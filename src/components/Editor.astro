@@ -1,0 +1,254 @@
+---
+export interface Props {
+  initialHtml?: string;
+  initialCss?: string;
+  initialJs?: string;
+  height?: string;
+}
+
+const {
+  initialHtml = `<!DOCTYPE html>
+<html>
+<head>
+  <title>My Page</title>
+</head>
+<body>
+
+  <h1>Hello, CodesCompiler!</h1>
+  <p>Edit this code and click <b>Run ▶</b></p>
+
+</body>
+</html>`,
+  initialCss  = `body {
+  font-family: sans-serif;
+  background: #f0f4f8;
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+h1 {
+  color: #04AA6D;
+  font-size: 2rem;
+}
+
+p {
+  color: #555;
+}`,
+  initialJs   = `// JavaScript runs after the HTML loads
+console.log("Welcome to CodesCompiler!");
+
+document.querySelector("h1").addEventListener("click", () => {
+  alert("You clicked the heading!");
+});`,
+  height = '520px',
+} = Astro.props;
+---
+
+<div class="try-it-wrap my-8 rounded-xl border border-gray-200 shadow-lg overflow-hidden bg-[#1e1e2e]" style={`height:${height}`}>
+
+  <!-- ── Header ──────────────────────────────────────────── -->
+  <div class="flex items-center justify-between px-4 py-2 bg-[#181825] border-b border-white/10">
+    <div class="flex items-center gap-1.5">
+      <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+      <span class="w-3 h-3 rounded-full bg-yellow-400/80"></span>
+      <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
+      <span class="ml-3 text-xs text-gray-400 font-mono hidden sm:block">try-it-yourself — CodesCompiler</span>
+    </div>
+
+    <!-- Tab buttons -->
+    <div class="flex rounded-md overflow-hidden border border-white/10" role="tablist" aria-label="Code type">
+      <button id="tiy-tab-html" role="tab" aria-selected="true"  class="tiy-tab active-tab px-4 py-1.5 text-xs font-bold font-mono" data-lang="html">HTML</button>
+      <button id="tiy-tab-css"  role="tab" aria-selected="false" class="tiy-tab px-4 py-1.5 text-xs font-bold font-mono" data-lang="css">CSS</button>
+      <button id="tiy-tab-js"   role="tab" aria-selected="false" class="tiy-tab px-4 py-1.5 text-xs font-bold font-mono" data-lang="js">JS</button>
+    </div>
+
+    <!-- Run button -->
+    <button id="tiy-run" class="flex items-center gap-1.5 px-4 py-1.5 bg-[#04AA6D] hover:bg-[#038a58] text-white text-xs font-bold rounded transition-colors">
+      <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.84A1.5 1.5 0 004 4.11v11.78a1.5 1.5 0 002.3 1.27l9.344-5.891a1.5 1.5 0 000-2.538L6.3 2.84z"/></svg>
+      Run
+    </button>
+  </div>
+
+  <!-- ── Body: editor + preview side by side ───────────── -->
+  <div class="flex h-[calc(100%-3rem)]">
+
+    <!-- Editor pane -->
+    <div class="w-1/2 border-r border-white/10 flex flex-col overflow-hidden">
+      <div id="tiy-editor" class="flex-1 overflow-auto text-sm"></div>
+    </div>
+
+    <!-- Preview pane -->
+    <div class="w-1/2 flex flex-col bg-white">
+      <div class="flex items-center justify-between px-3 py-1.5 bg-gray-50 border-b border-gray-200">
+        <span class="text-xs text-gray-400 font-mono">Preview</span>
+        <div class="flex gap-1">
+          <span class="w-2 h-2 rounded-full bg-gray-300"></span>
+          <span class="w-2 h-2 rounded-full bg-gray-300"></span>
+          <span class="w-2 h-2 rounded-full bg-gray-300"></span>
+        </div>
+      </div>
+      <iframe id="tiy-preview" class="flex-1 w-full border-none" title="Live Preview" sandbox="allow-scripts"></iframe>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── CodeMirror via CDN ──────────────────────────────────── -->
+<script type="module" define:vars={{ initialHtml, initialCss, initialJs }}>
+  // Load CodeMirror 6 from CDN
+  const BASE = 'https://esm.sh';
+  const [
+    { EditorState },
+    { EditorView, keymap, lineNumbers, highlightActiveLineGutter, highlightActiveLine, drawSelection },
+    { defaultKeymap, history, historyKeymap, indentWithTab },
+    { html:   htmlLang  },
+    { css:    cssLang   },
+    { javascript: jsLang },
+    { oneDark },
+    { autocompletion, completionKeymap },
+    { bracketMatching },
+    { closeBrackets, closeBracketsKeymap },
+  ] = await Promise.all([
+    import(`${BASE}/@codemirror/state`),
+    import(`${BASE}/@codemirror/view`),
+    import(`${BASE}/@codemirror/commands`),
+    import(`${BASE}/@codemirror/lang-html`),
+    import(`${BASE}/@codemirror/lang-css`),
+    import(`${BASE}/@codemirror/lang-javascript`),
+    import(`${BASE}/@codemirror/theme-one-dark`),
+    import(`${BASE}/@codemirror/autocomplete`),
+    import(`${BASE}/@codemirror/language`),
+    import(`${BASE}/@codemirror/autocomplete`),
+  ]);
+
+  const editorEl  = document.getElementById('tiy-editor');
+  const preview   = document.getElementById('tiy-preview');
+  const runBtn    = document.getElementById('tiy-run');
+  const tabs      = document.querySelectorAll('.tiy-tab');
+
+  const docs = {
+    html: initialHtml,
+    css:  initialCss,
+    js:   initialJs,
+  };
+
+  const langExt = { html: htmlLang(), css: cssLang(), js: jsLang() };
+
+  let currentLang = 'html';
+  let view = null;
+
+  const baseExtensions = [
+    lineNumbers(),
+    highlightActiveLineGutter(),
+    highlightActiveLine(),
+    drawSelection(),
+    history(),
+    bracketMatching(),
+    closeBrackets(),
+    autocompletion(),
+    oneDark,
+    keymap.of([
+      ...defaultKeymap,
+      ...historyKeymap,
+      ...completionKeymap,
+      ...closeBracketsKeymap,
+      indentWithTab,
+    ]),
+    EditorView.lineWrapping,
+  ];
+
+  function createEditor(lang) {
+    if (view) {
+      docs[currentLang] = view.state.doc.toString();
+      view.destroy();
+    }
+    currentLang = lang;
+
+    view = new EditorView({
+      state: EditorState.create({
+        doc: docs[lang],
+        extensions: [...baseExtensions, langExt[lang]],
+      }),
+      parent: editorEl,
+    });
+  }
+
+  // Init with HTML
+  createEditor('html');
+
+  // Tab switching
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => {
+        t.classList.remove('active-tab');
+        t.setAttribute('aria-selected', 'false');
+      });
+      tab.classList.add('active-tab');
+      tab.setAttribute('aria-selected', 'true');
+      createEditor(tab.dataset.lang);
+    });
+  });
+
+  // Run preview
+  function runPreview() {
+    // Save current editor state
+    if (view) docs[currentLang] = view.state.doc.toString();
+
+    const fullDoc = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <style>${docs.css}</style>
+</head>
+<body>
+${docs.html}
+<script>
+try { ${docs.js} } catch(e) { console.error(e); }
+<\/script>
+</body>
+</html>`;
+
+    const blob = new Blob([fullDoc], { type: 'text/html' });
+    const url  = URL.createObjectURL(blob);
+    preview.src = url;
+  }
+
+  runBtn?.addEventListener('click', runPreview);
+
+  // Auto-run on load
+  runPreview();
+</script>
+
+<style is:global>
+  /* Active tab styling */
+  .tiy-tab {
+    background: transparent;
+    color: #9ca3af;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .tiy-tab:hover { background: rgba(255,255,255,0.08); color: #e5e7eb; }
+  .tiy-tab.active-tab { background: #04AA6D; color: #fff; }
+
+  /* Make CodeMirror fill its container */
+  #tiy-editor .cm-editor {
+    height: 100%;
+    font-size: 13px;
+    font-family: 'Fira Code', 'JetBrains Mono', 'Cascadia Code', monospace;
+  }
+  #tiy-editor .cm-scroller { overflow: auto; }
+
+  /* One-Dark tweaks — slightly more saturated */
+  .cm-editor.cm-focused { outline: none; }
+  .cm-editor .cm-gutters { background: #1a1b26 !important; border-right: 1px solid rgba(255,255,255,0.06) !important; }
+  .cm-editor .cm-activeLineGutter { background: rgba(255,255,255,0.05); }
+
+  /* Mobile stacking */
+  @media (max-width: 640px) {
+    .try-it-wrap .flex.h-\[calc\(100\%-3rem\)\] { flex-direction: column; }
+    .try-it-wrap .w-1\/2 { width: 100%; height: 50%; }
+  }
+</style>

@@ -1,0 +1,80 @@
+# ─────────────────────────────────────────────────────────────
+# Decap CMS Configuration for CodesCompiler
+# Admin Panel: http://localhost:4321/admin
+# ─────────────────────────────────────────────────────────────
+
+# LOCAL backend — works on your computer without any login
+# When deploying to live server, change this to use GitHub auth
+local_backend: true
+
+backend:
+  name: git-gateway
+  branch: main
+
+# Where uploaded images go
+media_folder: "public/images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  # ── TUTORIALS ────────────────────────────────────────────────
+  - name: "tutorials"
+    label: "Tutorials"
+    label_singular: "Tutorial"
+    folder: "src/content/tutorials"
+    create: true
+    delete: true
+    extension: "mdx"
+    format: "frontmatter"
+    slug: "{{slug}}"
+    preview_path: "tutorial/{{slug}}"
+    summary: "{{title}} ({{category}} — Chapter {{order}})"
+    sortable_fields: ["category", "order", "title"]
+    view_filters:
+      - label: "HTML"
+        field: category
+        pattern: "html"
+      - label: "CSS"
+        field: category
+        pattern: "css"
+      - label: "JavaScript"
+        field: category
+        pattern: "javascript"
+    fields:
+      - label: "Title"
+        name: "title"
+        widget: "string"
+        hint: "Shown in browser tab, sidebar, and breadcrumb"
+
+      - label: "Description"
+        name: "description"
+        widget: "string"
+        hint: "One sentence — used for SEO meta description"
+
+      - label: "Category"
+        name: "category"
+        widget: "select"
+        options:
+          - { label: "HTML", value: "html" }
+          - { label: "CSS", value: "css" }
+          - { label: "JavaScript", value: "javascript" }
+        hint: "Which tutorial section this belongs to"
+
+      - label: "Chapter Order"
+        name: "order"
+        widget: "number"
+        value_type: "int"
+        min: 1
+        hint: "Sidebar sort position — 1 is the first chapter"
+
+      - label: "Published Date"
+        name: "date"
+        widget: "datetime"
+        required: false
+
+      - label: "Tutorial Content"
+        name: "body"
+        widget: "markdown"
+        hint: >
+          Write your tutorial here using Markdown.
+          To add a live code editor, type:
+          <Editor initialHtml={`your html`} initialCss={`your css`} />

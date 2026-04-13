@@ -1,0 +1,42 @@
+---
+export interface Props {
+  client?: string; // e.g. "ca-pub-XXXXXXXXXXXXXXXX"
+  slot?: string;   // e.g. "XXXXXXXXXX"
+  format?: 'auto' | 'fluid' | 'rectangle';
+  responsive?: boolean;
+}
+
+const { 
+  client = 'ca-pub-XXXXXXXXXXXX', // Placeholder Publisher ID
+  slot = 'XXXXXXXXXX',           // Placeholder Slot ID
+  format = 'auto', 
+  responsive = true 
+} = Astro.props;
+---
+
+<div class="adsense-container w-full bg-gray-50 flex items-center justify-center border border-gray-200 border-dashed rounded p-4 my-6">
+  <!-- Place valid AdSense script here in production -->
+  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={client}" crossorigin="anonymous"></script> -->
+  
+  <ins class="adsbygoogle"
+       style={`display:block; text-align:center; ${responsive ? 'width: 100%;' : 'width: 300px; height: 250px;'}`}
+       data-ad-layout="in-article"
+       data-ad-format={format}
+       data-ad-client={client}
+       data-ad-slot={slot}
+       data-full-width-responsive={responsive ? 'true' : 'false'}></ins>
+       
+  <script is:inline>
+       // (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+  
+  <span class="text-gray-400 text-sm italic absolute">Placeholder Ad Space</span>
+</div>
+
+<style>
+  .adsense-container {
+    position: relative;
+    min-height: 100px;
+    overflow: hidden;
+  }
+</style>

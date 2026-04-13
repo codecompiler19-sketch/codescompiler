@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>CodesCompiler Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --sidebar-bg: #1e1e2d;
+      --sidebar-hover: #2a2a3d;
+      --sidebar-active: rgba(4,170,109,.15);
+      --primary: #04AA6D;
+      --primary-hover: #038a58;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --info: #3b82f6;
+      --bg: #f0f2f5;
+      --card: #ffffff;
+      --border: #e5e7eb;
+      --text: #1a1a2e;
+      --text-muted: #6b7280;
+      --text-light: #9ca3af;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 13px; }
+
+    /* ── Admin Top Bar ── */
+    .admin-bar { position: fixed; top: 0; left: 0; right: 0; height: 32px; background: #1d2327; z-index: 1000; display: flex; align-items: center; padding: 0 16px; gap: 16px; }
+    .admin-bar a { color: #c3c4c7; font-size: 11px; text-decoration: none; display: flex; align-items: center; gap: 4px; }
+    .admin-bar a:hover { color: #00b9eb; }
+    .admin-bar .ab-right { margin-left: auto; display: flex; gap: 14px; }
+    .admin-bar .dot { width: 6px; height: 6px; border-radius: 50%; background: #04AA6D; display: inline-block; }
+
+    /* ── Sidebar ── */
+    .sidebar { width: 220px; background: var(--sidebar-bg); position: fixed; top: 32px; bottom: 0; left: 0; overflow-y: auto; z-index: 100; }
+    .sidebar-logo { padding: 18px 16px 14px; border-bottom: 1px solid rgba(255,255,255,.06); }
+    .sidebar-logo h1 { font-size: 15px; font-weight: 800; color: var(--primary); letter-spacing: -.02em; }
+    .sidebar-logo small { font-size: 10px; color: #64748b; display: block; margin-top: 2px; }
+    .sidebar-nav { padding: 8px 0; }
+    .nav-section { padding: 16px 16px 5px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: #475569; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 16px; color: #94a3b8; font-size: 13px; font-weight: 500; cursor: pointer; border-left: 3px solid transparent; transition: all .12s; text-decoration: none; }
+    .nav-item:hover { background: var(--sidebar-hover); color: #e2e8f0; }
+    .nav-item.active { background: var(--sidebar-active); color: var(--primary); border-left-color: var(--primary); font-weight: 600; }
+    .nav-item .ni { width: 18px; text-align: center; font-size: 14px; flex-shrink: 0; }
+    .nav-item .count { margin-left: auto; background: rgba(255,255,255,.1); color: #94a3b8; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 10px; }
+    .nav-item.active .count { background: rgba(4,170,109,.2); color: var(--primary); }
+    .nav-sub { padding-left: 44px; }
+    .nav-sub .nav-item { padding: 6px 16px 6px 0; font-size: 12px; border-left: none; }
+
+    /* ── Main ── */
+    .main { margin-left: 220px; margin-top: 32px; min-height: calc(100vh - 32px); display: flex; flex-direction: column; }
+    .page-header { background: var(--card); border-bottom: 1px solid var(--border); padding: 16px 28px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 32px; z-index: 10; }
+    .page-header h2 { font-size: 20px; font-weight: 700; }
+    .page-header .actions { display: flex; gap: 8px; }
+    .page { padding: 24px 28px; flex: 1; }
+
+    /* ── Cards & Widgets ── */
+    .widget-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .widget { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+    .widget-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-muted); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+    .stat-card { text-align: center; }
+    .stat-card .stat-num { font-size: 36px; font-weight: 900; color: var(--primary); }
+    .stat-card .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+    .stat-card.html .stat-num { color: #e34c26; }
+    .stat-card.css .stat-num { color: #264de4; }
+    .stat-card.js .stat-num { color: #f0db4f; }
+
+    /* ── Table ── */
+    .wp-table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+    .wp-table thead th { background: #f8f9fa; padding: 10px 14px; text-align: left; font-weight: 700; font-size: 12px; color: var(--text-muted); border-bottom: 1px solid var(--border); white-space: nowrap; }
+    .wp-table tbody td { padding: 12px 14px; border-bottom: 1px solid #f3f4f6; font-size: 13px; vertical-align: middle; }
+    .wp-table tbody tr:hover { background: #f8fafc; }
+    .wp-table .post-title { color: var(--info); font-weight: 600; cursor: pointer; }
+    .wp-table .post-title:hover { color: var(--primary); }
+    .wp-table .row-actions { font-size: 11px; color: var(--text-light); margin-top: 3px; }
+    .wp-table .row-actions a { color: var(--info); text-decoration: none; cursor: pointer; }
+    .wp-table .row-actions a.trash { color: var(--danger); }
+    .wp-table .row-actions a:hover { text-decoration: underline; }
+    .wp-table tbody tr:last-child td { border-bottom: none; }
+
+    /* ── Status badge ── */
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; }
+    .badge-published { background: #d1fae5; color: #065f46; }
+    .badge-draft { background: #fef3c7; color: #92400e; }
+    .badge-html { background: #fff4ee; color: #c2410c; }
+    .badge-css { background: #eff6ff; color: #1d4ed8; }
+    .badge-javascript { background: #fefce8; color: #a16207; }
+
+    /* ── Buttons ── */
+    .btn { padding: 8px 16px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all .12s; display: inline-flex; align-items: center; gap: 5px; font-family: inherit; }
+    .btn-primary { background: var(--primary); color: #fff; } .btn-primary:hover { background: var(--primary-hover); }
+    .btn-blue { background: var(--info); color: #fff; } .btn-blue:hover { background: #2563eb; }
+    .btn-danger { background: var(--danger); color: #fff; } .btn-danger:hover { background: #dc2626; }
+    .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); } .btn-outline:hover { background: #f3f4f6; }
+    .btn-sm { padding: 5px 10px; font-size: 11px; }
+    .btn-lg { padding: 10px 20px; font-size: 14px; }
+
+    /* ── Forms ── */
+    .form-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 24px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 5px; }
+    .form-group label .hint-inline { font-weight: 400; color: var(--text-light); }
+    input, select, textarea { width: 100%; padding: 8px 12px; border: 1.5px solid var(--border); border-radius: 6px; font-size: 13px; font-family: 'Inter', sans-serif; outline: none; transition: border .15s; background: #fafbfc; }
+    input:focus, select:focus, textarea:focus { border-color: var(--primary); background: #fff; }
+    textarea.code { font-family: 'Fira Code', 'Consolas', monospace; font-size: 12px; line-height: 1.7; resize: vertical; }
+    .hint { font-size: 11px; color: var(--text-light); margin-top: 3px; }
+
+    /* ── Section dividers ── */
+    .section-divider { border: none; border-top: 1px solid var(--border); margin: 6px 0 18px; }
+    .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text-muted); margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+
+    /* ── Alert ── */
+    .alert { padding: 10px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; margin-bottom: 16px; display: none; border-left: 4px solid; }
+    .alert-success { background: #d1fae5; color: #065f46; border-color: var(--primary); }
+    .alert-error { background: #fee2e2; color: #991b1b; border-color: var(--danger); }
+    .alert-info { background: #dbeafe; color: #1e40af; border-color: var(--info); }
+
+    /* ── Tabs ── */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* ── SEO Score ── */
+    .seo-circle { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 900; color: #fff; flex-shrink: 0; }
+    .score-good { background: #16a34a; }
+    .score-ok { background: #d97706; }
+    .score-bad { background: #dc2626; }
+    .score-none { background: #d1d5db; }
+
+    /* ── Quick Draft Widget ── */
+    .quick-draft textarea { min-height: 80px; margin-bottom: 10px; resize: vertical; }
+
+    /* ── Filter bar ── */
+    .filter-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    .filter-bar select, .filter-bar input { width: auto; min-width: 140px; padding: 6px 10px; font-size: 12px; }
+    .filter-count { font-size: 12px; color: var(--text-muted); }
+
+    /* ── Toolbar ── */
+    .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+
+    /* ── Responsive ── */
+    @media (max-width: 800px) {
+      .sidebar { display: none; }
+      .main { margin-left: 0; }
+      .form-row { grid-template-columns: 1fr; }
+      .editor-layout { grid-template-columns: 1fr !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Admin Bar ── -->
+<div class="admin-bar">
+  <a href="http://localhost:4321" target="_blank"><span class="dot"></span> CodesCompiler</a>
+  <a href="http://localhost:4321" target="_blank">🌐 Visit Site</a>
+  <div class="ab-right">
+    <a onclick="showTab('create')">➕ New</a>
+    <a onclick="showTab('seo-tools')">📊 SEO</a>
+    <span style="color:#64748b;font-size:11px">Admin</span>
+  </div>
+</div>
+
+<!-- ── Sidebar ── -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <h1>CodesCompiler</h1>
+    <small>Admin Dashboard</small>
+  </div>
+  <div class="sidebar-nav">
+    <div class="nav-section">Main</div>
+    <a class="nav-item active" id="nav-dashboard" onclick="showTab('dashboard')"><span class="ni">📊</span> Dashboard</a>
+
+    <div class="nav-section">Content</div>
+    <a class="nav-item" id="nav-posts" onclick="showTab('posts')"><span class="ni">📝</span> All Posts <span class="count" id="post-count">0</span></a>
+    <a class="nav-item" id="nav-create" onclick="showTab('create')"><span class="ni">✏️</span> Add New</a>
+    <a class="nav-item" id="nav-blogs" onclick="showTab('blogs')"><span class="ni">📰</span> Blog Posts <span class="count" id="blog-count">0</span></a>
+    <a class="nav-item" id="nav-blog-create" onclick="showTab('blog-create')"><span class="ni">✍️</span> New Blog</a>
+    <a class="nav-item" id="nav-pages" onclick="showTab('pages')"><span class="ni">📄</span> Pages</a>
+    <a class="nav-item" id="nav-media" onclick="showTab('media')"><span class="ni">🖼️</span> Media</a>
+
+    <div class="nav-section">SEO</div>
+    <a class="nav-item" id="nav-seo-audit" onclick="showTab('seo-audit')"><span class="ni">🔍</span> SEO Audit</a>
+    <a class="nav-item" id="nav-seo-tools" onclick="showTab('seo-tools')"><span class="ni">🛠️</span> SEO Tools</a>
+
+    <div class="nav-section">Settings</div>
+    <a class="nav-item" id="nav-header" onclick="showTab('header')"><span class="ni">🔗</span> Navigation</a>
+    <a class="nav-item" id="nav-settings" onclick="showTab('settings')"><span class="ni">⚙️</span> General</a>
+
+    <div class="nav-section" style="margin-top:16px;border-top:1px solid rgba(255,255,255,.05);padding-top:16px">
+      <a href="http://localhost:4321" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none">🌐 View Live Site →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ── Main Content ── -->
+<div class="main">
+  <div class="page-header">
+    <h2 id="page-title">Dashboard</h2>
+    <div class="actions" id="page-actions"></div>
+  </div>
+  <div class="page">
+    <div id="alert" class="alert"></div>
+
+    <!-- ═══════════════════════════════ DASHBOARD ═══════════════════════════════ -->
+    <div id="tab-dashboard" class="tab-content active">
+      <div class="widget-grid" id="dash-stats" style="grid-template-columns:repeat(5,1fr)"></div>
+
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px">
+        <!-- At a Glance -->
+        <div class="widget">
+          <div class="widget-title">📋 Recent Posts</div>
+          <table class="wp-table" style="border:none" id="dash-recent-table">
+            <thead><tr><th>Title</th><th>Category</th><th>Status</th></tr></thead>
+            <tbody id="dash-recent"></tbody>
+          </table>
+        </div>
+
+        <!-- Quick Draft -->
+        <div>
+          <div class="widget">
+            <div class="widget-title">✏️ Quick Draft</div>
+            <div class="form-group"><input id="qd-title" placeholder="Post title..."/></div>
+            <div class="form-group"><textarea class="quick-draft" id="qd-content" placeholder="What's on your mind?"></textarea></div>
+            <button class="btn btn-primary" onclick="quickDraft()">Save Draft</button>
+          </div>
+          <div class="widget" style="margin-top:16px">
+            <div class="widget-title">🔍 SEO Overview</div>
+            <div id="dash-seo-summary" style="font-size:12px;color:#6b7280">Loading...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════ ALL POSTS ═══════════════════════════════ -->
+    <div id="tab-posts" class="tab-content">
+      <div class="toolbar">
+        <div class="filter-bar">
+          <select id="filter-cat" onchange="loadPosts()">
+            <option value="">All Categories</option>
+            <option value="html">HTML</option>
+            <option value="css">CSS</option>
+            <option value="javascript">JavaScript</option>
+          </select>
+          <input type="text" id="filter-search" placeholder="🔍 Search posts..." oninput="loadPosts()" style="min-width:200px"/>
+          <span class="filter-count" id="posts-count-label">0 items</span>
+        </div>
+        <button class="btn btn-primary" onclick="showTab('create')">➕ Add New Post</button>
+      </div>
+
+      <table class="wp-table">
+        <thead>
+          <tr>
+            <th style="width:30px"><input type="checkbox" id="check-all" onclick="toggleAllChecks()"/></th>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Order</th>
+            <th>SEO</th>
+            <th>Date</th>
+            <th style="width:180px">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="posts-tbody"></tbody>
+      </table>
+
+      <div style="margin-top:12px;display:flex;gap:8px">
+        <select id="bulk-action" style="width:auto">
+          <option>Bulk Actions</option>
+          <option value="delete">Delete Selected</option>
+        </select>
+        <button class="btn btn-outline btn-sm" onclick="bulkAction()">Apply</button>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════ ADD NEW / EDIT ═══════════════════════════════ -->
+    <div id="tab-create" class="tab-content">
+      <div class="editor-layout" style="display:grid;grid-template-columns:1fr 320px;gap:20px;align-items:start">
+        <!-- Main editor -->
+        <div>
+          <div class="form-card" style="margin-bottom:16px">
+            <input type="hidden" id="edit-file"/>
+            <div class="form-group">
+              <input id="f-title" type="text" placeholder="Enter title here" style="font-size:20px;font-weight:700;padding:12px;border:none;border-bottom:2px solid var(--border);border-radius:0;background:transparent" oninput="updateSnippet();runSeoAnalysis()"/>
+            </div>
+            <div style="margin-top:12px;display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-light)">
+              <span>Permalink:</span>
+              <span style="color:var(--text-muted)">codescompiler.com/tutorial/</span>
+              <input id="f-filename" type="text" placeholder="auto-slug" style="width:160px;padding:3px 6px;font-size:11px;border:1px dashed var(--border);background:transparent" oninput="updateSnippet()"/>
+            </div>
+          </div>
+
+          <!-- Content Editor -->
+          <div class="form-card" style="margin-bottom:16px">
+            <div class="widget-title">📝 Content</div>
+            <textarea id="f-content" class="code" style="min-height:320px" oninput="runSeoAnalysis()" placeholder="## Introduction&#10;&#10;Write your tutorial here using Markdown...&#10;&#10;### Examples&#10;&#10;Use &lt;Editor initialHtml={...} /&gt; for live code editors."></textarea>
+            <div style="display:flex;justify-content:space-between;margin-top:8px">
+              <span class="hint" id="word-count">Words: 0 | Characters: 0</span>
+              <span class="hint" id="read-time">Reading time: 0 min</span>
+            </div>
+          </div>
+
+          <!-- SEO Settings Panel -->
+          <div class="form-card" style="margin-bottom:16px">
+            <div class="widget-title">🔍 SEO Settings <span style="font-weight:400;color:var(--text-light)">— Yoast-style optimization</span></div>
+
+            <div class="form-group">
+              <label>Focus Keyword <span class="hint-inline">(primary ranking keyword)</span></label>
+              <input id="f-keyword" type="text" placeholder="e.g. html headings tutorial" oninput="runSeoAnalysis()"/>
+            </div>
+            <div class="form-group">
+              <label>SEO Title <span class="hint-inline" id="seo-title-count">0/60</span></label>
+              <input id="f-seo-title" type="text" placeholder="Leave blank to use post title" oninput="updateSnippet()"/>
+              <div style="height:3px;background:#e5e7eb;border-radius:2px;margin-top:4px"><div id="title-bar" style="height:100%;width:0;background:#04AA6D;border-radius:2px;transition:width .2s"></div></div>
+            </div>
+            <div class="form-group">
+              <label>Meta Description <span class="hint-inline" id="desc-count">0/160</span></label>
+              <textarea id="f-description" style="min-height:60px" placeholder="Compelling description for Google search results..." oninput="updateDescCount();updateSnippet();runSeoAnalysis()"></textarea>
+              <div style="height:3px;background:#e5e7eb;border-radius:2px;margin-top:4px"><div id="desc-bar" style="height:100%;width:0;background:#04AA6D;border-radius:2px;transition:width .2s"></div></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Canonical URL</label>
+                <input id="f-canonical" type="text" placeholder="https://codescompiler.com/..."/>
+              </div>
+              <div class="form-group">
+                <label>Robots Directive</label>
+                <select id="f-noindex">
+                  <option value="">Index, Follow (default)</option>
+                  <option value="noindex">NoIndex (hide from Google)</option>
+                  <option value="nofollow">NoFollow</option>
+                  <option value="noindex,nofollow">NoIndex, NoFollow</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Open Graph -->
+          <div class="form-card">
+            <div class="widget-title">📱 Social / Open Graph</div>
+            <div class="form-group">
+              <label>OG Title <span class="hint-inline">(for Facebook/Twitter cards)</span></label>
+              <input id="f-og-title" type="text" placeholder="Leave blank to use SEO title"/>
+            </div>
+            <div class="form-group">
+              <label>OG Description</label>
+              <textarea id="f-og-desc" style="min-height:50px" placeholder="Leave blank to use meta description"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div>
+          <!-- Publish Box -->
+          <div class="form-card" style="margin-bottom:12px">
+            <div class="widget-title">📤 Publish</div>
+            <div class="form-row" style="gap:8px">
+              <div class="form-group" style="margin-bottom:8px">
+                <label>Category</label>
+                <select id="f-category">
+                  <option value="html">HTML</option>
+                  <option value="css">CSS</option>
+                  <option value="javascript">JavaScript</option>
+                </select>
+              </div>
+              <div class="form-group" style="margin-bottom:8px">
+                <label>Order</label>
+                <input id="f-order" type="number" value="1" min="1"/>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:4px">
+              <button class="btn btn-primary btn-lg" style="flex:1" onclick="savePost()">💾 Publish</button>
+              <button class="btn btn-outline" onclick="clearForm()">Clear</button>
+            </div>
+          </div>
+
+          <!-- Google Preview -->
+          <div class="form-card" style="margin-bottom:12px">
+            <div class="widget-title">🔎 Google Preview</div>
+            <div style="border:1px solid var(--border);border-radius:8px;padding:12px;background:#fff">
+              <div id="snip-url" style="font-size:11px;color:#006621;margin-bottom:2px">codescompiler.com › tutorial</div>
+              <div id="snip-title" style="font-size:16px;color:#1a0dab;font-weight:400;line-height:1.3;margin-bottom:3px">Page Title — CodesCompiler</div>
+              <div id="snip-desc" style="font-size:12px;color:#545454;line-height:1.45">Your meta description will appear here in search results...</div>
+            </div>
+          </div>
+
+          <!-- SEO Score -->
+          <div class="form-card" style="margin-bottom:12px">
+            <div class="widget-title">🏆 SEO Score</div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+              <div id="seo-score-circle" class="seo-circle score-none">?</div>
+              <div>
+                <div id="seo-score-label" style="font-weight:700;font-size:14px">Enter keyword</div>
+                <div id="seo-score-sub" style="font-size:11px;color:var(--text-light)">to analyze</div>
+              </div>
+            </div>
+            <div id="seo-checks"></div>
+          </div>
+
+          <!-- Readability -->
+          <div class="form-card">
+            <div class="widget-title">📖 Readability</div>
+            <div id="readability-checks"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════ BLOG POSTS ═══════════════════════════════ -->
+    <div id="tab-blogs" class="tab-content">
+      <div class="toolbar">
+        <input type="text" id="blog-search" placeholder="🔍 Search blogs..." oninput="loadBlogs()" style="width:auto;min-width:200px;padding:6px 10px;font-size:12px"/>
+        <button class="btn btn-primary" onclick="showTab('blog-create')">➕ New Blog Post</button>
+      </div>
+      <table class="wp-table">
+        <thead><tr><th>Title</th><th>Category</th><th>Date</th><th>SEO</th><th>Actions</th></tr></thead>
+        <tbody id="blogs-tbody"><tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text-light)">No blog posts yet</td></tr></tbody>
+      </table>
+    </div>
+
+    <!-- ═══════════════════════════════ NEW BLOG POST ═══════════════════════════════ -->
+    <div id="tab-blog-create" class="tab-content">
+      <div class="editor-layout" style="display:grid;grid-template-columns:1fr 320px;gap:20px;align-items:start">
+        <div>
+          <div class="form-card" style="margin-bottom:16px">
+            <input type="hidden" id="blog-edit-file"/>
+            <div class="form-group">
+              <input id="b-title" type="text" placeholder="Blog post title" style="font-size:20px;font-weight:700;padding:12px;border:none;border-bottom:2px solid var(--border);border-radius:0;background:transparent"/>
+            </div>
+            <div style="margin-top:12px;display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-light)">
+              <span>Permalink:</span>
+              <span style="color:var(--text-muted)">codescompiler.com/blog/</span>
+              <input id="b-slug" type="text" placeholder="auto-slug" style="width:160px;padding:3px 6px;font-size:11px;border:1px dashed var(--border);background:transparent"/>
+            </div>
+          </div>
+          <div class="form-card" style="margin-bottom:16px">
+            <div class="widget-title">📝 Blog Content</div>
+            <textarea id="b-content" class="code" style="min-height:320px" placeholder="Write your blog post here using Markdown..."></textarea>
+          </div>
+          <div class="form-card">
+            <div class="widget-title">🔍 Blog SEO</div>
+            <div class="form-group">
+              <label>Meta Description</label>
+              <textarea id="b-description" style="min-height:60px" placeholder="Blog description — shown in Google results"></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Focus Keyword</label>
+                <input id="b-keyword" type="text" placeholder="e.g. learn javascript"/>
+              </div>
+              <div class="form-group">
+                <label>SEO Title</label>
+                <input id="b-seo-title" type="text" placeholder="Leave blank to use post title"/>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="form-card" style="margin-bottom:12px">
+            <div class="widget-title">📤 Publish Blog</div>
+            <div class="form-group">
+              <label>Category</label>
+              <select id="b-category">
+                <option value="web-development">Web Development</option>
+                <option value="tutorials">Tutorials</option>
+                <option value="tips">Tips & Tricks</option>
+                <option value="news">Tech News</option>
+                <option value="guides">Guides</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Author</label>
+              <input id="b-author" type="text" value="Admin" placeholder="Author name"/>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:4px">
+              <button class="btn btn-primary btn-lg" style="flex:1" onclick="saveBlog()">💾 Publish Blog</button>
+              <button class="btn btn-outline" onclick="clearBlogForm()">Clear</button>
+            </div>
+          </div>
+          <div class="widget" style="padding:16px">
+            <div class="widget-title">💡 Why Blog?</div>
+            <p style="font-size:12px;color:var(--text-muted);line-height:1.6">Blog posts help with AdSense approval — Google requires original, quality content. Write 10-15 blog posts (300+ words each) covering topics like tutorials, tips, and guides.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════ PAGES ═══════════════════════════════ -->
+    <div id="tab-pages" class="tab-content">
+      <div class="toolbar">
+        <p style="font-size:13px;color:var(--text-muted)">Manage your static pages (About, Contact, Privacy, etc.)</p>
+        <button class="btn btn-primary" onclick="showAddPageForm()">➕ Add New Page</button>
+      </div>
+      <!-- Inline Add Page Form -->
+      <div id="add-page-form" class="form-card" style="display:none;margin-bottom:16px;max-width:600px">
+        <div class="widget-title" id="page-form-title">➕ Add New Page</div>
+        <input type="hidden" id="page-edit-idx" value="-1"/>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Page Title</label>
+            <input id="pg-title" type="text" placeholder="e.g. About Us"/>
+          </div>
+          <div class="form-group">
+            <label>Slug</label>
+            <input id="pg-slug" type="text" placeholder="/about"/>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Status</label>
+            <select id="pg-status">
+              <option value="Draft">Draft</option>
+              <option value="Published">Published</option>
+            </select>
+          </div>
+          <div class="form-group" style="display:flex;align-items:flex-end;gap:8px;padding-bottom:16px">
+            <button class="btn btn-primary" onclick="savePage()">💾 Save Page</button>
+            <button class="btn btn-outline" onclick="hideAddPageForm()">Cancel</button>
+          </div>
+        </div>
+      </div>
+      <table class="wp-table">
+        <thead><tr><th>Page Title</th><th>Slug</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="pages-tbody"></tbody>
+      </table>
+    </div>
+
+    <!-- ═══════════════════════════════ MEDIA ═══════════════════════════════ -->
+    <div id="tab-media" class="tab-content">
+      <div class="widget" style="text-align:center;padding:60px">
+        <div style="font-size:48px;margin-bottom:16px">🖼️</div>
+        <h3 style="font-size:16px;font-weight:700;margin-bottom:8px">Media Library</h3>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:20px">Upload images to <code>/public/images/uploads/</code> folder.<br>They will appear in your tutorials at <code>/images/uploads/filename.jpg</code></p>
+        <div id="media-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:20px;text-align:center"></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════ SEO AUDIT ═══════════════════════════════ -->
+    <div id="tab-seo-audit" class="tab-content">
+      <div class="widget-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px">
+        <div class="widget stat-card"><div class="stat-num" id="audit-total">-</div><div class="stat-label">Total Pages</div></div>
+        <div class="widget stat-card" style="--c:#16a34a"><div class="stat-num" style="color:#16a34a" id="audit-good">-</div><div class="stat-label">✅ Good</div></div>
+        <div class="widget stat-card"><div class="stat-num" style="color:#d97706" id="audit-ok">-</div><div class="stat-label">⚠️ Needs Work</div></div>
+        <div class="widget stat-card"><div class="stat-num" style="color:#dc2626" id="audit-bad">-</div><div class="stat-label">❌ Poor</div></div>
+      </div>
+      <table class="wp-table">
+        <thead>
+          <tr><th>Page</th><th>SEO Score</th><th>Title</th><th>Description</th><th>Keyword</th><th>Action</th></tr>
+        </thead>
+        <tbody id="audit-tbody"><tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text-light)">Loading...</td></tr></tbody>
+      </table>
+    </div>
+
+    <!-- ═══════════════════════════════ SEO TOOLS ═══════════════════════════════ -->
+    <div id="tab-seo-tools" class="tab-content">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <!-- Sitemap Generator -->
+        <div class="form-card">
+          <div class="widget-title">🗺️ Sitemap Generator</div>
+          <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Auto-generate a sitemap.xml for Google Search Console.</p>
+          <button class="btn btn-primary" onclick="generateSitemap()">🔄 Generate Sitemap</button>
+          <pre id="sitemap-preview" style="margin-top:12px;font-size:11px;background:#f8f9fa;padding:12px;border-radius:6px;max-height:200px;overflow:auto;display:none;white-space:pre-wrap"></pre>
+        </div>
+
+        <!-- Robots.txt -->
+        <div class="form-card">
+          <div class="widget-title">🤖 Robots.txt Editor</div>
+          <textarea id="robots-txt" class="code" style="min-height:140px">User-agent: *
+Allow: /
+
+Sitemap: https://codescompiler.com/sitemap.xml</textarea>
+          <button class="btn btn-primary" style="margin-top:10px" onclick="saveRobots()">💾 Save Robots.txt</button>
+        </div>
+
+        <!-- Schema Markup -->
+        <div class="form-card">
+          <div class="widget-title">🏷️ Schema Markup (JSON-LD)</div>
+          <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">Structured data for rich search results.</p>
+          <textarea id="schema-preview" class="code" style="min-height:160px;font-size:11px" readonly></textarea>
+          <button class="btn btn-outline" style="margin-top:8px" onclick="generateSchema()">🔄 Generate Schema</button>
+        </div>
+
+        <!-- Heading Analyzer -->
+        <div class="form-card">
+          <div class="widget-title">📑 Heading Structure Analyzer</div>
+          <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">Select a post to analyze its heading hierarchy.</p>
+          <select id="heading-post-select" onchange="analyzeHeadings()" style="margin-bottom:10px">
+            <option value="">Select a post...</option>
+          </select>
+          <div id="heading-analysis" style="font-size:12px"></div>
+        </div>
+
+        <!-- Internal Links -->
+        <div class="form-card">
+          <div class="widget-title">🔗 Internal Linking Suggestions</div>
+          <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">Find pages that could link to each other for better SEO.</p>
+          <div id="linking-suggestions" style="font-size:12px">Click a post to analyze...</div>
+          <button class="btn btn-outline" style="margin-top:10px" onclick="analyzeLinking()">🔄 Analyze Links</button>
+        </div>
+
+        <!-- Keyword Density -->
+        <div class="form-card">
+          <div class="widget-title">📊 Keyword Density Checker</div>
+          <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">Top keywords across all your content.</p>
+          <div id="keyword-density" style="font-size:12px">Loading...</div>
+          <button class="btn btn-outline" style="margin-top:10px" onclick="analyzeKeywordDensity()">🔄 Analyze</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════ NAVIGATION ═══════════════════════════════ -->
+    <div id="tab-header" class="tab-content">
+      <div class="form-card" style="max-width:600px">
+        <div class="widget-title">🔗 Header Navigation Links</div>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:20px">Edit the links in the dark language strip under the site header.</p>
+        <div id="nav-links-editor"></div>
+        <div style="margin-top:16px;display:flex;gap:8px">
+          <button class="btn btn-primary" onclick="saveHeaderNav()">💾 Save Navigation</button>
+          <button class="btn btn-outline" onclick="loadHeaderNav()">↺ Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════ SETTINGS ═══════════════════════════════ -->
+    <div id="tab-settings" class="tab-content">
+      <div class="form-card" style="max-width:680px">
+        <div class="widget-title">⚙️ General Settings</div>
+        <div class="form-group">
+          <label>Site Title</label>
+          <input id="s-title" type="text" value="CodesCompiler"/>
+        </div>
+        <div class="form-group">
+          <label>Tagline</label>
+          <input id="s-tagline" type="text" value="Learn HTML, CSS, JavaScript — The Easy Way"/>
+        </div>
+        <div class="form-group">
+          <label>Site URL</label>
+          <input id="s-url" type="text" value="https://codescompiler.com"/>
+        </div>
+        <hr class="section-divider"/>
+        <div class="widget-title">📱 Social Media</div>
+        <div class="form-row">
+          <div class="form-group"><label>Twitter / X</label><input id="s-twitter" placeholder="@codescompiler"/></div>
+          <div class="form-group"><label>GitHub</label><input id="s-github" placeholder="https://github.com/..."/></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>YouTube</label><input id="s-youtube" placeholder="https://youtube.com/..."/></div>
+          <div class="form-group"><label>LinkedIn</label><input id="s-linkedin" placeholder="https://linkedin.com/..."/></div>
+        </div>
+        <hr class="section-divider"/>
+        <div class="widget-title">🏷️ Default SEO</div>
+        <div class="form-group">
+          <label>Default Meta Description</label>
+          <textarea id="s-meta-desc" style="min-height:50px" placeholder="Default description for pages without a custom one">CodesCompiler — Free tutorials on HTML, CSS, JavaScript and more. Learn web development with interactive code examples.</textarea>
+        </div>
+        <div class="form-group">
+          <label>Google Analytics ID</label>
+          <input id="s-ga" placeholder="G-XXXXXXXXXX"/>
+        </div>
+        <div class="form-group">
+          <label>Google AdSense Publisher ID</label>
+          <input id="s-adsense" placeholder="ca-pub-XXXXXXXXXXXXXXXX"/>
+        </div>
+        <button class="btn btn-primary btn-lg" onclick="saveSettings()">💾 Save Settings</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════ JAVASCRIPT ═══════════════════════════════ -->
+<script>
+// ══ Globals
+let allPosts = [];
+
+// ══ Tab switching
+function showTab(name) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  var tabEl = document.getElementById('tab-' + name);
+  if (tabEl) tabEl.classList.add('active');
+  var navEl = document.getElementById('nav-' + name);
+  if (navEl) navEl.classList.add('active');
+  var titles = { dashboard:'Dashboard', posts:'All Posts', create:'Add New Post', blogs:'Blog Posts', 'blog-create':'New Blog Post', pages:'Pages', media:'Media Library', 'seo-audit':'SEO Audit', 'seo-tools':'SEO Tools', header:'Navigation', settings:'General Settings' };
+  document.getElementById('page-title').textContent = titles[name] || 'Admin';
+  // Actions
+  var actEl = document.getElementById('page-actions');
+  if (name === 'posts') actEl.innerHTML = '<button class="btn btn-primary" onclick="showTab(\'create\')">➕ Add New</button>';
+  else if (name === 'blogs') actEl.innerHTML = '<button class="btn btn-primary" onclick="showTab(\'blog-create\')">➕ New Blog</button>';
+  else actEl.innerHTML = '';
+  // Load data
+  if (name === 'dashboard') loadDashboard();
+  if (name === 'posts') loadPosts();
+  if (name === 'blogs') loadBlogs();
+  if (name === 'seo-audit') runSiteAudit();
+  if (name === 'seo-tools') loadSeoTools();
+  if (name === 'pages') loadPages();
+  if (name === 'media') loadMedia();
+}
+
+// ══ Alert
+function showAlert(msg, type) {
+  var el = document.getElementById('alert');
+  el.className = 'alert alert-' + (type || 'success');
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(function() { el.style.display = 'none'; }, 4000);
+}
+
+// ══ Data loading
+async function fetchPosts() {
+  var res  = await fetch('/api/list');
+  allPosts = await res.json();
+  document.getElementById('post-count').textContent = allPosts.length;
+  return allPosts;
+}
+
+// ══ Dashboard
+async function loadDashboard() {
+  var list = await fetchPosts();
+  var blogRes = await fetch('/api/blogs/list'); var blogList = await blogRes.json();
+  document.getElementById('blog-count').textContent = blogList.length;
+  var se = document.getElementById('dash-stats');
+  se.innerHTML =
+    '<div class="widget stat-card"><div class="stat-num">' + list.length + '</div><div class="stat-label">Tutorial Posts</div></div>' +
+    '<div class="widget stat-card"><div class="stat-num" style="color:#7c3aed">' + blogList.length + '</div><div class="stat-label">Blog Posts</div></div>' +
+    '<div class="widget stat-card html"><div class="stat-num">' + list.filter(function(t){return t.category==='html'}).length + '</div><div class="stat-label">HTML</div></div>' +
+    '<div class="widget stat-card css"><div class="stat-num">' + list.filter(function(t){return t.category==='css'}).length + '</div><div class="stat-label">CSS</div></div>' +
+    '<div class="widget stat-card js"><div class="stat-num">' + list.filter(function(t){return t.category==='javascript'}).length + '</div><div class="stat-label">JavaScript</div></div>';
+  // Recent — combine tutorials and blogs
+  var recent = list.slice(0,3).map(function(t) {
+    return '<tr><td><span class="post-title" onclick="editPost(\'' + t.file + '\')">' + (t.title || t.file) + '</span></td>' +
+      '<td><span class="badge badge-' + (t.category||'html') + '">' + (t.category||'html').toUpperCase() + '</span></td>' +
+      '<td><span class="badge badge-published">Published</span></td></tr>';
+  });
+  var recentBlogs = blogList.slice(0,3).map(function(b) {
+    return '<tr><td><span class="post-title" onclick="editBlog(\'' + b.file + '\')">' + (b.title || b.file) + '</span></td>' +
+      '<td><span class="badge" style="background:#f3e8ff;color:#7c3aed">BLOG</span></td>' +
+      '<td><span class="badge badge-published">Published</span></td></tr>';
+  });
+  var tb = document.getElementById('dash-recent');
+  tb.innerHTML = recent.concat(recentBlogs).join('') || '<tr><td colspan="3" style="text-align:center;color:var(--text-light);padding:16px">No posts yet</td></tr>';
+  // SEO summary
+  var good=0,ok=0,bad=0;
+  list.forEach(function(t) {
+    var s = 0;
+    if ((t.title||'').length >= 20) s++;
+    if ((t.title||'').length <= 65) s++;
+    if ((t.description||'').length >= 100) s++;
+    if ((t.description||'').length <= 165) s++;
+    if (t.focusKeyword) s++;
+    var p = Math.round((s/5)*100);
+    if (p>=80)good++;else if(p>=50)ok++;else bad++;
+  });
+  document.getElementById('dash-seo-summary').innerHTML =
+    '<div style="margin-bottom:6px"><span style="color:#16a34a;font-weight:700">' + good + '</span> pages with good SEO</div>' +
+    '<div style="margin-bottom:6px"><span style="color:#d97706;font-weight:700">' + ok + '</span> pages need improvement</div>' +
+    '<div style="margin-bottom:6px"><span style="color:#dc2626;font-weight:700">' + bad + '</span> pages with poor SEO</div>' +
+    '<hr style="border:none;border-top:1px solid var(--border);margin:8px 0">' +
+    '<div style="font-size:11px;color:var(--text-light)">💡 For AdSense: aim for 15+ blog posts</div>';
+}
+
+// ══ All Posts (WP table view)
+async function loadPosts() {
+  var list = await fetchPosts();
+  var catFilter = document.getElementById('filter-cat').value;
+  var search = document.getElementById('filter-search').value.toLowerCase();
+  var filtered = list.filter(function(t) {
+    if (catFilter && t.category !== catFilter) return false;
+    if (search && !(t.title||'').toLowerCase().includes(search) && !(t.description||'').toLowerCase().includes(search)) return false;
+    return true;
+  });
+  document.getElementById('posts-count-label').textContent = filtered.length + ' item' + (filtered.length!==1?'s':'');
+  document.getElementById('posts-tbody').innerHTML = filtered.map(function(t) {
+    var hasSeo = t.focusKeyword ? '<span style="color:#16a34a">●</span>' : '<span style="color:#dc2626">●</span>';
+    return '<tr>' +
+      '<td><input type="checkbox" class="post-check" data-file="' + t.file + '"/></td>' +
+      '<td><span class="post-title" onclick="editPost(\'' + t.file + '\')">' + (t.title || t.file) + '</span>' +
+      '<div class="row-actions"><a href="http://localhost:4321/tutorial/' + t.file.replace('.mdx','') + '" target="_blank">View Live</a></div></td>' +
+      '<td><span class="badge badge-' + (t.category||'html') + '">' + (t.category||'html').toUpperCase() + '</span></td>' +
+      '<td>Ch. ' + (t.order||'-') + '</td>' +
+      '<td>' + hasSeo + '</td>' +
+      '<td style="font-size:11px;color:var(--text-light)">' + (t.date ? new Date(t.date).toLocaleDateString() : '-') + '</td>' +
+      '<td><div style="display:flex;gap:4px">' +
+        '<button class="btn btn-blue btn-sm" style="padding:2px 8px" onclick="editPost(\'' + t.file + '\')">Edit</button>' +
+        '<button class="btn btn-outline btn-sm" style="padding:2px 8px" onclick="downloadItem(\'tutorial\', \'' + t.file + '\')">📥</button>' +
+        '<button class="btn btn-danger btn-sm" style="padding:2px 8px" onclick="deletePost(\'' + t.file + '\')">🗑️</button>' +
+      '</div></td>' +
+      '</tr>';
+  }).join('') || '<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text-light)">No posts found</td></tr>';
+}
+
+function toggleAllChecks() {
+  var checked = document.getElementById('check-all').checked;
+  document.querySelectorAll('.post-check').forEach(function(el) { el.checked = checked; });
+}
+
+async function bulkAction() {
+  var action = document.getElementById('bulk-action').value;
+  if (action !== 'delete') return;
+  var files = [];
+  document.querySelectorAll('.post-check:checked').forEach(function(el) { files.push(el.getAttribute('data-file')); });
+  if (!files.length) { showAlert('Select posts first', 'error'); return; }
+  if (!confirm('Delete ' + files.length + ' post(s)?')) return;
+  for (var i = 0; i < files.length; i++) {
+    await fetch('/api/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filename: files[i] }) });
+  }
+  showAlert(files.length + ' post(s) deleted');
+  loadPosts();
+}
+
+// ══ Edit post
+async function editPost(file) {
+  showTab('create');
+  document.getElementById('page-title').textContent = 'Edit Post';
+  var res = await fetch('/api/get?file=' + encodeURIComponent(file));
+  var json = await res.json();
+  if (!json.content) return;
+  var raw = json.content;
+  var fm = {};
+  var m = raw.match(/^---\n([\s\S]*?)\n---/);
+  if (m) m[1].split('\n').forEach(function(l) { var parts = l.split(':'); if (parts[0]) fm[parts[0].trim()] = parts.slice(1).join(':').trim().replace(/^"|"$/g, ''); });
+  var body = raw.replace(/^---[\s\S]*?---\n*/, '');
+  document.getElementById('f-title').value       = fm.title || '';
+  document.getElementById('f-description').value = fm.description || '';
+  document.getElementById('f-category').value    = fm.category || 'html';
+  document.getElementById('f-order').value       = fm.order || 1;
+  document.getElementById('f-filename').value    = file;
+  document.getElementById('f-content').value     = body;
+  document.getElementById('edit-file').value     = file;
+  document.getElementById('f-seo-title').value   = fm.seoTitle || '';
+  document.getElementById('f-keyword').value     = fm.focusKeyword || '';
+  document.getElementById('f-canonical').value   = fm.canonical || '';
+  document.getElementById('f-noindex').value     = fm.noindex || '';
+  document.getElementById('f-og-title').value    = fm.ogTitle || '';
+  document.getElementById('f-og-desc').value     = fm.ogDescription || '';
+  updateDescCount(); updateSnippet(); runSeoAnalysis(); updateWordCount();
+}
+
+// ══ Delete
+async function deletePost(file) {
+  if (!confirm('Delete "' + file + '"? This cannot be undone.')) return;
+  await fetch('/api/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filename: file }) });
+  showAlert('Deleted ' + file);
+  loadPosts();
+}
+
+// ══ Download
+async function downloadItem(type, file) {
+  var api = type === 'blog' ? '/api/blogs/get' : '/api/get';
+  var res = await fetch(api + '?file=' + encodeURIComponent(file));
+  var json = await res.json();
+  if (!json.content) { showAlert('Could not download file', 'error'); return; }
+  var blob = new Blob([json.content], { type: 'text/markdown' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = file;
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+}
+
+// ══ Save Post
+async function savePost() {
+  var title    = document.getElementById('f-title').value.trim();
+  var desc     = document.getElementById('f-description').value.trim();
+  var category = document.getElementById('f-category').value;
+  var order    = document.getElementById('f-order').value;
+  var content  = document.getElementById('f-content').value;
+  var seoTitle = document.getElementById('f-seo-title').value.trim();
+  var focusKw  = document.getElementById('f-keyword').value.trim();
+  var canonical= document.getElementById('f-canonical').value.trim();
+  var noindex  = document.getElementById('f-noindex').value;
+  var ogTitle  = document.getElementById('f-og-title').value.trim();
+  var ogDesc   = document.getElementById('f-og-desc').value.trim();
+  var filename = document.getElementById('f-filename').value.trim();
+  var editFile = document.getElementById('edit-file').value;
+
+  if (!title || !desc || !content) { showAlert('Fill in Title, Description and Content', 'error'); return; }
+  if (!filename) filename = editFile || (title.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.mdx');
+  if (!filename.endsWith('.mdx')) filename += '.mdx';
+
+  var fm = '---\ntitle: "' + title + '"\ndescription: "' + desc + '"\ncategory: "' + category + '"\norder: ' + order + '\ndate: ' + new Date().toISOString();
+  if (seoTitle)  fm += '\nseoTitle: "' + seoTitle + '"';
+  if (focusKw)   fm += '\nfocusKeyword: "' + focusKw + '"';
+  if (canonical) fm += '\ncanonical: "' + canonical + '"';
+  if (noindex)   fm += '\nnoindex: "' + noindex + '"';
+  if (ogTitle)   fm += '\nogTitle: "' + ogTitle + '"';
+  if (ogDesc)    fm += '\nogDescription: "' + ogDesc + '"';
+  fm += '\n---\n\n' + content;
+
+  var res = await fetch('/api/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filename: filename, content: fm }) });
+  var json = await res.json();
+  if (json.ok) { showAlert('✅ Post published!'); clearForm(); showTab('posts'); }
+  else showAlert('Error: ' + json.error, 'error');
+}
+
+// ══ Quick Draft
+async function quickDraft() {
+  var title = document.getElementById('qd-title').value.trim();
+  var content = document.getElementById('qd-content').value.trim();
+  if (!title) { showAlert('Enter a title', 'error'); return; }
+  var filename = title.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.mdx';
+  var fm = '---\ntitle: "' + title + '"\ndescription: "Draft post"\ncategory: "html"\norder: 99\ndate: ' + new Date().toISOString() + '\n---\n\n' + (content || '## Draft\n\nContent to be written...');
+  await fetch('/api/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filename: filename, content: fm }) });
+  showAlert('✅ Draft saved!');
+  document.getElementById('qd-title').value = '';
+  document.getElementById('qd-content').value = '';
+  loadDashboard();
+}
+
+// ══ Clear form
+function clearForm() {
+  ['f-title','f-description','f-filename','f-content','f-keyword','f-seo-title','f-canonical','f-og-title','f-og-desc'].forEach(function(id) { document.getElementById(id).value = ''; });
+  document.getElementById('f-order').value = 1;
+  document.getElementById('edit-file').value = '';
+  document.getElementById('f-category').value = 'html';
+  document.getElementById('f-noindex').value = '';
+  updateSnippet(); runSeoAnalysis(); updateWordCount();
+}
+
+// ══ Character counters
+function updateDescCount() {
+  var len = document.getElementById('f-description').value.length;
+  document.getElementById('desc-count').textContent = len + '/160';
+  document.getElementById('desc-count').style.color = len > 160 ? '#dc2626' : len >= 120 ? '#16a34a' : '#9ca3af';
+  var pct = Math.min(len / 160 * 100, 100);
+  document.getElementById('desc-bar').style.width = pct + '%';
+  document.getElementById('desc-bar').style.background = len > 160 ? '#dc2626' : len >= 120 ? '#16a34a' : '#d97706';
+}
+
+function updateSnippet() {
+  var title = document.getElementById('f-seo-title').value || document.getElementById('f-title').value || 'Page Title';
+  var desc  = document.getElementById('f-description').value || 'Your meta description...';
+  var slug  = document.getElementById('f-filename').value || (document.getElementById('f-title').value || '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  document.getElementById('snip-title').textContent = title.slice(0, 60) + ' — CodesCompiler';
+  document.getElementById('snip-desc').textContent  = desc.slice(0, 160);
+  document.getElementById('snip-url').textContent   = 'codescompiler.com › tutorial › ' + slug;
+  var tc = (document.getElementById('f-seo-title').value || document.getElementById('f-title').value).length;
+  document.getElementById('seo-title-count').textContent = tc + '/60';
+  document.getElementById('seo-title-count').style.color = tc > 60 ? '#dc2626' : '#9ca3af';
+  var tpct = Math.min(tc / 60 * 100, 100);
+  document.getElementById('title-bar').style.width = tpct + '%';
+  document.getElementById('title-bar').style.background = tc > 60 ? '#dc2626' : tc >= 30 ? '#16a34a' : '#d97706';
+}
+
+// ══ Word count
+function updateWordCount() {
+  var text = document.getElementById('f-content').value;
+  var words = text.trim() ? text.trim().split(/\s+/).length : 0;
+  var chars = text.length;
+  var mins  = Math.max(1, Math.ceil(words / 200));
+  document.getElementById('word-count').textContent  = 'Words: ' + words + ' | Characters: ' + chars;
+  document.getElementById('read-time').textContent   = 'Reading time: ~' + mins + ' min';
+}
+document.addEventListener('input', function(e) { if (e.target.id === 'f-content') updateWordCount(); });
+
+// ══ SEO Analysis
+function runSeoAnalysis() {
+  var keyword = (document.getElementById('f-keyword').value || '').toLowerCase().trim();
+  var title   = (document.getElementById('f-title').value || '').toLowerCase();
+  var desc    = (document.getElementById('f-description').value || '').toLowerCase();
+  var content = (document.getElementById('f-content').value || '').toLowerCase();
+  var slug    = (document.getElementById('f-filename').value || title.replace(/[^a-z0-9]+/g, '-'));
+  var descLen = document.getElementById('f-description').value.length;
+  var titLen  = (document.getElementById('f-seo-title').value || document.getElementById('f-title').value).length;
+  var words   = content.trim() ? content.trim().split(/\s+/).length : 0;
+
+  if (!keyword) {
+    document.getElementById('seo-score-circle').className = 'seo-circle score-none';
+    document.getElementById('seo-score-circle').textContent = '?';
+    document.getElementById('seo-score-label').textContent = 'Enter a keyword';
+    document.getElementById('seo-score-label').style.color = '';
+    document.getElementById('seo-score-sub').textContent = 'to start analysis';
+    document.getElementById('seo-checks').innerHTML = '<p style="font-size:12px;color:var(--text-light);padding:8px 0">Type a focus keyword to see SEO recommendations</p>';
+    runReadability();
+    return;
+  }
+
+  // Keyword density
+  var kwCount = 0; var idx = content.indexOf(keyword); while (idx !== -1) { kwCount++; idx = content.indexOf(keyword, idx + 1); }
+  var density = words > 0 ? ((kwCount / words) * 100).toFixed(1) : 0;
+
+  var checks = [
+    { pass: title.includes(keyword),                     label: 'Keyword in title',            tip: 'Include "' + keyword + '" in the title' },
+    { pass: desc.includes(keyword),                      label: 'Keyword in description',      tip: 'Include "' + keyword + '" in meta description' },
+    { pass: slug.includes(keyword.replace(/ /g,'-')),    label: 'Keyword in URL slug',         tip: 'Add keyword to the URL slug' },
+    { pass: content.indexOf(keyword) < 200 && content.includes(keyword), label: 'Keyword in first paragraph', tip: 'Mention keyword in the opening paragraph' },
+    { pass: kwCount >= 2,                                label: 'Keyword used ' + kwCount + 'x (' + density + '%)', tip: 'Use keyword at least 2 times' },
+    { pass: titLen >= 30 && titLen <= 60,                label: 'Title length (' + titLen + '/60)', tip: 'Title should be 30-60 characters' },
+    { pass: descLen >= 120 && descLen <= 160,            label: 'Description (' + descLen + '/160)', tip: 'Description should be 120-160 characters' },
+    { pass: words >= 300,                                label: 'Content length (' + words + ' words)', tip: 'Write at least 300 words' },
+    { pass: content.includes('## '),                     label: 'Has H2 subheadings',          tip: 'Add ## subheadings for structure' },
+    { pass: content.includes(']('),                      label: 'Has internal/external links',  tip: 'Add links to other pages or resources' },
+  ];
+
+  var passed = checks.filter(function(c) { return c.pass; }).length;
+  var pct    = Math.round((passed / checks.length) * 100);
+  var cls    = pct >= 70 ? 'score-good' : pct >= 40 ? 'score-ok' : 'score-bad';
+  var label  = pct >= 70 ? 'Good' : pct >= 40 ? 'Needs Work' : 'Poor';
+
+  document.getElementById('seo-score-circle').className = 'seo-circle ' + cls;
+  document.getElementById('seo-score-circle').textContent = pct;
+  document.getElementById('seo-score-label').textContent = label + ' SEO';
+  document.getElementById('seo-score-label').style.color = pct >= 70 ? '#16a34a' : pct >= 40 ? '#d97706' : '#dc2626';
+  document.getElementById('seo-score-sub').textContent = passed + '/' + checks.length + ' passed';
+
+  document.getElementById('seo-checks').innerHTML = checks.map(function(c) {
+    return '<div style="display:flex;align-items:flex-start;gap:7px;margin-bottom:5px;font-size:12px">' +
+      '<span style="flex-shrink:0">' + (c.pass ? '✅' : '❌') + '</span>' +
+      '<div><span style="font-weight:600">' + c.label + '</span>' +
+      (!c.pass ? '<br><span style="color:var(--text-light);font-size:11px">' + c.tip + '</span>' : '') +
+      '</div></div>';
+  }).join('');
+
+  runReadability();
+}
+
+// ══ Readability Analysis
+function runReadability() {
+  var content = document.getElementById('f-content').value;
+  var words   = content.trim() ? content.trim().split(/\s+/).length : 0;
+  var sentences = content.split(/[.!?]+/).filter(function(s){return s.trim()}).length || 1;
+  var paragraphs = content.split(/\n\n+/).filter(function(s){return s.trim()}).length;
+  var avgSentLen = Math.round(words / sentences);
+  var hasShortParas = paragraphs > 0 && (words / paragraphs) < 100;
+  var hasHeadings = content.includes('## ');
+  var hasBullets = content.includes('- ') || content.includes('* ') || content.includes('1. ');
+
+  var checks = [
+    { pass: avgSentLen <= 20, label: 'Avg sentence length: ' + avgSentLen + ' words', tip: 'Keep sentences under 20 words for readability' },
+    { pass: hasShortParas,    label: 'Short paragraphs',  tip: 'Break text into shorter paragraphs' },
+    { pass: hasHeadings,      label: 'Uses subheadings',  tip: 'Add ## subheadings every 150-300 words' },
+    { pass: hasBullets,       label: 'Uses lists/bullets', tip: 'Add bullet points or numbered lists' },
+    { pass: words >= 300,     label: words + ' words written', tip: 'Aim for at least 300 words' },
+  ];
+
+  document.getElementById('readability-checks').innerHTML = checks.map(function(c) {
+    return '<div style="display:flex;align-items:flex-start;gap:7px;margin-bottom:5px;font-size:12px">' +
+      '<span style="flex-shrink:0">' + (c.pass ? '✅' : '⚠️') + '</span>' +
+      '<div><span style="font-weight:500">' + c.label + '</span>' +
+      (!c.pass ? '<br><span style="color:var(--text-light);font-size:11px">' + c.tip + '</span>' : '') +
+      '</div></div>';
+  }).join('');
+}
+
+// ══ SEO Audit
+async function runSiteAudit() {
+  var list = await fetchPosts();
+  var good = 0, ok = 0, bad = 0;
+  var rows = list.map(function(t) {
+    var title = t.title || '';
+    var desc  = t.description || '';
+    var kw    = t.focusKeyword || '';
+    var score = 0;
+    if (title.length >= 20) score++;
+    if (title.length <= 65) score++;
+    if (desc.length >= 100) score++;
+    if (desc.length <= 165) score++;
+    if (kw) score++;
+    var pct   = Math.round((score / 5) * 100);
+    var color = pct >= 80 ? '#16a34a' : pct >= 50 ? '#d97706' : '#dc2626';
+    var badge = pct >= 80 ? '✅ Good' : pct >= 50 ? '⚠️ OK' : '❌ Poor';
+    if (pct >= 80) good++; else if (pct >= 50) ok++; else bad++;
+    var tSt = !title ? '<span style="color:#dc2626">Missing</span>' : title.length > 65 ? '<span style="color:#d97706">Long</span>' : '<span style="color:#16a34a">Good</span>';
+    var dSt = !desc ? '<span style="color:#dc2626">Missing</span>' : desc.length > 165 ? '<span style="color:#d97706">Long</span>' : desc.length < 100 ? '<span style="color:#d97706">Short</span>' : '<span style="color:#16a34a">Good</span>';
+    var kwSt = kw ? '<span style="color:#16a34a">' + kw + '</span>' : '<span style="color:#dc2626">—</span>';
+    return '<tr><td style="font-weight:600">' + (t.title || t.file) + '</td>' +
+      '<td><span style="background:' + color + ';color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px">' + badge + '</span></td>' +
+      '<td>' + tSt + ' <span style="color:var(--text-light);font-size:11px">(' + title.length + ')</span></td>' +
+      '<td>' + dSt + ' <span style="color:var(--text-light);font-size:11px">(' + desc.length + ')</span></td>' +
+      '<td>' + kwSt + '</td>' +
+      '<td><button class="btn btn-blue btn-sm" onclick="editPost(\'' + t.file + '\')">Fix</button></td></tr>';
+  });
+  document.getElementById('audit-tbody').innerHTML = rows.join('') || '<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text-light)">No posts</td></tr>';
+  document.getElementById('audit-total').textContent = list.length;
+  document.getElementById('audit-good').textContent = good;
+  document.getElementById('audit-ok').textContent = ok;
+  document.getElementById('audit-bad').textContent = bad;
+}
+
+// ══ Pages
+function getPages() {
+  var defaults = [
+    { title: 'Homepage', slug: '/', status: 'Published' },
+    { title: 'About', slug: '/about', status: 'Draft' },
+    { title: 'Contact', slug: '/contact', status: 'Draft' },
+    { title: 'Privacy Policy', slug: '/privacy', status: 'Draft' },
+  ];
+  return JSON.parse(localStorage.getItem('cc_pages') || JSON.stringify(defaults));
+}
+
+function loadPages() {
+  var pages = getPages();
+  document.getElementById('pages-tbody').innerHTML = pages.map(function(p, i) {
+    return '<tr><td style="font-weight:600">' + p.title + '</td><td style="color:var(--text-muted)">' + p.slug + '</td>' +
+      '<td><span class="badge badge-' + (p.status === 'Published' ? 'published' : 'draft') + '">' + p.status + '</span></td>' +
+      '<td><div class="row-actions" style="margin:0">' +
+        '<a onclick="editPage(' + i + ')">Edit</a> | ' +
+        '<a class="trash" onclick="deletePage(' + i + ')">Delete</a></div></td></tr>';
+  }).join('');
+}
+
+function showAddPageForm() {
+  document.getElementById('add-page-form').style.display = 'block';
+  document.getElementById('page-form-title').textContent = '➕ Add New Page';
+  document.getElementById('page-edit-idx').value = '-1';
+  document.getElementById('pg-title').value = '';
+  document.getElementById('pg-slug').value = '';
+  document.getElementById('pg-status').value = 'Draft';
+  document.getElementById('pg-title').focus();
+}
+
+function hideAddPageForm() {
+  document.getElementById('add-page-form').style.display = 'none';
+}
+
+function editPage(idx) {
+  var pages = getPages();
+  var p = pages[idx];
+  if (!p) return;
+  document.getElementById('add-page-form').style.display = 'block';
+  document.getElementById('page-form-title').textContent = '✏️ Edit Page';
+  document.getElementById('page-edit-idx').value = idx;
+  document.getElementById('pg-title').value = p.title;
+  document.getElementById('pg-slug').value = p.slug;
+  document.getElementById('pg-status').value = p.status;
+  document.getElementById('pg-title').focus();
+}
+
+function savePage() {
+  var title = document.getElementById('pg-title').value.trim();
+  var slug  = document.getElementById('pg-slug').value.trim();
+  var status= document.getElementById('pg-status').value;
+  if (!title) { showAlert('Enter a page title', 'error'); return; }
+  if (!slug) slug = '/' + title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  var pages = getPages();
+  var idx = parseInt(document.getElementById('page-edit-idx').value);
+  if (idx >= 0) {
+    pages[idx] = { title: title, slug: slug, status: status };
+  } else {
+    pages.push({ title: title, slug: slug, status: status });
+  }
+  localStorage.setItem('cc_pages', JSON.stringify(pages));
+  hideAddPageForm();
+  loadPages();
+  showAlert(idx >= 0 ? '✅ Page updated!' : '✅ Page added! Create a .astro file in src/pages/ to make it live.');
+}
+
+function deletePage(idx) {
+  if (!confirm('Delete this page?')) return;
+  var pages = getPages();
+  pages.splice(idx, 1);
+  localStorage.setItem('cc_pages', JSON.stringify(pages));
+  loadPages();
+  showAlert('Page deleted');
+}
+
+// ══ Blog Posts (for AdSense approval)
+async function fetchBlogs() {
+  var res = await fetch('/api/blogs/list');
+  var list = await res.json();
+  document.getElementById('blog-count').textContent = list.length;
+  return list;
+}
+
+async function loadBlogs() {
+  var list = await fetchBlogs();
+  var search = (document.getElementById('blog-search').value || '').toLowerCase();
+  var filtered = list.filter(function(b) {
+    if (search && !(b.title||'').toLowerCase().includes(search)) return false;
+    return true;
+  });
+  document.getElementById('blogs-tbody').innerHTML = filtered.map(function(b) {
+    var hasSeo = b.focusKeyword ? '<span style="color:#16a34a">●</span>' : '<span style="color:#dc2626">●</span>';
+    return '<tr>' +
+      '<td><span class="post-title" onclick="editBlog(\'' + b.file + '\')">' + (b.title || b.file) + '</span>' +
+      '<div class="row-actions"><a href="http://localhost:4321/blog/' + b.file.replace('.mdx','').replace('.md','') + '" target="_blank">View Live</a></div></td>' +
+      '<td><span class="badge" style="background:#f3e8ff;color:#7c3aed">' + (b.category || 'blog').toUpperCase() + '</span></td>' +
+      '<td style="font-size:11px;color:var(--text-light)">' + (b.date ? new Date(b.date).toLocaleDateString() : '-') + '</td>' +
+      '<td>' + hasSeo + '</td>' +
+      '<td><div style="display:flex;gap:4px">' +
+        '<button class="btn btn-blue btn-sm" style="padding:2px 8px" onclick="editBlog(\'' + b.file + '\')">Edit</button>' +
+        '<button class="btn btn-outline btn-sm" style="padding:2px 8px" onclick="downloadItem(\'blog\', \'' + b.file + '\')">📥</button>' +
+        '<button class="btn btn-danger btn-sm" style="padding:2px 8px" onclick="deleteBlog(\'' + b.file + '\')">🗑️</button>' +
+      '</div></td></tr>';
+  }).join('') || '<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text-light)">No blog posts yet — write some for AdSense approval!</td></tr>';
+}
+
+async function saveBlog() {
+  var title = document.getElementById('b-title').value.trim();
+  var desc  = document.getElementById('b-description').value.trim();
+  var content = document.getElementById('b-content').value;
+  var category = document.getElementById('b-category').value;
+  var author = document.getElementById('b-author').value.trim() || 'Admin';
+  var seoTitle = document.getElementById('b-seo-title').value.trim();
+  var focusKw = document.getElementById('b-keyword').value.trim();
+  var slug = document.getElementById('b-slug').value.trim();
+  var editFile = document.getElementById('blog-edit-file').value;
+
+  if (!title || !content) { showAlert('Fill in Title and Content', 'error'); return; }
+  if (!desc) desc = content.replace(/[#*`>\n]/g, ' ').trim().slice(0, 155) + '...';
+  if (!slug) slug = editFile || (title.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.mdx');
+  if (!slug.endsWith('.mdx') && !slug.endsWith('.md')) slug += '.mdx';
+
+  var fm = '---\ntitle: "' + title + '"\ndescription: "' + desc + '"\ncategory: "' + category + '"\nauthor: "' + author + '"\ndate: ' + new Date().toISOString();
+  if (seoTitle) fm += '\nseoTitle: "' + seoTitle + '"';
+  if (focusKw)  fm += '\nfocusKeyword: "' + focusKw + '"';
+  fm += '\n---\n\n' + content;
+
+  // Cleanup slug if they typed spaces manually
+  slug = slug.toLowerCase().replace(/[^a-z0-9.-]+/g, '-');
+  if (!slug.endsWith('.mdx') && !slug.endsWith('.md')) slug += '.mdx';
+
+  try {
+    var res = await fetch('/api/blogs/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filename: slug, content: fm }) });
+    var json = await res.json();
+    if (json.ok) { showAlert('✅ Blog published!'); clearBlogForm(); showTab('blogs'); }
+    else showAlert('Error: ' + json.error, 'error');
+  } catch (err) {
+    console.error(err);
+    showAlert('Failed to save! Did you restart the admin server in terminal using "npm run admin"?', 'error');
+  }
+}
+
+async function editBlog(file) {
+  showTab('blog-create');
+  document.getElementById('page-title').textContent = 'Edit Blog Post';
+  var res = await fetch('/api/blogs/get?file=' + encodeURIComponent(file));
+  var json = await res.json();
+  if (!json.content) return;
+  var raw = json.content;
+  var fm = {};
+  var m = raw.match(/^---\n([\s\S]*?)\n---/);
+  if (m) m[1].split('\n').forEach(function(l) { var parts = l.split(':'); if (parts[0]) fm[parts[0].trim()] = parts.slice(1).join(':').trim().replace(/^"|"$/g, ''); });
+  var body = raw.replace(/^---[\s\S]*?---\n*/, '');
+  document.getElementById('b-title').value = fm.title || '';
+  document.getElementById('b-description').value = fm.description || '';
+  document.getElementById('b-content').value = body;
+  document.getElementById('b-category').value = fm.category || 'web-development';
+  document.getElementById('b-author').value = fm.author || 'Admin';
+  document.getElementById('b-seo-title').value = fm.seoTitle || '';
+  document.getElementById('b-keyword').value = fm.focusKeyword || '';
+  document.getElementById('b-slug').value = file;
+  document.getElementById('blog-edit-file').value = file;
+}
+
+async function deleteBlog(file) {
+  if (!confirm('Delete blog "' + file + '"?')) return;
+  await fetch('/api/blogs/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filename: file }) });
+  showAlert('Blog deleted');
+  loadBlogs();
+}
+
+function clearBlogForm() {
+  ['b-title','b-description','b-content','b-keyword','b-seo-title','b-slug'].forEach(function(id) { document.getElementById(id).value = ''; });
+  document.getElementById('b-category').value = 'web-development';
+  document.getElementById('b-author').value = 'Admin';
+  document.getElementById('blog-edit-file').value = '';
+}
+
+// ══ Media
+function loadMedia() {
+  document.getElementById('media-list').innerHTML =
+    '<p style="color:var(--text-light);font-size:12px;grid-column:1/-1">Place images in <strong>public/images/uploads/</strong> and they\'ll appear here in a future update.<br>For now, reference them in your posts as: <code>/images/uploads/filename.jpg</code></p>';
+}
+
+// ══ SEO Tools
+async function loadSeoTools() {
+  var list = await fetchPosts();
+  var sel = document.getElementById('heading-post-select');
+  sel.innerHTML = '<option value="">Select a post...</option>' +
+    list.map(function(t) { return '<option value="' + t.file + '">' + (t.title||t.file) + '</option>'; }).join('');
+}
+
+async function generateSitemap() {
+  var list = await fetchPosts();
+  var base = document.getElementById('s-url') ? document.getElementById('s-url').value : 'https://codescompiler.com';
+  var xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+  xml += '  <url>\n    <loc>' + base + '/</loc>\n    <priority>1.0</priority>\n  </url>\n';
+  list.forEach(function(t) {
+    var slug = t.file.replace('.mdx', '').replace('.md', '');
+    xml += '  <url>\n    <loc>' + base + '/tutorial/' + slug + '</loc>\n    <lastmod>' + (t.date || new Date().toISOString()) + '</lastmod>\n    <priority>0.8</priority>\n  </url>\n';
+  });
+  xml += '</urlset>';
+  document.getElementById('sitemap-preview').textContent = xml;
+  document.getElementById('sitemap-preview').style.display = 'block';
+  // Save it
+  await fetch('/api/save-file', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ path: 'public/sitemap.xml', content: xml }) });
+  showAlert('✅ Sitemap generated with ' + (list.length + 1) + ' URLs!');
+}
+
+async function saveRobots() {
+  var content = document.getElementById('robots-txt').value;
+  await fetch('/api/save-file', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ path: 'public/robots.txt', content: content }) });
+  showAlert('✅ Robots.txt saved!');
+}
+
+function generateSchema() {
+  var siteTitle = document.getElementById('s-title') ? document.getElementById('s-title').value : 'CodesCompiler';
+  var siteUrl   = document.getElementById('s-url') ? document.getElementById('s-url').value : 'https://codescompiler.com';
+  var schema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": siteTitle,
+    "url": siteUrl,
+    "description": "Free tutorials on HTML, CSS, JavaScript and web development",
+    "potentialAction": { "@type": "SearchAction", "target": siteUrl + "/search?q={search_term_string}", "query-input": "required name=search_term_string" }
+  };
+  document.getElementById('schema-preview').value = JSON.stringify(schema, null, 2);
+}
+
+async function analyzeHeadings() {
+  var file = document.getElementById('heading-post-select').value;
+  if (!file) return;
+  var res = await fetch('/api/get?file=' + encodeURIComponent(file));
+  var json = await res.json();
+  if (!json.content) return;
+  var body = json.content.replace(/^---[\s\S]*?---\n*/, '');
+  var headings = body.match(/^#{1,6}\s.+$/gm) || [];
+  if (!headings.length) {
+    document.getElementById('heading-analysis').innerHTML = '<p style="color:#dc2626">⚠️ No headings found! Add ## subheadings.</p>';
+    return;
+  }
+  document.getElementById('heading-analysis').innerHTML = headings.map(function(h) {
+    var level = h.match(/^#+/)[0].length;
+    var text = h.replace(/^#+\s/, '');
+    return '<div style="padding-left:' + ((level-1)*16) + 'px;margin-bottom:4px"><span style="color:var(--primary);font-weight:700">H' + level + '</span> ' + text + '</div>';
+  }).join('') + '<p style="margin-top:8px;color:var(--text-light)">' + headings.length + ' heading(s) found</p>';
+}
+
+async function analyzeLinking() {
+  var list = await fetchPosts();
+  if (list.length < 2) { document.getElementById('linking-suggestions').innerHTML = '<p style="color:var(--text-light)">Add more posts to get linking suggestions.</p>'; return; }
+  var suggestions = [];
+  for (var i = 0; i < list.length; i++) {
+    for (var j = 0; j < list.length; j++) {
+      if (i === j) continue;
+      var kw = (list[j].title || '').toLowerCase().split(' ');
+      var content = (list[i].description || '').toLowerCase();
+      var match = kw.some(function(w) { return w.length > 3 && content.includes(w); });
+      if (match) suggestions.push({ from: list[i].title || list[i].file, to: list[j].title || list[j].file });
+    }
+  }
+  document.getElementById('linking-suggestions').innerHTML = suggestions.slice(0,8).map(function(s) {
+    return '<div style="margin-bottom:6px">📄 <strong>' + s.from + '</strong> → link to → 📄 <strong>' + s.to + '</strong></div>';
+  }).join('') || '<p style="color:var(--text-light)">No suggestions found.</p>';
+}
+
+async function analyzeKeywordDensity() {
+  var list = await fetchPosts();
+  var allText = '';
+  for (var i = 0; i < list.length; i++) {
+    var res = await fetch('/api/get?file=' + encodeURIComponent(list[i].file));
+    var json = await res.json();
+    if (json.content) allText += ' ' + json.content.replace(/^---[\s\S]*?---/, '').toLowerCase();
+  }
+  var words = allText.split(/\s+/).filter(function(w) { return w.length > 4 && !/^[#<\-()\[\]{}|`*_>\/]/.test(w); });
+  var freq = {};
+  words.forEach(function(w) { w = w.replace(/[^a-z]/g,''); if (w.length > 4) freq[w] = (freq[w] || 0) + 1; });
+  var sorted = Object.entries(freq).sort(function(a,b) { return b[1] - a[1]; }).slice(0, 15);
+  document.getElementById('keyword-density').innerHTML =
+    '<table style="width:100%;font-size:12px"><tr><th style="text-align:left">Keyword</th><th>Count</th><th>Density</th></tr>' +
+    sorted.map(function(kv) {
+      return '<tr><td>' + kv[0] + '</td><td style="text-align:center">' + kv[1] + '</td><td style="text-align:center">' + ((kv[1]/words.length)*100).toFixed(2) + '%</td></tr>';
+    }).join('') + '</table>';
+}
+
+// ══ Navigation Editor
+var defaultNav = [
+  { label: 'HTML', href: '/tutorial/html-introduction' },
+  { label: 'CSS', href: '/tutorial/css-introduction' },
+  { label: 'JavaScript', href: '/tutorial/js-introduction' },
+];
+
+function loadHeaderNav() {
+  var items = JSON.parse(localStorage.getItem('navItems') || JSON.stringify(defaultNav));
+  renderNavEditor(items);
+}
+
+function renderNavEditor(items) {
+  document.getElementById('nav-links-editor').innerHTML = items.map(function(item, i) {
+    return '<div style="display:flex;gap:8px;margin-bottom:8px;align-items:center">' +
+      '<input style="flex:1" type="text" value="' + item.label + '" id="nav-label-' + i + '"/>' +
+      '<input style="flex:2" type="text" value="' + item.href + '" id="nav-href-' + i + '"/>' +
+      '<button class="btn btn-danger btn-sm" onclick="removeNavItem(' + i + ')">✕</button></div>';
+  }).join('') + '<button class="btn btn-outline btn-sm" onclick="addNavItem()" style="margin-top:4px">+ Add Link</button>';
+}
+
+function getNavItems() {
+  var items = []; var i = 0;
+  while (document.getElementById('nav-label-' + i)) {
+    items.push({ label: document.getElementById('nav-label-' + i).value, href: document.getElementById('nav-href-' + i).value });
+    i++;
+  }
+  return items;
+}
+
+function addNavItem() { var items = getNavItems(); items.push({ label: 'New Link', href: '/' }); renderNavEditor(items); }
+function removeNavItem(i) { var items = getNavItems(); items.splice(i, 1); renderNavEditor(items); }
+
+async function saveHeaderNav() {
+  var items = getNavItems();
+  localStorage.setItem('navItems', JSON.stringify(items));
+  await fetch('/api/save-nav', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items: items }) });
+  showAlert('✅ Navigation saved!');
+}
+
+// ══ Settings
+function saveSettings() {
+  var settings = {
+    title: document.getElementById('s-title').value,
+    tagline: document.getElementById('s-tagline').value,
+    url: document.getElementById('s-url').value,
+    twitter: document.getElementById('s-twitter').value,
+    github: document.getElementById('s-github').value,
+    youtube: document.getElementById('s-youtube').value,
+    linkedin: document.getElementById('s-linkedin').value,
+    metaDesc: document.getElementById('s-meta-desc').value,
+    ga: document.getElementById('s-ga').value,
+    adsense: document.getElementById('s-adsense').value,
+  };
+  localStorage.setItem('cc_settings', JSON.stringify(settings));
+  showAlert('✅ Settings saved!');
+}
+
+function loadSettings() {
+  var s = JSON.parse(localStorage.getItem('cc_settings') || '{}');
+  if (s.title) document.getElementById('s-title').value = s.title;
+  if (s.tagline) document.getElementById('s-tagline').value = s.tagline;
+  if (s.url) document.getElementById('s-url').value = s.url;
+  if (s.twitter) document.getElementById('s-twitter').value = s.twitter;
+  if (s.github) document.getElementById('s-github').value = s.github;
+  if (s.youtube) document.getElementById('s-youtube').value = s.youtube;
+  if (s.linkedin) document.getElementById('s-linkedin').value = s.linkedin;
+  if (s.metaDesc) document.getElementById('s-meta-desc').value = s.metaDesc;
+  if (s.ga) document.getElementById('s-ga').value = s.ga;
+  if (s.adsense) document.getElementById('s-adsense').value = s.adsense;
+}
+
+// ══ Init
+loadDashboard();
+loadHeaderNav();
+updateSnippet();
+loadSettings();
+generateSchema();
+</script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+export interface Props {
+  title: string;
+  description: string;
+  category: 'html' | 'css' | 'javascript';
+  currentSlug: string;
+}
+
+const { title, description, category, currentSlug } = Astro.props;
+
+const allTutorials = await getCollection('tutorials');
+const categoryTutorials = allTutorials
+  .filter(t => t.data.category === category)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const categoryLabel = category.charAt(0).toUpperCase() + category.slice(1);
+const catColors: Record<string, { bg: string; text: string }> = {
+  html:       { bg: 'bg-orange-100', text: 'text-orange-700' },
+  css:        { bg: 'bg-blue-100',   text: 'text-blue-700'   },
+  javascript: { bg: 'bg-yellow-100', text: 'text-yellow-700' },
+};
+const catColor = catColors[category] ?? catColors.html;
+---
+
+<BaseLayout title={title} description={description}>
+
+  <!-- ============================================================ -->
+  <!-- Mobile backdrop — INSIDE BaseLayout so it renders in <body>  -->
+  <!-- ============================================================ -->
+  <div
+    id="sidebar-backdrop"
+    class="fixed inset-0 bg-black/40 z-[98] hidden"
+    aria-hidden="true"
+  ></div>
+
+  <div class="flex w-full min-h-[calc(100vh-6.5rem)]">
+
+    <!-- ============================================================ -->
+    <!-- SIDEBAR                                                       -->
+    <!-- On md+ : always visible as a static left panel               -->
+    <!-- On mobile : fixed overlay, hidden by default                 -->
+    <!-- ============================================================ -->
+    <aside
+      id="page-sidebar"
+      class="
+        flex flex-col w-56 flex-shrink-0 bg-white border-r border-gray-200 overflow-y-auto
+        /* mobile — hidden, fixed overlay when toggled */
+        fixed top-[6.5rem] left-0 bottom-0 z-[99] -translate-x-full
+        /* desktop — static in flow */
+        md:static md:translate-x-0 md:top-auto md:z-auto
+        transition-transform duration-300 ease-in-out
+      "
+    >
+      <!-- Category badge -->
+      <div class="px-3 py-3 border-b border-gray-200 bg-gray-50 sticky top-0">
+        <span class={`inline-block text-xs font-bold uppercase tracking-widest px-2 py-1 rounded ${catColor.bg} ${catColor.text}`}>
+          {categoryLabel} Tutorial
+        </span>
+      </div>
+
+      <!-- Chapter links -->
+      <nav class="py-2 flex flex-col" aria-label={`${categoryLabel} chapters`}>
+        {categoryTutorials.map((tutorial) => {
+          const isActive = tutorial.slug === currentSlug;
+          return (
+            <a
+              href={`/tutorial/${tutorial.slug}`}
+              aria-current={isActive ? 'page' : undefined}
+              class={`block px-4 py-2 text-[0.85rem] font-medium border-l-4 transition-colors ${
+                isActive
+                  ? 'border-[#04AA6D] bg-[#04AA6D] text-white'
+                  : 'border-transparent text-gray-700 hover:bg-gray-100 hover:text-[#04AA6D]'
+              }`}
+            >
+              {tutorial.data.title}
+            </a>
+          );
+        })}
+      </nav>
+    </aside>
+
+    <!-- ============================================================ -->
+    <!-- CONTENT AREA                                                  -->
+    <!-- ============================================================ -->
+    <div class="flex flex-1 min-w-0">
+
+      <!-- Article -->
+      <article class="flex-1 min-w-0 px-5 sm:px-8 lg:px-14 py-8 bg-white">
+
+        <!-- Breadcrumb -->
+        <nav class="text-xs text-gray-400 mb-6 flex items-center gap-1 flex-wrap" aria-label="Breadcrumb">
+          <a href="/" class="hover:text-[#04AA6D] transition-colors">Home</a>
+          <span>/</span>
+          <a href={`/tutorial/${category}-introduction`} class="hover:text-[#04AA6D] transition-colors capitalize">{category}</a>
+          <span>/</span>
+          <span class="text-gray-600 truncate max-w-[180px]">{title}</span>
+        </nav>
+
+        <!-- Prose Content -->
+        <div class="prose prose-gray prose-sm sm:prose-base max-w-3xl
+          prose-headings:font-bold prose-headings:text-gray-900
+          prose-a:text-[#04AA6D] prose-a:no-underline hover:prose-a:underline
+          prose-code:bg-gray-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-[#c7254e] prose-code:text-sm prose-code:font-normal
+          prose-pre:bg-[#282A35] prose-pre:text-gray-100 prose-pre:rounded-lg
+          prose-blockquote:border-[#04AA6D] prose-blockquote:bg-green-50 prose-blockquote:py-1
+          prose-li:text-gray-700">
+          <slot />
+        </div>
+
+        <!-- Prev / Next -->
+        {(() => {
+          const idx = categoryTutorials.findIndex(t => t.slug === currentSlug);
+          const prev = idx > 0 ? categoryTutorials[idx - 1] : null;
+          const next = idx < categoryTutorials.length - 1 ? categoryTutorials[idx + 1] : null;
+          if (!prev && !next) return null;
+          return (
+            <div class="flex justify-between gap-4 mt-12 pt-6 border-t border-gray-200">
+              {prev
+                ? <a href={`/tutorial/${prev.slug}`} class="flex items-center gap-2 text-sm font-semibold text-[#04AA6D] hover:underline">
+                    <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                    {prev.data.title}
+                  </a>
+                : <span/>
+              }
+              {next &&
+                <a href={`/tutorial/${next.slug}`} class="flex items-center gap-2 text-sm font-semibold text-[#04AA6D] hover:underline ml-auto">
+                  {next.data.title}
+                  <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </a>
+              }
+            </div>
+          );
+        })()}
+      </article>
+
+      <!-- Right ad rail (xl+) -->
+      <aside class="hidden xl:block w-52 flex-shrink-0 px-3 py-8 border-l border-gray-100">
+        <div class="sticky top-32">
+          <div class="text-xs text-gray-400 uppercase tracking-wider text-center mb-2">Advertisement</div>
+          <slot name="right-sidebar" />
+        </div>
+      </aside>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SIDEBAR TOGGLE SCRIPT — single source of truth               -->
+  <!-- ============================================================ -->
+  <script is:inline>
+    (function () {
+      const btn      = document.getElementById('sidebar-toggle');
+      const sidebar  = document.getElementById('page-sidebar');
+      const backdrop = document.getElementById('sidebar-backdrop');
+
+      if (!btn || !sidebar || !backdrop) return;
+
+      function openSidebar() {
+        sidebar.classList.remove('-translate-x-full');
+        sidebar.classList.add('translate-x-0');
+        backdrop.classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // prevent scroll behind
+      }
+
+      function closeSidebar() {
+        sidebar.classList.add('-translate-x-full');
+        sidebar.classList.remove('translate-x-0');
+        backdrop.classList.add('hidden');
+        document.body.style.overflow = '';
+      }
+
+      btn.addEventListener('click', () => {
+        const isOpen = !sidebar.classList.contains('-translate-x-full');
+        if (isOpen) { closeSidebar(); } else { openSidebar(); }
+      });
+
+      backdrop.addEventListener('click', closeSidebar);
+
+      // Close on md+ resize
+      window.addEventListener('resize', () => {
+        if (window.innerWidth >= 768) {
+          backdrop.classList.add('hidden');
+          document.body.style.overflow = '';
+        }
+      });
+    })();
+  </script>
+
+</BaseLayout>

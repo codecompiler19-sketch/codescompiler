@@ -1,0 +1,89 @@
+---
+// CodesCompiler CMS Admin Panel
+---
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CodesCompiler Admin</title>
+    <style>
+      body { margin: 0; font-family: sans-serif; }
+    </style>
+  </head>
+  <body>
+    <script>window.CMS_MANUAL_INIT = true;</script>
+    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    <script>
+      CMS.init({
+        config: {
+          local_backend: true,
+          backend: {
+            name: 'git-gateway',
+            branch: 'main'
+          },
+          media_folder: 'public/images/uploads',
+          public_folder: '/images/uploads',
+          collections: [
+            {
+              name: 'tutorials',
+              label: 'Tutorials',
+              label_singular: 'Tutorial',
+              folder: 'src/content/tutorials',
+              create: true,
+              delete: true,
+              extension: 'mdx',
+              format: 'frontmatter',
+              slug: '{{slug}}',
+              summary: '{{title}} — {{fields.category}} Ch.{{fields.order}}',
+              fields: [
+                {
+                  label: 'Title',
+                  name: 'title',
+                  widget: 'string',
+                  hint: 'Page title shown in browser tab and sidebar'
+                },
+                {
+                  label: 'Description',
+                  name: 'description',
+                  widget: 'string',
+                  hint: 'One sentence — used for SEO'
+                },
+                {
+                  label: 'Category',
+                  name: 'category',
+                  widget: 'select',
+                  options: [
+                    { label: 'HTML',       value: 'html'       },
+                    { label: 'CSS',        value: 'css'        },
+                    { label: 'JavaScript', value: 'javascript' },
+                  ]
+                },
+                {
+                  label: 'Chapter Order',
+                  name: 'order',
+                  widget: 'number',
+                  value_type: 'int',
+                  min: 1,
+                  hint: '1 = first chapter in sidebar'
+                },
+                {
+                  label: 'Date',
+                  name: 'date',
+                  widget: 'datetime',
+                  required: false
+                },
+                {
+                  label: 'Content',
+                  name: 'body',
+                  widget: 'markdown',
+                  hint: 'Write your tutorial in Markdown'
+                }
+              ]
+            }
+          ]
+        }
+      });
+    </script>
+  </body>
+</html>
