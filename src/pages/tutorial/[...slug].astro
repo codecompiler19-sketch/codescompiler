@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import TutorialLayout from '../../layouts/TutorialLayout.astro';
 import Editor from '../../components/Editor.astro';
 import AdSlot from '../../components/AdSlot.astro';
@@ -10,6 +10,10 @@ export async function getStaticPaths() {
     params: { slug: tutorial.slug },
     props: { tutorial },
   }));
+}
+
+interface Props {
+  tutorial: CollectionEntry<'tutorials'>;
 }
 
 const { tutorial } = Astro.props;
