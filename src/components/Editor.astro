@@ -75,7 +75,7 @@ const uid = Math.random().toString(36).slice(2, 9);
 </div>
 
 <!-- Single initialiser — runs once, finds every .tiy-root on the page -->
-<script>
+<script is:inline type="module">
   // Guard: only run the initialiser once per page load
   if (!window.__tiyInit) {
     window.__tiyInit = true;
@@ -139,9 +139,9 @@ const uid = Math.random().toString(36).slice(2, 9);
 
         // Read initial code from data attributes
         const docs = {
-          html: (wrapper as HTMLElement).dataset.html || '',
-          css:  (wrapper as HTMLElement).dataset.css  || '',
-          js:   (wrapper as HTMLElement).dataset.js   || '',
+          html: wrapper.dataset.html || '',
+          css:  wrapper.dataset.css  || '',
+          js:   wrapper.dataset.js   || '',
         };
 
         let currentLang = 'html';
@@ -178,7 +178,7 @@ const uid = Math.random().toString(36).slice(2, 9);
             });
             tab.classList.add('active-tab');
             tab.setAttribute('aria-selected', 'true');
-            createEditor((tab as HTMLElement).dataset.lang);
+            createEditor(tab.dataset.lang);
           });
         });
 
@@ -224,3 +224,4 @@ const uid = Math.random().toString(36).slice(2, 9);
     .tiy-root .w-1\/2 { width: 100%; height: 50%; }
   }
 </style>
+
