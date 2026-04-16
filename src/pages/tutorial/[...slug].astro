@@ -2,7 +2,6 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import TutorialLayout from '../../layouts/TutorialLayout.astro';
 import Editor from '../../components/Editor.astro';
-import AdSlot from '../../components/AdSlot.astro';
 
 export async function getStaticPaths() {
   const tutorials = await getCollection('tutorials');
@@ -18,30 +17,19 @@ interface Props {
 
 const { tutorial } = Astro.props;
 const { Content } = await tutorial.render();
+
+const categoryLabel = {
+  html: 'HTML',
+  css: 'CSS',
+  javascript: 'JavaScript',
+}[tutorial.data.category] ?? tutorial.data.category;
 ---
 
-<TutorialLayout 
+<TutorialLayout
   title={tutorial.data.title}
-  description={tutorial.data.description}
+  description={tutorial.data.description ?? ''}
   category={tutorial.data.category}
-  currentSlug={tutorial.slug}
+  categoryLabel={categoryLabel}
 >
-  <h1>{tutorial.data.title}</h1>
-  
-  <p class="lead text-xl text-gray-500">{tutorial.data.description}</p>
-  
-  <Content components={{ Editor, AdSlot }} />
-  
-  <!-- Content Bottom Ad -->
-  <div class="mt-12 w-full">
-    <AdSlot />
-  </div>
-
-  <!-- Right sidebar Ad Injection -->
-  <Fragment slot="right-sidebar">
-    <AdSlot format="rectangle" responsive={false} />
-    <div class="mt-8">
-      <AdSlot format="rectangle" responsive={false} />
-    </div>
-  </Fragment>
+  <Content components={{ Editor }} />
 </TutorialLayout>
