@@ -1,0 +1,22 @@
+---
+title: "HTML Geolocation"
+description: "Discover how to pinpoint an active user's geographical location using the HTML5 API."
+category: "html"
+order: 28
+---
+
+The web is a global platform, but sometimes web apps need to know precisely where you exist locally. The powerful HTML Geolocation API is used to instantly locate a user's physical geographic position.
+
+### Privacy Restrictions
+Because determining a user's exact coordinates severely impacts their physical privacy, this API is strictly governed. The user's device will aggressively prompt them with a pop-up requiring explicit permission before any location data is passed back to the website. 
+
+### Accessing Coordinates
+To acquire the latitude and longitude, you trigger the `navigator.geolocation` object directly within your JavaScript.
+
+<Editor 
+    initialHtml={`<h2>Find My Coordinates</h2>\n<button onclick="pingLocation()">Locate Me!</button>\n<p id="trackerOutput">Standing by...</p>`}
+    initialJs={`function pingLocation() {\n  const output = document.getElementById("trackerOutput");\n  \n  if (navigator.geolocation) {\n    output.innerHTML = "Requesting satellite link...";\n    navigator.geolocation.getCurrentPosition(printData);\n  } else {\n    output.innerHTML = "Your outdated browser blocks geolocation.";\n  }\n}\n\nfunction printData(position) {\n  let lat = position.coords.latitude;\n  let lon = position.coords.longitude;\n  document.getElementById("trackerOutput").innerHTML = \n    "Latitude: " + lat + "<br>Longitude: " + lon;\n}`}
+/>
+
+### Handling Geolocation Failures
+Users deny permission frequently. To build production-ready software, provide a second callback function to capture specialized error codes (like `PERMISSION_DENIED` or `POSITION_UNAVAILABLE`).

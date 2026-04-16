@@ -1,0 +1,24 @@
+---
+title: "JS Sets"
+description: "Establish rigidly unique data collections strictly destroying any duplicate clones."
+category: "javascript"
+order: 28
+---
+
+A mathematical `Set` behaves remarkably comparable to an array block, but implements a hyper-aggressive unique-variable structural law: **No raw value may ever be replicated or duplicated.**
+
+### Utilizing the Constructor
+To launch a Set, initialize new memory space using the standard `new Set()` command. Observe below as our code forcefully attempts to insert three identical variables; the internal algorithm brutally crushes the duplicate clones.
+
+<Editor 
+    initialHtml={`<h3>Fleet Registry Scanner</h3>\n<p>Attempting to register incoming ID signatures...</p>\n<p id="registry-count" style="font-weight: bold;"></p>`}
+    initialJs={`// Initializing absolute unique database array\nconst activeBeacons = new Set();\n\n// Pushing signals\nactiveBeacons.add("Ship_001");\nactiveBeacons.add("Ship_002");\nactiveBeacons.add("Ship_001"); // Attempting to duplicate - the system will obliterate this\nactiveBeacons.add("Ship_001"); // Annihilated again\n\ndocument.getElementById("registry-count").innerHTML = \n  "Total unique ship beacons detected: " + activeBeacons.size;`}
+/>
+
+### Methods of Extraction
+Testing a specific key's existence proves spectacularly faster referencing a rigid Set structure than linearly scanning an ordinary, sprawling array map using `.has()`.
+
+<Editor 
+    initialHtml={`<h3>Clearance Verification</h3>\n<p id="clearance-readout"></p>`}
+    initialJs={`const approvedSerials = new Set(["AX-99", "FX-11", "QX-55"]);\n\nlet output = "";\n\n// Instantly queries the Set matrix database\nif (approvedSerials.has("AX-99")) {\n  output += "Valid authorization detected.<br>";\n}\nif (!approvedSerials.has("ZZ-22")) {\n  output += "ACCESS DENIED: Unregistered credential.";\n}\n\ndocument.getElementById("clearance-readout").innerHTML = output;`}
+/>

@@ -1,0 +1,28 @@
+---
+title: "CSS Specificity"
+description: "Understand the mathematical weight hierarchy the browser uses to execute styling commands."
+category: "css"
+order: 29
+---
+
+When three competing CSS laws target an identical HTML tag, chaos erupts. The browser engine determines the winner by evaluating a scoring mechanism known as **Specificity**.
+
+### The Hierarchy of Power
+If conflicting constraints target identical elements, this definitive weight tier (lowest to highest) enforces order:
+
+1.  **Element tags** (`p`, `h1`): Weakest priority.
+2.  **Classes & Pseudo-classes** (`.menu-btn`, `:hover`): Medium priority.
+3.  **Unique Identifiers** (`#login-panel`): Massive priority.
+4.  **Inline HTML styling** (`style="color:red"`): God-tier priority.
+
+### Calculating the Battle
+Observe an intense clash where multiple targets collide against a solitary paragraph block.
+
+<Editor 
+    initialHtml={`<div id="wrapper-zone">\n  <p class="targetable-p">Observe the resulting pigment.</p>\n</div>`}
+    initialCss={`/* Level 1 Power (0,0,1) */\np {\n  color: black;\n}\n\n/* Level 2 Power (0,1,0) */\n.targetable-p {\n  color: blue;\n}\n\n/* Level 3 Power (1,0,0) - Dominates standard classes! */\n#wrapper-zone p {\n  color: crimson;\n}`}
+/>
+
+### The !important Hack
+If you append `!important` at the climax of a CSS directive, it shatters the structural scoring math completely, usurping absolute dominance. 
+*Note: Overusing this trick signifies heavily disorganized style frameworks.*

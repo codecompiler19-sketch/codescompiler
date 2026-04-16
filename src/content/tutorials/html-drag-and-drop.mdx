@@ -1,0 +1,23 @@
+---
+title: "HTML Drag and Drop"
+description: "Build interactive browser interfaces with native drag and drop capabilities."
+category: "html"
+order: 29
+---
+
+The ability to grab an item on the screen and fluidly drag it to a completely different location is a cornerstone of modern User Interfaces. With HTML5 native APIs, any element can become draggable!
+
+### Activating Draggable Elements
+By default, elements like paragraphs and divs are glued to the page. You must explicitly inject the `draggable="true"` attribute into the HTML tag to allow the user to pick it up.
+
+### The Anatomy of a Drop Operation
+Creating a drag-and-drop mechanism requires orchestrating specific event listeners:
+
+1.  `ondragstart`: Triggers the exact millisecond the user begins grabbing the element. You use `dataTransfer.setData()` to pack the element's ID.
+2.  `ondragover`: Attached to the receiving "drop zone". You must prevent default browser behavior to authorize the drop.
+3.  `ondrop`: Executes when the element is released over the drop zone. It reads the transferred data and moves the DOM node.
+
+<Editor 
+    initialHtml={`<div id="dropBase" ondrop="catchItem(event)" ondragover="allowHover(event)" \n     style="width: 250px; height: 100px; padding: 20px; border: 3px dashed crimson; border-radius: 8px;">\n</div>\n\n<br>\n<img id="myAvatar" src="https://codescompiler.com/og-image.png" draggable="true" ondragstart="pickup(event)" width="80" style="cursor: grab;">`}
+    initialJs={`function allowHover(event) {\n  // Required to allow dropping\n  event.preventDefault();\n}\n\nfunction pickup(event) {\n  // Register the ID of the flying element\n  event.dataTransfer.setData("elementId", event.target.id);\n}\n\nfunction catchItem(event) {\n  event.preventDefault();\n  // Unpack the element ID and append it into the Target Zone\n  let flyingId = event.dataTransfer.getData("elementId");\n  event.target.appendChild(document.getElementById(flyingId));\n}`}
+/>

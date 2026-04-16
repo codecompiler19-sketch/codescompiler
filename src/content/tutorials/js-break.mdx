@@ -1,0 +1,25 @@
+---
+title: "JS Break"
+description: "Shatter out of infinite loops organically using JavaScript break and continue statements."
+category: "javascript"
+order: 26
+---
+
+Executing a loop is extremely powerful, but occasionally an active process encounters an anomalistic condition necessitating an immediate, violent engine cutoff. The `break` and `continue` keywords provide this emergency abort logic.
+
+### The Break Command
+You have likely witnessed the `break` command terminating a `switch()` condition. Inside a standard orbital array loop, `break` entirely annihilates the loops sequence, ejecting the compiler instantly safely outside the bracket constraints.
+
+<Editor 
+    initialHtml={`<h3>Atmospheric Scanner Array</h3>\n<p>Scanning sectors up to max threshold. Halting operations instantly if anomalous signature (Sector 4) is detected.</p>\n<p id="system-log" style="font-family: monospace;"></p>`}
+    initialJs={`let dataStream = "";\n\nfor (let sector = 1; sector < 10; sector++) {\n  if (sector === 4) {\n    dataStream += ">> CRITICAL ANOMALY SECTOR 4 - ABORTING SCAN<br>";\n    break;\n  }\n  dataStream += "Sector " + sector + " clear.<br>";\n}\n\ndocument.getElementById("system-log").innerHTML = dataStream;`}
+/>
+
+### The Continue Command
+Alternatively, what if the engine encounters corrupted data causing a minor fault, but wants to keep scanning future sectors?
+The `continue` directive abandons *only the currently executing iteration cycle*, seamlessly leaping back to the top to calculate the next index sequence.
+
+<Editor 
+    initialHtml={`<h3>Comms Array Bypass</h3>\n<p>Bypassing corrupted Sector 3 transmission node but continuing relay link sequence.</p>\n<p id="commsLog" style="font-family: monospace;"></p>`}
+    initialJs={`let relayOutput = "";\n\nfor (let i = 1; i <= 5; i++) {\n  if (i === 3) {\n    relayOutput += "[Node 3 Corrupted - Skipping]<br>";\n    continue;\n  }\n  relayOutput += "Ping Node " + i + " successful.<br>";\n}\n\ndocument.getElementById("commsLog").innerHTML = relayOutput;`}
+/>

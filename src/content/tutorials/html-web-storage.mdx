@@ -1,0 +1,24 @@
+---
+title: "HTML Web Storage"
+description: "Save local application data directly inside the user's web browser securely."
+category: "html"
+order: 30
+---
+
+Before HTML5, web engineers were forced to desperately store temporary application data inside clumsy browser Cookies. Today, the HTML Web Storage API provides a massively secure, highly localized mechanism to store megabytes of variables locally.
+
+### LocalStorage vs SessionStorage
+Web storage is incredibly straightforward. The browser provides two unique vaults:
+
+*   `window.localStorage` - Saves raw data forever. It never expires, surviving browser restarts and computer reboots.
+*   `window.sessionStorage` - A temporary chamber. The second the website tab closes, the stored data disintegrates permanently.
+
+### Accessing the Web Vault
+You interact with both storages using standard getter and setter commands. Let's record a user's nickname!
+
+<Editor 
+    initialHtml={`<h2>Local Data Bank</h2>\n<button onclick="saveIdentity()">Save Identity</button>\n<button onclick="recallIdentity()">Load Identity</button>\n\n<p id="outputPanel" style="margin-top:20px; font-weight: bold;"></p>`}
+    initialJs={`function saveIdentity() {\n  // Saving into permanent storage\n  localStorage.setItem("topPlayer", "Commander Shepard");\n  document.getElementById("outputPanel").innerHTML = "System successfully updated local drive with commander credentials.";\n}\n\nfunction recallIdentity() {\n  // Reading from local storage\n  let loadedName = localStorage.getItem("topPlayer");\n  if(loadedName === null) {\n     document.getElementById("outputPanel").innerHTML = "Error: No data found. Did you save first?";\n  } else {\n     document.getElementById("outputPanel").innerHTML = "Welcome back, " + loadedName + "!";\n  }\n}`}
+/>
+
+> **Warning:** Information stored in the local cache is readable via Developer Tools. Never dump strictly confidential information like API keys or passwords directly into localStorage!

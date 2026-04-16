@@ -1,0 +1,19 @@
+---
+title: "CSS Counters"
+description: "Discover how to employ CSS integer variables to automatically number your headings and elements."
+category: "css"
+order: 26
+---
+
+CSS Counters are effectively "internal variables" preserved exclusively by CSS layout algorithms. You can increment or decrement them dynamically, enabling your style architecture to autonomously append numerical markings to paragraphs, headings, or list items without writing tedious JavaScript loops.
+
+### Initiating a Counter
+To utilize this feature, the counter must initially be born. You create one at the root element of your choice using `counter-reset`. Subsequently, `counter-increment` nudges the variable skyward.
+
+<Editor 
+    initialHtml={`<h2>Cosmic Chapters</h2>\n<div class="booklet">\n  <h3 class="chapter">Launch Preparations</h3>\n  <p>Commencing primary ignition protocols.</p>\n  \n  <h3 class="chapter">Orbital Insertion</h3>\n  <p>Calculating planetary rotation vectors.</p>\n  \n  <h3 class="chapter">Hyperdrive Spooling</h3>\n  <p>Engaging faster-than-light trajectories.</p>\n</div>`}
+    initialCss={`.booklet {\n  /* Initializes our custom counter named 'spaceIndex' */\n  counter-reset: spaceIndex;\n}\n\n.chapter::before {\n  /* Nudges the counter +1 */\n  counter-increment: spaceIndex;\n  /* Injects the raw number directly into the DOM */\n  content: "Sector " counter(spaceIndex) " - ";\n  color: #04AA6D;\n  font-weight: 800;\n}`}
+/>
+
+### Nesting Counters
+This technique gets profoundly powerful when building legally-bound hierarchical contracts or sub-chapters, where counters reset whenever a new primary class emerges.

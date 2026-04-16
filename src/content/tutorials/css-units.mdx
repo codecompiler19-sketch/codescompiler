@@ -1,0 +1,29 @@
+---
+title: "CSS Units"
+description: "Master the mathematical distances defining sizing and typography scaling."
+category: "css"
+order: 28
+---
+
+To designate padding expanses, structural lengths, or typographic weights, CSS utilizes an array of distinct measurement designations. Understanding the discrepancy between absolute lengths and scalable measurements is critical.
+
+### Absolute vs Relative
+Measurements branch into two severe categories:
+
+*   **Absolute Lengths**: Hard-coded distances. A pixel length (`px`) will rigidly render EXACTLY that magnitude, entirely uncaring toward user screen sizes.
+*   **Relative Lengths**: Reactive distances. Sizes shift dynamically referencing other dominant components globally.
+
+<Editor 
+    initialHtml={`<h3>Absolute Pixels vs Relative Viewports</h3>\n<div class="rigid-box">I span exactly 200 pixels laterally.</div>\n<br>\n<div class="fluid-box">I devour precisely 50% of parent width.</div>`}
+    initialCss={`.rigid-box {\n  width: 200px;\n  background-color: #FF5722;\n  color: white;\n  padding: 10px;\n}\n\n.fluid-box {\n  width: 50%;\n  background-color: #04AA6D;\n  color: white;\n  padding: 10px;\n}`}
+/>
+
+### The REM Typography Revolution
+Using simple `px` for font scaling crushes accessibility for partially sighted users attempting to scale text. Alternatively, deploying the `rem` constraint designates sizing directly dependent upon the raw HTML root size (defaulting historically to 16px).
+
+```css
+p {
+  font-size: 1.5rem; /* Calculates accurately to ~24px */
+}
+```
+If an individual manipulates their custom browser font metric bigger, your entire website interface will gracefully inflate proportionately avoiding broken overlapping grids.
