@@ -1,0 +1,22 @@
+---
+title: "HTML Server-Sent Events"
+description: "Establish a one-way pipeline forcing constant streams of data silently from the server to your screen."
+category: "html"
+order: 36
+---
+
+In traditional HTTP models, the browser must aggressively ask the server if new data exists via AJAX polling. HTML5 introduced **Server-Sent Events (SSE)**, which completely shatters this paradigm by holding a single channel open, allowing the server to blast data downward completely autonomously.
+
+### The SSE Pipeline
+Instead of constantly asking "Is the ship here yet?", the server simply holds the line open and shouts "Ship approaching!" the exact millisecond it happens. 
+
+<Editor 
+    initialHtml={`<h3>Global Command Uplink</h3>\n<p>Monitoring perpetual server heartbeat...</p>\n<p id="uplink-console" style="color: green; font-family: monospace;">Awaiting synchronization...</p>`}
+    initialJs={`if(typeof(EventSource) !== "undefined") {\n  // In a real environment, you point this to a PHP/Node backend file\n  // let sourceNode = new EventSource("tactical_stream.php");\n  \n  // sourceNode.onmessage = function(event) {\n  //   document.getElementById("uplink-console").innerHTML += event.data + "<br>";\n  // };\n  \n  document.getElementById("uplink-console").innerHTML = "EventSource Architecture verified. Ready to receive autonomous backend telemetry packets.";\n} else {\n  document.getElementById("uplink-console").innerHTML = "FATAL: Your outdated browser rejects SSE pipelines.";\n}`}
+/>
+
+### Common Use Cases
+You witness SSE constantly across modern infrastructure:
+*   Live stock market tickers pumping values.
+*   Twitter or Facebook feed arrays injecting alerts natively.
+*   Sports telemetry dashboards updating scores seamlessly.
