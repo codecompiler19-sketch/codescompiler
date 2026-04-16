@@ -27,7 +27,7 @@
 
     /* ── Admin Top Bar ── */
     .admin-bar { position: fixed; top: 0; left: 0; right: 0; height: 32px; background: #1d2327; z-index: 1000; display: flex; align-items: center; padding: 0 16px; gap: 16px; }
-    .admin-bar a { color: #c3c4c7; font-size: 11px; text-decoration: none; display: flex; align-items: center; gap: 4px; }
+    .admin-bar a { color: #c3c4c7; font-size: 11px; text-decoration: none; display: flex; align-items: center; gap: 4px; cursor:pointer; }
     .admin-bar a:hover { color: #00b9eb; }
     .admin-bar .ab-right { margin-left: auto; display: flex; gap: 14px; }
     .admin-bar .dot { width: 6px; height: 6px; border-radius: 50%; background: #04AA6D; display: inline-block; }
@@ -45,8 +45,6 @@
     .nav-item .ni { width: 18px; text-align: center; font-size: 14px; flex-shrink: 0; }
     .nav-item .count { margin-left: auto; background: rgba(255,255,255,.1); color: #94a3b8; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 10px; }
     .nav-item.active .count { background: rgba(4,170,109,.2); color: var(--primary); }
-    .nav-sub { padding-left: 44px; }
-    .nav-sub .nav-item { padding: 6px 16px 6px 0; font-size: 12px; border-left: none; }
 
     /* ── Main ── */
     .main { margin-left: 220px; margin-top: 32px; min-height: calc(100vh - 32px); display: flex; flex-direction: column; }
@@ -56,15 +54,12 @@
     .page { padding: 24px 28px; flex: 1; }
 
     /* ── Cards & Widgets ── */
-    .widget-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .widget-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
     .widget { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
     .widget-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--text-muted); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
     .stat-card { text-align: center; }
     .stat-card .stat-num { font-size: 36px; font-weight: 900; color: var(--primary); }
     .stat-card .stat-label { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
-    .stat-card.html .stat-num { color: #e34c26; }
-    .stat-card.css .stat-num { color: #264de4; }
-    .stat-card.js .stat-num { color: #f0db4f; }
 
     /* ── Table ── */
     .wp-table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
@@ -73,19 +68,15 @@
     .wp-table tbody tr:hover { background: #f8fafc; }
     .wp-table .post-title { color: var(--info); font-weight: 600; cursor: pointer; }
     .wp-table .post-title:hover { color: var(--primary); }
-    .wp-table .row-actions { font-size: 11px; color: var(--text-light); margin-top: 3px; }
-    .wp-table .row-actions a { color: var(--info); text-decoration: none; cursor: pointer; }
-    .wp-table .row-actions a.trash { color: var(--danger); }
-    .wp-table .row-actions a:hover { text-decoration: underline; }
     .wp-table tbody tr:last-child td { border-bottom: none; }
 
     /* ── Status badge ── */
     .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; }
     .badge-published { background: #d1fae5; color: #065f46; }
-    .badge-draft { background: #fef3c7; color: #92400e; }
     .badge-html { background: #fff4ee; color: #c2410c; }
     .badge-css { background: #eff6ff; color: #1d4ed8; }
     .badge-javascript { background: #fefce8; color: #a16207; }
+    .badge-blog { background: #f3e8ff; color: #7c3aed; }
 
     /* ── Buttons ── */
     .btn { padding: 8px 16px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all .12s; display: inline-flex; align-items: center; gap: 5px; font-family: inherit; }
@@ -101,43 +92,31 @@
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     .form-group { margin-bottom: 16px; }
     .form-group label { display: block; font-size: 12px; font-weight: 600; color: #374151; margin-bottom: 5px; }
-    .form-group label .hint-inline { font-weight: 400; color: var(--text-light); }
+    .form-group label .hint { font-weight: 400; color: var(--text-light); }
     input, select, textarea { width: 100%; padding: 8px 12px; border: 1.5px solid var(--border); border-radius: 6px; font-size: 13px; font-family: 'Inter', sans-serif; outline: none; transition: border .15s; background: #fafbfc; }
     input:focus, select:focus, textarea:focus { border-color: var(--primary); background: #fff; }
     textarea.code { font-family: 'Fira Code', 'Consolas', monospace; font-size: 12px; line-height: 1.7; resize: vertical; }
-    .hint { font-size: 11px; color: var(--text-light); margin-top: 3px; }
-
-    /* ── Section dividers ── */
-    .section-divider { border: none; border-top: 1px solid var(--border); margin: 6px 0 18px; }
-    .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text-muted); margin-bottom: 14px; display: flex; align-items: center; gap: 6px; }
+    .hint-text { font-size: 11px; color: var(--text-light); margin-top: 3px; }
 
     /* ── Alert ── */
     .alert { padding: 10px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; margin-bottom: 16px; display: none; border-left: 4px solid; }
     .alert-success { background: #d1fae5; color: #065f46; border-color: var(--primary); }
     .alert-error { background: #fee2e2; color: #991b1b; border-color: var(--danger); }
-    .alert-info { background: #dbeafe; color: #1e40af; border-color: var(--info); }
 
     /* ── Tabs ── */
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    /* ── SEO Score ── */
-    .seo-circle { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 900; color: #fff; flex-shrink: 0; }
-    .score-good { background: #16a34a; }
-    .score-ok { background: #d97706; }
-    .score-bad { background: #dc2626; }
-    .score-none { background: #d1d5db; }
+    /* ── Nav item editor ── */
+    .nav-editor-item { display: flex; gap: 8px; margin-bottom: 8px; align-items: center; }
+    .nav-editor-item input { flex: 1; }
+    .nav-editor-item .color-input { width: 50px; padding: 2px; }
 
-    /* ── Quick Draft Widget ── */
-    .quick-draft textarea { min-height: 80px; margin-bottom: 10px; resize: vertical; }
-
-    /* ── Filter bar ── */
-    .filter-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
-    .filter-bar select, .filter-bar input { width: auto; min-width: 140px; padding: 6px 10px; font-size: 12px; }
-    .filter-count { font-size: 12px; color: var(--text-muted); }
-
-    /* ── Toolbar ── */
-    .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+    /* ── Sidebar item list ── */
+    .sidebar-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: #f8f9fa; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 4px; cursor: grab; }
+    .sidebar-item .drag-handle { color: var(--text-light); cursor: grab; }
+    .sidebar-item .item-title { flex: 1; font-size: 13px; font-weight: 500; }
+    .sidebar-item .item-order { font-size: 11px; color: var(--text-light); width: 30px; text-align: center; }
 
     /* ── Responsive ── */
     @media (max-width: 800px) {
@@ -155,8 +134,8 @@
   <a href="http://localhost:4321" target="_blank"><span class="dot"></span> CodesCompiler</a>
   <a href="http://localhost:4321" target="_blank">🌐 Visit Site</a>
   <div class="ab-right">
-    <a onclick="showTab('create')">➕ New</a>
-    <a onclick="showTab('seo-tools')">📊 SEO</a>
+    <a onclick="showTab('tutorial-create')">➕ New Tutorial</a>
+    <a onclick="showTab('blog-create')">✍️ New Blog</a>
     <span style="color:#64748b;font-size:11px">Admin</span>
   </div>
 </div>
@@ -171,21 +150,18 @@
     <div class="nav-section">Main</div>
     <a class="nav-item active" id="nav-dashboard" onclick="showTab('dashboard')"><span class="ni">📊</span> Dashboard</a>
 
-    <div class="nav-section">Content</div>
-    <a class="nav-item" id="nav-posts" onclick="showTab('posts')"><span class="ni">📝</span> All Posts <span class="count" id="post-count">0</span></a>
-    <a class="nav-item" id="nav-create" onclick="showTab('create')"><span class="ni">✏️</span> Add New</a>
+    <div class="nav-section">Tutorials</div>
+    <a class="nav-item" id="nav-tutorials" onclick="showTab('tutorials')"><span class="ni">📝</span> All Tutorials <span class="count" id="tutorial-count">0</span></a>
+    <a class="nav-item" id="nav-tutorial-create" onclick="showTab('tutorial-create')"><span class="ni">✏️</span> Add Tutorial</a>
+
+    <div class="nav-section">Blog</div>
     <a class="nav-item" id="nav-blogs" onclick="showTab('blogs')"><span class="ni">📰</span> Blog Posts <span class="count" id="blog-count">0</span></a>
-    <a class="nav-item" id="nav-blog-create" onclick="showTab('blog-create')"><span class="ni">✍️</span> New Blog</a>
-    <a class="nav-item" id="nav-pages" onclick="showTab('pages')"><span class="ni">📄</span> Pages</a>
-    <a class="nav-item" id="nav-media" onclick="showTab('media')"><span class="ni">🖼️</span> Media</a>
+    <a class="nav-item" id="nav-blog-create" onclick="showTab('blog-create')"><span class="ni">✍️</span> Add Blog Post</a>
 
-    <div class="nav-section">SEO</div>
-    <a class="nav-item" id="nav-seo-audit" onclick="showTab('seo-audit')"><span class="ni">🔍</span> SEO Audit</a>
-    <a class="nav-item" id="nav-seo-tools" onclick="showTab('seo-tools')"><span class="ni">🛠️</span> SEO Tools</a>
-
-    <div class="nav-section">Settings</div>
-    <a class="nav-item" id="nav-header" onclick="showTab('header')"><span class="ni">🔗</span> Navigation</a>
-    <a class="nav-item" id="nav-settings" onclick="showTab('settings')"><span class="ni">⚙️</span> General</a>
+    <div class="nav-section">Site Management</div>
+    <a class="nav-item" id="nav-sidebar-mgr" onclick="showTab('sidebar-mgr')"><span class="ni">📑</span> Sidebar Order</a>
+    <a class="nav-item" id="nav-navbar" onclick="showTab('navbar')"><span class="ni">🔗</span> Nav Bar</a>
+    <a class="nav-item" id="nav-settings" onclick="showTab('settings')"><span class="ni">⚙️</span> Settings</a>
 
     <div class="nav-section" style="margin-top:16px;border-top:1px solid rgba(255,255,255,.05);padding-top:16px">
       <a href="http://localhost:4321" target="_blank" style="color:#64748b;font-size:11px;text-decoration:none">🌐 View Live Site →</a>
@@ -202,257 +178,239 @@
   <div class="page">
     <div id="alert" class="alert"></div>
 
-    <!-- ═══════════════════════════════ DASHBOARD ═══════════════════════════════ -->
+    <!-- ═══════════════ DASHBOARD ═══════════════ -->
     <div id="tab-dashboard" class="tab-content active">
-      <div class="widget-grid" id="dash-stats" style="grid-template-columns:repeat(5,1fr)"></div>
-
+      <div class="widget-grid" id="dash-stats"></div>
       <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px">
-        <!-- At a Glance -->
         <div class="widget">
           <div class="widget-title">📋 Recent Posts</div>
-          <table class="wp-table" style="border:none" id="dash-recent-table">
-            <thead><tr><th>Title</th><th>Category</th><th>Status</th></tr></thead>
-            <tbody id="dash-recent"></tbody>
+          <table class="wp-table" style="border:none">
+            <thead><tr><th>Title</th><th>Type</th><th>Category</th></tr></thead>
+            <tbody id="dash-recent"><tr><td colspan="3" style="text-align:center;color:var(--text-light);padding:16px">Loading...</td></tr></tbody>
           </table>
         </div>
-
-        <!-- Quick Draft -->
         <div>
           <div class="widget">
             <div class="widget-title">✏️ Quick Draft</div>
             <div class="form-group"><input id="qd-title" placeholder="Post title..."/></div>
-            <div class="form-group"><textarea class="quick-draft" id="qd-content" placeholder="What's on your mind?"></textarea></div>
+            <div class="form-group"><select id="qd-type"><option value="tutorial">Tutorial</option><option value="blog">Blog</option></select></div>
+            <div class="form-group"><select id="qd-category"><option value="html">HTML</option><option value="css">CSS</option><option value="javascript">JavaScript</option></select></div>
+            <div class="form-group"><textarea id="qd-content" style="min-height:80px;resize:vertical" placeholder="What's on your mind?"></textarea></div>
             <button class="btn btn-primary" onclick="quickDraft()">Save Draft</button>
           </div>
-          <div class="widget" style="margin-top:16px">
-            <div class="widget-title">🔍 SEO Overview</div>
-            <div id="dash-seo-summary" style="font-size:12px;color:#6b7280">Loading...</div>
-          </div>
         </div>
       </div>
     </div>
 
-    <!-- ═══════════════════════════════ ALL POSTS ═══════════════════════════════ -->
-    <div id="tab-posts" class="tab-content">
-      <div class="toolbar">
-        <div class="filter-bar">
-          <select id="filter-cat" onchange="loadPosts()">
-            <option value="">All Categories</option>
-            <option value="html">HTML</option>
-            <option value="css">CSS</option>
-            <option value="javascript">JavaScript</option>
-          </select>
-          <input type="text" id="filter-search" placeholder="🔍 Search posts..." oninput="loadPosts()" style="min-width:200px"/>
-          <span class="filter-count" id="posts-count-label">0 items</span>
-        </div>
-        <button class="btn btn-primary" onclick="showTab('create')">➕ Add New Post</button>
-      </div>
-
-      <table class="wp-table">
-        <thead>
-          <tr>
-            <th style="width:30px"><input type="checkbox" id="check-all" onclick="toggleAllChecks()"/></th>
-            <th>Title</th>
-            <th>Category</th>
-            <th>Order</th>
-            <th>SEO</th>
-            <th>Date</th>
-            <th style="width:180px">Actions</th>
-          </tr>
-        </thead>
-        <tbody id="posts-tbody"></tbody>
-      </table>
-
-      <div style="margin-top:12px;display:flex;gap:8px">
-        <select id="bulk-action" style="width:auto">
-          <option>Bulk Actions</option>
-          <option value="delete">Delete Selected</option>
+    <!-- ═══════════════ ALL TUTORIALS ═══════════════ -->
+    <div id="tab-tutorials" class="tab-content">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+        <select id="filter-cat" onchange="loadTutorials()" style="width:auto;min-width:140px;padding:6px 10px;font-size:12px">
+          <option value="">All Categories</option>
+          <option value="html">HTML</option>
+          <option value="css">CSS</option>
+          <option value="javascript">JavaScript</option>
         </select>
-        <button class="btn btn-outline btn-sm" onclick="bulkAction()">Apply</button>
+        <input type="text" id="filter-search" placeholder="🔍 Search..." oninput="loadTutorials()" style="width:auto;min-width:200px;padding:6px 10px;font-size:12px"/>
+        <span id="tutorial-count-label" style="font-size:12px;color:var(--text-muted)">0 items</span>
+        <span style="flex:1"></span>
+        <button class="btn btn-primary" onclick="showTab('tutorial-create')">➕ Add New Tutorial</button>
       </div>
+      <table class="wp-table">
+        <thead><tr><th>Title</th><th>Category</th><th>Order</th><th>Actions</th></tr></thead>
+        <tbody id="tutorials-tbody"><tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text-light)">Loading...</td></tr></tbody>
+      </table>
     </div>
 
-    <!-- ═══════════════════════════════ ADD NEW / EDIT ═══════════════════════════════ -->
-    <div id="tab-create" class="tab-content">
-      <div class="editor-layout" style="display:grid;grid-template-columns:1fr 320px;gap:20px;align-items:start">
-        <!-- Main editor -->
+    <!-- ═══════════════ ADD/EDIT TUTORIAL ═══════════════ -->
+    <div id="tab-tutorial-create" class="tab-content">
+      <div class="editor-layout" style="display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start">
         <div>
-          <div class="form-card" style="margin-bottom:16px">
-            <input type="hidden" id="edit-file"/>
-            <div class="form-group">
-              <input id="f-title" type="text" placeholder="Enter title here" style="font-size:20px;font-weight:700;padding:12px;border:none;border-bottom:2px solid var(--border);border-radius:0;background:transparent" oninput="updateSnippet();runSeoAnalysis()"/>
+          <!-- Edit mode banner -->
+          <div id="edit-banner" style="display:none;background:#fff8e1;border:1px solid #f59e0b;border-radius:8px;padding:10px 16px;margin-bottom:12px;align-items:center;justify-content:space-between;gap:12px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:16px">✏️</span>
+              <div>
+                <div style="font-size:12px;font-weight:700;color:#92400e">Editing Post</div>
+                <div id="edit-banner-file" style="font-size:11px;color:#b45309;font-family:monospace"></div>
+              </div>
             </div>
-            <div style="margin-top:12px;display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-light)">
+            <button class="btn btn-outline btn-sm" onclick="clearTutorialForm()" style="border-color:#f59e0b;color:#92400e;flex-shrink:0">✕ Cancel Edit</button>
+          </div>
+
+          <div class="form-card" style="margin-bottom:16px">
+            <input type="hidden" id="t-edit-file"/>
+            <div class="form-group" style="margin-bottom:10px">
+              <input id="t-title" type="text" placeholder="Enter tutorial title here" style="font-size:20px;font-weight:700;padding:12px;border:none;border-bottom:2px solid var(--border);border-radius:0;background:transparent" oninput="autoTutorialSlug()"/>
+            </div>
+            <div class="form-group" style="margin-bottom:10px">
+              <label>Description <span class="hint">(shown in Google results)</span></label>
+              <input id="t-description" type="text" placeholder="e.g. Learn what CSS is and how it styles web pages..."/>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-light)">
               <span>Permalink:</span>
               <span style="color:var(--text-muted)">codescompiler.com/tutorial/</span>
-              <input id="f-filename" type="text" placeholder="auto-slug" style="width:160px;padding:3px 6px;font-size:11px;border:1px dashed var(--border);background:transparent" oninput="updateSnippet()"/>
+              <input id="t-slug" type="text" placeholder="auto-generated" style="width:200px;padding:3px 6px;font-size:11px;border:1px dashed var(--border);background:transparent"/>
             </div>
           </div>
 
-          <!-- Content Editor -->
           <div class="form-card" style="margin-bottom:16px">
-            <div class="widget-title">📝 Content</div>
-            <textarea id="f-content" class="code" style="min-height:320px" oninput="runSeoAnalysis()" placeholder="## Introduction&#10;&#10;Write your tutorial here using Markdown...&#10;&#10;### Examples&#10;&#10;Use &lt;Editor initialHtml={...} /&gt; for live code editors."></textarea>
+            <div class="widget-title">📝 Content (Markdown/MDX)</div>
+            <textarea id="t-content" class="code" style="min-height:400px" placeholder="## Introduction
+
+Write your tutorial here using Markdown...
+
+### Code Example
+
+```html
+<h1>Hello World</h1>
+```"></textarea>
             <div style="display:flex;justify-content:space-between;margin-top:8px">
-              <span class="hint" id="word-count">Words: 0 | Characters: 0</span>
-              <span class="hint" id="read-time">Reading time: 0 min</span>
+              <span class="hint-text" id="t-word-count">Words: 0</span>
+              <span class="hint-text" id="t-read-time">~0 min read</span>
             </div>
           </div>
 
-          <!-- SEO Settings Panel -->
-          <div class="form-card" style="margin-bottom:16px">
-            <div class="widget-title">🔍 SEO Settings <span style="font-weight:400;color:var(--text-light)">— Yoast-style optimization</span></div>
-
-            <div class="form-group">
-              <label>Focus Keyword <span class="hint-inline">(primary ranking keyword)</span></label>
-              <input id="f-keyword" type="text" placeholder="e.g. html headings tutorial" oninput="runSeoAnalysis()"/>
-            </div>
-            <div class="form-group">
-              <label>SEO Title <span class="hint-inline" id="seo-title-count">0/60</span></label>
-              <input id="f-seo-title" type="text" placeholder="Leave blank to use post title" oninput="updateSnippet()"/>
-              <div style="height:3px;background:#e5e7eb;border-radius:2px;margin-top:4px"><div id="title-bar" style="height:100%;width:0;background:#04AA6D;border-radius:2px;transition:width .2s"></div></div>
-            </div>
-            <div class="form-group">
-              <label>Meta Description <span class="hint-inline" id="desc-count">0/160</span></label>
-              <textarea id="f-description" style="min-height:60px" placeholder="Compelling description for Google search results..." oninput="updateDescCount();updateSnippet();runSeoAnalysis()"></textarea>
-              <div style="height:3px;background:#e5e7eb;border-radius:2px;margin-top:4px"><div id="desc-bar" style="height:100%;width:0;background:#04AA6D;border-radius:2px;transition:width .2s"></div></div>
-            </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label>Canonical URL</label>
-                <input id="f-canonical" type="text" placeholder="https://codescompiler.com/..."/>
+          <!-- SEO (collapsed by default) -->
+          <details class="form-card" style="margin-bottom:16px">
+            <summary style="cursor:pointer;font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em">🔍 SEO Settings (Optional)</summary>
+            <div style="margin-top:14px">
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Focus Keyword</label>
+                  <input id="t-keyword" type="text" placeholder="e.g. html headings"/>
+                </div>
+                <div class="form-group">
+                  <label>SEO Title</label>
+                  <input id="t-seo-title" type="text" placeholder="Leave blank to use post title"/>
+                </div>
               </div>
-              <div class="form-group">
-                <label>Robots Directive</label>
-                <select id="f-noindex">
-                  <option value="">Index, Follow (default)</option>
-                  <option value="noindex">NoIndex (hide from Google)</option>
-                  <option value="nofollow">NoFollow</option>
-                  <option value="noindex,nofollow">NoIndex, NoFollow</option>
-                </select>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Canonical URL</label>
+                  <input id="t-canonical" type="text" placeholder="https://codescompiler.com/..."/>
+                </div>
+                <div class="form-group">
+                  <label>Robots</label>
+                  <select id="t-noindex">
+                    <option value="">Index, Follow</option>
+                    <option value="noindex">NoIndex</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>OG Title</label>
+                  <input id="t-og-title" type="text" placeholder="Leave blank for post title"/>
+                </div>
+                <div class="form-group">
+                  <label>OG Description</label>
+                  <input id="t-og-desc" type="text" placeholder="Leave blank for description"/>
+                </div>
               </div>
             </div>
-          </div>
-
-          <!-- Open Graph -->
-          <div class="form-card">
-            <div class="widget-title">📱 Social / Open Graph</div>
-            <div class="form-group">
-              <label>OG Title <span class="hint-inline">(for Facebook/Twitter cards)</span></label>
-              <input id="f-og-title" type="text" placeholder="Leave blank to use SEO title"/>
-            </div>
-            <div class="form-group">
-              <label>OG Description</label>
-              <textarea id="f-og-desc" style="min-height:50px" placeholder="Leave blank to use meta description"></textarea>
-            </div>
-          </div>
+          </details>
         </div>
 
-        <!-- Right Sidebar -->
+        <!-- Right sidebar — Publish box -->
         <div>
-          <!-- Publish Box -->
           <div class="form-card" style="margin-bottom:12px">
-            <div class="widget-title">📤 Publish</div>
-            <div class="form-row" style="gap:8px">
-              <div class="form-group" style="margin-bottom:8px">
-                <label>Category</label>
-                <select id="f-category">
-                  <option value="html">HTML</option>
-                  <option value="css">CSS</option>
-                  <option value="javascript">JavaScript</option>
-                </select>
-              </div>
-              <div class="form-group" style="margin-bottom:8px">
-                <label>Order</label>
-                <input id="f-order" type="number" value="1" min="1"/>
-              </div>
+            <div id="t-publish-title" class="widget-title">📤 Publish</div>
+            <div class="form-group" style="margin-bottom:8px">
+              <label>Category</label>
+              <select id="t-category">
+                <option value="html">HTML</option>
+                <option value="css">CSS</option>
+                <option value="javascript">JavaScript</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom:8px">
+              <label>Order <span class="hint">(chapter #)</span></label>
+              <input id="t-order" type="number" value="1" min="1"/>
+            </div>
+            <div id="t-status-row" style="display:none;align-items:center;gap:6px;margin-bottom:10px;font-size:12px">
+              <span class="badge badge-published">✅ Published</span>
+              <span id="t-status-file" style="color:var(--text-muted);font-size:11px;font-family:monospace"></span>
             </div>
             <div style="display:flex;gap:8px;margin-top:4px">
-              <button class="btn btn-primary btn-lg" style="flex:1" onclick="savePost()">💾 Publish</button>
-              <button class="btn btn-outline" onclick="clearForm()">Clear</button>
+              <button id="t-publish-btn" class="btn btn-primary btn-lg" style="flex:1" onclick="saveTutorial()">🚀 Publish</button>
+              <button class="btn btn-outline" onclick="clearTutorialForm()" title="Discard">✕</button>
             </div>
           </div>
 
-          <!-- Google Preview -->
-          <div class="form-card" style="margin-bottom:12px">
-            <div class="widget-title">🔎 Google Preview</div>
-            <div style="border:1px solid var(--border);border-radius:8px;padding:12px;background:#fff">
-              <div id="snip-url" style="font-size:11px;color:#006621;margin-bottom:2px">codescompiler.com › tutorial</div>
-              <div id="snip-title" style="font-size:16px;color:#1a0dab;font-weight:400;line-height:1.3;margin-bottom:3px">Page Title — CodesCompiler</div>
-              <div id="snip-desc" style="font-size:12px;color:#545454;line-height:1.45">Your meta description will appear here in search results...</div>
-            </div>
-          </div>
-
-          <!-- SEO Score -->
-          <div class="form-card" style="margin-bottom:12px">
-            <div class="widget-title">🏆 SEO Score</div>
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-              <div id="seo-score-circle" class="seo-circle score-none">?</div>
-              <div>
-                <div id="seo-score-label" style="font-weight:700;font-size:14px">Enter keyword</div>
-                <div id="seo-score-sub" style="font-size:11px;color:var(--text-light)">to analyze</div>
-              </div>
-            </div>
-            <div id="seo-checks"></div>
-          </div>
-
-          <!-- Readability -->
-          <div class="form-card">
-            <div class="widget-title">📖 Readability</div>
-            <div id="readability-checks"></div>
+          <div class="widget" style="padding:16px">
+            <div class="widget-title">💡 Tips</div>
+            <ul style="font-size:12px;color:var(--text-muted);line-height:1.8;padding-left:16px">
+              <li>Use <code>## Heading</code> for sections</li>
+              <li>Use <code>```html</code> for code blocks</li>
+              <li>Category groups tutorials in sidebar</li>
+              <li>Order sets the chapter position</li>
+            </ul>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ═══════════════════════════════ BLOG POSTS ═══════════════════════════════ -->
+    <!-- ═══════════════ ALL BLOGS ═══════════════ -->
     <div id="tab-blogs" class="tab-content">
-      <div class="toolbar">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap">
         <input type="text" id="blog-search" placeholder="🔍 Search blogs..." oninput="loadBlogs()" style="width:auto;min-width:200px;padding:6px 10px;font-size:12px"/>
+        <span style="flex:1"></span>
         <button class="btn btn-primary" onclick="showTab('blog-create')">➕ New Blog Post</button>
       </div>
       <table class="wp-table">
-        <thead><tr><th>Title</th><th>Category</th><th>Date</th><th>SEO</th><th>Actions</th></tr></thead>
-        <tbody id="blogs-tbody"><tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text-light)">No blog posts yet</td></tr></tbody>
+        <thead><tr><th>Title</th><th>Category</th><th>Date</th><th>Actions</th></tr></thead>
+        <tbody id="blogs-tbody"><tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text-light)">No blog posts yet</td></tr></tbody>
       </table>
     </div>
 
-    <!-- ═══════════════════════════════ NEW BLOG POST ═══════════════════════════════ -->
+    <!-- ═══════════════ ADD/EDIT BLOG ═══════════════ -->
     <div id="tab-blog-create" class="tab-content">
-      <div class="editor-layout" style="display:grid;grid-template-columns:1fr 320px;gap:20px;align-items:start">
+      <div class="editor-layout" style="display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start">
         <div>
-          <div class="form-card" style="margin-bottom:16px">
-            <input type="hidden" id="blog-edit-file"/>
-            <div class="form-group">
-              <input id="b-title" type="text" placeholder="Blog post title" style="font-size:20px;font-weight:700;padding:12px;border:none;border-bottom:2px solid var(--border);border-radius:0;background:transparent"/>
+          <div id="blog-edit-banner" style="display:none;background:#fff8e1;border:1px solid #f59e0b;border-radius:8px;padding:10px 16px;margin-bottom:12px;align-items:center;justify-content:space-between;gap:12px">
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:16px">✏️</span>
+              <div>
+                <div style="font-size:12px;font-weight:700;color:#92400e">Editing Blog Post</div>
+                <div id="blog-edit-filename" style="font-size:11px;color:#b45309;font-family:monospace"></div>
+              </div>
             </div>
-            <div style="margin-top:12px;display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-light)">
+            <button class="btn btn-outline btn-sm" onclick="clearBlogForm()" style="border-color:#f59e0b;color:#92400e">✕ Cancel</button>
+          </div>
+
+          <div class="form-card" style="margin-bottom:16px">
+            <input type="hidden" id="b-edit-file"/>
+            <div class="form-group">
+              <input id="b-title" type="text" placeholder="Blog post title" style="font-size:20px;font-weight:700;padding:12px;border:none;border-bottom:2px solid var(--border);border-radius:0;background:transparent" oninput="autoBlogSlug()"/>
+            </div>
+            <div class="form-group" style="margin-top:10px">
+              <label>Description</label>
+              <input id="b-description" type="text" placeholder="Short description for Google results"/>
+            </div>
+            <div style="margin-top:10px;display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-light)">
               <span>Permalink:</span>
               <span style="color:var(--text-muted)">codescompiler.com/blog/</span>
-              <input id="b-slug" type="text" placeholder="auto-slug" style="width:160px;padding:3px 6px;font-size:11px;border:1px dashed var(--border);background:transparent"/>
+              <input id="b-slug" type="text" placeholder="auto-generated" style="width:200px;padding:3px 6px;font-size:11px;border:1px dashed var(--border);background:transparent"/>
             </div>
           </div>
           <div class="form-card" style="margin-bottom:16px">
             <div class="widget-title">📝 Blog Content</div>
-            <textarea id="b-content" class="code" style="min-height:320px" placeholder="Write your blog post here using Markdown..."></textarea>
+            <textarea id="b-content" class="code" style="min-height:350px" placeholder="Write your blog post here using Markdown..."></textarea>
           </div>
-          <div class="form-card">
-            <div class="widget-title">🔍 Blog SEO</div>
-            <div class="form-group">
-              <label>Meta Description</label>
-              <textarea id="b-description" style="min-height:60px" placeholder="Blog description — shown in Google results"></textarea>
-            </div>
-            <div class="form-row">
+          <details class="form-card">
+            <summary style="cursor:pointer;font-size:12px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em">🔍 SEO Settings (Optional)</summary>
+            <div style="margin-top:14px" class="form-row">
               <div class="form-group">
                 <label>Focus Keyword</label>
                 <input id="b-keyword" type="text" placeholder="e.g. learn javascript"/>
               </div>
               <div class="form-group">
                 <label>SEO Title</label>
-                <input id="b-seo-title" type="text" placeholder="Leave blank to use post title"/>
+                <input id="b-seo-title" type="text" placeholder="Leave blank for post title"/>
               </div>
             </div>
-          </div>
+          </details>
         </div>
         <div>
           <div class="form-card" style="margin-bottom:12px">
@@ -469,161 +427,62 @@
             </div>
             <div class="form-group">
               <label>Author</label>
-              <input id="b-author" type="text" value="Admin" placeholder="Author name"/>
+              <input id="b-author" type="text" value="Admin"/>
+            </div>
+            <div id="blog-status-row" style="display:none;align-items:center;gap:6px;margin-bottom:10px;font-size:12px">
+              <span class="badge badge-published">✅ Published</span>
             </div>
             <div style="display:flex;gap:8px;margin-top:4px">
-              <button class="btn btn-primary btn-lg" style="flex:1" onclick="saveBlog()">💾 Publish Blog</button>
-              <button class="btn btn-outline" onclick="clearBlogForm()">Clear</button>
+              <button id="b-publish-btn" class="btn btn-primary btn-lg" style="flex:1" onclick="saveBlog()">🚀 Publish Blog</button>
+              <button class="btn btn-outline" onclick="clearBlogForm()">✕</button>
             </div>
           </div>
-          <div class="widget" style="padding:16px">
-            <div class="widget-title">💡 Why Blog?</div>
-            <p style="font-size:12px;color:var(--text-muted);line-height:1.6">Blog posts help with AdSense approval — Google requires original, quality content. Write 10-15 blog posts (300+ words each) covering topics like tutorials, tips, and guides.</p>
-          </div>
         </div>
       </div>
     </div>
 
-    <!-- ═══════════════════════════════ PAGES ═══════════════════════════════ -->
-    <div id="tab-pages" class="tab-content">
-      <div class="toolbar">
-        <p style="font-size:13px;color:var(--text-muted)">Manage your static pages (About, Contact, Privacy, etc.)</p>
-        <button class="btn btn-primary" onclick="showAddPageForm()">➕ Add New Page</button>
-      </div>
-      <!-- Inline Add Page Form -->
-      <div id="add-page-form" class="form-card" style="display:none;margin-bottom:16px;max-width:600px">
-        <div class="widget-title" id="page-form-title">➕ Add New Page</div>
-        <input type="hidden" id="page-edit-idx" value="-1"/>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Page Title</label>
-            <input id="pg-title" type="text" placeholder="e.g. About Us"/>
-          </div>
-          <div class="form-group">
-            <label>Slug</label>
-            <input id="pg-slug" type="text" placeholder="/about"/>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Status</label>
-            <select id="pg-status">
-              <option value="Draft">Draft</option>
-              <option value="Published">Published</option>
-            </select>
-          </div>
-          <div class="form-group" style="display:flex;align-items:flex-end;gap:8px;padding-bottom:16px">
-            <button class="btn btn-primary" onclick="savePage()">💾 Save Page</button>
-            <button class="btn btn-outline" onclick="hideAddPageForm()">Cancel</button>
-          </div>
-        </div>
-      </div>
-      <table class="wp-table">
-        <thead><tr><th>Page Title</th><th>Slug</th><th>Status</th><th>Actions</th></tr></thead>
-        <tbody id="pages-tbody"></tbody>
-      </table>
-    </div>
-
-    <!-- ═══════════════════════════════ MEDIA ═══════════════════════════════ -->
-    <div id="tab-media" class="tab-content">
-      <div class="widget" style="text-align:center;padding:60px">
-        <div style="font-size:48px;margin-bottom:16px">🖼️</div>
-        <h3 style="font-size:16px;font-weight:700;margin-bottom:8px">Media Library</h3>
-        <p style="font-size:13px;color:var(--text-muted);margin-bottom:20px">Upload images to <code>/public/images/uploads/</code> folder.<br>They will appear in your tutorials at <code>/images/uploads/filename.jpg</code></p>
-        <div id="media-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin-top:20px;text-align:center"></div>
-      </div>
-    </div>
-
-    <!-- ═══════════════════════════════ SEO AUDIT ═══════════════════════════════ -->
-    <div id="tab-seo-audit" class="tab-content">
-      <div class="widget-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px">
-        <div class="widget stat-card"><div class="stat-num" id="audit-total">-</div><div class="stat-label">Total Pages</div></div>
-        <div class="widget stat-card" style="--c:#16a34a"><div class="stat-num" style="color:#16a34a" id="audit-good">-</div><div class="stat-label">✅ Good</div></div>
-        <div class="widget stat-card"><div class="stat-num" style="color:#d97706" id="audit-ok">-</div><div class="stat-label">⚠️ Needs Work</div></div>
-        <div class="widget stat-card"><div class="stat-num" style="color:#dc2626" id="audit-bad">-</div><div class="stat-label">❌ Poor</div></div>
-      </div>
-      <table class="wp-table">
-        <thead>
-          <tr><th>Page</th><th>SEO Score</th><th>Title</th><th>Description</th><th>Keyword</th><th>Action</th></tr>
-        </thead>
-        <tbody id="audit-tbody"><tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text-light)">Loading...</td></tr></tbody>
-      </table>
-    </div>
-
-    <!-- ═══════════════════════════════ SEO TOOLS ═══════════════════════════════ -->
-    <div id="tab-seo-tools" class="tab-content">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-        <!-- Sitemap Generator -->
+    <!-- ═══════════════ SIDEBAR MANAGER ═══════════════ -->
+    <div id="tab-sidebar-mgr" class="tab-content">
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:20px">
+        The sidebar order is auto-generated from your tutorial files (sorted by <b>order</b> number).<br>
+        Change a tutorial's <b>order</b> value to rearrange the sidebar. The sidebar groups tutorials by category.
+      </p>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;align-items:start">
         <div class="form-card">
-          <div class="widget-title">🗺️ Sitemap Generator</div>
-          <p style="font-size:12px;color:var(--text-muted);margin-bottom:12px">Auto-generate a sitemap.xml for Google Search Console.</p>
-          <button class="btn btn-primary" onclick="generateSitemap()">🔄 Generate Sitemap</button>
-          <pre id="sitemap-preview" style="margin-top:12px;font-size:11px;background:#f8f9fa;padding:12px;border-radius:6px;max-height:200px;overflow:auto;display:none;white-space:pre-wrap"></pre>
+          <div class="widget-title" style="color:#c2410c">🟠 HTML Tutorials</div>
+          <div id="sidebar-html"></div>
         </div>
-
-        <!-- Robots.txt -->
         <div class="form-card">
-          <div class="widget-title">🤖 Robots.txt Editor</div>
-          <textarea id="robots-txt" class="code" style="min-height:140px">User-agent: *
-Allow: /
-
-Sitemap: https://codescompiler.com/sitemap.xml</textarea>
-          <button class="btn btn-primary" style="margin-top:10px" onclick="saveRobots()">💾 Save Robots.txt</button>
+          <div class="widget-title" style="color:#1d4ed8">🔵 CSS Tutorials</div>
+          <div id="sidebar-css"></div>
         </div>
-
-        <!-- Schema Markup -->
         <div class="form-card">
-          <div class="widget-title">🏷️ Schema Markup (JSON-LD)</div>
-          <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">Structured data for rich search results.</p>
-          <textarea id="schema-preview" class="code" style="min-height:160px;font-size:11px" readonly></textarea>
-          <button class="btn btn-outline" style="margin-top:8px" onclick="generateSchema()">🔄 Generate Schema</button>
-        </div>
-
-        <!-- Heading Analyzer -->
-        <div class="form-card">
-          <div class="widget-title">📑 Heading Structure Analyzer</div>
-          <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">Select a post to analyze its heading hierarchy.</p>
-          <select id="heading-post-select" onchange="analyzeHeadings()" style="margin-bottom:10px">
-            <option value="">Select a post...</option>
-          </select>
-          <div id="heading-analysis" style="font-size:12px"></div>
-        </div>
-
-        <!-- Internal Links -->
-        <div class="form-card">
-          <div class="widget-title">🔗 Internal Linking Suggestions</div>
-          <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">Find pages that could link to each other for better SEO.</p>
-          <div id="linking-suggestions" style="font-size:12px">Click a post to analyze...</div>
-          <button class="btn btn-outline" style="margin-top:10px" onclick="analyzeLinking()">🔄 Analyze Links</button>
-        </div>
-
-        <!-- Keyword Density -->
-        <div class="form-card">
-          <div class="widget-title">📊 Keyword Density Checker</div>
-          <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">Top keywords across all your content.</p>
-          <div id="keyword-density" style="font-size:12px">Loading...</div>
-          <button class="btn btn-outline" style="margin-top:10px" onclick="analyzeKeywordDensity()">🔄 Analyze</button>
+          <div class="widget-title" style="color:#a16207">🟡 JavaScript Tutorials</div>
+          <div id="sidebar-js"></div>
         </div>
       </div>
     </div>
 
-    <!-- ═══════════════════════════════ NAVIGATION ═══════════════════════════════ -->
-    <div id="tab-header" class="tab-content">
-      <div class="form-card" style="max-width:600px">
-        <div class="widget-title">🔗 Header Navigation Links</div>
-        <p style="font-size:12px;color:var(--text-muted);margin-bottom:20px">Edit the links in the dark language strip under the site header.</p>
-        <div id="nav-links-editor"></div>
+    <!-- ═══════════════ NAV BAR MANAGER ═══════════════ -->
+    <div id="tab-navbar" class="tab-content">
+      <div class="form-card" style="max-width:700px">
+        <div class="widget-title">🔗 Navigation Bar Links</div>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:20px">
+          Edit the dark language strip links that appear below the main header on your site. Changes are saved to <code>src/nav.json</code>.
+        </p>
+        <div id="nav-editor"></div>
+        <button class="btn btn-outline btn-sm" onclick="addNavItem()" style="margin-top:8px">+ Add Link</button>
         <div style="margin-top:16px;display:flex;gap:8px">
-          <button class="btn btn-primary" onclick="saveHeaderNav()">💾 Save Navigation</button>
-          <button class="btn btn-outline" onclick="loadHeaderNav()">↺ Reset</button>
+          <button class="btn btn-primary" onclick="saveNavBar()">💾 Save Navigation</button>
+          <button class="btn btn-outline" onclick="loadNavBar()">↺ Reset</button>
         </div>
       </div>
     </div>
 
-    <!-- ═══════════════════════════════ SETTINGS ═══════════════════════════════ -->
+    <!-- ═══════════════ SETTINGS ═══════════════ -->
     <div id="tab-settings" class="tab-content">
-      <div class="form-card" style="max-width:680px">
-        <div class="widget-title">⚙️ General Settings</div>
+      <div class="form-card" style="max-width:600px">
+        <div class="widget-title">⚙️ Site Settings</div>
         <div class="form-group">
           <label>Site Title</label>
           <input id="s-title" type="text" value="CodesCompiler"/>
@@ -636,29 +495,17 @@ Sitemap: https://codescompiler.com/sitemap.xml</textarea>
           <label>Site URL</label>
           <input id="s-url" type="text" value="https://codescompiler.com"/>
         </div>
-        <hr class="section-divider"/>
-        <div class="widget-title">📱 Social Media</div>
+        <hr style="border:none;border-top:1px solid var(--border);margin:16px 0"/>
+        <div class="widget-title">📊 Analytics</div>
         <div class="form-row">
-          <div class="form-group"><label>Twitter / X</label><input id="s-twitter" placeholder="@codescompiler"/></div>
-          <div class="form-group"><label>GitHub</label><input id="s-github" placeholder="https://github.com/..."/></div>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>YouTube</label><input id="s-youtube" placeholder="https://youtube.com/..."/></div>
-          <div class="form-group"><label>LinkedIn</label><input id="s-linkedin" placeholder="https://linkedin.com/..."/></div>
-        </div>
-        <hr class="section-divider"/>
-        <div class="widget-title">🏷️ Default SEO</div>
-        <div class="form-group">
-          <label>Default Meta Description</label>
-          <textarea id="s-meta-desc" style="min-height:50px" placeholder="Default description for pages without a custom one">CodesCompiler — Free tutorials on HTML, CSS, JavaScript and more. Learn web development with interactive code examples.</textarea>
-        </div>
-        <div class="form-group">
-          <label>Google Analytics ID</label>
-          <input id="s-ga" placeholder="G-XXXXXXXXXX"/>
-        </div>
-        <div class="form-group">
-          <label>Google AdSense Publisher ID</label>
-          <input id="s-adsense" placeholder="ca-pub-XXXXXXXXXXXXXXXX"/>
+          <div class="form-group">
+            <label>Google Analytics ID</label>
+            <input id="s-ga" placeholder="G-XXXXXXXXXX"/>
+          </div>
+          <div class="form-group">
+            <label>AdSense Publisher ID</label>
+            <input id="s-adsense" placeholder="ca-pub-XXXXXXXX"/>
+          </div>
         </div>
         <button class="btn btn-primary btn-lg" onclick="saveSettings()">💾 Save Settings</button>
       </div>
@@ -669,35 +516,53 @@ Sitemap: https://codescompiler.com/sitemap.xml</textarea>
 
 <!-- ═══════════════════════════════ JAVASCRIPT ═══════════════════════════════ -->
 <script>
-// ══ Globals
-let allPosts = [];
+// ══════════════════════════════════════════════════════════════════════
+// GLOBALS
+// ══════════════════════════════════════════════════════════════════════
+let allTutorials = [];
+let allBlogs = [];
 
-// ══ Tab switching
+// ══════════════════════════════════════════════════════════════════════
+// TAB SWITCHING
+// ══════════════════════════════════════════════════════════════════════
 function showTab(name) {
-  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-  var tabEl = document.getElementById('tab-' + name);
-  if (tabEl) tabEl.classList.add('active');
-  var navEl = document.getElementById('nav-' + name);
-  if (navEl) navEl.classList.add('active');
-  var titles = { dashboard:'Dashboard', posts:'All Posts', create:'Add New Post', blogs:'Blog Posts', 'blog-create':'New Blog Post', pages:'Pages', media:'Media Library', 'seo-audit':'SEO Audit', 'seo-tools':'SEO Tools', header:'Navigation', settings:'General Settings' };
+  document.querySelectorAll('.tab-content').forEach(function(el) { el.classList.remove('active'); });
+  document.querySelectorAll('.nav-item').forEach(function(el) { el.classList.remove('active'); });
+
+  var tab = document.getElementById('tab-' + name);
+  if (tab) tab.classList.add('active');
+  var nav = document.getElementById('nav-' + name);
+  if (nav) nav.classList.add('active');
+
+  var titles = {
+    'dashboard': 'Dashboard',
+    'tutorials': 'All Tutorials',
+    'tutorial-create': 'Add Tutorial',
+    'blogs': 'Blog Posts',
+    'blog-create': 'New Blog Post',
+    'sidebar-mgr': 'Sidebar Manager',
+    'navbar': 'Nav Bar Manager',
+    'settings': 'Settings'
+  };
   document.getElementById('page-title').textContent = titles[name] || 'Admin';
+
   // Actions
   var actEl = document.getElementById('page-actions');
-  if (name === 'posts') actEl.innerHTML = '<button class="btn btn-primary" onclick="showTab(\'create\')">➕ Add New</button>';
+  if (name === 'tutorials') actEl.innerHTML = '<button class="btn btn-primary" onclick="showTab(\'tutorial-create\')">➕ Add New</button>';
   else if (name === 'blogs') actEl.innerHTML = '<button class="btn btn-primary" onclick="showTab(\'blog-create\')">➕ New Blog</button>';
   else actEl.innerHTML = '';
-  // Load data
+
+  // Load data on tab switch
   if (name === 'dashboard') loadDashboard();
-  if (name === 'posts') loadPosts();
+  if (name === 'tutorials') loadTutorials();
   if (name === 'blogs') loadBlogs();
-  if (name === 'seo-audit') runSiteAudit();
-  if (name === 'seo-tools') loadSeoTools();
-  if (name === 'pages') loadPages();
-  if (name === 'media') loadMedia();
+  if (name === 'sidebar-mgr') loadSidebarManager();
+  if (name === 'navbar') loadNavBar();
 }
 
-// ══ Alert
+// ══════════════════════════════════════════════════════════════════════
+// ALERT
+// ══════════════════════════════════════════════════════════════════════
 function showAlert(msg, type) {
   var el = document.getElementById('alert');
   el.className = 'alert alert-' + (type || 'success');
@@ -706,465 +571,223 @@ function showAlert(msg, type) {
   setTimeout(function() { el.style.display = 'none'; }, 4000);
 }
 
-// ══ Data loading
-async function fetchPosts() {
-  var res  = await fetch('/api/list');
-  allPosts = await res.json();
-  document.getElementById('post-count').textContent = allPosts.length;
-  return allPosts;
+// ══════════════════════════════════════════════════════════════════════
+// DATA FETCHING
+// ══════════════════════════════════════════════════════════════════════
+async function fetchTutorials() {
+  try {
+    var res = await fetch('/api/tutorials/list');
+    allTutorials = await res.json();
+  } catch(e) { allTutorials = []; }
+  document.getElementById('tutorial-count').textContent = allTutorials.length;
+  return allTutorials;
 }
 
-// ══ Dashboard
+async function fetchBlogs() {
+  try {
+    var res = await fetch('/api/blogs/list');
+    allBlogs = await res.json();
+  } catch(e) { allBlogs = []; }
+  document.getElementById('blog-count').textContent = allBlogs.length;
+  return allBlogs;
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════════════════════════════════════════
 async function loadDashboard() {
-  var list = await fetchPosts();
-  var blogRes = await fetch('/api/blogs/list'); var blogList = await blogRes.json();
-  document.getElementById('blog-count').textContent = blogList.length;
-  var se = document.getElementById('dash-stats');
-  se.innerHTML =
-    '<div class="widget stat-card"><div class="stat-num">' + list.length + '</div><div class="stat-label">Tutorial Posts</div></div>' +
-    '<div class="widget stat-card"><div class="stat-num" style="color:#7c3aed">' + blogList.length + '</div><div class="stat-label">Blog Posts</div></div>' +
-    '<div class="widget stat-card html"><div class="stat-num">' + list.filter(function(t){return t.category==='html'}).length + '</div><div class="stat-label">HTML</div></div>' +
-    '<div class="widget stat-card css"><div class="stat-num">' + list.filter(function(t){return t.category==='css'}).length + '</div><div class="stat-label">CSS</div></div>' +
-    '<div class="widget stat-card js"><div class="stat-num">' + list.filter(function(t){return t.category==='javascript'}).length + '</div><div class="stat-label">JavaScript</div></div>';
-  // Recent — combine tutorials and blogs
-  var recent = list.slice(0,3).map(function(t) {
-    return '<tr><td><span class="post-title" onclick="editPost(\'' + t.file + '\')">' + (t.title || t.file) + '</span></td>' +
-      '<td><span class="badge badge-' + (t.category||'html') + '">' + (t.category||'html').toUpperCase() + '</span></td>' +
-      '<td><span class="badge badge-published">Published</span></td></tr>';
+  var tutorials = await fetchTutorials();
+  var blogs = await fetchBlogs();
+
+  document.getElementById('dash-stats').innerHTML =
+    '<div class="widget stat-card"><div class="stat-num">' + tutorials.length + '</div><div class="stat-label">Tutorials</div></div>' +
+    '<div class="widget stat-card"><div class="stat-num" style="color:#7c3aed">' + blogs.length + '</div><div class="stat-label">Blog Posts</div></div>' +
+    '<div class="widget stat-card"><div class="stat-num" style="color:#c2410c">' + tutorials.filter(function(t){return t.category==='html'}).length + '</div><div class="stat-label">HTML</div></div>' +
+    '<div class="widget stat-card"><div class="stat-num" style="color:#1d4ed8">' + tutorials.filter(function(t){return t.category==='css'}).length + '</div><div class="stat-label">CSS</div></div>' +
+    '<div class="widget stat-card"><div class="stat-num" style="color:#a16207">' + tutorials.filter(function(t){return t.category==='javascript'}).length + '</div><div class="stat-label">JavaScript</div></div>';
+
+  // Recent posts
+  var recentTutorials = tutorials.slice(0, 4).map(function(t) {
+    return '<tr><td><span class="post-title" onclick="editTutorial(\'' + t.file + '\')">' + (t.title || t.file) + '</span></td>' +
+      '<td><span class="badge badge-published">Tutorial</span></td>' +
+      '<td><span class="badge badge-' + (t.category||'html') + '">' + (t.category||'html').toUpperCase() + '</span></td></tr>';
   });
-  var recentBlogs = blogList.slice(0,3).map(function(b) {
+  var recentBlogs = blogs.slice(0, 3).map(function(b) {
     return '<tr><td><span class="post-title" onclick="editBlog(\'' + b.file + '\')">' + (b.title || b.file) + '</span></td>' +
-      '<td><span class="badge" style="background:#f3e8ff;color:#7c3aed">BLOG</span></td>' +
-      '<td><span class="badge badge-published">Published</span></td></tr>';
+      '<td><span class="badge badge-blog">Blog</span></td>' +
+      '<td><span class="badge" style="background:#f3f4f6;color:#6b7280">' + (b.category || '-') + '</span></td></tr>';
   });
-  var tb = document.getElementById('dash-recent');
-  tb.innerHTML = recent.concat(recentBlogs).join('') || '<tr><td colspan="3" style="text-align:center;color:var(--text-light);padding:16px">No posts yet</td></tr>';
-  // SEO summary
-  var good=0,ok=0,bad=0;
-  list.forEach(function(t) {
-    var s = 0;
-    if ((t.title||'').length >= 20) s++;
-    if ((t.title||'').length <= 65) s++;
-    if ((t.description||'').length >= 100) s++;
-    if ((t.description||'').length <= 165) s++;
-    if (t.focusKeyword) s++;
-    var p = Math.round((s/5)*100);
-    if (p>=80)good++;else if(p>=50)ok++;else bad++;
-  });
-  document.getElementById('dash-seo-summary').innerHTML =
-    '<div style="margin-bottom:6px"><span style="color:#16a34a;font-weight:700">' + good + '</span> pages with good SEO</div>' +
-    '<div style="margin-bottom:6px"><span style="color:#d97706;font-weight:700">' + ok + '</span> pages need improvement</div>' +
-    '<div style="margin-bottom:6px"><span style="color:#dc2626;font-weight:700">' + bad + '</span> pages with poor SEO</div>' +
-    '<hr style="border:none;border-top:1px solid var(--border);margin:8px 0">' +
-    '<div style="font-size:11px;color:var(--text-light)">💡 For AdSense: aim for 15+ blog posts</div>';
+  document.getElementById('dash-recent').innerHTML =
+    recentTutorials.concat(recentBlogs).join('') ||
+    '<tr><td colspan="3" style="text-align:center;color:var(--text-light);padding:16px">No posts yet — create your first tutorial!</td></tr>';
 }
 
-// ══ All Posts (WP table view)
-async function loadPosts() {
-  var list = await fetchPosts();
+// ══════════════════════════════════════════════════════════════════════
+// TUTORIALS LIST
+// ══════════════════════════════════════════════════════════════════════
+async function loadTutorials() {
+  var list = await fetchTutorials();
   var catFilter = document.getElementById('filter-cat').value;
   var search = document.getElementById('filter-search').value.toLowerCase();
+
   var filtered = list.filter(function(t) {
     if (catFilter && t.category !== catFilter) return false;
-    if (search && !(t.title||'').toLowerCase().includes(search) && !(t.description||'').toLowerCase().includes(search)) return false;
+    if (search && !(t.title||'').toLowerCase().includes(search)) return false;
     return true;
   });
-  document.getElementById('posts-count-label').textContent = filtered.length + ' item' + (filtered.length!==1?'s':'');
-  document.getElementById('posts-tbody').innerHTML = filtered.map(function(t) {
-    var hasSeo = t.focusKeyword ? '<span style="color:#16a34a">●</span>' : '<span style="color:#dc2626">●</span>';
+
+  document.getElementById('tutorial-count-label').textContent = filtered.length + ' item' + (filtered.length !== 1 ? 's' : '');
+
+  document.getElementById('tutorials-tbody').innerHTML = filtered.map(function(t) {
     return '<tr>' +
-      '<td><input type="checkbox" class="post-check" data-file="' + t.file + '"/></td>' +
-      '<td><span class="post-title" onclick="editPost(\'' + t.file + '\')">' + (t.title || t.file) + '</span>' +
-      '<div class="row-actions"><a href="http://localhost:4321/tutorial/' + t.file.replace('.mdx','') + '" target="_blank">View Live</a></div></td>' +
+      '<td><span class="post-title" onclick="editTutorial(\'' + t.file + '\')">' + (t.title || t.file) + '</span></td>' +
       '<td><span class="badge badge-' + (t.category||'html') + '">' + (t.category||'html').toUpperCase() + '</span></td>' +
-      '<td>Ch. ' + (t.order||'-') + '</td>' +
-      '<td>' + hasSeo + '</td>' +
-      '<td style="font-size:11px;color:var(--text-light)">' + (t.date ? new Date(t.date).toLocaleDateString() : '-') + '</td>' +
+      '<td>Ch. ' + (t.order || '-') + '</td>' +
       '<td><div style="display:flex;gap:4px">' +
-        '<button class="btn btn-blue btn-sm" style="padding:2px 8px" onclick="editPost(\'' + t.file + '\')">Edit</button>' +
-        '<button class="btn btn-outline btn-sm" style="padding:2px 8px" onclick="downloadItem(\'tutorial\', \'' + t.file + '\')">📥</button>' +
-        '<button class="btn btn-danger btn-sm" style="padding:2px 8px" onclick="deletePost(\'' + t.file + '\')">🗑️</button>' +
-      '</div></td>' +
-      '</tr>';
-  }).join('') || '<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text-light)">No posts found</td></tr>';
+        '<button class="btn btn-blue btn-sm" onclick="editTutorial(\'' + t.file + '\')">Edit</button>' +
+        '<a href="http://localhost:4321/tutorial/' + t.file.replace(/\.mdx?$/, '') + '" target="_blank" class="btn btn-outline btn-sm">View</a>' +
+        '<button class="btn btn-danger btn-sm" onclick="deleteTutorial(\'' + t.file + '\')">🗑️</button>' +
+      '</div></td></tr>';
+  }).join('') || '<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text-light)">No tutorials found</td></tr>';
 }
 
-function toggleAllChecks() {
-  var checked = document.getElementById('check-all').checked;
-  document.querySelectorAll('.post-check').forEach(function(el) { el.checked = checked; });
+// ══════════════════════════════════════════════════════════════════════
+// TUTORIAL FORM: SAVE / EDIT / CLEAR
+// ══════════════════════════════════════════════════════════════════════
+function autoTutorialSlug() {
+  if (document.getElementById('t-edit-file').value) return;
+  var title = document.getElementById('t-title').value;
+  document.getElementById('t-slug').value = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 
-async function bulkAction() {
-  var action = document.getElementById('bulk-action').value;
-  if (action !== 'delete') return;
-  var files = [];
-  document.querySelectorAll('.post-check:checked').forEach(function(el) { files.push(el.getAttribute('data-file')); });
-  if (!files.length) { showAlert('Select posts first', 'error'); return; }
-  if (!confirm('Delete ' + files.length + ' post(s)?')) return;
-  for (var i = 0; i < files.length; i++) {
-    await fetch('/api/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filename: files[i] }) });
+async function saveTutorial() {
+  var title    = document.getElementById('t-title').value.trim();
+  var desc     = document.getElementById('t-description').value.trim();
+  var content  = document.getElementById('t-content').value;
+  var category = document.getElementById('t-category').value;
+  var order    = document.getElementById('t-order').value;
+  var slug     = document.getElementById('t-slug').value.trim();
+  var editFile = document.getElementById('t-edit-file').value;
+
+  // SEO fields
+  var seoTitle  = document.getElementById('t-seo-title').value.trim();
+  var keyword   = document.getElementById('t-keyword').value.trim();
+  var canonical = document.getElementById('t-canonical').value.trim();
+  var noindex   = document.getElementById('t-noindex').value;
+  var ogTitle   = document.getElementById('t-og-title').value.trim();
+  var ogDesc    = document.getElementById('t-og-desc').value.trim();
+
+  if (!title)          { showAlert('❌ Title is required', 'error'); return; }
+  if (!content.trim()) { showAlert('❌ Content is required', 'error'); return; }
+
+  // Auto-generate description
+  if (!desc) desc = content.replace(/[#*`>\n\r<]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 155) + '...';
+
+  // Build filename
+  var filename = editFile || (slug || title.toLowerCase().replace(/[^a-z0-9]+/g, '-')) + '.mdx';
+  filename = filename.replace(/\.mdx$|\.md$/, '') + '.mdx';
+
+  // Build frontmatter (date UNQUOTED for Astro z.date())
+  var fm = '---\n';
+  fm += 'title: "' + title.replace(/"/g, '&quot;') + '"\n';
+  fm += 'description: "' + desc.replace(/"/g, '&quot;') + '"\n';
+  fm += 'category: "' + category + '"\n';
+  fm += 'order: ' + order + '\n';
+  fm += 'date: ' + new Date().toISOString() + '\n';
+  if (seoTitle)  fm += 'seoTitle: "' + seoTitle.replace(/"/g, '&quot;') + '"\n';
+  if (keyword)   fm += 'focusKeyword: "' + keyword + '"\n';
+  if (canonical) fm += 'canonical: "' + canonical + '"\n';
+  if (noindex)   fm += 'noindex: "' + noindex + '"\n';
+  if (ogTitle)   fm += 'ogTitle: "' + ogTitle.replace(/"/g, '&quot;') + '"\n';
+  if (ogDesc)    fm += 'ogDescription: "' + ogDesc.replace(/"/g, '&quot;') + '"\n';
+  fm += '---\n\n' + content;
+
+  try {
+    var res = await fetch('/api/tutorials/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ filename: filename, content: fm })
+    });
+    var json = await res.json();
+    if (json.ok) {
+      showAlert('✅ Tutorial "' + title + '" published!');
+      clearTutorialForm();
+      showTab('tutorials');
+    } else {
+      showAlert('❌ Error: ' + json.error, 'error');
+    }
+  } catch(err) {
+    showAlert('❌ Cannot reach admin server!', 'error');
   }
-  showAlert(files.length + ' post(s) deleted');
-  loadPosts();
 }
 
-// ══ Edit post
-async function editPost(file) {
-  showTab('create');
-  document.getElementById('page-title').textContent = 'Edit Post';
-  var res = await fetch('/api/get?file=' + encodeURIComponent(file));
-  var json = await res.json();
-  if (!json.content) return;
-  var raw = json.content;
-  var fm = {};
-  var m = raw.match(/^---\n([\s\S]*?)\n---/);
-  if (m) m[1].split('\n').forEach(function(l) { var parts = l.split(':'); if (parts[0]) fm[parts[0].trim()] = parts.slice(1).join(':').trim().replace(/^"|"$/g, ''); });
-  var body = raw.replace(/^---[\s\S]*?---\n*/, '');
-  document.getElementById('f-title').value       = fm.title || '';
-  document.getElementById('f-description').value = fm.description || '';
-  document.getElementById('f-category').value    = fm.category || 'html';
-  document.getElementById('f-order').value       = fm.order || 1;
-  document.getElementById('f-filename').value    = file;
-  document.getElementById('f-content').value     = body;
-  document.getElementById('edit-file').value     = file;
-  document.getElementById('f-seo-title').value   = fm.seoTitle || '';
-  document.getElementById('f-keyword').value     = fm.focusKeyword || '';
-  document.getElementById('f-canonical').value   = fm.canonical || '';
-  document.getElementById('f-noindex').value     = fm.noindex || '';
-  document.getElementById('f-og-title').value    = fm.ogTitle || '';
-  document.getElementById('f-og-desc').value     = fm.ogDescription || '';
-  updateDescCount(); updateSnippet(); runSeoAnalysis(); updateWordCount();
+async function editTutorial(file) {
+  showTab('tutorial-create');
+  document.getElementById('page-title').textContent = 'Edit Tutorial';
+  try {
+    var res = await fetch('/api/tutorials/get?file=' + encodeURIComponent(file));
+    var json = await res.json();
+    if (!json.content) { showAlert('Could not load: ' + (json.error || 'Not found'), 'error'); return; }
+
+    var raw = json.content.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    var fm = parseFM(raw);
+    var body = raw.replace(/^---[\s\S]*?---\n*/, '');
+
+    document.getElementById('t-title').value       = fm.title || '';
+    document.getElementById('t-description').value  = fm.description || '';
+    document.getElementById('t-category').value     = fm.category || 'html';
+    document.getElementById('t-order').value        = fm.order || 1;
+    document.getElementById('t-slug').value         = file;
+    document.getElementById('t-content').value      = body;
+    document.getElementById('t-edit-file').value    = file;
+    document.getElementById('t-seo-title').value    = fm.seoTitle || '';
+    document.getElementById('t-keyword').value      = fm.focusKeyword || '';
+    document.getElementById('t-canonical').value    = fm.canonical || '';
+    document.getElementById('t-noindex').value      = fm.noindex || '';
+    document.getElementById('t-og-title').value     = fm.ogTitle || '';
+    document.getElementById('t-og-desc').value      = fm.ogDescription || '';
+
+    updateTutorialPublishBox();
+    updateWordCount();
+  } catch(err) {
+    showAlert('❌ Failed to load tutorial', 'error');
+  }
 }
 
-// ══ Delete
-async function deletePost(file) {
+async function deleteTutorial(file) {
   if (!confirm('Delete "' + file + '"? This cannot be undone.')) return;
-  await fetch('/api/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filename: file }) });
+  await fetch('/api/tutorials/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filename: file }) });
   showAlert('Deleted ' + file);
-  loadPosts();
+  loadTutorials();
 }
 
-// ══ Download
-async function downloadItem(type, file) {
-  var api = type === 'blog' ? '/api/blogs/get' : '/api/get';
-  var res = await fetch(api + '?file=' + encodeURIComponent(file));
-  var json = await res.json();
-  if (!json.content) { showAlert('Could not download file', 'error'); return; }
-  var blob = new Blob([json.content], { type: 'text/markdown' });
-  var a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = file;
-  a.style.display = 'none';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(a.href);
-}
-
-// ══ Save Post
-async function savePost() {
-  var title    = document.getElementById('f-title').value.trim();
-  var desc     = document.getElementById('f-description').value.trim();
-  var category = document.getElementById('f-category').value;
-  var order    = document.getElementById('f-order').value;
-  var content  = document.getElementById('f-content').value;
-  var seoTitle = document.getElementById('f-seo-title').value.trim();
-  var focusKw  = document.getElementById('f-keyword').value.trim();
-  var canonical= document.getElementById('f-canonical').value.trim();
-  var noindex  = document.getElementById('f-noindex').value;
-  var ogTitle  = document.getElementById('f-og-title').value.trim();
-  var ogDesc   = document.getElementById('f-og-desc').value.trim();
-  var filename = document.getElementById('f-filename').value.trim();
-  var editFile = document.getElementById('edit-file').value;
-
-  if (!title || !desc || !content) { showAlert('Fill in Title, Description and Content', 'error'); return; }
-  if (!filename) filename = editFile || (title.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.mdx');
-  if (!filename.endsWith('.mdx')) filename += '.mdx';
-
-  var fm = '---\ntitle: "' + title + '"\ndescription: "' + desc + '"\ncategory: "' + category + '"\norder: ' + order + '\ndate: ' + new Date().toISOString();
-  if (seoTitle)  fm += '\nseoTitle: "' + seoTitle + '"';
-  if (focusKw)   fm += '\nfocusKeyword: "' + focusKw + '"';
-  if (canonical) fm += '\ncanonical: "' + canonical + '"';
-  if (noindex)   fm += '\nnoindex: "' + noindex + '"';
-  if (ogTitle)   fm += '\nogTitle: "' + ogTitle + '"';
-  if (ogDesc)    fm += '\nogDescription: "' + ogDesc + '"';
-  fm += '\n---\n\n' + content;
-
-  var res = await fetch('/api/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filename: filename, content: fm }) });
-  var json = await res.json();
-  if (json.ok) { showAlert('✅ Post published!'); clearForm(); showTab('posts'); }
-  else showAlert('Error: ' + json.error, 'error');
-}
-
-// ══ Quick Draft
-async function quickDraft() {
-  var title = document.getElementById('qd-title').value.trim();
-  var content = document.getElementById('qd-content').value.trim();
-  if (!title) { showAlert('Enter a title', 'error'); return; }
-  var filename = title.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.mdx';
-  var fm = '---\ntitle: "' + title + '"\ndescription: "Draft post"\ncategory: "html"\norder: 99\ndate: ' + new Date().toISOString() + '\n---\n\n' + (content || '## Draft\n\nContent to be written...');
-  await fetch('/api/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filename: filename, content: fm }) });
-  showAlert('✅ Draft saved!');
-  document.getElementById('qd-title').value = '';
-  document.getElementById('qd-content').value = '';
-  loadDashboard();
-}
-
-// ══ Clear form
-function clearForm() {
-  ['f-title','f-description','f-filename','f-content','f-keyword','f-seo-title','f-canonical','f-og-title','f-og-desc'].forEach(function(id) { document.getElementById(id).value = ''; });
-  document.getElementById('f-order').value = 1;
-  document.getElementById('edit-file').value = '';
-  document.getElementById('f-category').value = 'html';
-  document.getElementById('f-noindex').value = '';
-  updateSnippet(); runSeoAnalysis(); updateWordCount();
-}
-
-// ══ Character counters
-function updateDescCount() {
-  var len = document.getElementById('f-description').value.length;
-  document.getElementById('desc-count').textContent = len + '/160';
-  document.getElementById('desc-count').style.color = len > 160 ? '#dc2626' : len >= 120 ? '#16a34a' : '#9ca3af';
-  var pct = Math.min(len / 160 * 100, 100);
-  document.getElementById('desc-bar').style.width = pct + '%';
-  document.getElementById('desc-bar').style.background = len > 160 ? '#dc2626' : len >= 120 ? '#16a34a' : '#d97706';
-}
-
-function updateSnippet() {
-  var title = document.getElementById('f-seo-title').value || document.getElementById('f-title').value || 'Page Title';
-  var desc  = document.getElementById('f-description').value || 'Your meta description...';
-  var slug  = document.getElementById('f-filename').value || (document.getElementById('f-title').value || '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
-  document.getElementById('snip-title').textContent = title.slice(0, 60) + ' — CodesCompiler';
-  document.getElementById('snip-desc').textContent  = desc.slice(0, 160);
-  document.getElementById('snip-url').textContent   = 'codescompiler.com › tutorial › ' + slug;
-  var tc = (document.getElementById('f-seo-title').value || document.getElementById('f-title').value).length;
-  document.getElementById('seo-title-count').textContent = tc + '/60';
-  document.getElementById('seo-title-count').style.color = tc > 60 ? '#dc2626' : '#9ca3af';
-  var tpct = Math.min(tc / 60 * 100, 100);
-  document.getElementById('title-bar').style.width = tpct + '%';
-  document.getElementById('title-bar').style.background = tc > 60 ? '#dc2626' : tc >= 30 ? '#16a34a' : '#d97706';
-}
-
-// ══ Word count
-function updateWordCount() {
-  var text = document.getElementById('f-content').value;
-  var words = text.trim() ? text.trim().split(/\s+/).length : 0;
-  var chars = text.length;
-  var mins  = Math.max(1, Math.ceil(words / 200));
-  document.getElementById('word-count').textContent  = 'Words: ' + words + ' | Characters: ' + chars;
-  document.getElementById('read-time').textContent   = 'Reading time: ~' + mins + ' min';
-}
-document.addEventListener('input', function(e) { if (e.target.id === 'f-content') updateWordCount(); });
-
-// ══ SEO Analysis
-function runSeoAnalysis() {
-  var keyword = (document.getElementById('f-keyword').value || '').toLowerCase().trim();
-  var title   = (document.getElementById('f-title').value || '').toLowerCase();
-  var desc    = (document.getElementById('f-description').value || '').toLowerCase();
-  var content = (document.getElementById('f-content').value || '').toLowerCase();
-  var slug    = (document.getElementById('f-filename').value || title.replace(/[^a-z0-9]+/g, '-'));
-  var descLen = document.getElementById('f-description').value.length;
-  var titLen  = (document.getElementById('f-seo-title').value || document.getElementById('f-title').value).length;
-  var words   = content.trim() ? content.trim().split(/\s+/).length : 0;
-
-  if (!keyword) {
-    document.getElementById('seo-score-circle').className = 'seo-circle score-none';
-    document.getElementById('seo-score-circle').textContent = '?';
-    document.getElementById('seo-score-label').textContent = 'Enter a keyword';
-    document.getElementById('seo-score-label').style.color = '';
-    document.getElementById('seo-score-sub').textContent = 'to start analysis';
-    document.getElementById('seo-checks').innerHTML = '<p style="font-size:12px;color:var(--text-light);padding:8px 0">Type a focus keyword to see SEO recommendations</p>';
-    runReadability();
-    return;
-  }
-
-  // Keyword density
-  var kwCount = 0; var idx = content.indexOf(keyword); while (idx !== -1) { kwCount++; idx = content.indexOf(keyword, idx + 1); }
-  var density = words > 0 ? ((kwCount / words) * 100).toFixed(1) : 0;
-
-  var checks = [
-    { pass: title.includes(keyword),                     label: 'Keyword in title',            tip: 'Include "' + keyword + '" in the title' },
-    { pass: desc.includes(keyword),                      label: 'Keyword in description',      tip: 'Include "' + keyword + '" in meta description' },
-    { pass: slug.includes(keyword.replace(/ /g,'-')),    label: 'Keyword in URL slug',         tip: 'Add keyword to the URL slug' },
-    { pass: content.indexOf(keyword) < 200 && content.includes(keyword), label: 'Keyword in first paragraph', tip: 'Mention keyword in the opening paragraph' },
-    { pass: kwCount >= 2,                                label: 'Keyword used ' + kwCount + 'x (' + density + '%)', tip: 'Use keyword at least 2 times' },
-    { pass: titLen >= 30 && titLen <= 60,                label: 'Title length (' + titLen + '/60)', tip: 'Title should be 30-60 characters' },
-    { pass: descLen >= 120 && descLen <= 160,            label: 'Description (' + descLen + '/160)', tip: 'Description should be 120-160 characters' },
-    { pass: words >= 300,                                label: 'Content length (' + words + ' words)', tip: 'Write at least 300 words' },
-    { pass: content.includes('## '),                     label: 'Has H2 subheadings',          tip: 'Add ## subheadings for structure' },
-    { pass: content.includes(']('),                      label: 'Has internal/external links',  tip: 'Add links to other pages or resources' },
-  ];
-
-  var passed = checks.filter(function(c) { return c.pass; }).length;
-  var pct    = Math.round((passed / checks.length) * 100);
-  var cls    = pct >= 70 ? 'score-good' : pct >= 40 ? 'score-ok' : 'score-bad';
-  var label  = pct >= 70 ? 'Good' : pct >= 40 ? 'Needs Work' : 'Poor';
-
-  document.getElementById('seo-score-circle').className = 'seo-circle ' + cls;
-  document.getElementById('seo-score-circle').textContent = pct;
-  document.getElementById('seo-score-label').textContent = label + ' SEO';
-  document.getElementById('seo-score-label').style.color = pct >= 70 ? '#16a34a' : pct >= 40 ? '#d97706' : '#dc2626';
-  document.getElementById('seo-score-sub').textContent = passed + '/' + checks.length + ' passed';
-
-  document.getElementById('seo-checks').innerHTML = checks.map(function(c) {
-    return '<div style="display:flex;align-items:flex-start;gap:7px;margin-bottom:5px;font-size:12px">' +
-      '<span style="flex-shrink:0">' + (c.pass ? '✅' : '❌') + '</span>' +
-      '<div><span style="font-weight:600">' + c.label + '</span>' +
-      (!c.pass ? '<br><span style="color:var(--text-light);font-size:11px">' + c.tip + '</span>' : '') +
-      '</div></div>';
-  }).join('');
-
-  runReadability();
-}
-
-// ══ Readability Analysis
-function runReadability() {
-  var content = document.getElementById('f-content').value;
-  var words   = content.trim() ? content.trim().split(/\s+/).length : 0;
-  var sentences = content.split(/[.!?]+/).filter(function(s){return s.trim()}).length || 1;
-  var paragraphs = content.split(/\n\n+/).filter(function(s){return s.trim()}).length;
-  var avgSentLen = Math.round(words / sentences);
-  var hasShortParas = paragraphs > 0 && (words / paragraphs) < 100;
-  var hasHeadings = content.includes('## ');
-  var hasBullets = content.includes('- ') || content.includes('* ') || content.includes('1. ');
-
-  var checks = [
-    { pass: avgSentLen <= 20, label: 'Avg sentence length: ' + avgSentLen + ' words', tip: 'Keep sentences under 20 words for readability' },
-    { pass: hasShortParas,    label: 'Short paragraphs',  tip: 'Break text into shorter paragraphs' },
-    { pass: hasHeadings,      label: 'Uses subheadings',  tip: 'Add ## subheadings every 150-300 words' },
-    { pass: hasBullets,       label: 'Uses lists/bullets', tip: 'Add bullet points or numbered lists' },
-    { pass: words >= 300,     label: words + ' words written', tip: 'Aim for at least 300 words' },
-  ];
-
-  document.getElementById('readability-checks').innerHTML = checks.map(function(c) {
-    return '<div style="display:flex;align-items:flex-start;gap:7px;margin-bottom:5px;font-size:12px">' +
-      '<span style="flex-shrink:0">' + (c.pass ? '✅' : '⚠️') + '</span>' +
-      '<div><span style="font-weight:500">' + c.label + '</span>' +
-      (!c.pass ? '<br><span style="color:var(--text-light);font-size:11px">' + c.tip + '</span>' : '') +
-      '</div></div>';
-  }).join('');
-}
-
-// ══ SEO Audit
-async function runSiteAudit() {
-  var list = await fetchPosts();
-  var good = 0, ok = 0, bad = 0;
-  var rows = list.map(function(t) {
-    var title = t.title || '';
-    var desc  = t.description || '';
-    var kw    = t.focusKeyword || '';
-    var score = 0;
-    if (title.length >= 20) score++;
-    if (title.length <= 65) score++;
-    if (desc.length >= 100) score++;
-    if (desc.length <= 165) score++;
-    if (kw) score++;
-    var pct   = Math.round((score / 5) * 100);
-    var color = pct >= 80 ? '#16a34a' : pct >= 50 ? '#d97706' : '#dc2626';
-    var badge = pct >= 80 ? '✅ Good' : pct >= 50 ? '⚠️ OK' : '❌ Poor';
-    if (pct >= 80) good++; else if (pct >= 50) ok++; else bad++;
-    var tSt = !title ? '<span style="color:#dc2626">Missing</span>' : title.length > 65 ? '<span style="color:#d97706">Long</span>' : '<span style="color:#16a34a">Good</span>';
-    var dSt = !desc ? '<span style="color:#dc2626">Missing</span>' : desc.length > 165 ? '<span style="color:#d97706">Long</span>' : desc.length < 100 ? '<span style="color:#d97706">Short</span>' : '<span style="color:#16a34a">Good</span>';
-    var kwSt = kw ? '<span style="color:#16a34a">' + kw + '</span>' : '<span style="color:#dc2626">—</span>';
-    return '<tr><td style="font-weight:600">' + (t.title || t.file) + '</td>' +
-      '<td><span style="background:' + color + ';color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px">' + badge + '</span></td>' +
-      '<td>' + tSt + ' <span style="color:var(--text-light);font-size:11px">(' + title.length + ')</span></td>' +
-      '<td>' + dSt + ' <span style="color:var(--text-light);font-size:11px">(' + desc.length + ')</span></td>' +
-      '<td>' + kwSt + '</td>' +
-      '<td><button class="btn btn-blue btn-sm" onclick="editPost(\'' + t.file + '\')">Fix</button></td></tr>';
+function clearTutorialForm() {
+  ['t-title','t-description','t-slug','t-content','t-keyword','t-seo-title','t-canonical','t-og-title','t-og-desc'].forEach(function(id) {
+    document.getElementById(id).value = '';
   });
-  document.getElementById('audit-tbody').innerHTML = rows.join('') || '<tr><td colspan="6" style="text-align:center;padding:20px;color:var(--text-light)">No posts</td></tr>';
-  document.getElementById('audit-total').textContent = list.length;
-  document.getElementById('audit-good').textContent = good;
-  document.getElementById('audit-ok').textContent = ok;
-  document.getElementById('audit-bad').textContent = bad;
+  document.getElementById('t-order').value = 1;
+  document.getElementById('t-edit-file').value = '';
+  document.getElementById('t-category').value = 'html';
+  document.getElementById('t-noindex').value = '';
+  updateTutorialPublishBox();
+  updateWordCount();
 }
 
-// ══ Pages
-function getPages() {
-  var defaults = [
-    { title: 'Homepage', slug: '/', status: 'Published' },
-    { title: 'About', slug: '/about', status: 'Draft' },
-    { title: 'Contact', slug: '/contact', status: 'Draft' },
-    { title: 'Privacy Policy', slug: '/privacy', status: 'Draft' },
-  ];
-  return JSON.parse(localStorage.getItem('cc_pages') || JSON.stringify(defaults));
+function updateTutorialPublishBox() {
+  var isEdit = !!document.getElementById('t-edit-file').value;
+  var file   = document.getElementById('t-edit-file').value;
+  document.getElementById('t-publish-btn').innerHTML = isEdit ? '💾 Update' : '🚀 Publish';
+  document.getElementById('t-publish-btn').className = isEdit ? 'btn btn-blue btn-lg' : 'btn btn-primary btn-lg';
+  document.getElementById('t-publish-title').textContent = isEdit ? '✏️ Update' : '📤 Publish';
+  document.getElementById('t-status-row').style.display = isEdit ? 'flex' : 'none';
+  document.getElementById('t-status-file').textContent = file;
+  document.getElementById('edit-banner').style.display = isEdit ? 'flex' : 'none';
+  document.getElementById('edit-banner-file').textContent = file;
 }
 
-function loadPages() {
-  var pages = getPages();
-  document.getElementById('pages-tbody').innerHTML = pages.map(function(p, i) {
-    return '<tr><td style="font-weight:600">' + p.title + '</td><td style="color:var(--text-muted)">' + p.slug + '</td>' +
-      '<td><span class="badge badge-' + (p.status === 'Published' ? 'published' : 'draft') + '">' + p.status + '</span></td>' +
-      '<td><div class="row-actions" style="margin:0">' +
-        '<a onclick="editPage(' + i + ')">Edit</a> | ' +
-        '<a class="trash" onclick="deletePage(' + i + ')">Delete</a></div></td></tr>';
-  }).join('');
-}
-
-function showAddPageForm() {
-  document.getElementById('add-page-form').style.display = 'block';
-  document.getElementById('page-form-title').textContent = '➕ Add New Page';
-  document.getElementById('page-edit-idx').value = '-1';
-  document.getElementById('pg-title').value = '';
-  document.getElementById('pg-slug').value = '';
-  document.getElementById('pg-status').value = 'Draft';
-  document.getElementById('pg-title').focus();
-}
-
-function hideAddPageForm() {
-  document.getElementById('add-page-form').style.display = 'none';
-}
-
-function editPage(idx) {
-  var pages = getPages();
-  var p = pages[idx];
-  if (!p) return;
-  document.getElementById('add-page-form').style.display = 'block';
-  document.getElementById('page-form-title').textContent = '✏️ Edit Page';
-  document.getElementById('page-edit-idx').value = idx;
-  document.getElementById('pg-title').value = p.title;
-  document.getElementById('pg-slug').value = p.slug;
-  document.getElementById('pg-status').value = p.status;
-  document.getElementById('pg-title').focus();
-}
-
-function savePage() {
-  var title = document.getElementById('pg-title').value.trim();
-  var slug  = document.getElementById('pg-slug').value.trim();
-  var status= document.getElementById('pg-status').value;
-  if (!title) { showAlert('Enter a page title', 'error'); return; }
-  if (!slug) slug = '/' + title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-  var pages = getPages();
-  var idx = parseInt(document.getElementById('page-edit-idx').value);
-  if (idx >= 0) {
-    pages[idx] = { title: title, slug: slug, status: status };
-  } else {
-    pages.push({ title: title, slug: slug, status: status });
-  }
-  localStorage.setItem('cc_pages', JSON.stringify(pages));
-  hideAddPageForm();
-  loadPages();
-  showAlert(idx >= 0 ? '✅ Page updated!' : '✅ Page added! Create a .astro file in src/pages/ to make it live.');
-}
-
-function deletePage(idx) {
-  if (!confirm('Delete this page?')) return;
-  var pages = getPages();
-  pages.splice(idx, 1);
-  localStorage.setItem('cc_pages', JSON.stringify(pages));
-  loadPages();
-  showAlert('Page deleted');
-}
-
-// ══ Blog Posts (for AdSense approval)
-async function fetchBlogs() {
-  var res = await fetch('/api/blogs/list');
-  var list = await res.json();
-  document.getElementById('blog-count').textContent = list.length;
-  return list;
-}
-
+// ══════════════════════════════════════════════════════════════════════
+// BLOGS LIST
+// ══════════════════════════════════════════════════════════════════════
 async function loadBlogs() {
   var list = await fetchBlogs();
   var search = (document.getElementById('blog-search').value || '').toLowerCase();
@@ -1173,251 +796,264 @@ async function loadBlogs() {
     return true;
   });
   document.getElementById('blogs-tbody').innerHTML = filtered.map(function(b) {
-    var hasSeo = b.focusKeyword ? '<span style="color:#16a34a">●</span>' : '<span style="color:#dc2626">●</span>';
     return '<tr>' +
-      '<td><span class="post-title" onclick="editBlog(\'' + b.file + '\')">' + (b.title || b.file) + '</span>' +
-      '<div class="row-actions"><a href="http://localhost:4321/blog/' + b.file.replace('.mdx','').replace('.md','') + '" target="_blank">View Live</a></div></td>' +
-      '<td><span class="badge" style="background:#f3e8ff;color:#7c3aed">' + (b.category || 'blog').toUpperCase() + '</span></td>' +
+      '<td><span class="post-title" onclick="editBlog(\'' + b.file + '\')">' + (b.title || b.file) + '</span></td>' +
+      '<td><span class="badge badge-blog">' + (b.category || '-') + '</span></td>' +
       '<td style="font-size:11px;color:var(--text-light)">' + (b.date ? new Date(b.date).toLocaleDateString() : '-') + '</td>' +
-      '<td>' + hasSeo + '</td>' +
       '<td><div style="display:flex;gap:4px">' +
-        '<button class="btn btn-blue btn-sm" style="padding:2px 8px" onclick="editBlog(\'' + b.file + '\')">Edit</button>' +
-        '<button class="btn btn-outline btn-sm" style="padding:2px 8px" onclick="downloadItem(\'blog\', \'' + b.file + '\')">📥</button>' +
-        '<button class="btn btn-danger btn-sm" style="padding:2px 8px" onclick="deleteBlog(\'' + b.file + '\')">🗑️</button>' +
+        '<button class="btn btn-blue btn-sm" onclick="editBlog(\'' + b.file + '\')">Edit</button>' +
+        '<button class="btn btn-danger btn-sm" onclick="deleteBlog(\'' + b.file + '\')">🗑️</button>' +
       '</div></td></tr>';
-  }).join('') || '<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text-light)">No blog posts yet — write some for AdSense approval!</td></tr>';
+  }).join('') || '<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text-light)">No blog posts yet</td></tr>';
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// BLOG FORM: SAVE / EDIT / CLEAR
+// ══════════════════════════════════════════════════════════════════════
+function autoBlogSlug() {
+  if (document.getElementById('b-edit-file').value) return;
+  var title = document.getElementById('b-title').value;
+  document.getElementById('b-slug').value = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 
 async function saveBlog() {
-  var title = document.getElementById('b-title').value.trim();
-  var desc  = document.getElementById('b-description').value.trim();
-  var content = document.getElementById('b-content').value;
+  var title    = document.getElementById('b-title').value.trim();
+  var desc     = document.getElementById('b-description').value.trim();
+  var content  = document.getElementById('b-content').value;
   var category = document.getElementById('b-category').value;
-  var author = document.getElementById('b-author').value.trim() || 'Admin';
+  var author   = document.getElementById('b-author').value.trim() || 'Admin';
+  var slug     = document.getElementById('b-slug').value.trim();
+  var editFile = document.getElementById('b-edit-file').value;
   var seoTitle = document.getElementById('b-seo-title').value.trim();
-  var focusKw = document.getElementById('b-keyword').value.trim();
-  var slug = document.getElementById('b-slug').value.trim();
-  var editFile = document.getElementById('blog-edit-file').value;
+  var keyword  = document.getElementById('b-keyword').value.trim();
 
-  if (!title || !content) { showAlert('Fill in Title and Content', 'error'); return; }
-  if (!desc) desc = content.replace(/[#*`>\n]/g, ' ').trim().slice(0, 155) + '...';
-  if (!slug) slug = editFile || (title.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.mdx');
-  if (!slug.endsWith('.mdx') && !slug.endsWith('.md')) slug += '.mdx';
+  if (!title)          { showAlert('❌ Title is required', 'error'); return; }
+  if (!content.trim()) { showAlert('❌ Content is required', 'error'); return; }
+  if (!desc) desc = content.replace(/[#*`>\n\r<]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 155) + '...';
 
-  var fm = '---\ntitle: "' + title + '"\ndescription: "' + desc + '"\ncategory: "' + category + '"\nauthor: "' + author + '"\ndate: ' + new Date().toISOString();
-  if (seoTitle) fm += '\nseoTitle: "' + seoTitle + '"';
-  if (focusKw)  fm += '\nfocusKeyword: "' + focusKw + '"';
-  fm += '\n---\n\n' + content;
+  var filename = editFile || (slug || title.toLowerCase().replace(/[^a-z0-9]+/g, '-')) + '.mdx';
+  filename = filename.replace(/\.mdx$|\.md$/, '') + '.mdx';
 
-  // Cleanup slug if they typed spaces manually
-  slug = slug.toLowerCase().replace(/[^a-z0-9.-]+/g, '-');
-  if (!slug.endsWith('.mdx') && !slug.endsWith('.md')) slug += '.mdx';
+  var fm = '---\n';
+  fm += 'title: "' + title.replace(/"/g, '&quot;') + '"\n';
+  fm += 'description: "' + desc.replace(/"/g, '&quot;') + '"\n';
+  fm += 'category: "' + category + '"\n';
+  fm += 'author: "' + author + '"\n';
+  fm += 'date: ' + new Date().toISOString() + '\n';
+  if (seoTitle) fm += 'seoTitle: "' + seoTitle.replace(/"/g, '&quot;') + '"\n';
+  if (keyword)  fm += 'focusKeyword: "' + keyword + '"\n';
+  fm += '---\n\n' + content;
 
   try {
-    var res = await fetch('/api/blogs/save', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filename: slug, content: fm }) });
+    var res = await fetch('/api/blogs/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ filename: filename, content: fm })
+    });
     var json = await res.json();
-    if (json.ok) { showAlert('✅ Blog published!'); clearBlogForm(); showTab('blogs'); }
-    else showAlert('Error: ' + json.error, 'error');
-  } catch (err) {
-    console.error(err);
-    showAlert('Failed to save! Did you restart the admin server in terminal using "npm run admin"?', 'error');
+    if (json.ok) {
+      showAlert('✅ Blog "' + title + '" published!');
+      clearBlogForm();
+      showTab('blogs');
+    } else {
+      showAlert('❌ Error: ' + json.error, 'error');
+    }
+  } catch(err) {
+    showAlert('❌ Cannot reach admin server!', 'error');
   }
 }
 
 async function editBlog(file) {
   showTab('blog-create');
   document.getElementById('page-title').textContent = 'Edit Blog Post';
-  var res = await fetch('/api/blogs/get?file=' + encodeURIComponent(file));
-  var json = await res.json();
-  if (!json.content) return;
-  var raw = json.content;
-  var fm = {};
-  var m = raw.match(/^---\n([\s\S]*?)\n---/);
-  if (m) m[1].split('\n').forEach(function(l) { var parts = l.split(':'); if (parts[0]) fm[parts[0].trim()] = parts.slice(1).join(':').trim().replace(/^"|"$/g, ''); });
-  var body = raw.replace(/^---[\s\S]*?---\n*/, '');
-  document.getElementById('b-title').value = fm.title || '';
-  document.getElementById('b-description').value = fm.description || '';
-  document.getElementById('b-content').value = body;
-  document.getElementById('b-category').value = fm.category || 'web-development';
-  document.getElementById('b-author').value = fm.author || 'Admin';
-  document.getElementById('b-seo-title').value = fm.seoTitle || '';
-  document.getElementById('b-keyword').value = fm.focusKeyword || '';
-  document.getElementById('b-slug').value = file;
-  document.getElementById('blog-edit-file').value = file;
+  try {
+    var res = await fetch('/api/blogs/get?file=' + encodeURIComponent(file));
+    var json = await res.json();
+    if (!json.content) { showAlert('Could not load blog', 'error'); return; }
+
+    var raw = json.content.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    var fm = parseFM(raw);
+    var body = raw.replace(/^---[\s\S]*?---\n*/, '');
+
+    document.getElementById('b-title').value       = fm.title || '';
+    document.getElementById('b-description').value  = fm.description || '';
+    document.getElementById('b-category').value     = fm.category || 'web-development';
+    document.getElementById('b-author').value       = fm.author || 'Admin';
+    document.getElementById('b-slug').value         = file;
+    document.getElementById('b-content').value      = body;
+    document.getElementById('b-edit-file').value    = file;
+    document.getElementById('b-seo-title').value    = fm.seoTitle || '';
+    document.getElementById('b-keyword').value      = fm.focusKeyword || '';
+
+    document.getElementById('b-publish-btn').innerHTML = '💾 Update Blog';
+    document.getElementById('b-publish-btn').className = 'btn btn-blue btn-lg';
+    document.getElementById('blog-status-row').style.display = 'flex';
+    document.getElementById('blog-edit-banner').style.display = 'flex';
+    document.getElementById('blog-edit-filename').textContent = file;
+  } catch(err) {
+    showAlert('❌ Failed to load blog', 'error');
+  }
 }
 
 async function deleteBlog(file) {
-  if (!confirm('Delete blog "' + file + '"?')) return;
+  if (!confirm('Delete "' + file + '"?')) return;
   await fetch('/api/blogs/delete', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filename: file }) });
-  showAlert('Blog deleted');
+  showAlert('Deleted ' + file);
   loadBlogs();
 }
 
 function clearBlogForm() {
-  ['b-title','b-description','b-content','b-keyword','b-seo-title','b-slug'].forEach(function(id) { document.getElementById(id).value = ''; });
-  document.getElementById('b-category').value = 'web-development';
-  document.getElementById('b-author').value = 'Admin';
-  document.getElementById('blog-edit-file').value = '';
-}
-
-// ══ Media
-function loadMedia() {
-  document.getElementById('media-list').innerHTML =
-    '<p style="color:var(--text-light);font-size:12px;grid-column:1/-1">Place images in <strong>public/images/uploads/</strong> and they\'ll appear here in a future update.<br>For now, reference them in your posts as: <code>/images/uploads/filename.jpg</code></p>';
-}
-
-// ══ SEO Tools
-async function loadSeoTools() {
-  var list = await fetchPosts();
-  var sel = document.getElementById('heading-post-select');
-  sel.innerHTML = '<option value="">Select a post...</option>' +
-    list.map(function(t) { return '<option value="' + t.file + '">' + (t.title||t.file) + '</option>'; }).join('');
-}
-
-async function generateSitemap() {
-  var list = await fetchPosts();
-  var base = document.getElementById('s-url') ? document.getElementById('s-url').value : 'https://codescompiler.com';
-  var xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
-  xml += '  <url>\n    <loc>' + base + '/</loc>\n    <priority>1.0</priority>\n  </url>\n';
-  list.forEach(function(t) {
-    var slug = t.file.replace('.mdx', '').replace('.md', '');
-    xml += '  <url>\n    <loc>' + base + '/tutorial/' + slug + '</loc>\n    <lastmod>' + (t.date || new Date().toISOString()) + '</lastmod>\n    <priority>0.8</priority>\n  </url>\n';
+  ['b-title','b-description','b-slug','b-content','b-keyword','b-seo-title'].forEach(function(id) {
+    document.getElementById(id).value = '';
   });
-  xml += '</urlset>';
-  document.getElementById('sitemap-preview').textContent = xml;
-  document.getElementById('sitemap-preview').style.display = 'block';
-  // Save it
-  await fetch('/api/save-file', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ path: 'public/sitemap.xml', content: xml }) });
-  showAlert('✅ Sitemap generated with ' + (list.length + 1) + ' URLs!');
+  document.getElementById('b-edit-file').value = '';
+  document.getElementById('b-author').value = 'Admin';
+  document.getElementById('b-category').value = 'web-development';
+  document.getElementById('b-publish-btn').innerHTML = '🚀 Publish Blog';
+  document.getElementById('b-publish-btn').className = 'btn btn-primary btn-lg';
+  document.getElementById('blog-status-row').style.display = 'none';
+  document.getElementById('blog-edit-banner').style.display = 'none';
 }
 
-async function saveRobots() {
-  var content = document.getElementById('robots-txt').value;
-  await fetch('/api/save-file', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ path: 'public/robots.txt', content: content }) });
-  showAlert('✅ Robots.txt saved!');
+// ══════════════════════════════════════════════════════════════════════
+// QUICK DRAFT
+// ══════════════════════════════════════════════════════════════════════
+async function quickDraft() {
+  var title   = document.getElementById('qd-title').value.trim();
+  var content = document.getElementById('qd-content').value.trim();
+  var type    = document.getElementById('qd-type').value;
+  var cat     = document.getElementById('qd-category').value;
+  if (!title) { showAlert('❌ Enter a title', 'error'); return; }
+
+  var filename = title.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.mdx';
+  var fm = '---\ntitle: "' + title + '"\ndescription: "Draft post"\ncategory: "' + cat + '"';
+  if (type === 'tutorial') fm += '\norder: 99';
+  if (type === 'blog') fm += '\nauthor: "Admin"';
+  fm += '\ndate: ' + new Date().toISOString() + '\n---\n\n' + (content || '## Draft\n\nContent to be written...');
+
+  var api = type === 'blog' ? '/api/blogs/save' : '/api/tutorials/save';
+  try {
+    var res = await fetch(api, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ filename: filename, content: fm }) });
+    var json = await res.json();
+    if (json.ok) {
+      showAlert('✅ Draft saved!');
+      document.getElementById('qd-title').value = '';
+      document.getElementById('qd-content').value = '';
+      loadDashboard();
+    } else showAlert('❌ ' + json.error, 'error');
+  } catch(err) {
+    showAlert('❌ Cannot reach admin server!', 'error');
+  }
 }
 
-function generateSchema() {
-  var siteTitle = document.getElementById('s-title') ? document.getElementById('s-title').value : 'CodesCompiler';
-  var siteUrl   = document.getElementById('s-url') ? document.getElementById('s-url').value : 'https://codescompiler.com';
-  var schema = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": siteTitle,
-    "url": siteUrl,
-    "description": "Free tutorials on HTML, CSS, JavaScript and web development",
-    "potentialAction": { "@type": "SearchAction", "target": siteUrl + "/search?q={search_term_string}", "query-input": "required name=search_term_string" }
-  };
-  document.getElementById('schema-preview').value = JSON.stringify(schema, null, 2);
+// ══════════════════════════════════════════════════════════════════════
+// SIDEBAR MANAGER
+// ══════════════════════════════════════════════════════════════════════
+async function loadSidebarManager() {
+  try {
+    var res = await fetch('/api/sidebar/get');
+    var sidebar = await res.json();
+    renderSidebarCategory('sidebar-html', sidebar.html || []);
+    renderSidebarCategory('sidebar-css', sidebar.css || []);
+    renderSidebarCategory('sidebar-js', sidebar.javascript || []);
+  } catch(e) {
+    document.getElementById('sidebar-html').innerHTML = '<p style="color:var(--text-light);font-size:12px">Failed to load</p>';
+  }
 }
 
-async function analyzeHeadings() {
-  var file = document.getElementById('heading-post-select').value;
-  if (!file) return;
-  var res = await fetch('/api/get?file=' + encodeURIComponent(file));
-  var json = await res.json();
-  if (!json.content) return;
-  var body = json.content.replace(/^---[\s\S]*?---\n*/, '');
-  var headings = body.match(/^#{1,6}\s.+$/gm) || [];
-  if (!headings.length) {
-    document.getElementById('heading-analysis').innerHTML = '<p style="color:#dc2626">⚠️ No headings found! Add ## subheadings.</p>';
+function renderSidebarCategory(containerId, items) {
+  var el = document.getElementById(containerId);
+  if (!items.length) {
+    el.innerHTML = '<p style="color:var(--text-light);font-size:12px;padding:8px 0">No tutorials in this category yet.</p>';
     return;
   }
-  document.getElementById('heading-analysis').innerHTML = headings.map(function(h) {
-    var level = h.match(/^#+/)[0].length;
-    var text = h.replace(/^#+\s/, '');
-    return '<div style="padding-left:' + ((level-1)*16) + 'px;margin-bottom:4px"><span style="color:var(--primary);font-weight:700">H' + level + '</span> ' + text + '</div>';
-  }).join('') + '<p style="margin-top:8px;color:var(--text-light)">' + headings.length + ' heading(s) found</p>';
+  el.innerHTML = items.map(function(item, i) {
+    return '<div class="sidebar-item">' +
+      '<span class="drag-handle">☰</span>' +
+      '<span class="item-title">' + item.title + '</span>' +
+      '<span class="item-order">#' + item.order + '</span>' +
+    '</div>';
+  }).join('');
 }
 
-async function analyzeLinking() {
-  var list = await fetchPosts();
-  if (list.length < 2) { document.getElementById('linking-suggestions').innerHTML = '<p style="color:var(--text-light)">Add more posts to get linking suggestions.</p>'; return; }
-  var suggestions = [];
-  for (var i = 0; i < list.length; i++) {
-    for (var j = 0; j < list.length; j++) {
-      if (i === j) continue;
-      var kw = (list[j].title || '').toLowerCase().split(' ');
-      var content = (list[i].description || '').toLowerCase();
-      var match = kw.some(function(w) { return w.length > 3 && content.includes(w); });
-      if (match) suggestions.push({ from: list[i].title || list[i].file, to: list[j].title || list[j].file });
-    }
+// ══════════════════════════════════════════════════════════════════════
+// NAV BAR MANAGER
+// ══════════════════════════════════════════════════════════════════════
+var navItems = [];
+
+async function loadNavBar() {
+  try {
+    var res = await fetch('/api/nav/get');
+    navItems = await res.json();
+  } catch(e) {
+    navItems = [
+      { label: 'HTML', href: '/tutorial/html-introduction', color: '#E34F26' },
+      { label: 'CSS', href: '/tutorial/css-introduction', color: '#264DE4' },
+      { label: 'JavaScript', href: '/tutorial/js-introduction', color: '#F7DF1E' },
+    ];
   }
-  document.getElementById('linking-suggestions').innerHTML = suggestions.slice(0,8).map(function(s) {
-    return '<div style="margin-bottom:6px">📄 <strong>' + s.from + '</strong> → link to → 📄 <strong>' + s.to + '</strong></div>';
-  }).join('') || '<p style="color:var(--text-light)">No suggestions found.</p>';
+  renderNavEditor();
 }
 
-async function analyzeKeywordDensity() {
-  var list = await fetchPosts();
-  var allText = '';
-  for (var i = 0; i < list.length; i++) {
-    var res = await fetch('/api/get?file=' + encodeURIComponent(list[i].file));
-    var json = await res.json();
-    if (json.content) allText += ' ' + json.content.replace(/^---[\s\S]*?---/, '').toLowerCase();
-  }
-  var words = allText.split(/\s+/).filter(function(w) { return w.length > 4 && !/^[#<\-()\[\]{}|`*_>\/]/.test(w); });
-  var freq = {};
-  words.forEach(function(w) { w = w.replace(/[^a-z]/g,''); if (w.length > 4) freq[w] = (freq[w] || 0) + 1; });
-  var sorted = Object.entries(freq).sort(function(a,b) { return b[1] - a[1]; }).slice(0, 15);
-  document.getElementById('keyword-density').innerHTML =
-    '<table style="width:100%;font-size:12px"><tr><th style="text-align:left">Keyword</th><th>Count</th><th>Density</th></tr>' +
-    sorted.map(function(kv) {
-      return '<tr><td>' + kv[0] + '</td><td style="text-align:center">' + kv[1] + '</td><td style="text-align:center">' + ((kv[1]/words.length)*100).toFixed(2) + '%</td></tr>';
-    }).join('') + '</table>';
+function renderNavEditor() {
+  document.getElementById('nav-editor').innerHTML = navItems.map(function(item, i) {
+    return '<div class="nav-editor-item">' +
+      '<input type="text" value="' + (item.label || '') + '" id="nav-label-' + i + '" placeholder="Label" style="flex:1"/>' +
+      '<input type="text" value="' + (item.href || '') + '" id="nav-href-' + i + '" placeholder="/path" style="flex:2"/>' +
+      '<input type="color" value="' + (item.color || '#9CA3AF') + '" id="nav-color-' + i + '" class="color-input" title="Color"/>' +
+      '<button class="btn btn-danger btn-sm" onclick="removeNavItem(' + i + ')">✕</button>' +
+    '</div>';
+  }).join('');
 }
 
-// ══ Navigation Editor
-var defaultNav = [
-  { label: 'HTML', href: '/tutorial/html-introduction' },
-  { label: 'CSS', href: '/tutorial/css-introduction' },
-  { label: 'JavaScript', href: '/tutorial/js-introduction' },
-];
-
-function loadHeaderNav() {
-  var items = JSON.parse(localStorage.getItem('navItems') || JSON.stringify(defaultNav));
-  renderNavEditor(items);
-}
-
-function renderNavEditor(items) {
-  document.getElementById('nav-links-editor').innerHTML = items.map(function(item, i) {
-    return '<div style="display:flex;gap:8px;margin-bottom:8px;align-items:center">' +
-      '<input style="flex:1" type="text" value="' + item.label + '" id="nav-label-' + i + '"/>' +
-      '<input style="flex:2" type="text" value="' + item.href + '" id="nav-href-' + i + '"/>' +
-      '<button class="btn btn-danger btn-sm" onclick="removeNavItem(' + i + ')">✕</button></div>';
-  }).join('') + '<button class="btn btn-outline btn-sm" onclick="addNavItem()" style="margin-top:4px">+ Add Link</button>';
-}
-
-function getNavItems() {
-  var items = []; var i = 0;
+function getNavItemsFromEditor() {
+  var items = [];
+  var i = 0;
   while (document.getElementById('nav-label-' + i)) {
-    items.push({ label: document.getElementById('nav-label-' + i).value, href: document.getElementById('nav-href-' + i).value });
+    items.push({
+      label: document.getElementById('nav-label-' + i).value,
+      href: document.getElementById('nav-href-' + i).value,
+      color: document.getElementById('nav-color-' + i).value,
+    });
     i++;
   }
   return items;
 }
 
-function addNavItem() { var items = getNavItems(); items.push({ label: 'New Link', href: '/' }); renderNavEditor(items); }
-function removeNavItem(i) { var items = getNavItems(); items.splice(i, 1); renderNavEditor(items); }
-
-async function saveHeaderNav() {
-  var items = getNavItems();
-  localStorage.setItem('navItems', JSON.stringify(items));
-  await fetch('/api/save-nav', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items: items }) });
-  showAlert('✅ Navigation saved!');
+function addNavItem() {
+  navItems = getNavItemsFromEditor();
+  navItems.push({ label: 'New Link', href: '/', color: '#9CA3AF' });
+  renderNavEditor();
 }
 
-// ══ Settings
+function removeNavItem(i) {
+  navItems = getNavItemsFromEditor();
+  navItems.splice(i, 1);
+  renderNavEditor();
+}
+
+async function saveNavBar() {
+  navItems = getNavItemsFromEditor();
+  try {
+    await fetch('/api/nav/save', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items: navItems })
+    });
+    showAlert('✅ Navigation saved! Reload the live site to see changes.');
+  } catch(e) {
+    showAlert('❌ Failed to save navigation', 'error');
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// SETTINGS
+// ══════════════════════════════════════════════════════════════════════
 function saveSettings() {
   var settings = {
     title: document.getElementById('s-title').value,
     tagline: document.getElementById('s-tagline').value,
     url: document.getElementById('s-url').value,
-    twitter: document.getElementById('s-twitter').value,
-    github: document.getElementById('s-github').value,
-    youtube: document.getElementById('s-youtube').value,
-    linkedin: document.getElementById('s-linkedin').value,
-    metaDesc: document.getElementById('s-meta-desc').value,
     ga: document.getElementById('s-ga').value,
     adsense: document.getElementById('s-adsense').value,
   };
@@ -1430,21 +1066,45 @@ function loadSettings() {
   if (s.title) document.getElementById('s-title').value = s.title;
   if (s.tagline) document.getElementById('s-tagline').value = s.tagline;
   if (s.url) document.getElementById('s-url').value = s.url;
-  if (s.twitter) document.getElementById('s-twitter').value = s.twitter;
-  if (s.github) document.getElementById('s-github').value = s.github;
-  if (s.youtube) document.getElementById('s-youtube').value = s.youtube;
-  if (s.linkedin) document.getElementById('s-linkedin').value = s.linkedin;
-  if (s.metaDesc) document.getElementById('s-meta-desc').value = s.metaDesc;
   if (s.ga) document.getElementById('s-ga').value = s.ga;
   if (s.adsense) document.getElementById('s-adsense').value = s.adsense;
 }
 
-// ══ Init
+// ══════════════════════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════════════════════
+function parseFM(raw) {
+  var normalised = raw.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  var fm = {};
+  var m = normalised.match(/^---\n([\s\S]*?)\n---/);
+  if (!m) return fm;
+  m[1].split('\n').forEach(function(line) {
+    var idx = line.indexOf(':');
+    if (idx === -1) return;
+    var k = line.slice(0, idx).trim();
+    var v = line.slice(idx + 1).trim().replace(/^"|"$/g, '');
+    if (k) fm[k] = v;
+  });
+  return fm;
+}
+
+function updateWordCount() {
+  var text = document.getElementById('t-content').value;
+  var words = text.trim() ? text.trim().split(/\s+/).length : 0;
+  var mins = Math.max(1, Math.ceil(words / 200));
+  document.getElementById('t-word-count').textContent = 'Words: ' + words;
+  document.getElementById('t-read-time').textContent = '~' + mins + ' min read';
+}
+
+document.addEventListener('input', function(e) {
+  if (e.target.id === 't-content') updateWordCount();
+});
+
+// ══════════════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════════════
 loadDashboard();
-loadHeaderNav();
-updateSnippet();
 loadSettings();
-generateSchema();
 </script>
 </body>
 </html>

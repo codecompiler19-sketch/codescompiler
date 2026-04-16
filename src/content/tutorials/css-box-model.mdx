@@ -1,0 +1,37 @@
+---
+title: "CSS Box Model"
+description: "All HTML elements can be considered as boxes. The CSS box model describes the spacing around every element."
+category: "css"
+order: 4
+---
+
+Every HTML element is a rectangular **box** made of four layers:
+
+1. **Content** — the text or image inside
+2. **Padding** — space between content and border (inside)
+3. **Border** — a line around the padding
+4. **Margin** — space outside the border (between elements)
+
+### Try It — Visualise the Box Model
+
+<Editor 
+    initialHtml={`<h2>The CSS Box Model</h2>\n\n<div class="box-demo">\n  <p>This box has:<br>\n  • 20px padding (inside space)<br>\n  • 4px solid border<br>\n  • 30px margin (outside space)</p>\n</div>\n\n<div class="box-demo">Another box — notice the gap between them (margin).</div>\n\n<h3>Width Calculation</h3>\n<div class="width-box">\n  width: 300px + padding: 20px each side + border: 4px each side<br>\n  = Total rendered width: 348px\n</div>`}
+    initialCss={`body { font-family: Arial, sans-serif; padding: 16px; background: #f9f9f9; }\nh2 { color: #04AA6D; }\nh3 { color: #555; margin-top: 20px; }\n\n.box-demo {\n  background-color: #d4edda;\n  width: 300px;\n  padding: 20px;\n  border: 4px solid #28a745;\n  margin: 30px;\n  border-radius: 4px;\n  color: #155724;\n  line-height: 1.7;\n}\n\n.width-box {\n  background: #fff3cd;\n  border: 4px solid #f0ad4e;\n  width: 300px;\n  padding: 20px;\n  margin: 10px 30px;\n  color: #856404;\n  font-size: 13px;\n  line-height: 1.6;\n  border-radius: 4px;\n}`}
+/>
+
+### Box Model Layers
+
+| Layer | Property | What it does |
+| :--- | :--- | :--- |
+| Content | `width`, `height` | The size of the content area |
+| Padding | `padding` | Space **inside** the border |
+| Border | `border` | Line around the element |
+| Margin | `margin` | Space **outside** the element |
+
+### Total Width Formula
+
+```
+Total width = width + left padding + right padding + left border + right border
+```
+
+> **Tip:** Use `box-sizing: border-box` in your CSS to make `width` include padding and border automatically — this is much more predictable and is what most modern websites use.

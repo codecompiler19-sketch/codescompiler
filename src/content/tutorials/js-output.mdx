@@ -1,0 +1,28 @@
+---
+title: "JS Output"
+description: "JavaScript can display data in different ways."
+category: "javascript"
+order: 2
+---
+
+JavaScript has four ways to display output. The most useful and common is `innerHTML` — it lets you update any element on the page without a full reload.
+
+### Try It — Output Methods Compared
+
+<Editor 
+    initialHtml={`<h2>JavaScript Output Demo</h2>\n\n<h3>innerHTML — most common</h3>\n<p id="demo1" class="result"></p>\n\n<h3>Direct DOM write</h3>\n<p id="demo2" class="result"></p>\n\n<h3>Button-triggered output</h3>\n<button onclick="showMessage()">Click Me!</button>\n<p id="demo3" class="result"></p>`}
+    initialCss={`body { font-family: Arial, sans-serif; padding: 16px; }\nh2 { color: #04AA6D; }\nh3 { color: #555; margin: 16px 0 6px; }\n.result {\n  background: #f4f4f4;\n  border-left: 4px solid #04AA6D;\n  padding: 10px 14px;\n  font-family: monospace;\n  min-height: 20px;\n  margin: 0;\n}\nbutton {\n  background: #04AA6D; color: white; border: none;\n  padding: 9px 18px; border-radius: 5px; cursor: pointer; font-size: 14px;\n}\nbutton:hover { background: #038a58; }`}
+    initialJs={`// 1. innerHTML — write HTML into an element\ndocument.getElementById("demo1").innerHTML =\n  "Result of 5 + 6 = <strong>" + (5 + 6) + "</strong>";\n\n// 2. textContent — write plain text (no HTML)\ndocument.getElementById("demo2").textContent =\n  "Today is: " + new Date().toDateString();\n\n// 3. Function called by button click\nfunction showMessage() {\n  document.getElementById("demo3").innerHTML =\n    "🎉 Button clicked at " + new Date().toLocaleTimeString();\n}\n\n// Note: console.log is for debugging — open F12 to see:\nconsole.log("Page loaded! JavaScript is working.");`}
+/>
+
+### Output Methods Compared
+
+| Method | Where Output Goes | Best For |
+| :--- | :--- | :--- |
+| `innerHTML` | Inside an HTML element | Displaying HTML content |
+| `textContent` | Inside an element (text only) | Safe text updates |
+| `document.write()` | Directly in HTML stream | Quick testing only |
+| `window.alert()` | Browser popup | Simple alerts |
+| `console.log()` | Browser DevTools (F12) | Debugging |
+
+> **Tip:** Open your browser's DevTools (press **F12** → **Console** tab) to see the `console.log()` output from the JS editor!

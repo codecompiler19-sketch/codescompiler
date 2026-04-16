@@ -1,0 +1,27 @@
+---
+title: "CSS Position"
+description: "The position property specifies the type of positioning method used for an element."
+category: "css"
+order: 10
+---
+
+The CSS `position` property controls **how an element is placed** in the document. The `top`, `right`, `bottom`, `left` properties then offset it from that position.
+
+### Try It — All Position Types
+
+<Editor 
+    initialHtml={`<h2>CSS Position Demo</h2>\n\n<div class="container">\n  <div class="box static">static (default — normal flow)</div>\n  <div class="box relative">relative (shifted 20px right from normal place)</div>\n  <div class="box absolute">absolute (positioned to top-right of container)</div>\n  <div class="box sticky-note">sticky (scroll to see it stick!)</div>\n  <div style="height:80px; background:#f0f0f0; padding:8px; color:#999;">\n    Scroll content below...\n  </div>\n</div>\n\n<div class="box fixed-note">fixed (always in corner)</div>`}
+    initialCss={`body { font-family: Arial, sans-serif; padding: 16px; }\nh2 { color: #04AA6D; }\n\n.container {\n  position: relative;\n  background: #f9f9f9;\n  border: 2px dashed #ccc;\n  padding: 16px;\n  height: 280px;\n  overflow-y: auto;\n}\n\n.box {\n  padding: 10px 14px;\n  border-radius: 5px;\n  margin-bottom: 10px;\n  font-weight: bold;\n  font-size: 13px;\n}\n\n.static {\n  position: static;\n  background: #d4edda;\n  border: 2px solid #28a745;\n  color: #155724;\n}\n\n.relative {\n  position: relative;\n  left: 20px;\n  background: #d1ecf1;\n  border: 2px solid #0c5460;\n  color: #0c5460;\n}\n\n.absolute {\n  position: absolute;\n  top: 10px;\n  right: 10px;\n  background: #fff3cd;\n  border: 2px solid #856404;\n  color: #856404;\n  width: 200px;\n}\n\n.sticky-note {\n  position: sticky;\n  top: 0;\n  background: #04AA6D;\n  color: white;\n  border: none;\n  z-index: 1;\n}\n\n.fixed-note {\n  position: fixed;\n  bottom: 16px;\n  right: 16px;\n  background: #e74c3c;\n  color: white;\n  padding: 10px 14px;\n  border-radius: 5px;\n  font-weight: bold;\n  font-size: 13px;\n  z-index: 999;\n}`}
+/>
+
+### Position Values Reference
+
+| Value | Behaviour |
+| :--- | :--- |
+| `static` | Default — follows normal document flow |
+| `relative` | Offset from **its own** normal position |
+| `absolute` | Positioned relative to **nearest positioned ancestor** |
+| `fixed` | Positioned relative to **viewport** — stays on screen when scrolling |
+| `sticky` | Normal flow until scroll threshold, then acts like `fixed` |
+
+> **Tip:** `position: absolute` needs a **positioned ancestor** (`relative`, `absolute`, or `fixed`) to anchor to. If none exists, it anchors to the `<body>`.
