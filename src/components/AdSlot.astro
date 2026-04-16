@@ -1,42 +1,22 @@
 ---
 export interface Props {
-  client?: string; // e.g. "ca-pub-XXXXXXXXXXXXXXXX"
-  slot?: string;   // e.g. "XXXXXXXXXX"
-  format?: 'auto' | 'fluid' | 'rectangle';
-  responsive?: boolean;
+  format?: 'rectangle' | 'vertical' | 'horizontal';
+  className?: string;
 }
+const { format = 'rectangle', className = '' } = Astro.props;
 
-const { 
-  client = 'ca-pub-XXXXXXXXXXXX', // Placeholder Publisher ID
-  slot = 'XXXXXXXXXX',           // Placeholder Slot ID
-  format = 'auto', 
-  responsive = true 
-} = Astro.props;
+const styles = {
+  rectangle: 'w-full max-w-[300px] h-[250px]',
+  vertical: 'w-full max-w-[160px] md:max-w-[300px] h-[600px]',
+  horizontal: 'w-full h-[90px]',
+};
 ---
 
-<div class="adsense-container w-full bg-gray-50 flex items-center justify-center border border-gray-200 border-dashed rounded p-4 my-6">
-  <!-- Place valid AdSense script here in production -->
-  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={client}" crossorigin="anonymous"></script> -->
+<div class={`bg-gray-50 border border-dashed border-gray-300 rounded flex flex-col items-center justify-center text-gray-400 overflow-hidden text-center relative ${styles[format]} ${className}`}>
+  <span class="absolute top-2 left-0 right-0 text-[10px] uppercase tracking-widest font-semibold text-gray-400">Advertisement</span>
   
-  <ins class="adsbygoogle"
-       style={`display:block; text-align:center; ${responsive ? 'width: 100%;' : 'width: 300px; height: 250px;'}`}
-       data-ad-layout="in-article"
-       data-ad-format={format}
-       data-ad-client={client}
-       data-ad-slot={slot}
-       data-full-width-responsive={responsive ? 'true' : 'false'}></ins>
-       
-  <script is:inline>
-       // (adsbygoogle = window.adsbygoogle || []).push({});
-  </script>
-  
-  <span class="text-gray-400 text-sm italic absolute">Placeholder Ad Space</span>
+  <!-- Add your Google AdSense <ins> tag here inside this div -->
+  <div class="text-xs font-medium text-gray-400 px-4 mt-4">
+    Google AdSense<br/>Block Ready
+  </div>
 </div>
-
-<style>
-  .adsense-container {
-    position: relative;
-    min-height: 100px;
-    overflow: hidden;
-  }
-</style>
