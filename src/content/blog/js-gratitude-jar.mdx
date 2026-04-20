@@ -1,0 +1,49 @@
+---
+title: "Gratitude Jar with Firefly Glow"
+description: "Users drop short gratitude notes into a glowing glass jar where they float inside like fireflies."
+date: "2026-04-18"
+category: "JavaScript Projects"
+tags: ["javascript", "canvas", "css", "creative"]
+image: "/images/posts/js-gratitude-jar.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Practicing gratitude improves mental health. Digital gratitude journals lack character, so let's build a literal Glass Jar using Glassmorphism, and turn each written gratitude into a glowing firefly particle trapped inside!
+
+## The Glassmorphism Jar
+
+```css
+.jar {
+  width: 200px;
+  height: 300px;
+  border-radius: 40px 40px 20px 20px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 0 40px rgba(0, 255, 200, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+```
+
+## Creating Fireflies
+
+Every time the user submits a note, we spawn a div inside the jar that wanders randomly.
+
+```javascript
+function addFirefly(noteText) {
+  const fly = document.createElement('div');
+  fly.className = 'firefly';
+  fly.title = noteText;
+  
+  // Random starting position inside the jar
+  fly.style.left = Math.random() * 80 + '%';
+  fly.style.top = Math.random() * 80 + '%';
+  
+  jar.appendChild(fly);
+}
+```
+
+Add your own glowing memories to the jar in the incredibly serene Live Demo!

@@ -1,0 +1,30 @@
+---
+title: "Habit Streak Tracker (GitHub Style)"
+description: "Check off daily habits and visualize your 30-day streak in a heatmap style table just like GitHub."
+date: "2026-04-18"
+category: "JavaScript Projects"
+tags: ["javascript", "heatmap", "localStorage", "app"]
+image: "/images/posts/js-habit-tracker.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Heatmaps are highly motivating! Let's build a grid that tracks completion across 30 days.
+
+## Data Structure
+
+```javascript
+let habits = JSON.parse(localStorage.getItem('habits')) || {
+  "Drink Water": new Array(30).fill(false),
+  "Read 10 Pages": new Array(30).fill(false)
+};
+
+function toggleDay(habit, dayIndex) {
+  habits[habit][dayIndex] = !habits[habit][dayIndex];
+  localStorage.setItem('habits', JSON.stringify(habits));
+  renderGrid();
+}
+```
+
+Check out the Live Demo to click the squares and watch them light up with colors based on your streak!

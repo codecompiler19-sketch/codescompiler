@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Magnifying Lens</title>
+  <style>
+    body { background: #f1f5f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif;}
+    
+    .zoom-container {
+      position: relative;
+      width: 600px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      cursor: crosshair;
+    }
+    
+    .base-img {
+      width: 100%;
+      height: auto;
+      display: block; /* Removes baseline gap */
+    }
+    
+    /* The Floating Magnifying Glass */
+    .lens {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background-image: url('https://images.unsplash.com/photo-1506744626753-143683980bcf?q=80&w=1200&auto=format&fit=crop');
+      
+      /* The multiplier config! Zoom factor 2x = 200% */
+      background-size: 1200px auto; /* 600px * 2 */
+      background-repeat: no-repeat;
+      
+      border: 3px solid white;
+      box-shadow: 0 0 15px rgba(0,0,0,0.4), inset 0 0 15px rgba(0,0,0,0.2);
+      
+      /* Hide by default until JS unhides on mouse enter */
+      opacity: 0; 
+      pointer-events: none; /* Stops the lens from blocking the mouse event listeners! */
+      transition: opacity 0.2s;
+    }
+  </style>
+</head>
+<body>
+  <div class="zoom-container" id="container">
+    <img src="https://images.unsplash.com/photo-1506744626753-143683980bcf?q=80&w=1200&auto=format&fit=crop" class="base-img" alt="Landscape">
+    <div class="lens" id="lens"></div>
+  </div>
+
+  <script>
+    const container = document.getElementById('container');
+    const lens = document.getElementById('lens');
+    const zoomMultiplier = 2;
+
+    container.addEventListener('mousemove', (e) => {
+      // Show the lens
+      lens.style.opacity = '1';
+      
+      // Calculate coordinates relative to the image
+      const rect = container.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      
+      // Move the physical lens div
+      // -60px centers it because the lens is 120x120 pixels
+      lens.style.left = (x - 60) + 'px';
+      lens.style.top = (y - 60) + 'px';
+      
+      // Shift the background image proportionally to simulate zooming!
+      // Math: Cursor location * multiplier, offset by half the lens size
+      const bgX = (x * zoomMultiplier) - 60;
+      const bgY = (y * zoomMultiplier) - 60;
+      
+      lens.style.backgroundPosition = `-${bgX}px -${bgY}px`;
+    });
+    
+    // Hide lens off-screen
+    container.addEventListener('mouseleave', () => {
+      lens.style.opacity = '0';
+    });
+  </script>
+</body>
+</html>

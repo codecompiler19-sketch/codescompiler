@@ -1,0 +1,37 @@
+---
+title: "Infinite Scroll Social Feed"
+description: "A fake social media platform feed that endlessly generates new posts as the user scrolls downwards."
+date: "2026-04-18"
+category: "Website Designs"
+tags: ["javascript", "scroll", "feed", "dom"]
+image: "/images/posts/js-infinite-scroll.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Infinite scrolling is massive for engagement. Instead of loading "pages", it watches the scroll height and appends new content dynamically.
+
+## Scroll Detection
+
+```javascript
+window.addEventListener('scroll', () => {
+  const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+  
+  // If we are close to the bottom (within 50px)
+  if (scrollTop + clientHeight >= scrollHeight - 50) {
+    loadMorePosts();
+  }
+});
+
+function loadMorePosts() {
+  const feed = document.getElementById('feed');
+  const newPost = document.createElement('div');
+  newPost.className = 'post';
+  newPost.innerHTML = `<h3>New Post</h3><p>Endless content here...</p>`;
+  
+  feed.appendChild(newPost);
+}
+```
+
+It is beautifully satisfying. Scroll as far as you can in the Live Demo!

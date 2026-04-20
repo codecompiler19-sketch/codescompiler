@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hexagon Crop</title>
+  <style>
+    body { background: #fdf2f8; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0;}
+    
+    .profile-card {
+      text-align: center;
+      font-family: sans-serif;
+    }
+    
+    .hex-avatar {
+      width: 220px;
+      height: 220px;
+      object-fit: cover;
+      
+      /* The Mathematical Hexagon Slice */
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      
+      cursor: pointer;
+      /* Very long transition for the 360 spin effect */
+      transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      
+      /* Optional fallback border rendering since clip-path cuts off borders */
+      background: white;
+      padding: 5px; 
+    }
+    
+    .hex-avatar:hover {
+      /* Reverts perfectly into a bloated squircle shape! */
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+      border-radius: 40px;
+      transform: rotate(360deg) scale(1.15);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2); /* Box shadow works perfectly once clip-path is rectangular */
+    }
+    
+    .info { margin-top: 30px; }
+    h2 { margin: 0; color: #db2777;}
+    p { color: #6b7280;}
+  </style>
+</head>
+<body>
+  <div class="profile-card">
+    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=400&auto=format&fit=crop" class="hex-avatar" alt="Avatar">
+    <div class="info">
+      <h2>Jessica Smith</h2>
+      <p>Hover avatar to morph</p>
+    </div>
+  </div>
+</body>
+</html>

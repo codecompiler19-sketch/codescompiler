@@ -1,0 +1,37 @@
+---
+title: "Whimsical Star Rating Hearts"
+description: "A gorgeous progressive hover implementation substituting boring 5-stars with 5 pink lovable hearts."
+date: "2026-04-18"
+category: "JavaScript Projects"
+tags: ["javascript", "css", "rating", "interactive"]
+image: "/images/posts/js-heart-rating.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Traditional 5-star ratings are everywhere. Replacing them with large, unicode hearts providing progressive fill on-hover brings immediate delight.
+
+## The Core Interaction
+
+We map all Hearts, assigning a numeric index. On mouse over, we fill all hearts whose index is less-than-or-equal-to the current target.
+
+```javascript
+const hearts = document.querySelectorAll('.heart');
+let lockedScore = 0;
+
+hearts.forEach((h, i) => {
+  h.addEventListener('mouseover', () => {
+    // Fill all previous hearts up to 'i'
+    hearts.forEach((heart, idx) => {
+      heart.style.color = idx <= i ? '#f43f5e' : '#e5e7eb';
+    });
+  });
+  
+  h.addEventListener('click', () => {
+    lockedScore = i + 1; // Save it!
+  });
+});
+```
+
+See the progressive hover animations trigger natively in the beautiful Live Demo!

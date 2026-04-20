@@ -1,0 +1,50 @@
+---
+title: "Immersive Focus Blur Gallery"
+description: "A stunning CSS gallery effect where hovering a single image actively darkens and blurs all other surrounding images to intensely drive user focus."
+date: "2026-04-18"
+category: "Card Design"
+tags: ["css", "gallery", "blur", "focus"]
+image: "/images/posts/css-focus-blur-gallery.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+When building an image gallery, you want the user's attention physically glued to whichever picture they are interacting with. By leveraging the modern CSS `:has()` pseudo-class, we can easily dictate styling across siblings!
+
+## The Sibling Hover Logic
+
+The trick is targeting the parent container and checking if *any* of its children are being hovered. If so, apply a blur. But then, override the specific child being hovered to remain sharp!
+
+```css
+.gallery {
+  display: flex;
+  gap: 15px;
+}
+
+.gallery-image {
+  width: 200px;
+  height: 300px;
+  transition: all 0.4s ease;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* If the gallery has a hovered child, blur all images */
+.gallery:has(.gallery-image:hover) .gallery-image {
+  filter: blur(5px) grayscale(80%);
+  opacity: 0.6;
+  transform: scale(0.95);
+}
+
+/* Wait, EXCEPT the specific one being hovered! */
+.gallery:has(.gallery-image:hover) .gallery-image:hover {
+  filter: blur(0px) grayscale(0%);
+  opacity: 1;
+  transform: scale(1.1);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  z-index: 10; /* Bring it forward */
+}
+```
+
+This ensures extreme focus. Experience this powerful cinematic dimming effect across the three posters in the Live Demo panel.

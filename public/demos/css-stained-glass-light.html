@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Stained Glass Demo</title>
+  <style>
+    body { background: #1e293b; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0;}
+    
+    .window {
+      width: 250px;
+      height: 350px;
+      position: relative;
+      border: 8px solid #0f172a;
+      border-radius: 10px 10px 0 0;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+    
+    /* The Light Source moving dynamically in the background */
+    .light-leak {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(253, 224, 71, 0.9) 0%, transparent 60%);
+      top: -50px; left: -100px;
+      animation: sunlight 8s linear infinite alternate;
+      z-index: 1;
+    }
+    
+    @keyframes sunlight {
+      0% { transform: translate(0px, 0px) scale(1); }
+      100% { transform: translate(100px, 200px) scale(1.5); }
+    }
+    
+    /* The Stained Glass Overlay */
+    .glass-panes {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      /* CSS grid of colored translucent geometric shards */
+      background: linear-gradient(135deg, rgba(56, 189, 248, 0.4) 30%, transparent 30%),
+                  linear-gradient(45deg, rgba(244, 63, 94, 0.4) 40%, transparent 40%),
+                  linear-gradient(220deg, rgba(16, 185, 129, 0.4) 50%, transparent 50%),
+                  rgba(255, 255, 255, 0.1);
+      mix-blend-mode: color-burn;
+      backdrop-filter: blur(2px);
+      /* Add "lead borders" between glass panes */
+      box-shadow: inset 0 0 0 4px #0f172a;
+    }
+    
+    /* Draw lead framing using SVG or borders */
+    .lead-frame {
+      position: absolute; inset: 0; z-index: 3;
+      background: linear-gradient(to right, transparent 48%, #0f172a 48%, #0f172a 52%, transparent 52%),
+                  linear-gradient(to bottom, transparent 30%, #0f172a 30%, #0f172a 32%, transparent 32%),
+                  linear-gradient(to bottom, transparent 70%, #0f172a 70%, #0f172a 72%, transparent 72%);
+    }
+  </style>
+</head>
+<body>
+  <div class="window">
+    <div class="light-leak"></div>
+    <div class="glass-panes"></div>
+    <div class="lead-frame"></div>
+  </div>
+</body>
+</html>

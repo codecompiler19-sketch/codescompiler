@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pill Nav Tabs</title>
+  <style>
+    body { background: #1e293b; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; margin: 0;}
+    .nav-container { background: #0f172a; border-radius: 50px; display: flex; position: relative; padding: 5px; }
+    .tab { z-index: 2; padding: 12px 30px; font-weight: bold; cursor: pointer; color: #94a3b8; transition: color 0.3s; }
+    .tab.active { color: #fff; }
+    
+    /* The sliding pill */
+    .pill { position: absolute; height: calc(100% - 10px); top: 5px; left: 5px; background: #3b82f6; border-radius: 50px; z-index: 1; transition: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); box-shadow: 0 0 15px rgba(59,130,246,0.5);}
+  </style>
+</head>
+<body>
+  <div class="nav-container">
+    <div class="pill" id="pill"></div>
+    <div class="tab active" onclick="movePill(this)">Home</div>
+    <div class="tab" onclick="movePill(this)">Products</div>
+    <div class="tab" onclick="movePill(this)">Pricing</div>
+    <div class="tab" onclick="movePill(this)">Contact</div>
+  </div>
+  
+  <script>
+    const pill = document.getElementById('pill');
+    
+    // Init size
+    window.onload = () => {
+      const first = document.querySelector('.tab');
+      pill.style.width = first.offsetWidth + 'px';
+    };
+    
+    function movePill(el) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      
+      const width = el.offsetWidth;
+      const left = el.offsetLeft;
+      
+      pill.style.width = width + 'px';
+      pill.style.left = left + 'px';
+    }
+  </script>
+</body>
+</html>

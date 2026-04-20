@@ -1,0 +1,57 @@
+---
+title: "Interactive Canvas Particle Network"
+description: "Build a stunning, interactive matrix-style particle network using HTML5 Canvas and vanilla JavaScript that reacts to your mouse movements."
+date: "2026-04-18"
+category: "JavaScript Projects"
+tags: ["javascript", "canvas", "animation", "creative", "math"]
+image: "/images/posts/javascript-particle-network.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Particle networks are heavily used on modern tech and cybersecurity company landing pages to convey complexity and connection. In this tutorial we'll use HTML5 `<canvas>` to generate hundreds of nodes that bounce off the edges and draw lines to each other when they get close.
+
+## HTML5 Canvas Setup
+
+```html
+<canvas id="canvas1"></canvas>
+```
+
+```css
+#canvas1 {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: radial-gradient(#1a1a1a, #000);
+}
+```
+
+## The Particle Object
+
+We need a class to define each particle's position, size, and direction.
+
+```javascript
+class Particle {
+  constructor() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.width;
+    this.size = Math.random() * 3 + 1;
+    this.speedX = Math.random() * 3 - 1.5;
+    this.speedY = Math.random() * 3 - 1.5;
+  }
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    if (this.size > 0.2) this.size -= 0.1;
+  }
+  draw() {
+    ctx.fillStyle = 'white';
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+```
+
+Check out the full collision detection and mouse interaction mathematics in the Live Demo completely built from scratch!

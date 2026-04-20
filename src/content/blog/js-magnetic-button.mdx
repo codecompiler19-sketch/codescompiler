@@ -1,0 +1,35 @@
+---
+title: "Magnetic Button Hover Effect"
+description: "A button that beautifully 'attracts' your cursor like a magnet using JavaScript mouse tracking and CSS transforms."
+date: "2026-04-18"
+category: "CSS Buttons"
+tags: ["js", "css", "buttons", "interaction"]
+image: "/images/posts/js-magnetic-button.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Bring physical realism to your buttons using a magnetic hover effect. When the mouse gets close, the button physically pulls towards the cursor.
+
+## Mouse Tracking Logic
+
+We track `mousemove` to calculate the distance between the button's center and the cursor, applying a slight `translate` based on strength.
+
+```javascript
+const magnet = document.querySelector('.magnet-btn');
+
+magnet.addEventListener('mousemove', (e) => {
+  const position = magnet.getBoundingClientRect();
+  const x = e.clientX - position.left - position.width / 2;
+  const y = e.clientY - position.top - position.height / 2;
+  
+  magnet.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+});
+
+magnet.addEventListener('mouseleave', () => {
+  magnet.style.transform = 'translate(0px, 0px)';
+});
+```
+
+Combine this with CSS `transition` for a buttery smooth magnetic snap! See the Live Demo.

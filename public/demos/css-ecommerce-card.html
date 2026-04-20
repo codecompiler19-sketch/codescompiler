@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>E-Commerce Card Demo</title>
+  <style>
+    body { background: #e2e8f0; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; }
+    .card { background: white; width: 320px; border-radius: 20px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+    .img-box { width: 100%; height: 200px; background: #38bdf8; border-radius: 12px; margin-bottom: 20px; transition: background 0.3s; display: flex; justify-content: center; align-items: center; font-size: 5rem; color: white;}
+    h3 { margin: 0 0 10px; font-size: 24px; color: #1e293b; }
+    .price { font-size: 20px; font-weight: bold; color: #04AA6D; margin-bottom: 20px;}
+    .colors { display: flex; gap: 10px; margin-bottom: 20px; }
+    .color { width: 25px; height: 25px; border-radius: 50%; cursor: pointer; border: 3px solid white; box-shadow: 0 0 0 1px #cbd5e1; transition: 0.2s;}
+    .color.active { box-shadow: 0 0 0 2px #0f172a; }
+    .add-btn { width: 100%; padding: 15px; background: #0f172a; color: white; font-weight: bold; font-size: 16px; border: none; border-radius: 12px; cursor: pointer; transition: 0.2s; overflow: hidden; position: relative;}
+    .add-btn:active { transform: scale(0.97); }
+    .add-btn.added { background: #04AA6D; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="img-box" id="shoe">👟</div>
+    <h3>Running Pro X</h3>
+    <div class="price">$129.99</div>
+    <div class="colors">
+      <div class="color active" style="background:#38bdf8;" onclick="changeColor(this, '#38bdf8')"></div>
+      <div class="color" style="background:#f43f5e;" onclick="changeColor(this, '#f43f5e')"></div>
+      <div class="color" style="background:#a855f7;" onclick="changeColor(this, '#a855f7')"></div>
+    </div>
+    <button class="add-btn" id="addBtn" onclick="addToCart()">Add to Cart</button>
+  </div>
+  <script>
+    function changeColor(el, color) {
+      document.querySelectorAll('.color').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('shoe').style.background = color;
+    }
+    function addToCart() {
+      const btn = document.getElementById('addBtn');
+      btn.innerText = '✓ Added!';
+      btn.classList.add('added');
+      setTimeout(() => {
+        btn.innerText = 'Add to Cart';
+        btn.classList.remove('added');
+      }, 2000);
+    }
+  </script>
+</body>
+</html>

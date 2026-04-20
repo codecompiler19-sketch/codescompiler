@@ -1,0 +1,66 @@
+---
+title: "3D Parallax Hover Cards"
+description: "Implement stunning 3D tilt effects using vanilla JavaScript math tracking the mouse position over CSS transformed cards."
+date: "2026-04-18"
+category: "Card Design"
+tags: ["javascript", "css", "3d", "animations", "creative"]
+image: "/images/posts/glassmorphism-card.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+A 3D tilt effect reacts dynamically to your mouse, making physical UI elements feel tangible. We map the X and Y coordinates of the mouse within the element to CSS `rotateX` and `rotateY`.
+
+## The Card Setup
+
+```html
+<div class="card-container">
+  <div class="card">
+    <div class="card-content">
+      <h2>Hover Me!</h2>
+    </div>
+  </div>
+</div>
+```
+
+The container needs CSS perspective to enable 3D space:
+```css
+.card-container {
+  perspective: 1000px;
+}
+.card {
+  transition: transform 0.1s ease;
+  transform-style: preserve-3d;
+}
+.card-content {
+  transform: translateZ(30px); /* Pushes text closer to you */
+}
+```
+
+## Mouse Move Logic
+
+```javascript
+const card = document.querySelector('.card');
+
+card.addEventListener('mousemove', e => {
+  const rect = card.getBoundingClientRect();
+  const x = e.clientX - rect.left; 
+  const y = e.clientY - rect.top;
+  
+  const centerX = rect.width / 2;
+  const centerY = rect.height / 2;
+  
+  const rotateX = ((y - centerY) / centerY) * -15; 
+  const rotateY = ((x - centerX) / centerX) * 15;
+  
+  card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+});
+
+card.addEventListener('mouseleave', () => {
+  card.style.transform = `rotateX(0deg) rotateY(0deg)`;
+  card.style.transition = `transform 0.5s ease`;
+});
+```
+
+Try the Live Demo to interact with this beautiful hardware-accelerated 3D effect.

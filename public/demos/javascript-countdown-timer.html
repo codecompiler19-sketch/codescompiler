@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Countdown Timer — Demo</title>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Segoe UI',sans-serif;background:#040712;overflow:hidden;padding:24px;position:relative;}
+
+    /* Grid background */
+    body::before{content:'';position:fixed;inset:0;background:linear-gradient(rgba(4,170,109,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(4,170,109,0.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
+
+    /* Glow orbs */
+    .orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;opacity:0.35;}
+    .orb1{width:500px;height:500px;background:radial-gradient(#04AA6D,transparent);top:-150px;left:-150px;}
+    .orb2{width:400px;height:400px;background:radial-gradient(#6366f1,transparent);bottom:-100px;right:-100px;}
+
+    .hero{text-align:center;position:relative;z-index:1;}
+    .event-badge{display:inline-block;background:rgba(4,170,109,0.12);border:1px solid rgba(4,170,109,0.3);color:#04AA6D;font-size:12px;font-weight:800;padding:6px 18px;border-radius:20px;margin-bottom:24px;text-transform:uppercase;letter-spacing:.06em;}
+    h1{font-size:clamp(26px,5vw,48px);font-weight:900;color:#fff;margin-bottom:8px;line-height:1.1;}
+    .subtitle{font-size:15px;color:rgba(255,255,255,0.4);margin-bottom:48px;}
+
+    .timer-grid{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;}
+    .timer-block{
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:20px;
+      padding:clamp(20px,4vw,32px) clamp(16px,4vw,36px);
+      text-align:center;min-width:90px;
+      position:relative;overflow:hidden;
+      backdrop-filter:blur(8px);
+    }
+    .timer-block::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#04AA6D,#34d399);}
+    .timer-num{font-size:clamp(40px,8vw,72px);font-weight:900;color:#fff;font-variant-numeric:tabular-nums;line-height:1;}
+    .timer-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,0.4);margin-top:8px;}
+    .sep{font-size:clamp(36px,7vw,60px);font-weight:900;color:rgba(255,255,255,0.2);padding-bottom:28px;animation:blink 1s step-end infinite;}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+
+    .event-info{margin-top:40px;display:flex;gap:20px;flex-wrap:wrap;justify-content:center;}
+    .info-pill{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 20px;font-size:13px;color:rgba(255,255,255,0.5);}
+    .info-pill strong{color:#fff;}
+
+    .done-msg{display:none;font-size:32px;font-weight:900;color:#04AA6D;text-align:center;animation:pop .4s cubic-bezier(0.34,1.56,0.64,1);}
+    @keyframes pop{from{transform:scale(0.5);opacity:0}to{transform:scale(1);opacity:1}}
+  </style>
+</head>
+<body>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+
+  <div class="hero">
+    <div class="event-badge">⚡ Upcoming Launch</div>
+    <h1>🚀 CodesCompiler 2.0</h1>
+    <div class="subtitle">The next generation is almost here — get ready!</div>
+
+    <div class="timer-grid">
+      <div class="timer-block"><div class="timer-num" id="days">00</div><div class="timer-label">Days</div></div>
+      <span class="sep">:</span>
+      <div class="timer-block"><div class="timer-num" id="hours">00</div><div class="timer-label">Hours</div></div>
+      <span class="sep">:</span>
+      <div class="timer-block"><div class="timer-num" id="minutes">00</div><div class="timer-label">Minutes</div></div>
+      <span class="sep">:</span>
+      <div class="timer-block"><div class="timer-num" id="seconds">00</div><div class="timer-label">Seconds</div></div>
+    </div>
+
+    <div class="done-msg" id="doneMsg">🎉 We're Live! Welcome to CodesCompiler 2.0</div>
+
+    <div class="event-info">
+      <div class="info-pill">📅 Target: <strong id="targetDisplay"></strong></div>
+      <div class="info-pill">🌍 Timezone: <strong>Your local time</strong></div>
+    </div>
+  </div>
+
+  <script>
+    // Target: 40 days from now for a nice demo
+    const TARGET = new Date(Date.now() + 40 * 24 * 60 * 60 * 1000);
+    document.getElementById('targetDisplay').textContent = TARGET.toLocaleDateString('en-US', {month:'long',day:'numeric',year:'numeric'});
+
+    function pad(n){return String(n).padStart(2,'0');}
+    function tick(){
+      const diff=TARGET.getTime()-Date.now();
+      if(diff<=0){
+        ['days','hours','minutes','seconds'].forEach(id=>document.getElementById(id).textContent='00');
+        document.getElementById('doneMsg').style.display='block';
+        clearInterval(timer);return;
+      }
+      document.getElementById('days').textContent    = pad(Math.floor(diff/864e5));
+      document.getElementById('hours').textContent   = pad(Math.floor(diff%864e5/36e5));
+      document.getElementById('minutes').textContent = pad(Math.floor(diff%36e5/6e4));
+      document.getElementById('seconds').textContent = pad(Math.floor(diff%6e4/1e3));
+    }
+    const timer=setInterval(tick,1000);
+    tick();
+  </script>
+</body>
+</html>

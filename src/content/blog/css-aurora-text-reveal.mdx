@@ -1,0 +1,40 @@
+---
+title: "Aurora Dreamy Text Reveal"
+description: "Slice CSS background animations exclusively inside the text font to create a flowing, colorful aurora borealis text mask!"
+date: "2026-04-18"
+category: "Website Designs"
+tags: ["css", "text", "gradient", "typography"]
+image: "/images/posts/css-aurora-text-reveal.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+The webkit property `background-clip: text;` is a developer's secret weapon. We can literally render a heavy CSS animation behind a text block, but restrict the visibility of that animation purely to the font letters!
+
+## The Animated Glow Flow
+
+We create a massively oversized neon background, and transition its X-coordinates to simulate a river of color sliding across the letters.
+
+```css
+.aurora-text {
+  font-size: 5rem;
+  font-weight: 900;
+  
+  /* The giant flowing gradient */
+  background: linear-gradient(90deg, #38bdf8, #a855f7, #f43f5e, #38bdf8);
+  background-size: 300% 100%;
+  
+  /* The secret clip rule */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  
+  animation: flowLight 5s linear infinite;
+}
+
+@keyframes flowLight {
+  to { background-position: 300% 0; }
+}
+```
+
+Look at the gorgeous results scrolling sideways across the quote inside the Live Demo frame!

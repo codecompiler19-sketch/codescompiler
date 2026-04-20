@@ -1,0 +1,40 @@
+---
+title: "JavaScript Tab Filtering"
+description: "How to use JavaScript to filter groups of cards on a page via navigational tabs (like a portfolio)."
+date: "2026-04-18"
+category: "Tabs"
+tags: ["javascript", "tabs", "filter", "dom"]
+image: "/images/posts/js-tab-filtering.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Filtering items using tabs is extremely common for portfolios. We assign data attributes to the tabs and the content, then match them in JS.
+
+## The Filter Logic
+
+```javascript
+const tabs = document.querySelectorAll('.tab');
+const items = document.querySelectorAll('.item');
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    // Remove active styles
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    
+    // Filter
+    const target = tab.dataset.target;
+    items.forEach(item => {
+      if (target === 'all' || item.classList.contains(target)) {
+        item.style.display = 'block';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+  });
+});
+```
+
+Try the Live Demo to elegantly filter the image gallery using the tabs above it!

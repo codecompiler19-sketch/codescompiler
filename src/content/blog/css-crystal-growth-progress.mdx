@@ -1,0 +1,31 @@
+---
+title: "Crystal Growth Progress Indicator"
+description: "A mesmerizing loading bar where sharp, geometric quartz crystals physically sprout outwards from the surface as it fills."
+date: "2026-04-18"
+category: "Preloader or Loader"
+tags: ["css", "clip-path", "progress", "growth"]
+image: "/images/posts/css-crystal-growth-progress.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Instead of a smooth loading bar filling slowly, we can mimic the accumulation of geometric crystals. We use `clip-path` to draw sharp geometric shards, and CSS timing delays to sprout them like spikes.
+
+## The Quartz Shard Polygons
+
+```css
+.shard {
+  position: absolute;
+  background: linear-gradient(135deg, #a78bfa, #fbcfe8);
+  /* Perfect diamond spike */
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  transform: scale(0);
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.box[data-loaded="stage1"] .shard-1 { transform: scale(1); }
+.box[data-loaded="stage2"] .shard-2 { transform: scale(1.5) rotate(45deg); }
+```
+
+Hit the Mine Data button in the Live Demo to incrementally spawn breathtaking gem shards from the baserock!

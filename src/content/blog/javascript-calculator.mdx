@@ -1,0 +1,126 @@
+---
+title: "JavaScript Calculator App"
+description: "Build a fully functional calculator with keyboard support, decimal handling, and chained operations using vanilla JavaScript."
+date: "2026-04-17"
+category: "JavaScript Projects"
+tags: ["javascript", "calculator", "dom", "project", "beginner"]
+image: "/images/posts/calculator.png"
+featured: true
+hasDemo: true
+author: "CodesCompiler"
+---
+
+A calculator is a timeless JavaScript project. In this tutorial we'll build a **fully functional calculator** with a clean modern UI, keyboard input support, and proper decimal/operator chaining logic.
+
+## Features
+
+- ✅ All basic operations (+, -, ×, ÷)
+- ✅ Decimal support with double-click prevention
+- ✅ Chained calculations (5 + 3 × 2)
+- ✅ Keyboard input support
+- ✅ Clear & backspace buttons
+- ✅ Responsive layout
+
+## HTML Structure
+
+```html
+<div class="calculator">
+  <div class="display">
+    <span id="expression"></span>
+    <span id="result">0</span>
+  </div>
+  <div class="buttons">
+    <button class="btn btn-wide btn-gray" data-action="clear">AC</button>
+    <button class="btn btn-gray" data-action="backspace">⌫</button>
+    <button class="btn btn-gray" data-action="percent">%</button>
+    <button class="btn btn-orange" data-op="/">÷</button>
+
+    <button class="btn" data-num="7">7</button>
+    <button class="btn" data-num="8">8</button>
+    <button class="btn" data-num="9">9</button>
+    <button class="btn btn-orange" data-op="*">×</button>
+
+    <button class="btn" data-num="4">4</button>
+    <button class="btn" data-num="5">5</button>
+    <button class="btn" data-num="6">6</button>
+    <button class="btn btn-orange" data-op="-">−</button>
+
+    <button class="btn" data-num="1">1</button>
+    <button class="btn" data-num="2">2</button>
+    <button class="btn" data-num="3">3</button>
+    <button class="btn btn-orange" data-op="+">+</button>
+
+    <button class="btn btn-wide" data-num="0">0</button>
+    <button class="btn" data-action="dot">.</button>
+    <button class="btn btn-orange" data-action="equals">=</button>
+  </div>
+</div>
+```
+
+## JavaScript Logic
+
+```javascript
+let current = '0', prev = '', operator = null, resetNext = false;
+
+function updateDisplay() {
+  document.getElementById('result').textContent = current;
+}
+
+function inputDigit(digit) {
+  if (resetNext) { current = digit; resetNext = false; }
+  else            { current = current === '0' ? digit : current + digit; }
+  updateDisplay();
+}
+
+function inputDecimal() {
+  if (resetNext) { current = '0.'; resetNext = false; return; }
+  if (!current.includes('.')) current += '.';
+  updateDisplay();
+}
+
+function handleOperator(op) {
+  if (operator && !resetNext) calculate();
+  prev = current;
+  operator = op;
+  resetNext = true;
+}
+
+function calculate() {
+  if (!operator || !prev) return;
+  const a = parseFloat(prev), b = parseFloat(current);
+  const ops = { '+': a + b, '-': a - b, '*': a * b, '/': b !== 0 ? a / b : 'Error' };
+  current = String(parseFloat((ops[operator]).toFixed(10)));
+  operator = null; prev = '';
+  resetNext = true;
+  updateDisplay();
+}
+
+// Event listeners
+document.querySelectorAll('[data-num]').forEach(btn =>
+  btn.addEventListener('click', () => inputDigit(btn.dataset.num))
+);
+document.querySelectorAll('[data-op]').forEach(btn =>
+  btn.addEventListener('click', () => handleOperator(btn.dataset.op))
+);
+document.querySelector('[data-action="equals"]').addEventListener('click', calculate);
+document.querySelector('[data-action="clear"]').addEventListener('click', () => {
+  current = '0'; prev = ''; operator = null; resetNext = false; updateDisplay();
+});
+document.querySelector('[data-action="dot"]').addEventListener('click', inputDecimal);
+document.querySelector('[data-action="backspace"]').addEventListener('click', () => {
+  current = current.length > 1 ? current.slice(0, -1) : '0';
+  updateDisplay();
+});
+
+// Keyboard support
+document.addEventListener('keydown', e => {
+  if (e.key >= '0' && e.key <= '9') inputDigit(e.key);
+  if (e.key === '.') inputDecimal();
+  if (['+','-','*','/'].includes(e.key)) handleOperator(e.key);
+  if (e.key === 'Enter' || e.key === '=') calculate();
+  if (e.key === 'Backspace') { current = current.length > 1 ? current.slice(0,-1) : '0'; updateDisplay(); }
+  if (e.key === 'Escape') { current='0'; operator=null; prev=''; updateDisplay(); }
+});
+```
+
+> **Try it:** Click the **Live Demo** button above to use the fully working calculator!

@@ -1,0 +1,39 @@
+---
+title: "Cuddle Creature Adoption Center"
+description: "A mini virtual pet that reacts to mouse proximity, follows the cursor, purrs, and falls asleep when idle."
+date: "2026-04-18"
+category: "JavaScript Games"
+tags: ["javascript", "game", "interactive", "animation"]
+image: "/images/posts/js-cuddle-pets.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Let's build a tiny virtual pet! The pet will read mouse coordinates to face and gently follow the cursor. If the mouse doesn't move for 5 seconds, the pet falls asleep and emits "Zzz" bubbles.
+
+## Mouse Awareness
+
+By calculating the `Math.atan2` between the center of the pet and the mouse cursor, we can elegantly transition the pet's rotation to face the mouse.
+
+```javascript
+let isSleeping = false;
+let idleTimer;
+
+window.addEventListener('mousemove', (e) => {
+  clearTimeout(idleTimer);
+  wakeUpPet();
+  
+  // Calculate angle for eyes to look at mouse
+  const rect = pet.getBoundingClientRect();
+  const angle = Math.atan2(e.clientY - rect.top, e.clientX - rect.left);
+  pupils.forEach(p => p.style.transform = `rotate(${angle}rad) translateX(3px)`);
+  
+  idleTimer = setTimeout(() => {
+    isSleeping = true;
+    fallAsleep();
+  }, 5000);
+});
+```
+
+Head over to the Live Demo to adopt your own little creature and watch its adorable reactions!

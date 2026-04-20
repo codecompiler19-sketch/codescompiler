@@ -1,0 +1,31 @@
+---
+title: "Expense Tracker App with Chart"
+description: "Track your income and expenses. Visualized dynamically via a live chart and persisted with localStorage."
+date: "2026-04-18"
+category: "JavaScript Projects"
+tags: ["javascript", "app", "finance", "localstorage"]
+image: "/images/posts/js-expense-tracker.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Financial trackers are perfect practice for arrays, array methods (`reduce`, `filter`), and tying DOM updates to state.
+
+## State Management
+
+```javascript
+let transactions = JSON.parse(localStorage.getItem('expenses')) || [];
+
+// Calculate totals
+const amounts = transactions.map(t => t.amount);
+const total = amounts.reduce((acc, item) => (acc += item), 0).toFixed(2);
+
+const income = amounts.filter(item => item > 0)
+                      .reduce((acc, item) => (acc += item), 0).toFixed(2);
+                      
+const expense = (amounts.filter(item => item < 0)
+                        .reduce((acc, item) => (acc += item), 0) * -1).toFixed(2);
+```
+
+We can map these values to a UI layout in CSS or even simple SVG bars. See the Live Demo to add your own transaction history!

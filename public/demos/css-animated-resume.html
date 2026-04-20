@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Animated Timeline Resume</title>
+  <style>
+    body { background: #1f2937; color: white; font-family: sans-serif; margin: 0; padding: 50px; }
+    h1 { text-align: center; font-size: 3rem; margin-bottom: 50px; color: #38bdf8; }
+    .timeline { position: relative; max-width: 800px; margin: 0 auto; }
+    /* The line */
+    .timeline::after { content: ''; position: absolute; width: 6px; background-color: #334155; top: 0; bottom: 0; left: 50%; margin-left: -3px; border-radius: 3px;}
+    .container { padding: 10px 40px; position: relative; width: 50%; box-sizing: border-box; }
+    .left { left: 0; text-align: right;} .right { left: 50%; }
+    /* Timeline Dots */
+    .container::after { content: ''; position: absolute; width: 20px; height: 20px; right: -13px; background-color: #38bdf8; border: 4px solid #1f2937; top: 15px; border-radius: 50%; z-index: 1;}
+    .right::after { left: -14px; }
+    .content { padding: 20px 30px; background-color: #334155; position: relative; border-radius: 12px; }
+    .content h2 { margin-top: 0; color: #38bdf8; }
+    
+    /* Animation Classes */
+    .fade-in { opacity: 0; transition: all 1s ease-out; }
+    .left.fade-in { transform: translateX(-50px); }
+    .right.fade-in { transform: translateX(50px); }
+    .fade-in.show { opacity: 1; transform: translateX(0); }
+  </style>
+</head>
+<body>
+  <h1>Work Experience</h1>
+  <div class="timeline">
+    <div class="container left fade-in">
+      <div class="content"><h2>Senior Developer</h2><p>2023 - Present<br>Led the frontend architecture and improved load times by 40%.</p></div>
+    </div>
+    <div class="container right fade-in" style="margin-top: 150px;">
+      <div class="content"><h2>Frontend Engineer</h2><p>2020 - 2023<br>Built 50+ interactive React components and mentored juniors.</p></div>
+    </div>
+    <div class="container left fade-in" style="margin-top: 150px;">
+      <div class="content"><h2>UI Designer</h2><p>2018 - 2020<br>Created the entire design system and Figma mockups.</p></div>
+    </div>
+    <div class="container right fade-in" style="margin-top: 150px; margin-bottom: 200px;">
+      <div class="content"><h2>Intern</h2><p>2017 - 2018<br>Learned the ropes, drank lots of coffee.</p></div>
+    </div>
+  </div>
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add('show'); });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('.fade-in').forEach((el) => observer.observe(el));
+  </script>
+</body>
+</html>

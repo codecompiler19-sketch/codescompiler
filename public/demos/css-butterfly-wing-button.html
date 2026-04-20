@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Butterfly Wing Button</title>
+  <style>
+    body { background: #fdf2f8; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif;}
+    
+    .butterfly-btn {
+      position: relative;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      width: 120px;
+      height: 100px;
+    }
+    
+    .body {
+      width: 6px;
+      height: 60px;
+      background: #713f12;
+      border-radius: 10px;
+      position: relative;
+      z-index: 2;
+    }
+    .body::before { content: ''; position: absolute; top: -10px; left: -2px; width: 10px; height: 10px; background: #713f12; border-radius: 50%;}
+    
+    .wing {
+      position: absolute;
+      width: 60px; height: 80px;
+      background: linear-gradient(135deg, #f472b6, #3b82f6);
+      z-index: 1;
+      opacity: 0.9;
+      box-shadow: 0 0 15px rgba(244, 114, 182, 0.4);
+    }
+    
+    .wing.left {
+      left: 0;
+      border-radius: 100px 10px 10px 100px;
+      transform-origin: right center;
+      transform: perspective(300px) rotateY(20deg);
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .wing.right {
+      right: 0;
+      border-radius: 10px 100px 100px 10px;
+      transform-origin: left center;
+      transform: perspective(300px) rotateY(-20deg);
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    /* Flutter Animation on Hover */
+    .butterfly-btn:hover .wing.left { animation: flapLeft 0.15s infinite alternate; }
+    .butterfly-btn:hover .wing.right { animation: flapRight 0.15s infinite alternate; }
+    
+    @keyframes flapLeft {
+      from { transform: perspective(300px) rotateY(0deg); }
+      to { transform: perspective(300px) rotateY(60deg); }
+    }
+    @keyframes flapRight {
+      from { transform: perspective(300px) rotateY(0deg); }
+      to { transform: perspective(300px) rotateY(-60deg); }
+    }
+    
+    .label { position: absolute; bottom: -30px; font-weight: bold; color: #db2777; letter-spacing: 2px;}
+  </style>
+</head>
+<body>
+  <button class="butterfly-btn">
+    <div class="wing left"></div>
+    <div class="body"></div>
+    <div class="wing right"></div>
+    <div class="label">FLY</div>
+  </button>
+</body>
+</html>

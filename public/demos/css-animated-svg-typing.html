@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SVG Typing - Demo</title>
+  <style>
+    body { background: #0b0f19; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+    svg { width: 80%; max-width: 800px; filter: drop-shadow(0 0 10px #04AA6D); }
+    .draw {
+      fill: none;
+      stroke: #04AA6D;
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      /* Lengths set by JS */
+      stroke-dasharray: var(--length);
+      stroke-dashoffset: var(--length);
+      animation: drawLine 3s ease forwards alternate infinite 1s;
+    }
+    .draw:nth-child(even) { stroke: #38bdf8; filter: drop-shadow(0 0 10px #38bdf8); animation-delay: 1.5s;}
+    @keyframes drawLine {
+      from { stroke-dashoffset: var(--length); fill: transparent; }
+      to { stroke-dashoffset: 0; fill: transparent; }
+    }
+  </style>
+</head>
+<body>
+  <svg viewBox="0 0 250 100">
+    <!-- Letter C -->
+    <path class="draw" d="M 60 30 C 30 30, 30 70, 60 70" />
+    <!-- Letter O -->
+    <path class="draw" d="M 90 30 C 60 30, 60 70, 90 70 C 120 70, 120 30, 90 30" />
+    <!-- Letter D -->
+    <path class="draw" d="M 110 30 L 110 70 C 140 70, 140 30, 110 30" />
+    <!-- Letter E -->
+    <path class="draw" d="M 160 70 L 140 70 L 140 30 L 160 30 M 140 50 L 155 50" />
+    <!-- Letter S -->
+    <path class="draw" d="M 200 30 C 160 30, 190 50, 180 50 C 220 50, 170 70, 200 70" />
+    
+    <text x="50%" y="95" fill="white" font-family="sans-serif" font-size="10" text-anchor="middle" style="opacity:0; animation: fadeIn 2s forwards 3s;">CODESCOMPILER</text>
+  </svg>
+  <style>
+    @keyframes fadeIn { to {opacity:0.8} }
+  </style>
+
+  <script>
+    // Dynamically calculate exact path lengths for perfect animation pacing
+    document.querySelectorAll('.draw').forEach(path => {
+      const length = path.getTotalLength();
+      path.style.setProperty('--length', length);
+    });
+  </script>
+</body>
+</html>

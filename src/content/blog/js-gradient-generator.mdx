@@ -1,0 +1,38 @@
+---
+title: "Random CSS Gradient Generator"
+description: "Generate beautiful, vibrant CSS linear-gradients and copy the code to your clipboard instantly."
+date: "2026-04-18"
+category: "JavaScript Projects"
+tags: ["javascript", "generator", "utility", "colors"]
+image: "/images/posts/js-gradient-generator.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Need a new background? Instead of searching the web, hit a button to mathematically generate gorgeous hex colors.
+
+## The Generation Logic
+
+```javascript
+function randomHex() {
+  const chars = '0123456789abcdef';
+  let hex = '#';
+  for(let i=0; i<6; i++){
+    hex += chars[Math.floor(Math.random() * 16)];
+  }
+  return hex;
+}
+
+function updateGradient() {
+  const color1 = randomHex();
+  const color2 = randomHex();
+  const angle = Math.floor(Math.random() * 360);
+  
+  const cssValue = `linear-gradient(${angle}deg, ${color1}, ${color2})`;
+  document.body.style.background = cssValue;
+  document.getElementById('cssCode').innerText = `background: ${cssValue};`;
+}
+```
+
+Check the Live Demo, generate your favorite gradient, and hit copy!

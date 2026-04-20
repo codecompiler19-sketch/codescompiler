@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Love Letter Demo</title>
+  <style>
+    body { background: #ffe4e6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: 'Comic Sans MS', cursive, sans-serif;}
+    .envelope-wrapper { position: relative; width: 300px; height: 200px; cursor: pointer; }
+    
+    .envelope { width: 100%; height: 100%; background: #fb7185; position: absolute; border-radius: 0 0 10px 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); z-index: 2;}
+    .envelope::before { content:''; position: absolute; border-left: 150px solid transparent; border-right: 150px solid transparent; border-bottom: 100px solid #f43f5e; bottom: 0; z-index: 3;}
+    .envelope::after { content:''; position: absolute; border-right: 150px solid #e11d48; border-top: 100px solid transparent; border-bottom: 100px solid transparent; right: 0; z-index: 3;}
+    .envelope > span { position: absolute; border-left: 150px solid #e11d48; border-top: 100px solid transparent; border-bottom: 100px solid transparent; left: 0; z-index: 3;}
+
+    .flap { position: absolute; top: 0; left: 0; border-left: 150px solid transparent; border-right: 150px solid transparent; border-top: 120px solid #fda4af; transform-origin: top; transition: transform 0.6s 0.4s, z-index 0s 0.6s; z-index: 4;}
+    
+    .letter { position: absolute; width: 280px; height: 180px; background: white; border-radius: 10px; top: 10px; left: 10px; z-index: 1; transition: transform 0.8s; padding: 20px; box-sizing: border-box; color: #4c1d95; box-shadow: 0 0 10px rgba(0,0,0,0.1);}
+    
+    /* Open State */
+    .envelope-wrapper.open .flap { transform: rotateX(180deg); transition: transform 0.6s, z-index 0s 0s; z-index: 1;}
+    .envelope-wrapper.open .letter { transform: translateY(-100px); z-index: 2;}
+  </style>
+</head>
+<body>
+  <p style="position: absolute; top: 50px; color: #be185d;">Click to open</p>
+  <div class="envelope-wrapper" onclick="this.classList.toggle('open')">
+    <div class="flap"></div>
+    <div class="letter">
+      <h3>Just for you.</h3>
+      <p>Building things from scratch is hard, but you are creating magic every single day.</p>
+      <p>Love,<br>The Code</p>
+    </div>
+    <div class="envelope"><span></span></div>
+  </div>
+</body>
+</html>

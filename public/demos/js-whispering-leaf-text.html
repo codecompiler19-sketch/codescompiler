@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Whispering Leaf Demo</title>
+  <style>
+    body { background: #fdfbf7; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: 'Georgia', serif;}
+    
+    .reveal-area {
+      width: 600px;
+      height: 300px;
+      border: 2px dashed #e2e8f0;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+    }
+    
+    .word-container {
+      display: flex;
+      gap: 15px; /* Spaces between words */
+    }
+    
+    .word { display: flex; }
+    
+    span {
+      font-size: 2.5rem;
+      color: #166534;
+      display: inline-block;
+      transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    /* When hovered, we force all spans back to identity! */
+    .reveal-area:hover span {
+      transform: translate(0, 0) rotate(0deg) !important;
+      opacity: 1 !important;
+      filter: blur(0px) !important;
+    }
+    
+    .tip { position: absolute; bottom: 20px; color: #94a3b8; font-family: sans-serif; font-size: 0.9rem;}
+  </style>
+</head>
+<body>
+  <div class="reveal-area" id="area">
+    <div class="tip">Move mouse here</div>
+    <div class="word-container" id="container"></div>
+  </div>
+
+  <script>
+    const sentence = "Nature always listens.";
+    const container = document.getElementById('container');
+    
+    // Split into words, then into letters to keep spaces intact visually
+    const words = sentence.split(' ');
+    
+    words.forEach(word => {
+      let wordDiv = document.createElement('div');
+      wordDiv.className = 'word';
+      
+      word.split('').forEach(letter => {
+        let span = document.createElement('span');
+        span.innerText = letter;
+        
+        // Randomize initial scattered state!
+        const rot = (Math.random() * 180) - 90;
+        const tx = (Math.random() * 400) - 200;
+        const ty = (Math.random() * 300) - 150;
+        
+        span.style.transform = `translate(${tx}px, ${ty}px) rotate(${rot}deg)`;
+        span.style.opacity = Math.random() * 0.3;
+        span.style.filter = `blur(${Math.random() * 4}px)`;
+        
+        // Random transition delay so they don't all snap back at exactly the same time
+        span.style.transitionDelay = `${Math.random() * 0.3}s`;
+        
+        wordDiv.appendChild(span);
+      });
+      container.appendChild(wordDiv);
+    });
+  </script>
+</body>
+</html>

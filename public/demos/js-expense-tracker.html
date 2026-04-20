@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Expense Tracker Demo</title>
+  <style>
+    body { background: #f3f4f6; font-family: sans-serif; display: flex; justify-content: center; padding: 40px; margin: 0; }
+    .card { background: white; padding: 30px; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+    h2 { margin-top: 0; text-align: center; }
+    .balance { font-size: 32px; font-weight: bold; text-align: center; margin-bottom: 20px; }
+    .inc-exp { display: flex; justify-content: space-between; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 20px; border-radius: 8px; margin-bottom: 20px;}
+    .inc-exp div { text-align: center; flex: 1; }
+    .inc-exp div:first-child { border-right: 1px solid #e5e7eb; }
+    .money { font-size: 20px; font-weight: bold; letter-spacing: 1px; }
+    .plus { color: #10b981; } .minus { color: #ef4444; }
+    input, button { width: 100%; padding: 10px; margin-top: 10px; box-sizing: border-box; border-radius: 6px; border: 1px solid #ccc; font-size: 14px;}
+    button { background: #3b82f6; color: white; font-weight: bold; border: none; cursor: pointer; }
+    ul { list-style: none; padding: 0; margin-top: 20px;}
+    li { background: #f9fafb; padding: 10px; display: flex; justify-content: space-between; position: relative; border-right: 5px solid #10b981; margin-bottom: 10px;}
+    li.minus { border-right-color: #ef4444; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Expense Tracker</h2>
+    <div class="balance" id="balance">$0.00</div>
+    <div class="inc-exp">
+      <div><h4>INCOME</h4><p class="money plus" id="money-plus">+$0.00</p></div>
+      <div><h4>EXPENSE</h4><p class="money minus" id="money-minus">-$0.00</p></div>
+    </div>
+    <ul id="list"></ul>
+    <h3>Add Transaction</h3>
+    <input type="text" id="text" placeholder="Enter text...">
+    <input type="number" id="amount" placeholder="Negative - exp, Positive - inc">
+    <button onclick="addTransaction()">Add Transaction</button>
+  </div>
+  <script>
+    let trans = [];
+    const tEl = document.getElementById('text'), aEl = document.getElementById('amount'), list = document.getElementById('list');
+    function update() {
+      const amts = trans.map(t => t.amt);
+      const tot = amts.reduce((acc, i) => (acc += i), 0).toFixed(2);
+      const inc = amts.filter(i => i > 0).reduce((a, i) => a += i, 0).toFixed(2);
+      const exp = (amts.filter(i => i < 0).reduce((a, i) => a += i, 0) * -1).toFixed(2);
+      document.getElementById('balance').innerText = `$${tot}`;
+      document.getElementById('money-plus').innerText = `+$${inc}`;
+      document.getElementById('money-minus').innerText = `-$${exp}`;
+      
+      list.innerHTML = '';
+      trans.forEach(t => {
+        const sign = t.amt < 0 ? '-' : '+';
+        const li = document.createElement('li');
+        li.className = t.amt < 0 ? 'minus' : '';
+        li.innerHTML = `${t.text} <span>${sign}$${Math.abs(t.amt)}</span>`;
+        list.appendChild(li);
+      });
+    }
+    function addTransaction() {
+      if(!tEl.value || !aEl.value) return alert('Add text and amount');
+      trans.push({ id: Math.random(), text: tEl.value, amt: +aEl.value });
+      tEl.value=''; aEl.value=''; update();
+    }
+    update();
+  </script>
+</body>
+</html>

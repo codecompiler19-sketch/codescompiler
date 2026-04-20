@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Weather API - Demo</title>
+  <style>
+    body { background: linear-gradient(135deg, #1e3a8a, #3b82f6); font-family: sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+    .weather-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 40px;
+      color: white;
+      text-align: center;
+      width: 320px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.2);
+    }
+    .search { display: flex; gap: 10px; margin-bottom: 30px; }
+    .search input { flex: 1; padding: 10px; border-radius: 8px; border: none; outline: none; }
+    .search button { background: #10b981; color: white; border: none; border-radius: 8px; padding: 10px 15px; cursor: pointer; }
+    .city { font-size: 28px; font-weight: bold; margin: 0; }
+    .temp { font-size: 64px; font-weight: 900; margin: 10px 0; }
+    .desc { font-size: 18px; opacity: 0.8; text-transform: capitalize; }
+    .icon { font-size: 64px; margin: 10px 0; line-height: 1; }
+  </style>
+</head>
+<body>
+  <div class="weather-card">
+    <div class="search">
+      <input type="text" id="cityInput" placeholder="Enter city" value="London">
+      <button id="searchBtn">Search</button>
+    </div>
+    <h2 class="city" id="cityName">London</h2>
+    <div class="icon" id="wIcon">🌥️</div>
+    <div class="temp"><span id="tempVal">18</span>°C</div>
+    <div class="desc" id="descTxt">Partly cloudy</div>
+  </div>
+  <script>
+    async function getWeather(city) {
+      const btn = document.getElementById('searchBtn');
+      btn.innerText = '...';
+      try {
+        const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=1`);
+        const geoData = await geoRes.json();
+        
+        if (!geoData.results || geoData.results.length === 0) throw new Error('Not found');
+        
+        const { latitude, longitude, name } = geoData.results[0];
+        
+        const wRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`);
+        const wData = await wRes.json();
+        const w = wData.current_weather;
+        
+        document.getElementById('cityName').innerText = name;
+        document.getElementById('tempVal').innerText = Math.round(w.temperature);
+        
+        let icon = '☀️', desc = 'Clear';
+        if (w.weathercode >= 1 && w.weathercode <= 3) { icon = '🌥️'; desc = 'Cloudy'; }
+        if (w.weathercode >= 45 && w.weathercode <= 48) { icon = '🌫️'; desc = 'Foggy'; }
+        if (w.weathercode >= 51 && w.weathercode <= 67) { icon = '🌧️'; desc = 'Rain'; }
+        if (w.weathercode >= 71 && w.weathercode <= 77) { icon = '❄️'; desc = 'Snow'; }
+        if (w.weathercode >= 95) { icon = '⛈️'; desc = 'Thunderstorm'; }
+        
+        document.getElementById('descTxt').innerText = desc;
+        document.getElementById('wIcon').innerText = icon;
+      } catch (e) {
+        document.getElementById('cityName').innerText = "Not found";
+        document.getElementById('tempVal').innerText = "--";
+        document.getElementById('descTxt').innerText = "Try another city";
+        document.getElementById('wIcon').innerText = "❌";
+      }
+      btn.innerText = 'Search';
+    }
+
+    document.getElementById('searchBtn').addEventListener('click', () => {
+      const city = document.getElementById('cityInput').value.trim();
+      if(city) getWeather(city);
+    });
+
+    // Handle enter key
+    document.getElementById('cityInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        const city = e.target.value.trim();
+        if(city) getWeather(city);
+      }
+    });
+
+    // Initial weather load
+    getWeather('London');
+  </script>
+</body>
+</html>

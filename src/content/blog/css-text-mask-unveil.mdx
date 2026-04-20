@@ -1,0 +1,38 @@
+---
+title: "Dynamic Text-Mask Unveiling"
+description: "Lock an amazing photograph exclusively inside massive typography, and then seamlessly unmask it into a full-scale image on hover."
+date: "2026-04-18"
+category: "Website Designs"
+tags: ["css", "typography", "mask", "reveal"]
+image: "/images/posts/css-text-mask-unveil.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+`background-clip: text;` is famously used to colorize text with gradients. But you can pass entire dynamic images through it. More impressively, we can smoothly animate the `color` property from transparent (to show the mask image) to solid on hover (covering the image), while zooming the image background out!
+
+## Reversing the Clip Priority
+
+```css
+.text-mask {
+  font-size: 8rem;
+  font-weight: 900;
+  color: transparent; /* Initial state: see through the text */
+  background-image: url('my-photo.jpg');
+  background-size: 200%;
+  background-position: center;
+  background-clip: text;
+  -webkit-background-clip: text;
+  
+  transition: color 0.5s ease-out, background-size 0.5s ease-out;
+}
+
+/* Hover logic: Fill text with white, expand the image */
+.text-mask-wrapper:hover .text-mask {
+  color: white; /* Hides the masked image inside the letters */
+  background-size: 100%; /* Show whole image */
+}
+```
+
+When checking the Live Demo, notice how the text turns solid white while the hidden city backdrop simultaneously swells up behind it!

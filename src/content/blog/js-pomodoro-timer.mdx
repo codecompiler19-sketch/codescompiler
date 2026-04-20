@@ -1,0 +1,44 @@
+---
+title: "Pomodoro Focus Timer"
+description: "A fully functional Pomodoro app with work/break cycles, circle progress rings, and session tracking."
+date: "2026-04-18"
+category: "JavaScript Projects"
+tags: ["javascript", "app", "timer", "productivity"]
+image: "/images/posts/js-pomodoro-timer.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+The Pomodoro technique involves 25 minutes of focus followed by a 5-minute break. This project integrates `setInterval` with a SVG circular progress bar.
+
+## The Core Timer
+
+We convert total minutes into seconds and tick down every 1000ms.
+
+```javascript
+let time = 25 * 60; // 25 mins
+let isRunning = false;
+let interval;
+
+function updateDisplay() {
+  const min = Math.floor(time / 60).toString().padStart(2, '0');
+  const sec = (time % 60).toString().padStart(2, '0');
+  document.getElementById('display').innerText = `${min}:${sec}`;
+}
+
+function startTimer() {
+  if (isRunning) return;
+  isRunning = true;
+  interval = setInterval(() => {
+    time--;
+    updateDisplay();
+    if (time <= 0) {
+      clearInterval(interval);
+      alert("Session Complete!");
+    }
+  }, 1000);
+}
+```
+
+Try the Live Demo to see the interactive circular ring that animates as the timer decreases!

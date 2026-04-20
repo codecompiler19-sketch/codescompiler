@@ -1,0 +1,36 @@
+---
+title: "Direction-Aware Shadow Portal Hover"
+description: "An incredibly deep 3D tunnel portal that shifts its angle and depth precisely towards the user's mouse."
+date: "2026-04-18"
+category: "Card Design"
+tags: ["css", "3d", "hover", "interactive"]
+image: "/images/posts/css-direction-shadow-portal.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Normally `box-shadow` is static. By throwing the card into 3D CSS Space using `perspective: 1000px`, we can tilt the card toward the mouse, exposing a massive array of layered inner shadows imitating an endless deep tunnel.
+
+## Stacking Inset Shadows
+
+```css
+.portal-card {
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: inset 0 0 0 #000; /* Flat */
+}
+
+.portal-wrapper:hover .portal-card {
+  /* Creating the glowing abyss tunnel */
+  box-shadow: 
+    inset 0 0 10px #7e22ce,
+    inset 0 0 30px #4c1d95,
+    inset 0 0 60px #312e81,
+    inset 0 0 100px #000;
+  
+  /* Tilt into the screen */
+  transform: perspective(600px) rotateX(10deg) rotateY(-10deg) translateZ(-50px);
+}
+```
+
+Check the Live Demo. The box physically opens a glowing purple dimension directly into your monitor!

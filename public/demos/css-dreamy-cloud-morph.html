@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cloud Morph Demo</title>
+  <style>
+    body { background: #bae6fd; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+    
+    .divider-container {
+      width: 100%;
+      height: 150px;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    
+    .cloud-blob {
+      position: absolute;
+      background: white;
+      filter: blur(12px);
+      opacity: 0.8;
+      animation: morphSky 6s ease-in-out infinite alternate, drift 15s linear infinite;
+    }
+    
+    .b1 { width: 300px; height: 100px; left: 10%; animation-delay: 0s, 0s;}
+    .b2 { width: 400px; height: 120px; left: 40%; animation-delay: 1s, -5s; background: #f0f9ff;}
+    .b3 { width: 250px; height: 90px; right: 10%; animation-delay: 2.5s, -10s;}
+    
+    /* Modify all 8 border-radius parameters dynamically */
+    @keyframes morphSky {
+      0%   { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+      34%  { border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%; }
+      67%  { border-radius: 100% 60% 60% 100% / 100% 100% 60% 60%; }
+      100% { border-radius: 30% 70% 70% 30% / 50% 40% 50% 60%; }
+    }
+    
+    @keyframes drift {
+      0%   { transform: translateX(-50px); }
+      50%  { transform: translateX(50px); }
+      100% { transform: translateX(-50px); }
+    }
+    
+    .content {
+      z-index: 10;
+      color: #0369a1;
+      font-family: sans-serif;
+      font-size: 2rem;
+      font-weight: bold;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <div class="divider-container">
+    <div class="cloud-blob b1"></div>
+    <div class="cloud-blob b2"></div>
+    <div class="cloud-blob b3"></div>
+    <div class="content">Section Two</div>
+  </div>
+</body>
+</html>

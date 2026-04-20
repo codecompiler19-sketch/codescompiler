@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Snake Game Demo</title>
+  <style>
+    body { background: #000; text-align: center; font-family: sans-serif; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; color: white;}
+    canvas { background: #111; border: 4px solid #39ea2c; box-shadow: 0 0 20px #39ea2c; margin-top: 20px;}
+    h1 {text-transform: uppercase; font-family: monospace; letter-spacing: 4px; color: #39ea2c; text-shadow: 0 0 10px #39ea2c;}
+  </style>
+</head>
+<body>
+  <h1>Neon Snake</h1>
+  <canvas id="game" width="400" height="400"></canvas>
+  <p>Use WASD or Arrows to move.</p>
+  <script>
+    const c = document.getElementById("game"), ctx = c.getContext("2d");
+    let speed = 7, tile = 20, tail = 5, snakeX = 10, snakeY = 10;
+    let velX = 0, velY = 0, appX = 15, appY = 15;
+    let trail = [];
+
+    function draw() {
+      snakeX += velX; snakeY += velY;
+      if(snakeX<0) snakeX=19; if(snakeX>19) snakeX=0;
+      if(snakeY<0) snakeY=19; if(snakeY>19) snakeY=0;
+
+      ctx.fillStyle = "#111"; ctx.fillRect(0,0,c.width,c.height);
+
+      ctx.fillStyle = "#39ea2c";
+      for(let i=0; i<trail.length; i++) {
+        ctx.fillRect(trail[i].x*tile, trail[i].y*tile, tile-2, tile-2);
+        if(trail[i].x===snakeX && trail[i].y===snakeY) tail = 5;
+      }
+      trail.push({x:snakeX, y:snakeY});
+      while(trail.length>tail) trail.shift();
+
+      if(appX===snakeX && appY===snakeY) { tail++; appX=Math.floor(Math.random()*20); appY=Math.floor(Math.random()*20); }
+      ctx.fillStyle = "red";
+      ctx.fillRect(appX*tile, appY*tile, tile-2, tile-2);
+    }
+    
+    document.addEventListener("keydown", (e) => {
+      if((e.key==="w" || e.key==="ArrowUp") && velY!==1) {velX=0; velY=-1;}
+      if((e.key==="s" || e.key==="ArrowDown") && velY!==-1) {velX=0; velY=1;}
+      if((e.key==="a" || e.key==="ArrowLeft") && velX!==1) {velX=-1; velY=0;}
+      if((e.key==="d" || e.key==="ArrowRight") && velX!==-1) {velX=1; velY=0;}
+    });
+    setInterval(draw, 1000/speed);
+  </script>
+</body>
+</html>

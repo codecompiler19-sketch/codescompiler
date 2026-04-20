@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gratitude Jar Demo</title>
+  <style>
+    body { background: #0f172a; height: 100vh; margin: 0; display: flex; align-items: center; justify-content: center; font-family: sans-serif; overflow: hidden; color: white;}
+    .jar { width: 180px; height: 260px; background: rgba(255,255,255,0.05); backdrop-filter: blur(8px); border: 4px solid rgba(255,255,255,0.3); border-radius: 5px 5px 40px 40px; position: relative; box-shadow: 0 0 50px rgba(52, 211, 153, 0.1), inset 0 0 20px rgba(255,255,255,0.1); margin-bottom: 30px;}
+    .lid { width: 190px; height: 20px; background: #854d0e; position: absolute; top: -24px; left: -9px; border-radius: 4px;}
+    .controls { text-align: center; z-index: 10;}
+    input { padding: 10px; border-radius: 20px; border: none; outline: none; background: rgba(255,255,255,0.1); color: white; margin-right: 10px; padding-left: 15px;}
+    button { padding: 10px 20px; border-radius: 20px; border: none; background: #34d399; color: #022c22; font-weight: bold; cursor: pointer; transition: 0.2s;}
+    button:hover { background: #10b981; }
+    .firefly { position: absolute; width: 6px; height: 6px; background: #fff; border-radius: 50%; box-shadow: 0 0 15px 5px #fde047; transition: all 2s ease-in-out;}
+  </style>
+</head>
+<body>
+  <div>
+    <div class="jar" id="jar"><div class="lid"></div></div>
+    <div class="controls">
+      <input type="text" id="note" placeholder="I am grateful for..." autocomplete="off">
+      <button onclick="add()">Drop In</button>
+    </div>
+  </div>
+  <script>
+    const jar = document.getElementById('jar');
+    const flies = [];
+    function add() {
+      const text = document.getElementById('note').value;
+      if(!text) return; document.getElementById('note').value = '';
+      
+      const fly = document.createElement('div');
+      fly.className = 'firefly'; fly.title = text;
+      fly.style.left = '50%'; fly.style.top = '-20px';
+      jar.appendChild(fly);
+      flies.push(fly);
+      moveFly(fly); // Start its engine!
+    }
+    
+    function moveFly(f) {
+      setInterval(() => {
+        const x = Math.random() * 80 + 10; // 10% to 90%
+        const y = Math.random() * 80 + 10;
+        f.style.left = x + '%';
+        f.style.top = y + '%';
+      }, 2000);
+    }
+    // Add two to start
+    document.getElementById('note').value="Coffee"; add();
+    document.getElementById('note').value="My dog"; add();
+  </script>
+</body>
+</html>

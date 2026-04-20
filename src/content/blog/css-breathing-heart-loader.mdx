@@ -1,0 +1,45 @@
+---
+title: "Soft Breathing Heart Loader"
+description: "A calming loading indicator using an expanding and contracting heart graphic to simulate human breathing."
+date: "2026-04-18"
+category: "Preloader or Loader"
+tags: ["css", "animation", "loader", "heart"]
+image: "/images/posts/css-breathing-heart-loader.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Pulsing loading spinners are too chaotic. To bring users a sense of peace while fetching data, we can build a slowly inflating and deflating heart that maps perfectly onto human respiration (around 4 seconds per breath).
+
+## The Base Heart
+
+A simple CSS trick to draw a perfect heart leverages `::before` and `::after` placed at overlapping angles.
+
+```css
+.heart {
+  background-color: #f43f5e;
+  height: 50px;
+  width: 50px;
+  position: relative;
+  transform: rotate(-45deg);
+  animation: breathe 4s ease-in-out infinite;
+}
+.heart::before, .heart::after {
+  content: "";
+  background-color: #f43f5e;
+  border-radius: 50%;
+  height: 50px;
+  position: absolute;
+  width: 50px;
+}
+.heart::before { top: -25px; left: 0; }
+.heart::after { left: 25px; top: 0; }
+
+@keyframes breathe {
+  0%, 100% { transform: rotate(-45deg) scale(0.8); }
+  50%      { transform: rotate(-45deg) scale(1.2); }
+}
+```
+
+Experience the incredibly serene wait-time loader implemented directly in the Live Demo window!

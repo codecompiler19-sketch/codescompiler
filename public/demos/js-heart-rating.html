@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Heart Rating Demo</title>
+  <style>
+    body { background: #fff1f2; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: serif; color: #881337;}
+    .rating { display: flex; gap: 10px; font-size: 4rem; cursor: pointer; color: #e5e7eb;}
+    .heart { transition: 0.2s transform, 0.2s color; }
+    .heart:hover { transform: scale(1.2); }
+    .thanks { margin-top: 30px; font-size: 1.5rem; opacity: 0; transition: 0.5s; }
+  </style>
+</head>
+<body>
+  <h2>How much do you love coding?</h2>
+  <div class="rating" id="stars">
+    <div class="heart">♥</div><div class="heart">♥</div><div class="heart">♥</div>
+    <div class="heart">♥</div><div class="heart">♥</div>
+  </div>
+  <div class="thanks" id="thanks">Thank you for sharing the love!</div>
+
+  <script>
+    const hearts = document.querySelectorAll('.heart');
+    let locked = 0;
+
+    hearts.forEach((h, i) => {
+      // Hover logic
+      h.addEventListener('mouseover', () => {
+        hearts.forEach((hj, j) => { hj.style.color = j <= i ? '#f43f5e' : '#e5e7eb'; });
+      });
+      // Mouse off
+      h.addEventListener('mouseout', () => {
+        hearts.forEach((hj, j) => { hj.style.color = j < locked ? '#f43f5e' : '#e5e7eb'; });
+      });
+      // Click lock
+      h.addEventListener('click', () => {
+        locked = i + 1;
+        document.getElementById('thanks').style.opacity = 1;
+        // Pulse animation
+        hearts.forEach((hj, j) => {
+          if(j < locked) { hj.style.transform = 'scale(1.3)'; setTimeout(()=>hj.style.transform='scale(1)', 200); }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

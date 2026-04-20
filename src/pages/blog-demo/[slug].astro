@@ -1,0 +1,265 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts
+    .filter(p => p.data.hasDemo)
+    .map(post => ({
+      params: { slug: post.slug },
+      props: { post },
+    }));
+}
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const demoFile = `/demos/${post.slug}.html`;
+const postUrl  = `/blog/${post.slug}`;
+---
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{post.data.title} — Live Demo | CodesCompiler</title>
+  <meta name="robots" content="noindex" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; font-family: 'Segoe UI', sans-serif; background: #282A35; }
+
+    /* ── DEMO HEADER ─────────────────────────────────────────── */
+    #demo-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 16px;
+      height: 48px;
+      background: #1a1b26;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      position: relative;
+      z-index: 10;
+      flex-shrink: 0;
+      transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                  height   0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity  0.25s;
+      overflow: hidden;
+    }
+    #demo-header.hidden {
+      transform: translateY(-100%);
+      height: 0 !important;
+      opacity: 0;
+      border: none;
+    }
+
+    .header-logo {
+      font-size: 14px;
+      font-weight: 900;
+      color: #fff;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .header-logo span { color: #04AA6D; }
+
+    .header-sep { width: 1px; height: 20px; background: rgba(255,255,255,0.12); flex-shrink: 0; }
+
+    .header-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.65);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .hdr-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 13px;
+      border: none;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity .15s, transform .1s;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+    .hdr-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+    .hdr-btn-ghost {
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.7);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .hdr-btn-ghost:hover { background: rgba(255,255,255,0.14); color: #fff; }
+    .hdr-btn-green  { background: #04AA6D; color: #fff; }
+    .hdr-btn-expand { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.1); }
+
+    /* ── IFRAME WRAPPER ──────────────────────────────────────── */
+    #frame-wrap {
+      position: relative;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    #demo-frame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      flex: 1;
+    }
+
+    /* Full-page layout */
+    body {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── FLOATING RESTORE BUTTON ─────────────────────────────── */
+    #restore-btn {
+      position: fixed;
+      top: 12px;
+      right: 14px;
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      background: rgba(26,27,38,0.92);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 30px;
+      color: rgba(255,255,255,0.8);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      backdrop-filter: blur(12px);
+      transition: opacity .2s, transform .2s;
+      animation: slideInBtn .3s cubic-bezier(0.34,1.56,0.64,1);
+      font-family: inherit;
+    }
+    #restore-btn:hover { opacity: 0.9; transform: scale(1.04); }
+    #restore-btn.visible { display: flex; }
+    @keyframes slideInBtn {
+      from { opacity: 0; transform: translateY(-14px) scale(0.9); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* ── LOADING OVERLAY ─────────────────────────────────────── */
+    #loading {
+      position: absolute;
+      inset: 0;
+      background: #282A35;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      color: rgba(255,255,255,0.6);
+      font-size: 14px;
+      z-index: 5;
+      pointer-events: none;
+      transition: opacity .3s;
+    }
+    #loading.gone { opacity: 0; }
+    .spin {
+      width: 32px; height: 32px;
+      border: 3px solid rgba(255,255,255,0.1);
+      border-top-color: #04AA6D;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Responsive for very small screens */
+    @media (max-width: 480px) {
+      .hdr-btn span { display: none; }
+      .header-title { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── DEMO HEADER ─────────────────────────────────────────── -->
+  <header id="demo-header">
+    <a href="/" class="header-logo"><span>Codes</span>Compiler</a>
+    <div class="header-sep"></div>
+    <span class="header-title" title={post.data.title}>
+      📺 {post.data.title}
+    </span>
+    <div class="header-actions">
+      <!-- Back to post -->
+      <a href={postUrl} class="hdr-btn hdr-btn-ghost" title="Read the full post">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        <span>Back to Post</span>
+      </a>
+      <!-- Download -->
+      <a href={demoFile} download={`${post.slug}.html`} class="hdr-btn hdr-btn-ghost" title="Download source file">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+        <span>Download</span>
+      </a>
+      <!-- Hide header (fullscreen) -->
+      <button class="hdr-btn hdr-btn-expand" id="fullscreenBtn" title="Hide header for fullscreen view" onclick="hideHeader()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
+        <span>Fullscreen</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ── IFRAME SECTION ─────────────────────────────────────── -->
+  <div id="frame-wrap">
+    <div id="loading">
+      <div class="spin"></div>
+      <span>Loading demo…</span>
+    </div>
+    <iframe
+      id="demo-frame"
+      src={demoFile}
+      title={`Live demo: ${post.data.title}`}
+      loading="eager"
+      onload="frameLoaded()"
+      sandbox="allow-scripts allow-forms allow-same-origin allow-modals"
+    ></iframe>
+  </div>
+
+  <!-- ── FLOATING RESTORE BUTTON ─────────────────────────────── -->
+  <button id="restore-btn" onclick="showHeader()" title="Show header">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h8m-8 6h16"/></svg>
+    Show Header
+  </button>
+
+  <script is:inline>
+    function hideHeader() {
+      document.getElementById('demo-header').classList.add('hidden');
+      document.getElementById('restore-btn').classList.add('visible');
+    }
+    function showHeader() {
+      document.getElementById('demo-header').classList.remove('hidden');
+      document.getElementById('restore-btn').classList.remove('visible');
+    }
+    function frameLoaded() {
+      const loading = document.getElementById('loading');
+      loading.classList.add('gone');
+      setTimeout(() => loading.remove(), 350);
+    }
+    // Keyboard shortcut: Escape to show header again
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') showHeader();
+    });
+  </script>
+
+</body>
+</html>

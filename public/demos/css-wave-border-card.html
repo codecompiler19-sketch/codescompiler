@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Wave Border Card</title>
+  <style>
+    body { background: #f0f9ff; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif;}
+    
+    .wave-card {
+      position: relative;
+      width: 300px;
+      background: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      z-index: 1;
+      text-align: center;
+      transition: transform 0.4s, box-shadow 0.4s;
+    }
+    
+    /* The animated wavy border wrapper */
+    .wave-card::before {
+      content: '';
+      position: absolute;
+      inset: -6px; /* The thickness of the border */
+      z-index: -1;
+      border-radius: 15px;
+      /* Using radial circles to emulate waves */
+      background: radial-gradient(circle at 10px 10px, #38bdf8 12px, transparent 13px);
+      background-size: 20px 20px;
+      animation: waveFlow 4s linear infinite;
+    }
+    
+    .wave-card:hover {
+      transform: translateY(-10px) rotateX(10deg);
+      box-shadow: 0 20px 25px rgba(0,0,0,0.1);
+    }
+    
+    /* Accelerate the water on hover */
+    .wave-card:hover::before { animation: waveFlow 1s linear infinite; background: radial-gradient(circle at 10px 10px, #0ea5e9 12px, transparent 13px); background-size: 20px 20px; }
+    
+    @keyframes waveFlow {
+      from { background-position: 0px 0px; }
+      to { background-position: 40px 40px; } /* Must perfectly match a multiple of background-size */
+    }
+    
+    h3 { color: #0284c7; margin-top: 0;}
+    p { color: #64748b; font-size: 0.95rem; line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <div class="wave-card">
+    <h3>Ocean Vibes</h3>
+    <p>Hover over this card to dive in. The border is purely CSS background repeating radial gradients.</p>
+  </div>
+</body>
+</html>

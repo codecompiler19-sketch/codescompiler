@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Infinite Scroll Demo</title>
+  <style>
+    body { background: #f3f4f6; padding: 20px; font-family: sans-serif; display: flex; flex-direction: column; align-items: center;}
+    .feed { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 20px;}
+    .post { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    .post-header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+    .avatar { width: 40px; height: 40px; background: #e5e7eb; border-radius: 50%; }
+    .line { height: 12px; background: #e5e7eb; border-radius: 6px; margin-bottom: 10px; }
+    .img-box { height: 200px; background: #e5e7eb; border-radius: 8px; margin-top: 15px; }
+    .loading { text-align: center; padding: 20px; font-weight: bold; color: #6b7280; font-size: 1.2rem;}
+  </style>
+</head>
+<body>
+  <h1>FakeGram Scroll</h1>
+  <div class="feed" id="feed">
+    <!-- Initial Post -->
+    <div class="post">
+      <div class="post-header"><div class="avatar"></div><strong>User 1</strong></div>
+      <div class="line" style="width: 80%"></div><div class="line" style="width: 60%"></div>
+      <div class="img-box"></div>
+    </div>
+  </div>
+  <div class="loading" id="loader">Loading more posts...</div>
+  <script>
+    const feed = document.getElementById('feed');
+    let count = 2;
+    
+    function createPost() {
+      const p = document.createElement('div'); p.className = 'post';
+      p.innerHTML = `<div class="post-header"><div class="avatar" style="background:#${Math.floor(Math.random()*16777215).toString(16)}"></div><strong>User ${count++}</strong></div>
+      <div class="line" style="width: ${Math.random()*40+40}%"></div><div class="line" style="width: ${Math.random()*30+30}%"></div>
+      <div class="img-box" style="background:#${Math.floor(Math.random()*16777215).toString(16)}"></div>`;
+      feed.appendChild(p);
+    }
+    
+    // Add initial
+    for(let i=0; i<4; i++) createPost();
+
+    window.addEventListener('scroll', () => {
+      const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+      if (scrollTop + clientHeight >= scrollHeight - 30) {
+        setTimeout(() => { for(let i=0; i<3; i++) createPost(); }, 300); // slight fake delay
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Habit Tracker Demo</title>
+  <style>
+    body { background: #0d1117; color: #c9d1d9; font-family: -apple-system, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+    .container { background: #161b22; padding: 30px; border-radius: 12px; border: 1px solid #30363d; }
+    h2 { margin-top: 0; }
+    .habit-row { display: flex; align-items: center; margin-bottom: 15px; }
+    .habit-name { width: 120px; font-weight: bold; }
+    .grid { display: grid; grid-template-columns: repeat(30, 15px); gap: 4px; }
+    .cell { width: 15px; height: 15px; background: #161b22; border: 1px solid #30363d; border-radius: 3px; cursor: pointer; transition: 0.2s;}
+    .cell.done { background: #39d353; border-color: #39d353; }
+    .cell:hover { transform: scale(1.2); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>30-Day Streak 🔥</h2>
+    <div id="tracker"></div>
+  </div>
+  <script>
+    const habits = {
+      "Drink Water": Array(30).fill(false),
+      "Read 10 Pages": Array(30).fill(false),
+      "Code Daily": Array(30).fill(false).map(()=> Math.random() > 0.5) // Demo data
+    };
+    const tracker = document.getElementById('tracker');
+
+    function render() {
+      tracker.innerHTML = '';
+      for (const [name, days] of Object.entries(habits)) {
+        const row = document.createElement('div');
+        row.className = 'habit-row';
+        row.innerHTML = `<div class="habit-name">${name}</div>`;
+        const grid = document.createElement('div');
+        grid.className = 'grid';
+        
+        days.forEach((done, i) => {
+          const cell = document.createElement('div');
+          cell.className = `cell ${done ? 'done' : ''}`;
+          cell.onclick = () => { habits[name][i] = !habits[name][i]; render(); };
+          grid.appendChild(cell);
+        });
+        row.appendChild(grid);
+        tracker.appendChild(row);
+      }
+    }
+    render();
+  </script>
+</body>
+</html>

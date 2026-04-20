@@ -1,0 +1,51 @@
+---
+title: "Blooming Flower Button Effect"
+description: "A magical circular button that blossoms open on hover using overlapping CSS pseudo-elements to reveal the content inside."
+date: "2026-04-18"
+category: "CSS Buttons"
+tags: ["css", "buttons", "animation", "creative"]
+image: "/images/posts/css-blooming-flower-button.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Nature provides some of the best design inspiration. Let's create an organic Call to Action button that begins as a closed green "bud" and slowly unravels "petals" when hovered, shifting into a soft pink blossom.
+
+## Layering the Petals
+
+This is achieved without extra HTML! We use `::before` and `::after` on the button, stacking overlapping border-radius circles.
+
+```css
+.flower-btn {
+  background: #34d399; /* Green bud */
+  border-radius: 50%;
+  position: relative;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.flower-btn::before, .flower-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #f472b6; /* Pink petal */
+  border-radius: 50%;
+  transform: scale(0) rotate(0deg);
+  transition: all 0.6s ease;
+  z-index: -1;
+}
+
+.flower-btn:hover {
+  background: transparent;
+}
+
+.flower-btn:hover::before {
+  transform: scale(1.2) rotate(45deg);
+}
+.flower-btn:hover::after {
+  transform: scale(1.2) rotate(-45deg);
+}
+```
+
+Check out the warm blosom effect in the Live Demo when you hover over the bud!

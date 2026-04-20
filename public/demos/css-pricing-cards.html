@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Pricing Cards — Demo</title>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;gap:32px;}
+    h1{font-size:clamp(22px,4vw,32px);font-weight:900;color:#fff;text-align:center;}
+    p.sub{font-size:15px;color:rgba(255,255,255,0.65);text-align:center;margin-top:-20px;}
+
+    .pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;width:100%;max-width:900px;align-items:center;}
+
+    .pricing-card{
+      background:#fff;
+      border:2px solid #e5e7eb;
+      border-radius:24px;
+      padding:36px 28px;
+      display:flex;flex-direction:column;gap:16px;position:relative;
+      transition:transform .3s,box-shadow .3s,border-color .3s;
+    }
+    .pricing-card:hover{transform:translateY(-10px);box-shadow:0 24px 60px rgba(0,0,0,.18);border-color:#04AA6D;}
+
+    .pricing-card.featured{
+      background:linear-gradient(160deg,#1a1b26,#282A35);
+      border-color:#04AA6D;color:#fff;
+      transform:scale(1.05);
+      box-shadow:0 24px 60px rgba(4,170,109,0.3);
+    }
+    .pricing-card.featured:hover{transform:scale(1.05) translateY(-8px);}
+
+    .popular-tag{
+      position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+      background:#04AA6D;color:#fff;font-size:11px;font-weight:800;
+      padding:4px 16px;border-radius:20px;text-transform:uppercase;letter-spacing:.05em;
+      white-space:nowrap;
+    }
+    .card-badge{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:#04AA6D;}
+    .featured .card-badge{color:#34d399;}
+    .price{font-size:52px;font-weight:900;line-height:1;}
+    .price .cur{font-size:22px;vertical-align:top;margin-top:10px;display:inline-block;}
+    .price .per{font-size:15px;font-weight:500;opacity:.5;}
+    .card-desc{font-size:13px;color:#6b7280;line-height:1.6;}
+    .featured .card-desc{color:rgba(255,255,255,0.55);}
+    .features{list-style:none;display:flex;flex-direction:column;gap:10px;flex:1;}
+    .features li{font-size:13.5px;display:flex;align-items:center;gap:10px;color:#374151;}
+    .featured .features li{color:rgba(255,255,255,0.8);}
+    .features li.yes::before{content:'✓';color:#04AA6D;font-weight:900;font-size:15px;flex-shrink:0;}
+    .features li.no{opacity:.4;}
+    .features li.no::before{content:'✕';color:#ef4444;font-weight:700;flex-shrink:0;}
+
+    .card-btn{
+      display:block;text-align:center;padding:14px;border-radius:12px;
+      font-weight:800;font-size:14px;text-decoration:none;
+      transition:all .2s;border:2px solid transparent;margin-top:8px;
+    }
+    .pricing-card:not(.featured) .card-btn{background:#f3f4f6;color:#374151;border-color:#e5e7eb;}
+    .pricing-card:not(.featured) .card-btn:hover{background:#04AA6D;color:#fff;border-color:#04AA6D;}
+    .featured .card-btn{background:#04AA6D;color:#fff;box-shadow:0 6px 20px rgba(4,170,109,.4);}
+    .featured .card-btn:hover{background:#038a58;transform:translateY(-2px);}
+  </style>
+</head>
+<body>
+  <h1>💎 Choose Your Plan</h1>
+  <p class="sub">Simple, transparent pricing. No hidden fees.</p>
+
+  <div class="pricing-grid">
+    <!-- Starter -->
+    <div class="pricing-card">
+      <div class="card-badge">Starter</div>
+      <div class="price"><span class="cur">$</span>9<span class="per">/mo</span></div>
+      <p class="card-desc">Perfect for individuals just getting started with web development.</p>
+      <ul class="features">
+        <li class="yes">5 Projects</li>
+        <li class="yes">10 GB Storage</li>
+        <li class="yes">Basic Analytics</li>
+        <li class="yes">Email Support</li>
+        <li class="no">Priority Support</li>
+        <li class="no">Custom Domain</li>
+        <li class="no">Team Collaboration</li>
+      </ul>
+      <a href="#" class="card-btn">Get Started</a>
+    </div>
+
+    <!-- Pro (Featured) -->
+    <div class="pricing-card featured">
+      <div class="popular-tag">Most Popular</div>
+      <div class="card-badge">Pro</div>
+      <div class="price"><span class="cur">$</span>29<span class="per">/mo</span></div>
+      <p class="card-desc">For professional developers who want the full experience.</p>
+      <ul class="features">
+        <li class="yes">Unlimited Projects</li>
+        <li class="yes">100 GB Storage</li>
+        <li class="yes">Advanced Analytics</li>
+        <li class="yes">Priority Support</li>
+        <li class="yes">Custom Domain</li>
+        <li class="yes">Team (up to 5)</li>
+        <li class="no">Dedicated Server</li>
+      </ul>
+      <a href="#" class="card-btn">Start Free Trial</a>
+    </div>
+
+    <!-- Enterprise -->
+    <div class="pricing-card">
+      <div class="card-badge">Enterprise</div>
+      <div class="price"><span class="cur">$</span>99<span class="per">/mo</span></div>
+      <p class="card-desc">For teams and organizations with advanced needs and scale.</p>
+      <ul class="features">
+        <li class="yes">Unlimited Everything</li>
+        <li class="yes">1 TB Storage</li>
+        <li class="yes">Custom Analytics</li>
+        <li class="yes">24/7 Dedicated Support</li>
+        <li class="yes">Custom Domain + SSL</li>
+        <li class="yes">Unlimited Team</li>
+        <li class="yes">Dedicated Server</li>
+      </ul>
+      <a href="#" class="card-btn">Contact Sales</a>
+    </div>
+  </div>
+</body>
+</html>

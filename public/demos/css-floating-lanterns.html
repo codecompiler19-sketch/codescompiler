@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Floating Lanterns Demo</title>
+  <style>
+    body { background: linear-gradient(to top, #1e1b4b, #000); color: white; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100vh; margin: 0; padding-bottom: 50px; overflow: hidden; font-family: serif; position: relative;}
+    .stars { position: absolute; inset: 0; background: transparent; z-index: -1;}
+    .ui { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); padding: 30px; border-radius: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1); z-index: 10;}
+    h1 { margin-top: 0; font-size: 2rem; font-weight: normal; letter-spacing: 2px;}
+    textarea { width: 300px; height: 80px; background: rgba(0,0,0,0.3); border: 1px solid #4b5563; color: white; border-radius: 8px; padding: 15px; font-family: serif; resize: none; margin-bottom: 20px;}
+    button { background: #fb923c; color: white; padding: 12px 30px; font-size: 1.2rem; border-radius: 30px; border: none; cursor: pointer; transition: 0.3s; font-family: serif;}
+    button:hover { background: #f97316; box-shadow: 0 0 20px rgba(251, 146, 60, 0.5);}
+    /* Lantern Config */
+    .lantern { position: absolute; width: 40px; height: 60px; background: linear-gradient(#fde047, #ea580c); border-radius: 5px 5px 15px 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; pointer-events: none;}
+    .lantern::after { content:''; position: absolute; bottom: 0; width: 10px; height: 10px; background: #fff; border-radius: 50%; filter: blur(4px); box-shadow: 0 0 20px #fff;}
+    @keyframes float { 0% { transform: translateY(110vh) scale(0.8); opacity: 1; margin-left: 0;} 30% { margin-left: 30px; opacity: 1;} 70% { margin-left: -30px; } 100% { transform: translateY(-30vh) scale(0.3); opacity: 0; margin-left: 0; } }
+  </style>
+</head>
+<body>
+  <div class="stars" id="stars"></div>
+  <div class="ui">
+    <h1>Send a Wish</h1>
+    <textarea id="wishText" placeholder="May the world find peace..."></textarea><br>
+    <button onclick="release()">Release Lantern</button>
+  </div>
+  <script>
+    // Gen stars
+    for(let i=0; i<100; i++){
+      let s=document.createElement('div');
+      s.style = `position:absolute; width:2px; height:2px; background:white; top:${Math.random()*100}%; left:${Math.random()*100}%; opacity:${Math.random()};`;
+      document.getElementById('stars').appendChild(s);
+    }
+    function release() {
+      const text = document.getElementById('wishText').value;
+      if(!text) return;
+      document.getElementById('wishText').value = '';
+      
+      const lant = document.createElement('div');
+      lant.className = 'lantern';
+      lant.style.left = (Math.random() * 80 + 10) + 'vw';
+      lant.style.animation = `float ${Math.random()*5 + 10}s ease-in forwards`;
+      lant.style.boxShadow = '0 0 30px rgba(234, 88, 12, 0.8), 0 0 60px rgba(253, 224, 71, 0.6)';
+      
+      document.body.appendChild(lant);
+      setTimeout(()=>lant.remove(), 15000);
+    }
+  </script>
+</body>
+</html>

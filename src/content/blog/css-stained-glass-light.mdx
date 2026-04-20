@@ -1,0 +1,41 @@
+---
+title: "Stained Glass Light Leak Effect"
+description: "A gorgeous premium panel where radial light beams physically glide behind transparent stained-glass polygon panes."
+date: "2026-04-18"
+category: "Card Design"
+tags: ["css", "animation", "glassmorphism", "light"]
+image: "/images/posts/css-stained-glass-light.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+For an artistic or church-like UI, use `background-clip` layered with translucent SVG or CSS polygons. A rotating radial gradient underneath acts as a physical sunbeam slicing behind the glass.
+
+## The Roaming Sunbeam
+
+```css
+.glass-panel {
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.glass-panel::before {
+  content: '';
+  position: absolute;
+  /* The Sunbeam */
+  background: radial-gradient(circle, rgba(234, 179, 8, 0.8) 0%, transparent 50%);
+  width: 200px;
+  height: 200px;
+  animation: roamLight 6s linear infinite;
+}
+
+@keyframes roamLight {
+  0% { transform: translate(-100px, -100px); }
+  50% { transform: translate(300px, 200px); }
+  100% { transform: translate(-100px, -100px); }
+}
+```
+
+Check out the glorious, heavenly church window light leak effect inside the Live Demo!

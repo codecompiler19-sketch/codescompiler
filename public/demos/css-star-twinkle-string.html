@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Star Twinkle String Demo</title>
+  <style>
+    body { background: #0f172a; padding: 100px; }
+    
+    .box { background: #1e293b; color: white; padding: 40px; text-align: center; border-radius: 10px; font-family: sans-serif;}
+    
+    .twinkle-string {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin: 40px 0;
+      border-top: 1px solid rgba(253, 224, 71, 0.2);
+    }
+    
+    .star {
+      width: 12px; height: 12px;
+      /* Perfect 5-point star polygon */
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+      background: #fef08a;
+      margin-top: -6px; /* pull to center on the wire */
+      animation: shine 1.5s infinite alternate;
+      transition: filter 0.3s;
+    }
+    
+    /* De-sync */
+    .star:nth-child(even) { animation-delay: 0.7s; }
+    .star:nth-child(3n) { animation-delay: 0.3s; }
+    .star:nth-child(4n) { animation-delay: 1s; }
+    
+    @keyframes shine {
+      0% { filter: drop-shadow(0 0 2px rgba(253,224,71,0.5)) scale(0.8); opacity: 0.6;}
+      100% { filter: drop-shadow(0 0 10px rgba(253,224,71,1)) scale(1.3); opacity: 1; background: #fff;}
+    }
+    
+    .box:hover .star { animation-duration: 0.5s; } /* Get excited on hover! */
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>Happy Holidays!</h2>
+    
+    <!-- The Divider -->
+    <div class="twinkle-string">
+      <div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div>
+      <div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div>
+      <div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div>
+    </div>
+    
+    <p>Using clip-path polygons allows us to create totally unique horizontal rule dividers.</p>
+  </div>
+</body>
+</html>

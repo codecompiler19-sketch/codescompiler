@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Origami Photo Hinge</title>
+  <style>
+    body { background: #cbd5e1; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; perspective: 1200px;}
+    
+    .folding-wrapper {
+      position: relative;
+      cursor: pointer;
+      /* Drop shadow is attached to the wrapper so it remains static while the pieces lift internally */
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+    
+    /* Config for all 3 fragments */
+    .slice {
+      width: 400px;
+      height: 120px;
+      /* Background repeats the same image, we just offset it */
+      background-image: url('https://images.unsplash.com/photo-1472214103451-9374bd1c798e?q=80&w=600&auto=format&fit=crop');
+      background-size: 400px 360px; /* Force to exact dimensions (3x 120px height) */
+      
+      /* Vital for physical 3D intersection! */
+      transform-style: preserve-3d; 
+    }
+    
+    /* Top Slice is anchored. It doesn't move. */
+    .top {
+      background-position: 0 0px; /* Top part of image */
+      border-radius: 8px 8px 0 0;
+    }
+    
+    /* Middle Slice hinges directly off the TOP edge of itself */
+    .mid {
+      background-position: 0 -120px; /* Middle slice */
+      transform-origin: top;
+      transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    /* Bottom Slice hinges off the top edge of itself (which is attached to the bottom of MID) */
+    .btm {
+      background-position: 0 -240px; /* Bottom slice */
+      border-radius: 0 0 8px 8px;
+      transform-origin: top;
+      transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    /* The folding interaction! */
+    /* Hovering wraps the middle backwards into the screen, and the bottom forwards towards you! */
+    .folding-wrapper:hover .mid {
+      transform: rotateX(-50deg);
+      filter: brightness(60%); /* Artificial shadow for depth! */
+    }
+    
+    .folding-wrapper:hover .btm {
+      /* Stacked rotation! */
+      transform: rotateX(100deg); 
+      filter: brightness(110%); /* Catching light */
+      border-radius: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="folding-wrapper">
+    <div class="slice top"></div>
+    <div class="slice mid">
+      <!-- The bottom is a child of the mid so it inherits its rotation transforms mathematically! -->
+      <div class="slice btm"></div>
+    </div>
+  </div>
+</body>
+</html>

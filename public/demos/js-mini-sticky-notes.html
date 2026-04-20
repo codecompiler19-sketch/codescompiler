@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sticky Notes Wall Demo</title>
+  <style>
+    body { background: #f3f4f6; display: flex; flex-direction: column; align-items: center; padding: 40px; font-family: 'Comic Sans MS', cursive, sans-serif; margin: 0;}
+    button { padding: 12px 30px; font-size: 1.2rem; background: #38bdf8; color: white; border: none; border-radius: 30px; cursor: pointer; margin-bottom: 40px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.2s;}
+    button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.15);}
+    
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 30px; width: 100%; max-width: 900px;}
+    
+    .note { width: 200px; min-height: 200px; padding: 20px; font-size: 1.4rem; color: #374151; box-shadow: 2px 4px 6px rgba(0,0,0,0.1); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; justify-content: center; text-align: center; cursor: pointer;}
+    .note:hover { transform: scale(1.1) rotate(0deg) !important; box-shadow: 10px 15px 25px rgba(0,0,0,0.15); z-index: 10;}
+  </style>
+</head>
+<body>
+  <button onclick="addNote()">+ Add Happy Thought</button>
+  <div class="grid" id="wall"></div>
+
+  <script>
+    const thoughts = ["You are loved.", "Keep going!", "Smile 😊", "Breathe.", "Today is a gift.", "You belong here.", "Shine bright!"];
+    const colors = ["#fef08a", "#fbcfe8", "#bbf7d0", "#bfdbfe", "#e9d5ff"];
+    const wall = document.getElementById('wall');
+
+    function addNote() {
+      const n = document.createElement('div');
+      n.className = 'note';
+      n.innerText = thoughts[Math.floor(Math.random() * thoughts.length)];
+      n.style.background = colors[Math.floor(Math.random() * colors.length)];
+      n.style.transform = `rotate(${Math.random() * 10 - 5}deg)`;
+      wall.appendChild(n);
+    }
+    
+    // Start with 3
+    for(let i=0; i<3; i++) addNote();
+  </script>
+</body>
+</html>

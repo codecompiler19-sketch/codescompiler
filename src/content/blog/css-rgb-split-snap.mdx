@@ -1,0 +1,42 @@
+---
+title: "RGB Chromatic Snap Shift"
+description: "A highly aggressive image interaction that temporarily tears the RGB channels apart upon hover to generate energetic chromatic aberration."
+date: "2026-04-18"
+category: "Website Designs"
+tags: ["css", "filter", "glitch", "effect"]
+image: "/images/posts/css-rgb-split-snap.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Glitch art adds intense character to otherwise static banners. Instead of complicated JS framing, we can achieve chromatic aberration purely by stacking the identical image over itself and shifting it horizontally alongside a red/blue mix-blend mode.
+
+## The Aberration Overlay
+
+```css
+.glitch-image {
+  position: relative;
+}
+
+/* A complete duplicate of the base image generated via CSS! */
+.glitch-image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  background-size: cover;
+  mix-blend-mode: color-burn;
+  opacity: 0;
+  transform: translateX(0);
+  transition: opacity 0.2s, transform 0.2s;
+  filter: drop-shadow(5px 0 0 red) drop-shadow(-5px 0 0 cyan);
+}
+
+.glitch-image:hover::after {
+  opacity: 0.8;
+  transform: translateX(10px); /* Tears the copy sideways! */
+}
+```
+
+Hover violently over the subject in the Live Demo to see the 3D anaglyph red-cyan split tear rapidly across their form.

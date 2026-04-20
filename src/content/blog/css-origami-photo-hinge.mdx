@@ -1,0 +1,44 @@
+---
+title: "The Origami Folding Photo"
+description: "Fragment your hero image horizontally and enforce extreme 3D hinges between the strata to create a fully foldable paper photograph."
+date: "2026-04-18"
+category: "Card Design"
+tags: ["css", "3d", "origami", "image"]
+image: "/images/posts/css-origami-photo-hinge.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+You can achieve the absolute pinnacle of UI depth by recreating physical material limitations. By splitting an image into three horizontal bars, we can use `rotateX` chained together to fold the picture up like a trifold pamphlet.
+
+## Chaining 3D Hinge Slices
+
+```css
+.photo-top, .photo-mid, .photo-btm {
+  height: 100px;
+  width: 300px;
+  /* Essential! Ensures children are anchored to edges */
+  transform-style: preserve-3d;
+  background-image: url('nature.jpg');
+}
+
+/* Map the background position so it aligns across pieces */
+.photo-top { background-position: top; }
+.photo-mid {
+  background-position: center;
+  transform-origin: top; 
+  transition: transform 0.5s;
+}
+.photo-btm {
+  background-position: bottom;
+  transform-origin: top;
+  transition: transform 0.5s;
+}
+
+/* Hover rolls the segments violently towards the viewer into a tight cube! */
+.wrapper:hover .photo-mid { transform: rotateX(-45deg); }
+.wrapper:hover .photo-btm { transform: rotateX(45deg); }
+```
+
+Gaze at the incredibly complex shadowing and folding depth happening live across the forest scene in the Demo application.

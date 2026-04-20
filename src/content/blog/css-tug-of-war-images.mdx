@@ -1,0 +1,39 @@
+---
+title: "Tug-of-War Split Image Hover"
+description: "Slice two competing images across a single row and let the user's cursor wage an aggressive tug-of-war for visual dominance."
+date: "2026-04-18"
+category: "Website Designs"
+tags: ["css", "layout", "flex", "images"]
+image: "/images/posts/css-tug-of-war-images.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Flexbox transitions are magical. By wrapping two images in a flex container aligned side by side, we can dictate their `flex-grow` parameters based purely on hovering!
+
+## Shrinking the Sibling
+
+```css
+.tug-container {
+  display: flex;
+  width: 100%;
+  height: 400px;
+}
+
+.tug-side {
+  flex: 1; /* Both start at 50% / 50% */
+  background-size: cover;
+  background-position: center;
+  transition: flex 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* The one currently hovered balloons to massive size */
+.tug-side:hover {
+  flex: 4; /* Dominates the wrapper! */
+}
+```
+
+We can even drop an absolute positioned title in the middle of each. Interact with the two competing landscapes in the Live Demo to see the seamless flex-ratio shifting.

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Direction Shadow Portal</title>
+  <style>
+    body { background: #1e1b4b; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; perspective: 1500px;}
+    
+    .portal-wrapper {
+      padding: 50px;
+      border-radius: 20px;
+    }
+    
+    .portal-card {
+      width: 250px;
+      height: 350px;
+      background: #0f172a;
+      border-radius: 20px;
+      box-shadow: inset 0 0 0 black;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: sans-serif;
+      font-size: 1.5rem;
+      border: 1px solid #312e81;
+    }
+    
+    /* Using a general hover here since calculating specific mouse direction in pure CSS is extremely hacky. We simulate "pulling the eye inward". */
+    .portal-wrapper:hover .portal-card {
+      transform: rotateX(15deg) rotateY(-15deg) translateZ(-100px);
+      box-shadow: 
+        inset 0 0 20px #9333ea,
+        inset 0 0 50px #7e22ce,
+        inset 0 0 80px #581c87,
+        inset 0 0 150px #000;
+        border-color: #a855f7;
+    }
+  </style>
+</head>
+<body>
+  <!-- Wrapping div allows moving the mouse near it to trigger the 3D shift smoothly -->
+  <div class="portal-wrapper">
+    <div class="portal-card">
+      <span style="z-index: 10; text-shadow: 0 0 10px #7e22ce;">ENTER</span>
+    </div>
+  </div>
+</body>
+</html>

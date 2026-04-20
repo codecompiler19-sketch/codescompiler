@@ -1,0 +1,44 @@
+---
+title: "Whimsical Star Twinkle String Divider"
+description: "Replace boring <hr> tags with a beautiful string of independently glowing and shimmering CSS star icons."
+date: "2026-04-18"
+category: "Website Designs"
+tags: ["css", "layout", "animation", "divider"]
+image: "/images/posts/css-star-twinkle-string.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+The web has overused standard gray horizontal rule lines. Using an inline flexbox array of CSS polygons, you can build glowing fairy-lights horizontally across your pages!
+
+## Flex Alignment and Staggering
+
+```css
+.twinkle-string {
+  display: flex;
+  justify-content: space-around;
+  width: 80%;
+  margin: 50px auto;
+  border-top: 1px solid rgba(253, 224, 71, 0.3); /* The wire */
+}
+
+.star {
+  width: 10px; height: 10px;
+  background: #fde047;
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  margin-top: -5px; /* Pull it exactly onto the wire line */
+  animation: shine 2s infinite alternate;
+}
+
+/* De-sync the flashing array natively! */
+.star:nth-child(odd)  { animation-delay: 0.5s; }
+.star:nth-child(3n)   { animation-delay: 1.2s; }
+.star:nth-child(4n)   { animation-delay: 0.2s; }
+
+@keyframes shine {
+  to { filter: drop-shadow(0 0 8px #fef08a) scale(1.4); }
+}
+```
+
+Review the gorgeous, mesmerizing holiday-esque twinkling light array replacing standard dividers inside the Live Demo.

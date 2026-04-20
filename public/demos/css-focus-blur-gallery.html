@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Focus Blur Gallery</title>
+  <style>
+    body { background: #0f172a; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif;}
+    
+    .gallery {
+      display: flex;
+      gap: 20px;
+      padding: 50px;
+    }
+    
+    .gallery-image {
+      width: 220px;
+      height: 320px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      transition: filter 0.5s ease, opacity 0.5s ease, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.5s ease;
+      cursor: pointer;
+    }
+    
+    /* Using CSS :has() to build global sibling awareness on hover! */
+    .gallery:has(.gallery-image:hover) .gallery-image {
+      filter: blur(8px) grayscale(80%);
+      opacity: 0.4;
+      transform: scale(0.9); /* shrink backgrounds */
+    }
+    
+    /* The explicitly hovered object breaks out of the blur */
+    .gallery:has(.gallery-image:hover) .gallery-image:hover {
+      filter: blur(0px) grayscale(0%);
+      opacity: 1;
+      transform: scale(1.15); /* Expand the focus item */
+      box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+  <!-- Utilizing Unsplash random placeholders -->
+  <div class="gallery">
+    <img src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=400&auto=format&fit=crop" class="gallery-image" alt="Cityscape">
+    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=400&auto=format&fit=crop" class="gallery-image" alt="Technology">
+    <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=400&auto=format&fit=crop" class="gallery-image" alt="Laptop">
+    <img src="https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=400&auto=format&fit=crop" class="gallery-image" alt="Code">
+  </div>
+</body>
+</html>

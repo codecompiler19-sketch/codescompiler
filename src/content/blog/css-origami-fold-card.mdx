@@ -1,0 +1,37 @@
+---
+title: "Paper Origami Fold Transition"
+description: "A spectacularly complex 3D CSS transition where a flat card physically folds its upper corner inward like origami."
+date: "2026-04-18"
+category: "Card Design"
+tags: ["css", "3d", "origami", "hover"]
+image: "/images/posts/css-origami-fold-card.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Adding physical material traits (like paper folding) to digital items brings a massive tactile improvement. Using `transform: rotateX()` and `rotateY()` mapped diagonally, we can simulate an origami corner crease!
+
+## The Diagonal Crease
+
+The trick is creating an absolute triangle in the corner, shifting its `transform-origin` to the diagonal line, and swinging it!
+
+```css
+.corner-fold {
+  position: absolute;
+  top: 0; right: 0;
+  width: 100px; height: 100px;
+  background: white;
+  clip-path: polygon(100% 0, 0 0, 100% 100%); /* The top-right triangle */
+  
+  transform-origin: bottom left; /* The crease acts as the hinge! */
+  transition: transform 0.8s;
+  box-shadow: -5px 5px 15px rgba(0,0,0,0.2);
+}
+
+.paper-card:hover .corner-fold {
+  transform: rotate3d(-1, 1, 0, 180deg); /* Swings it diagonally inward! */
+}
+```
+
+Hover inside the Live Demo to see the paper physically detach and fold backwards over itself!

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Neumorphism Calculator - Demo</title>
+  <style>
+    body { background-color: #E0E5EC; display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: sans-serif; margin: 0; }
+    .calculator { padding: 30px; border-radius: 30px; box-shadow: 9px 9px 16px rgb(163,177,198,0.6), -9px -9px 16px rgba(255,255,255, 0.5); }
+    .display { width: 100%; height: 80px; margin-bottom: 30px; border-radius: 15px; box-shadow: inset 6px 6px 10px 0 rgba(163, 177, 198, 0.6), inset -6px -6px 10px 0 rgba(255, 255, 255, 0.5); text-align: right; border: none; font-size: 32px; padding: 20px; box-sizing: border-box; background: transparent; color: #4d5766; outline: none;}
+    .keys { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    button { width: 60px; height: 60px; border-radius: 50%; border: none; font-size: 20px; font-weight: bold; color: #4d5766; background-color: #E0E5EC; box-shadow: 6px 6px 10px rgb(163,177,198,0.6), -6px -6px 10px rgba(255,255,255, 0.5); cursor: pointer; transition: 0.1s; display: flex; justify-content: center; align-items: center;}
+    button:active { box-shadow: inset 4px 4px 6px 0 rgba(163, 177, 198, 0.6), inset -4px -4px 6px 0 rgba(255, 255, 255, 0.5); color: #04AA6D; }
+    .zero { grid-column: span 2; width: 100%; border-radius: 30px; }
+    .op { color: #f97316; }
+    .eq { color: #fff; background-color: #f97316; box-shadow: 6px 6px 10px rgba(249, 115, 22, 0.4), -6px -6px 10px rgba(255,255,255, 0.5); }
+    .eq:active { box-shadow: inset 4px 4px 6px 0 rgba(194, 65, 12, 0.6), inset -4px -4px 6px 0 rgba(253, 186, 116, 0.5); color: #fff;}
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <input type="text" class="display" id="display" disabled value="0">
+    <div class="keys">
+      <button class="op" onclick="clr()">C</button>
+      <button class="op">±</button>
+      <button class="op">%</button>
+      <button class="op" onclick="append('/')">÷</button>
+      <button onclick="append('7')">7</button>
+      <button onclick="append('8')">8</button>
+      <button onclick="append('9')">9</button>
+      <button class="op" onclick="append('*')">×</button>
+      <button onclick="append('4')">4</button>
+      <button onclick="append('5')">5</button>
+      <button onclick="append('6')">6</button>
+      <button class="op" onclick="append('-')">−</button>
+      <button onclick="append('1')">1</button>
+      <button onclick="append('2')">2</button>
+      <button onclick="append('3')">3</button>
+      <button class="op" onclick="append('+')">+</button>
+      <button class="zero" onclick="append('0')">0</button>
+      <button onclick="append('.')">.</button>
+      <button class="eq" onclick="calc()">=</button>
+    </div>
+  </div>
+  <script>
+    const d = document.getElementById('display');
+    function append(val) { if(d.value==='0') d.value=val; else d.value+=val; }
+    function clr() { d.value='0'; }
+    function calc() { try { d.value = eval(d.value); } catch(e){ d.value='Err'; } }
+  </script>
+</body>
+</html>

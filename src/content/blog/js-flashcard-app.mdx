@@ -1,0 +1,42 @@
+---
+title: "Flashcard Study App"
+description: "Create interactive study cards, click to softly 3D flip them to reveal answers, and track your correctness."
+date: "2026-04-18"
+category: "JavaScript Projects"
+tags: ["javascript", "app", "study", "3D"]
+image: "/images/posts/js-flashcard-app.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Flashcards require mapping 3D CSS animations to JavaScript state to see if a card is "flipped".
+
+## CSS 3D Card
+
+```css
+.card {
+  perspective: 1000px;
+}
+.inner {
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+.card.flipped .inner {
+  transform: rotateY(180deg);
+}
+```
+
+## JavaScript Logic
+
+```javascript
+let flashcards = [
+  { q: "What is the DOM?", a: "Document Object Model" }
+];
+
+document.querySelector('.card').addEventListener('click', function() {
+  this.classList.toggle('flipped');
+});
+```
+
+See the Live Demo for the full application where you can even add your own custom flashcards!

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tug-of-War Split Images</title>
+  <style>
+    body { background: #f8fafc; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: 'Inter', sans-serif;}
+    
+    .versus-container {
+      display: flex;
+      width: 800px;
+      height: 400px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    }
+    
+    .panel {
+      /* The secret sauce: Both flex values start identically */
+      flex: 1;
+      position: relative;
+      background-size: cover;
+      background-position: center;
+      transition: flex 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* Apply borders/masks to slightly separate them natively */
+    .left-side { background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=800&auto=format&fit=crop'); }
+    .right-side { background-image: url('https://images.unsplash.com/photo-1519046904884-53103b34b206?q=80&w=800&auto=format&fit=crop'); }
+    
+    /* The Tug of War Mechanics */
+    .panel:hover {
+      /* The hovered item violently balloons, crushing its sibling down to the remaining space! */
+      flex: 5;
+    }
+    
+    /* Text styles */
+    .title {
+      color: white;
+      font-size: 2.5rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      text-shadow: 0 4px 15px rgba(0,0,0,0.8);
+      white-space: nowrap; /* Prevent wrapping when shrunk */
+      transition: transform 0.4s;
+    }
+    
+    .panel:hover .title { transform: scale(1.2); }
+    
+    /* Slight dark overlay that drops on hover so the image pops perfectly */
+    .panel::after {
+      content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.3); transition: 0.4s; z-index: 1;
+    }
+    .panel:hover::after { background: rgba(0,0,0,0); }
+    .panel .title { z-index: 2; position: relative;}
+  </style>
+</head>
+<body>
+  <div class="versus-container">
+    <div class="panel left-side">
+      <div class="title">Summer</div>
+    </div>
+    <div class="panel right-side">
+      <div class="title">Winter</div>
+    </div>
+  </div>
+</body>
+</html>

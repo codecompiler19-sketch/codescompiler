@@ -1,0 +1,44 @@
+---
+title: "Magic Ink Reveal Button"
+description: "A deeply satisfying CSS hover transition where a dark ink blot smoothly wipes away to reveal the button's message underneath."
+date: "2026-04-18"
+category: "CSS Buttons"
+tags: ["css", "buttons", "interaction", "ui"]
+image: "/images/posts/css-magic-ink-button.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+For a mysterious or "magical" UI aesthetic, we can start with a button that is completely obscured by an ink layer. Hovering smoothly retracts that ink using the ultra-powerful CSS `clip-path` property.
+
+## The Clip-Path Wipe
+
+```css
+.ink-btn {
+  position: relative;
+  background: white;
+  color: #111;
+  /* Font etc */
+}
+
+.ink-overlay {
+  position: absolute;
+  inset: 0;
+  background: #111; /* The deep dark ink */
+  color: white; /* Hidden text */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: clip-path 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  /* The ink covers everything initially */
+  clip-path: circle(150% at 50% 50%); 
+}
+
+.ink-btn:hover .ink-overlay {
+  /* Retracts into a tiny dot and vanishes! */
+  clip-path: circle(0% at 50% 50%);
+}
+```
+
+Check out the smooth, mysterious wipe transition via the live interactive Demo button!

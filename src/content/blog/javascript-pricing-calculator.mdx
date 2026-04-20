@@ -1,0 +1,76 @@
+---
+title: "Interactive SaaS Pricing Calculator"
+description: "A dynamic SaaS pricing slider that calculates monthly cost based on active users, with an annual billing toggle."
+date: "2026-04-18"
+category: "Website Designs"
+tags: ["javascript", "saas", "pricing", "slider", "project"]
+image: "/images/posts/pricing-calculator.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Pricing calculators help users estimate their costs before they sign up. In this unique tutorial, we'll build a draggable SaaS slider that calculates price based on user count and a monthly/yearly toggle.
+
+## The HTML Structure
+
+```html
+<div class="calculator-card">
+  <h3>Calculate your price</h3>
+  <div class="slider-container">
+    <label for="usersSlider" id="usersVal">100 Users</label>
+    <input type="range" id="usersSlider" min="10" max="1000" step="10" value="100">
+  </div>
+  
+  <div class="billing-toggle">
+    <span>Monthly</span>
+    <label class="switch">
+      <input type="checkbox" id="annualToggle">
+      <span class="slider round"></span>
+    </label>
+    <span>Annually <span class="discount">-20%</span></span>
+  </div>
+
+  <div class="price-display">
+    <span class="currency">$</span>
+    <span class="price" id="totalPrice">49.00</span>
+    <span class="period">/mo</span>
+  </div>
+</div>
+```
+
+## The JavaScript Logic
+
+```javascript
+const slider = document.getElementById('usersSlider');
+const annualToggle = document.getElementById('annualToggle');
+const priceDisplay = document.getElementById('totalPrice');
+const usersDisplay = document.getElementById('usersVal');
+
+// Base rate per user
+const ratePerUser = 0.50; 
+const annualDiscount = 0.20; // 20% off
+
+function calculate() {
+  const users = parseInt(slider.value);
+  usersDisplay.innerText = `${users} Users`;
+  
+  let monthlyCost = users * ratePerUser;
+  
+  // Apply logic for annual billing
+  if (annualToggle.checked) {
+    monthlyCost = monthlyCost - (monthlyCost * annualDiscount);
+  }
+  
+  priceDisplay.innerText = monthlyCost.toFixed(2);
+}
+
+// Listeners
+slider.addEventListener('input', calculate);
+annualToggle.addEventListener('change', calculate);
+
+// Initial calc
+calculate();
+```
+
+Make sure to view the live demo to see the responsive UI design mapping correctly to the input!

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Whack-a-Mole Demo</title>
+  <style>
+    body { background: #65a30d; color: white; font-family: sans-serif; text-align: center; user-select: none; }
+    h1 { font-size: 3rem; margin-bottom: 0; }
+    .score { font-size: 2rem; margin: 10px 0 30px; display: block;}
+    .game { width: 400px; height: 400px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin: 0 auto; }
+    .hole { background: #3f6212; border-radius: 50%; position: relative; overflow: hidden;}
+    .mole { width: 100%; height: 100%; font-size: 4rem; position: absolute; top: 100%; transition: top 0.2s; cursor: pointer; display: flex; align-items: center; justify-content: center;}
+    .hole.up .mole { top: 0; }
+    button { padding: 10px 30px; font-size: 1.5rem; border-radius: 10px; border: none; cursor: pointer; background: white; font-weight: bold; color: #65a30d;}
+  </style>
+</head>
+<body>
+  <h1>Whack-a-Mole!</h1>
+  <span class="score">Score: 0</span>
+  <button onClick="startGame()">Start</button>
+  <div class="game" style="margin-top:40px;">
+    <div class="hole"><div class="mole">🦫</div></div><div class="hole"><div class="mole">🦫</div></div><div class="hole"><div class="mole">🦫</div></div>
+    <div class="hole"><div class="mole">🦫</div></div><div class="hole"><div class="mole">🦫</div></div><div class="hole"><div class="mole">🦫</div></div>
+  </div>
+  <script>
+    const holes = document.querySelectorAll('.hole');
+    const scoreBoard = document.querySelector('.score');
+    const moles = document.querySelectorAll('.mole');
+    let lastHole, timeUp = false, score = 0;
+
+    function randTime(min,max) { return Math.round(Math.random() * (max-min) + min); }
+    function randHole(holes) {
+      const id = Math.floor(Math.random() * holes.length);
+      const hole = holes[id];
+      if(hole === lastHole) return randHole(holes);
+      lastHole = hole; return hole;
+    }
+    function peep() {
+      const time = randTime(400, 1000); const hole = randHole(holes);
+      hole.classList.add('up');
+      setTimeout(() => { hole.classList.remove('up'); if(!timeUp) peep(); }, time);
+    }
+    window.startGame = function() { scoreBoard.innerText = "Score: 0"; timeUp = false; score = 0; peep(); setTimeout(()=>timeUp=true, 15000); }
+    function bonk(e) { if(!e.isTrusted) return; score++; this.parentNode.classList.remove('up'); scoreBoard.innerText = "Score: "+score; }
+    moles.forEach(m => m.addEventListener('mousedown', bonk));
+  </script>
+</body>
+</html>

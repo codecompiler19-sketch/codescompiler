@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Origami Fold Demo</title>
+  <style>
+    body { background: #f1f5f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; perspective: 1000px;}
+    
+    .origami-card {
+      width: 250px; height: 350px;
+      position: relative;
+      cursor: pointer;
+    }
+    
+    .main-surface {
+      width: 100%; height: 100%;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      padding: 30px;
+      box-sizing: border-box;
+      color: #334155;
+      /* Cut the upper right corner natively so the fold looks real! */
+      clip-path: polygon(0 0, 70% 0, 100% 25%, 100% 100%, 0 100%);
+    }
+    
+    /* The paper fold piece */
+    .fold {
+      position: absolute;
+      top: 0; right: 0;
+      width: 75px; height: 88px;
+      background: #e2e8f0; /* Backside of paper color */
+      
+      /* Triangle shape */
+      clip-path: polygon(100% 0, 0 100%, 0 0);
+      
+      /* MAGIC: By placing the origin exactly on the hypotenuse, we fold diagonally! */
+      transform-origin: bottom left;
+      transform: rotate3d(-1, 1, 0, 180deg);
+      
+      transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border-radius: 0 0 0 8px; /* Smooth inner folded tip */
+      box-shadow: -5px 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .origami-card:hover .fold {
+      /* Flaps back open on hover! */
+      transform: rotate3d(0, 0, 0, 0deg);
+      background: white;
+    }
+    
+    .origami-card:hover .main-surface {
+      /* Fill the corner back out visually! */
+      clip-path: polygon(0 0, 100% 0, 100% 25%, 100% 100%, 0 100%);
+      transition: clip-path 0s 0.3s; /* Delay the fill till flap is up */
+    }
+  </style>
+</head>
+<body>
+  <div class="origami-card">
+    <div class="main-surface">
+      <h2>Origami</h2>
+      <p>Hover to unfold the paper corner cleanly in 3D space.</p>
+    </div>
+    <div class="fold"></div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Plant Progress Demo</title>
+  <style>
+    body { background: #f0fdf4; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; }
+    .pot { width: 80px; height: 60px; background: #b45309; border-radius: 5px 5px 20px 20px; border-top: 10px solid #92400e; z-index: 2;}
+    
+    .stem-container { height: 300px; width: 10px; background: #dcfce7; border-radius: 5px; position: relative; display: flex; align-items: flex-end;}
+    .stem { width: 100%; height: 5px; background: #22c55e; transition: height 0.5s ease-out; border-radius: 5px; position: relative;}
+    
+    .leaf { position: absolute; font-size: 2rem; color: #22c55e; top: -15px; opacity: 0; transition: 0.5s; transform: scale(0);}
+    .leaf.left { left: -30px; transform-origin: right bottom;}
+    .leaf.right { right: -30px; transform-origin: left bottom; transform: scaleX(-1);}
+    .leaf.show { opacity: 1; transform: scale(1) rotate(-20deg); }
+    .leaf.right.show { transform: scaleX(-1) scale(1) rotate(-20deg); }
+
+    button { margin-top: 40px; padding: 15px 30px; border-radius: 30px; background: #3b82f6; color: white; border: none; font-size: 1.2rem; cursor: pointer; font-weight: bold; box-shadow: 0 4px 15px rgba(59,130,246,0.3); transition: 0.2s;}
+    button:active { transform: scale(0.95); }
+  </style>
+</head>
+<body>
+  <div class="stem-container">
+    <div class="stem" id="stem">
+      <!-- Generated leaves will go here -->
+    </div>
+  </div>
+  <div class="pot"></div>
+  <button onclick="water()">💧 Water Plant</button>
+
+  <script>
+    let growth = 5;
+    const stem = document.getElementById('stem');
+    
+    function water() {
+      if(growth >= 100) return alert("Fully grown!");
+      growth += 20;
+      if(growth > 100) growth = 100;
+      
+      stem.style.height = growth + '%';
+      
+      // Sprout leaves based on height passing
+      if(growth === 25) addLeaf('left');
+      if(growth === 45) addLeaf('right');
+      if(growth === 65) addLeaf('left');
+      if(growth === 85) addLeaf('right');
+      if(growth === 100) document.querySelector('button').innerText = "🌸 B L O O M 🌸";
+    }
+
+    function addLeaf(side) {
+      const l = document.createElement('div');
+      l.className = `leaf ${side}`;
+      l.innerText = '🍃';
+      stem.appendChild(l);
+      setTimeout(()=>l.classList.add('show'), 100);
+    }
+  </script>
+</body>
+</html>

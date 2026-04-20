@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cloud Loader Demo</title>
+  <style>
+    body { background: #e0f2fe; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; overflow: hidden;}
+    .scene { position: relative; width: 300px; height: 200px; display: flex; justify-content: center; align-items: center;}
+    
+    .cloud { background: white; width: 120px; height: 40px; border-radius: 50px; position: absolute; animation: float 3s ease-in-out infinite alternate; opacity: 1; transition: 1s;}
+    .cloud::before { content: ''; position: absolute; width: 50px; height: 50px; background: white; border-radius: 50%; top: -25px; left: 20px;}
+    .cloud::after { content: ''; position: absolute; width: 70px; height: 70px; background: white; border-radius: 50%; top: -40px; right: 15px;}
+    
+    @keyframes float { 0% { transform: translateY(0); } 100% { transform: translateY(15px); } }
+    
+    .sun { position: absolute; width: 80px; height: 80px; background: #fde047; border-radius: 50%; box-shadow: 0 0 40px rgba(253, 224, 71, 0.8); opacity: 0; transform: translateY(50px); transition: 1.5s ease-out;}
+    .msg { margin-top: 40px; color: #0284c7; font-weight: bold; font-size: 1.5rem; letter-spacing: 1px; opacity: 0; transition: 1s;}
+    
+    /* Loaded State */
+    body.loaded { background: #fdf4ff; }
+    body.loaded .cloud { transform: translateX(200px) scale(0); opacity: 0;}
+    body.loaded .sun { opacity: 1; transform: translateY(-30px); }
+    body.loaded .msg { opacity: 1; transform: translateY(-10px); }
+  </style>
+</head>
+<body>
+  <div class="scene">
+    <div class="sun"></div>
+    <div class="cloud"></div>
+  </div>
+  <div class="msg">You're doing great! ☀️</div>
+  
+  <script>
+    setTimeout(() => { document.body.classList.add('loaded'); }, 3000);
+  </script>
+</body>
+</html>

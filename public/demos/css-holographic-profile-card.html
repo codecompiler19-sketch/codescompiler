@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Holo Profile Card</title>
+  <style>
+    body { background: #111827; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; perspective: 1000px;}
+    
+    .holo-card {
+      width: 250px;
+      height: 350px;
+      border-radius: 15px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: transform 0.4s;
+    }
+    .holo-card:hover { transform: translateY(-10px) rotateY(15deg); }
+    
+    /* Background Image */
+    .image-layer { position: absolute; inset: 0; background: url('https://source.unsplash.com/random/300x400/?cyberpunk') center/cover; z-index: 1;}
+    
+    /* The Holographic Sweep Layer */
+    .holo-card::after {
+      content: '';
+      position: absolute;
+      inset: -50%;
+      background: linear-gradient(
+        115deg,
+        transparent 20%,
+        rgba(255, 255, 255, 0.6) 30%,
+        rgba(255, 0, 255, 0.5) 40%,
+        rgba(0, 255, 255, 0.5) 50%,
+        rgba(255, 255, 255, 0.6) 60%,
+        transparent 70%
+      );
+      background-size: 300% 300%;
+      mix-blend-mode: screen; /* Integrates light perfectly */
+      z-index: 2;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .holo-card:hover::after {
+      opacity: 1;
+      animation: holoSweep 2s infinite linear;
+    }
+    
+    @keyframes holoSweep {
+      0% { background-position: 100% 100%; }
+      100% { background-position: 0% 0%; }
+    }
+    
+    /* Text */
+    .details { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); color: white; z-index: 3;}
+    .details h3 { margin: 0; font-size: 1.5rem; letter-spacing: 1px;}
+    .details p { margin: 5px 0 0; font-size: 0.9rem; color: #a1a1aa;}
+  </style>
+</head>
+<body>
+  <div class="holo-card">
+    <div class="image-layer"></div>
+    <div class="details">
+      <h3>Rare ID_73</h3>
+      <p>Holographic Edition</p>
+    </div>
+  </div>
+</body>
+</html>

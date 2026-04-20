@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JavaScript Calculator — Demo</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #1a1b26 0%, #282A35 100%);
+      font-family: 'Segoe UI', sans-serif; padding: 20px;
+    }
+    h1 { color: rgba(255,255,255,0.4); font-size: 13px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px; }
+    .calc {
+      background: #1a1b26;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 28px;
+      overflow: hidden;
+      width: 320px;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+    }
+    .display {
+      padding: 24px 24px 16px;
+      background: rgba(0,0,0,0.25);
+      text-align: right;
+      min-height: 110px;
+      display: flex; flex-direction: column; justify-content: flex-end; gap: 6px;
+    }
+    #expression { font-size: 14px; color: rgba(255,255,255,0.35); min-height: 20px; word-break: break-all; }
+    #result     { font-size: 44px; font-weight: 200; color: #fff; word-break: break-all; line-height: 1; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: rgba(255,255,255,0.04);
+      padding: 1px;
+    }
+    .btn {
+      padding: 22px 10px;
+      background: #23243a;
+      border: none;
+      font-size: 20px;
+      font-weight: 500;
+      color: #e2e8f0;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background .12s, transform .08s;
+      user-select: none;
+    }
+    .btn:hover  { background: #2e3050; }
+    .btn:active { background: #383c62; transform: scale(0.96); }
+    .btn-gray   { color: #94a3b8; font-size: 17px; }
+    .btn-orange { color: #f97316; font-weight: 700; }
+    .btn-orange:hover { background: rgba(249,115,22,0.15); }
+    .btn-wide   { grid-column: span 2; text-align: left; padding-left: 26px; font-size: 18px; }
+    .btn-equals { background: #f97316; color: #fff; }
+    .btn-equals:hover { background: #ea6c0a; }
+  </style>
+</head>
+<body>
+  <h1>JS Calculator</h1>
+  <div class="calc">
+    <div class="display">
+      <div id="expression"></div>
+      <div id="result">0</div>
+    </div>
+    <div class="grid">
+      <button class="btn btn-wide btn-gray" data-action="clear">AC</button>
+      <button class="btn btn-gray" data-action="backspace">⌫</button>
+      <button class="btn btn-orange" data-op="/">÷</button>
+
+      <button class="btn" data-num="7">7</button>
+      <button class="btn" data-num="8">8</button>
+      <button class="btn" data-num="9">9</button>
+      <button class="btn btn-orange" data-op="*">×</button>
+
+      <button class="btn" data-num="4">4</button>
+      <button class="btn" data-num="5">5</button>
+      <button class="btn" data-num="6">6</button>
+      <button class="btn btn-orange" data-op="-">−</button>
+
+      <button class="btn" data-num="1">1</button>
+      <button class="btn" data-num="2">2</button>
+      <button class="btn" data-num="3">3</button>
+      <button class="btn btn-orange" data-op="+">+</button>
+
+      <button class="btn btn-wide" data-num="0">0</button>
+      <button class="btn" data-action="dot">.</button>
+      <button class="btn btn-orange btn-equals" data-action="equals">=</button>
+    </div>
+  </div>
+
+  <script>
+    let cur='0', prev='', op=null, reset=false;
+    const R=()=>document.getElementById('result').textContent=cur;
+    const E=()=>document.getElementById('expression').textContent=prev&&op?`${prev} ${op}`:'' ;
+    function dig(d){if(reset){cur=d;reset=false;}else cur=(cur==='0')?d:cur+d;R();}
+    function dot(){if(reset){cur='0.';reset=false;return;}if(!cur.includes('.'))cur+='.';R();}
+    function setOp(o){if(op&&!reset)calc();prev=cur;op=o;reset=true;E();}
+    function calc(){
+      if(!op||!prev)return;
+      const a=parseFloat(prev),b=parseFloat(cur);
+      const r={'+':a+b,'-':a-b,'*':a*b,'/':{true:'Error',false:a/b}[b===0]}[op];
+      cur=String(parseFloat((+r).toFixed(10)));op=null;prev='';reset=true;R();E();
+    }
+    function clr(){cur='0';prev='';op=null;reset=false;R();E();}
+
+    document.querySelectorAll('[data-num]').forEach(b=>b.addEventListener('click',()=>dig(b.dataset.num)));
+    document.querySelectorAll('[data-op]').forEach(b=>b.addEventListener('click',()=>setOp(b.dataset.op)));
+    document.querySelector('[data-action="equals"]').addEventListener('click',calc);
+    document.querySelector('[data-action="clear"]').addEventListener('click',clr);
+    document.querySelector('[data-action="dot"]').addEventListener('click',dot);
+    document.querySelector('[data-action="backspace"]').addEventListener('click',()=>{cur=cur.length>1?cur.slice(0,-1):'0';R();});
+
+    document.addEventListener('keydown',e=>{
+      if(e.key>='0'&&e.key<='9')dig(e.key);
+      if(e.key==='.')dot();
+      if(['+','-','*','/'].includes(e.key)){e.preventDefault();setOp(e.key);}
+      if(e.key==='Enter'||e.key==='=')calc();
+      if(e.key==='Backspace'){cur=cur.length>1?cur.slice(0,-1):'0';R();}
+      if(e.key==='Escape')clr();
+    });
+    R();
+  </script>
+</body>
+</html>

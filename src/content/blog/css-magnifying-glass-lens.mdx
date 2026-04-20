@@ -1,0 +1,31 @@
+---
+title: "Magnifying Glass Lens Engine"
+description: "A highly interactive JS/CSS hybrid that anchors a physical circular glass lens to your mouse cursor to natively zoom in on high-fidelity images."
+date: "2026-04-18"
+category: "Website Designs"
+tags: ["javascript", "css", "image", "zoom"]
+image: "/images/posts/css-magnifying-glass-lens.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+E-commerce stores rely heavily on product zooming. Using vanilla JS, we can actively track the `offsetX` and `offsetY` of the user's mouse, and bind a 2x-scaled CSS `background-position` circle perfectly over their cursor!
+
+## Mapping Movement to Backgrounds
+
+```javascript
+// We read where the mouse is on the bounding box
+const x = event.offsetX;
+const y = event.offsetY;
+
+// Move the physical CSS lens circle to that location
+lens.style.left = x - 50 + 'px';
+lens.style.top = y - 50 + 'px';
+
+// Update the highly zoomed background of the lens to match
+// The lens uses background-size: 200%;
+lens.style.backgroundPosition = `-${x * 2 - 50}px -${y * 2 - 50}px`;
+```
+
+Examine the unbelievably satisfying zoom magnification ring inside the Live Demo. The crispness of the scaled background is immaculate.

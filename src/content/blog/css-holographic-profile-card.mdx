@@ -1,0 +1,54 @@
+---
+title: "Holographic Shine Profile Card"
+description: "A futuristic profile/ID card wrapper that exhibits an iridescent, holographic light-sweep when hovered."
+date: "2026-04-18"
+category: "Card Design"
+tags: ["css", "profile", "card", "effect"]
+image: "/images/posts/css-holographic-profile-card.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Trading cards like PokÃ©mon often have "holo" variants where shimmering pastel light rakes across the cardboard when tilted. We can perfectly replicate this using massive CSS `linear-gradient` overlays!
+
+## The Iridescent Sweep
+
+We make a background 300% wider than the card, painted with an RGB rainbow. We then animate `background-position` to physically slide that rainbow across the card face. Adding `mix-blend-mode: overlay` integrates it into the actual photo underneath!
+
+```css
+.holo-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.holo-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.5) 30%,
+    rgba(255, 0, 255, 0.4) 40%,
+    rgba(0, 255, 255, 0.4) 50%,
+    transparent 60%
+  );
+  background-size: 300% 300%;
+  mix-blend-mode: color-dodge;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.holo-card:hover::after {
+  opacity: 1;
+  animation: holoSweep 2s infinite linear;
+}
+
+@keyframes holoSweep {
+  0% { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+```
+
+Try hovering over the incredibly premium employee profile photo in the Live Demo!

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Gradient Generator Demo</title>
+  <style>
+    body { background: linear-gradient(45deg, #12c2e9, #c471ed, #f64f59); height: 100vh; margin: 0; display: flex; justify-content: center; align-items: center; font-family: sans-serif; transition: background 0.5s;}
+    .box { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); text-align: center;}
+    h1 { margin-top: 0; }
+    .code { background: #f3f4f6; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 16px; margin: 20px 0; border: 1px solid #e5e7eb; word-break: break-all;}
+    button { padding: 12px 24px; font-size: 16px; font-weight: bold; background: #111; color: white; border: none; border-radius: 8px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>Gradient Generator</h1>
+    <div class="code" id="cssCode">background: linear-gradient(45deg, #12c2e9, #f64f59);</div>
+    <button onclick="updateGradient()">Generate Random</button>
+  </div>
+  <script>
+    function hex() {
+      let h = '#';
+      for(let i=0; i<6; i++) h += '0123456789abcdef'[Math.floor(Math.random() * 16)];
+      return h;
+    }
+    function updateGradient() {
+      const css = `linear-gradient(${Math.floor(Math.random() * 360)}deg, ${hex()}, ${hex()})`;
+      document.body.style.background = css;
+      document.getElementById('cssCode').innerText = `background: ${css};`;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+---
+title: "Butterfly Wing Flutter Button"
+description: "An incredibly delicate CSS button shaped like closed wings that rapidly flutter open on hover."
+date: "2026-04-18"
+category: "CSS Buttons"
+tags: ["css", "buttons", "animation", "creative"]
+image: "/images/posts/css-butterfly-wing-button.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Instead of rigid rectangles, let's create a button that feels like a living organism. Using `border-radius` we can shape butterfly wings, and `transform-origin` allows us to hinge them.
+
+## The Flapping Hinge
+
+```css
+.wing {
+  width: 50px;
+  height: 80px;
+  background: #f472b6;
+  border-radius: 5px 50px 5px 50px; /* Wing shape */
+  transition: transform 0.1s;
+}
+
+.wing.left { transform-origin: right center; }
+.wing.right { transform-origin: left center; }
+
+.button-wrap:hover .wing.left {
+  animation: flapLeft 0.15s infinite alternate;
+}
+
+@keyframes flapLeft {
+  from { transform: perspective(200px) rotateY(0deg); }
+  to { transform: perspective(200px) rotateY(40deg); }
+}
+```
+
+Move your mouse over the insect inside the Live Demo to see the wings violently and beautifully flutter!

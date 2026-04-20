@@ -1,0 +1,43 @@
+---
+title: "Gentle Wave Border Hover Card"
+description: "A calming presentation card bordered by an animated water-wave created entirely from CSS background-position loops."
+date: "2026-04-18"
+category: "Card Design"
+tags: ["css", "card", "animation", "background"]
+image: "/images/posts/css-wave-border-card.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Instead of hard layout borders, let's inject some fluid motion into the design. By animating a radial background pattern, we can make the border of a card physically flow like a gentle current!
+
+## The Wave Background Graphic
+
+We can build a repeated curved pattern using native CSS `radial-gradient` circles, stacked over each other in the background.
+
+```css
+.wave-card {
+  position: relative;
+  padding: 30px;
+  background: white;
+  z-index: 1;
+}
+
+.wave-card::before {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  z-index: -1;
+  background: radial-gradient(circle at 10px 10px, #38bdf8 12px, transparent 13px);
+  background-size: 20px 20px;
+  animation: waveFlow 4s linear infinite;
+}
+
+@keyframes waveFlow {
+  from { background-position: 0 0; }
+  to { background-position: 40px 0; } /* Matches size to loop perfectly */
+}
+```
+
+Hovering the card in the Live Demo seamlessly accelerates the water flow and lifts the card!

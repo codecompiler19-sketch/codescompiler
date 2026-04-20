@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dream Cloud Demo</title>
+  <style>
+    body { background: #bae6fd; font-family: serif; display: flex; flex-direction: column; height: 100vh; margin: 0; transition: background 2s ease; overflow: hidden; justify-content: space-between; padding: 40px;}
+    .controls { display: flex; gap: 15px; z-index: 10; justify-content: center;}
+    button { padding: 10px 20px; font-size: 1.2rem; border-radius: 30px; border: none; background: white; color: #333; cursor: pointer; opacity: 0.8; transition: 0.2s;}
+    button:hover { opacity: 1; transform: scale(1.05); }
+    .cloud-bg { position: absolute; inset: 0; z-index: 0;}
+    .cloud { background: white; border-radius: 50px; position: absolute; filter: blur(2px); opacity: 0.4; animation: drift linear infinite;}
+    @keyframes drift { from { transform: translateX(-300px); } to { transform: translateX(110vw); } }
+    .drop { position: absolute; padding: 10px; background: rgba(255,255,255,0.7); border-radius: 10px; font-size: 1.2rem; font-style: italic; color: #1e293b; animation: fall 4s linear forwards;}
+    @keyframes fall { 0% { transform: translateY(-50px); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(100vh); opacity: 0; } }
+  </style>
+</head>
+<body>
+  <div class="cloud-bg" id="clouds"></div>
+  <h1 style="text-align: center; z-index: 1; font-weight: normal; color: #334155;">Weather of the Soul</h1>
+  
+  <div class="controls">
+    <button onclick="setWeather('sunny')">☀️ Sunny</button>
+    <button onclick="setWeather('rainy')">🌧️ Rainy</button>
+    <button onclick="setWeather('night')">🌃 Starry</button>
+  </div>
+
+  <script>
+    // Spawn clouds
+    const cb = document.getElementById('clouds');
+    for(let i=0; i<8; i++){
+      let c = document.createElement('div'); c.className = 'cloud';
+      c.style.width = (Math.random()*200 + 100) + 'px';
+      c.style.height = (Math.random()*60 + 40) + 'px';
+      c.style.top = (Math.random()*60) + '%';
+      c.style.animationDuration = (Math.random()*40 + 40) + 's';
+      cb.appendChild(c);
+    }
+    
+    const poetry = { 'sunny': "Warmth embraces.", 'rainy': "Let it wash away.", 'night': "Look at the stars." };
+    
+    function setWeather(w) {
+      document.body.style.background = w==='sunny'?'#fef08a' : w==='rainy'?'#cbd5e1' : '#1e1b4b';
+      document.body.style.color = w==='night' ? '#e2e8f0' : '#334155';
+      
+      const word = document.createElement('div');
+      word.className = 'drop';
+      word.innerText = poetry[w];
+      word.style.left = (Math.random() * 80 + 10) + 'vw';
+      document.body.appendChild(word);
+      setTimeout(()=>word.remove(), 4000);
+    }
+  </script>
+</body>
+</html>

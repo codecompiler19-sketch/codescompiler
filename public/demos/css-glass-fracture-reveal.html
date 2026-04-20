@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Fractured Glass Reveal</title>
+  <style>
+    body { background: #0f172a; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0;}
+    
+    .reveal-card {
+      width: 400px;
+      height: 300px;
+      position: relative;
+      cursor: pointer;
+      overflow: hidden; /* Prevents slats from showing outside */
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    
+    .hidden-image {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.8s ease;
+    }
+    
+    /* The Dark Glass Blind Slats */
+    .slat {
+      position: absolute;
+      top: 0;
+      width: 25%; /* 4 columns = 100% */
+      height: 100%;
+      background: #1e293b;
+      backdrop-filter: blur(5px);
+      border-right: 1px solid rgba(255,255,255,0.05); /* Slat lines */
+      transition: transform 0.6s cubic-bezier(0.85, 0, 0.15, 1);
+      z-index: 2;
+    }
+    
+    /* Configure starting positions */
+    .s1 { left: 0%;   transition-delay: 0.1s;}
+    .s2 { left: 25%;  transition-delay: 0.2s;}
+    .s3 { left: 50%;  transition-delay: 0s;}
+    .s4 { left: 75%;  transition-delay: 0.15s;}
+    
+    /* The Violent Reveal */
+    /* Alternating directions gives the fracture effect! */
+    .reveal-card:hover .s1 { transform: translateY(-100%); }
+    .reveal-card:hover .s2 { transform: translateY(100%); }
+    .reveal-card:hover .s3 { transform: translateY(-100%); }
+    .reveal-card:hover .s4 { transform: translateY(100%); }
+    
+    /* Bonus image zoom */
+    .reveal-card:hover .hidden-image { transform: scale(1.1); }
+    
+    /* Optional Title */
+    .title { position: absolute; top: 50%; left: 0; width: 100%; text-align: center; color: white; font-family: sans-serif; z-index: 3; pointer-events: none;}
+    .reveal-card:hover .title { opacity: 0; transition: 0.2s;}
+  </style>
+</head>
+<body>
+  <div class="reveal-card">
+    <img src="https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?q=80&w=500&auto=format&fit=crop" class="hidden-image" alt="Artwork">
+    <div class="title"><h2>HOVER</h2></div>
+    <!-- The Slats -->
+    <div class="slat s1"></div>
+    <div class="slat s2"></div>
+    <div class="slat s3"></div>
+    <div class="slat s4"></div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Simon Says - Demo</title>
+  <style>
+    body { background: #121212; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; font-family: sans-serif; margin: 0; }
+    h1 { font-size: 3rem; margin-bottom: 40px; text-align: center;}
+    .game-board { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .btn { width: 140px; height: 140px; border-radius: 20px; border: 10px solid #222; cursor: pointer; transition: 0.1s; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+    .green { background: #00a74a; }
+    .red { background: #9f0f17; }
+    .yellow { background: #cca707; }
+    .blue { background: #094a8f; }
+    .pressed { box-shadow: 0 0 20px rgba(255,255,255,0.8); opacity: 0.5; transform: scale(0.95); }
+    .game-over { background: red; }
+    .start-btn { margin-top: 40px; padding: 15px 30px; font-size: 20px; cursor: pointer; border: none; border-radius: 8px; background: whitesmoke; }
+  </style>
+</head>
+<body>
+  <h1 id="level-title">Press Start to Play</h1>
+  <div class="game-board">
+    <div class="btn green" id="green"></div>
+    <div class="btn red" id="red"></div>
+    <div class="btn yellow" id="yellow"></div>
+    <div class="btn blue" id="blue"></div>
+  </div>
+  <button class="start-btn" id="startBtn">Start Game</button>
+
+  <script>
+    let gameSequence = [], userSequence = [], level = 0, playing = false;
+    const colors = ["green", "red", "yellow", "blue"];
+
+    document.getElementById('startBtn').addEventListener('click', () => {
+      if(!playing) { playing = true; document.getElementById('startBtn').style.display='none'; nextSequence(); }
+    });
+
+    function nextSequence() {
+      userSequence = [];
+      level++;
+      document.getElementById("level-title").innerText = `Level ${level}`;
+      const randomColor = colors[Math.floor(Math.random() * 4)];
+      gameSequence.push(randomColor);
+      
+      setTimeout(() => { animatePress(randomColor); }, 500);
+    }
+
+    document.querySelectorAll('.btn').forEach(b => {
+      b.addEventListener('click', function() {
+        if(!playing) return;
+        let color = this.id;
+        userSequence.push(color);
+        animatePress(color);
+        checkAnswer(userSequence.length-1);
+      });
+    });
+
+    function checkAnswer(currentLevel) {
+      if(gameSequence[currentLevel] === userSequence[currentLevel]) {
+        if(userSequence.length === gameSequence.length) setTimeout(nextSequence, 1000);
+      } else {
+        document.body.classList.add("game-over");
+        document.getElementById("level-title").innerText = "Game Over! Score: " + (level-1);
+        setTimeout(() => document.body.classList.remove("game-over"), 200);
+        document.getElementById('startBtn').style.display='block';
+        document.getElementById('startBtn').innerText='Restart';
+        level=0; gameSequence=[]; playing=false;
+      }
+    }
+
+    function animatePress(c) {
+      const el = document.getElementById(c);
+      el.classList.add("pressed");
+      setTimeout(() => el.classList.remove("pressed"), 150);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+---
+title: "JavaScript Todo List App with localStorage"
+description: "Build a feature-rich todo list app with add, complete, delete, filter tasks, and localStorage persistence — all in vanilla JavaScript."
+date: "2026-04-15"
+category: "JavaScript Projects"
+tags: ["javascript", "localstorage", "todo", "dom", "project"]
+image: "/images/posts/todo-app.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+A todo list app is the perfect project to practice **CRUD operations**, **DOM manipulation**, and **localStorage persistence** all in one. This version includes filtering, progress tracking, and task persistence across page reloads.
+
+## Features
+
+- ➕ Add tasks with Enter key or button
+- ✅ Mark as complete (strikethrough)
+- 🗑️ Delete individual tasks
+- 🔍 Filter: All / Active / Completed
+- 💾 Persists with `localStorage`
+- 📊 Progress bar + task counter
+
+## Data Structure
+
+```javascript
+// Each task is a plain object
+const task = {
+  id: Date.now(),        // unique timestamp ID
+  text: 'Learn CSS Grid',
+  completed: false,
+  createdAt: new Date().toISOString(),
+};
+
+// All tasks stored as JSON in localStorage
+let tasks = JSON.parse(localStorage.getItem('cc-tasks')) || [];
+
+function save() {
+  localStorage.setItem('cc-tasks', JSON.stringify(tasks));
+}
+```
+
+## Core CRUD Functions
+
+```javascript
+// CREATE
+function addTask(text) {
+  if (!text.trim()) return;
+  tasks.unshift({ id: Date.now(), text: text.trim(), completed: false });
+  save();
+  render();
+}
+
+// UPDATE
+function toggleTask(id) {
+  const task = tasks.find(t => t.id === id);
+  if (task) { task.completed = !task.completed; save(); render(); }
+}
+
+// DELETE
+function deleteTask(id) {
+  tasks = tasks.filter(t => t.id !== id);
+  save();
+  render();
+}
+
+// READ + FILTER
+let filter = 'all';
+function getFiltered() {
+  return tasks.filter(t =>
+    filter === 'active'    ? !t.completed :
+    filter === 'completed' ?  t.completed :
+    true
+  );
+}
+```
+
+## Render Function
+
+```javascript
+function render() {
+  const list    = document.getElementById('taskList');
+  const filtered = getFiltered();
+  const done    = tasks.filter(t => t.completed).length;
+  const pct     = tasks.length ? Math.round((done / tasks.length) * 100) : 0;
+
+  // Update stats
+  document.getElementById('taskCount').textContent =
+    `${tasks.filter(t => !t.completed).length} task(s) remaining`;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent  = pct + '%';
+
+  // Render items
+  list.innerHTML = filtered.length === 0
+    ? `<li class="empty-state">No ${filter} tasks! 🎉</li>`
+    : filtered.map(t => `
+      <li class="task-item ${t.completed ? 'done' : ''}" id="task-${t.id}">
+        <button class="check-btn" onclick="toggleTask(${t.id})">
+          ${t.completed ? '✅' : '⬜'}
+        </button>
+        <span class="task-text">${escapeHtml(t.text)}</span>
+        <button class="del-btn" onclick="deleteTask(${t.id})" aria-label="Delete">🗑️</button>
+      </li>
+    `).join('');
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+```
+
+## Input Handling
+
+```javascript
+const input = document.getElementById('taskInput');
+document.getElementById('addBtn').addEventListener('click', () => {
+  addTask(input.value);
+  input.value = '';
+  input.focus();
+});
+input.addEventListener('keydown', e => {
+  if (e.key === 'Enter') { addTask(input.value); input.value = ''; }
+});
+
+// Filter buttons
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    filter = btn.dataset.filter;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    render();
+  });
+});
+
+render(); // Initial render
+```
+
+> **Pro Tip:** You can extend this by adding due dates, priorities, or drag-and-drop reordering!

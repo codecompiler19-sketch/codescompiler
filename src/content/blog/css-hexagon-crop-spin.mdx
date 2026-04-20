@@ -1,0 +1,35 @@
+---
+title: "Geometric Hexagon Crop & Spin"
+description: "Perfectly mask your avatar or profile items natively into sharp-cornered hexagons that smoothly round-out on interaction."
+date: "2026-04-18"
+category: "Website Designs"
+tags: ["css", "clip-path", "shape", "morph"]
+image: "/images/posts/css-hexagon-crop-spin.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Profile pictures shouldn't always be rigid circles. `clip-path` rules in CSS allow us to map a literal coordinate polygon across the `<img>` tag, permanently restructuring its boundaries.
+
+## The Hexagon Polygon Array
+
+```css
+.hex-image {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+  /* The exact mathematical slicing of a perfect hexagon! */
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.hex-image:hover {
+  /* It balloons out into a rounded soft square on contact */
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  border-radius: 40px;
+  transform: rotate(360deg) scale(1.1);
+}
+```
+
+Look at the wildly satisfying boundary morph combined with the 360 rotation that the cat avatar executes in the Live Demo.

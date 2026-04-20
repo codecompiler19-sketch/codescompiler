@@ -1,0 +1,39 @@
+---
+title: "Animated JavaScript Accordion"
+description: "Create an accordion that smoothly animates open and closed using JavaScript height calculations."
+date: "2026-04-18"
+category: "Accordion"
+tags: ["javascript", "css", "accordion", "animation"]
+image: "/images/posts/js-animated-accordion.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+While pure CSS accordions are great, animating the height dynamically often requires JavaScript to calculate the exact `scrollHeight` of the content block so it smoothly slides down.
+
+## The JavaScript Logic
+
+```javascript
+const headers = document.querySelectorAll('.acc-header');
+
+headers.forEach(header => {
+  header.addEventListener('click', () => {
+    // Close others
+    document.querySelectorAll('.acc-content').forEach(content => {
+      content.style.maxHeight = null;
+    });
+
+    const content = header.nextElementSibling;
+    
+    // Toggle current
+    if (content.style.maxHeight) {
+      content.style.maxHeight = null;
+    } else {
+      content.style.maxHeight = content.scrollHeight + "px";
+    }
+  });
+});
+```
+
+See the Live Demo to experience the buttery smooth CSS transitions!

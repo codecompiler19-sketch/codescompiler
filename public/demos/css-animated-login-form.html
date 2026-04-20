@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animated Login Form — Demo</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(ellipse at 60% 40%, #1a1a3e 0%, #0a0a1a 100%);
+      font-family: 'Segoe UI', sans-serif;
+      padding: 20px;
+    }
+    .login-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 24px;
+      padding: 44px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.08);
+      backdrop-filter: blur(20px);
+    }
+    .brand { display: flex; align-items: center; gap: 8px; margin-bottom: 28px; }
+    .brand-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: linear-gradient(135deg, #04AA6D, #038a58);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 900; color: #fff;
+    }
+    .brand-name { font-size: 18px; font-weight: 800; color: #fff; }
+    .brand-name span { color: #04AA6D; }
+
+    h2 { font-size: 24px; font-weight: 900; color: #f8fafc; margin-bottom: 6px; }
+    .sub { font-size: 14px; color: rgba(255,255,255,0.4); margin-bottom: 32px; }
+
+    .input-group { position: relative; margin-bottom: 22px; }
+    .input-group input {
+      width: 100%;
+      padding: 16px 18px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      color: #f8fafc;
+      font-size: 15px;
+      outline: none;
+      transition: border-color .25s, box-shadow .25s, background .25s;
+      font-family: inherit;
+    }
+    .input-group input:focus {
+      border-color: #04AA6D;
+      background: rgba(255,255,255,0.07);
+      box-shadow: 0 0 0 3px rgba(4,170,109,0.2);
+    }
+    .input-group label {
+      position: absolute;
+      left: 18px;
+      top: 16px;
+      color: rgba(255,255,255,0.35);
+      font-size: 15px;
+      pointer-events: none;
+      transition: all .22s cubic-bezier(0.4, 0, 0.2, 1);
+      background: transparent;
+    }
+    .input-group input:focus + label,
+    .input-group input:not(:placeholder-shown) + label {
+      top: -9px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #04AA6D;
+      background: #0f0f1e;
+      padding: 0 6px;
+      border-radius: 4px;
+      letter-spacing: 0.04em;
+    }
+    .forgot {
+      text-align: right;
+      margin-top: -12px;
+      margin-bottom: 24px;
+    }
+    .forgot a { font-size: 12px; color: #04AA6D; text-decoration: none; transition: opacity .2s; }
+    .forgot a:hover { opacity: 0.7; }
+
+    .submit-btn {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #04AA6D, #038a58);
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+      letter-spacing: 0.02em;
+      transition: opacity .2s, transform .15s, box-shadow .2s;
+      box-shadow: 0 6px 24px rgba(4,170,109,0.3);
+    }
+    .submit-btn:hover { opacity: 0.92; transform: translateY(-2px); box-shadow: 0 10px 32px rgba(4,170,109,0.4); }
+    .submit-btn:active { transform: translateY(0); }
+
+    .divider { display: flex; align-items: center; gap: 12px; margin: 20px 0; }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.08); }
+    .divider span { font-size: 12px; color: rgba(255,255,255,0.3); }
+
+    .social-btn {
+      width: 100%;
+      padding: 13px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      color: rgba(255,255,255,0.7);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background .2s, border-color .2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .social-btn:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: #fff; }
+
+    .signup-link { text-align: center; margin-top: 20px; font-size: 13px; color: rgba(255,255,255,0.35); }
+    .signup-link a { color: #04AA6D; text-decoration: none; font-weight: 700; }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #04AA6D;
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 14px;
+      box-shadow: 0 8px 24px rgba(4,170,109,0.4);
+      transition: transform .3s cubic-bezier(0.34,1.56,0.64,1);
+      z-index: 999;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <div class="brand">
+      <div class="brand-icon">CC</div>
+      <div class="brand-name"><span>Codes</span>Compiler</div>
+    </div>
+    <h2>Welcome back 👋</h2>
+    <p class="sub">Sign in to your account to continue</p>
+
+    <form onsubmit="handleSubmit(event)">
+      <div class="input-group">
+        <input type="email" id="email" placeholder=" " autocomplete="email" required />
+        <label for="email">Email Address</label>
+      </div>
+      <div class="input-group">
+        <input type="password" id="password" placeholder=" " autocomplete="current-password" required />
+        <label for="password">Password</label>
+      </div>
+      <div class="forgot"><a href="#">Forgot password?</a></div>
+      <button type="submit" class="submit-btn">Sign In →</button>
+    </form>
+
+    <div class="divider"><span>or continue with</span></div>
+    <button class="social-btn" onclick="showToast('GitHub login is just a demo 😊')">⚡ Continue with GitHub</button>
+    <div class="signup-link">Don't have an account? <a href="#">Sign up free</a></div>
+  </div>
+
+  <div class="toast" id="toast">✅ Login demo — no real auth!</div>
+
+  <script>
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2800);
+    }
+    function handleSubmit(e) {
+      e.preventDefault();
+      showToast('✅ Floating label animation works perfectly!');
+    }
+  </script>
+</body>
+</html>

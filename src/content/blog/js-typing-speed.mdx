@@ -1,0 +1,39 @@
+---
+title: "Typing Speed Test App"
+description: "Test your WPM (Words Per Minute) in 60 seconds with live accuracy checking and word highlighting."
+date: "2026-04-18"
+category: "JavaScript Games"
+tags: ["javascript", "typing", "game", "events"]
+image: "/images/posts/js-typing-speed.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+A typing test involves breaking a long string into a span array, tracking the user's hidden textarea input, and comparing character by character!
+
+## Character Checking
+
+```javascript
+const quote = "The quick brown fox jumps over the lazy dog";
+const chars = quote.split('').map(c => `<span>${c}</span>`);
+display.innerHTML = chars.join('');
+
+inputField.addEventListener('input', () => {
+  const arrayQuote = display.querySelectorAll('span');
+  const arrayValue = inputField.value.split('');
+  
+  arrayQuote.forEach((characterSpan, index) => {
+    const character = arrayValue[index];
+    if (character == null) {
+      characterSpan.className = '';
+    } else if (character === characterSpan.innerText) {
+      characterSpan.className = 'correct';
+    } else {
+      characterSpan.className = 'incorrect';
+    }
+  });
+});
+```
+
+See the Live Demo to see how we calculate the WPM and handle the timer!

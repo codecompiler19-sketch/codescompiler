@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Crystal Growth Demo</title>
+  <style>
+    body { background: #f8fafc; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif;}
+    
+    .base-rock {
+      width: 150px;
+      height: 40px;
+      background: #475569;
+      border-radius: 10px;
+      position: relative;
+      margin-bottom: 40px;
+    }
+    
+    /* Crystal Shards */
+    .shard {
+      position: absolute;
+      bottom: 10px; /* Anchored in the rock */
+      background: linear-gradient(135deg, #a78bfa, #fbcfe8);
+      /* Geometric diamond shape */
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+      transform: scale(0);
+      transform-origin: bottom center;
+      transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 0 10px rgba(167, 139, 250, 0.5);
+    }
+    
+    .s1 { width: 30px; height: 80px; left: 20px; }
+    .s2 { width: 40px; height: 120px; left: 55px; background: linear-gradient(135deg, #818cf8, #bae6fd); z-index: 2;}
+    .s3 { width: 35px; height: 90px; right: 20px; background: linear-gradient(135deg, #f472b6, #e9d5ff);}
+    .s4 { width: 25px; height: 60px; right: 5px; z-index: 3;}
+    
+    /* Stage Activation */
+    .base-rock[data-stage="1"] .s1 { transform: scale(1) rotate(-15deg); }
+    
+    .base-rock[data-stage="2"] .s1 { transform: scale(1) rotate(-15deg); }
+    .base-rock[data-stage="2"] .s3 { transform: scale(1) rotate(20deg); }
+    
+    .base-rock[data-stage="3"] .s1 { transform: scale(1) rotate(-15deg); }
+    .base-rock[data-stage="3"] .s3 { transform: scale(1) rotate(20deg); }
+    .base-rock[data-stage="3"] .s2 { transform: scale(1) rotate(5deg); }
+    .base-rock[data-stage="3"] .s4 { transform: scale(1) rotate(35deg); }
+    
+    button { padding: 12px 24px; font-weight: bold; background: #8b5cf6; color: white; border: none; border-radius: 8px; cursor: pointer;}
+  </style>
+</head>
+<body>
+  <div class="base-rock" id="rock" data-stage="0">
+    <div class="shard s1"></div>
+    <div class="shard s2"></div>
+    <div class="shard s3"></div>
+    <div class="shard s4"></div>
+  </div>
+  
+  <button onclick="mine()">Mine Data (Load)</button>
+
+  <script>
+    let stage = 0;
+    function mine() {
+      stage++;
+      if(stage > 3) stage = 0; // reset for demo purposes
+      document.getElementById('rock').setAttribute('data-stage', stage.toString());
+      if(stage === 3) document.querySelector('button').innerText = "Fully Crystalized! (Reset)";
+      else document.querySelector('button').innerText = "Mine Data (Load)";
+    }
+  </script>
+</body>
+</html>

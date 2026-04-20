@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Nav Menu — Demo</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f3f4f6; }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 64px;
+      background: #1a1a2e;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+    }
+    .logo { color: #04AA6D; font-weight: 900; font-size: 22px; text-decoration: none; letter-spacing: -0.5px; }
+    .logo span { color: #fff; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .nav-links a {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all .2s;
+    }
+    .nav-links a:hover { color: #fff; background: rgba(255,255,255,0.1); }
+    .nav-links a.active { color: #04AA6D; background: rgba(4,170,109,0.12); }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 8px;
+      transition: background .2s;
+    }
+    .hamburger:hover { background: rgba(255,255,255,0.1); }
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: #fff;
+      border-radius: 2px;
+      transition: all .3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    @media (max-width: 700px) {
+      .hamburger { display: flex; }
+      .nav-links {
+        position: fixed;
+        top: 64px;
+        right: -100%;
+        width: min(280px, 80vw);
+        height: calc(100vh - 64px);
+        background: #1a1a2e;
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 20px;
+        gap: 4px;
+        transition: right .3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: -10px 0 40px rgba(0,0,0,0.4);
+      }
+      .nav-links.open { right: 0; }
+      .nav-links a { width: 100%; font-size: 15px; padding: 12px 16px; border-radius: 10px; }
+      .overlay { position: fixed; top: 64px; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 99; display: none; }
+      .overlay.show { display: block; }
+    }
+
+    /* Page content */
+    .hero {
+      max-width: 700px;
+      margin: 80px auto;
+      padding: 0 24px;
+      text-align: center;
+    }
+    .hero h1 { font-size: clamp(28px, 5vw, 48px); font-weight: 900; color: #111827; margin-bottom: 16px; }
+    .hero p  { font-size: 16px; color: #6b7280; line-height: 1.7; margin-bottom: 24px; }
+    .badge {
+      display: inline-block;
+      background: #f0fdf4;
+      color: #04AA6D;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 6px 16px;
+      border-radius: 20px;
+      border: 1px solid #bbf7d0;
+      margin-bottom: 20px;
+    }
+    .info-box {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 24px;
+      max-width: 500px;
+      margin: 0 auto;
+      text-align: left;
+    }
+    .info-box h3 { font-size: 14px; font-weight: 700; color: #374151; margin-bottom: 10px; }
+    .info-box li { font-size: 13px; color: #6b7280; margin-bottom: 6px; margin-left: 16px; }
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <a href="#" class="logo">Codes<span>Compiler</span></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#" class="active">Home</a>
+      <a href="#">About</a>
+      <a href="#">Blog</a>
+      <a href="#">Projects</a>
+      <a href="#">Contact</a>
+    </nav>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+  <div class="overlay" id="overlay"></div>
+
+  <div class="hero">
+    <div class="badge">📐 Responsive Navigation Demo</div>
+    <h1>Hamburger Menu<br/>in Action</h1>
+    <p>Resize the browser window to under 700px to see the hamburger menu appear. Click it to open/close the slide-in navigation panel.</p>
+    <div class="info-box">
+      <h3>🔧 Features demonstrated:</h3>
+      <ul>
+        <li>Sticky header that stays at top on scroll</li>
+        <li>Smooth hamburger → X icon animation</li>
+        <li>Slide-in sidebar from the right</li>
+        <li>Overlay backdrop when menu is open</li>
+        <li>Click outside / overlay to close</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    const ham  = document.getElementById('hamburger');
+    const nav  = document.getElementById('navLinks');
+    const over = document.getElementById('overlay');
+    function close() { ham.classList.remove('open'); nav.classList.remove('open'); over.classList.remove('show'); }
+    ham.addEventListener('click', () => { const isOpen = nav.classList.contains('open'); isOpen ? close() : (ham.classList.add('open'), nav.classList.add('open'), over.classList.add('show')); });
+    over.addEventListener('click', close);
+    nav.querySelectorAll('a').forEach(a => a.addEventListener('click', close));
+  </script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Blooming Flower Button</title>
+  <style>
+    body { background: #fdf2f8; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; }
+    
+    .flower-btn {
+      position: relative;
+      background: #10b981; /* Green bud */
+      color: white;
+      font-size: 1.2rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 50px;
+      padding: 20px 40px;
+      cursor: pointer;
+      z-index: 1;
+      transition: color 0.4s;
+    }
+    
+    .flower-btn span { position: relative; z-index: 2; transition: color 0.4s; }
+    .flower-btn:hover span { color: #831843; } /* Pink-red text on hover */
+    
+    .flower-btn::before, .flower-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: #f472b6; /* Pink petal */
+      border-radius: 50px;
+      transform: scale(0.2) rotate(0deg);
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s;
+      z-index: 0;
+      opacity: 0;
+    }
+    
+    /* Center the pseudo elements to act as spreading petals */
+    .flower-btn::before { transform-origin: center; }
+    .flower-btn::after { transform-origin: center; }
+    
+    .flower-btn:hover::before {
+      transform: scale(1.1) rotate(10deg);
+      opacity: 1;
+    }
+    
+    .flower-btn:hover::after {
+      transform: scale(1.1) rotate(-10deg);
+      opacity: 1;
+    }
+    
+    .flower-btn:hover { background: transparent; }
+  </style>
+</head>
+<body>
+  <button class="flower-btn"><span>BLOOM</span></button>
+</body>
+</html>

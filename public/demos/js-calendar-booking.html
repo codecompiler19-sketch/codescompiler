@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Calendar Booking UI</title>
+  <style>
+    body { background: #fdf2f8; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0;}
+    .container { display: flex; gap: 30px; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); flex-wrap: wrap;}
+    
+    .grid { display: grid; grid-template-columns: repeat(7, 40px); gap: 5px; text-align: center; }
+    .day { height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; cursor: pointer;}
+    .day:hover { background: #fce7f3; }
+    .day.active { background: #db2777; color: white; }
+    
+    .panel { width: 200px; }
+    h3 { margin-top: 0; color: #1f2937; margin-bottom: 20px;}
+    .slots { display: flex; flex-direction: column; gap: 10px; }
+    .btn { padding: 15px; border: 1px solid #db2777; background: transparent; color: #db2777; flex-grow: 1; border-radius: 8px; font-weight: bold; cursor: pointer; display: none; animation: slideIn 0.3s forwards;}
+    .btn:hover { background: #db2777; color: white;}
+    
+    @keyframes slideIn { from { opacity: 0; transform: translateX(20px);} to{ opacity: 1; transform: translateX(0);} }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div>
+      <h3>Select Date</h3>
+      <div class="grid" id="grid">
+        <div style="grid-column: span 3"></div>
+        <div class="day" onclick="pick(this)">1</div>
+        <div class="day" onclick="pick(this)">2</div>
+        <div class="day" onclick="pick(this)">3</div>
+        <div class="day" onclick="pick(this)">4</div>
+        <div class="day" onclick="pick(this)">5</div>
+      </div>
+    </div>
+    
+    <div class="panel">
+      <h3 id="panelTitle">Select Time</h3>
+      <div class="slots" id="slots"></div>
+    </div>
+  </div>
+
+  <script>
+    const times = ["09:00 AM", "10:30 AM", "01:00 PM", "04:15 PM"];
+    const slots = document.getElementById('slots');
+    
+    function pick(el) {
+      document.querySelectorAll('.day').forEach(d => d.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('panelTitle').innerText = `April ${el.innerText}`;
+      
+      slots.innerHTML = '';
+      times.forEach((t, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'btn';
+        btn.innerText = t;
+        btn.style.display = 'block';
+        btn.style.animationDelay = (i * 0.1) + 's';
+        btn.onclick = () => alert("Booked for April " + el.innerText + " at " + t);
+        slots.appendChild(btn);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Puzzle Hover Demo</title>
+  <style>
+    body { background: #fdf2f8; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0;}
+    
+    .puzzle-grid {
+      width: 200px;
+      height: 200px;
+      position: relative;
+      cursor: pointer;
+    }
+    
+    .piece {
+      position: absolute;
+      width: 100px; height: 100px;
+      background: #ec4899;
+      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    /* The 4 Quadrants */
+    .top-left { top: -15px; left: -15px; background: #ec4899; border-radius: 10px 0 0 0; }
+    .top-right { top: -15px; left: 115px; background: #db2777; border-radius: 0 10px 0 0; }
+    .btm-left { top: 115px; left: -15px; background: #f472b6; border-radius: 0 0 0 10px; }
+    .btm-right { top: 115px; left: 115px; background: #be185d; border-radius: 0 0 10px 0;}
+    
+    /* Real puzzle pieces use clip-path to make the nubs, but for this geometric example, we simply use separated offset boxes that snap perfectly into a seamless grid. */
+    
+    .puzzle-grid:hover .top-left { transform: translate(15px, 15px); }
+    .puzzle-grid:hover .top-right { transform: translate(-15px, 15px); }
+    .puzzle-grid:hover .btm-left { transform: translate(15px, -15px); }
+    .puzzle-grid:hover .btm-right { transform: translate(-15px, -15px); }
+    
+    .icon {
+      position: absolute; inset: 0; color: white; display: flex; align-items: center; justify-content: center; font-size: 2rem; opacity: 0; transition: opacity 0.5s; z-index: 10;
+    }
+    .puzzle-grid:hover .icon { opacity: 1; transition-delay: 0.3s;}
+  </style>
+</head>
+<body>
+  <div class="puzzle-grid">
+    <div class="piece top-left"></div>
+    <div class="piece top-right"></div>
+    <div class="piece btm-left"></div>
+    <div class="piece btm-right"></div>
+    <div class="icon">★</div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+---
+title: "Whack-a-Mole Game UI"
+description: "Emojis pop up randomly! Tap them quickly to score points in this fun mobile-friendly arcade game."
+date: "2026-04-18"
+category: "JavaScript Games"
+tags: ["javascript", "game", "arcade", "mobile"]
+image: "/images/posts/js-whack-a-mole.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Whack-a-Mole is hilariously fun. We combine CSS transforms that move the mole "up" out of a hole with Javascript interval loops.
+
+## Pop-up Logic
+
+```javascript
+const holes = document.querySelectorAll('.hole');
+
+function randomHole(holes) {
+  const idx = Math.floor(Math.random() * holes.length);
+  return holes[idx];
+}
+
+function peep() {
+  const time = Math.random() * 1000 + 200; // 200ms to 1200ms
+  const hole = randomHole(holes);
+  
+  hole.classList.add('up');
+  
+  setTimeout(() => {
+    hole.classList.remove('up');
+    if(!timeUp) peep();
+  }, time);
+}
+```
+
+Try to beat 20 points in the Live Demo arcade!

@@ -1,0 +1,32 @@
+---
+title: "Digital Sunshine Clock"
+description: "A round clock face with rotating soft yellow sun rays that displays dynamic times using Javascript calculations."
+date: "2026-04-18"
+category: "JavaScript Projects"
+tags: ["javascript", "clock", "date", "animation"]
+image: "/images/posts/js-sunshine-clock.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Ditch the boring digital clocks. Let's create an animated sun clock that gently rotates and updates the physical time!
+
+## Getting The Time
+
+Every single second, we want Javascript to fetch the system's current time and format it nicely using AM and PM logic.
+
+```javascript
+setInterval(() => {
+  const d = new Date();
+  let h = d.getHours();
+  let m = d.getMinutes().toString().padStart(2, '0');
+  let ampm = h >= 12 ? 'PM' : 'AM';
+  
+  h = h % 12 || 12; // Convert 24hr to 12hr
+  
+  document.getElementById('display').innerText = `${h}:${m} ${ampm}`;
+}, 1000);
+```
+
+Check out the continuous rotating sunbeams in the Live Demo while the clock tracks your exact system time.

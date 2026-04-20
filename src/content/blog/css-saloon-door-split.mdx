@@ -1,0 +1,41 @@
+---
+title: "3D Saloon Door Image Split"
+description: "An incredibly dramatic hover effect where the solid colored cover splits vertically down the middle and swings open to reveal a hidden photograph."
+date: "2026-04-18"
+category: "Card Design"
+tags: ["css", "3d", "image", "split"]
+image: "/images/posts/css-saloon-door-split.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Why settle for simple opacity fades when you can literally rip the doors open? This effect uses two overlaid `div` flaps, applying `perspective` and `transform: rotateY()` to hinge them violently backwards like saloon doors on hover.
+
+## Creating the 3D Flaps
+
+```css
+.card {
+  perspective: 1000px;
+  position: relative;
+}
+
+.flap-left, .flap-right {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 50%;
+  background: #3b82f6;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.flap-left { left: 0; transform-origin: left center; }
+.flap-right { right: 0; transform-origin: right center; }
+
+/* The swinging hinges */
+.card:hover .flap-left { transform: rotateY(-110deg); }
+.card:hover .flap-right { transform: rotateY(110deg); }
+```
+
+You can even add complex labels and icons onto the flaps. Look at the incredibly crisp physical mechanics unfolding in the Live Demo.

@@ -1,0 +1,36 @@
+---
+title: "Whispering Leaf Text Reveal"
+description: "Text spans separated into scattered, falling leaves that organically blow back into readable sentences via CSS transforms."
+date: "2026-04-18"
+category: "Website Designs"
+tags: ["javascript", "css", "text", "animation"]
+image: "/images/posts/js-whispering-leaf-text.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Typography doesn't have to be static. Using a tiny bit of JS, we wrap every letter of a sentence in a `<span>`. We scatter them via random CSS translations, and then snap them into order on hover!
+
+## Scattering Letters
+
+```javascript
+const text = "A gentle breeze arrives.";
+container.innerHTML = text.split('').map(letter => {
+  const rot = Math.random() * 90 - 45;
+  const x = Math.random() * 100 - 50;
+  return `<span style="transform: translate(${x}px, -20px) rotate(${rot}deg); opacity: 0;">${letter}</span>`;
+}).join('');
+```
+
+## The Wind CSS Snap
+
+```css
+.reveal-wrapper:hover span {
+  transform: translate(0, 0) rotate(0deg) !important;
+  opacity: 1 !important;
+  transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+```
+
+Move your mouse into the interactive area in the Live Demo to watch the chaotic storm of leaves snap perfectly into a poem!

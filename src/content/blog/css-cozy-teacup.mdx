@@ -1,0 +1,46 @@
+---
+title: "Cozy Teacup Mood Steamer"
+description: "An ultra-relaxing teacup that emits SVG steam particles changing colors based on your mood, dispensing calm affirmations."
+date: "2026-04-18"
+category: "Website Designs"
+tags: ["css", "svg", "ui", "animations", "creative"]
+image: "/images/posts/css-cozy-teacup.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Digital self-care is a beautiful niche. This interactive teacup acts as a grounding ritual. By picking a "mood" (like anxious, or happy), the steam changes color and dispenses tiny uplifting quotes.
+
+## Animating the Steam
+
+SVG paths representing steam can be morphed, but an easier way is to use CSS animations to softly translate and fade div particles upwards, acting like steam.
+
+```css
+.steam {
+  width: 15px; height: 15px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  filter: blur(8px);
+  animation: rise 4s linear infinite;
+}
+
+@keyframes rise {
+  0% { transform: translateY(0) scale(1); opacity: 0.6; }
+  100% { transform: translateY(-100px) scale(3); opacity: 0; }
+}
+```
+
+## Adding Grounding Affirmations
+
+```javascript
+const quotes = ["Take a deep breath.", "You are enough.", "Sip slowly."];
+
+teacup.addEventListener('click', () => {
+  const quote = quotes[Math.floor(Math.random() * quotes.length)];
+  displayQuote(quote);
+});
+```
+
+Grab a warm drink and try out the Live Demo to interact with this beautiful cozy UI!

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Neon Text Generator</title>
+  <style>
+    body { background: #050505; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: 'Segoe UI', sans-serif; gap: 40px; margin: 0; }
+    .controls { display: flex; gap: 20px; background: #1a1a1a; padding: 20px; border-radius: 12px; }
+    input[type="text"] { padding: 10px; border-radius: 6px; border: 1px solid #333; background: #222; color: white; }
+    input[type="color"] { cursor: pointer; height: 40px; border-radius: 6px; width: 60px; padding: 0; border: none; }
+    .neon-text {
+      font-size: 5rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 5px;
+      --neon-color: #ff00ff;
+      text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--neon-color), 0 0 40px var(--neon-color), 0 0 80px var(--neon-color);
+      transition: text-shadow 0.3s;
+    }
+  </style>
+</head>
+<body>
+  <div class="controls">
+    <input type="text" id="textInput" value="CYBERPUNK">
+    <input type="color" id="colorInput" value="#ff00ff">
+  </div>
+  <div class="neon-text" id="neonDisplay">CYBERPUNK</div>
+  <script>
+    const t = document.getElementById('textInput');
+    const c = document.getElementById('colorInput');
+    const d = document.getElementById('neonDisplay');
+    t.addEventListener('input', () => d.innerText = t.value || ' ');
+    c.addEventListener('input', () => d.style.setProperty('--neon-color', c.value));
+  </script>
+</body>
+</html>

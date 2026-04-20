@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JavaScript Quiz App — Demo</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0f172a;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 20px;
+    }
+    .quiz-wrap { width: 100%; max-width: 540px; }
+    .quiz-card {
+      background: #1e293b;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 24px;
+      padding: 36px;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+    }
+    .q-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .q-num  { font-size: 13px; font-weight: 700; color: #64748b; }
+    .timer  { font-size: 13px; font-weight: 700; color: #04AA6D; background: rgba(4,170,109,0.12); padding: 5px 12px; border-radius: 20px; }
+    .timer.warning { color: #f59e0b; background: rgba(245,158,11,0.15); }
+    .timer.danger  { color: #ef4444; background: rgba(239,68,68,0.15); animation: pulse 0.5s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+    .progress-bar {
+      height: 5px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 10px;
+      margin-bottom: 28px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #04AA6D, #34d399);
+      border-radius: 10px;
+      transition: width .4s ease;
+    }
+
+    .question { font-size: clamp(16px, 2.5vw, 19px); font-weight: 700; color: #f1f5f9; line-height: 1.5; margin-bottom: 28px; }
+
+    .options { display: flex; flex-direction: column; gap: 10px; }
+    .opt-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 18px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      color: #cbd5e1;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all .2s;
+      text-align: left;
+      font-family: inherit;
+      width: 100%;
+    }
+    .opt-btn:not(:disabled):hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); color: #fff; }
+    .opt-btn.correct  { background: rgba(4,170,109,0.18); border-color: #04AA6D; color: #34d399; }
+    .opt-btn.wrong    { background: rgba(239,68,68,0.15); border-color: #ef4444; color: #fca5a5; }
+    .opt-letter {
+      width: 28px; height: 28px; border-radius: 8px;
+      background: rgba(255,255,255,0.08);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800; flex-shrink: 0;
+      transition: background .2s;
+    }
+    .opt-btn.correct .opt-letter { background: #04AA6D; color: #fff; }
+    .opt-btn.wrong   .opt-letter { background: #ef4444; color: #fff; }
+
+    /* Result Screen */
+    .result-screen { text-align: center; display: none; }
+    .result-screen.show { display: block; }
+    .quiz-card.result-mode .quiz-content { display: none; }
+    .score-ring {
+      width: 130px; height: 130px;
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      background: conic-gradient(#04AA6D calc(var(--pct) * 1%), rgba(255,255,255,0.06) 0);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .score-ring::before {
+      content: '';
+      position: absolute;
+      inset: 10px;
+      border-radius: 50%;
+      background: #1e293b;
+    }
+    .score-num { position: relative; z-index: 1; font-size: 28px; font-weight: 900; color: #f1f5f9; }
+    .result-title { font-size: 22px; font-weight: 900; color: #f1f5f9; margin-bottom: 8px; }
+    .result-sub   { font-size: 14px; color: #64748b; margin-bottom: 24px; }
+    .retry-btn {
+      padding: 13px 32px;
+      background: #04AA6D;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: opacity .2s, transform .15s;
+    }
+    .retry-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+  </style>
+</head>
+<body>
+  <div class="quiz-wrap">
+    <div class="quiz-card" id="quizCard">
+      <div class="quiz-content">
+        <div class="q-header">
+          <span class="q-num" id="qNum">Question 1 / 5</span>
+          <span class="timer" id="timer">⏱ 20s</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+        <div class="question" id="question"></div>
+        <div class="options" id="options"></div>
+      </div>
+      <div class="result-screen" id="resultScreen">
+        <div class="score-ring" id="scoreRing"><span class="score-num" id="scoreNum"></span></div>
+        <div class="result-title" id="resultTitle"></div>
+        <div class="result-sub"  id="resultSub"></div>
+        <button class="retry-btn" onclick="startQuiz()">🔄 Try Again</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const qs = [
+      { q: 'Which method converts a JSON string to a JS object?', opts: ['JSON.stringify()', 'JSON.parse()', 'JSON.convert()', 'JSON.objectify()'], a: 1 },
+      { q: 'What does typeof null return in JavaScript?', opts: ['"null"', '"undefined"', '"object"', '"boolean"'], a: 2 },
+      { q: 'Which is NOT a valid JavaScript data type?', opts: ['Symbol', 'BigInt', 'Float', 'String'], a: 2 },
+      { q: "What does === check for?", opts: ['Value only', 'Type only', 'Value AND type', 'Object reference'], a: 2 },
+      { q: 'How do you declare an arrow function?', opts: ['function => {}', 'const fn = () => {}', 'fn() => {}', '() function {}'], a: 1 },
+    ];
+
+    let cur = 0, score = 0, timeLeft, tInt;
+
+    function startQuiz() {
+      cur = score = 0;
+      document.getElementById('quizCard').classList.remove('result-mode');
+      document.getElementById('resultScreen').classList.remove('show');
+      loadQ();
+    }
+
+    function loadQ() {
+      clearInterval(tInt);
+      if (cur >= qs.length) { showResult(); return; }
+      const q = qs[cur];
+      document.getElementById('qNum').textContent = `Question ${cur+1} / ${qs.length}`;
+      document.getElementById('progress').style.width = `${(cur / qs.length) * 100}%`;
+      document.getElementById('question').textContent = q.q;
+      const opts = document.getElementById('options');
+      opts.innerHTML = q.opts.map((o, i) =>
+        `<button class="opt-btn" onclick="pick(this,${i})"><span class="opt-letter">${'ABCD'[i]}</span>${o}</button>`
+      ).join('');
+      timeLeft = 20; updateTimer();
+      tInt = setInterval(() => { timeLeft--; updateTimer(); if (timeLeft <= 0) { clearInterval(tInt); next(); } }, 1000);
+    }
+
+    function updateTimer() {
+      const el = document.getElementById('timer');
+      el.textContent = `⏱ ${timeLeft}s`;
+      el.className = 'timer' + (timeLeft <= 5 ? ' danger' : timeLeft <= 10 ? ' warning' : '');
+    }
+
+    function pick(btn, idx) {
+      clearInterval(tInt);
+      document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+      const correct = qs[cur].a;
+      btn.classList.add(idx === correct ? 'correct' : 'wrong');
+      document.querySelectorAll('.opt-btn')[correct].classList.add('correct');
+      if (idx === correct) score++;
+      setTimeout(next, 900);
+    }
+
+    function next() { cur++; loadQ(); }
+
+    function showResult() {
+      document.getElementById('progress').style.width = '100%';
+      const pct = Math.round((score / qs.length) * 100);
+      document.getElementById('scoreRing').style.setProperty('--pct', pct);
+      document.getElementById('scoreNum').textContent = `${score}/${qs.length}`;
+      const grades = [['😞 Needs Work', 'Keep practicing!'], ['😐 Getting There', 'Not bad, try again!'], ['😊 Good Job!', 'Nice work!'], ['😄 Great!', 'Really solid!'], ['🏆 Perfect!', 'Excellent score!']];
+      const g = grades[score] ?? grades[4];
+      document.getElementById('resultTitle').textContent = g[0];
+      document.getElementById('resultSub').textContent = g[1];
+      document.getElementById('quizCard').classList.add('result-mode');
+      document.getElementById('resultScreen').classList.add('show');
+    }
+
+    startQuiz();
+  </script>
+</body>
+</html>

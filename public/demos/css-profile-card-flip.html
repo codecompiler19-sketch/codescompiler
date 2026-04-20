@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profile Card Flip — Demo</title>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;background:linear-gradient(135deg,#0f4c75,#1b6ca8,#4fc3f7);font-family:'Segoe UI',sans-serif;padding:32px 20px}
+    h1{color:rgba(255,255,255,0.9);font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-align:center;}
+    p.hint{color:rgba(255,255,255,0.5);font-size:13px;text-align:center;margin-top:-20px;}
+    .cards-row{display:flex;flex-wrap:wrap;gap:24px;justify-content:center;}
+
+    /* 3D flip card */
+    .card{width:240px;height:320px;perspective:800px;cursor:pointer;}
+    .card-inner{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.4,0,.2,1);}
+    .card:hover .card-inner,.card.flipped .card-inner{transform:rotateY(180deg);}
+    .card-front,.card-back{position:absolute;inset:0;border-radius:24px;backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:28px 20px;}
+    .card-back{transform:rotateY(180deg);}
+
+    /* Front face */
+    .card-front{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);backdrop-filter:blur(16px);}
+    .avatar{width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.15);border:3px solid rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;font-size:40px;}
+    .name{font-size:17px;font-weight:800;color:#fff;}
+    .role{font-size:13px;color:rgba(255,255,255,0.65);}
+    .tags{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:4px;}
+    .tags span{font-size:11px;font-weight:700;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:#fff;padding:3px 10px;border-radius:20px;}
+    .flip-hint{font-size:11px;color:rgba(255,255,255,0.4);margin-top:8px;}
+
+    /* Back face */
+    .card-back{background:linear-gradient(160deg,#04AA6D,#038a58);color:#fff;}
+    .card-back h3{font-size:15px;font-weight:800;margin-bottom:4px;}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;text-align:center;}
+    .stat .n{font-size:20px;font-weight:900;}
+    .stat .l{font-size:10px;opacity:.7;text-transform:uppercase;letter-spacing:.05em;}
+    .socials{display:flex;flex-direction:column;gap:6px;width:100%;}
+    .social-link{display:block;text-align:center;padding:8px;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.3);border-radius:8px;color:#fff;text-decoration:none;font-size:12px;font-weight:700;transition:background .2s;}
+    .social-link:hover{background:rgba(255,255,255,0.32);}
+    .hire-btn{width:100%;padding:11px;background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.6);border-radius:20px;color:#fff;font-weight:800;font-size:13px;text-align:center;text-decoration:none;transition:background .2s;}
+    .hire-btn:hover{background:rgba(255,255,255,0.35);}
+  </style>
+</head>
+<body>
+  <h1>CSS 3D Flip Cards</h1>
+  <p class="hint">Hover (or tap) a card to flip it!</p>
+
+  <div class="cards-row">
+    <!-- Card 1 -->
+    <div class="card">
+      <div class="card-inner">
+        <div class="card-front">
+          <div class="avatar">👩‍💻</div>
+          <div class="name">Sarah Chen</div>
+          <div class="role">Frontend Developer</div>
+          <div class="tags"><span>React</span><span>CSS</span><span>TypeScript</span></div>
+          <p class="flip-hint">Hover to see more →</p>
+        </div>
+        <div class="card-back">
+          <h3>Sarah Chen</h3>
+          <div class="stats">
+            <div class="stat"><div class="n">142</div><div class="l">Projects</div></div>
+            <div class="stat"><div class="n">8.4k</div><div class="l">Followers</div></div>
+            <div class="stat"><div class="n">96%</div><div class="l">Rating</div></div>
+          </div>
+          <div class="socials">
+            <a class="social-link" href="#">⚡ GitHub</a>
+            <a class="social-link" href="#">💼 LinkedIn</a>
+          </div>
+          <a class="hire-btn" href="#">Hire Me →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="card">
+      <div class="card-inner">
+        <div class="card-front">
+          <div class="avatar">🚀</div>
+          <div class="name">Alex Rivera</div>
+          <div class="role">Full Stack Engineer</div>
+          <div class="tags"><span>Node.js</span><span>AWS</span><span>Go</span></div>
+          <p class="flip-hint">Hover to see more →</p>
+        </div>
+        <div class="card-back">
+          <h3>Alex Rivera</h3>
+          <div class="stats">
+            <div class="stat"><div class="n">89</div><div class="l">Repos</div></div>
+            <div class="stat"><div class="n">3.2k</div><div class="l">Stars</div></div>
+            <div class="stat"><div class="n">500+</div><div class="l">Commits</div></div>
+          </div>
+          <div class="socials">
+            <a class="social-link" href="#">⚡ GitHub</a>
+            <a class="social-link" href="#">🐦 Twitter</a>
+          </div>
+          <a class="hire-btn" href="#">Work Together →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="card">
+      <div class="card-inner">
+        <div class="card-front">
+          <div class="avatar">🎨</div>
+          <div class="name">Priya Sharma</div>
+          <div class="role">UI/UX Designer</div>
+          <div class="tags"><span>Figma</span><span>CSS</span><span>Framer</span></div>
+          <p class="flip-hint">Hover to see more →</p>
+        </div>
+        <div class="card-back">
+          <h3>Priya Sharma</h3>
+          <div class="stats">
+            <div class="stat"><div class="n">57</div><div class="l">Designs</div></div>
+            <div class="stat"><div class="n">2.1k</div><div class="l">Likes</div></div>
+            <div class="stat"><div class="n">4.9★</div><div class="l">Rating</div></div>
+          </div>
+          <div class="socials">
+            <a class="social-link" href="#">🎨 Dribbble</a>
+            <a class="social-link" href="#">💼 LinkedIn</a>
+          </div>
+          <a class="hire-btn" href="#">See Portfolio →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Touch support: tap to flip
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('click', () => card.classList.toggle('flipped'));
+    });
+  </script>
+</body>
+</html>

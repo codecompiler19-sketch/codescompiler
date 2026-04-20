@@ -1,0 +1,41 @@
+---
+title: "Retro CRT TV Screen Effect"
+description: "Add scanlines, flicker, and noise overlays on any text or image using pure CSS animations."
+date: "2026-04-18"
+category: "HTML & CSS"
+tags: ["css", "retro", "effects", "design"]
+image: "/images/posts/css-crt-tv-effect.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+The 80s are back! A CRT television effect creates a cyberpunk/retro feel instantly.
+
+## Scanlines and Flicker
+
+We use `linear-gradient` to create scanlines and `@keyframes` for screen flicker.
+
+```css
+.crt::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  z-index: 2;
+  background-size: 100% 2px, 3px 100%;
+  pointer-events: none;
+}
+
+@keyframes flicker {
+  0% { opacity: 0.95; }
+  5% { opacity: 0.85; }
+  10% { opacity: 0.95; }
+  15% { opacity: 1; }
+}
+
+.crt { animation: flicker 0.15s infinite; }
+```
+
+Experience the nostalgia in the Live Demo.

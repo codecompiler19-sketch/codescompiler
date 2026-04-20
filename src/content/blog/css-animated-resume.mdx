@@ -1,0 +1,44 @@
+---
+title: "Animated Resume/CV Template"
+description: "A professional timeline-based work history page that uses IntersectionObserver for scroll-triggered entrance animations."
+date: "2026-04-18"
+category: "Website Designs"
+tags: ["css", "resume", "cv", "animation", "javascript"]
+image: "/images/posts/css-animated-resume.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+A standard resume is boring. Let's create a timeline design where jobs slide into view as the user scrolls down the page!
+
+## IntersectionObserver Logic
+
+We observe `.timeline-item` classes. When they enter the viewport, we add a `.show` class to trigger the CSS transition.
+
+```javascript
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('show');
+    }
+  });
+});
+
+const hiddenElements = document.querySelectorAll('.timeline-item');
+hiddenElements.forEach((el) => observer.observe(el));
+```
+
+```css
+.timeline-item {
+  opacity: 0;
+  transform: translateX(-100px);
+  transition: all 0.8s;
+}
+.timeline-item.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+```
+
+Scroll down in the Live Demo to see the timeline items fade in seamlessly.

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Typing Test Demo</title>
+  <style>
+    body { background: #1e293b; color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: monospace; margin: 0; }
+    .container { max-width: 800px; padding: 40px; background: #0f172a; border-radius: 12px;}
+    .quote { font-size: 1.5rem; line-height: 1.6; margin-bottom: 20px; color: #94a3b8; }
+    .correct { color: #22c55e; } .incorrect { color: #ef4444; background: rgba(239, 68, 68, 0.2); }
+    textarea { width: 100%; height: 100px; background: transparent; border: 2px solid #334155; border-radius: 8px; color: white; padding: 15px; font-size: 1.2rem; font-family: monospace; outline: none; }
+    textarea:focus { border-color: #38bdf8; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="quote" id="quoteDisplay"></div>
+    <textarea id="quoteInput" placeholder="Start typing here..." autofocus></textarea>
+  </div>
+  <script>
+    const text = "The quick brown fox jumps over the lazy dog. Programming is a symphony of logic and creativity combined.";
+    const display = document.getElementById('quoteDisplay');
+    const input = document.getElementById('quoteInput');
+    
+    // Split to spans
+    text.split('').forEach(char => {
+      const s = document.createElement('span'); s.innerText = char; display.appendChild(s);
+    });
+
+    input.addEventListener('input', () => {
+      const spans = display.querySelectorAll('span');
+      const val = input.value.split('');
+      
+      spans.forEach((span, i) => {
+        const char = val[i];
+        if (char == null) { span.className = ''; }
+        else if (char === span.innerText) { span.className = 'correct'; }
+        else { span.className = 'incorrect'; }
+      });
+      // End game
+      if(val.length === spans.length && document.querySelectorAll('.incorrect').length === 0) {
+        alert("Completed!"); input.value = ''; input.dispatchEvent(new Event('input'));
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+---
+title: "JavaScript Auto Image Slider / Carousel"
+description: "Build a smooth, auto-playing image slider with touch swipe support, dot indicators, and prev/next controls from scratch in vanilla JavaScript."
+date: "2026-04-04"
+category: "Image Slider"
+tags: ["javascript", "slider", "carousel", "css", "animation"]
+image: "/images/posts/image-slider.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Image sliders are everywhere on the web. This tutorial shows you how to build a **production-quality carousel** with auto-play, smooth CSS transitions, dot navigation, and touch swipe — all without any library.
+
+## The Core CSS: The "Window" Trick
+
+```css
+/* The outer container clips the overflow */
+.slider-window {
+  width: 100%;
+  overflow: hidden;        /* hides slides that are off-screen */
+  border-radius: 20px;
+  position: relative;
+}
+
+/* The track holds all slides side by side */
+.slider-track {
+  display: flex;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+/* Each slide is exactly as wide as the window */
+.slide {
+  min-width: 100%;
+  height: 480px;
+  position: relative;
+  overflow: hidden;
+}
+
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+```
+
+## JavaScript Slide Logic
+
+```javascript
+const slides  = document.querySelectorAll('.slide');
+const track   = document.querySelector('.slider-track');
+const dots    = document.querySelectorAll('.dot');
+let current   = 0;
+let autoTimer;
+
+function goTo(index) {
+  // Wrap around at both ends
+  current = ((index % slides.length) + slides.length) % slides.length;
+
+  // Move the track using CSS transform
+  track.style.transform = `translateX(-${current * 100}%)`;
+
+  // Update dot indicators
+  dots.forEach((dot, i) => dot.classList.toggle('active', i === current));
+}
+
+function next() { goTo(current + 1); }
+function prev() { goTo(current - 1); }
+
+// Auto-play every 4 seconds
+function startAuto() {
+  autoTimer = setInterval(next, 4000);
+}
+function stopAuto() {
+  clearInterval(autoTimer);
+}
+
+// Pause on hover, resume on mouse leave
+document.querySelector('.slider-window').addEventListener('mouseenter', stopAuto);
+document.querySelector('.slider-window').addEventListener('mouseleave', startAuto);
+
+// Button controls
+document.getElementById('prevBtn').addEventListener('click', () => { stopAuto(); prev(); startAuto(); });
+document.getElementById('nextBtn').addEventListener('click', () => { stopAuto(); next(); startAuto(); });
+
+// Dot navigation
+dots.forEach((dot, i) => dot.addEventListener('click', () => { stopAuto(); goTo(i); startAuto(); }));
+
+goTo(0);
+startAuto();
+```
+
+## Touch Swipe Support
+
+```javascript
+let touchStartX = 0;
+
+document.querySelector('.slider-window').addEventListener('touchstart', e => {
+  touchStartX = e.touches[0].clientX;
+}, { passive: true });
+
+document.querySelector('.slider-window').addEventListener('touchend', e => {
+  const diff = touchStartX - e.changedTouches[0].clientX;
+  if (Math.abs(diff) > 50) {   // minimum swipe distance
+    stopAuto();
+    diff > 0 ? next() : prev();
+    startAuto();
+  }
+}, { passive: true });
+```
+
+## Slide Caption Overlay
+
+```css
+.slide-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 40px 32px 28px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.7));
+  color: #fff;
+}
+.slide-caption h3 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+.slide-caption p  { font-size: 14px; opacity: 0.8; }
+```
+
+> **Performance Tip:** Use `will-change: transform` on the `.slider-track` to hint the browser to use GPU compositing for smoother animation.

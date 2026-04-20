@@ -1,0 +1,36 @@
+---
+title: "Enchanted Mirror Reflection Hover Card"
+description: "A mysterious hover card that magically generates a flipped, distorted reflection of itself when interacted with."
+date: "2026-04-18"
+category: "Card Design"
+tags: ["css", "animation", "filter", "card"]
+image: "/images/posts/css-enchanted-mirror-card.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Mirrors and reflection aesthetics make an interface feel alive. By combining `transform: scaleY(-1)` and a gradient alpha-mask, we can simulate a card that generates a liquid glass reflection below itself!
+
+## Building the Reflection
+
+Instead of duplicating HTML, we use CSS `::after` on a wrapper to capture its visual state, or we simply flip a duplicated element.
+
+```css
+.mirror-reflect {
+  transform: scaleY(-1); /* Flips it perfectly upside down */
+  filter: blur(2px) opacity(0.5); /* Distorts and softens it */
+  position: relative;
+  transition: 0.6s ease;
+}
+
+/* The gradient mask to fade the reflection out */
+.mirror-reflect::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, #0f172a 100%);
+}
+```
+
+Check out the "liquid mirror" hover effect on the protagonist card in the Live Demo!

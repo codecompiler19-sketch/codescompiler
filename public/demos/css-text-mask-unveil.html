@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Text Mask Reveal</title>
+  <style>
+    body { background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: 'Arial Black', sans-serif;}
+    
+    .mask-wrapper {
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+      display: inline-block;
+    }
+    
+    .text-mask {
+      font-size: 10vw; /* Scales massively */
+      margin: 0;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -5px;
+      
+      /* The initial state: Mask the image exclusively within the letters */
+      color: transparent;
+      background-image: url('https://images.unsplash.com/photo-1449844908441-8829872d2607?q=80&w=1200&auto=format&fit=crop');
+      background-size: 200%; /* Start zoomed in */
+      background-position: center;
+      background-repeat: no-repeat;
+      
+      -webkit-background-clip: text;
+      background-clip: text;
+      
+      transition: color 0.5s ease-out, background-size 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    
+    /* Reveal state */
+    .mask-wrapper:hover .text-mask {
+      /* Dropping transparency fills the letters solidly, revealing the background image behind them via standard background painting */
+      color: white; 
+      /* We also pull the camera out simultaneously */
+      background-size: 100%; 
+    }
+  </style>
+</head>
+<body>
+  <div class="mask-wrapper">
+    <h1 class="text-mask">EXPLORE<br>NATURE</h1>
+  </div>
+</body>
+</html>

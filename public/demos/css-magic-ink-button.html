@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Magic Ink Button</title>
+  <style>
+    body { background: #fafafa; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; }
+    
+    .ink-btn {
+      position: relative;
+      border: 2px solid #111;
+      background: white;
+      color: #111;
+      font-size: 1.2rem;
+      font-weight: 800;
+      padding: 20px 40px;
+      cursor: pointer;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+    
+    .real-text { position: relative; z-index: 1;}
+    
+    .ink-overlay {
+      position: absolute;
+      inset: -2px; /* Covers border */
+      background: #111;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 800;
+      z-index: 2;
+      transition: clip-path 0.7s cubic-bezier(0.77, 0, 0.175, 1);
+      /* Full circle covering the button initially */
+      clip-path: circle(200% at 50% 50%);
+    }
+    
+    .ink-btn:hover .ink-overlay {
+      /* Shrinks the ink into nothingness precisely in the center */
+      clip-path: circle(0% at 50% 50%);
+    }
+  </style>
+</head>
+<body>
+  <div class="ink-btn">
+    <span class="real-text">REVEALED MAGIC ✨</span>
+    <div class="ink-overlay">HOVER ME</div>
+  </div>
+</body>
+</html>

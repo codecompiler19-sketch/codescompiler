@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Seed Growth Demo</title>
+  <style>
+    body { background: #fdfbf7; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif;}
+    
+    .tracker { display: flex; gap: 50px; align-items: center;}
+    
+    .stem {
+      width: 8px;
+      height: 300px;
+      background: #e2e8f0;
+      border-radius: 4px;
+      position: relative;
+    }
+    
+    .growth {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: #10b981;
+      height: var(--grow, 0%);
+      border-radius: 4px;
+      transition: height 1s ease-out;
+    }
+    
+    /* Leaves */
+    .leaf {
+      position: absolute;
+      font-size: 2rem;
+      transform: scale(0);
+      transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .l1 { bottom: 20%; left: -35px; transform-origin: bottom right;}
+    .l2 { bottom: 40%; right: -35px; transform-origin: bottom left; transform: scaleX(-1) scale(0);}
+    .l3 { bottom: 60%; left: -35px; transform-origin: bottom right;}
+    .l4 { bottom: 80%; right: -35px; transform-origin: bottom left; transform: scaleX(-1) scale(0);}
+    
+    /* Stages controlled via parent attribute natively linked to CSS! */
+    .stem[data-stage="1"] .l1 { transform: scale(1); transition-delay: 0.5s;}
+    
+    .stem[data-stage="2"] .l1 { transform: scale(1); }
+    .stem[data-stage="2"] .l2 { transform: scaleX(-1) scale(1); transition-delay: 0.5s;}
+    
+    .stem[data-stage="3"] .l1 { transform: scale(1); }
+    .stem[data-stage="3"] .l2 { transform: scaleX(-1) scale(1); }
+    .stem[data-stage="3"] .l3 { transform: scale(1); transition-delay: 0.5s;}
+    
+    .stem[data-stage="4"] .l1, .stem[data-stage="4"] .l3 { transform: scale(1); }
+    .stem[data-stage="4"] .l2, .stem[data-stage="4"] .l4 { transform: scaleX(-1) scale(1); }
+    .stem[data-stage="4"] .l4 { transition-delay: 0.5s; }
+
+    button { padding: 15px 30px; border-radius: 30px; cursor: pointer; border: none; background: #3b82f6; color: white; font-weight: bold;}
+  </style>
+</head>
+<body>
+  <div class="tracker">
+    <div class="stem" id="stem" data-stage="0" style="--grow: 0%;">
+      <div class="growth"></div>
+      <div class="leaf l1">🍃</div><div class="leaf l2">🍃</div>
+      <div class="leaf l3">🍃</div><div class="leaf l4">🍃</div>
+    </div>
+    
+    <div>
+      <h2 id="num">0% Raised</h2>
+      <button onclick="donate()">Donate +25%</button>
+    </div>
+  </div>
+
+  <script>
+    let p = 0;
+    function donate() {
+      if(p>=100) return;
+      p += 25;
+      const s = document.getElementById('stem');
+      s.style.setProperty('--grow', p + '%');
+      document.getElementById('num').innerText = p + '% Raised';
+      
+      // Update HTML stage tag! CSS takes care of animating the correct leaves beautifully!
+      s.setAttribute('data-stage', (p/25).toString());
+    }
+  </script>
+</body>
+</html>

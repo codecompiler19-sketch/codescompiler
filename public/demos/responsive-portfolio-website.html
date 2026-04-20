@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio Website — Demo</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: #f8fafc; }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 50;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px; height: 60px;
+      background: rgba(15,23,42,0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-logo { font-size: 18px; font-weight: 900; }
+    .nav-logo span { color: #04AA6D; }
+    .nav-links a { color: rgba(255,255,255,0.6); text-decoration: none; font-size: 14px; margin-left: 20px; transition: color .2s; }
+    .nav-links a:hover { color: #04AA6D; }
+
+    /* HERO */
+    .hero {
+      min-height: 90vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 60px 24px;
+      background: radial-gradient(ellipse at 50% 60%, rgba(4,170,109,0.08), transparent 70%);
+    }
+    .hero-badge {
+      display: inline-block;
+      font-size: 12px; font-weight: 700;
+      color: #04AA6D;
+      background: rgba(4,170,109,0.1);
+      border: 1px solid rgba(4,170,109,0.25);
+      padding: 6px 16px; border-radius: 20px;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: clamp(36px, 7vw, 68px);
+      font-weight: 900; line-height: 1.05;
+      margin-bottom: 20px;
+    }
+    .hero h1 span { color: #04AA6D; }
+    .hero p { font-size: 17px; color: rgba(255,255,255,0.55); line-height: 1.7; max-width: 500px; margin-bottom: 36px; }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+    .btn-primary {
+      padding: 13px 30px;
+      background: #04AA6D; color: #fff;
+      border-radius: 10px; text-decoration: none;
+      font-weight: 800; font-size: 15px;
+      transition: transform .2s, box-shadow .2s;
+      box-shadow: 0 6px 24px rgba(4,170,109,0.3);
+    }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(4,170,109,0.4); }
+    .btn-outline {
+      padding: 13px 30px;
+      border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.7);
+      border-radius: 10px; text-decoration: none;
+      font-weight: 700; font-size: 15px;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-outline:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
+
+    /* SKILLS */
+    .section { padding: 80px 24px; max-width: 980px; margin: 0 auto; }
+    .section-label { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: #04AA6D; margin-bottom: 8px; }
+    .section-title { font-size: clamp(24px, 4vw, 36px); font-weight: 900; margin-bottom: 40px; }
+
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+    .skill-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 20px;
+    }
+    .skill-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .skill-name { font-size: 14px; font-weight: 700; }
+    .skill-pct  { font-size: 13px; font-weight: 700; color: #04AA6D; }
+    .skill-bar  { height: 5px; background: rgba(255,255,255,0.08); border-radius: 10px; overflow: hidden; }
+    .skill-fill { height: 100%; background: linear-gradient(90deg, #04AA6D, #34d399); border-radius: 10px; }
+
+    /* PROJECTS */
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+    .proj-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px; overflow: hidden;
+      transition: transform .3s, box-shadow .3s;
+    }
+    .proj-card:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(0,0,0,0.4); }
+    .proj-thumb {
+      height: 130px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 48px;
+    }
+    .proj-body { padding: 18px; }
+    .proj-title { font-size: 15px; font-weight: 800; margin-bottom: 6px; }
+    .proj-desc  { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.55; margin-bottom: 12px; }
+    .proj-tags  { display: flex; flex-wrap: wrap; gap: 6px; }
+    .proj-tag   { font-size: 11px; font-weight: 700; color: #04AA6D; background: rgba(4,170,109,0.12); padding: 3px 10px; border-radius: 20px; }
+
+    /* FOOTER */
+    footer { text-align: center; padding: 32px; font-size: 13px; color: rgba(255,255,255,0.25); border-top: 1px solid rgba(255,255,255,0.05); }
+    footer span { color: #04AA6D; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-logo"><span>Alex</span>.dev</div>
+    <div class="nav-links">
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badge">👋 Available for hire</div>
+    <h1>Hi, I'm <span>Alex Rivera</span><br/>Frontend Developer</h1>
+    <p>I craft beautiful, performant web experiences with HTML, CSS, and JavaScript. Turning ideas into polished, responsive interfaces.</p>
+    <div class="hero-btns">
+      <a href="#projects" class="btn-primary">View My Work</a>
+      <a href="#contact"  class="btn-outline">Let's Talk</a>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section class="section" id="skills">
+    <div class="section-label">What I know</div>
+    <div class="section-title">Skills & Technologies</div>
+    <div class="skills-grid">
+      <div class="skill-card"><div class="skill-top"><span class="skill-name">HTML5</span><span class="skill-pct">95%</span></div><div class="skill-bar"><div class="skill-fill" style="width:95%"></div></div></div>
+      <div class="skill-card"><div class="skill-top"><span class="skill-name">CSS3</span><span class="skill-pct">90%</span></div><div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div></div>
+      <div class="skill-card"><div class="skill-top"><span class="skill-name">JavaScript</span><span class="skill-pct">85%</span></div><div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div></div>
+      <div class="skill-card"><div class="skill-top"><span class="skill-name">React</span><span class="skill-pct">78%</span></div><div class="skill-bar"><div class="skill-fill" style="width:78%"></div></div></div>
+      <div class="skill-card"><div class="skill-top"><span class="skill-name">Git</span><span class="skill-pct">82%</span></div><div class="skill-bar"><div class="skill-fill" style="width:82%"></div></div></div>
+      <div class="skill-card"><div class="skill-top"><span class="skill-name">UI Design</span><span class="skill-pct">70%</span></div><div class="skill-bar"><div class="skill-fill" style="width:70%"></div></div></div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section class="section" id="projects" style="padding-top:0">
+    <div class="section-label">What I've built</div>
+    <div class="section-title">Featured Projects</div>
+    <div class="projects-grid">
+      <div class="proj-card">
+        <div class="proj-thumb" style="background:linear-gradient(135deg,#667eea,#764ba2)">🎮</div>
+        <div class="proj-body"><div class="proj-title">Memory Card Game</div><div class="proj-desc">Valentine's themed card-flipping game with 3D animations and match detection.</div><div class="proj-tags"><span class="proj-tag">HTML</span><span class="proj-tag">CSS</span><span class="proj-tag">JS</span></div></div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-thumb" style="background:linear-gradient(135deg,#f093fb,#f5576c)">✨</div>
+        <div class="proj-body"><div class="proj-title">Glassmorphism UI</div><div class="proj-desc">Frosted glass card components using CSS backdrop-filter and RGBA transparency.</div><div class="proj-tags"><span class="proj-tag">HTML</span><span class="proj-tag">CSS</span></div></div>
+      </div>
+      <div class="proj-card">
+        <div class="proj-thumb" style="background:linear-gradient(135deg,#4facfe,#00f2fe)">📝</div>
+        <div class="proj-body"><div class="proj-title">JS Quiz App</div><div class="proj-desc">Interactive multiple-choice quiz with timer, progress bar and score tracking.</div><div class="proj-tags"><span class="proj-tag">HTML</span><span class="proj-tag">CSS</span><span class="proj-tag">JS</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <footer id="contact">Built with <span>❤️</span> using HTML, CSS & JavaScript — Portfolio Demo by CodesCompiler</footer>
+</body>
+</html>

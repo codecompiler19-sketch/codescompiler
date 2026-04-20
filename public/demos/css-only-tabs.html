@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pure CSS Tabs</title>
+  <style>
+    body { background: #f3f4f6; padding: 50px; font-family: sans-serif; display: flex; justify-content: center;}
+    .tabs-wrapper { width: 100%; max-width: 600px; background: white; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); padding: 30px;}
+    
+    input[type="radio"] { display: none; }
+    
+    .nav { display: flex; gap: 10px; border-bottom: 2px solid #e5e7eb; margin-bottom: 20px; }
+    label { padding: 10px 20px; cursor: pointer; font-weight: bold; color: #6b7280; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: 0.3s;}
+    label:hover { color: #1f2937; }
+    
+    .content { display: none; padding: 10px; color: #4b5563; line-height: 1.6;}
+    
+    /* The CSS Magic */
+    #tab1:checked ~ .nav label[for="tab1"],
+    #tab2:checked ~ .nav label[for="tab2"],
+    #tab3:checked ~ .nav label[for="tab3"] {
+      color: #3b82f6; border-bottom-color: #3b82f6;
+    }
+    
+    #tab1:checked ~ #content1,
+    #tab2:checked ~ #content2,
+    #tab3:checked ~ #content3 {
+      display: block;
+      animation: fadeIn 0.4s;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+  <div class="tabs-wrapper">
+    <input type="radio" name="tabs" id="tab1" checked>
+    <input type="radio" name="tabs" id="tab2">
+    <input type="radio" name="tabs" id="tab3">
+    
+    <div class="nav">
+      <label for="tab1">Overview</label>
+      <label for="tab2">Features</label>
+      <label for="tab3">Reviews</label>
+    </div>
+    
+    <div class="content" id="content1">Welcome to the Overview panel. Notice how there is absolutely zero javascript running on this page.</div>
+    <div class="content" id="content2">The Features panel uses adjacent siblings and radio checked pseudo classes to dictate visibility.</div>
+    <div class="content" id="content3">⭐⭐⭐⭐⭐ "The best CSS trick I have ever seen!" - Happy Coder</div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Breathing Heart Loader</title>
+  <style>
+    body { background: #fdf2f8; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; gap: 40px;}
+    
+    .loading-text { color: #db2777; font-size: 1.2rem; font-weight: bold; letter-spacing: 2px;}
+    
+    .heart {
+      background-color: #f43f5e;
+      height: 60px;
+      width: 60px;
+      position: relative;
+      transform: rotate(-45deg);
+      /* 4 Seconds = Roughly standard human resting breath cycle */
+      animation: breathe 4s ease-in-out infinite;
+      box-shadow: 0 0 20px rgba(244, 63, 94, 0.4);
+    }
+    
+    .heart::before, .heart::after {
+      content: "";
+      background-color: inherit;
+      border-radius: 50%;
+      height: 60px;
+      width: 60px;
+      position: absolute;
+    }
+    .heart::before { top: -30px; left: 0; }
+    .heart::after { left: 30px; top: 0; }
+    
+    @keyframes breathe {
+      0%   { transform: rotate(-45deg) scale(0.8); }
+      50%  { transform: rotate(-45deg) scale(1.1); } /* Inhale expanded */
+      100% { transform: rotate(-45deg) scale(0.8); }
+    }
+  </style>
+</head>
+<body>
+  <div class="heart"></div>
+  <div class="loading-text">RELAX & BREATHE...</div>
+</body>
+</html>

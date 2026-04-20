@@ -1,0 +1,42 @@
+---
+title: "2.5D Parallax Parallelogram Stacker"
+description: "Construct an impossibly deep 3D image slice using identical layered offsets mapped linearly through the Z-axis."
+date: "2026-04-18"
+category: "Website Designs"
+tags: ["css", "3d", "parallax", "effect"]
+image: "/images/posts/css-parallax-image-stack.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+If you slice an image along the `skew()` axis, drop its opacity, and place subsequent copies visually stacked tightly behind one another, you get a phenomenally premium "glitch glass" depth. 
+
+## Stacking with Absolute Identical
+
+```css
+.stack-wrap {
+  position: relative;
+  /* Skew radically cuts the rectangles into fast-moving speed lines */
+  transform: skew(-20deg);
+}
+
+.layer {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: url('art.jpg') center/cover;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+/* Layering logic! */
+.layer-bottom { opacity: 0.2; transform: translate(30px, 30px); }
+.layer-middle { opacity: 0.5; transform: translate(15px, 15px); }
+.layer-top    { opacity: 1; transform: translate(0, 0); }
+
+/* The spread occurs upon interaction */
+.stack-wrap:hover .layer-bottom { transform: translate(60px, 60px); }
+.stack-wrap:hover .layer-middle { transform: translate(30px, 30px); }
+```
+
+When you hover the neon city inside the Live Demo, watch how the physical ghosting echoes drift outwards across the page!
