@@ -80,7 +80,7 @@ files.forEach(file => {
     const slug = file.replace('.mdx', '');
     const demoPath = path.join(demosDir, slug + '.html');
     
-    const demoHtmlContent = '<!DOCTYPE html>\\n<html lang="en">\\n<head>\\n  <meta charset="UTF-8">\\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\\n  <title>' + seoTitle + ' - Live Demo</title>\\n  <style>\\n' + tpl.css + '\\n  </style>\\n</head>\\n<body>\\n' + replacedHtml + '\\n  <script>\\n' + tpl.js + '\\n  </script>\\n</body>\\n</html>';
+    const demoHtmlContent = '<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n  <title>' + seoTitle + ' - Live Demo</title>\n  <link rel="canonical" href="https://codescompiler.com/blog/' + slug + '/" />\n  <script>\n    if (window.self === window.top) {\n      window.location.replace(\'/blog-demo/\' + window.location.pathname.split(\'/\').pop().replace(\'.html\', \'\') + \'/\');\n    }\n  </script>\n  <style>\n' + tpl.css + '\n  </style>\n</head>\n<body>\n' + replacedHtml + '\n  <script>\n' + tpl.js + '\n  </script>\n</body>\n</html>';
 
     fs.writeFileSync(demoPath, demoHtmlContent);
     console.log('Fixed broken demo: ' + slug);

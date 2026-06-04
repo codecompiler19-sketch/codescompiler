@@ -32,6 +32,12 @@ files.forEach(file => {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${title} Demo</title>
+  <link rel="canonical" href="https://codescompiler.com/blog/${slug}/" />
+  <script>
+    if (window.self === window.top) {
+      window.location.replace('/blog-demo/' + window.location.pathname.split('/').pop().replace('.html', '') + '/');
+    }
+  </script>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
