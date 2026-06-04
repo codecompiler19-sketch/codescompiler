@@ -1,0 +1,55 @@
+---
+title: "SQL – SQL Injection"
+description: "Understand SQL injection attacks — what they are, how they work, and how to prevent them completely."
+category: "sql"
+order: 66
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+SQL injection is the most common and damaging database attack. It occurs when user input is concatenated directly into a SQL query without sanitization, allowing an attacker to inject malicious SQL code. A single login form vulnerable to injection can expose an entire database containing millions of records.
+
+The classic example: a login query built as `"SELECT * FROM users WHERE username = '" + input + "'"` can be defeated by entering `' OR '1'='1` as the username — the injected `OR '1'='1` always evaluates to true, bypassing authentication entirely.
+
+**The fix: Parameterized Queries**
+```python
+# VULNERABLE (never do this)
+query = f"SELECT * FROM users WHERE username = '{user_input}'"
+
+# SAFE (parameterized)
+query = "SELECT * FROM users WHERE username = ?"
+cursor.execute(query, (user_input,))
+```
+The `?` placeholder is filled by the driver with proper escaping.
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={`CREATE TABLE user_accounts (id INTEGER PRIMARY KEY, username TEXT NOT NULL UNIQUE, role TEXT DEFAULT 'user');
+INSERT INTO user_accounts VALUES (1,'admin','superadmin'),(2,'aria_chen','user'),(3,'ben_torres','user');`}
+  querySql={`-- Safe demonstration: show what injectable queries look like
+-- and why parameterization is the only real fix.
+
+-- This query is SAFE because we control the literal:
+SELECT * FROM user_accounts WHERE username = 'admin';
+
+-- In real apps, NEVER build queries like this:
+-- "SELECT * FROM users WHERE username = '" + userInput + "'"
+-- Instead always use parameterized queries in your language driver.
+
+-- For education: count users to show what's at risk
+SELECT COUNT(*) AS total_accounts_at_risk FROM user_accounts;`}
+/>
+
+## Key Points
+
+- SQL injection exploits unparameterized dynamic queries
+- ALWAYS use parameterized queries / prepared statements
+- Never concatenate user input directly into SQL strings
+- Input sanitization alone is insufficient — parameterization is the only safe defense
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

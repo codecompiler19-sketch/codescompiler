@@ -1,0 +1,56 @@
+---
+title: "SQL – CHECK Constraint"
+description: "Enforce custom business rules at the database level using CHECK constraints on column values."
+category: "sql"
+order: 60
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+The `CHECK` constraint lets you define custom validation rules directly in the database schema. Any INSERT or UPDATE that would set a column to a value violating the condition is rejected with an error. This is business logic baked into your data layer.
+
+CHECK constraints can reference other columns in the same row, making them capable of cross-column validation — like ensuring an end date is always after a start date.
+
+**CHECK examples**
+```sql
+score REAL CHECK (score BETWEEN 0 AND 100)
+age   INTEGER CHECK (age >= 18)
+price REAL CHECK (price > 0)
+gender TEXT CHECK (gender IN ('M','F','NB','X'))
+-- Cross-column:
+CHECK (end_date > start_date)
+```
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={``}
+  querySql={`CREATE TABLE events (
+  id         INTEGER PRIMARY KEY,
+  title      TEXT    NOT NULL,
+  start_date TEXT    NOT NULL,
+  end_date   TEXT    NOT NULL,
+  capacity   INTEGER CHECK (capacity BETWEEN 10 AND 50000),
+  ticket_price REAL  CHECK (ticket_price >= 0),
+  CHECK (end_date >= start_date)
+);
+
+INSERT INTO events VALUES
+  (1,'SQL Summit','2024-09-01','2024-09-03',500,999.00),
+  (2,'Hackathon','2024-10-15','2024-10-17',200,0.00);
+
+SELECT * FROM events;`}
+/>
+
+## Key Points
+
+- CHECK validates data at insert and update time
+- Can reference multiple columns in the same row
+- Failed CHECK raises an error automatically
+- More reliable than application-level validation alone
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

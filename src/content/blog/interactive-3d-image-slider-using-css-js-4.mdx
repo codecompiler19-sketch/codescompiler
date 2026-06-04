@@ -1,0 +1,117 @@
+---
+title: "Interactive 3D Coverflow Slider"
+seoTitle: "Interactive 3D Image Slider using CSS & JS"
+description: "Learn interactive 3d image slider using with this comprehensive guide containing source code and step-by-step instructions."
+date: "2026-06-04"
+category: "Image Slider"
+tags: ["slider","carousel","javascript"]
+image: "/images/posts/default-coding.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Welcome to this tutorial on **Interactive 3D Image Slider using CSS & JS**. 
+
+## HTML Structure
+
+```html
+<div class="coverflow-container">
+  <div class="coverflow-slider">
+    <div class="coverflow-item">
+      <img src="https://images.unsplash.com/photo-1506744626753-143d3f0a1c6a?auto=format&fit=crop&w=400&q=80" alt="Img">
+    </div>
+    <div class="coverflow-item">
+      <img src="https://images.unsplash.com/photo-1511576661531-b34d7da5d0f4?auto=format&fit=crop&w=400&q=80" alt="Img">
+    </div>
+    <div class="coverflow-item active">
+      <img src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=400&q=80" alt="Img">
+    </div>
+    <div class="coverflow-item">
+      <img src="https://images.unsplash.com/photo-1533446002934-2e9b110bc595?auto=format&fit=crop&w=400&q=80" alt="Img">
+    </div>
+    <div class="coverflow-item">
+      <img src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=400&q=80" alt="Img">
+    </div>
+  </div>
+</div>
+```
+
+## CSS Styling
+
+```css
+.coverflow-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #1a1a2e;
+  perspective: 1000px;
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+}
+.coverflow-slider {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  height: 400px;
+  transform-style: preserve-3d;
+}
+.coverflow-item {
+  position: absolute;
+  width: 300px;
+  height: 400px;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+  cursor: pointer;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+.coverflow-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+```
+
+## JavaScript Logic
+
+```javascript
+document.addEventListener('DOMContentLoaded', () => {
+    const items = document.querySelectorAll('.coverflow-item');
+    if(!items.length) return;
+    
+    let currentIndex = 2; // middle item
+
+    function updateCoverflow() {
+        items.forEach((item, index) => {
+            item.classList.remove('active');
+            let offset = index - currentIndex;
+            
+            let zIndex = items.length - Math.abs(offset);
+            let translateX = offset * 120;
+            let translateZ = Math.abs(offset) * -100;
+            let rotateY = offset === 0 ? 0 : (offset > 0 ? -45 : 45);
+            let opacity = Math.abs(offset) > 2 ? 0 : 1;
+
+            item.style.transform = `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg)`;
+            item.style.zIndex = zIndex;
+            item.style.opacity = opacity;
+            
+            if(offset === 0) item.classList.add('active');
+        });
+    }
+
+    items.forEach((item, index) => {
+        item.addEventListener('click', () => {
+            currentIndex = index;
+            updateCoverflow();
+        });
+    });
+
+    updateCoverflow();
+});
+```

@@ -1,0 +1,164 @@
+---
+title: "PHP – Strings"
+description: "Master PHP strings from creation and concatenation to 20+ powerful built-in string functions that supercharge your text processing skills."
+category: "php"
+order: 19
+---
+
+import Editor from '../../components/Editor.astro';
+
+# PHP Strings
+
+A **string** in PHP is a sequence of characters enclosed in quotes. Strings are one of the most-used data types in PHP — used for everything from displaying HTML to querying databases.
+
+## Creating Strings
+
+PHP supports four ways to create strings:
+
+### 1. Single Quotes (Literal)
+```php
+<?php
+  $name = 'John Doe';
+  echo 'Hello, $name!'; // Output: Hello, $name! (no interpolation)
+?>
+```
+
+### 2. Double Quotes (With Interpolation)
+```php
+<?php
+  $name = "Alice";
+  echo "Hello, $name!"; // Output: Hello, Alice!
+?>
+```
+
+### 3. Heredoc
+```php
+<?php
+  $text = <<<EOT
+  This is a multi-line
+  string using heredoc.
+  EOT;
+  echo $text;
+?>
+```
+
+### 4. Nowdoc (like single-quoted heredoc)
+```php
+<?php
+  $text = <<<'EOT'
+  No $variable interpolation here.
+  EOT;
+?>
+```
+
+## String Concatenation
+
+Use the dot `.` operator to join strings:
+
+```php
+<?php
+  $first = "Codes";
+  $last  = "Compiler";
+  $full  = $first . $last;
+  echo $full; // CodesCompiler
+
+  $full .= " 2025"; // Append
+  echo $full; // CodesCompiler 2025
+?>
+```
+
+## Essential String Functions
+
+| Function | Purpose |
+|---|---|
+| `strlen($s)` | Length of string |
+| `strtoupper($s)` | Convert to UPPERCASE |
+| `strtolower($s)` | Convert to lowercase |
+| `str_replace($f, $r, $s)` | Replace substring |
+| `strpos($s, $n)` | Find position of substring |
+| `substr($s, $start, $len)` | Extract part of string |
+| `trim($s)` | Remove whitespace from ends |
+| `str_word_count($s)` | Count words |
+| `strrev($s)` | Reverse string |
+| `str_repeat($s, $n)` | Repeat string n times |
+| `ucfirst($s)` | Capitalize first letter |
+| `ucwords($s)` | Capitalize each word |
+| `explode($d, $s)` | Split string into array |
+| `implode($d, $a)` | Join array into string |
+| `sprintf($f, ...)` | Format string |
+
+## Live String Lab
+
+<Editor
+  initialPhp={`<?php
+$sentence = "  the quick brown fox jumps over the lazy dog  ";
+
+echo "<h3>🔬 String Function Lab</h3>";
+echo "<table style='border-collapse:collapse; font-family:monospace;'>";
+
+$tests = [
+    "Original"       => $sentence,
+    "trim()"         => trim($sentence),
+    "strtoupper()"   => strtoupper($sentence),
+    "ucwords()"      => ucwords(trim($sentence)),
+    "strlen()"       => strlen($sentence),
+    "str_word_count" => str_word_count(trim($sentence)),
+    "strrev()"       => strrev(trim($sentence)),
+    "str_replace()"  => str_replace("fox", "🦊", trim($sentence)),
+];
+
+foreach ($tests as $fn => $result) {
+    echo "<tr>
+        <td style='padding:6px 12px; color:#7c3aed; font-weight:bold;'>$fn</td>
+        <td style='padding:6px 12px; border-left:2px solid #e5e7eb;'>$result</td>
+    </tr>";
+}
+echo "</table>";
+
+// String search
+$pos = strpos($sentence, "fox");
+echo "<p>Position of 'fox': <b>$pos</b></p>";
+
+// Substring
+$sub = substr(trim($sentence), 4, 5);
+echo "<p>substr(4, 5): <b>$sub</b></p>";
+?>`}
+  activeTab="php"
+/>
+
+## Escape Sequences in Double-Quoted Strings
+
+| Escape | Meaning |
+|---|---|
+| `\n` | Newline |
+| `\t` | Tab |
+| `\\` | Backslash |
+| `\"` | Double quote |
+| `\$` | Dollar sign (literal) |
+
+```php
+<?php
+  echo "Line 1\nLine 2\n";
+  echo "Price: \$49.99\n";
+  echo "Path: C:\\Users\\Admin";
+?>
+```
+
+## String Formatting with sprintf()
+
+```php
+<?php
+  $name  = "CodesCompiler";
+  $price = 49.5;
+  $qty   = 3;
+
+  $msg = sprintf(
+    "Order for %s: %d items at $%.2f each = $%.2f total",
+    $name, $qty, $price, $qty * $price
+  );
+  echo $msg;
+  // Order for CodesCompiler: 3 items at $49.50 each = $148.50 total
+?>
+```
+
+PHP strings are incredibly versatile — with 100+ built-in functions, they can handle everything from basic output to complex text parsing!

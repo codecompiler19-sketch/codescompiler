@@ -1,0 +1,99 @@
+---
+title: "SQL – Database Hosting"
+description: "Understand the options for hosting SQL databases — local, cloud, managed, and serverless."
+category: "sql"
+order: 69
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+Choosing where to host your database is as important as choosing the database itself. Options range from running SQLite locally in a single file (perfect for learning and small apps) to managed cloud databases that handle backups, scaling, and failover automatically.
+
+For production applications, **managed database services** like AWS RDS, Supabase, PlanetScale, or Neon are popular — they handle the infrastructure so your team can focus on building features rather than administering servers.
+
+**Hosting tiers**
+| Tier | Examples | Best for |
+|---|---|---|
+| Local file | SQLite | Development, learning |
+| Self-hosted | PostgreSQL on VPS | Full control |
+| Managed Cloud | AWS RDS, Supabase | Most production apps |
+| Serverless | Neon, PlanetScale | Scale-to-zero apps |
+| In-memory | SQLite :memory: | Testing, this browser! |
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={`CREATE TABLE students (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  age INTEGER,
+  city TEXT,
+  score REAL,
+  grade TEXT
+);
+INSERT INTO students VALUES
+  (1,'Aria Chen',22,'Mumbai',94.5,'A'),
+  (2,'Ben Torres',19,'Delhi',78.2,'B'),
+  (3,'Cleo Park',24,'Bangalore',88.0,'A'),
+  (4,'Dev Patel',21,'Chennai',65.5,'C'),
+  (5,'Eva Müller',20,'Hyderabad',91.3,'A'),
+  (6,'Finn Walsh',23,'Pune',72.8,'B'),
+  (7,'Gina Lopez',22,'Kolkata',55.1,'D'),
+  (8,'Hiro Sato',25,'Mumbai',83.6,'B');
+
+CREATE TABLE courses (
+  id INTEGER PRIMARY KEY,
+  title TEXT,
+  instructor TEXT,
+  category TEXT,
+  price REAL,
+  rating REAL
+);
+INSERT INTO courses VALUES
+  (1,'Python Mastery','Dr. Ada Lovelace','Programming',2999,4.9),
+  (2,'SQL Foundations','Prof. Edgar Codd','Database',1999,4.8),
+  (3,'Web Design','Ms. Grace Hopper','Design',1499,4.7),
+  (4,'Data Science','Dr. Alan Turing','Analytics',3999,4.9),
+  (5,'Cybersecurity','Mr. Kevin Mitnick','Security',2499,4.6);
+
+CREATE TABLE enrollments (
+  student_id INTEGER,
+  course_id INTEGER,
+  enroll_date TEXT,
+  status TEXT,
+  final_score REAL
+);
+INSERT INTO enrollments VALUES
+  (1,1,'2024-01-15','completed',95),
+  (1,2,'2024-02-01','completed',88),
+  (2,3,'2024-01-20','active',NULL),
+  (3,1,'2024-03-05','completed',90),
+  (4,4,'2024-02-10','dropped',45),
+  (5,2,'2024-01-10','completed',96),
+  (6,5,'2024-03-15','active',NULL),
+  (7,3,'2024-02-20','completed',60),
+  (8,1,'2024-04-01','active',NULL);`}
+  querySql={`-- This entire tutorial runs on SQLite in your browser!
+-- Zero configuration, zero cost, works on GitHub Pages.
+-- Perfect for learning SQL concepts interactively.
+
+-- Summary of everything in our academy database:
+SELECT 'students'   AS table_name, COUNT(*) AS rows FROM students
+UNION ALL
+SELECT 'courses',    COUNT(*) FROM courses
+UNION ALL
+SELECT 'enrollments', COUNT(*) FROM enrollments;`}
+/>
+
+## Key Points
+
+- SQLite is ideal for development, learning, and small applications
+- Managed cloud databases handle backups, scaling, and patching automatically
+- Serverless databases scale to zero cost when idle
+- Always use dedicated hosting for production — not the same server as your web app
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

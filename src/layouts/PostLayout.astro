@@ -13,23 +13,44 @@ interface Props {
   author?: string;
   slug?: string;
   hasDemo?: boolean;
+  // SEO overrides from frontmatter
+  seoTitle?: string;
+  canonicalUrl?: string;
+  ogImage?: string;
+  noindex?: boolean;
+  headings?: { depth: number; slug: string; text: string }[];
+  imageAlt?: string;
 }
 
-const { title, description, image, date, category, tags = [], author = 'CodesCompiler', slug = '', hasDemo = false } = Astro.props;
+const {
+  title, description, image, date, category,
+  tags = [], author = 'CodesCompiler', slug = '', hasDemo = false,
+  seoTitle, canonicalUrl, ogImage, noindex = false,
+  headings = [], imageAlt = title,
+} = Astro.props;
 
-// Fetch all posts for sidebar panels
-const allPosts = await getCollection('blog');
+// Fetch all posts for sidebar panels — only published
+const allPostsRaw = await getCollection('blog');
+const allPosts = allPostsRaw.filter(
+  p => !p.data.status || p.data.status === 'published'
+);
 const sortedPosts = allPosts.sort(
   (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
 );
 const recentPosts = sortedPosts.slice(0, 6);
 
-// Category counts
 const categoryCounts = allPosts.reduce((acc, post) => {
   const cat = post.data.category;
-  acc[cat] = (acc[cat] || 0) + 1;
+  if(cat) {
+    acc[cat] = (acc[cat] || 0) + 1;
+  }
   return acc;
 }, {} as Record<string, number>);
+
+// Related Posts (same category, not this post)
+const relatedPosts = allPosts
+  .filter(p => p.data.category === category && p.slug !== slug)
+  .slice(0, 4);
 
 // Format date
 const formattedDate = date
@@ -62,9 +83,62 @@ const catMeta = category ? (CATEGORY_MAP[category] ?? { color: '#6b7280', bg: '#
 
 // All unique tags across posts
 const allTags = [...new Set(allPosts.flatMap(p => p.data.tags ?? []))].sort();
+
+// Table of Contents (H2 and H3 only)
+const toc = headings.filter(h => h.depth === 2 || h.depth === 3);
+
+// ── SCHEMA.ORG JSON-LD ─────────────────────────────────────
+const siteUrl = Astro.site ? Astro.site.toString().replace(/\/$/, '') : 'https://app.codescompiler.com';
+const fullUrl = `${siteUrl}/blog/${slug}`;
+
+const blogPostingSchema = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": title,
+  "description": description,
+  "image": image ? (image.startsWith('http') ? image : `${siteUrl}${image}`) : undefined,
+  "author": {
+    "@type": "Person",
+    "name": author
+  },
+  "datePublished": date ? new Date(date).toISOString() : undefined,
+  "publisher": {
+    "@type": "Organization",
+    "name": "CodesCompiler",
+    "logo": {
+      "@type": "ImageObject",
+      "url": `${siteUrl}/favicon.svg`
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": fullUrl
+  }
+};
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": siteUrl },
+    { "@type": "ListItem", "position": 2, "name": "Blog", "item": `${siteUrl}/blog` },
+    { "@type": "ListItem", "position": 3, "name": title, "item": fullUrl }
+  ]
+};
+
+const schemaData = [blogPostingSchema, breadcrumbSchema];
 ---
 
-<BaseLayout title={title} description={description} image={image}>
+<BaseLayout
+  title={title}
+  description={description}
+  image={image}
+  seoTitle={seoTitle}
+  ogImage={ogImage}
+  noindex={noindex}
+  canonicalURL={canonicalUrl ? new URL(canonicalUrl) : undefined}
+  schemaData={schemaData}
+>
   <!-- ======================================================== -->
   <!-- FULL-WIDTH BREADCRUMB BAR                                 -->
   <!-- ======================================================== -->
@@ -194,7 +268,7 @@ const allTags = [...new Set(allPosts.flatMap(p => p.data.tags ?? []))].sort();
         <div class="post-featured-img-wrap">
           <img
             src={image}
-            alt={title}
+            alt={imageAlt}
             class="post-featured-img"
             width="900"
             height="475"
@@ -222,7 +296,7 @@ const allTags = [...new Set(allPosts.flatMap(p => p.data.tags ?? []))].sort();
             </a>
             <a
               href={`/demos/${slug}.html`}
-              download={`${slug}.html`}
+              download={`${title}.html`}
               class="demo-btn demo-btn-outline"
               id="btn-download"
             >
@@ -244,7 +318,7 @@ const allTags = [...new Set(allPosts.flatMap(p => p.data.tags ?? []))].sort();
             {category}
           </a>
         )}
-        <h1 class="post-title">{title}</h1>
+        <h1 class="post-title">{seoTitle || title}</h1>
         <p class="post-description">{description}</p>
 
         <!-- Meta row -->
@@ -266,10 +340,45 @@ const allTags = [...new Set(allPosts.flatMap(p => p.data.tags ?? []))].sort();
 
       <hr class="post-divider" />
 
+      {toc.length > 0 && (
+        <div class="post-toc">
+          <h4 class="toc-title">
+            <svg width="18" height="18" fill="none" stroke="#04AA6D" stroke-width="2.5" viewBox="0 0 24 24" style="margin-top:-2px;">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7"/>
+            </svg>
+            Table of Contents
+          </h4>
+          <ul class="toc-list">
+            {toc.map(heading => (
+              <li class={`toc-depth-${heading.depth}`}>
+                <a href={`#${heading.slug}`}>{heading.text}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       <!-- MDX – Post Content -->
       <div class="post-content">
         <slot />
       </div>
+
+      <!-- Related Posts Section -->
+      {relatedPosts.length > 0 && (
+        <div class="related-posts-section">
+          <h3 class="related-title">📖 You Might Also Like</h3>
+          <div class="related-grid">
+            {relatedPosts.map(rp => (
+              <a href={`/blog/${rp.data.permalink || rp.slug}`} class="related-card">
+                {rp.data.image && (
+                  <img src={rp.data.image} alt={rp.data.title} loading="lazy" />
+                )}
+                <h4>{rp.data.title}</h4>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
 
       <hr class="post-divider" />
 
@@ -762,6 +871,84 @@ const allTags = [...new Set(allPosts.flatMap(p => p.data.tags ?? []))].sort();
   .mobile-sidebar-btn:hover { background: #f9fafb; border-color: #04AA6D; color: #04AA6D; }
   @media (max-width: 768px) {
     .mobile-sidebar-btn { display: flex; }
+  }
+
+  /* ── TABLE OF CONTENTS ─────────────────────────────────────────── */
+  .post-toc {
+    background: #1b1b2f;
+    border-radius: 12px;
+    border-left: 4px solid #04AA6D;
+    padding: 24px 28px;
+    margin: 0 32px 32px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+  .toc-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .toc-list { list-style: none; padding: 0; margin: 0; }
+  .toc-list li { margin-bottom: 10px; }
+  .toc-list a { color: #d1d5db; text-decoration: none; font-size: 14.5px; font-weight: 500; transition: color .15s; }
+  .toc-list a:hover { color: #04AA6D; }
+  .toc-depth-3 { padding-left: 20px; font-size: 13.5px; }
+  .toc-depth-3 a { color: #9ca3af; font-weight: 400; }
+
+  /* ── RELATED POSTS ─────────────────────────────────────────────── */
+  .related-posts-section {
+    padding: 0 32px 10px;
+    margin-top: 32px;
+  }
+  .related-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #f3f4f6;
+    padding-bottom: 10px;
+  }
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+  }
+  .related-card {
+    display: block;
+    text-decoration: none;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .related-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+    border-color: #d1d5db;
+  }
+  .related-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .related-card h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1f2937;
+    padding: 12px 14px;
+    line-height: 1.4;
+  }
+  .related-card:hover h4 { color: #04AA6D; }
+
+  @media (max-width: 600px) {
+    .post-toc { margin: 0 18px 24px; padding: 16px; }
+    .related-posts-section { padding: 0 18px 10px; }
   }
 
   /* Mobile sidebar — becomes full-screen overlay slide-in */

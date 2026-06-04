@@ -1,0 +1,401 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Kids & Computers"
+  description="A fun, easy place for kids to discover how computers work, what the internet is, and take first steps into coding!"
+>
+  <style>
+    :root {
+      --green: #04AA6D;
+      --green-dark: #028a57;
+      --green-light: #e6f9f2;
+      --yellow: #FFD43B;
+      --orange: #FF922B;
+      --blue: #339AF0;
+      --pink: #F06595;
+      --purple: #9775FA;
+      --red: #FF6B6B;
+      --bg: #f8fffe;
+      --text: #1a1a2e;
+      --text-muted: #555;
+      --card-bg: #ffffff;
+      --radius: 20px;
+    }
+
+    body { font-family: 'Source Sans 3', sans-serif; }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, #e6f9f2 0%, #fff9e6 50%, #e8f0ff 100%);
+      padding: 72px 40px 56px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at 20% 50%, rgba(4,170,109,0.08) 0%, transparent 60%),
+                  radial-gradient(circle at 80% 20%, rgba(255,212,59,0.12) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .hero-emoji { font-size: 4rem; display: block; margin-bottom: 14px; animation: bounce 2s infinite; }
+    @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+    .hero-badge {
+      display: inline-block; background: var(--yellow); color: #7a5800;
+      font-weight: 800; font-size: 0.78rem; padding: 4px 16px;
+      border-radius: 30px; margin-bottom: 18px;
+      letter-spacing: 1px; text-transform: uppercase;
+    }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); color: var(--text); line-height: 1.15; margin-bottom: 14px; font-weight: 800; }
+    .hero h1 span { color: var(--green); }
+    .hero p { font-size: 1.1rem; color: var(--text-muted); max-width: 560px; margin: 0 auto 28px; line-height: 1.7; font-weight: 600; }
+    .hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--green); color: #fff; padding: 13px 30px; border-radius: 50px;
+      font-weight: 800; font-size: 0.95rem; text-decoration: none;
+      transition: transform 0.2s, background 0.2s; box-shadow: 0 4px 20px rgba(4,170,109,0.3);
+    }
+    .btn-primary:hover { background: var(--green-dark); transform: translateY(-2px); }
+    .btn-secondary {
+      background: #fff; color: var(--green); padding: 13px 30px; border-radius: 50px;
+      font-weight: 800; font-size: 0.95rem; text-decoration: none;
+      border: 2px solid var(--green); transition: transform 0.2s;
+    }
+    .btn-secondary:hover { transform: translateY(-2px); }
+
+    /* FLOATING ICONS */
+    .floats { display: flex; justify-content: center; gap: 16px; margin-top: 44px; flex-wrap: wrap; }
+    .float-item {
+      background: #fff; border-radius: 16px; padding: 14px 20px;
+      font-size: 0.88rem; font-weight: 800; box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      display: flex; align-items: center; gap: 9px;
+      animation: floatUp 3s ease-in-out infinite;
+    }
+    .float-item:nth-child(2) { animation-delay: 0.5s; }
+    .float-item:nth-child(3) { animation-delay: 1s; }
+    .float-item:nth-child(4) { animation-delay: 1.5s; }
+    @keyframes floatUp { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    .float-item .fi { font-size: 1.4rem; }
+
+    /* SECTION */
+    .kids-section { padding: 72px 40px; max-width: 1200px; margin: 0 auto; }
+    .section-label {
+      display: inline-block; background: var(--green-light); color: var(--green-dark);
+      font-weight: 800; font-size: 0.78rem; padding: 4px 14px; border-radius: 30px;
+      margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px;
+    }
+    .kids-section h2 { font-size: clamp(1.7rem, 3vw, 2.4rem); margin-bottom: 10px; font-weight: 800; color: var(--text); }
+    .section-sub { color: var(--text-muted); font-size: 1rem; margin-bottom: 44px; max-width: 540px; font-weight: 600; line-height: 1.6; }
+
+    /* TOPIC CARDS */
+    .topics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 22px; }
+    .topic-card {
+      background: var(--card-bg); border-radius: var(--radius); padding: 30px 26px;
+      border: 2px solid #eee; text-decoration: none; color: inherit; display: block;
+      transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+      cursor: pointer; position: relative; overflow: hidden;
+    }
+    .topic-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px;
+      background: var(--card-accent); border-radius: 20px 20px 0 0;
+    }
+    .topic-card:hover { transform: translateY(-6px); box-shadow: 0 12px 40px rgba(0,0,0,0.1); border-color: var(--card-accent); }
+    .topic-icon { font-size: 2.6rem; margin-bottom: 14px; display: block; }
+    .topic-card h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 9px; color: var(--text); }
+    .topic-card p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.65; font-weight: 600; }
+    .topic-tag {
+      display: inline-block; margin-top: 14px; font-size: 0.76rem; font-weight: 800;
+      padding: 3px 12px; border-radius: 20px;
+      background: var(--card-accent-light); color: var(--card-accent);
+    }
+
+    /* FUN FACTS */
+    .facts-section { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border-radius: 24px; padding: 56px 44px; color: #fff; }
+    .facts-section .section-label { background: rgba(4,170,109,0.2); color: #04AA6D; }
+    .facts-section h2 { color: #fff; }
+    .facts-section .section-sub { color: rgba(255,255,255,0.6); }
+    .facts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 18px; margin-top: 36px; }
+    .fact-card {
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 14px; padding: 22px; transition: background 0.2s, transform 0.2s;
+    }
+    .fact-card:hover { background: rgba(255,255,255,0.12); transform: scale(1.02); }
+    .fact-num { font-size: 2rem; font-weight: 800; color: var(--yellow); margin-bottom: 8px; }
+    .fact-card p { font-size: 0.9rem; color: rgba(255,255,255,0.8); line-height: 1.6; font-weight: 600; }
+
+    /* QUIZ */
+    .quiz-section { background: var(--green-light); border-radius: 24px; padding: 56px 44px; }
+    .quiz-section h2 { color: var(--green-dark); }
+    .quiz-box { background: #fff; border-radius: 18px; padding: 32px; max-width: 620px; box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+    .quiz-q { font-size: 1.05rem; font-weight: 800; margin-bottom: 18px; color: var(--text); }
+    .quiz-opts { display: flex; flex-direction: column; gap: 10px; }
+    .quiz-opt {
+      background: #f5f5f5; border: 2px solid #eee; border-radius: 10px;
+      padding: 12px 18px; font-weight: 700; font-size: 0.93rem; cursor: pointer;
+      transition: all 0.2s; text-align: left;
+    }
+    .quiz-opt:hover { border-color: var(--green); background: var(--green-light); color: var(--green-dark); }
+    .quiz-opt.correct { background: #d4edda; border-color: var(--green); color: #155724; }
+    .quiz-opt.wrong { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+    .quiz-feedback { margin-top: 14px; font-weight: 800; font-size: 0.95rem; padding: 10px 14px; border-radius: 8px; display: none; }
+    .quiz-feedback.show { display: block; }
+    .quiz-feedback.correct-fb { background: #d4edda; color: #155724; }
+    .quiz-feedback.wrong-fb { background: #f8d7da; color: #721c24; }
+    .quiz-next { margin-top: 18px; background: var(--green); color: #fff; border: none; padding: 11px 26px; border-radius: 30px; font-weight: 800; font-size: 0.93rem; cursor: pointer; transition: background 0.2s; display: none; }
+    .quiz-next.show { display: inline-block; }
+    .quiz-next:hover { background: var(--green-dark); }
+    .quiz-progress { font-size: 0.83rem; color: var(--text-muted); font-weight: 700; margin-bottom: 18px; }
+
+    /* GLOSSARY */
+    .glossary-preview { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 14px; margin-top: 28px; }
+    .glos-card { background: #fff; border-radius: 12px; padding: 18px; border: 2px solid #eee; transition: border-color 0.2s, transform 0.2s; }
+    .glos-card:hover { border-color: var(--green); transform: translateY(-3px); }
+    .glos-word { font-size: 1rem; font-weight: 800; color: var(--green); margin-bottom: 5px; }
+    .glos-def { font-size: 0.83rem; color: var(--text-muted); font-weight: 600; line-height: 1.5; }
+
+    /* CTA */
+    .cta-section { text-align: center; background: linear-gradient(135deg, var(--green) 0%, #028a57 100%); border-radius: 24px; padding: 60px 36px; color: #fff; }
+    .cta-section h2 { color: #fff; font-size: 2rem; margin-bottom: 10px; font-weight: 800; }
+    .cta-section p { color: rgba(255,255,255,0.85); font-size: 1.02rem; margin-bottom: 28px; font-weight: 600; }
+    .btn-white { background: #fff; color: var(--green); padding: 13px 32px; border-radius: 50px; font-weight: 800; text-decoration: none; font-size: 0.95rem; transition: transform 0.2s; display: inline-block; }
+    .btn-white:hover { transform: translateY(-3px); }
+
+    @media (max-width: 640px) {
+      .hero { padding: 52px 20px 36px; }
+      .kids-section { padding: 44px 20px; }
+      .facts-section, .quiz-section, .cta-section { padding: 36px 20px; }
+    }
+  </style>
+
+  <!-- HERO -->
+  <div class="hero">
+    <span class="hero-emoji">🧒💻</span>
+    <span class="hero-badge">✨ For Kids & Beginners</span>
+    <h1>Learn About <span>Computers</span><br>& Technology!</h1>
+    <p>A fun, easy place to discover how computers work, what the internet is, and take your first steps into coding — no experience needed!</p>
+    <div class="hero-btns">
+      <a href="#topics" class="btn-primary">🚀 Start Exploring</a>
+      <a href="#quiz" class="btn-secondary">🧠 Take a Quiz</a>
+    </div>
+    <div class="floats">
+      <div class="float-item"><span class="fi">💻</span> What is a Computer?</div>
+      <div class="float-item"><span class="fi">🌐</span> How the Internet Works</div>
+      <div class="float-item"><span class="fi">🔐</span> Stay Safe Online</div>
+      <div class="float-item"><span class="fi">🎮</span> Fun with Coding</div>
+    </div>
+  </div>
+
+  <!-- TOPICS -->
+  <section class="kids-section" id="topics">
+    <span class="section-label">📚 Topics</span>
+    <h2>What Do You Want to Learn?</h2>
+    <p class="section-sub">Pick any topic below — each one is written in simple, fun language — perfect for kids ages 8 and up!</p>
+
+    <div class="topics-grid">
+      <a href="/kids/what-is-a-computer" class="topic-card" style="--card-accent:#04AA6D; --card-accent-light:#e6f9f2;">
+        <span class="topic-icon">💻</span>
+        <h3>What is a Computer?</h3>
+        <p>A computer is a machine that can store, process, and display information super fast. Learn about the parts that make it work!</p>
+        <span class="topic-tag">Beginner</span>
+      </a>
+
+      <a href="/kids/what-is-a-cpu" class="topic-card" style="--card-accent:#339AF0; --card-accent-light:#e7f5ff;">
+        <span class="topic-icon">🧠</span>
+        <h3>What is a CPU?</h3>
+        <p>The CPU (Central Processing Unit) is the "brain" of the computer. It does all the thinking and math — millions of times per second!</p>
+        <span class="topic-tag">Hardware</span>
+      </a>
+
+      <a href="/kids/memory-and-storage" class="topic-card" style="--card-accent:#FF922B; --card-accent-light:#fff4e6;">
+        <span class="topic-icon">💾</span>
+        <h3>Memory & Storage</h3>
+        <p>RAM is like your desk — it holds what you're working on right now. A hard drive is like your closet — it stores everything long-term.</p>
+        <span class="topic-tag">Hardware</span>
+      </a>
+
+      <a href="/kids/how-internet-works" class="topic-card" style="--card-accent:#9775FA; --card-accent-light:#f3f0ff;">
+        <span class="topic-icon">🌐</span>
+        <h3>How the Internet Works</h3>
+        <p>The internet is a giant network of computers connected around the whole world. When you visit a website, you're asking another computer to send you files!</p>
+        <span class="topic-tag">Internet</span>
+      </a>
+
+      <a href="/kids/what-is-a-website" class="topic-card" style="--card-accent:#F06595; --card-accent-light:#fff0f6;">
+        <span class="topic-icon">🌍</span>
+        <h3>What is a Website?</h3>
+        <p>A website is a collection of pages stored on a computer called a "server." You view it using a browser like Chrome or Firefox.</p>
+        <span class="topic-tag">Internet</span>
+      </a>
+
+      <a href="/kids/online-safety" class="topic-card" style="--card-accent:#FF6B6B; --card-accent-light:#fff5f5;">
+        <span class="topic-icon">🔐</span>
+        <h3>Online Safety for Kids</h3>
+        <p>Learn the golden rules: never share personal info online, use strong passwords, and always tell a trusted adult if something feels wrong.</p>
+        <span class="topic-tag">Safety</span>
+      </a>
+
+      <a href="/kids/what-is-ai" class="topic-card" style="--card-accent:#FFD43B; --card-accent-light:#fff9db;">
+        <span class="topic-icon">🤖</span>
+        <h3>What is AI?</h3>
+        <p>Artificial Intelligence is when computers learn to do things that normally need human brains — like recognizing faces or understanding speech!</p>
+        <span class="topic-tag">Technology</span>
+      </a>
+
+      <a href="/kids/what-is-coding" class="topic-card" style="--card-accent:#04AA6D; --card-accent-light:#e6f9f2;">
+        <span class="topic-icon">👩‍💻</span>
+        <h3>What is Coding?</h3>
+        <p>Coding is writing instructions for a computer. Like a recipe for a cake, a program tells the computer exactly what to do, step by step.</p>
+        <span class="topic-tag">Coding</span>
+      </a>
+
+      <a href="/kids/how-games-are-made" class="topic-card" style="--card-accent:#339AF0; --card-accent-light:#e7f5ff;">
+        <span class="topic-icon">🎮</span>
+        <h3>How Are Games Made?</h3>
+        <p>Video games are made using programming languages, art, sound, and game engines. It takes a whole team — and a lot of creativity and code!</p>
+        <span class="topic-tag">Fun</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- FUN FACTS -->
+  <div class="kids-section" style="padding-top:0;">
+    <div class="facts-section">
+      <span class="section-label">🌟 Did You Know?</span>
+      <h2>Amazing Computer Facts</h2>
+      <p class="section-sub">Mind-blowing facts about technology that will surprise you!</p>
+      <div class="facts-grid">
+        <div class="fact-card">
+          <div class="fact-num">1 Billion+</div>
+          <p>There are over 1 billion websites on the internet today — and more are being created every second!</p>
+        </div>
+        <div class="fact-card">
+          <div class="fact-num">50,000</div>
+          <p>Your computer's CPU can do around 50,000 million calculations every single second. That's faster than any human!</p>
+        </div>
+        <div class="fact-card">
+          <div class="fact-num">1969</div>
+          <p>The internet was invented in 1969. It was first called "ARPANET" and only connected 4 computers!</p>
+        </div>
+        <div class="fact-card">
+          <div class="fact-num">2 Tons!</div>
+          <p>The first computer ever built (ENIAC in 1945) weighed 2 tons and was as big as an entire room.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="kids-section" id="quiz" style="padding-top:0;">
+    <div class="quiz-section">
+      <span class="section-label">🧠 Quiz Time!</span>
+      <h2>Test What You Know</h2>
+      <p class="section-sub" style="color:#028a57;">Answer these fun questions about computers and technology!</p>
+      <div class="quiz-box">
+        <div class="quiz-progress" id="quiz-progress">Question 1 of 5</div>
+        <div class="quiz-q" id="quiz-question"></div>
+        <div class="quiz-opts" id="quiz-opts"></div>
+        <div class="quiz-feedback" id="quiz-feedback"></div>
+        <button class="quiz-next" id="quiz-next" onclick="nextQ()">Next Question →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GLOSSARY -->
+  <section class="kids-section">
+    <span class="section-label">📖 Quick Terms</span>
+    <h2>Computer Words Made Simple</h2>
+    <p class="section-sub">Big tech words explained in plain, easy language for everyone.</p>
+    <div class="glossary-preview">
+      <div class="glos-card"><div class="glos-word">💾 RAM</div><div class="glos-def">Short-term memory that holds what your computer is using right now.</div></div>
+      <div class="glos-card"><div class="glos-word">🌐 Browser</div><div class="glos-def">A program like Chrome used to visit websites on the internet.</div></div>
+      <div class="glos-card"><div class="glos-word">🔗 URL</div><div class="glos-def">A web address like "codescompiler.com" that points to a website.</div></div>
+      <div class="glos-card"><div class="glos-word">📡 Wi-Fi</div><div class="glos-def">Wireless internet that lets devices connect without cables.</div></div>
+      <div class="glos-card"><div class="glos-word">🖥️ Server</div><div class="glos-def">A powerful computer that stores websites and sends them to visitors.</div></div>
+      <div class="glos-card"><div class="glos-word">🐛 Bug</div><div class="glos-def">An error in a program that makes it do something wrong or unexpected.</div></div>
+      <div class="glos-card"><div class="glos-word">🔑 Password</div><div class="glos-def">A secret word or phrase used to protect your accounts from others.</div></div>
+      <div class="glos-card"><div class="glos-word">☁️ Cloud</div><div class="glos-def">Storing your files on the internet instead of your own computer.</div></div>
+    </div>
+    <div style="text-align:center; margin-top:32px;">
+      <a href="/internet-terms" class="btn-primary">📖 See Full Internet Terms Glossary →</a>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <div class="kids-section" style="padding-top:0;">
+    <div class="cta-section">
+      <span style="font-size:3rem; display:block; margin-bottom:14px;">🚀</span>
+      <h2>Ready to Start Coding?</h2>
+      <p>Now that you know how computers work — try writing your very first HTML code. It's easier than you think!</p>
+      <a href="/tutorial/html-introduction" class="btn-white">Start HTML for Free →</a>
+    </div>
+  </div>
+
+  <script is:inline>
+    const questions = [
+      { q: "What does 'CPU' stand for?", opts: ["Computer Power Unit","Central Processing Unit","Creative Programming Unit","Computer Program Uploader"], ans: 1 },
+      { q: "What is the internet?", opts: ["A single super-computer","A giant network of connected computers","A type of software","A computer's memory"], ans: 1 },
+      { q: "What is a 'bug' in coding?", opts: ["An insect on your keyboard","A type of program","An error in code","A computer virus"], ans: 2 },
+      { q: "What does RAM stand for?", opts: ["Random Access Memory","Read And Monitor","Really Awesome Machine","Running All Megabytes"], ans: 0 },
+      { q: "What does HTML stand for?", opts: ["How To Make Links","Hyper Text Markup Language","High Tech Modern Layout","Hyper Transfer Mail Link"], ans: 1 },
+    ];
+    let current = 0;
+    let answered = false;
+
+    function loadQ() {
+      const q = questions[current];
+      document.getElementById('quiz-question').textContent = q.q;
+      document.getElementById('quiz-progress').textContent = `Question ${current + 1} of ${questions.length}`;
+      const opts = document.getElementById('quiz-opts');
+      opts.innerHTML = '';
+      q.opts.forEach((o, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'quiz-opt';
+        btn.textContent = o;
+        btn.onclick = () => answer(btn, i === q.ans);
+        opts.appendChild(btn);
+      });
+      document.getElementById('quiz-feedback').className = 'quiz-feedback';
+      document.getElementById('quiz-next').className = 'quiz-next';
+      answered = false;
+    }
+
+    function answer(btn, correct) {
+      if (answered) return;
+      answered = true;
+      const fb = document.getElementById('quiz-feedback');
+      const next = document.getElementById('quiz-next');
+      document.querySelectorAll('.quiz-opt').forEach((b, i) => {
+        b.disabled = true;
+        if (i === questions[current].ans) b.classList.add('correct');
+      });
+      if (!correct) btn.classList.add('wrong');
+      fb.textContent = correct ? '🎉 Correct! Great job!' : '❌ Not quite — the highlighted answer is correct!';
+      fb.className = `quiz-feedback show ${correct ? 'correct-fb' : 'wrong-fb'}`;
+      next.className = 'quiz-next show';
+      next.textContent = current < questions.length - 1 ? 'Next Question →' : '🏆 See Results';
+    }
+
+    function nextQ() {
+      current++;
+      if (current >= questions.length) {
+        document.querySelector('.quiz-box').innerHTML = `
+          <div style="text-align:center;padding:20px 0">
+            <div style="font-size:3.5rem;margin-bottom:14px">🏆</div>
+            <h3 style="font-size:1.7rem;font-weight:800;margin-bottom:10px">Quiz Complete!</h3>
+            <p style="color:#555;font-weight:600;margin-bottom:22px">Amazing work! You're on your way to becoming a tech expert 🚀</p>
+            <button onclick="current=0;document.querySelector('.quiz-box').innerHTML='';document.querySelector('.quiz-box').innerHTML=document.querySelector('.quiz-box').outerHTML;location.reload();"
+              style="background:#04AA6D;color:#fff;border:none;padding:11px 26px;border-radius:30px;font-weight:800;font-size:0.93rem;cursor:pointer;">
+              🔁 Try Again
+            </button>
+          </div>`;
+        return;
+      }
+      loadQ();
+    }
+
+    loadQ();
+  </script>
+</BaseLayout>

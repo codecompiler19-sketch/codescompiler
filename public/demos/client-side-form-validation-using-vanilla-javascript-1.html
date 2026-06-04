@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Client-Side Form Validation - Live Demo</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .container { width: 100%; max-width: 520px; }
+    h1 { text-align: center; color: #fff; font-size: 1.6rem; font-weight: 800; margin-bottom: 0.35rem; }
+    .subtitle { text-align: center; color: rgba(255,255,255,0.45); font-size: 0.82rem; margin-bottom: 2rem; }
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 22px;
+      padding: 2rem 2.2rem;
+      backdrop-filter: blur(20px);
+    }
+    .progress-bar-wrap {
+      height: 4px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      margin-bottom: 1.8rem;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #7c3aed, #06b6d4);
+      width: 0%;
+      transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .form-group { margin-bottom: 1.25rem; position: relative; }
+    label {
+      display: block;
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.55);
+      text-transform: uppercase;
+      letter-spacing: 0.55px;
+      margin-bottom: 0.4rem;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 0.78rem 2.6rem 0.78rem 0.95rem;
+      background: rgba(255,255,255,0.07);
+      border: 1.5px solid rgba(255,255,255,0.14);
+      border-radius: 10px;
+      color: #fff;
+      font-size: 0.92rem;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.25s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    select option { background: #302b63; }
+    textarea { padding: 0.78rem; resize: vertical; min-height: 80px; }
+    input::placeholder, textarea::placeholder { color: rgba(255,255,255,0.28); }
+    input:focus, select:focus, textarea:focus {
+      background: rgba(255,255,255,0.1);
+      border-color: #7c3aed;
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.2);
+    }
+    input.valid { border-color: #22c55e !important; box-shadow: 0 0 0 3px rgba(34,197,94,0.15) !important; }
+    input.invalid, select.invalid, textarea.invalid {
+      border-color: #ef4444 !important;
+      box-shadow: 0 0 0 3px rgba(239,68,68,0.15) !important;
+    }
+    .field-icon {
+      position: absolute;
+      right: 10px;
+      top: 38px;
+      font-size: 0.9rem;
+      pointer-events: none;
+    }
+    .error-text {
+      font-size: 0.72rem;
+      color: #f87171;
+      margin-top: 0.3rem;
+      min-height: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      opacity: 0;
+      transform: translateY(-3px);
+      transition: all 0.2s;
+    }
+    .error-text.show { opacity: 1; transform: translateY(0); }
+
+    /* Phone row with country */
+    .phone-row { display: flex; gap: 8px; }
+    .phone-row select { width: 110px; flex-shrink: 0; padding: 0.78rem 0.5rem; }
+    .phone-row input { flex: 1; }
+
+    /* Terms checkbox */
+    .checkbox-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 1.25rem;
+    }
+    .checkbox-group input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      padding: 0;
+      margin-top: 2px;
+      cursor: pointer;
+      accent-color: #7c3aed;
+      border-radius: 4px;
+    }
+    .checkbox-group label {
+      font-size: 0.8rem;
+      text-transform: none;
+      letter-spacing: 0;
+      color: rgba(255,255,255,0.55);
+      cursor: pointer;
+      line-height: 1.4;
+    }
+    .checkbox-group label a { color: #a78bfa; }
+
+    /* Submit button */
+    .submit-btn {
+      width: 100%;
+      padding: 0.95rem;
+      background: linear-gradient(135deg, #7c3aed, #2563eb);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.25s;
+      box-shadow: 0 4px 20px rgba(124,58,237,0.4);
+      position: relative;
+      overflow: hidden;
+    }
+    .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(124,58,237,0.5); }
+    .submit-btn:active { transform: translateY(0); }
+    .submit-btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0);
+      transition: background 0.2s;
+    }
+    .submit-btn:hover::after { background: rgba(255,255,255,0.05); }
+
+    /* Error summary */
+    .error-summary {
+      background: rgba(239,68,68,0.1);
+      border: 1px solid rgba(239,68,68,0.3);
+      border-radius: 10px;
+      padding: 0.8rem 1rem;
+      margin-bottom: 1.2rem;
+      display: none;
+    }
+    .error-summary.show { display: block; }
+    .error-summary p {
+      font-size: 0.77rem;
+      color: #fca5a5;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+    .error-summary ul { list-style: none; padding: 0; }
+    .error-summary ul li {
+      font-size: 0.73rem;
+      color: rgba(252,165,165,0.8);
+      padding: 2px 0;
+    }
+    .error-summary ul li::before { content: '→ '; }
+
+    /* Success overlay */
+    .success-overlay {
+      display: none;
+      text-align: center;
+      padding: 2rem 1rem;
+    }
+    .success-overlay .icon { font-size: 4rem; margin-bottom: 1rem; animation: bounce 0.6s cubic-bezier(0.34,1.56,0.64,1); }
+    .success-overlay h2 { color: #86efac; font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .success-overlay p { color: rgba(255,255,255,0.55); font-size: 0.88rem; margin-bottom: 1.5rem; }
+    .success-grid { display: grid; grid-template-columns: auto 1fr; gap: 0.4rem 0.8rem; text-align: left; max-width: 300px; margin: 0 auto 1.5rem; }
+    .success-grid .key { color: rgba(255,255,255,0.4); font-size: 0.75rem; text-align: right; }
+    .success-grid .val { color: #c4b5fd; font-size: 0.82rem; font-weight: 600; word-break: break-all; }
+    @keyframes bounce { 0% { transform: scale(0) rotate(-15deg); } 60% { transform: scale(1.15) rotate(5deg); } 100% { transform: scale(1); } }
+    .reset-btn {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.7);
+      padding: 0.7rem 1.8rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    .reset-btn:hover { background: rgba(255,255,255,0.14); color: #fff; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📋 Client-Side Validation</h1>
+    <p class="subtitle">Full registration form with vanilla JavaScript validation</p>
+
+    <div class="card">
+      <!-- Progress -->
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar"></div></div>
+
+      <!-- Error summary -->
+      <div class="error-summary" id="errorSummary">
+        <p>⚠ Please fix the following errors:</p>
+        <ul id="errorList"></ul>
+      </div>
+
+      <!-- Form -->
+      <form id="regForm" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" placeholder="Alice">
+            <span class="field-icon" id="fi-firstName"></span>
+            <div class="error-text" id="et-firstName"></div>
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" placeholder="Johnson">
+            <span class="field-icon" id="fi-lastName"></span>
+            <div class="error-text" id="et-lastName"></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="alice@example.com">
+          <span class="field-icon" id="fi-email"></span>
+          <div class="error-text" id="et-email"></div>
+        </div>
+
+        <div class="form-group">
+          <label>Phone Number</label>
+          <div class="phone-row">
+            <select id="countryCode">
+              <option value="+1">🇺🇸 +1</option>
+              <option value="+44">🇬🇧 +44</option>
+              <option value="+91">🇮🇳 +91</option>
+              <option value="+61">🇦🇺 +61</option>
+              <option value="+49">🇩🇪 +49</option>
+              <option value="+33">🇫🇷 +33</option>
+            </select>
+            <input type="tel" id="phone" placeholder="555 000 0000">
+          </div>
+          <span class="field-icon" id="fi-phone" style="top:38px;"></span>
+          <div class="error-text" id="et-phone"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="gender">Gender</label>
+          <select id="gender">
+            <option value="">— Select gender —</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="nonbinary">Non-binary</option>
+            <option value="prefer-not">Prefer not to say</option>
+          </select>
+          <span class="field-icon" id="fi-gender"></span>
+          <div class="error-text" id="et-gender"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Min 8 chars, 1 uppercase, 1 number">
+          <span class="field-icon" id="fi-password"></span>
+          <div class="error-text" id="et-password"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password" id="confirmPassword" placeholder="Repeat your password">
+          <span class="field-icon" id="fi-confirmPassword"></span>
+          <div class="error-text" id="et-confirmPassword"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="bio">Bio (optional)</label>
+          <textarea id="bio" placeholder="Tell us a little about yourself… (max 200 chars)"></textarea>
+          <div class="error-text" id="et-bio"></div>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="terms">
+          <label for="terms">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></label>
+        </div>
+        <div class="error-text" id="et-terms" style="margin-bottom:0.8rem;"></div>
+
+        <button type="submit" class="submit-btn">Create Account →</button>
+      </form>
+
+      <!-- Success -->
+      <div class="success-overlay" id="successOverlay">
+        <div class="icon">🎉</div>
+        <h2>Account Created!</h2>
+        <p>All fields validated successfully.</p>
+        <div class="success-grid">
+          <span class="key">Name</span><span class="val" id="s-name"></span>
+          <span class="key">Email</span><span class="val" id="s-email"></span>
+          <span class="key">Phone</span><span class="val" id="s-phone"></span>
+          <span class="key">Gender</span><span class="val" id="s-gender"></span>
+        </div>
+        <button class="reset-btn" onclick="resetForm()">← Fill again</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const validators = {
+      firstName:       { el: () => document.getElementById('firstName'), validate(v) {
+        if (!v.trim()) return 'First name is required.';
+        if (v.trim().length < 2) return 'Must be at least 2 characters.';
+        if (!/^[A-Za-z\s'-]+$/.test(v.trim())) return 'Only letters allowed.';
+        return null;
+      }},
+      lastName:        { el: () => document.getElementById('lastName'), validate(v) {
+        if (!v.trim()) return 'Last name is required.';
+        if (v.trim().length < 2) return 'Must be at least 2 characters.';
+        if (!/^[A-Za-z\s'-]+$/.test(v.trim())) return 'Only letters allowed.';
+        return null;
+      }},
+      email:           { el: () => document.getElementById('email'), validate(v) {
+        if (!v.trim()) return 'Email is required.';
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim())) return 'Enter a valid email address.';
+        return null;
+      }},
+      phone:           { el: () => document.getElementById('phone'), validate(v) {
+        if (!v.trim()) return 'Phone number is required.';
+        if (!/^\d{7,15}$/.test(v.replace(/[\s\-()]/g, ''))) return 'Enter a valid phone number.';
+        return null;
+      }},
+      gender:          { el: () => document.getElementById('gender'), validate(v) {
+        if (!v) return 'Please select a gender.';
+        return null;
+      }},
+      password:        { el: () => document.getElementById('password'), validate(v) {
+        if (!v) return 'Password is required.';
+        if (v.length < 8) return 'Must be at least 8 characters.';
+        if (!/[A-Z]/.test(v)) return 'Must include at least one uppercase letter.';
+        if (!/[0-9]/.test(v)) return 'Must include at least one number.';
+        return null;
+      }},
+      confirmPassword: { el: () => document.getElementById('confirmPassword'), validate(v) {
+        if (!v) return 'Please confirm your password.';
+        if (v !== document.getElementById('password').value) return 'Passwords do not match.';
+        return null;
+      }},
+      bio: { el: () => document.getElementById('bio'), validate(v) {
+        if (v.length > 200) return `Too long — ${v.length}/200 characters.`;
+        return null;
+      }},
+      terms: { el: () => document.getElementById('terms'), validate() {
+        if (!document.getElementById('terms').checked) return 'You must accept the terms.';
+        return null;
+      }}
+    };
+
+    const totalRequired = Object.keys(validators).filter(k => k !== 'bio').length;
+
+    function validateField(key, silent = false) {
+      const cfg = validators[key];
+      const el = cfg.el();
+      const val = el.type === 'checkbox' ? '' : el.value;
+      const error = cfg.validate(val);
+      const errEl = document.getElementById(`et-${key}`);
+      const iconEl = document.getElementById(`fi-${key}`);
+
+      if (error) {
+        if (!silent) {
+          el.classList.remove('valid');
+          el.classList.add('invalid');
+          if (errEl) { errEl.textContent = '⚠ ' + error; errEl.classList.add('show'); }
+          if (iconEl && el.type !== 'checkbox') iconEl.textContent = '❌';
+        }
+        return false;
+      } else {
+        el.classList.remove('invalid');
+        if (el.type !== 'checkbox') el.classList.add('valid');
+        if (errEl) { errEl.textContent = ''; errEl.classList.remove('show'); }
+        if (iconEl && el.type !== 'checkbox') iconEl.textContent = '✅';
+        return true;
+      }
+    }
+
+    function updateProgress() {
+      const requiredKeys = Object.keys(validators).filter(k => k !== 'bio');
+      const validCount = requiredKeys.filter(k => {
+        const el = validators[k].el();
+        return el.classList.contains('valid') || (k === 'terms' && el.checked && !validators[k].validate(''));
+      }).length;
+      const pct = Math.round((validCount / requiredKeys.length) * 100);
+      document.getElementById('progressBar').style.width = pct + '%';
+    }
+
+    // Wire up live validation
+    Object.keys(validators).forEach(key => {
+      const el = validators[key].el();
+      if (!el) return;
+      const evt = el.type === 'checkbox' ? 'change' : 'input';
+      el.addEventListener(evt, () => { validateField(key, false); updateProgress(); });
+      el.addEventListener('blur', () => validateField(key, false));
+    });
+
+    // Confirm password also re-validates when password changes
+    document.getElementById('password').addEventListener('input', () => {
+      if (document.getElementById('confirmPassword').value) validateField('confirmPassword', false);
+    });
+
+    document.getElementById('regForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const errors = [];
+      Object.keys(validators).forEach(key => {
+        const ok = validateField(key, false);
+        if (!ok) {
+          const cfg = validators[key];
+          const el = cfg.el();
+          const val = el.type === 'checkbox' ? '' : el.value;
+          errors.push(cfg.validate(val));
+        }
+      });
+
+      const summaryEl = document.getElementById('errorSummary');
+      const listEl = document.getElementById('errorList');
+
+      if (errors.length) {
+        listEl.innerHTML = errors.map(e => `<li>${e}</li>`).join('');
+        summaryEl.classList.add('show');
+        summaryEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        summaryEl.classList.remove('show');
+        const fn = document.getElementById('firstName').value.trim();
+        const ln = document.getElementById('lastName').value.trim();
+        document.getElementById('s-name').textContent = `${fn} ${ln}`;
+        document.getElementById('s-email').textContent = document.getElementById('email').value.trim();
+        document.getElementById('s-phone').textContent = document.getElementById('countryCode').value + ' ' + document.getElementById('phone').value.trim();
+        document.getElementById('s-gender').textContent = document.getElementById('gender').options[document.getElementById('gender').selectedIndex].text;
+        document.getElementById('regForm').style.display = 'none';
+        document.getElementById('successOverlay').style.display = 'block';
+        document.getElementById('progressBar').style.width = '100%';
+      }
+    });
+
+    function resetForm() {
+      document.getElementById('regForm').reset();
+      document.getElementById('regForm').style.display = 'block';
+      document.getElementById('successOverlay').style.display = 'none';
+      document.getElementById('errorSummary').classList.remove('show');
+      document.getElementById('progressBar').style.width = '0%';
+      Object.keys(validators).forEach(key => {
+        const el = validators[key].el();
+        el.classList.remove('valid', 'invalid');
+        const errEl = document.getElementById(`et-${key}`);
+        const iconEl = document.getElementById(`fi-${key}`);
+        if (errEl) { errEl.textContent = ''; errEl.classList.remove('show'); }
+        if (iconEl) iconEl.textContent = '';
+      });
+    }
+  </script>
+</body>
+</html>

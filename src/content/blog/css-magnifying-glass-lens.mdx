@@ -1,31 +1,102 @@
 ---
-title: "Magnifying Glass Lens Engine"
-description: "A highly interactive JS/CSS hybrid that anchors a physical circular glass lens to your mouse cursor to natively zoom in on high-fidelity images."
-date: "2026-04-18"
+title: "CSS Magnifying Glass Lens"
+seoTitle: "CSS Magnifying Glass Lens Effect Tutorial"
+description: "Learn how to build a dynamic magnifying glass effect over images using CSS background properties and a touch of Vanilla JavaScript."
+date: "2026-06-05"
 category: "Website Designs"
-tags: ["javascript", "css", "image", "zoom"]
-image: "/images/posts/css-magnifying-glass-lens.png"
+tags: ["css", "javascript", "image", "zoom"]
+image: "/images/posts/default-coding.png"
 featured: false
 hasDemo: true
 author: "CodesCompiler"
 ---
 
-E-commerce stores rely heavily on product zooming. Using vanilla JS, we can actively track the `offsetX` and `offsetY` of the user's mouse, and bind a 2x-scaled CSS `background-position` circle perfectly over their cursor!
+Welcome to this tutorial on building a **Magnifying Glass Lens Effect**. This effect is extremely popular on eCommerce websites, allowing users to hover over a product image and inspect the fine details up close without opening a massive high-res image modal.
 
-## Mapping Movement to Backgrounds
+In this guide, we will achieve this effect using a clever CSS background trick combined with a few lines of Vanilla JavaScript to track the mouse.
 
-```javascript
-// We read where the mouse is on the bounding box
-const x = event.offsetX;
-const y = event.offsetY;
+## 1. The HTML Structure
 
-// Move the physical CSS lens circle to that location
-lens.style.left = x - 50 + 'px';
-lens.style.top = y - 50 + 'px';
+Our structure is very simple. We need an image container, the main image itself, and a `div` that will act as our "Lens".
 
-// Update the highly zoomed background of the lens to match
-// The lens uses background-size: 200%;
-lens.style.backgroundPosition = `-${x * 2 - 50}px -${y * 2 - 50}px`;
+```html
+<div class="image-container" id="container">
+  <!-- The main visible image -->
+  <img src="sneaker.jpg" class="main-image" id="mainImage" alt="Sneaker">
+  
+  <!-- The magnifying lens (initially hidden) -->
+  <div class="lens" id="lens"></div>
+</div>
 ```
 
-Examine the unbelievably satisfying zoom magnification ring inside the Live Demo. The crispness of the scaled background is immaculate.
+## 2. The CSS Magic
+
+Here is the trick: The `.lens` is a circle that floats above the image. Its `background-image` is set to the *exact same image* as the main image. We just scale that background image up, and shift its position to match where the mouse is pointing!
+
+```css
+.image-container {
+  position: relative;
+  cursor: none; /* Hide the default mouse cursor! */
+}
+
+.lens {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+  
+  /* The Magic Trick: Same image as the main tag */
+  background-image: url('sneaker.jpg');
+  background-repeat: no-repeat;
+  
+  /* Hide until hover */
+  opacity: 0;
+  pointer-events: none; /* Let mouse events pass through to the container */
+}
+
+.image-container:hover .lens {
+  opacity: 1; /* Show the lens when hovering over container */
+}
+```
+
+## 3. The JavaScript Tracker
+
+Now we need JavaScript to do three things when the mouse moves:
+1. Move the `.lens` circle to follow the cursor.
+2. Calculate how big the background image inside the lens should be (the zoom level).
+3. Shift the background image position in the *opposite* direction of the mouse.
+
+```javascript
+const container = document.getElementById('container');
+const lens = document.getElementById('lens');
+const mainImage = document.getElementById('mainImage');
+
+// 2x Zoom level
+const zoomLevel = 2;
+
+container.addEventListener('mousemove', (e) => {
+  // 1. Get exact cursor coordinates relative to the container
+  const rect = container.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+
+  // 2. Center the lens on the cursor
+  const lensRadius = lens.offsetWidth / 2;
+  lens.style.left = `${x - lensRadius}px`;
+  lens.style.top = `${y - lensRadius}px`;
+
+  // 3. Set background size (Zoom the image)
+  const bgWidth = mainImage.width * zoomLevel;
+  const bgHeight = mainImage.height * zoomLevel;
+  lens.style.backgroundSize = `${bgWidth}px ${bgHeight}px`;
+
+  // 4. Shift the background image position
+  const bgPosX = (x * zoomLevel) - lensRadius;
+  const bgPosY = (y * zoomLevel) - lensRadius;
+  lens.style.backgroundPosition = `-${bgPosX}px -${bgPosY}px`;
+});
+```
+
+And there you have it! A perfectly smooth, highly performant magnifying glass effect. Check out the Live Demo to see the code in action.

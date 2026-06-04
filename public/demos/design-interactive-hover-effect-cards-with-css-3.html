@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Hover Cards | Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Outfit', sans-serif;
+    }
+    
+    body {
+      background-color: #0f172a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+    
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    .card {
+      position: relative;
+      height: 400px;
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    }
+
+    .card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .card-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 2rem;
+      color: white;
+      transition: opacity 0.4s ease;
+    }
+    
+    .card-content {
+      transform: translateY(40px);
+      transition: transform 0.4s ease;
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+
+    .card-text {
+      font-size: 0.95rem;
+      font-weight: 300;
+      line-height: 1.6;
+      opacity: 0;
+      transition: opacity 0.4s ease 0.1s;
+      margin-bottom: 1.5rem;
+    }
+    
+    .card-btn {
+      display: inline-block;
+      padding: 10px 24px;
+      background: #38bdf8;
+      color: #0f172a;
+      text-decoration: none;
+      font-weight: 700;
+      border-radius: 30px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.4s ease 0.2s;
+    }
+    
+    .card-btn:hover {
+      background: white;
+    }
+
+    /* Hover Effects */
+    .card:hover .card-img {
+      transform: scale(1.1); /* Zoom image */
+    }
+    
+    .card:hover .card-content {
+      transform: translateY(0); /* Slide content up */
+    }
+    
+    .card:hover .card-text,
+    .card:hover .card-btn {
+      opacity: 1; /* Fade in text and button */
+      transform: translateY(0);
+    }
+    
+    @media (max-width: 768px) {
+      .card-container {
+        grid-template-columns: 1fr;
+      }
+      .card {
+        height: 350px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card-container">
+    <!-- Card 1 -->
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=600&q=80" alt="Mountain" class="card-img">
+      <div class="card-overlay">
+        <div class="card-content">
+          <h2 class="card-title">Mountain Peak</h2>
+          <p class="card-text">Discover the highest peaks and breathe the freshest air. A journey into the wild awaits you.</p>
+          <a href="#" class="card-btn">Explore</a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Card 2 -->
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=600&q=80" alt="Forest" class="card-img">
+      <div class="card-overlay">
+        <div class="card-content">
+          <h2 class="card-title">Deep Forest</h2>
+          <p class="card-text">Lose yourself among ancient trees and discover the hidden secrets of the deep woods.</p>
+          <a href="#" class="card-btn">Explore</a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Card 3 -->
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1498623116890-37e912163d5d?auto=format&fit=crop&w=600&q=80" alt="Ocean" class="card-img">
+      <div class="card-overlay">
+        <div class="card-content">
+          <h2 class="card-title">Endless Ocean</h2>
+          <p class="card-text">Dive into the blue abyss. Experience the calming rhythm of the ocean waves.</p>
+          <a href="#" class="card-btn">Explore</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+---
+title: "SQL – DELETE"
+description: "Remove rows from a table permanently using the DELETE statement — and why the WHERE clause is critical."
+category: "sql"
+order: 15
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+The `DELETE` statement permanently removes rows from a table. Like `UPDATE`, it is completely unforgiving without a `WHERE` clause — `DELETE FROM students` will wipe out the entire table in an instant, with no warning and no undo.
+
+Always develop the habit of running your filter as a `SELECT` first, confirming the rows you intend to delete, and only then issuing the `DELETE`. In production systems, most engineers wrap deletes inside a **transaction** so they can roll back if something goes wrong.
+
+**TRUNCATE vs DELETE**
+| | DELETE | TRUNCATE |
+|---|---|---|
+| Can use WHERE | ✅ Yes | ❌ No |
+| Is a transaction | ✅ Yes | ❌ No |
+| Speed on large tables | Slower | Faster |
+| Keeps table structure | ✅ Yes | ✅ Yes |
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={`CREATE TABLE log_entries (id INTEGER PRIMARY KEY, event TEXT, level TEXT, created_at TEXT);
+INSERT INTO log_entries VALUES (1,'User logged in','INFO','2024-01-10'),(2,'DB backup failed','ERROR','2024-01-11'),(3,'Email sent','INFO','2024-01-11'),(4,'Disk full warning','WARN','2024-01-12'),(5,'Service restarted','INFO','2024-01-12'),(6,'Auth token expired','ERROR','2024-01-13');`}
+  querySql={`-- Remove only INFO-level log entries (routine noise)
+DELETE FROM log_entries
+WHERE  level = 'INFO';
+
+-- Verify: only warnings and errors remain
+SELECT * FROM log_entries ORDER BY created_at;`}
+/>
+
+## Key Points
+
+- ALWAYS use WHERE with DELETE — no WHERE = delete all rows
+- Deleted rows are gone permanently (unless using transactions)
+- Run SELECT with the same WHERE first to preview what will be deleted
+- Use TRUNCATE when you want to empty an entire table quickly
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

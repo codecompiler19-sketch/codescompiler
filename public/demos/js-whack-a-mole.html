@@ -16,32 +16,67 @@
 </head>
 <body>
   <h1>Whack-a-Mole!</h1>
+  <p style="font-size: 1.2rem; margin-top: 10px; margin-bottom: 20px;">
+    <strong>How to play:</strong> Click "Start", then quickly click on the hamsters 🐹 as they pop out of their holes to score points! You have 15 seconds.
+  </p>
   <span class="score">Score: 0</span>
-  <button onClick="startGame()">Start</button>
+  <br>
+  <button onClick="startGame()" style="margin-top: 20px;">Start</button>
   <div class="game" style="margin-top:40px;">
-    <div class="hole"><div class="mole">🦫</div></div><div class="hole"><div class="mole">🦫</div></div><div class="hole"><div class="mole">🦫</div></div>
-    <div class="hole"><div class="mole">🦫</div></div><div class="hole"><div class="mole">🦫</div></div><div class="hole"><div class="mole">🦫</div></div>
+    <div class="hole"><div class="mole">🐹</div></div><div class="hole"><div class="mole">🐹</div></div><div class="hole"><div class="mole">🐹</div></div>
+    <div class="hole"><div class="mole">🐹</div></div><div class="hole"><div class="mole">🐹</div></div><div class="hole"><div class="mole">🐹</div></div>
   </div>
   <script>
     const holes = document.querySelectorAll('.hole');
     const scoreBoard = document.querySelector('.score');
     const moles = document.querySelectorAll('.mole');
-    let lastHole, timeUp = false, score = 0;
+    let lastHole, timeUp = false, score = 0, isPlaying = false;
 
     function randTime(min,max) { return Math.round(Math.random() * (max-min) + min); }
     function randHole(holes) {
       const id = Math.floor(Math.random() * holes.length);
       const hole = holes[id];
       if(hole === lastHole) return randHole(holes);
-      lastHole = hole; return hole;
+      lastHole = hole; 
+      return hole;
     }
+    
     function peep() {
-      const time = randTime(400, 1000); const hole = randHole(holes);
+      const time = randTime(400, 1000); 
+      const hole = randHole(holes);
       hole.classList.add('up');
-      setTimeout(() => { hole.classList.remove('up'); if(!timeUp) peep(); }, time);
+      
+      setTimeout(() => { 
+        hole.classList.remove('up'); 
+        if(!timeUp) peep(); 
+      }, time);
     }
-    window.startGame = function() { scoreBoard.innerText = "Score: 0"; timeUp = false; score = 0; peep(); setTimeout(()=>timeUp=true, 15000); }
-    function bonk(e) { if(!e.isTrusted) return; score++; this.parentNode.classList.remove('up'); scoreBoard.innerText = "Score: "+score; }
+
+    window.startGame = function() { 
+      // Prevent restarting if already playing
+      if(isPlaying) return; 
+      
+      isPlaying = true;
+      scoreBoard.innerText = "Score: 0"; 
+      timeUp = false; 
+      score = 0; 
+      peep(); 
+      
+      // Stop the game after 15 seconds
+      setTimeout(() => {
+        timeUp = true;
+        isPlaying = false;
+        setTimeout(() => alert("Time's up! Your final score is " + score + " 🐹"), 100);
+      }, 15000); 
+    }
+
+    function bonk(e) { 
+      if(!e.isTrusted) return; // Cheater detection
+      score++; 
+      this.parentNode.classList.remove('up'); 
+      scoreBoard.innerText = "Score: " + score; 
+    }
+    
     moles.forEach(m => m.addEventListener('mousedown', bonk));
   </script>
 </body>

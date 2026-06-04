@@ -1,0 +1,54 @@
+---
+title: "SQL – Prepared Statements"
+description: "Pre-compile SQL queries for security, performance, and reuse using prepared statements."
+category: "sql"
+order: 68
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+A **prepared statement** is a pre-compiled SQL query template. The database parses and optimizes it once, and then you can execute it multiple times with different parameter values — without re-parsing each time. This provides two major benefits: security (parameters prevent injection) and performance (parsing happens only once).
+
+Prepared statements are the standard approach for any query executed repeatedly in a loop — like inserting thousands of records, or running the same filtered search with different input values.
+
+**Prepared statement lifecycle**
+1. PREPARE — database parses and compiles the query template
+2. BIND — you supply the actual parameter values
+3. EXECUTE — database runs with those values
+4. REPEAT steps 2-3 as many times as needed
+5. DEALLOCATE — free the compiled plan
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={`CREATE TABLE inventory (id INTEGER PRIMARY KEY, product TEXT NOT NULL, qty INTEGER DEFAULT 0, price REAL NOT NULL);`}
+  querySql={`-- Simulate bulk INSERT (the prepared statement pattern)
+-- In a real driver: stmt = conn.prepare("INSERT INTO inventory VALUES(?,?,?,?)")
+-- Then execute in a loop with different values
+
+INSERT INTO inventory VALUES (1,'Laptop',45,65000);
+INSERT INTO inventory VALUES (2,'Mouse',150,1200);
+INSERT INTO inventory VALUES (3,'Keyboard',80,3500);
+INSERT INTO inventory VALUES (4,'Monitor',30,28000);
+INSERT INTO inventory VALUES (5,'Webcam',60,4500);
+
+SELECT product,
+       qty,
+       price,
+       qty * price AS total_stock_value
+FROM   inventory
+ORDER  BY total_stock_value DESC;`}
+/>
+
+## Key Points
+
+- Prepared statements parse SQL once, execute many times
+- Mandatory for security — prevents SQL injection via bound parameters
+- Improve performance when the same query runs repeatedly
+- Available in all major database libraries across all programming languages
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

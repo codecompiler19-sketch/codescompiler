@@ -3,7 +3,11 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 
-const allPosts = await getCollection('blog');
+const allPostsRaw = await getCollection('blog');
+// Only show published posts publicly (draft & scheduled are hidden)
+const allPosts = allPostsRaw.filter(
+  p => !p.data.status || p.data.status === 'published'
+);
 const sorted   = allPosts.sort(
   (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
 );
@@ -307,7 +311,7 @@ const allTags = [...new Set(allPosts.flatMap(p => p.data.tags ?? []))].sort();
   
   // Pagination State
   let currentPage = 1;
-  const itemsPerPage = 9;
+  const itemsPerPage = 10;
   let totalPages = 1;
 
   function filterCards() {

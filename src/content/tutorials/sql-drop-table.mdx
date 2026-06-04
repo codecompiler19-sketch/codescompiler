@@ -1,0 +1,48 @@
+---
+title: "SQL – DROP TABLE"
+description: "Permanently remove a table and all of its data using the DROP TABLE statement."
+category: "sql"
+order: 53
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+`DROP TABLE` permanently deletes the entire table structure and every row of data inside it. Unlike `DELETE`, which removes rows but keeps the empty table, DROP removes the table itself completely — column definitions, indexes, and all. Recovery requires restoring from a backup.
+
+In development environments, DROP TABLE is used frequently for rebuilding schema during iteration. In production, it should be used with extreme caution and always within a change management process.
+
+**DROP vs TRUNCATE vs DELETE**
+| | DROP | TRUNCATE | DELETE |
+|---|---|---|---|
+| Removes rows | ✅ | ✅ | ✅ |
+| Removes structure | ✅ | ❌ | ❌ |
+| Resettable | ❌ | ❌† | ✅ |
+| Triggers fire | ❌ | ❌ | ✅ |
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={`CREATE TABLE scratch_data (id INTEGER, note TEXT);
+INSERT INTO scratch_data VALUES (1,'temp'),(2,'scratch'),(3,'delete me');`}
+  querySql={`-- Confirm table exists
+SELECT * FROM scratch_data;
+
+-- Drop it safely
+DROP TABLE IF EXISTS scratch_data;
+
+-- Verify it no longer exists
+SELECT name FROM sqlite_master WHERE type='table';`}
+/>
+
+## Key Points
+
+- DROP TABLE removes the table AND all its data permanently
+- IF EXISTS prevents an error if the table does not exist
+- Cannot DROP a table that other tables reference via foreign keys
+- Use DELETE to remove rows; DROP to remove the entire table
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

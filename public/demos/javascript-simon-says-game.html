@@ -19,6 +19,9 @@
 </head>
 <body>
   <h1 id="level-title">Press Start to Play</h1>
+  <p style="color: #ccc; margin-top: -20px; margin-bottom: 30px; text-align: center;">
+    <strong>How to Play:</strong> Watch the sequence of flashing colors and repeat it by clicking the buttons in the exact same order!
+  </p>
   <div class="game-board">
     <div class="btn green" id="green"></div>
     <div class="btn red" id="red"></div>
@@ -28,26 +31,43 @@
   <button class="start-btn" id="startBtn">Start Game</button>
 
   <script>
-    let gameSequence = [], userSequence = [], level = 0, playing = false;
+    let gameSequence = [], userSequence = [], level = 0, playing = false, animating = false;
     const colors = ["green", "red", "yellow", "blue"];
 
     document.getElementById('startBtn').addEventListener('click', () => {
-      if(!playing) { playing = true; document.getElementById('startBtn').style.display='none'; nextSequence(); }
+      if(!playing) { 
+        playing = true; 
+        document.getElementById('startBtn').style.display='none'; 
+        nextSequence(); 
+      }
     });
 
     function nextSequence() {
       userSequence = [];
       level++;
       document.getElementById("level-title").innerText = `Level ${level}`;
+      
       const randomColor = colors[Math.floor(Math.random() * 4)];
       gameSequence.push(randomColor);
       
-      setTimeout(() => { animatePress(randomColor); }, 500);
+      animating = true;
+      let i = 0;
+      // Play the full sequence back to the user
+      const interval = setInterval(() => {
+        animatePress(gameSequence[i]);
+        i++;
+        if (i >= gameSequence.length) {
+          clearInterval(interval);
+          animating = false; // Allow user to click now
+        }
+      }, 600); // 600ms delay between flashes
     }
 
     document.querySelectorAll('.btn').forEach(b => {
       b.addEventListener('click', function() {
-        if(!playing) return;
+        // Prevent clicking if game is over or sequence is still playing
+        if(!playing || animating) return;
+        
         let color = this.id;
         userSequence.push(color);
         animatePress(color);
@@ -57,21 +77,28 @@
 
     function checkAnswer(currentLevel) {
       if(gameSequence[currentLevel] === userSequence[currentLevel]) {
-        if(userSequence.length === gameSequence.length) setTimeout(nextSequence, 1000);
+        // If they got the whole sequence right, go to next level
+        if(userSequence.length === gameSequence.length) {
+          setTimeout(nextSequence, 1000);
+        }
       } else {
+        // Wrong answer
         document.body.classList.add("game-over");
         document.getElementById("level-title").innerText = "Game Over! Score: " + (level-1);
         setTimeout(() => document.body.classList.remove("game-over"), 200);
+        
         document.getElementById('startBtn').style.display='block';
         document.getElementById('startBtn').innerText='Restart';
-        level=0; gameSequence=[]; playing=false;
+        level = 0; 
+        gameSequence = []; 
+        playing = false;
       }
     }
 
     function animatePress(c) {
       const el = document.getElementById(c);
       el.classList.add("pressed");
-      setTimeout(() => el.classList.remove("pressed"), 150);
+      setTimeout(() => el.classList.remove("pressed"), 200);
     }
   </script>
 </body>

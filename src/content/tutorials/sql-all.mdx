@@ -1,0 +1,95 @@
+---
+title: "SQL – ALL"
+description: "Compare a value against every value returned by a subquery using the ALL operator."
+category: "sql"
+order: 40
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+`ALL` is the strict sibling of `ANY` — it requires the comparison to be true for **every** value returned by the subquery, not just one. `WHERE price > ALL (SELECT price FROM courses WHERE category = 'Design')` means "return courses more expensive than every Design course" — i.e., more expensive than even the priciest Design course.
+
+Think of it this way: ANY passes if you beat *one* opponent, ALL passes only if you beat *all* opponents.
+
+**ALL vs ANY**
+| Operator | Passes when... |
+|---|---|
+| &gt; ANY | Greater than the MIN of subquery values |
+| &gt; ALL | Greater than the MAX of subquery values |
+| &lt; ANY | Less than the MAX of subquery values |
+| &lt; ALL | Less than the MIN of subquery values |
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={`CREATE TABLE students (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  age INTEGER,
+  city TEXT,
+  score REAL,
+  grade TEXT
+);
+INSERT INTO students VALUES
+  (1,'Aria Chen',22,'Mumbai',94.5,'A'),
+  (2,'Ben Torres',19,'Delhi',78.2,'B'),
+  (3,'Cleo Park',24,'Bangalore',88.0,'A'),
+  (4,'Dev Patel',21,'Chennai',65.5,'C'),
+  (5,'Eva Müller',20,'Hyderabad',91.3,'A'),
+  (6,'Finn Walsh',23,'Pune',72.8,'B'),
+  (7,'Gina Lopez',22,'Kolkata',55.1,'D'),
+  (8,'Hiro Sato',25,'Mumbai',83.6,'B');
+
+CREATE TABLE courses (
+  id INTEGER PRIMARY KEY,
+  title TEXT,
+  instructor TEXT,
+  category TEXT,
+  price REAL,
+  rating REAL
+);
+INSERT INTO courses VALUES
+  (1,'Python Mastery','Dr. Ada Lovelace','Programming',2999,4.9),
+  (2,'SQL Foundations','Prof. Edgar Codd','Database',1999,4.8),
+  (3,'Web Design','Ms. Grace Hopper','Design',1499,4.7),
+  (4,'Data Science','Dr. Alan Turing','Analytics',3999,4.9),
+  (5,'Cybersecurity','Mr. Kevin Mitnick','Security',2499,4.6);
+
+CREATE TABLE enrollments (
+  student_id INTEGER,
+  course_id INTEGER,
+  enroll_date TEXT,
+  status TEXT,
+  final_score REAL
+);
+INSERT INTO enrollments VALUES
+  (1,1,'2024-01-15','completed',95),
+  (1,2,'2024-02-01','completed',88),
+  (2,3,'2024-01-20','active',NULL),
+  (3,1,'2024-03-05','completed',90),
+  (4,4,'2024-02-10','dropped',45),
+  (5,2,'2024-01-10','completed',96),
+  (6,5,'2024-03-15','active',NULL),
+  (7,3,'2024-02-20','completed',60),
+  (8,1,'2024-04-01','active',NULL);`}
+  querySql={`-- Courses more expensive than ALL Security courses
+SELECT title, category, price
+FROM   courses
+WHERE  price > ALL (
+  SELECT price FROM courses WHERE category = 'Security'
+)
+ORDER  BY price DESC;`}
+/>
+
+## Key Points
+
+- ALL requires the comparison to hold true for every subquery row
+- &gt; ALL is equivalent to being greater than the MAX value
+- If subquery returns no rows, ALL is vacuously TRUE
+- If subquery returns a NULL, ALL comparisons become NULL/Unknown
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

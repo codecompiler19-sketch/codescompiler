@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodesCompiler - All Demos Index</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            padding: 3rem 2rem; 
+            background: #f8fafc; 
+            color: #0f172a;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
+        .header p {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+        .search-bar {
+            width: 100%;
+            max-width: 500px;
+            padding: 12px 20px;
+            border-radius: 30px;
+            border: 1px solid #e2e8f0;
+            font-size: 1rem;
+            margin: 0 auto 3rem auto;
+            display: block;
+            outline: none;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+        .search-bar:focus {
+            border-color: #04AA6D;
+        }
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
+            gap: 1.5rem; 
+        }
+        .card { 
+            background: white; 
+            padding: 1.5rem; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); 
+            border: 1px solid #f1f5f9;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+        .card h3 { 
+            font-size: 1.1rem; 
+            margin: 0 0 1.5rem 0; 
+            word-wrap: break-word; 
+            line-height: 1.4;
+            color: #1e293b;
+            flex-grow: 1;
+        }
+        .links { 
+            display: flex; 
+            gap: 1rem; 
+            font-size: 0.9rem; 
+            border-top: 1px solid #f1f5f9;
+            padding-top: 1rem;
+        }
+        .links a { 
+            text-decoration: none; 
+            font-weight: 600; 
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: background-color 0.2s;
+            flex: 1;
+            text-align: center;
+        }
+        .btn-blog {
+            color: #475569;
+            background: #f1f5f9;
+        }
+        .btn-blog:hover {
+            background: #e2e8f0;
+        }
+        .btn-demo {
+            color: white;
+            background: #04AA6D;
+        }
+        .btn-demo:hover {
+            background: #038a58;
+        }
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Live Demos Directory</h1>
+        <p>Explore all 171 tutorials and their interactive demos.</p>
+    </div>
+
+    <input type="text" id="searchInput" class="search-bar" placeholder="Search for a demo...">
+
+    <div class="grid" id="grid"></div>
+
+    <script>
+        const files = [{"Name":"10-creative-css-button-hover-effects-you-must-try-1.html"},{"Name":"advanced-css-grid-and-flexbox-layout-examples-5.html"},{"Name":"animated-login-form-ui-design-using-css-3.html"},{"Name":"animated-sidebar-menu-using-css-transitions-4.html"},{"Name":"animated-skeleton-loaders-using-css-keyframes-3.html"},{"Name":"bootstrap-modal-offcanvas.html"},{"Name":"bootstrap-responsive-grid.html"},{"Name":"bootstrap-setup-guide.html"},{"Name":"build-a-custom-form-validation-library-in-js-4.html"},{"Name":"build-a-dark-mode-sidebar-menu-for-web-apps-5.html"},{"Name":"build-a-flappy-bird-clone-in-vanilla-javascript-3.html"},{"Name":"build-a-notes-app-using-javascript-and-local-storage-5.html"},{"Name":"build-a-touch-friendly-image-swiper-in-javascript-5.html"},{"Name":"build-a-transparent-navigation-bar-on-scroll-5.html"},{"Name":"build-a-weather-app-with-javascript-and-fetch-api-1.html"},{"Name":"build-beautiful-bouncing-loaders-with-css-5.html"},{"Name":"build-interactive-social-media-share-buttons-5.html"},{"Name":"client-side-form-validation-using-vanilla-javascript-1.html"},{"Name":"create-3d-flip-card-animations-in-html-css-4.html"},{"Name":"create-a-collapsible-sidebar-navigation-with-javascript-2.html"},{"Name":"create-a-multi-step-registration-form-using-javascript-5.html"},{"Name":"create-a-progress-bar-loader-with-javascript-4.html"},{"Name":"create-a-responsive-image-slider-using-vanilla-javascript-1.html"},{"Name":"create-a-sticky-navigation-bar-using-css-and-js-2.html"},{"Name":"create-a-tic-tac-toe-game-with-html-css-and-js-2.html"},{"Name":"create-a-to-do-list-application-using-vanilla-js-2.html"},{"Name":"create-an-engaging-landing-page-using-html-css-3.html"},{"Name":"create-animated-gradient-buttons-using-html-css-3.html"},{"Name":"css-3d-parallax-cards.html"},{"Name":"css-animated-buttons.html"},{"Name":"css-animated-login-form.html"},{"Name":"css-animated-resume.html"},{"Name":"css-animated-svg-typing.html"},{"Name":"css-aurora-blob.html"},{"Name":"css-aurora-text-reveal.html"},{"Name":"css-blooming-flower-button.html"},{"Name":"css-breathing-galaxy-loader.html"},{"Name":"css-breathing-heart-loader.html"},{"Name":"css-butterfly-wing-button.html"},{"Name":"css-cozy-teacup.html"},{"Name":"css-crt-tv-effect.html"},{"Name":"css-crystal-growth-progress.html"},{"Name":"css-dark-mode-toggle.html"},{"Name":"css-direction-shadow-portal.html"},{"Name":"css-dream-clouds.html"},{"Name":"css-dreamy-cloud-morph.html"},{"Name":"css-ecommerce-card.html"},{"Name":"css-elegant-datepicker.html"},{"Name":"css-enchanted-mirror-card.html"},{"Name":"css-eternal-flame-border.html"},{"Name":"css-fireplace-hover-card.html"},{"Name":"css-floating-cloud-loader.html"},{"Name":"css-floating-lantern-bg.html"},{"Name":"css-floating-lanterns.html"},{"Name":"css-focus-blur-gallery.html"},{"Name":"css-friendship-buttons.html"},{"Name":"css-glass-accordion.html"},{"Name":"css-glass-fracture-reveal.html"},{"Name":"css-glassmorphism-card.html"},{"Name":"css-glassmorphism-credit-card.html"},{"Name":"css-grid-blog-layout.html"},{"Name":"css-hexagon-crop-spin.html"},{"Name":"css-holographic-profile-card.html"},{"Name":"css-liquid-morphing.html"},{"Name":"css-love-letter-envelope.html"},{"Name":"css-magic-ink-button.html"},{"Name":"css-magnifying-glass-lens.html"},{"Name":"css-melting-ice-cream-card.html"},{"Name":"css-morning-coffee-card.html"},{"Name":"css-neon-generator.html"},{"Name":"css-neumorphism-calculator.html"},{"Name":"css-only-accordion.html"},{"Name":"css-only-tabs.html"},{"Name":"css-origami-fold-card.html"},{"Name":"css-origami-photo-hinge.html"},{"Name":"css-paper-plane-button.html"},{"Name":"css-parallax-image-stack.html"},{"Name":"css-pill-nav-tabs.html"},{"Name":"css-pricing-cards.html"},{"Name":"css-profile-card-flip.html"},{"Name":"css-puzzle-piece-hover.html"},{"Name":"css-restaurant-menu.html"},{"Name":"css-rgb-split-snap.html"},{"Name":"css-ripple-pond-card.html"},{"Name":"css-saas-landing-page.html"},{"Name":"css-saloon-door-split.html"},{"Name":"css-seed-growth-progress.html"},{"Name":"css-spinners-preloaders.html"},{"Name":"css-stacking-cards.html"},{"Name":"css-stained-glass-light.html"},{"Name":"css-star-twinkle-string.html"},{"Name":"css-sweetheart-locket.html"},{"Name":"css-text-mask-unveil.html"},{"Name":"css-tug-of-war-images.html"},{"Name":"css-wave-border-card.html"},{"Name":"design-3d-clickable-buttons-with-css-box-shadow-4.html"},{"Name":"design-a-custom-page-preloader-using-html-css-2.html"},{"Name":"design-a-modern-dashboard-sidebar-ui-3.html"},{"Name":"design-a-modern-glassmorphism-ui-with-html-css-2.html"},{"Name":"design-a-modern-login-registration-form-with-html-and-css-1.html"},{"Name":"design-an-animated-dropdown-menu-in-css-3.html"},{"Name":"design-an-auto-playing-image-slider-with-js-3.html"},{"Name":"design-interactive-hover-effect-cards-with-css-3.html"},{"Name":"develop-a-countdown-timer-project-in-javascript-4.html"},{"Name":"develop-a-memory-matching-game-using-js-4.html"},{"Name":"how-to-build-a-calculator-with-javascript-3.html"},{"Name":"how-to-build-a-responsive-navbar-with-html-css-1.html"},{"Name":"how-to-build-a-responsive-sidebar-menu-using-html-css-1.html"},{"Name":"how-to-build-a-responsive-website-layout-in-html-css-1.html"},{"Name":"how-to-build-a-snake-game-using-javascript-canvas-1.html"},{"Name":"how-to-build-an-infinite-carousel-with-html-css-2.html"},{"Name":"how-to-build-interactivity-into-your-site-using-javascript-5.html"},{"Name":"how-to-code-a-rock-paper-scissors-game-in-javascript-5.html"},{"Name":"how-to-create-a-glassmorphism-login-form-2.html"},{"Name":"how-to-create-awesome-css-loading-spinners-1.html"},{"Name":"how-to-create-beautiful-profile-card-designs-in-css-1.html"},{"Name":"how-to-create-live-email-validation-in-js-2.html"},{"Name":"how-to-design-neumorphism-buttons-in-css-2.html"},{"Name":"how-to-manipulate-the-dom-with-vanilla-javascript-2.html"},{"Name":"html-css-masterclass-building-a-personal-portfolio-4.html"},{"Name":"html-css-music-player.html"},{"Name":"interactive-3d-image-slider-using-css-js-4.html"},{"Name":"javascript-array-methods-a-complete-guide-with-examples-4.html"},{"Name":"javascript-best-practices-for-modern-web-development-1.html"},{"Name":"javascript-calculator.html"},{"Name":"javascript-countdown-timer.html"},{"Name":"javascript-form-validation.html"},{"Name":"javascript-image-slider.html"},{"Name":"javascript-particle-network.html"},{"Name":"javascript-password-generator.html"},{"Name":"javascript-pricing-calculator.html"},{"Name":"javascript-quiz-app.html"},{"Name":"javascript-simon-says-game.html"},{"Name":"javascript-todo-app.html"},{"Name":"javascript-weather-api.html"},{"Name":"js-animated-accordion.html"},{"Name":"js-calendar-booking.html"},{"Name":"js-colorful-mood-picker.html"},{"Name":"js-cuddle-pets.html"},{"Name":"js-expense-tracker.html"},{"Name":"js-flashcard-app.html"},{"Name":"js-gradient-generator.html"},{"Name":"js-gratitude-jar.html"},{"Name":"js-habit-tracker.html"},{"Name":"js-heart-rating.html"},{"Name":"js-infinite-scroll.html"},{"Name":"js-magnetic-button.html"},{"Name":"js-mini-sticky-notes.html"},{"Name":"js-month-calendar.html"},{"Name":"js-plant-progress-bar.html"},{"Name":"js-polaroid-memory.html"},{"Name":"js-pomodoro-timer.html"},{"Name":"js-snake-game.html"},{"Name":"js-sunshine-clock.html"},{"Name":"js-tab-filtering.html"},{"Name":"js-typing-speed.html"},{"Name":"js-whack-a-mole.html"},{"Name":"js-whispering-leaf-text.html"},{"Name":"js-wordle-clone.html"},{"Name":"modern-pricing-table-cards-using-css-flexbox-5.html"},{"Name":"password-strength-checker-using-javascript-3.html"},{"Name":"premium-draggable-card-slider.html"},{"Name":"regex-validation-for-registration-forms-in-javascript-5.html"},{"Name":"responsive-login-page-template-with-html-css-4.html"},{"Name":"responsive-mega-menu-tutorial-with-html-css-4.html"},{"Name":"responsive-nav-menu.html"},{"Name":"responsive-portfolio-website.html"},{"Name":"responsive-product-card-ui-using-html-css-2.html"},{"Name":"responsive-sidebar-menu.html"},{"Name":"understanding-async-await-and-promises-in-javascript-3.html"},{"Name":"valentine-fun-game.html"}];
+
+        const grid = document.getElementById('grid');
+        const searchInput = document.getElementById('searchInput');
+
+        function renderGrid(filterText = '') {
+            grid.innerHTML = '';
+            files.forEach(f => {
+                const rawName = f.Name.replace('.html', '');
+                // Clean up the string to be readable
+                const readableName = rawName
+                    .split('-')
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(' ')
+                    // Remove trailing numbers if any (like " 5")
+                    .replace(/ \d+$/, '');
+
+                if (readableName.toLowerCase().includes(filterText.toLowerCase())) {
+                    grid.innerHTML += `
+                        <div class="card">
+                            <h3>${readableName}</h3>
+                            <div class="links">
+                                <a href="/blog/${rawName}" target="_blank" class="btn-blog">📄 Tutorial</a>
+                                <a href="/demos/${f.Name}" target="_blank" class="btn-demo">▶ Live Demo</a>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+        }
+
+        renderGrid();
+
+        searchInput.addEventListener('input', (e) => {
+            renderGrid(e.target.value);
+        });
+    </script>
+</body>
+</html>

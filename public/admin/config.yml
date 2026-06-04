@@ -1,25 +1,216 @@
-# ─────────────────────────────────────────────────────────────
-# Decap CMS Configuration for CodesCompiler
-# Admin Panel: http://localhost:4321/admin
-# ─────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
+# CodesCompiler — Decap CMS Full Configuration
+# Admin URL (local): http://localhost:4321/admin/
+# Run BOTH commands before opening admin:
+#   Terminal 1: npm run dev
+#   Terminal 2: npx decap-server
+# ─────────────────────────────────────────────────────────────────────────────
 
-# LOCAL backend — works on your computer without any login
-# When deploying to live server, change this to use GitHub auth
+# LOCAL backend — no login needed on your PC
+# Connects to `npx decap-server` running on port 8081
 local_backend: true
 
 backend:
   name: git-gateway
   branch: main
+  commit_messages:
+    create:  'feat(cms): create {{collection}} "{{slug}}"'
+    update:  'fix(cms): update {{collection}} "{{slug}}"'
+    delete:  'chore(cms): delete {{collection}} "{{slug}}"'
 
-# Where uploaded images go
+# Where uploaded images are stored & served from
 media_folder: "public/images/uploads"
 public_folder: "/images/uploads"
 
+# Slug settings — clean URLs automatically
+slug:
+  encoding: ascii
+  clean_accents: true
+  sanitize_replacement: "-"
+
+# =============================================================================
+# COLLECTIONS
+# =============================================================================
 collections:
-  # ── TUTORIALS ────────────────────────────────────────────────
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # 1. BLOG POSTS
+  # ───────────────────────────────────────────────────────────────────────────
+  - name: "blog"
+    label: "📝 Blog Posts"
+    label_singular: "Blog Post"
+    folder: "src/content/blog"
+    create: true
+    delete: true
+    extension: "mdx"
+    format: "frontmatter"
+    slug: "{{slug}}"
+    preview_path: "blog/{{slug}}"
+    summary: "{{fields.status | upper}} | {{title}} — {{fields.date}}"
+    sortable_fields: ["title", "date", "category", "status"]
+    view_filters:
+      - label: "✅ Published"
+        field: status
+        pattern: "published"
+      - label: "📄 Drafts"
+        field: status
+        pattern: "draft"
+      - label: "🕐 Scheduled"
+        field: status
+        pattern: "scheduled"
+      - label: "⭐ Featured"
+        field: featured
+        pattern: "true"
+    view_groups:
+      - label: "Status"
+        field: status
+      - label: "Category"
+        field: category
+    fields:
+
+      # ── BASIC INFO ─────────────────────────────────────────────────────────
+      - label: "Post Title"
+        name: "title"
+        widget: "string"
+        hint: "The display title shown on the page (H1). Keep it clear and descriptive."
+
+      - label: "Description / Excerpt"
+        name: "description"
+        widget: "text"
+        hint: "1–2 sentence summary. Shown below the title and used in social shares. (10–300 chars)"
+
+      # ── STATUS ─────────────────────────────────────────────────────────────
+      - label: "Post Status"
+        name: "status"
+        widget: "select"
+        default: "published"
+        hint: "📄 Draft = hidden everywhere. ✅ Published = live on site. 🕐 Scheduled = hidden, publish manually when ready."
+        options:
+          - { label: "📄 Draft — Not visible on site", value: "draft" }
+          - { label: "✅ Published — Live on site", value: "published" }
+          - { label: "🕐 Scheduled — Hidden, publish manually", value: "scheduled" }
+
+      # ── DATE ───────────────────────────────────────────────────────────────
+      - label: "Publish Date"
+        name: "date"
+        widget: "datetime"
+        date_format: "YYYY-MM-DD"
+        time_format: false
+        format: "YYYY-MM-DD"
+        hint: "Used for sorting posts. For Scheduled posts, this is the planned go-live date."
+
+      # ── CATEGORY & TAGS ────────────────────────────────────────────────────
+      - label: "Category"
+        name: "category"
+        widget: "select"
+        hint: "Pick the best matching category."
+        options:
+          - "HTML & CSS"
+          - "JavaScript"
+          - "JavaScript Projects"
+          - "Login Form"
+          - "Card Design"
+          - "Navigation Bar"
+          - "Blog"
+          - "Website Designs"
+          - "Image Slider"
+          - "API Projects"
+          - "Sidebar Menu"
+          - "CSS Buttons"
+          - "JavaScript Games"
+          - "Preloader or Loader"
+          - "Form Validation"
+          - "Accordion"
+          - "Bootstrap"
+          - "Tabs"
+          - "Calendar"
+
+      - label: "Tags"
+        name: "tags"
+        widget: "list"
+        allow_add: true
+        collapsed: false
+        hint: "Add relevant tags. e.g. css, animation, card, ui"
+
+      # ── AUTHOR ─────────────────────────────────────────────────────────────
+      - label: "Author"
+        name: "author"
+        widget: "string"
+        default: "CodesCompiler"
+        hint: "Author name shown on the post."
+
+      # ── IMAGES ─────────────────────────────────────────────────────────────
+      - label: "Featured Image"
+        name: "image"
+        widget: "image"
+        required: false
+        hint: "Main thumbnail shown in the blog listing and at the top of the post."
+
+      - label: "Featured Image Alt Text"
+        name: "imageAlt"
+        widget: "string"
+        required: false
+        hint: "(Important for SEO) Describe the featured image briefly."
+
+      - label: "OG / Social Share Image"
+        name: "ogImage"
+        widget: "image"
+        required: false
+        hint: "(Optional) Custom image for Facebook & Twitter sharing. Leave blank to use Featured Image."
+
+      # ── TOGGLES ────────────────────────────────────────────────────────────
+      - label: "⭐ Featured Post"
+        name: "featured"
+        widget: "boolean"
+        default: false
+        hint: "Shows this post in the Featured section at the top of the blog page."
+
+      - label: "🚀 Has Live Demo"
+        name: "hasDemo"
+        widget: "boolean"
+        default: false
+        hint: "Shows the Live Demo + Download buttons bar at the top of the post."
+
+      # ── SEO ────────────────────────────────────────────────────────────────
+      - label: "Custom Permalink (URL)"
+        name: "permalink"
+        widget: "string"
+        required: false
+        hint: "(Optional) Override the URL slug. e.g. 'my-custom-url'"
+
+      - label: "SEO Title (Browser Tab & Google)"
+        name: "seoTitle"
+        widget: "string"
+        required: false
+        hint: "(Optional) Custom <title> tag for Google. If blank, Post Title is used. Best: 50–60 chars."
+
+      - label: "Canonical URL"
+        name: "canonicalUrl"
+        widget: "string"
+        required: false
+        hint: "(Optional) Override canonical URL. Leave blank to use the page URL. Use only if this article is published elsewhere first."
+
+      - label: "🚫 No-Index (Hide from Google)"
+        name: "noindex"
+        widget: "boolean"
+        default: false
+        hint: "When ON: adds noindex meta tag. Google will NOT index this page. Use for drafts you accidentally publish."
+
+      # ── CONTENT ────────────────────────────────────────────────────────────
+      - label: "Post Content"
+        name: "body"
+        widget: "markdown"
+        hint: "Write your full post in Markdown. Code blocks, images, and links are supported."
+        show_raw: true
+        modes: ["raw", "rich_text"]
+
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # 2. TUTORIALS
+  # ───────────────────────────────────────────────────────────────────────────
   - name: "tutorials"
-    label: "Tutorials"
-    label_singular: "Tutorial"
+    label: "📖 Tutorials"
+    label_singular: "Tutorial Chapter"
     folder: "src/content/tutorials"
     create: true
     delete: true
@@ -27,54 +218,225 @@ collections:
     format: "frontmatter"
     slug: "{{slug}}"
     preview_path: "tutorial/{{slug}}"
-    summary: "{{title}} ({{category}} — Chapter {{order}})"
-    sortable_fields: ["category", "order", "title"]
+    summary: "[{{fields.category | upper}}] Ch.{{fields.order}} — {{title}}"
+    sortable_fields: ["title", "order", "category"]
+    view_groups:
+      - label: "Category"
+        field: category
     view_filters:
-      - label: "HTML"
-        field: category
-        pattern: "html"
-      - label: "CSS"
-        field: category
-        pattern: "css"
-      - label: "JavaScript"
-        field: category
-        pattern: "javascript"
+      - { label: "HTML",       field: category, pattern: "html"       }
+      - { label: "CSS",        field: category, pattern: "css"        }
+      - { label: "JavaScript", field: category, pattern: "javascript" }
+      - { label: "SEO",        field: category, pattern: "seo"        }
+      - { label: "Python",     field: category, pattern: "python"     }
+      - { label: "SQL",        field: category, pattern: "sql"        }
+      - { label: "PHP",        field: category, pattern: "php"        }
     fields:
-      - label: "Title"
+
+      - label: "Chapter Title"
         name: "title"
         widget: "string"
-        hint: "Shown in browser tab, sidebar, and breadcrumb"
+        hint: "Short, clear title for this tutorial chapter."
 
-      - label: "Description"
-        name: "description"
+      - label: "Custom Permalink (URL)"
+        name: "permalink"
         widget: "string"
-        hint: "One sentence — used for SEO meta description"
+        required: false
+        hint: "(Optional) Override the URL slug. e.g. 'javascript-introduction'"
 
-      - label: "Category"
+      - label: "Meta Description (SEO)"
+        name: "description"
+        widget: "text"
+        required: false
+        hint: "1–2 sentences for Google. If blank, Google picks its own snippet."
+
+      - label: "Language / Category"
         name: "category"
         widget: "select"
+        hint: "Which tutorial track does this chapter belong to?"
         options:
-          - { label: "HTML", value: "html" }
-          - { label: "CSS", value: "css" }
-          - { label: "JavaScript", value: "javascript" }
-        hint: "Which tutorial section this belongs to"
+          - { label: "📄 HTML",       value: "html"       }
+          - { label: "🎨 CSS",        value: "css"        }
+          - { label: "⚡ JavaScript", value: "javascript" }
+          - { label: "🔍 SEO",        value: "seo"        }
+          - { label: "🐍 Python",     value: "python"     }
+          - { label: "🗄️ SQL",        value: "sql"        }
+          - { label: "🐘 PHP",        value: "php"        }
 
       - label: "Chapter Order"
         name: "order"
         widget: "number"
         value_type: "int"
         min: 1
-        hint: "Sidebar sort position — 1 is the first chapter"
+        max: 9999
+        step: 1
+        hint: "Sort order in sidebar. 1 = first chapter."
 
-      - label: "Published Date"
-        name: "date"
-        widget: "datetime"
+      - label: "Section Group"
+        name: "group"
+        widget: "string"
         required: false
+        hint: "(Optional) Section heading in sidebar. e.g. Basics, Advanced, OOP"
 
-      - label: "Tutorial Content"
+      - label: "SEO Title"
+        name: "seoTitle"
+        widget: "string"
+        required: false
+        hint: "(Optional) Custom browser tab title. If blank, uses Chapter Title."
+
+      - label: "Content"
         name: "body"
         widget: "markdown"
-        hint: >
-          Write your tutorial here using Markdown.
-          To add a live code editor, type:
-          <Editor initialHtml={`your html`} initialCss={`your css`} />
+        hint: "Tutorial content in Markdown. Supports code blocks, tables, and images."
+        show_raw: true
+        modes: ["raw", "rich_text"]
+
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # 3. PAGES
+  # ───────────────────────────────────────────────────────────────────────────
+  - name: "pages"
+    label: "📄 Pages"
+    label_singular: "Page"
+    folder: "src/content/pages"
+    create: true
+    delete: true
+    extension: "mdx"
+    format: "frontmatter"
+    slug: "{{slug}}"
+    preview_path: "{{slug}}"
+    summary: "{{title}}"
+    fields:
+      - label: "Page Title"
+        name: "title"
+        widget: "string"
+        hint: "The main H1 title for this page."
+
+      - label: "Meta Description (SEO)"
+        name: "description"
+        widget: "text"
+        hint: "Short description for Google and social sharing."
+
+      - label: "SEO Title"
+        name: "seoTitle"
+        widget: "string"
+        required: false
+        hint: "(Optional) Custom browser tab title. If blank, uses Page Title."
+
+      - label: "🚫 No-Index (Hide from Google)"
+        name: "noindex"
+        widget: "boolean"
+        default: false
+        hint: "When ON: adds noindex meta tag. Google will NOT index this page."
+
+      - label: "Page Content"
+        name: "body"
+        widget: "markdown"
+        hint: "Write the page content in Markdown. HTML is fully supported."
+        show_raw: true
+        modes: ["raw", "rich_text"]
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # 4. SITE SETTINGS
+  # ───────────────────────────────────────────────────────────────────────────
+  - name: "settings"
+    label: "⚙️ Site Settings"
+    files:
+      - label: "🌐 General Settings"
+        name: "general"
+        file: "src/site-settings.json"
+        fields:
+
+          - label: "Site Title"
+            name: "siteTitle"
+            widget: "string"
+            hint: "Your site name. Appended to every page title."
+
+          - label: "Site URL"
+            name: "siteUrl"
+            widget: "string"
+            hint: "Your full domain. e.g. https://codescompiler.com"
+
+          - label: "Default Meta Description"
+            name: "siteDescription"
+            widget: "text"
+            hint: "Used on pages without their own meta description."
+
+          - label: "💰 Google AdSense Publisher ID"
+            name: "adsenseId"
+            widget: "string"
+            required: false
+            hint: "Your AdSense ID. e.g. ca-pub-1234567890123456. Leave blank if not approved yet."
+
+          - label: "Enable AdSense Auto Ads"
+            name: "adsenseAutoAds"
+            widget: "boolean"
+            default: false
+            hint: "When ON, Google places ads automatically. Enable ONLY after AdSense approval."
+
+          - label: "🔍 Google Search Console Verification Tag"
+            name: "searchConsoleTag"
+            widget: "string"
+            required: false
+            hint: "The content value from the Google Search Console verification meta tag."
+
+          - label: "🤖 Robots.txt Content"
+            name: "robotsTxt"
+            widget: "text"
+            hint: "Controls what search engines can crawl. Default allows everything."
+
+          - label: "📜 Custom <head> Scripts"
+            name: "customHeadScripts"
+            widget: "text"
+            required: false
+            hint: "HTML/script tags for <head>. e.g. Google Analytics, GTM, custom fonts."
+
+          - label: "📜 Custom <body> Scripts"
+            name: "customBodyScripts"
+            widget: "text"
+            required: false
+            hint: "Scripts to inject before </body>. e.g. chat widgets, tracking pixels."
+
+          - label: "🔗 Blog Permalink Structure"
+            name: "permalinkStructure"
+            widget: "string"
+            hint: "URL pattern for blog posts. Default: /blog/{slug}/"
+
+          - label: "🔗 Tutorial Permalink Structure"
+            name: "tutorialPermalinkStructure"
+            widget: "string"
+            hint: "URL pattern for tutorials. Default: /tutorial/{slug}/"
+
+      - file: "src/data/navigation.json"
+        label: "🗺️ Navigation Menu"
+        name: "navigation"
+        fields:
+          - label: "Navigation Items"
+            name: "navItems"
+            widget: "list"
+            types:
+              - label: "Dropdown Menu"
+                name: "dropdown"
+                widget: "object"
+                fields:
+                  - { label: "Dropdown Label", name: "label", widget: "string", hint: "e.g. 🌐 Web" }
+                  - label: "Sections"
+                    name: "sections"
+                    widget: "list"
+                    fields:
+                      - { label: "Section Title", name: "title", widget: "string", required: false, hint: "Optional heading for the dropdown section" }
+                      - label: "Links"
+                        name: "links"
+                        widget: "list"
+                        fields:
+                          - { label: "Icon Emoji", name: "icon", widget: "string", required: false }
+                          - { label: "Link Text", name: "label", widget: "string" }
+                          - { label: "URL", name: "href", widget: "string" }
+                          - { label: "Badge Text", name: "badge", widget: "string", required: false, hint: "e.g. New or Soon" }
+                          - { label: "Badge Color", name: "badgeColor", widget: "select", options: ["green", "orange"], required: false, default: "green" }
+              - label: "Single Link"
+                name: "link"
+                widget: "object"
+                fields:
+                  - { label: "Link Text", name: "label", widget: "string" }
+                  - { label: "URL", name: "href", widget: "string" }

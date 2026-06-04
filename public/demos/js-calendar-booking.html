@@ -8,12 +8,14 @@
     .container { display: flex; gap: 30px; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); flex-wrap: wrap;}
     
     .grid { display: grid; grid-template-columns: repeat(7, 40px); gap: 5px; text-align: center; }
-    .day { height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; cursor: pointer;}
+    .grid-headers { display: grid; grid-template-columns: repeat(7, 40px); gap: 5px; text-align: center; font-size: 0.8rem; color: #9ca3af; margin-bottom: 10px; font-weight: bold;}
+    .day { height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; cursor: pointer; transition: background 0.2s;}
     .day:hover { background: #fce7f3; }
     .day.active { background: #db2777; color: white; }
     
     .panel { width: 200px; }
-    h3 { margin-top: 0; color: #1f2937; margin-bottom: 20px;}
+    h3 { margin-top: 0; color: #1f2937; margin-bottom: 10px;}
+    .instruction { color: #6b7280; font-size: 0.9rem; margin-bottom: 20px; max-width: 300px; line-height: 1.5; }
     .slots { display: flex; flex-direction: column; gap: 10px; }
     .btn { padding: 15px; border: 1px solid #db2777; background: transparent; color: #db2777; flex-grow: 1; border-radius: 8px; font-weight: bold; cursor: pointer; display: none; animation: slideIn 0.3s forwards;}
     .btn:hover { background: #db2777; color: white;}
@@ -25,23 +27,33 @@
   <div class="container">
     <div>
       <h3>Select Date</h3>
+      <p class="instruction">
+        Please click on any available date to view the open time slots. Then, select a time to confirm your appointment.
+      </p>
+      <div class="grid-headers">
+        <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
+      </div>
       <div class="grid" id="grid">
-        <div style="grid-column: span 3"></div>
-        <div class="day" onclick="pick(this)">1</div>
-        <div class="day" onclick="pick(this)">2</div>
-        <div class="day" onclick="pick(this)">3</div>
-        <div class="day" onclick="pick(this)">4</div>
-        <div class="day" onclick="pick(this)">5</div>
+        <!-- Calendar populated by JS -->
       </div>
     </div>
     
     <div class="panel">
       <h3 id="panelTitle">Select Time</h3>
-      <div class="slots" id="slots"></div>
+      <div class="slots" id="slots">
+        <p style="color: #9ca3af; font-size: 0.9rem; margin-top: 20px;">No date selected.</p>
+      </div>
     </div>
   </div>
 
   <script>
+    // Generate full calendar
+    const grid = document.getElementById('grid');
+    grid.innerHTML = '<div style="grid-column: span 3"></div>'; // Start on Wednesday
+    for(let i = 1; i <= 30; i++) {
+        grid.innerHTML += `<div class="day" onclick="pick(this)">${i}</div>`;
+    }
+
     const times = ["09:00 AM", "10:30 AM", "01:00 PM", "04:15 PM"];
     const slots = document.getElementById('slots');
     
@@ -57,7 +69,7 @@
         btn.innerText = t;
         btn.style.display = 'block';
         btn.style.animationDelay = (i * 0.1) + 's';
-        btn.onclick = () => alert("Booked for April " + el.innerText + " at " + t);
+        btn.onclick = () => alert("Successfully booked for April " + el.innerText + " at " + t + "!");
         slots.appendChild(btn);
       });
     }

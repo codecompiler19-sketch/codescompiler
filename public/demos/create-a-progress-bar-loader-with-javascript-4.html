@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Progress Bar Loader | Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    
+    body {
+      background: #0f172a;
+      color: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .loader-container {
+      width: 100%;
+      max-width: 500px;
+      padding: 30px;
+      background: #1e293b;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #38bdf8;
+    }
+
+    .progress-wrapper {
+      background: #334155;
+      border-radius: 30px;
+      height: 20px;
+      width: 100%;
+      overflow: hidden;
+      margin-bottom: 15px;
+      position: relative;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%; /* Initial state */
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+      background-size: 200% 100%;
+      border-radius: 30px;
+      transition: width 0.1s linear;
+      animation: gradientMove 2s infinite linear;
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 100% 0; }
+      100% { background-position: -100% 0; }
+    }
+
+    .status-text {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #94a3b8;
+    }
+
+    .btn {
+      margin-top: 30px;
+      padding: 10px 24px;
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .btn:hover { background: #2563eb; }
+    .btn:disabled { background: #475569; cursor: not-allowed; }
+
+  </style>
+</head>
+<body>
+
+  <div class="loader-container">
+    <h2>Downloading Assets</h2>
+    
+    <div class="progress-wrapper">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+    
+    <div class="status-text" id="statusText">0% Complete</div>
+    
+    <button class="btn" id="startBtn">Start Download</button>
+  </div>
+
+  <script>
+    const progressBar = document.getElementById('progressBar');
+    const statusText = document.getElementById('statusText');
+    const startBtn = document.getElementById('startBtn');
+
+    let progress = 0;
+    let intervalId = null;
+
+    function simulateDownload() {
+      // Disable button during "download"
+      startBtn.disabled = true;
+      progress = 0;
+      progressBar.style.width = '0%';
+      statusText.textContent = '0% Complete';
+      statusText.style.color = '#94a3b8';
+      
+      // Update progress randomly to simulate real network activity
+      intervalId = setInterval(() => {
+        // Random increment between 1 and 8
+        const increment = Math.floor(Math.random() * 8) + 1;
+        progress += increment;
+
+        if (progress >= 100) {
+          progress = 100;
+          clearInterval(intervalId);
+          startBtn.disabled = false;
+          startBtn.textContent = 'Download Again';
+          statusText.textContent = 'Download Complete! 🎉';
+          statusText.style.color = '#10b981'; // Green color
+        }
+
+        // Update the DOM
+        progressBar.style.width = progress + '%';
+        if (progress < 100) {
+          statusText.textContent = progress + '% Complete';
+        }
+
+      }, 150); // Every 150ms
+    }
+
+    startBtn.addEventListener('click', simulateDownload);
+  </script>
+</body>
+</html>

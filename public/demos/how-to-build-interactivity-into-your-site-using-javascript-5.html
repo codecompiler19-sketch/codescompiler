@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JavaScript Interactivity Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-color: #f8fafc;
+      --text-color: #0f172a;
+      --card-bg: #ffffff;
+      --border-color: #e2e8f0;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #0f172a;
+      --text-color: #f8fafc;
+      --card-bg: #1e293b;
+      --border-color: #334155;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: background-color 0.3s ease, color 0.3s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 1.5rem;
+    }
+
+    .dashboard {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle:hover {
+      background: var(--border-color);
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 1rem;
+      border-bottom: 2px solid var(--border-color);
+      margin-bottom: 1.5rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-color);
+      padding: 10px 16px;
+      cursor: pointer;
+      font-weight: 600;
+      opacity: 0.6;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .tab-btn.active {
+      opacity: 1;
+      color: var(--primary);
+      border-bottom: 2px solid var(--primary);
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Modal Trigger */
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      width: 100%;
+      margin-top: 1rem;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      z-index: 100;
+      padding: 1rem;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 2rem;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 400px;
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.active .modal {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: var(--text-color);
+      font-size: 1.5rem;
+      cursor: pointer;
+      opacity: 0.5;
+    }
+
+    .close-btn:hover { opacity: 1; }
+
+    /* Accordion */
+    .accordion-item {
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+    .accordion-header {
+      width: 100%;
+      padding: 15px;
+      background: transparent;
+      border: none;
+      color: var(--text-color);
+      text-align: left;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .accordion-content {
+      padding: 0 15px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+      color: var(--text-color);
+      opacity: 0.8;
+    }
+    .accordion-item.active .accordion-content {
+      padding: 0 15px 15px 15px;
+      max-height: 200px;
+    }
+    .accordion-item.active .accordion-header::after {
+      content: '−';
+    }
+    .accordion-header::after {
+      content: '+';
+      font-size: 1.2rem;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Main Dashboard -->
+  <div class="dashboard">
+    <div class="header">
+      <h2>Interactive UI</h2>
+      <button class="theme-toggle" id="themeToggle">🌙 Dark Mode</button>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="tabs">
+      <button class="tab-btn active" data-target="tab1">Overview</button>
+      <button class="tab-btn" data-target="tab2">Accordion</button>
+      <button class="tab-btn" data-target="tab3">Settings</button>
+    </div>
+
+    <!-- Tab Content 1 -->
+    <div class="tab-content active" id="tab1">
+      <h3 style="margin-bottom:10px;">Welcome to the Overview</h3>
+      <p style="opacity: 0.8; line-height: 1.6; margin-bottom: 20px;">
+        This demo showcases several interactive components built entirely with Vanilla JavaScript. Try toggling the theme, switching tabs, opening the accordion, or launching the modal!
+      </p>
+      <button class="btn-primary" id="openModalBtn">Open Modal Popup</button>
+    </div>
+
+    <!-- Tab Content 2 (Accordion) -->
+    <div class="tab-content" id="tab2">
+      <div class="accordion-item">
+        <button class="accordion-header">What is JavaScript?</button>
+        <div class="accordion-content">
+          JavaScript is the programming language of the Web. It can update and change both HTML and CSS.
+        </div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-header">Why use Vanilla JS?</button>
+        <div class="accordion-content">
+          Vanilla JS is fast, lightweight, and requires no external libraries. Understanding it is crucial before learning frameworks like React.
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Content 3 -->
+    <div class="tab-content" id="tab3">
+      <h3 style="margin-bottom:10px;">Settings Panel</h3>
+      <p style="opacity: 0.8; line-height: 1.6;">Configure your application preferences here. (This is a dummy tab to demonstrate tab switching logic).</p>
+    </div>
+  </div>
+
+  <!-- Modal Overlay -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Modal Window</h2>
+        <button class="close-btn" id="closeModalBtn">&times;</button>
+      </div>
+      <p style="opacity: 0.8; line-height: 1.6; margin-bottom: 20px;">
+        You have successfully opened the modal using JavaScript event listeners! Click the "X" or anywhere outside this box to close it.
+      </p>
+      <button class="btn-primary" id="confirmModalBtn">Awesome!</button>
+    </div>
+  </div>
+
+  <script>
+    // 1. Dark Mode Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const htmlElement = document.documentElement;
+
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = htmlElement.getAttribute('data-theme');
+      if (currentTheme === 'dark') {
+        htmlElement.removeAttribute('data-theme');
+        themeToggle.textContent = '🌙 Dark Mode';
+      } else {
+        htmlElement.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️ Light Mode';
+      }
+    });
+
+    // 2. Tab Switching Logic
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Remove active class from all
+        tabBtns.forEach(b => b.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
+
+        // Add active class to clicked tab
+        btn.classList.add('active');
+        const targetId = btn.getAttribute('data-target');
+        document.getElementById(targetId).classList.add('active');
+      });
+    });
+
+    // 3. Modal Logic
+    const modalOverlay = document.getElementById('modalOverlay');
+    const openModalBtn = document.getElementById('openModalBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const confirmModalBtn = document.getElementById('confirmModalBtn');
+
+    function openModal() { modalOverlay.classList.add('active'); }
+    function closeModal() { modalOverlay.classList.remove('active'); }
+
+    openModalBtn.addEventListener('click', openModal);
+    closeModalBtn.addEventListener('click', closeModal);
+    confirmModalBtn.addEventListener('click', closeModal);
+    
+    // Close modal if clicking outside the modal box
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) closeModal();
+    });
+
+    // 4. Accordion Logic
+    const accordionHeaders = document.querySelectorAll('.accordion-header');
+    
+    accordionHeaders.forEach(header => {
+      header.addEventListener('click', () => {
+        const item = header.parentElement;
+        item.classList.toggle('active');
+      });
+    });
+  </script>
+</body>
+</html>

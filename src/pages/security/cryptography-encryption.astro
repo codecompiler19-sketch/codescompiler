@@ -1,0 +1,52 @@
+---
+import TopicLayout from '../../layouts/TopicLayout.astro';
+---
+<TopicLayout title="Cryptography & Encryption" description="Understand how encryption, hashing, and digital certificates secure our data on the internet." section="security">
+  <h2>What is Cryptography?</h2>
+  <p><strong>Cryptography</strong> is the practice of securing information and communication through the use of codes, so that only those for whom the information is intended can read and process it. In the digital world, cryptography is the foundation of data confidentiality, integrity, and authenticity.</p>
+
+  <h2>Symmetric vs. Asymmetric Encryption</h2>
+  <p>Encryption converts plaintext (readable data) into ciphertext (unreadable scrambled data). There are two main categories of encryption based on the keys used:</p>
+
+  <h3>1. Symmetric Encryption</h3>
+  <p>Symmetric encryption uses the <strong>same key</strong> for both encrypting and decrypting data. It is fast and efficient, making it ideal for encrypting large amounts of data (such as files on a hard drive).</p>
+  <ul>
+    <li><strong>Pros:</strong> Very fast execution speed.</li>
+    <li><strong>Cons:</strong> Key distribution problem. How do you securely share the key with the recipient without someone intercepting it?</li>
+    <li><strong>Common Algorithms:</strong> AES (Advanced Encryption Standard - the industry standard), DES, 3DES, Blowfish.</li>
+  </ul>
+
+  <h3>2. Asymmetric Encryption (Public Key Cryptography)</h3>
+  <p>Asymmetric encryption solves the key distribution problem by using a <strong>mathematically linked key pair</strong>:</p>
+  <ul>
+    <li><strong>Public Key</strong> — Can be shared with anyone. Used to <em>encrypt</em> the data.</li>
+    <li><strong>Private Key</strong> — Must be kept secret. Used to <em>decrypt</em> the data.</li>
+  </ul>
+  <p>If Alice wants to send a secure message to Bob, Alice encrypts it using Bob's public key. Only Bob's private key can decrypt it. Anyone intercepting the message cannot read it without the private key.</p>
+  <ul>
+    <li><strong>Pros:</strong> Highly secure key distribution.</li>
+    <li><strong>Cons:</strong> Much slower than symmetric encryption due to complex mathematical operations.</li>
+    <li><strong>Common Algorithms:</strong> RSA (Rivest-Shamir-Adleman), ECC (Elliptic Curve Cryptography), Diffie-Hellman.</li>
+  </ul>
+
+  <blockquote><strong>Hybrid Approach:</strong> Modern secure protocols (like HTTPS and TLS) use a hybrid system. Asymmetric encryption is used at the start of a connection to securely exchange a temporary symmetric key, which is then used to encrypt the rest of the session data. This gives you the speed of symmetric encryption with the security of asymmetric encryption.</blockquote>
+
+  <h2>Hashing: One-Way Security</h2>
+  <p>A <strong>cryptographic hash function</strong> takes an input of any size and produces a fixed-size string of characters, typically a hexadecimal number. Unlike encryption, hashing is a <strong>one-way function</strong> — you cannot convert a hash back into the original input.</p>
+  <p>Hashing is used to verify the <strong>integrity</strong> of data (ensuring it hasn't been altered). If even a single character in the input changes, the resulting hash will be completely different (known as the <em>avalanche effect</em>).</p>
+  <ul>
+    <li><strong>Password Storage</strong> — Websites should never store passwords in plaintext. Instead, they hash the password. When you log in, the site hashes your input and compares it to the stored hash.</li>
+    <li><strong>File Integrity</strong> — Software downloads often provide a SHA-256 checksum (hash). After downloading, you can hash the file to verify it hasn't been tampered with or corrupted.</li>
+    <li><strong>Common Hashing Algorithms:</strong> SHA-256, SHA-3, MD5 (legacy, insecure), SHA-1 (legacy, insecure).</li>
+  </ul>
+
+  <h2>Digital Signatures &amp; Certificates</h2>
+  <p>To verify the authenticity of a sender or website, cryptography uses digital certificates:</p>
+  <ul>
+    <li><strong>Digital Signature</strong> — A mathematical scheme that proves a message was created by a known sender (authenticity) and was not altered in transit (integrity). It is created by hashing the message and encrypting the hash with the sender's private key.</li>
+    <li><strong>Digital Certificate (SSL/TLS)</strong> — Issued by a trusted third party called a <strong>Certificate Authority (CA)</strong>. It binds a public key to an entity (like a website's domain name) to verify that you are connecting to the genuine server, not an imposter.</li>
+  </ul>
+
+  <h2>What's Next?</h2>
+  <p>Learn how cryptography is used to secure web traffic in <a href="/networking/http-https">HTTP &amp; HTTPS</a>, or explore the physical boundary tools in <a href="/security/vpn-firewall">VPN &amp; Firewall</a>.</p>
+</TopicLayout>

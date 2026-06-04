@@ -1,0 +1,104 @@
+---
+title: "SQL – Stored Procedures"
+description: "Understand stored procedures — named, reusable SQL programs stored in the database server."
+category: "sql"
+order: 45
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+A **stored procedure** is a named collection of SQL statements saved inside the database itself. Instead of sending a long SQL query from your application every time, you simply call the procedure by name and pass any required parameters. The database executes the stored logic directly — faster, more secure, and reusable.
+
+SQLite does not support stored procedures (it uses application-level logic instead), but MySQL, PostgreSQL, and SQL Server do. Below we simulate the concept using a CTE-based approach that demonstrates the same reusable computation pattern.
+
+**MySQL / PostgreSQL syntax**
+```sql
+CREATE PROCEDURE GetTopStudents(IN min_score REAL)
+BEGIN
+  SELECT name, score
+  FROM students
+  WHERE score >= min_score
+  ORDER BY score DESC;
+END;
+
+-- Calling it:
+CALL GetTopStudents(85);
+```
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={`CREATE TABLE students (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  age INTEGER,
+  city TEXT,
+  score REAL,
+  grade TEXT
+);
+INSERT INTO students VALUES
+  (1,'Aria Chen',22,'Mumbai',94.5,'A'),
+  (2,'Ben Torres',19,'Delhi',78.2,'B'),
+  (3,'Cleo Park',24,'Bangalore',88.0,'A'),
+  (4,'Dev Patel',21,'Chennai',65.5,'C'),
+  (5,'Eva Müller',20,'Hyderabad',91.3,'A'),
+  (6,'Finn Walsh',23,'Pune',72.8,'B'),
+  (7,'Gina Lopez',22,'Kolkata',55.1,'D'),
+  (8,'Hiro Sato',25,'Mumbai',83.6,'B');
+
+CREATE TABLE courses (
+  id INTEGER PRIMARY KEY,
+  title TEXT,
+  instructor TEXT,
+  category TEXT,
+  price REAL,
+  rating REAL
+);
+INSERT INTO courses VALUES
+  (1,'Python Mastery','Dr. Ada Lovelace','Programming',2999,4.9),
+  (2,'SQL Foundations','Prof. Edgar Codd','Database',1999,4.8),
+  (3,'Web Design','Ms. Grace Hopper','Design',1499,4.7),
+  (4,'Data Science','Dr. Alan Turing','Analytics',3999,4.9),
+  (5,'Cybersecurity','Mr. Kevin Mitnick','Security',2499,4.6);
+
+CREATE TABLE enrollments (
+  student_id INTEGER,
+  course_id INTEGER,
+  enroll_date TEXT,
+  status TEXT,
+  final_score REAL
+);
+INSERT INTO enrollments VALUES
+  (1,1,'2024-01-15','completed',95),
+  (1,2,'2024-02-01','completed',88),
+  (2,3,'2024-01-20','active',NULL),
+  (3,1,'2024-03-05','completed',90),
+  (4,4,'2024-02-10','dropped',45),
+  (5,2,'2024-01-10','completed',96),
+  (6,5,'2024-03-15','active',NULL),
+  (7,3,'2024-02-20','completed',60),
+  (8,1,'2024-04-01','active',NULL);`}
+  querySql={`-- Simulate a "stored procedure" using a CTE
+-- In MySQL/PG you would CALL GetStudentReport(85)
+WITH top_students AS (
+  SELECT name, city, score, grade
+  FROM   students
+  WHERE  score >= 85
+)
+SELECT *, 'High Performer' AS category
+FROM   top_students
+ORDER  BY score DESC;`}
+/>
+
+## Key Points
+
+- Stored procedures are saved SQL programs in the database
+- They accept parameters and can contain flow control (IF, LOOP)
+- Reduce network round-trips between app and database
+- SQLite uses application logic instead; MySQL/PG/SQL Server support them fully
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

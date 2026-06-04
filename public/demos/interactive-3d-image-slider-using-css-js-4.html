@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive 3D Coverflow Slider</title>
+    <style>
+        body { margin: 0; padding: 0; }
+        .coverflow-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+          background-color: #1a1a2e;
+          perspective: 1000px;
+          overflow: hidden;
+          font-family: 'Inter', sans-serif;
+        }
+        .coverflow-slider {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          position: relative;
+          width: 100%;
+          height: 400px;
+          transform-style: preserve-3d;
+        }
+        .coverflow-item {
+          position: absolute;
+          width: 300px;
+          height: 400px;
+          transition: transform 0.5s ease, opacity 0.5s ease;
+          cursor: pointer;
+          border-radius: 15px;
+          overflow: hidden;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .coverflow-item img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="coverflow-container">
+      <div class="coverflow-slider">
+        <div class="coverflow-item">
+          <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=400&q=80" alt="Img">
+        </div>
+        <div class="coverflow-item">
+          <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80" alt="Img">
+        </div>
+        <div class="coverflow-item active">
+          <img src="https://images.unsplash.com/photo-1494522855154-9297ac14b55f?auto=format&fit=crop&w=400&q=80" alt="Img">
+        </div>
+        <div class="coverflow-item">
+          <img src="https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=400&q=80" alt="Img">
+        </div>
+        <div class="coverflow-item">
+          <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=400&q=80" alt="Img">
+        </div>
+      </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const items = document.querySelectorAll('.coverflow-item');
+            const slider = document.querySelector('.coverflow-slider');
+            if(!items.length) return;
+            
+            let currentIndex = 2; // middle item
+
+            function updateCoverflow() {
+                items.forEach((item, index) => {
+                    item.classList.remove('active');
+                    let offset = index - currentIndex;
+                    
+                    let zIndex = items.length - Math.abs(offset);
+                    // Increased spacing for better clickability
+                    let translateX = offset * 150; 
+                    let translateZ = Math.abs(offset) * -150;
+                    let rotateY = offset === 0 ? 0 : (offset > 0 ? -45 : 45);
+                    let opacity = Math.abs(offset) > 2 ? 0 : 1;
+                    
+                    // Add slight scale down for side items
+                    let scale = offset === 0 ? 1 : 0.8;
+
+                    item.style.transform = `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`;
+                    item.style.zIndex = zIndex;
+                    item.style.opacity = opacity;
+                    item.style.pointerEvents = Math.abs(offset) > 2 ? 'none' : 'auto'; // Disable clicking invisible items
+                    
+                    if(offset === 0) item.classList.add('active');
+                });
+            }
+
+            // Click Support
+            items.forEach((item, index) => {
+                item.addEventListener('click', () => {
+                    currentIndex = index;
+                    updateCoverflow();
+                });
+            });
+
+            // Touch / Swipe Support
+            let startX = 0;
+            let endX = 0;
+
+            slider.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+            }, {passive: true});
+
+            slider.addEventListener('touchmove', (e) => {
+                endX = e.touches[0].clientX;
+            }, {passive: true});
+
+            slider.addEventListener('touchend', () => {
+                const threshold = 50; // minimum pixels swiped to trigger a change
+                if (startX - endX > threshold) {
+                    // Swiped left (go next)
+                    if (currentIndex < items.length - 1) {
+                        currentIndex++;
+                        updateCoverflow();
+                    }
+                } else if (endX - startX > threshold) {
+                    // Swiped right (go prev)
+                    if (currentIndex > 0) {
+                        currentIndex--;
+                        updateCoverflow();
+                    }
+                }
+                // Reset
+                startX = 0;
+                endX = 0;
+            });
+
+            updateCoverflow();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+---
+title: "PHP – Constants"
+description: "Learn how to define PHP constants using define() and const. Discover why constants are faster than variables and use predefined PHP constants."
+category: "php"
+order: 14
+---
+
+# PHP Constants
+
+In mathematics and modern system software development, certain massive values simply **must not change** after they are officially defined.
+
+While a **Variable** (`$price`) can be freely overwritten countless times across thousands of scripting interactions, a **Constant** acts fundamentally like a steel vault. Once a Constant is initiated correctly, its data can **never** be changed, modified, or permanently undefined during the execution of the entire PHP script.
+
+## The define() Function
+
+To create a constant in PHP, you do not use the dollar sign (`$`). Instead, you invoke the core `define()` processor function.
+
+```php
+define(name, value, case_insensitive)
+```
+1. **`name`**: The assigned label of the constant.
+2. **`value`**: The data assigned to it continuously.
+3. **`case_insensitive`** (Optional): Specifies whether the engine ignores case checks. (Note: Since PHP 7.3+, this behavior is heavily deprecated and constants are explicitly case-sensitive!).
+
+### Classic Naming Conventions
+As a strict, globally established community rule, developers dictate that Constants must continually be written in all **UPPERCASE LETTERS**. If they consist of multiple terms, separate them explicitly using underscores (e.g., `DB_PASSWORD`).
+
+```php
+<?php
+  // Initializing a strict global constant
+  define("SITE_URL", "https://CodesCompiler.com");
+
+  // Outputting the constant (NOTICE: No $ Sign required!)
+  echo "Please visit us at " . SITE_URL;
+?>
+```
+
+## The `const` Keyword
+
+Following the architectural updates in modern PHP engines, you can natively initialize constants fundamentally using the `const` keyword. This syntax is heavily utilized for Object-Oriented Programming (Classes) but functions exquisitely outside them as well.
+
+```php
+<?php
+  const MAX_LOGIN_ATTEMPTS = 5;
+  const VERSION_PATCH = "v2.10.4";
+  
+  echo "You have " . MAX_LOGIN_ATTEMPTS . " tries remaining securely.";
+?>
+```
+
+### Constant vs `define()`
+If both approaches operate identically, why strictly separate them?
+The `const` parameter initializes during script compilation (compile-time), severely restricting it from natively establishing dynamically inside `if()` loop behaviors. The `define()` function dynamically registers during standard run-time operations natively!
+
+## Global Scope Inheritances
+
+One of the largest core differences regarding constants is their massive capability to shatter standard variable scoping limits. 
+
+Constants are **automatically globally scoped**. This explicitly implies that securely defining a constant essentially allows incredibly dense functions nested thousands of lines lower to aggressively utilize it without resorting to using `global` requests.
+
+## Interactive Configuration Mockup
+
+In heavily monitored systems like WordPress, `define()` commands secure strict system properties. Experiment executing the standard simulated `WP-CONFIG` below to visualize logic restrictions intelligently:
+
+
+<Editor 
+  initialPhp={`<?php
+// Mocking a strict server configuration file
+define("DB_USER", "admin_portal");
+define("DB_PASS", "SecureX99");
+define("DB_HOST", "localhost");
+
+echo "<div style='background: #fff3cd; color: #856404; padding: 20px; border-radius: 5px; font-family: monospace;'>";
+echo "<h3>Executing System Boot...</h3>";
+
+if (DB_HOST == "localhost") {
+   echo "<b>Status:</b> Local Environment Detected.<br>";
+   echo "Accessing strictly via username: " . DB_USER . "<br>";
+   
+   // Notice what happens if we attempt to change the user name statically:
+   // DB_USER = "Hacker"; // This line is highly ILLEGAL in PHP!
+}
+
+echo "</div>";
+?>`}
+  activeTab="php" 
+/>

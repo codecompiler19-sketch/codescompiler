@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Landing Page | Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Space Grotesk', sans-serif; }
+    
+    body { background: #fdfdfd; color: #1e293b; overflow-x: hidden; }
+
+    /* Header */
+    header {
+      padding: 30px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: absolute;
+      width: 100%;
+      z-index: 10;
+    }
+
+    .brand { font-size: 1.5rem; font-weight: 700; color: #0f172a; text-decoration: none; }
+    .brand span { color: #f97316; }
+
+    .nav-btn {
+      background: #1e293b; color: white;
+      padding: 10px 25px; border-radius: 30px;
+      text-decoration: none; font-weight: 600;
+      transition: background 0.3s;
+    }
+    .nav-btn:hover { background: #f97316; }
+
+    /* Hero Section */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 0 5%;
+      position: relative;
+    }
+
+    /* Abstract shapes background */
+    .shape-1 { position: absolute; top: -100px; right: -100px; width: 500px; height: 500px; background: #fff7ed; border-radius: 50%; z-index: -1; filter: blur(50px); }
+    .shape-2 { position: absolute; bottom: 100px; left: -100px; width: 400px; height: 400px; background: #f0fdf4; border-radius: 50%; z-index: -1; filter: blur(50px); }
+
+    .content { flex: 1; max-width: 600px; padding-right: 50px; }
+    
+    h1 { font-size: 4rem; font-weight: 700; line-height: 1.1; margin-bottom: 20px; color: #0f172a; }
+    p { font-size: 1.2rem; color: #64748b; margin-bottom: 40px; line-height: 1.6; }
+
+    .cta-group { display: flex; gap: 20px; }
+    
+    .btn-primary {
+      background: #f97316; color: white;
+      padding: 18px 40px; border-radius: 30px;
+      text-decoration: none; font-weight: 600; font-size: 1.1rem;
+      box-shadow: 0 10px 20px rgba(249, 115, 22, 0.3);
+      transition: transform 0.2s;
+    }
+    .btn-primary:hover { transform: translateY(-3px); }
+
+    .btn-secondary {
+      background: transparent; color: #0f172a;
+      padding: 18px 40px; border-radius: 30px;
+      text-decoration: none; font-weight: 600; font-size: 1.1rem;
+      border: 2px solid #e2e8f0;
+      transition: border-color 0.2s;
+    }
+    .btn-secondary:hover { border-color: #0f172a; }
+
+    .visual { flex: 1; display: flex; justify-content: center; position: relative; }
+    
+    .visual img {
+      width: 100%; max-width: 600px;
+      border-radius: 20px;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
+      position: relative; z-index: 2;
+    }
+
+    /* Floating Stats Card */
+    .stat-card {
+      position: absolute; bottom: -30px; left: -30px;
+      background: white; padding: 20px; border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      display: flex; align-items: center; gap: 15px;
+      z-index: 3; animation: float 4s ease-in-out infinite;
+    }
+
+    .stat-card.two { bottom: auto; top: 50px; left: auto; right: -30px; animation-delay: 2s; }
+
+    .icon { font-size: 2rem; background: #fff7ed; width: 50px; height: 50px; display: flex; justify-content: center; align-items: center; border-radius: 12px; }
+    .stat-val { font-size: 1.5rem; font-weight: 700; color: #0f172a; }
+    .stat-label { font-size: 0.9rem; color: #64748b; }
+
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+      100% { transform: translateY(0px); }
+    }
+
+    /* Features Section */
+    .features { padding: 100px 5%; background: white; }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; margin-top: 60px; }
+    
+    .feature-card { text-align: center; padding: 40px 20px; border-radius: 20px; transition: background 0.3s; }
+    .feature-card:hover { background: #f8fafc; }
+    
+    .f-icon { font-size: 3rem; margin-bottom: 20px; display: inline-block; }
+    .feature-card h3 { font-size: 1.5rem; margin-bottom: 15px; }
+
+    @media (max-width: 900px) {
+      .hero { flex-direction: column; text-align: center; padding-top: 120px; }
+      .content { padding-right: 0; margin-bottom: 60px; }
+      h1 { font-size: 3rem; }
+      .cta-group { justify-content: center; }
+      .stat-card { display: none; } /* Hide floating cards on mobile */
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="#" class="brand">Nova<span>App</span></a>
+    <a href="#" class="nav-btn">Get Started</a>
+  </header>
+
+  <section class="hero">
+    <div class="shape-1"></div>
+    <div class="shape-2"></div>
+    
+    <div class="content">
+      <h1>Manage your work with unparalleled ease.</h1>
+      <p>NovaApp provides a central hub for all your team's tasks, documents, and communication. Streamline your workflow and boost productivity today.</p>
+      
+      <div class="cta-group">
+        <a href="#" class="btn-primary">Start Free Trial</a>
+        <a href="#features" class="btn-secondary">Learn More</a>
+      </div>
+    </div>
+
+    <div class="visual">
+      <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1000&q=80" alt="Dashboard Dashboard">
+      
+      <div class="stat-card">
+        <div class="icon">🚀</div>
+        <div>
+          <div class="stat-val">2.5x</div>
+          <div class="stat-label">Faster Delivery</div>
+        </div>
+      </div>
+
+      <div class="stat-card two">
+        <div class="icon">⭐</div>
+        <div>
+          <div class="stat-val">4.9/5</div>
+          <div class="stat-label">User Rating</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features" id="features">
+    <div style="text-align:center; max-width:600px; margin:0 auto;">
+      <h2 style="font-size: 2.5rem; margin-bottom:20px;">Why choose NovaApp?</h2>
+      <p style="color:#64748b; font-size:1.1rem;">Everything you need to manage projects, built into one beautifully designed platform.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <span class="f-icon">⚡</span>
+        <h3>Lightning Fast</h3>
+        <p style="color:#64748b;">Built on a modern technology stack to ensure sub-second load times and real-time updates.</p>
+      </div>
+      <div class="feature-card">
+        <span class="f-icon">🔒</span>
+        <h3>Bank-Grade Security</h3>
+        <p style="color:#64748b;">Your data is encrypted at rest and in transit. We take your privacy and security seriously.</p>
+      </div>
+      <div class="feature-card">
+        <span class="f-icon">🤝</span>
+        <h3>Seamless Collaboration</h3>
+        <p style="color:#64748b;">Work together in real-time with your team members, clients, and contractors.</p>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>

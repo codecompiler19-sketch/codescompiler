@@ -4,20 +4,42 @@
   <meta charset="UTF-8">
   <title>Wordle Clone Demo</title>
   <style>
-    body { background: #121213; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0;}
-    h1 { text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid #3a3a3c; padding-bottom: 10px; width: 330px; text-align: center;}
-    .grid { display: grid; grid-template-rows: repeat(6, 1fr); gap: 5px; margin-bottom: 20px; }
+    body { background: #121213; color: white; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: 100vh; margin: 0; padding: 20px 0;}
+    h1 { text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid #3a3a3c; padding-bottom: 10px; margin: 0 0 10px 0; text-align: center; width: 100%; max-width: 400px;}
+    .instructions { color: #818384; font-size: 0.9rem; text-align: center; max-width: 350px; margin-bottom: 20px; line-height: 1.4;}
+    .instructions strong { color: #d7dadc; }
+    
+    .grid { display: grid; grid-template-rows: repeat(6, 1fr); gap: 5px; margin-bottom: 30px; }
     .row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; }
-    .tile { width: 62px; height: 62px; border: 2px solid #3a3a3c; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: bold; text-transform: uppercase; transition: background 0.5s ease; }
-    .input-hidden { position: absolute; opacity: 0; pointer-events: none;}
+    .tile { width: 60px; height: 60px; border: 2px solid #3a3a3c; display: flex; align-items: center; justify-content: center; font-size: 2rem; font-weight: bold; text-transform: uppercase; transition: background 0.3s ease, border-color 0.3s ease; box-sizing: border-box;}
+    
+    /* On-Screen Keyboard */
+    .keyboard { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 8px; padding: 0 10px; box-sizing: border-box;}
+    .k-row { display: flex; justify-content: center; gap: 6px; }
+    .k-key { background: #818384; color: white; border: none; border-radius: 4px; height: 50px; flex: 1; font-size: 1rem; font-weight: bold; cursor: pointer; transition: 0.2s; text-transform: uppercase; display: flex; align-items: center; justify-content: center;}
+    .k-key:hover { opacity: 0.8; }
+    .k-key.wide { flex: 1.5; font-size: 0.8rem;}
+
+    @media (max-width: 400px) {
+      .tile { width: 50px; height: 50px; font-size: 1.5rem; }
+      .k-key { height: 45px; font-size: 0.85rem; gap: 4px;}
+    }
   </style>
 </head>
 <body>
   <h1>Wordle Clone</h1>
+  <div class="instructions">
+    Guess the 5-letter word in 6 tries.<br>
+    <span style="color:#538d4e">Green</span> = Right letter & place. <span style="color:#b59f3b">Yellow</span> = Right letter, wrong place. <br>
+    <strong>(Psst... The secret word is APPLE)</strong>
+  </div>
+
   <div class="grid" id="grid"></div>
-  <p style="color: #818384;">Type your guess (Secret is APPLE)</p>
+  <div class="keyboard" id="keyboard"></div>
+
   <script>
     const grid = document.getElementById('grid');
+    const kbContainer = document.getElementById('keyboard');
     const target = "APPLE";
     let curRow = 0, curCol = 0, guesses = Array(6).fill("");
 
@@ -31,18 +53,48 @@
       grid.appendChild(row);
     }
 
+    // Setup Keyboard
+    const kbRows = [
+      ["Q","W","E","R","T","Y","U","I","O","P"],
+      ["A","S","D","F","G","H","J","K","L"],
+      ["ENTER","Z","X","C","V","B","N","M","⌫"]
+    ];
+
+    kbRows.forEach(row => {
+      const rDiv = document.createElement('div');
+      rDiv.className = 'k-row';
+      row.forEach(key => {
+        const btn = document.createElement('button');
+        btn.className = 'k-key';
+        if(key === "ENTER" || key === "⌫") btn.classList.add('wide');
+        btn.innerText = key;
+        btn.onclick = () => handleInput(key);
+        rDiv.appendChild(btn);
+      });
+      kbContainer.appendChild(rDiv);
+    });
+
+    // Handle physical keyboard
     document.addEventListener('keydown', (e) => {
+      if(e.key === 'Enter') handleInput('ENTER');
+      else if (e.key === 'Backspace') handleInput('⌫');
+      else if (/^[A-Za-z]$/.test(e.key)) handleInput(e.key.toUpperCase());
+    });
+
+    function handleInput(key) {
       if(curRow >= 6) return;
-      if(e.key === 'Enter') {
+      if(key === 'ENTER') {
         if(guesses[curRow].length === 5) {
           check(curRow); curRow++; curCol=0;
+        } else {
+          alert("Not enough letters!");
         }
-      } else if (e.key === 'Backspace') {
+      } else if (key === '⌫') {
         if(curCol > 0) { curCol--; guesses[curRow] = guesses[curRow].slice(0, -1); update(); }
-      } else if (/^[A-Za-z]$/.test(e.key)) {
-        if(curCol < 5) { guesses[curRow] += e.key.toUpperCase(); curCol++; update(); }
+      } else {
+        if(curCol < 5) { guesses[curRow] += key; curCol++; update(); }
       }
-    });
+    }
 
     function update() {
       for(let i=0; i<5; i++){
@@ -52,13 +104,24 @@
 
     function check(r) {
       const g = guesses[r];
+      let win = true;
       for(let i=0; i<5; i++){
         const id = document.getElementById(`r${r}c${i}`);
-        if(g[i] === target[i]) id.style.background = '#538d4e';
-        else if(target.includes(g[i])) id.style.background = '#b59f3b';
-        else id.style.background = '#3a3a3c';
-        id.style.borderColor = id.style.background;
+        if(g[i] === target[i]) {
+          id.style.background = '#538d4e';
+          id.style.borderColor = '#538d4e';
+        } else if(target.includes(g[i])) {
+          id.style.background = '#b59f3b';
+          id.style.borderColor = '#b59f3b';
+          win = false;
+        } else {
+          id.style.background = '#3a3a3c';
+          id.style.borderColor = '#3a3a3c';
+          win = false;
+        }
       }
+      if(win) setTimeout(() => alert("Congratulations! You guessed the word!"), 300);
+      else if (r === 5) setTimeout(() => alert("Game Over! The word was " + target), 300);
     }
   </script>
 </body>

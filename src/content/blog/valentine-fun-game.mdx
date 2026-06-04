@@ -1,201 +1,146 @@
 ---
-title: "Valentine's Fun Game using HTML, CSS & JavaScript"
-description: "Create a fun and interactive Valentine's Day card matching game from scratch using only HTML, CSS, and JavaScript. No libraries needed!"
-date: "2026-04-10"
+title: "Valentine's Fun Game (Catch the Button!)"
+seoTitle: "Create a Fun Valentine's Day Game with HTML CSS and JavaScript"
+description: "Learn how to create a fun, interactive Will You Be My Valentine game using HTML, CSS, and JavaScript, where the No button runs away!"
+date: "2026-06-05"
 category: "JavaScript Games"
-tags: ["html", "css", "javascript", "game", "animation"]
-image: "/images/posts/valentine-game.png"
-featured: true
+tags: ["valentine", "game", "javascript", "animation"]
+image: "/images/posts/default-coding.png"
+featured: false
 hasDemo: true
 author: "CodesCompiler"
-seoTitle: "Valentine's Fun Game - HTML CSS JavaScript"
 ---
 
-In this project, we'll build a fun **Valentine's Day card-flipping memory game** using only HTML, CSS, and vanilla JavaScript. Great for beginners and intermediate learners who want to practice DOM manipulation, CSS animations, and game logic.
-
-## What We'll Build
-
-A card flip memory game with:
-- 💕 Valentine-themed card faces
-- 🔄 Smooth 3D flip animation using CSS
-- 🎯 Match detection logic in JavaScript
-- 🏆 Win condition with congratulation message
-- 📱 Fully responsive layout
-
-## Project Structure
-
-```
-valentine-game/
-├── index.html
-├── style.css
-└── script.js
-```
+Welcome to this tutorial on **Create a Fun Valentine's Day Game with HTML CSS and JavaScript**. In this tutorial, we will build the classic "Will you be my Valentine?" interactive game, where the "No" button playfully dodges the user's cursor!
 
 ## HTML Structure
 
-Create your `index.html` file with the game board:
-
 ```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Valentine's Memory Game</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="game-header">
-    <h1>💕 Valentine's Memory Game</h1>
-    <p>Moves: <span id="moves">0</span> | Pairs: <span id="pairs">0</span>/6</p>
-    <button onclick="resetGame()">Restart 🔄</button>
+<div class="valentine-container">
+  <div class="gif-container">
+    <!-- Cute pleading bear GIF -->
+    <img id="bear-gif" src="https://media.tenor.com/ef3X8834_E0AAAAi/tkthao219-bubududu.gif" alt="Cute Bear">
   </div>
-  <div class="game-board" id="gameBoard"></div>
-  <div class="win-message hidden" id="winMsg">
-    🎉 You Won! All pairs matched!
+  <h1 id="question">Will you be my Valentine? 🥺</h1>
+  
+  <div class="btn-container">
+    <button id="yes-btn" class="btn yes-btn">Yes</button>
+    <button id="no-btn" class="btn no-btn">No</button>
   </div>
-  <script src="script.js"></script>
-</body>
-</html>
+</div>
 ```
 
-## CSS Styles
-
-The magic of the 3D flip is done entirely with CSS:
+## CSS Styling
 
 ```css
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
 body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #ff6b8a, #ff4d88);
-  font-family: 'Segoe UI', sans-serif;
+  background-color: #ffdde1;
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
 }
 
-.game-board {
-  display: grid;
-  grid-template-columns: repeat(4, 100px);
-  gap: 12px;
-  padding: 20px;
-}
-
-.card {
-  width: 100px;
-  height: 100px;
-  perspective: 600px;
-  cursor: pointer;
-}
-
-.card-inner {
-  width: 100%;
-  height: 100%;
+.valentine-container {
+  text-align: center;
   position: relative;
-  transform-style: preserve-3d;
-  transition: transform 0.5s ease;
+  z-index: 10;
 }
 
-.card.flipped .card-inner { transform: rotateY(180deg); }
+.gif-container img {
+  width: 250px;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(255, 105, 135, 0.3);
+}
 
-.card-front, .card-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 12px;
-  backface-visibility: hidden;
+h1 {
+  color: #ff4d6d;
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-container {
   display: flex;
-  align-items: center;
   justify-content: center;
-  font-size: 40px;
+  gap: 30px;
+  position: relative;
 }
 
-.card-front { background: #fff; }
-.card-back  { background: #ff4d88; transform: rotateY(180deg); }
+.btn {
+  padding: 15px 40px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.yes-btn {
+  background-color: #ff4d6d;
+  color: white;
+}
+
+.yes-btn:hover {
+  background-color: #c9184a;
+  transform: scale(1.1);
+}
+
+.no-btn {
+  background-color: #ffffff;
+  color: #ff4d6d;
+  position: relative;
+}
+
+/* This class hides the buttons when the user clicks 'Yes' */
+.hidden {
+  display: none !important;
+}
 ```
 
 ## JavaScript Logic
 
+The magic happens here! We listen for the `mouseover` event on the "No" button, and randomly update its top and left coordinates.
+
 ```javascript
-const emojis = ['💕','🌹','💌','🍫','💖','🎁'];
-const cards  = [...emojis, ...emojis]; // duplicate for pairs
+document.addEventListener('DOMContentLoaded', () => {
+    const noBtn = document.getElementById('no-btn');
+    const yesBtn = document.getElementById('yes-btn');
+    const question = document.getElementById('question');
+    const bearGif = document.getElementById('bear-gif');
+    const btnContainer = document.querySelector('.btn-container');
 
-let flipped = [], matched = 0, moves = 0, lockBoard = false;
+    // Make the "No" button run away
+    noBtn.addEventListener('mouseover', () => {
+        // Calculate random positions bounded by window size
+        const x = Math.floor(Math.random() * (window.innerWidth - noBtn.offsetWidth));
+        const y = Math.floor(Math.random() * (window.innerHeight - noBtn.offsetHeight));
+        
+        noBtn.style.position = 'fixed';
+        noBtn.style.left = `${x}px`;
+        noBtn.style.top = `${y}px`;
+    });
 
-function shuffle(arr) {
-  return arr.sort(() => Math.random() - 0.5);
-}
-
-function createBoard() {
-  const board = document.getElementById('gameBoard');
-  board.innerHTML = '';
-  shuffle(cards).forEach(emoji => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `
-      <div class="card-inner">
-        <div class="card-front">❓</div>
-        <div class="card-back">${emoji}</div>
-      </div>`;
-    card.dataset.emoji = emoji;
-    card.addEventListener('click', flipCard);
-    board.appendChild(card);
-  });
-}
-
-function flipCard() {
-  if (lockBoard || this.classList.contains('flipped')) return;
-  this.classList.add('flipped');
-  flipped.push(this);
-  if (flipped.length === 2) checkMatch();
-}
-
-function checkMatch() {
-  lockBoard = true;
-  moves++;
-  document.getElementById('moves').textContent = moves;
-  const [a, b] = flipped;
-  if (a.dataset.emoji === b.dataset.emoji) {
-    matched++;
-    document.getElementById('pairs').textContent = matched;
-    flipped = [];
-    lockBoard = false;
-    if (matched === emojis.length) {
-      document.getElementById('winMsg').classList.remove('hidden');
-    }
-  } else {
-    setTimeout(() => {
-      a.classList.remove('flipped');
-      b.classList.remove('flipped');
-      flipped = [];
-      lockBoard = false;
-    }, 1000);
-  }
-}
-
-function resetGame() {
-  matched = moves = 0;
-  document.getElementById('moves').textContent = 0;
-  document.getElementById('pairs').textContent = 0;
-  document.getElementById('winMsg').classList.add('hidden');
-  flipped = [];
-  createBoard();
-}
-
-createBoard();
+    // When the user clicks "Yes"
+    yesBtn.addEventListener('click', () => {
+        question.innerHTML = "Yaaay! I love you! ❤️✨";
+        // Change to a happy kissing bear GIF
+        bearGif.src = "https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif";
+        
+        // Hide the buttons
+        btnContainer.classList.add('hidden');
+        noBtn.classList.add('hidden');
+    });
+});
 ```
 
-## How It Works
-
-1. **Card Array** — We duplicate the emoji array to create matching pairs
-2. **Shuffle** — Cards are randomly sorted using `Array.sort()` with a random comparator
-3. **Flip Logic** — Clicking a card adds the `flipped` class which triggers the CSS 3D rotation
-4. **Match Check** — When two cards are flipped, we compare their `data-emoji` attribute
-5. **Lock Board** — We lock interaction while the mismatch animation plays
-
-> **Pro Tip:** Try adding a timer countdown to make it more challenging!
-
-## Live Demo Result
-
-After assembling all three files, open `index.html` in your browser. You'll see 12 face-down cards. Click any two — if the emojis match, they stay flipped. Match all 6 pairs to win! 🎉
+Try checking out the demo, and try to click the "No" button! 😆

@@ -10,7 +10,9 @@
     button { padding: 5px 15px; cursor: pointer; border: 1px solid #ccc; background: white; border-radius: 4px;}
     .grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center;}
     .header-day { font-weight: bold; color: #888; padding-bottom: 10px;}
-    .day { padding: 10px; background: #f9f9f9; border-radius: 4px; color: #333;}
+    .day { padding: 10px; background: #f9f9f9; border-radius: 4px; color: #333; cursor: pointer; transition: 0.2s;}
+    .day:hover { background: #eee; }
+    .day.active { background: #3b82f6; color: white; font-weight: bold; }
     .empty { background: transparent; }
   </style>
 </head>
@@ -49,6 +51,13 @@
         grid.innerHTML += `<div class="day">${d}</div>`;
       }
     }
+    
+    document.getElementById('grid').addEventListener('click', function(e) {
+      if (e.target.classList.contains('day')) {
+        document.querySelectorAll('.day').forEach(el => el.classList.remove('active'));
+        e.target.classList.add('active');
+      }
+    });
     
     function prevMonth() { currentDate.setMonth(currentDate.getMonth() - 1); render(); }
     function nextMonth() { currentDate.setMonth(currentDate.getMonth() + 1); render(); }

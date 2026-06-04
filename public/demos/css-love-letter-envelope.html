@@ -14,21 +14,23 @@
 
     .flap { position: absolute; top: 0; left: 0; border-left: 150px solid transparent; border-right: 150px solid transparent; border-top: 120px solid #fda4af; transform-origin: top; transition: transform 0.6s 0.4s, z-index 0s 0.6s; z-index: 4;}
     
-    .letter { position: absolute; width: 280px; height: 180px; background: white; border-radius: 10px; top: 10px; left: 10px; z-index: 1; transition: transform 0.8s; padding: 20px; box-sizing: border-box; color: #4c1d95; box-shadow: 0 0 10px rgba(0,0,0,0.1);}
+    .letter { position: absolute; width: 280px; height: 200px; background: white; border-radius: 10px; top: 10px; left: 10px; z-index: 1; transition: all 0.8s; padding: 20px; box-sizing: border-box; color: #4c1d95; box-shadow: 0 0 10px rgba(0,0,0,0.1); text-align: center;}
     
     /* Open State */
     .envelope-wrapper.open .flap { transform: rotateX(180deg); transition: transform 0.6s, z-index 0s 0s; z-index: 1;}
-    .envelope-wrapper.open .letter { transform: translateY(-100px); z-index: 2;}
+    
+    /* Slide the letter ALL the way up and slightly scale it so it's readable! */
+    .envelope-wrapper.open .letter { transform: translateY(-180px) scale(1.1); z-index: 2; transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.4s;}
   </style>
 </head>
 <body>
-  <p style="position: absolute; top: 50px; color: #be185d;">Click to open</p>
+  <p style="position: absolute; top: 50px; color: #be185d; font-size: 1.2rem; font-weight: bold;">Click the envelope to open! 💌</p>
   <div class="envelope-wrapper" onclick="this.classList.toggle('open')">
     <div class="flap"></div>
     <div class="letter">
-      <h3>Just for you.</h3>
-      <p>Building things from scratch is hard, but you are creating magic every single day.</p>
-      <p>Love,<br>The Code</p>
+      <h3 style="margin-top: 0; color: #db2777;">Just for you ❤️</h3>
+      <p style="font-size: 0.95rem; line-height: 1.5;">Building things from scratch is hard, but you are creating absolute magic every single day. Keep going!</p>
+      <p style="font-weight: bold; color: #e11d48; margin-bottom: 0;">Love,<br>The Code ✨</p>
     </div>
     <div class="envelope"><span></span></div>
   </div>

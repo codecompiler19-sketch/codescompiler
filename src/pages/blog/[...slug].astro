@@ -4,9 +4,13 @@ import PostLayout from '../../layouts/PostLayout.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
-  return posts.map(post => ({
-    params: { slug: post.slug },
-    props: { post },
+  // Only build pages for published posts. Draft & scheduled = 404
+  const published = posts.filter(
+    p => !p.data.status || p.data.status === 'published'
+  );
+  return published.map(post => ({
+    params: { slug: post.data.permalink || post.slug },
+    props:  { post },
   }));
 }
 
@@ -15,19 +19,25 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const { Content } = await post.render();
+const { Content, headings } = await post.render();
 ---
 
 <PostLayout
-  title={post.data.seoTitle || post.data.title}
-  description={post.data.description}
+  title={post.data.title}
+  seoTitle={post.data.seoTitle}
+  description={post.data.description ?? ''}
   image={post.data.image}
   date={post.data.date}
   category={post.data.category}
   tags={post.data.tags ?? []}
   author={post.data.author ?? 'CodesCompiler'}
-  slug={post.slug}
+  slug={post.data.permalink || post.slug}
   hasDemo={post.data.hasDemo ?? false}
+  canonicalUrl={post.data.canonicalUrl}
+  ogImage={post.data.ogImage}
+  noindex={post.data.noindex ?? false}
+  headings={headings}
 >
   <Content />
 </PostLayout>
+

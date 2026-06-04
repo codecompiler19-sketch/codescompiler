@@ -1,50 +1,108 @@
 ---
-title: "Immersive Focus Blur Gallery"
-description: "A stunning CSS gallery effect where hovering a single image actively darkens and blurs all other surrounding images to intensely drive user focus."
-date: "2026-04-18"
-category: "Card Design"
-tags: ["css", "gallery", "blur", "focus"]
-image: "/images/posts/css-focus-blur-gallery.png"
+title: "CSS Focus Blur Gallery"
+seoTitle: "Expandable Focus and Blur Gallery"
+description: "Create an expandable accordion-style image gallery with CSS."
+date: "2026-06-07"
+category: "Image Slider"
+tags: ["slider","gallery","css"]
+image: "/images/posts/default-coding.png"
 featured: false
 hasDemo: true
 author: "CodesCompiler"
 ---
 
-When building an image gallery, you want the user's attention physically glued to whichever picture they are interacting with. By leveraging the modern CSS `:has()` pseudo-class, we can easily dictate styling across siblings!
+Welcome to this tutorial on **Expandable Focus and Blur Gallery**.
 
-## The Sibling Hover Logic
+## HTML Structure
 
-The trick is targeting the parent container and checking if *any* of its children are being hovered. If so, apply a blur. But then, override the specific child being hovered to remain sharp!
+```html
+<div class="gallery-container">
+  <div class="gallery-panel active" style="background-image: url('https://images.unsplash.com/photo-1506744626753-143d3f0a1c6a?auto=format&fit=crop&w=800&q=80');">
+    <h3>Mountains</h3>
+  </div>
+  <div class="gallery-panel" style="background-image: url('https://images.unsplash.com/photo-1511576661531-b34d7da5d0f4?auto=format&fit=crop&w=800&q=80');">
+    <h3>Beach</h3>
+  </div>
+  <div class="gallery-panel" style="background-image: url('https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=800&q=80');">
+    <h3>Forest</h3>
+  </div>
+  <div class="gallery-panel" style="background-image: url('https://images.unsplash.com/photo-1533446002934-2e9b110bc595?auto=format&fit=crop&w=800&q=80');">
+    <h3>Desert</h3>
+  </div>
+  <div class="gallery-panel" style="background-image: url('https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=800&q=80');">
+    <h3>Aurora</h3>
+  </div>
+</div>
+```
+
+## CSS Styling
 
 ```css
-.gallery {
+body { margin: 0; padding: 0; background: #222; }
+.gallery-container {
   display: flex;
-  gap: 15px;
+  width: 90vw;
+  max-width: 1200px;
+  height: 60vh;
+  margin: 10vh auto;
+  gap: 10px;
 }
-
-.gallery-image {
-  width: 200px;
-  height: 300px;
-  transition: all 0.4s ease;
-  object-fit: cover;
-  border-radius: 10px;
+.gallery-panel {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100%;
+  border-radius: 50px;
+  color: white;
+  cursor: pointer;
+  flex: 0.5;
+  position: relative;
+  transition: flex 0.7s cubic-bezier(0.15, 0.85, 0.35, 1), filter 0.7s ease;
+  filter: grayscale(80%) blur(3px);
+  overflow: hidden;
 }
-
-/* If the gallery has a hovered child, blur all images */
-.gallery:has(.gallery-image:hover) .gallery-image {
-  filter: blur(5px) grayscale(80%);
-  opacity: 0.6;
-  transform: scale(0.95);
+.gallery-panel h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 2rem;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  margin: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease-in 0.4s;
+  text-shadow: 0 2px 5px rgba(0,0,0,0.8);
 }
-
-/* Wait, EXCEPT the specific one being hovered! */
-.gallery:has(.gallery-image:hover) .gallery-image:hover {
-  filter: blur(0px) grayscale(0%);
+.gallery-panel.active {
+  flex: 5;
+  filter: grayscale(0%) blur(0px);
+}
+.gallery-panel.active h3 {
   opacity: 1;
-  transform: scale(1.1);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  z-index: 10; /* Bring it forward */
+}
+@media (max-width: 768px) {
+  .gallery-container { width: 95vw; height: 50vh; }
+  .gallery-panel h3 { font-size: 1.2rem; }
 }
 ```
 
-This ensures extreme focus. Experience this powerful cinematic dimming effect across the three posters in the Live Demo panel.
+## JavaScript Logic
+
+```javascript
+document.addEventListener('DOMContentLoaded', () => {
+    const panels = document.querySelectorAll('.gallery-panel');
+    if(!panels.length) return;
+
+    panels.forEach(panel => {
+        panel.addEventListener('click', () => {
+            removeActiveClasses();
+            panel.classList.add('active');
+        });
+    });
+
+    function removeActiveClasses() {
+        panels.forEach(panel => {
+            panel.classList.remove('active');
+        });
+    }
+});
+```

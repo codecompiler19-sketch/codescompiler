@@ -1,0 +1,54 @@
+---
+title: "SQL – PRIMARY KEY"
+description: "Uniquely identify every row in a table using the PRIMARY KEY constraint."
+category: "sql"
+order: 58
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+Every table should have a **primary key** — a column (or set of columns) whose values uniquely identify each row. The PRIMARY KEY constraint combines UNIQUE and NOT NULL automatically: every value must be present and unique. It also creates an index behind the scenes, making lookups by primary key extremely fast.
+
+The most common pattern is a synthetic integer primary key with AUTOINCREMENT (or IDENTITY), which the database generates automatically. This avoids relying on real-world data (like names or emails) that might change or have duplicates.
+
+**Natural vs Surrogate keys**
+| | Natural Key | Surrogate Key |
+|---|---|---|
+| Example | email, ISBN | id INTEGER |
+| Stable? | May change | Always stable |
+| Meaningful? | Yes | No (just a number) |
+| Preferred? | Sometimes | Usually ✅ |
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={``}
+  querySql={`-- Surrogate primary key with AUTOINCREMENT
+CREATE TABLE projects (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  title       TEXT    NOT NULL,
+  team_lead   TEXT    NOT NULL,
+  deadline    TEXT,
+  status      TEXT    DEFAULT 'Planning'
+);
+
+INSERT INTO projects (title, team_lead, deadline)
+VALUES ('API Redesign', 'Aria Chen', '2024-06-30'),
+       ('Mobile App', 'Ben Torres', '2024-09-01'),
+       ('Data Pipeline', 'Cleo Park', '2024-04-15');
+
+SELECT * FROM projects;`}
+/>
+
+## Key Points
+
+- PRIMARY KEY = NOT NULL + UNIQUE + fast lookup index
+- Every table should have exactly one primary key
+- AUTOINCREMENT generates the next ID automatically on insert
+- Composite PKs use multiple columns: PRIMARY KEY (col1, col2)
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

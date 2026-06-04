@@ -1,0 +1,89 @@
+---
+title: "JavaScript Array Methods: A Complete Guide with Examples"
+seoTitle: "JavaScript Array Methods: A Complete Guide with Examples"
+description: "Master modern JavaScript array methods including map(), filter(), reduce(), and find() with practical, real-world data examples."
+date: "2026-06-05"
+category: "JavaScript"
+tags: ["javascript", "arrays", "methods", "es6"]
+image: "/images/posts/default-coding.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+Welcome to this tutorial on **JavaScript Array Methods**. In modern JavaScript development (especially when working with frameworks like React or handling API responses), the old `for` loop is rarely used. Instead, we rely on powerful, functional array methods to manipulate data cleanly and efficiently.
+
+In this guide, we will use a sample array of eCommerce products and explore how to transform, filter, and calculate data using the "Big Three" methods: `map`, `filter`, and `reduce`.
+
+## The Sample Data
+
+Imagine we fetched this data from a database:
+
+```javascript
+const products = [
+  { id: 1, name: 'Laptop', price: 999, category: 'Electronics' },
+  { id: 2, name: 'Coffee Mug', price: 15, category: 'Home' },
+  { id: 3, name: 'Headphones', price: 150, category: 'Electronics' },
+  { id: 4, name: 'Desk Chair', price: 200, category: 'Furniture' }
+];
+```
+
+## 1. Array.map() - Transforming Data
+
+`map()` executes a function on every item in an array and returns a **brand new array** with the transformed results. It is perfect for extracting specific data.
+
+**Goal:** Create an array containing *only* the names of the products.
+
+```javascript
+const productNames = products.map(product => {
+  return product.name;
+});
+
+// Output: ['Laptop', 'Coffee Mug', 'Headphones', 'Desk Chair']
+```
+
+## 2. Array.filter() - Filtering Data
+
+`filter()` executes a test on every item in an array. If the item passes the test (returns `true`), it is kept. If it fails (returns `false`), it is discarded. It returns a **new array**.
+
+**Goal:** Find all products that cost more than $100.
+
+```javascript
+const expensiveItems = products.filter(product => {
+  return product.price > 100;
+});
+
+// Output: [{Laptop object}, {Headphones object}, {Desk Chair object}]
+```
+
+## 3. Array.reduce() - Calculating Data
+
+`reduce()` takes an array of items and squashes them down into a **single value** (like a number, string, or object). It uses an `accumulator` that remembers the previous value as it loops through.
+
+**Goal:** Find the total price of all items in the store.
+
+```javascript
+// The '0' at the end is the starting value of the accumulator
+const totalCost = products.reduce((accumulator, currentProduct) => {
+  return accumulator + currentProduct.price;
+}, 0); 
+
+// Output: 1364
+```
+
+## 4. Array.find() - Locating a Single Item
+
+`find()` searches the array and returns the **very first object** that matches your condition. Once it finds a match, it stops searching.
+
+**Goal:** Find the first item in the 'Home' category.
+
+```javascript
+const homeItem = products.find(product => {
+  return product.category === 'Home';
+});
+
+// Output: { id: 2, name: 'Coffee Mug', price: 15, category: 'Home' }
+```
+
+These methods can even be chained together! For example, `products.filter(...).map(...)`. 
+Check out the Live Demo to interact with an interactive playground that demonstrates exactly how these methods manipulate a JSON array in real time!

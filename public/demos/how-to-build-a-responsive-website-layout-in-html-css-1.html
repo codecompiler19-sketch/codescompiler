@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Website Layout | Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* CSS Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background-color: #f8fafc;
+      color: #334155;
+      line-height: 1.6;
+    }
+
+    /* Container for constraints */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* --- Navbar --- */
+    .navbar {
+      background: white;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 70px;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #4f46e5;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #64748b;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: #4f46e5;
+    }
+
+    .btn-primary {
+      background: #4f46e5;
+      color: white;
+      padding: 10px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: background 0.3s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover {
+      background: #4338ca;
+    }
+
+    .menu-btn {
+      display: none;
+      font-size: 1.5rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #334155;
+    }
+
+    /* --- Hero Section --- */
+    .hero {
+      padding: 80px 0;
+      background: linear-gradient(135deg, #eef2ff 0%, #ffffff 100%);
+    }
+
+    .hero-container {
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .hero-content {
+      flex: 1;
+    }
+
+    .hero-content h1 {
+      font-size: 3.5rem;
+      line-height: 1.2;
+      color: #0f172a;
+      margin-bottom: 20px;
+      font-weight: 800;
+    }
+
+    .hero-content h1 span {
+      color: #4f46e5;
+    }
+
+    .hero-content p {
+      font-size: 1.1rem;
+      color: #64748b;
+      margin-bottom: 30px;
+      max-width: 500px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 15px;
+    }
+
+    .btn-secondary {
+      background: white;
+      color: #4f46e5;
+      border: 2px solid #e2e8f0;
+      padding: 10px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .btn-secondary:hover {
+      border-color: #4f46e5;
+    }
+
+    .hero-image {
+      flex: 1;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+    }
+    
+    .hero-image img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* --- Features Section --- */
+    .features {
+      padding: 80px 0;
+      background: white;
+      text-align: center;
+    }
+
+    .features h2 {
+      font-size: 2.5rem;
+      color: #0f172a;
+      margin-bottom: 50px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+    }
+
+    .feature-card {
+      padding: 40px 30px;
+      background: #f8fafc;
+      border-radius: 16px;
+      transition: transform 0.3s ease;
+      border: 1px solid #f1f5f9;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+    }
+
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.5rem;
+      color: #1e293b;
+      margin-bottom: 15px;
+    }
+
+    .feature-card p {
+      color: #64748b;
+    }
+
+    /* --- Footer --- */
+    .footer {
+      background: #0f172a;
+      color: white;
+      padding: 40px 0;
+      text-align: center;
+    }
+
+    .footer p {
+      color: #94a3b8;
+    }
+
+    /* --- Responsive Media Queries --- */
+    
+    /* Tablet & Smaller Laptops */
+    @media (max-width: 992px) {
+      .hero-container {
+        flex-direction: column;
+        text-align: center;
+      }
+      .hero-content p {
+        margin: 0 auto 30px auto;
+      }
+      .hero-buttons {
+        justify-content: center;
+      }
+      .hero-content h1 {
+        font-size: 3rem;
+      }
+      .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    /* Mobile Phones */
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background: white;
+        flex-direction: column;
+        gap: 0;
+        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+      }
+      
+      .nav-links.active {
+        display: flex;
+      }
+
+      .nav-links li {
+        width: 100%;
+        text-align: center;
+      }
+
+      .nav-links a {
+        display: block;
+        padding: 15px 0;
+        border-bottom: 1px solid #f1f5f9;
+      }
+
+      .nav-btn-wrapper {
+        display: none; /* Hide the main button on mobile */
+      }
+
+      .menu-btn {
+        display: block;
+      }
+
+      .hero {
+        padding: 50px 0;
+      }
+
+      .hero-content h1 {
+        font-size: 2.2rem;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .hero-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="#" class="logo">Brand.</a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Features</a></li>
+        <li><a href="#">Pricing</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+      <div class="nav-btn-wrapper">
+        <a href="#" class="btn-primary">Get Started</a>
+      </div>
+      <button class="menu-btn" id="menuBtn">☰</button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container hero-container">
+      <div class="hero-content">
+        <h1>Build Faster With <span>Modern Layouts</span></h1>
+        <p>Create stunning, responsive websites in minutes using our beautiful HTML and CSS templates designed for conversion.</p>
+        <div class="hero-buttons">
+          <a href="#" class="btn-primary">Start Building Free</a>
+          <a href="#" class="btn-secondary">View Documentation</a>
+        </div>
+      </div>
+      <div class="hero-image">
+        <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Workspace">
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <div class="container">
+      <h2>Why Choose Us?</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📱</div>
+          <h3>Fully Responsive</h3>
+          <p>Our layouts automatically adapt to any screen size, from large desktop monitors down to mobile phones.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Lightning Fast</h3>
+          <p>Optimized HTML and CSS with zero bloat, ensuring your website loads instantly for maximum conversion.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎨</div>
+          <h3>Easy to Customize</h3>
+          <p>Clean code architecture makes it incredibly simple to change colors, fonts, and layouts to match your brand.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2026 Brand Inc. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Simple script for mobile menu toggle
+    const menuBtn = document.getElementById('menuBtn');
+    const navLinks = document.getElementById('navLinks');
+
+    menuBtn.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      if (navLinks.classList.contains('active')) {
+        menuBtn.innerHTML = '✕';
+      } else {
+        menuBtn.innerHTML = '☰';
+      }
+    });
+  </script>
+</body>
+</html>

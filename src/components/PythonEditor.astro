@@ -1,0 +1,233 @@
+---
+export interface Props {
+  code?: string;
+  height?: string;
+}
+
+const {
+  code = `# Edit this code and click Run ▶\nprint("Welcome to CodesCompiler!")\nfor i in range(1, 6):\n    print(f"Line {i}")`,
+  height = '420px',
+} = Astro.props;
+
+const uid = Math.random().toString(36).slice(2, 9);
+const safeCode = code.replace(/`/g, '\\`').replace(/\$/g, '\\$');
+---
+
+<div
+  class="not-prose py-root my-8 rounded-xl border border-gray-200 shadow-lg overflow-hidden bg-[#1e1e2e]"
+  style={`height:${height}`}
+  data-code={code}
+  data-uid={uid}
+>
+  <!-- Header -->
+  <div class="flex items-center justify-between px-4 py-2 bg-[#181825] border-b border-white/10">
+    <div class="flex items-center gap-1.5">
+      <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+      <span class="w-3 h-3 rounded-full bg-yellow-400/80"></span>
+      <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
+      <span class="ml-3 text-xs text-gray-400 font-mono hidden sm:block">python — CodesCompiler</span>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <!-- Reset button -->
+      <button class="py-reset text-xs text-gray-400 hover:text-white px-2 py-1 rounded border border-white/10 hover:border-white/30 transition-colors font-mono">
+        Reset
+      </button>
+      <!-- Run button -->
+      <button class="py-run flex items-center gap-1.5 px-4 py-1.5 bg-[#04AA6D] hover:bg-[#038a58] text-white text-xs font-bold rounded transition-colors">
+        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M6.3 2.84A1.5 1.5 0 004 4.11v11.78a1.5 1.5 0 002.3 1.27l9.344-5.891a1.5 1.5 0 000-2.538L6.3 2.84z"/>
+        </svg>
+        Run ▶
+      </button>
+    </div>
+  </div>
+
+  <!-- Body: editor left, output right -->
+  <div class="flex h-[calc(100%-2.5rem)]">
+
+    <!-- Code editor pane -->
+    <div class="w-1/2 border-r border-white/10 flex flex-col overflow-hidden">
+      <div class="px-3 py-1 bg-[#1a1b26] border-b border-white/05">
+        <span class="text-[10px] text-blue-400 font-bold uppercase tracking-widest font-mono">Python 3</span>
+      </div>
+      <div class="py-editor flex-1 overflow-auto text-sm"></div>
+    </div>
+
+    <!-- Output pane -->
+    <div class="w-1/2 flex flex-col bg-[#0d1117]">
+      <div class="flex items-center justify-between px-3 py-1.5 bg-[#161b22] border-b border-white/10">
+        <span class="text-xs text-gray-400 font-mono">Output</span>
+        <button class="py-clear text-[10px] text-gray-500 hover:text-gray-300 transition-colors font-mono">Clear</button>
+      </div>
+      <div class="py-output flex-1 overflow-auto p-4 font-mono text-sm text-green-400 whitespace-pre-wrap leading-relaxed">
+        <span class="text-gray-500">← Click <strong class="text-[#04AA6D]">Run ▶</strong> to execute your Python code</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script is:inline type="module">
+  // Guard: only initialise once per page
+  if (!window.__pyEditorInit) {
+    window.__pyEditorInit = true;
+
+    // Load Skulpt (Python interpreter) + CodeMirror (editor)
+    async function loadSkulpt() {
+      if (window.Sk) return;
+      await new Promise((resolve, reject) => {
+        const s1 = document.createElement('script');
+        s1.src = 'https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js';
+        s1.onload = () => {
+          const s2 = document.createElement('script');
+          s2.src = 'https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js';
+          s2.onload = resolve;
+          s2.onerror = reject;
+          document.head.appendChild(s2);
+        };
+        s1.onerror = reject;
+        document.head.appendChild(s1);
+      });
+    }
+
+    async function initAll() {
+      const BASE = 'https://esm.sh';
+
+      const [
+        { EditorState },
+        { EditorView, keymap, lineNumbers, highlightActiveLineGutter, highlightActiveLine, drawSelection },
+        { defaultKeymap, history, historyKeymap, indentWithTab },
+        { python: pythonLang },
+        { oneDark },
+        { autocompletion, completionKeymap },
+        { bracketMatching },
+        { closeBrackets, closeBracketsKeymap },
+      ] = await Promise.all([
+        import(`${BASE}/@codemirror/state`),
+        import(`${BASE}/@codemirror/view`),
+        import(`${BASE}/@codemirror/commands`),
+        import(`${BASE}/@codemirror/lang-python`),
+        import(`${BASE}/@codemirror/theme-one-dark`),
+        import(`${BASE}/@codemirror/autocomplete`),
+        import(`${BASE}/@codemirror/language`),
+        import(`${BASE}/@codemirror/autocomplete`),
+      ]);
+
+      const baseExtensions = [
+        lineNumbers(),
+        highlightActiveLineGutter(),
+        highlightActiveLine(),
+        drawSelection(),
+        history(),
+        bracketMatching(),
+        closeBrackets(),
+        autocompletion(),
+        oneDark,
+        pythonLang(),
+        keymap.of([
+          ...defaultKeymap,
+          ...historyKeymap,
+          ...completionKeymap,
+          ...closeBracketsKeymap,
+          indentWithTab,
+        ]),
+        EditorView.lineWrapping,
+      ];
+
+      await loadSkulpt();
+
+      // Init every Python editor on the page
+      document.querySelectorAll('.py-root').forEach(wrapper => {
+        const editorEl = wrapper.querySelector('.py-editor');
+        const outputEl = wrapper.querySelector('.py-output');
+        const runBtn   = wrapper.querySelector('.py-run');
+        const resetBtn = wrapper.querySelector('.py-reset');
+        const clearBtn = wrapper.querySelector('.py-clear');
+
+        const originalCode = wrapper.dataset.code || '';
+        let view = null;
+
+        // Create CodeMirror editor
+        view = new EditorView({
+          state: EditorState.create({
+            doc: originalCode,
+            extensions: baseExtensions,
+          }),
+          parent: editorEl,
+        });
+
+        // Run Python with Skulpt
+        function runPython() {
+          const code = view.state.doc.toString();
+          outputEl.innerHTML = '';
+
+          const outDiv = document.createElement('span');
+          outDiv.className = 'text-green-400';
+
+          Sk.configure({
+            output(text) {
+              outDiv.textContent += text;
+              outputEl.appendChild(outDiv);
+            },
+            read(x) {
+              if (Sk.builtinFiles === undefined || Sk.builtinFiles['files'][x] === undefined)
+                throw `File not found: '${x}'`;
+              return Sk.builtinFiles['files'][x];
+            },
+            execLimit: 10000,
+          });
+
+          const promise = Sk.misceval.asyncToPromise(() =>
+            Sk.importMainWithBody('<stdin>', false, code, true)
+          );
+
+          promise.then(
+            () => {
+              if (!outDiv.textContent) {
+                outputEl.innerHTML = '<span class="text-gray-500">✓ Ran successfully (no output)</span>';
+              }
+            },
+            err => {
+              const errMsg = document.createElement('span');
+              errMsg.className = 'text-red-400';
+              errMsg.textContent = '❌ ' + (err.toString() || 'Runtime error');
+              outputEl.innerHTML = '';
+              outputEl.appendChild(errMsg);
+            }
+          );
+        }
+
+        runBtn?.addEventListener('click', runPython);
+
+        resetBtn?.addEventListener('click', () => {
+          view.dispatch({
+            changes: { from: 0, to: view.state.doc.length, insert: originalCode },
+          });
+          outputEl.innerHTML = '<span class="text-gray-500">← Click <strong class="text-[#04AA6D]">Run ▶</strong> to execute your Python code</span>';
+        });
+
+        clearBtn?.addEventListener('click', () => {
+          outputEl.innerHTML = '';
+        });
+      });
+    }
+
+    initAll().catch(console.error);
+  }
+</script>
+
+<style is:global>
+  .py-root .cm-editor {
+    height: 100%;
+    font-size: 13px;
+    font-family: 'Fira Code', 'JetBrains Mono', 'Cascadia Code', monospace;
+  }
+  .py-root .cm-scroller { overflow: auto; }
+  .cm-editor.cm-focused { outline: none; }
+
+  @media (max-width: 640px) {
+    .py-root > div.flex { flex-direction: column; }
+    .py-root .w-1\/2 { width: 100%; height: 50%; }
+  }
+</style>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Email Validation in JS - Live Demo</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0c0c1e 0%, #1a1040 50%, #0e1f35 100%);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+    .container { width: 100%; max-width: 480px; }
+    h1 { text-align: center; color: #fff; font-size: 1.7rem; font-weight: 800; margin-bottom: 0.35rem; }
+    .subtitle { text-align: center; color: rgba(255,255,255,0.4); font-size: 0.82rem; margin-bottom: 2rem; }
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 22px;
+      padding: 2.2rem;
+      backdrop-filter: blur(20px);
+    }
+    .email-wrapper {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+    .email-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.1rem;
+      pointer-events: none;
+    }
+    input[type="email"], input[type="text"] {
+      width: 100%;
+      padding: 0.95rem 3.2rem 0.95rem 2.8rem;
+      background: rgba(255,255,255,0.08);
+      border: 2px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 1rem;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.3s;
+    }
+    input::placeholder { color: rgba(255,255,255,0.3); }
+    input:focus {
+      background: rgba(255,255,255,0.11);
+      border-color: #6366f1;
+      box-shadow: 0 0 0 4px rgba(99,102,241,0.2);
+    }
+    input.valid {
+      border-color: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34,197,94,0.15);
+    }
+    input.invalid {
+      border-color: #ef4444;
+      box-shadow: 0 0 0 4px rgba(239,68,68,0.15);
+    }
+    .status-icon {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.1rem;
+      pointer-events: none;
+      transition: all 0.3s;
+    }
+
+    /* Real-time analysis panel */
+    .analysis-panel {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 1rem 1.1rem;
+      margin-bottom: 1.2rem;
+    }
+    .analysis-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.4);
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      margin-bottom: 0.7rem;
+    }
+    .parts-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 0.7rem;
+    }
+    .part-chip {
+      font-size: 0.75rem;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+      border: 1px solid;
+    }
+    .part-chip.local { background: rgba(99,102,241,0.15); color: #a5b4fc; border-color: rgba(99,102,241,0.3); }
+    .part-chip.at { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); border-color: rgba(255,255,255,0.15); }
+    .part-chip.domain { background: rgba(16,185,129,0.15); color: #6ee7b7; border-color: rgba(16,185,129,0.3); }
+    .part-chip.tld { background: rgba(251,191,36,0.12); color: #fde68a; border-color: rgba(251,191,36,0.25); }
+    .part-chip.empty { background: rgba(239,68,68,0.12); color: #fca5a5; border-color: rgba(239,68,68,0.25); }
+
+    .check-list { list-style: none; }
+    .check-list li {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.4);
+      padding: 3px 0;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      transition: color 0.25s;
+    }
+    .check-list li.pass { color: #86efac; }
+    .check-list li.fail { color: #fca5a5; }
+
+    /* Feedback message */
+    .feedback-msg {
+      min-height: 1.4rem;
+      font-size: 0.82rem;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.3s;
+    }
+    .feedback-msg.neutral { color: rgba(255,255,255,0.4); }
+    .feedback-msg.valid { color: #86efac; }
+    .feedback-msg.invalid { color: #f87171; }
+
+    /* Examples */
+    .examples-title {
+      font-size: 0.74rem;
+      color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 0.55rem;
+    }
+    .examples-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 1.4rem;
+    }
+    .example-pill {
+      font-size: 0.74rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-family: 'Courier New', monospace;
+      border: 1px solid;
+      transition: all 0.2s;
+    }
+    .example-pill.good { background: rgba(34,197,94,0.1); color: #86efac; border-color: rgba(34,197,94,0.25); }
+    .example-pill.bad { background: rgba(239,68,68,0.1); color: #fca5a5; border-color: rgba(239,68,68,0.25); }
+    .example-pill:hover { transform: scale(1.05); }
+
+    /* Subscribe button */
+    .subscribe-btn {
+      width: 100%;
+      padding: 0.9rem;
+      background: linear-gradient(135deg, #6366f1, #4f46e5);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+      box-shadow: 0 4px 20px rgba(99,102,241,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .subscribe-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(99,102,241,0.5); }
+    .subscribe-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    /* Success state */
+    .success-panel {
+      text-align: center;
+      padding: 1.5rem;
+      display: none;
+    }
+    .success-panel .checkmark { font-size: 3rem; margin-bottom: 0.7rem; animation: pop 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+    .success-panel h3 { color: #86efac; font-size: 1.1rem; margin-bottom: 0.4rem; }
+    .success-panel p { color: rgba(255,255,255,0.5); font-size: 0.85rem; }
+    @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+
+    .try-again-btn {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: rgba(255,255,255,0.6);
+      padding: 0.6rem 1.4rem;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      margin-top: 1rem;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    .try-again-btn:hover { background: rgba(255,255,255,0.08); color: #fff; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📧 Live Email Validator</h1>
+    <p class="subtitle">Real-time email validation using JavaScript</p>
+
+    <div class="card" id="mainCard">
+      <!-- Quick test examples -->
+      <div class="examples-title">✅ Valid examples — click to test</div>
+      <div class="examples-row">
+        <span class="example-pill good" onclick="tryEmail(this)">alice@gmail.com</span>
+        <span class="example-pill good" onclick="tryEmail(this)">bob.jones@company.co</span>
+        <span class="example-pill good" onclick="tryEmail(this)">dev+tag@site.org</span>
+      </div>
+      <div class="examples-title">❌ Invalid examples — click to test</div>
+      <div class="examples-row">
+        <span class="example-pill bad" onclick="tryEmail(this)">notanemail</span>
+        <span class="example-pill bad" onclick="tryEmail(this)">missing@domain</span>
+        <span class="example-pill bad" onclick="tryEmail(this)">no spaces @mail.com</span>
+        <span class="example-pill bad" onclick="tryEmail(this)">double@@mail.com</span>
+      </div>
+
+      <!-- Input -->
+      <div class="email-wrapper">
+        <span class="email-icon">📨</span>
+        <input type="text" id="emailInput" placeholder="Enter your email address…" autocomplete="off">
+        <span class="status-icon" id="statusIcon"></span>
+      </div>
+
+      <!-- Analysis breakdown -->
+      <div class="analysis-panel">
+        <div class="analysis-title">🔬 Live Email Analysis</div>
+        <div class="parts-row" id="partsRow">
+          <span class="part-chip empty">—</span>
+        </div>
+        <ul class="check-list" id="checkList">
+          <li id="ck-nonempty">◌ &nbsp;Field is not empty</li>
+          <li id="ck-atsign">◌ &nbsp;Contains exactly one @</li>
+          <li id="ck-local">◌ &nbsp;Local part is valid</li>
+          <li id="ck-domain">◌ &nbsp;Domain part is valid</li>
+          <li id="ck-tld">◌ &nbsp;Has valid TLD (2+ chars)</li>
+          <li id="ck-nospaces">◌ &nbsp;No spaces or illegal chars</li>
+        </ul>
+      </div>
+
+      <!-- Feedback -->
+      <div class="feedback-msg neutral" id="feedbackMsg">💡 Start typing to validate…</div>
+
+      <!-- Subscribe button -->
+      <button class="subscribe-btn" id="subBtn" disabled onclick="subscribe()">
+        <span>Subscribe</span><span>→</span>
+      </button>
+    </div>
+
+    <!-- Success panel -->
+    <div class="success-panel" id="successPanel">
+      <div class="checkmark">🎉</div>
+      <h3>You're subscribed!</h3>
+      <p id="confirmedEmail" style="color:#c4b5fd; font-weight:700; font-size:0.95rem; margin-top:0.3rem;"></p>
+      <p style="margin-top:0.6rem;">Check your inbox for a confirmation email.</p>
+      <button class="try-again-btn" onclick="tryAgain()">Try another email</button>
+    </div>
+  </div>
+
+  <script>
+    const checks = {
+      nonempty: v => v.length > 0,
+      atsign:   v => (v.match(/@/g) || []).length === 1,
+      local:    v => { const p = v.split('@'); return p[0] && /^[a-zA-Z0-9._%+\-]+$/.test(p[0]); },
+      domain:   v => { const p = v.split('@'); return p[1] && /^[a-zA-Z0-9.\-]+$/.test(p[1]); },
+      tld:      v => { const p = v.split('@'); if (!p[1]) return false; const d = p[1].split('.'); return d.length >= 2 && d[d.length-1].length >= 2; },
+      nospaces: v => !/[\s,;]/.test(v)
+    };
+
+    const REGEX_EMAIL = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
+
+    document.getElementById('emailInput').addEventListener('input', function() {
+      validate(this.value);
+    });
+
+    function validate(val) {
+      const v = val.trim();
+      const icon = document.getElementById('statusIcon');
+      const fb = document.getElementById('feedbackMsg');
+      const btn = document.getElementById('subBtn');
+      const input = document.getElementById('emailInput');
+
+      // Update checklist
+      Object.keys(checks).forEach(k => {
+        const el = document.getElementById(`ck-${k}`);
+        const pass = checks[k](v);
+        el.className = pass ? 'pass' : (v.length ? 'fail' : '');
+        el.textContent = (pass ? '✓' : (v.length ? '✗' : '◌')) + ' \u00a0' + el.textContent.slice(2);
+      });
+
+      // Update parts chips
+      updateParts(v);
+
+      // Overall validity
+      const isValid = REGEX_EMAIL.test(v);
+
+      if (!v) {
+        input.className = '';
+        icon.textContent = '';
+        fb.textContent = '💡 Start typing to validate…';
+        fb.className = 'feedback-msg neutral';
+        btn.disabled = true;
+      } else if (isValid) {
+        input.classList.remove('invalid');
+        input.classList.add('valid');
+        icon.textContent = '✅';
+        fb.textContent = '✅ Valid email address!';
+        fb.className = 'feedback-msg valid';
+        btn.disabled = false;
+      } else {
+        input.classList.remove('valid');
+        input.classList.add('invalid');
+        icon.textContent = '❌';
+        fb.textContent = getSuggestion(v);
+        fb.className = 'feedback-msg invalid';
+        btn.disabled = true;
+      }
+    }
+
+    function updateParts(v) {
+      const row = document.getElementById('partsRow');
+      if (!v) {
+        row.innerHTML = '<span class="part-chip empty">—</span>';
+        return;
+      }
+      const atIdx = v.indexOf('@');
+      const html = [];
+      if (atIdx >= 0) {
+        const local = v.substring(0, atIdx);
+        const rest = v.substring(atIdx + 1);
+        const lastDot = rest.lastIndexOf('.');
+        const domain = lastDot >= 0 ? rest.substring(0, lastDot) : rest;
+        const tld = lastDot >= 0 ? rest.substring(lastDot + 1) : '';
+        html.push(`<span class="part-chip local" title="Local part">${local || '…'}</span>`);
+        html.push(`<span class="part-chip at">@</span>`);
+        html.push(`<span class="part-chip domain" title="Domain">${domain || '…'}</span>`);
+        if (tld) html.push(`<span class="part-chip tld" title="TLD">.${tld}</span>`);
+      } else {
+        html.push(`<span class="part-chip local">${v}</span>`);
+      }
+      row.innerHTML = html.join('');
+    }
+
+    function getSuggestion(v) {
+      if (!v.includes('@')) return '⚠ Missing @ symbol.';
+      const [local, domain] = v.split('@');
+      if (!local) return '⚠ Missing local part (before @).';
+      if (!domain) return '⚠ Missing domain (after @).';
+      if (!domain.includes('.')) return '⚠ Domain needs a dot (e.g., gmail.com).';
+      if (/\s/.test(v)) return '⚠ Email cannot contain spaces.';
+      const tld = domain.split('.').pop();
+      if (tld.length < 2) return '⚠ TLD too short (needs 2+ chars like .com, .org).';
+      return '⚠ Invalid email format.';
+    }
+
+    function tryEmail(el) {
+      const input = document.getElementById('emailInput');
+      input.value = el.textContent;
+      validate(el.textContent);
+    }
+
+    function subscribe() {
+      const val = document.getElementById('emailInput').value.trim();
+      if (!REGEX_EMAIL.test(val)) return;
+      document.getElementById('mainCard').style.display = 'none';
+      document.getElementById('confirmedEmail').textContent = val;
+      document.getElementById('successPanel').style.display = 'block';
+    }
+
+    function tryAgain() {
+      document.getElementById('mainCard').style.display = 'block';
+      document.getElementById('successPanel').style.display = 'none';
+      document.getElementById('emailInput').value = '';
+      validate('');
+    }
+  </script>
+</body>
+</html>

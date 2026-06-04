@@ -42,14 +42,16 @@
     // JS just to fill the rest of the visual grid
     const grid = document.getElementById('grid');
     for(let i=12; i<=30; i++) {
-      grid.innerHTML += `<div class="day" onclick="pick(this)">${i}</div>`;
+      grid.innerHTML += `<div class="day">${i}</div>`;
     }
     grid.innerHTML += `<div class="day muted">1</div><div class="day muted">2</div>`;
     
-    function pick(el) {
-      document.querySelectorAll('.day').forEach(d => d.classList.remove('active'));
-      el.classList.add('active');
-    }
+    grid.addEventListener('click', function(e) {
+      if (e.target.classList.contains('day') && !e.target.classList.contains('muted')) {
+        document.querySelectorAll('.day').forEach(d => d.classList.remove('active'));
+        e.target.classList.add('active');
+      }
+    });
   </script>
 </body>
 </html>

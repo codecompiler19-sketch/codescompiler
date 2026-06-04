@@ -1,0 +1,56 @@
+---
+title: "SQL – DEFAULT"
+description: "Set automatic fallback values for columns when no value is provided on insert using DEFAULT."
+category: "sql"
+order: 61
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+The `DEFAULT` constraint specifies a value to use when an INSERT statement does not provide one for that column. Defaults reduce boilerplate, prevent accidental NULLs, and make inserts simpler by allowing you to omit optional column values entirely.
+
+Defaults can be static literals ("General", 0, TRUE) or dynamic expressions like `date('now')` for a timestamp or `LOWER()` for automatic formatting. They make schemas more self-service and reduce bugs from forgetting to set routine values.
+
+**Useful default patterns**
+```sql
+status      TEXT    DEFAULT 'pending'
+created_at  TEXT    DEFAULT (datetime('now'))
+is_active   INTEGER DEFAULT 1
+priority    INTEGER DEFAULT 5
+country     TEXT    DEFAULT 'IN'
+```
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={``}
+  querySql={`CREATE TABLE support_tickets (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  title       TEXT    NOT NULL,
+  status      TEXT    DEFAULT 'open',
+  priority    INTEGER DEFAULT 3,
+  created_at  TEXT    DEFAULT (date('now')),
+  resolved_at TEXT    -- no default, NULL until resolved
+);
+
+-- Insert without specifying optional columns
+INSERT INTO support_tickets (title) VALUES ('Login page broken');
+INSERT INTO support_tickets (title, priority) VALUES ('Slow API',1);
+INSERT INTO support_tickets (title, status, priority)
+  VALUES ('Missing email', 'in_progress', 2);
+
+SELECT * FROM support_tickets;`}
+/>
+
+## Key Points
+
+- DEFAULT provides automatic values when a column is omitted from INSERT
+- Dynamic defaults like date('now') run at insert time
+- DEFAULT values can be overridden by providing an explicit value
+- Combine DEFAULT with NOT NULL to guarantee a value is always present
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

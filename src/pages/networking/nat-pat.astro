@@ -1,0 +1,52 @@
+---
+import TopicLayout from '../../layouts/TopicLayout.astro';
+---
+<TopicLayout title="NAT & PAT Explained" description="Learn how Network Address Translation (NAT) and Port Address Translation (PAT) allow private devices to share a single public IP address." section="networking">
+  <h2>The Problem NAT Solves</h2>
+  <p>IPv4 addresses are 32 bits long, providing about 4.3 billion addresses. Because of the explosive growth of the internet, we ran out of unique public IPv4 addresses. </p>
+  <p>To solve this, <strong>NAT (Network Address Translation)</strong> was introduced. It allows an entire local network (LAN) containing hundreds of devices to share a single public IP address to access the internet.</p>
+
+  <blockquote>NAT acts like a mailroom clerk in an office building. The building has one public mailing address, and the clerk routes incoming mail to specific desks.</blockquote>
+
+  <h2>How NAT Works (Step-by-Step)</h2>
+  <ol>
+    <li>A device with private IP <code>192.168.1.5</code> sends a packet to a website (public IP <code>8.8.8.8</code>).</li>
+    <li>The packet arrives at the router. The router sees the private source IP (which cannot be routed on the public internet).</li>
+    <li>The router replaces the private source IP with its own <strong>public IP</strong> (e.g., <code>203.0.113.1</code>).</li>
+    <li>The router saves this mapping (private IP &harr; public IP) in its internal <strong>NAT Translation Table</strong>.</li>
+    <li>The router sends the packet to the website.</li>
+    <li>When the website replies, the packet arrives at the router's public IP.</li>
+    <li>The router looks at its NAT table, translates the destination public IP back to the device's private IP (<code>192.168.1.5</code>), and forwards it to the LAN.</li>
+  </ol>
+
+  <h2>Types of NAT</h2>
+  <ul>
+    <li><strong>Static NAT (One-to-One)</strong> — Maps a single private IP address to a single public IP address permanently. Commonly used for web servers hosted inside a private network that must be reachable from the outside.</li>
+    <li><strong>Dynamic NAT (Many-to-Many)</strong> — Maps private IP addresses to a pool of public IP addresses on a first-come, first-served basis.</li>
+    <li><strong>PAT (Port Address Translation / NAT Overload)</strong> — The most common type of NAT. Maps multiple private IP addresses to a single public IP address by assigning unique <strong>source port numbers</strong> to each session.</li>
+  </ul>
+
+  <h2>Port Address Translation (PAT) in Detail</h2>
+  <p>Since multiple devices on a LAN might try to access the internet at the same time, the router uses ports to keep track of who gets what response:</p>
+  <ul>
+    <li>Device A (<code>192.168.1.5</code>) sends traffic from port <code>5000</code>. Router translates it to: Public IP, port <code>10001</code>.</li>
+    <li>Device B (<code>192.168.1.10</code>) sends traffic from port <code>5000</code>. Router translates it to: Public IP, port <code>10002</code>.</li>
+    <li>When responses return on ports <code>10001</code> and <code>10002</code>, the router knows exactly which local IP to forward the packets to.</li>
+  </ul>
+
+  <h2>Benefits and Drawbacks of NAT</h2>
+  <h3>Benefits</h3>
+  <ul>
+    <li><strong>Conserves IP Addresses</strong> — Dramatically slows the depletion of IPv4 addresses.</li>
+    <li><strong>Security</strong> — Hides internal IP addresses from the public internet, making it harder for external attackers to target individual local computers.</li>
+  </ul>
+  <h3>Drawbacks</h3>
+  <ul>
+    <li><strong>Performance</strong> — Router has to unpack, translate, and repack every packet header, adding minor latency.</li>
+    <li><strong>End-to-End Traceability</strong> — Makes tracking the exact source device of network traffic more difficult.</li>
+    <li><strong>Compatibility</strong> — Certain protocols (like older VoIP systems) don't work well with translated ports without additional helper services.</li>
+  </ul>
+
+  <h2>What's Next?</h2>
+  <p>Learn more about how routers manage IP assignments in <a href="/networking/ip-addressing-subnetting">IP Addressing &amp; Subnetting</a>, or see how packets travel across networks in <a href="/networking/routing-switching">Routing &amp; Switching</a>.</p>
+</TopicLayout>

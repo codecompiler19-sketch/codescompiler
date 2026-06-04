@@ -1,0 +1,53 @@
+---
+title: "SQL – ALTER TABLE"
+description: "Modify an existing table structure using ALTER TABLE to add, drop, or rename columns."
+category: "sql"
+order: 54
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+`ALTER TABLE` lets you modify the schema of an existing table without losing existing data. Common operations include adding a new column (as your application evolves), renaming columns, changing data types, or dropping obsolete columns. 
+
+In SQLite, ALTER TABLE has limited support — it allows adding columns and renaming tables/columns, but not dropping columns or changing types (those require recreating the table). Other databases like MySQL and PostgreSQL support the full range of ALTER operations.
+
+**Common ALTER operations**
+```sql
+-- Add a column
+ALTER TABLE students ADD COLUMN email TEXT;
+
+-- Rename a column (SQLite 3.25+)
+ALTER TABLE students RENAME COLUMN age TO student_age;
+
+-- Drop a column (MySQL/PostgreSQL)
+ALTER TABLE students DROP COLUMN old_col;
+```
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={`CREATE TABLE employees (id INTEGER PRIMARY KEY, name TEXT, salary REAL);
+INSERT INTO employees VALUES (1,'Alice',75000),(2,'Bob',68000),(3,'Carol',82000);`}
+  querySql={`-- Add new columns to an existing table
+ALTER TABLE employees ADD COLUMN department TEXT DEFAULT 'General';
+ALTER TABLE employees ADD COLUMN hire_year INTEGER DEFAULT 2024;
+
+-- Update some values in the new columns
+UPDATE employees SET department = 'Engineering' WHERE id IN (1,3);
+UPDATE employees SET department = 'Marketing' WHERE id = 2;
+
+SELECT * FROM employees;`}
+/>
+
+## Key Points
+
+- ALTER TABLE modifies structure without losing existing data
+- New columns added via ALTER cannot have NOT NULL without a DEFAULT
+- SQLite supports ADD COLUMN and RENAME but not DROP COLUMN
+- Always test ALTER operations on a backup first in production
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

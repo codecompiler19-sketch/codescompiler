@@ -1,42 +1,101 @@
 ---
-title: "2.5D Parallax Parallelogram Stacker"
-description: "Construct an impossibly deep 3D image slice using identical layered offsets mapped linearly through the Z-axis."
-date: "2026-04-18"
-category: "Website Designs"
-tags: ["css", "3d", "parallax", "effect"]
-image: "/images/posts/css-parallax-image-stack.png"
+title: "CSS Parallax Image Stack"
+seoTitle: "Build a Parallax Image Stack Slider with CSS"
+description: "Learn how to build a stunning parallax image stack slider using CSS 3D transforms."
+date: "2026-06-06"
+category: "Image Slider"
+tags: ["slider","parallax","css"]
+image: "/images/posts/default-coding.png"
 featured: false
 hasDemo: true
 author: "CodesCompiler"
 ---
 
-If you slice an image along the `skew()` axis, drop its opacity, and place subsequent copies visually stacked tightly behind one another, you get a phenomenally premium "glitch glass" depth. 
+Welcome to this tutorial on **Build a Parallax Image Stack Slider with CSS**. 
 
-## Stacking with Absolute Identical
+## HTML Structure
+
+```html
+<div class="parallax-wrapper">
+  <div class="parallax-stack">
+    <div class="stack-card">
+      <img src="https://images.unsplash.com/photo-1506744626753-143d3f0a1c6a?auto=format&fit=crop&w=500&q=80" alt="Mountain">
+    </div>
+    <div class="stack-card">
+      <img src="https://images.unsplash.com/photo-1511576661531-b34d7da5d0f4?auto=format&fit=crop&w=500&q=80" alt="Beach">
+    </div>
+    <div class="stack-card">
+      <img src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=500&q=80" alt="Forest">
+    </div>
+    <div class="stack-card">
+      <img src="https://images.unsplash.com/photo-1533446002934-2e9b110bc595?auto=format&fit=crop&w=500&q=80" alt="Desert">
+    </div>
+  </div>
+  <p class="instruction">Hover to expand, Click to bring to front</p>
+</div>
+```
+
+## CSS Styling
 
 ```css
-.stack-wrap {
-  position: relative;
-  /* Skew radically cuts the rectangles into fast-moving speed lines */
-  transform: skew(-20deg);
+.parallax-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #2c3e50;
+  font-family: 'Inter', sans-serif;
+  color: white;
 }
-
-.layer {
+.parallax-stack {
+  position: relative;
+  width: 350px;
+  height: 450px;
+  perspective: 1000px;
+  margin-bottom: 40px;
+}
+.stack-card {
   position: absolute;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background: url('art.jpg') center/cover;
-  transition: transform 0.5s ease, opacity 0.5s ease;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+  transition: transform 0.5s ease, z-index 0s;
+  cursor: pointer;
+  transform-origin: center center;
 }
+.stack-card img { width: 100%; height: 100%; object-fit: cover; }
+.stack-card:nth-child(1) { transform: translateZ(-90px) translateY(-30px) rotate(-3deg); z-index: 1; }
+.stack-card:nth-child(2) { transform: translateZ(-60px) translateY(-20px) rotate(2deg); z-index: 2; }
+.stack-card:nth-child(3) { transform: translateZ(-30px) translateY(-10px) rotate(-1deg); z-index: 3; }
+.stack-card:nth-child(4) { transform: translateZ(0) translateY(0) rotate(0deg); z-index: 4; }
 
-/* Layering logic! */
-.layer-bottom { opacity: 0.2; transform: translate(30px, 30px); }
-.layer-middle { opacity: 0.5; transform: translate(15px, 15px); }
-.layer-top    { opacity: 1; transform: translate(0, 0); }
-
-/* The spread occurs upon interaction */
-.stack-wrap:hover .layer-bottom { transform: translate(60px, 60px); }
-.stack-wrap:hover .layer-middle { transform: translate(30px, 30px); }
+.parallax-stack:hover .stack-card:nth-child(1) { transform: translateX(-150px) translateZ(0) rotate(-10deg); }
+.parallax-stack:hover .stack-card:nth-child(2) { transform: translateX(-50px) translateZ(20px) rotate(-3deg); }
+.parallax-stack:hover .stack-card:nth-child(3) { transform: translateX(50px) translateZ(40px) rotate(3deg); }
+.parallax-stack:hover .stack-card:nth-child(4) { transform: translateX(150px) translateZ(60px) rotate(10deg); }
+.instruction { font-size: 14px; opacity: 0.6; letter-spacing: 1px; }
 ```
 
-When you hover the neon city inside the Live Demo, watch how the physical ghosting echoes drift outwards across the page!
+## JavaScript Logic
+
+```javascript
+document.addEventListener('DOMContentLoaded', () => {
+    const stack = document.querySelector('.parallax-stack');
+    if(!stack) return;
+    
+    stack.addEventListener('click', (e) => {
+        const clickedCard = e.target.closest('.stack-card');
+        if (!clickedCard) return;
+
+        stack.appendChild(clickedCard);
+        
+        clickedCard.style.transform = 'translateY(-50px) scale(1.1)';
+        setTimeout(() => {
+            clickedCard.style.transform = '';
+        }, 150);
+    });
+});
+```

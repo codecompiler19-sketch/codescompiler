@@ -1,0 +1,67 @@
+---
+import TopicLayout from '../../layouts/TopicLayout.astro';
+---
+<TopicLayout title="Network Troubleshooting & Tools" description="Master the essential command-line tools and techniques used to diagnose, analyze, and repair network connectivity issues." section="networking">
+  <h2>The Troubleshooting Methodology</h2>
+  <p>When solving network problems, a structured approach is essential. Most engineers troubleshoot by using the <strong>OSI Model</strong>, starting at Layer 1 (Physical check: Is the cable plugged in?) and working up to Layer 7 (Application check: Is the server running?).</p>
+
+  <h2>Essential Command-Line Tools</h2>
+  <p>These commands are built into Windows, macOS, and Linux terminal environments and are the first line of defense for network diagnostics:</p>
+
+  <h3>1. ping</h3>
+  <p>Sends ICMP Echo Request packets to a target IP or domain and waits for an Echo Reply. Used to verify basic connectivity and measure round-trip time latency.</p>
+  <pre><code>$ ping google.com
+Reply from 142.250.190.46: bytes=32 time=14ms TTL=117</code></pre>
+  <ul>
+    <li><strong>No reply?</strong> Either the target is offline, network routing is broken, or a firewall is blocking ICMP packets.</li>
+  </ul>
+
+  <h3>2. traceroute / tracert</h3>
+  <p>Shows the exact path (list of routers) a packet takes to reach a destination. It lists each "hop" and the latency for that hop. (Called <code>tracert</code> on Windows, <code>traceroute</code> on Linux/macOS).</p>
+  <pre><code>$ traceroute google.com
+1  192.168.1.1 (1.2ms)
+2  10.0.0.1 (5.4ms)
+3  203.0.113.5 (12.1ms)
+4  142.250.190.46 (14.5ms)</code></pre>
+  <ul>
+    <li>Helps identify exactly which router along the path is failing or causing latency.</li>
+  </ul>
+
+  <h3>3. nslookup / dig</h3>
+  <p>Queries DNS servers to resolve a domain name to an IP address. Used to diagnose DNS lookup issues.</p>
+  <pre><code>$ nslookup codescompiler.com
+Server:  1.1.1.1
+Address: 1.1.1.1#53
+
+Name:    codescompiler.com
+Address: 104.21.75.122</code></pre>
+
+  <h3>4. ipconfig / ifconfig / ip addr</h3>
+  <p>Displays the network configuration of your local network adapters, including IP address, subnet mask, and default gateway.</p>
+  <ul>
+    <li><strong>Windows:</strong> <code>ipconfig</code> (use <code>ipconfig /release</code> and <code>ipconfig /renew</code> to reset DHCP leases)</li>
+    <li><strong>Linux/macOS:</strong> <code>ifconfig</code> or <code>ip addr</code></li>
+  </ul>
+
+  <h3>5. netstat / ss</h3>
+  <p>Displays active TCP connections, listening ports, and routing tables on your local machine. Great for finding out what applications are using the network.</p>
+  <pre><code>$ netstat -an | grep 8080
+TCP    0.0.0.0:8080           0.0.0.0:0              LISTENING</code></pre>
+
+  <h2>Advanced Packet Sniffers & Analyzers</h2>
+  <h3>Wireshark</h3>
+  <p>A graphical packet analysis tool (packet sniffer). It captures network traffic flowing through a network interface card and decodes the packet frames into human-readable layers. Used for deep protocol analysis and application troubleshooting.</p>
+
+  <h3>tcpdump</h3>
+  <p>A lightweight, command-line packet sniffer for Unix-like systems. Essential for capturing traffic on remote head-less servers and saving it to `.pcap` files for later analysis in Wireshark.</p>
+
+  <h2>Common Network Issues & Solutions</h2>
+  <ul>
+    <li><strong>"Limited or No Connectivity" (IP is 169.254.x.x)</strong> — This is an APIPA (Automatic Private IP Addressing) address. It means your computer could not contact a DHCP server to get an IP address. Check the DHCP server or cables.</li>
+    <li><strong>Can Ping IP, but cannot open website by Name</strong> — This indicates a DNS failure. Your DNS server is either offline or misconfigured. Change your DNS server to <code>1.1.1.1</code> or <code>8.8.8.8</code> to test.</li>
+    <li><strong>Duplicate IP Address Error</strong> — Two devices on the same LAN were assigned the same IP. Usually happens due to static IP misconfigurations overlapping with the DHCP pool.</li>
+  </ul>
+
+  <h2>What's Next?</h2>
+  <p>Learn how DNS works to prevent name resolution issues in <a href="/networking/dns-explained">DNS Explained</a>, or check out how IP addressing systems are designed in <a href="/networking/ip-addressing-subnetting">IP Addressing &amp; Subnetting</a>.</p>
+</TopicLayout>

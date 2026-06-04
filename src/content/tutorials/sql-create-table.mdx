@@ -1,0 +1,57 @@
+---
+title: "SQL – CREATE TABLE"
+description: "Define the structure of a new database table using CREATE TABLE with column names, data types, and constraints."
+category: "sql"
+order: 52
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+`CREATE TABLE` defines the structure of a new table — column names, their data types, and any constraints. Getting table design right at the start is critical; changing table structures later (adding columns, changing types) in a live database can be complex and risky.
+
+The key decisions: choosing appropriate data types for each column, identifying the primary key, and deciding which columns should allow NULL values. Good table design is the foundation of a fast, reliable database.
+
+**Common SQL data types**
+| Type | Used for |
+|---|---|
+| INTEGER / INT | Whole numbers |
+| REAL / DECIMAL | Decimal numbers |
+| TEXT / VARCHAR | Character strings |
+| BLOB | Binary data |
+| DATE / DATETIME | Temporal values |
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={``}
+  querySql={`-- Design a full e-commerce products table
+CREATE TABLE products (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  sku         TEXT    NOT NULL UNIQUE,
+  name        TEXT    NOT NULL,
+  category    TEXT    DEFAULT 'General',
+  price       REAL    NOT NULL CHECK (price > 0),
+  stock_qty   INTEGER DEFAULT 0,
+  is_active   INTEGER DEFAULT 1,
+  created_at  TEXT    DEFAULT (date('now'))
+);
+
+-- Insert a test product
+INSERT INTO products (sku, name, category, price, stock_qty)
+VALUES ('PRD-001', 'Wireless Headphones', 'Electronics', 4999, 150);
+
+SELECT * FROM products;`}
+/>
+
+## Key Points
+
+- Always define a PRIMARY KEY for every table
+- NOT NULL prevents empty values where data is required
+- DEFAULT sets a fallback value for omitted columns
+- CHECK constraints validate data at the database level
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

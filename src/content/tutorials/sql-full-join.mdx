@@ -1,0 +1,50 @@
+---
+title: "SQL – FULL JOIN"
+description: "Combine all rows from both tables using FULL OUTER JOIN, showing NULLs where there is no match on either side."
+category: "sql"
+order: 32
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+`FULL OUTER JOIN` is the most inclusive join — it returns every row from both tables whether or not a match exists. Where the left table has no match, right columns are NULL. Where the right has no match, left columns are NULL. It is the union of a LEFT JOIN and a RIGHT JOIN.
+
+SQLite does not natively support FULL OUTER JOIN, but you can emulate it perfectly using UNION ALL as shown below. This is a great example of problem-solving around database limitations.
+
+**Emulating FULL OUTER JOIN in SQLite**
+```sql
+-- FULL JOIN = LEFT JOIN UNION ALL anti-join RIGHT
+SELECT * FROM a LEFT JOIN b ON a.id = b.id
+UNION ALL
+SELECT * FROM a RIGHT JOIN b ON a.id = b.id
+WHERE a.id IS NULL;
+```
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={`CREATE TABLE employees (id INTEGER PRIMARY KEY, name TEXT, dept_id INTEGER);
+INSERT INTO employees VALUES (1,'Alice',1),(2,'Bob',2),(3,'Carol',NULL),(4,'Dev',3);
+CREATE TABLE departments (dept_id INTEGER PRIMARY KEY, dept_name TEXT);
+INSERT INTO departments VALUES (1,'Engineering'),(2,'Marketing'),(4,'HR');`}
+  querySql={`-- Emulate FULL OUTER JOIN: all employees and all departments
+SELECT e.name AS employee, d.dept_name AS department
+FROM employees e LEFT JOIN departments d ON e.dept_id = d.dept_id
+UNION ALL
+SELECT e.name, d.dept_name
+FROM employees e RIGHT JOIN departments d ON e.dept_id = d.dept_id
+WHERE e.id IS NULL;`}
+/>
+
+## Key Points
+
+- FULL JOIN returns every row from both tables
+- NULLs fill columns where no match exists on either side
+- SQLite emulates it with UNION of LEFT and RIGHT joins
+- Useful for finding all discrepancies between two datasets
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.
