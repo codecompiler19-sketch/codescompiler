@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="canonical" href="https://codescompiler.com/blog/js-login-lamp/" />
+  <script>
+    if (window.self === window.top) {
+      window.location.replace('/blog-demo/' + window.location.pathname.split('/').pop().replace('.html', '') + '/');
+    }
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Lamp Login Form — Demo</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 50% 10%, #111827 0%, #030712 100%);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      padding: 20px;
+      overflow: hidden;
+      perspective: 1000px;
+      transition: background 0.5s ease;
+    }
+
+    body.lamp-off {
+      background: #02040a;
+    }
+
+    /* ── LAMP ASSEMBLY ───────────────────────────────────────── */
+    .lamp-assembly {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      transform-origin: top center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 10;
+      pointer-events: none;
+      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .lamp-mount {
+      width: 40px;
+      height: 8px;
+      background: #1f2937;
+      border-radius: 0 0 6px 6px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .lamp-cord {
+      width: 3px;
+      height: 110px;
+      background: linear-gradient(to bottom, #374151, #1f2937);
+    }
+
+    .lamp-head {
+      width: 70px;
+      height: 40px;
+      background: linear-gradient(135deg, #374151 0%, #111827 100%);
+      border-radius: 35px 35px 0 0;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      display: flex;
+      justify-content: center;
+    }
+
+    .lamp-rim {
+      position: absolute;
+      bottom: -2px;
+      width: 74px;
+      height: 4px;
+      background: #4b5563;
+      border-radius: 2px;
+    }
+
+    .lamp-bulb {
+      width: 22px;
+      height: 22px;
+      background: #9ca3af;
+      border-radius: 50%;
+      position: absolute;
+      bottom: -11px;
+      box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.2);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    body:not(.lamp-off) .lamp-bulb {
+      background: #fef08a;
+      box-shadow: 0 0 25px 8px rgba(253, 224, 71, 0.8),
+                  0 0 50px 15px rgba(253, 224, 71, 0.4),
+                  inset 0 -2px 4px rgba(0,0,0,0.2);
+    }
+
+    /* ── LIGHT BEAM ──────────────────────────────────────────── */
+    .light-beam {
+      position: absolute;
+      top: 38px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 900px;
+      background: linear-gradient(to bottom, 
+                    rgba(253, 224, 71, 0.22) 0%, 
+                    rgba(253, 224, 71, 0.06) 45%, 
+                    rgba(253, 224, 71, 0.01) 75%, 
+                    rgba(253, 224, 71, 0) 100%);
+      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+      pointer-events: none;
+      transform-origin: top center;
+      opacity: 1;
+      transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body.lamp-off .light-beam {
+      opacity: 0;
+    }
+
+    /* ── PULL CORD ───────────────────────────────────────────── */
+    .pull-cord {
+      position: absolute;
+      top: 0;
+      left: calc(50% + 50px);
+      width: 24px;
+      height: 220px;
+      cursor: pointer;
+      z-index: 12;
+      transform-origin: top center;
+      pointer-events: all;
+    }
+
+    .pull-cord-line {
+      width: 2px;
+      height: 190px;
+      background: repeating-linear-gradient(
+        to bottom,
+        #4b5563,
+        #4b5563 4px,
+        #1f2937 4px,
+        #1f2937 8px
+      );
+      margin: 0 auto;
+      transition: height 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .pull-cord-handle {
+      width: 14px;
+      height: 14px;
+      background: linear-gradient(135deg, #9ca3af 0%, #4b5563 100%);
+      border-radius: 50%;
+      margin: 0 auto;
+      border: 1px solid #374151;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.5);
+      position: relative;
+    }
+
+    .pull-cord.pulling .pull-cord-line {
+      height: 215px;
+    }
+
+    @keyframes cordSwing {
+      0% { transform: rotate(0deg); }
+      15% { transform: rotate(-18deg); }
+      30% { transform: rotate(14deg); }
+      45% { transform: rotate(-10deg); }
+      60% { transform: rotate(6deg); }
+      75% { transform: rotate(-3deg); }
+      90% { transform: rotate(1deg); }
+      100% { transform: rotate(0deg); }
+    }
+
+    .pull-cord.swing {
+      animation: cordSwing 1.6s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    }
+
+    /* ── LOGIN CARD ──────────────────────────────────────────── */
+    .login-container {
+      position: relative;
+      width: 100%;
+      max-width: 400px;
+      z-index: 8;
+      transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .login-card {
+      background: rgba(17, 24, 39, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 28px;
+      padding: 44px 40px;
+      box-shadow: 
+        0 20px 50px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: 
+        background 0.5s ease, 
+        border-color 0.5s ease, 
+        box-shadow 0.5s ease;
+      position: relative;
+    }
+
+    /* When light is ON, illuminate the card surface */
+    body:not(.lamp-off) .login-card {
+      background: rgba(17, 24, 39, 0.55);
+      border-color: rgba(253, 224, 71, 0.18);
+      box-shadow: 
+        0 25px 60px rgba(0, 0, 0, 0.5),
+        0 0 40px rgba(253, 224, 71, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    /* Branding styles matching CodesCompiler */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #04AA6D 0%, #027a4e 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
+      font-weight: 900;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(4, 170, 109, 0.25);
+    }
+
+    .brand-name {
+      font-size: 19px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-name span {
+      color: #04AA6D;
+    }
+
+    h2 {
+      font-size: 24px;
+      font-weight: 800;
+      color: #f3f4f6;
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+
+    .sub-text {
+      font-size: 14px;
+      color: #9ca3af;
+      margin-bottom: 32px;
+      transition: color 0.5s;
+    }
+
+    body.lamp-off .sub-text {
+      color: #4b5563;
+    }
+
+    /* ── FORM FIELDS & FLOATING LABELS ───────────────────────── */
+    .input-group {
+      position: relative;
+      margin-bottom: 22px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 16px 18px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      color: #f9fafb;
+      font-size: 15px;
+      outline: none;
+      font-family: inherit;
+      transition: 
+        border-color 0.3s ease, 
+        background-color 0.3s ease, 
+        box-shadow 0.3s ease;
+    }
+
+    /* Neon glow effect when lamp is off */
+    body.lamp-off .input-group input:focus {
+      border-color: #04AA6D;
+      background: rgba(255, 255, 255, 0.03);
+      box-shadow: 0 0 15px rgba(4, 170, 109, 0.3);
+    }
+
+    /* Spotlight glow effect when lamp is on */
+    body:not(.lamp-off) .input-group input:focus {
+      border-color: #fde047;
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 0 0 3px rgba(253, 224, 71, 0.15);
+    }
+
+    .input-group label {
+      position: absolute;
+      left: 18px;
+      top: 17px;
+      color: #6b7280;
+      font-size: 15px;
+      pointer-events: none;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Floating label positions */
+    .input-group input:focus + label,
+    .input-group input:not(:placeholder-shown) + label {
+      top: -10px;
+      font-size: 11px;
+      font-weight: 700;
+      background: #0d121f;
+      padding: 0 8px;
+      border-radius: 6px;
+      letter-spacing: 0.05em;
+    }
+
+    body.lamp-off .input-group input:focus + label,
+    body.lamp-off .input-group input:not(:placeholder-shown) + label {
+      color: #04AA6D;
+    }
+
+    body:not(.lamp-off) .input-group input:focus + label,
+    body:not(.lamp-off) .input-group input:not(:placeholder-shown) + label {
+      color: #fde047;
+    }
+
+    /* Password visibility toggle */
+    .password-toggle {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #6b7280;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s;
+    }
+
+    .password-toggle:hover {
+      color: #f3f4f6;
+    }
+
+    /* ── SUBMIT BUTTON & LINKS ───────────────────────────────── */
+    .forgot-link {
+      text-align: right;
+      margin-top: -12px;
+      margin-bottom: 24px;
+    }
+
+    .forgot-link a {
+      font-size: 13px;
+      color: #9ca3af;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .forgot-link a:hover {
+      color: #04AA6D;
+    }
+
+    body:not(.lamp-off) .forgot-link a:hover {
+      color: #fde047;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #04AA6D 0%, #027a4e 100%);
+      border: none;
+      border-radius: 14px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 4px 18px rgba(4, 170, 109, 0.3);
+      transition: transform 0.2s, opacity 0.2s, box-shadow 0.2s;
+    }
+
+    .submit-btn:hover {
+      opacity: 0.95;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(4, 170, 109, 0.4);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    /* The gold button glow when lamp is on */
+    body:not(.lamp-off) .submit-btn {
+      background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
+      box-shadow: 0 4px 18px rgba(234, 179, 8, 0.25);
+    }
+
+    body:not(.lamp-off) .submit-btn:hover {
+      box-shadow: 0 8px 24px rgba(234, 179, 8, 0.35);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 22px 0;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .divider span {
+      font-size: 12px;
+      color: #4b5563;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .social-btn {
+      width: 100%;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      color: #e5e7eb;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .social-btn:hover {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+
+    .signup-link {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .signup-link a {
+      color: #04AA6D;
+      text-decoration: none;
+      font-weight: 700;
+      transition: color 0.2s;
+    }
+
+    .signup-link a:hover {
+      text-decoration: underline;
+    }
+
+    body:not(.lamp-off) .signup-link a {
+      color: #eab308;
+    }
+
+    /* ── TOAST MESSAGES ──────────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #1f2937;
+      color: #fff;
+      padding: 14px 28px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 14px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast.success {
+      border-color: rgba(4, 170, 109, 0.3);
+      background: #044e34;
+    }
+
+    body:not(.lamp-off) .toast.success {
+      border-color: rgba(234, 179, 8, 0.3);
+      background: #5f4407;
+    }
+
+    /* ── MOBILE RESPONSIVENESS ───────────────────────────────── */
+    @media (max-width: 480px) {
+      body {
+        padding: 12px;
+        align-items: flex-end;
+        padding-bottom: 40px;
+      }
+
+      .lamp-assembly {
+        transform: scale(0.8) translateX(-50%);
+        transform-origin: top left;
+      }
+      
+      .pull-cord {
+        left: calc(50% + 35px);
+        height: 170px;
+      }
+      
+      .pull-cord-line {
+        height: 140px;
+      }
+
+      .pull-cord.pulling .pull-cord-line {
+        height: 160px;
+      }
+
+      .login-container {
+        max-width: 100%;
+      }
+
+      .login-card {
+        padding: 30px 24px;
+        border-radius: 20px;
+      }
+
+      .brand {
+        margin-bottom: 20px;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
+
+      .sub-text {
+        margin-bottom: 24px;
+        font-size: 13px;
+      }
+      
+      .input-group input {
+        padding: 14px 16px;
+        font-size: 14px;
+      }
+      
+      .input-group label {
+        left: 16px;
+        top: 15px;
+        font-size: 14px;
+      }
+      
+      .submit-btn {
+        padding: 14px;
+        font-size: 15px;
+      }
+
+      .toast {
+        width: calc(100% - 32px);
+        text-align: center;
+        justify-content: center;
+        font-size: 13px;
+        padding: 12px 20px;
+      }
+    }
+  </style>
+</head>
+<body class="lamp-on">
+
+  <!-- ── PULL CORD ───────────────────────────────────────────── -->
+  <div class="pull-cord" id="pullCord" onclick="toggleLamp()">
+    <div class="pull-cord-line"></div>
+    <div class="pull-cord-handle"></div>
+  </div>
+
+  <!-- ── HANGING LAMP ────────────────────────────────────────── -->
+  <div class="lamp-assembly" id="lampAssembly">
+    <div class="lamp-mount"></div>
+    <div class="lamp-cord"></div>
+    <div class="lamp-head">
+      <div class="lamp-rim"></div>
+      <div class="lamp-bulb"></div>
+      <div class="light-beam" id="lightBeam"></div>
+    </div>
+  </div>
+
+  <!-- ── LOGIN FORM CARD ──────────────────────────────────────── -->
+  <div class="login-container" id="loginContainer">
+    <div class="login-card">
+      <div class="brand">
+        <div class="brand-icon">CC</div>
+        <div class="brand-name"><span>Codes</span>Compiler</div>
+      </div>
+      
+      <h2>Interactive Lamp UI</h2>
+      <p class="sub-text">Interact with inputs or pull the light switch cord!</p>
+
+      <form onsubmit="handleFormSubmit(event)">
+        <!-- Email Input -->
+        <div class="input-group">
+          <input 
+            type="email" 
+            id="email" 
+            placeholder=" " 
+            autocomplete="email" 
+            required 
+            onfocus="focusInput('email')"
+            onblur="blurInput()"
+          />
+          <label for="email">Email Address</label>
+        </div>
+
+        <!-- Password Input -->
+        <div class="input-group">
+          <input 
+            type="password" 
+            id="password" 
+            placeholder=" " 
+            autocomplete="current-password" 
+            required 
+            onfocus="focusInput('password')"
+            onblur="blurInput()"
+          />
+          <label for="password">Password</label>
+          <button 
+            type="button" 
+            class="password-toggle" 
+            onclick="togglePasswordVisibility()" 
+            aria-label="Toggle password visibility"
+          >
+            <!-- SVG Eye Icon -->
+            <svg id="eyeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
+
+        <div class="forgot-link">
+          <a href="#" onclick="showToast('Password recovery is just a demo!')">Forgot Password?</a>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">Sign In →</button>
+      </form>
+
+      <div class="divider">
+        <span>or</span>
+      </div>
+
+      <button class="social-btn" onclick="showToast('GitHub auth is a demo! 😊')">
+        <!-- SVG Github Icon -->
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+        </svg>
+        Continue with GitHub
+      </button>
+
+      <div class="signup-link">
+        Don't have an account? <a href="#" onclick="showToast('Registration is a demo!')">Sign up free</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
+
+  <!-- ── JAVASCRIPT LOGIC ────────────────────────────────────── -->
+  <script>
+    const body = document.body;
+    const lampAssembly = document.getElementById('lampAssembly');
+    const pullCord = document.getElementById('pullCord');
+    const toast = document.getElementById('toast');
+    const eyeIcon = document.getElementById('eyeIcon');
+    const passwordInput = document.getElementById('password');
+
+    let activeInputId = null;
+    let isMouseOver = false;
+
+    // ── LIGHT SWITCH (PULL CORD) ──────────────────────────────
+    function toggleLamp() {
+      // Cord visual pull effect
+      pullCord.classList.add('pulling');
+      setTimeout(() => {
+        pullCord.classList.remove('pulling');
+        pullCord.classList.add('swing');
+      }, 120);
+
+      // Clean up swing animation class after run
+      setTimeout(() => {
+        pullCord.classList.remove('swing');
+      }, 1800);
+
+      // Toggle state
+      const isCurrentlyOff = body.classList.contains('lamp-off');
+      if (isCurrentlyOff) {
+        body.classList.remove('lamp-off');
+        showToast('💡 Lights ON! Enjoy the spotlight focus effect.', 'success');
+      } else {
+        body.classList.add('lamp-off');
+        showToast('🌙 Lights OFF! Neon night-mode active.', 'info');
+      }
+    }
+
+    // ── INPUT FOCUS TRACKING ──────────────────────────────────
+    function focusInput(inputId) {
+      activeInputId = inputId;
+      updateLampDirection();
+    }
+
+    function blurInput() {
+      activeInputId = null;
+      updateLampDirection();
+    }
+
+    // ── UPDATE LAMP ANGLE ─────────────────────────────────────
+    function updateLampDirection(mouseX = null, mouseY = null) {
+      // If lamp is off, don't tilt or point light (keep straight)
+      if (body.classList.contains('lamp-off')) {
+        lampAssembly.style.transform = 'translateX(-50%) rotate(0deg)';
+        return;
+      }
+
+      // Priority 1: Focus States
+      if (activeInputId === 'email') {
+        // Spotlight email (tilt left and pull slightly forward)
+        lampAssembly.style.transform = 'translateX(-50%) rotate(-12deg) scale(1.02)';
+        return;
+      }
+      if (activeInputId === 'password') {
+        // Spotlight password (tilt right and pull slightly forward)
+        lampAssembly.style.transform = 'translateX(-50%) rotate(12deg) scale(1.02)';
+        return;
+      }
+
+      // Priority 2: Mouse tracking (only if light is ON and no active focus)
+      if (mouseX !== null && mouseY !== null && !activeInputId) {
+        const lampRect = lampAssembly.getBoundingClientRect();
+        // Calculate point of rotation (approx bottom of cord/rim center)
+        const lampX = lampRect.left + (lampRect.width / 2);
+        const lampY = lampRect.top;
+
+        const deltaX = mouseX - lampX;
+        const deltaY = mouseY - lampY;
+
+        // Calculate angle in degrees
+        let angle = Math.atan2(deltaX, deltaY) * (180 / Math.PI);
+        
+        // Convert to swing tilt - invert since we rotate around Z axis
+        angle = -angle;
+
+        // Clamp the angle to a maximum swing of 22 degrees
+        const maxAngle = 22;
+        const clampedAngle = Math.max(-maxAngle, Math.min(maxAngle, angle));
+
+        lampAssembly.style.transform = `translateX(-50%) rotate(${clampedAngle}deg)`;
+        return;
+      }
+
+      // Default: Subtle idle state (center)
+      lampAssembly.style.transform = 'translateX(-50%) rotate(0deg)';
+    }
+
+    // ── MOUSE MOVE TRACKER ────────────────────────────────────
+    document.addEventListener('mousemove', (e) => {
+      updateLampDirection(e.clientX, e.clientY);
+    });
+
+    // Reset direction when cursor leaves page window
+    document.addEventListener('mouseleave', () => {
+      updateLampDirection();
+    });
+
+    // ── PASSWORD VISIBILITY TOGGLE ────────────────────────────
+    function togglePasswordVisibility() {
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        // Eye off icon
+        eyeIcon.innerHTML = `
+          <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+          <line x1="1" y1="1" x2="23" y2="23"></line>
+        `;
+        showToast('👁️ Password characters visible');
+      } else {
+        passwordInput.type = 'password';
+        // Eye icon
+        eyeIcon.innerHTML = `
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+          <circle cx="12" cy="12" r="3"></circle>
+        `;
+        showToast('👁️ Password characters hidden');
+      }
+    }
+
+    // ── TOAST NOTIFICATIONS ──────────────────────────────────
+    let toastTimeout;
+    function showToast(message, type = 'info') {
+      clearTimeout(toastTimeout);
+      toast.textContent = message;
+      
+      // Setup classes
+      toast.className = 'toast';
+      if (type === 'success') {
+        toast.classList.add('success');
+      }
+      
+      toast.classList.add('show');
+      
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // ── FORM SUBMISSION ───────────────────────────────────────
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const emailVal = document.getElementById('email').value;
+      const isCurrentlyOff = body.classList.contains('lamp-off');
+      
+      if (isCurrentlyOff) {
+        showToast('🔒 Signed in in the dark! Neon style verified.', 'success');
+      } else {
+        showToast('✨ Signed in under the spotlight! Form validated.', 'success');
+      }
+    }
+  </script>
+</body>
+</html>
