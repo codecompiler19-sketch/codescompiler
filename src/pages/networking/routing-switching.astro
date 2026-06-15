@@ -1,52 +1,121 @@
 ---
 import TopicLayout from '../../layouts/TopicLayout.astro';
 ---
-<TopicLayout title="Routing & Switching" description="Understand how switches move data inside a local network, and how routers direct traffic across networks using routing tables and protocols." section="networking">
-  <h2>The Foundation: LAN vs. WAN</h2>
-  <p>To understand routing and switching, you must know where they happen:</p>
-  <ul>
-    <li><strong>Switching</strong> happens <em>inside</em> a network (LAN). It uses hardware MAC addresses.</li>
-    <li><strong>Routing</strong> happens <em>between</em> networks (WAN/Internet). It uses logical IP addresses.</li>
-  </ul>
+<TopicLayout title="Routing & Switching" description="Master the core functions of network traffic management. Explore Layer 2 switching, MAC address tables, Layer 3 routing, routing protocols, and static vs. dynamic routing." section="networking">
+  <h2>Routing vs. Switching: Core Differences</h2>
+  <p>In network engineering, **Switching** and **Routing** are the two primary mechanisms used to direct data packets from their source to their destination. While they perform similar conceptual tasks, they operate at different layers of the OSI model and handle data traffic at different boundaries:</p>
 
-  <h2>How Switching Works (Layer 2)</h2>
-  <p>A network switch acts as a smart controller. When a device sends a packet to another device on the same LAN:</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Aspect</th>
+        <th>Switching (Layer 2)</th>
+        <th>Routing (Layer 3)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>OSI Layer</strong></td>
+        <td>Data Link Layer (Layer 2).</td>
+        <td>Network Layer (Layer 3).</td>
+      </tr>
+      <tr>
+        <td><strong>Addressing Used</strong></td>
+        <td>Physical **MAC Addresses** (burned into NICs).</td>
+        <td>Logical **IP Addresses** (configured in software).</td>
+      </tr>
+      <tr>
+        <td><strong>Boundary</strong></td>
+        <td>Operates **inside** a single local network (LAN) segment.</td>
+        <td>Operates **between** different networks (WAN/LAN boundaries).</td>
+      </tr>
+      <tr>
+        <td><strong>Data Unit</strong></td>
+        <td>Frames.</td>
+        <td>Packets.</td>
+      </tr>
+      <tr>
+        <td><strong>Primary Device</strong></td>
+        <td>Network Switch.</td>
+        <td>Router.</td>
+      </tr>
+      <tr>
+        <td><strong>Domain Impact</strong></td>
+        <td>Forwards broadcasts; splits collision domains.</td>
+        <td>Blocks broadcasts; splits broadcast domains.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>How a Switch Works: The MAC Address Table</h2>
+  <p>A network switch acts as a high-speed controller connecting devices within a LAN. To ensure frames are sent directly to their intended targets rather than broadcasting them to all devices (like a hub does), a switch builds and maintains a dynamic database called a **MAC Address Table** (or CAM table). It does this using a five-step lifecycle:</p>
   <ol>
-    <li>The switch inspects the <strong>Destination MAC address</strong> in the packet header.</li>
-    <li>It looks at its internal <strong>MAC Address Table</strong> (or CAM table) to find which port corresponds to that MAC.</li>
-    <li>If found, it forwards the packet directly to that port.</li>
-    <li>If not found, it floods the packet to all ports (except the source port) to discover where the target is.</li>
+    <li><strong>Learning</strong> — When a device sends a frame, the switch reads the source MAC address and records it in the table alongside the physical port the frame entered (e.g., MAC `00:0a:95:9d:68:16` is on Port 3).</li>
+    <li><strong>Flooding</strong> — If the switch receives a frame destined for a MAC address not yet in its table, it floods (broadcasts) the frame out of all ports (except the port it arrived on).</li>
+    <li><strong>Forwarding</strong> — Once the target device replies, the switch records the target's port. The next time a frame is sent to that MAC address, the switch forwards it directly to that port (unicast forwarding).</li>
+    <li><strong>Filtering</strong> — If the source and destination MAC addresses are on the same physical port segment, the switch drops (filters) the frame, reducing local congestion.</li>
+    <li><strong>Aging</strong> — To prevent the table from filling with inactive devices, entries are deleted after a period of inactivity (typically 300 seconds).</li>
   </ol>
 
-  <h2>VLANs (Virtual LANs)</h2>
-  <p>Switches can logically segment a single physical switch into multiple virtual networks (VLANs). Devices on different VLANs cannot talk to each other directly without a router, which increases network security and limits broadcast domains.</p>
-
-  <h2>How Routing Works (Layer 3)</h2>
-  <p>When you send data to a device on a different network (e.g., loading a website):</p>
-  <ol>
-    <li>Your computer realizes the destination IP is outside the local network.</li>
-    <li>It sends the packet to its <strong>Default Gateway</strong> (the local router).</li>
-    <li>The router examines the <strong>Destination IP address</strong>.</li>
-    <li>It consults its <strong>Routing Table</strong> to find the best path.</li>
-    <li>It forwards the packet to the next hop (another router) closer to the destination.</li>
-  </ol>
-
-  <h2>Routing Tables</h2>
-  <p>A router's map. It contains list entries of destination networks, interface exits, and metrics (cost). Entries are learned in three ways:</p>
+  <h2>Routing Protocols: Interior vs. Exterior Gateway Protocols</h2>
+  <p>Routers forward packets across networks using **Routing Tables**. These tables are populated manually (static routing) or dynamically via **Routing Protocols** that allow routers to share information about network topology. These protocols are classified into two groups:</p>
+  
+  <h3>1. Interior Gateway Protocols (IGP)</h3>
+  <p>Used to route data within a single organization's autonomous system (like a corporate network or university campus):</p>
   <ul>
-    <li><strong>Directly Connected</strong> — Networks physically plugged into the router.</li>
-    <li><strong>Static Routes</strong> — Routes manually typed in by a network administrator.</li>
-    <li><strong>Dynamic Routes</strong> — Routes learned automatically via routing protocols.</li>
+    <li><strong>Distance Vector (e.g., RIP - Routing Information Protocol):</strong> Routers share their entire routing tables with neighbors at fixed intervals. RIP uses **hop count** (the number of routers a packet passes through) to determine the best path. It has a limit of 15 hops, making it legacy and unsuitable for large networks.</li>
+    <li><strong>Link-State (e.g., OSPF - Open Shortest Path First):</strong> Instead of sharing tables, routers share link-state advertisements (LSAs) containing the status of their active interfaces. Every router builds a complete map of the network and calculates paths using Dijkstra’s algorithm. Highly scalable, fast convergence.</li>
+    <li><strong>Hybrid (e.g., EIGRP - Enhanced Interior Gateway Routing Protocol):</strong> A Cisco-proprietary protocol combining distance-vector and link-state characteristics, using bandwidth, delay, reliability, and load to calculate path costs.</li>
   </ul>
 
-  <h2>Dynamic Routing Protocols</h2>
-  <p>Routers talk to each other to share network paths using specialized protocols:</p>
+  <h3>2. Exterior Gateway Protocols (EGP)</h3>
+  <p>Used to route data between different autonomous systems. The internet is built on EGPs:</p>
   <ul>
-    <li><strong>OSPF (Open Shortest Path First)</strong> — An interior gateway protocol (IGP) used inside large corporate networks. Uses Dijkstra's algorithm.</li>
-    <li><strong>BGP (Border Gateway Protocol)</strong> — The protocol that binds the global internet together. It routes traffic between ISPs and autonomous systems (AS).</li>
-    <li><strong>RIP (Routing Information Protocol)</strong> — An older, simpler protocol based on hop count. Rarely used in modern networks.</li>
+    <li><strong>Path Vector (e.g., BGP - Border Gateway Protocol):</strong> The routing protocol of the Internet. BGP coordinates path decisions between ISPs, managing routing tables containing hundreds of thousands of routes based on network policies and path vectors (autonomous system hops).</li>
   </ul>
+
+  <h2>Static vs. Dynamic Routing</h2>
+  <p>Network engineers choose between static and dynamic methods based on network complexity:</p>
+  <ul>
+    <li><strong>Static Routing</strong> — Network paths are manually entered into the routing table by an administrator.
+      <ul>
+        <li>*Pros:* Low CPU/RAM overhead on routers, highly secure (no routing updates shared), complete control over paths.</li>
+        <li>*Cons:* Highly manual; does not scale. If a link goes down, the path does not redirect automatically, leading to network downtime.</li>
+      </ul>
+    </li>
+    <li><strong>Dynamic Routing</strong> — Protocols dynamically adjust paths based on network conditions.
+      <ul>
+        <li>*Pros:* Automatic redirection if a link fails, highly scalable for large networks, minimal manual updates.</li>
+        <li>*Cons:* Higher router resource usage, complex troubleshooting, routing protocols can be vulnerable to spoofing.</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h2>Frequently Asked Questions (FAQ)</h2>
+
+  <h3>❓ What is the difference between a collision domain and a broadcast domain?</h3>
+  <p>
+    <ul>
+      <li>A <strong>Collision Domain</strong> is a network segment where data packets can collide with each other during transmission (e.g., devices connected to a hub). Standard switch ports split collision domains.</li>
+      <li>A <strong>Broadcast Domain</strong> is a network segment where a broadcast frame (sent to all devices) is received by all hosts. Standard switches forward broadcasts. Routers block broadcasts, splitting broadcast domains.</li>
+    </ul>
+  </p>
+
+  <h3>❓ What is a Layer 3 Switch?</h3>
+  <p>A Layer 3 switch is a hybrid device. It performs high-speed local switching (Layer 2) using specialized hardware, but also contains routing capabilities (Layer 3) to forward packets between virtual local area networks (VLANs) without needing an external router. It is faster than a standard router for internal routing but lacks WAN connectivity features.</p>
+
+  <h3>❓ What is a routing metric?</h3>
+  <p>A routing metric is a mathematical value assigned by a routing protocol to evaluate the cost of a path. Routers choose the path with the lowest metric. Metrics vary by protocol: RIP uses hop count, OSPF uses cost (calculated from interface bandwidth), and EIGRP uses a composite formula based on bandwidth and link delay.</p>
+
+  <h3>❓ What is convergence in routing?</h3>
+  <p>Convergence is the time it takes for all routers in a network to update their routing tables and agree on the new network topology after a change has occurred (such as a link failing or a new router being added). Fast convergence is critical to prevent routing loops and packet drops.</p>
 
   <h2>What's Next?</h2>
-  <p>See how the physical network layer works by going back to <a href="/networking/network-topologies-hardware">Network Topologies &amp; Hardware</a>, or learn about how security is implemented on these devices in <a href="/networking/network-security">Network Security Basics</a>.</p>
+  <p>Advance your network routing studies:</p>
+  <ul>
+    <li>Learn how transport protocols carry segment data in <a href="/networking/network-protocols">Network Protocols</a>.</li>
+    <li>Explore how private IP ranges are translated in <a href="/networking/nat-pat">NAT &amp; PAT Explained</a>.</li>
+    <li>Learn subnet calculations and CIDR limits in <a href="/networking/ip-addressing-subnetting">IP Addressing &amp; Subnetting</a>.</li>
+    <li>Study the physical boundary devices in <a href="/networking/network-topologies-hardware">Topologies &amp; Hardware</a>.</li>
+  </ul>
 </TopicLayout>

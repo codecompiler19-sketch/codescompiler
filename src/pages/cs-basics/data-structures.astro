@@ -2,36 +2,146 @@
 import TopicLayout from '../../layouts/TopicLayout.astro';
 ---
 <TopicLayout title="Data Structures" description="Learn how programs organize and store data efficiently using arrays, linked lists, trees, graphs, and more." section="cs-basics">
-  <h2>What are Data Structures?</h2>
-  <p>A <strong>data structure</strong> is a way of organizing, managing, and storing data so it can be accessed and modified efficiently. Choosing the right data structure is critical for writing fast and memory-efficient programs.</p>
+  <h2>The Logic of Organization: Why Data Structures Matter</h2>
+  <p>In computer programming, data is more than just raw numbers and characters; it represents relationships, structures, and systems. A <strong>data structure</strong> is a specialized format for organizing, managing, and storing data in a computer's memory so that it can be accessed, searched, and modified efficiently. Choosing the wrong data structure can cause a program to slow to a crawl, run out of memory, or become impossible to maintain. Conversely, the correct structure can turn a sluggish task into an instantaneous operation.</p>
 
-  <h2>Array</h2>
-  <p>An <strong>array</strong> stores elements of the same type in contiguous memory. Access by index is O(1) — instant. Inserting or deleting in the middle is O(n) — slow for large arrays.</p>
-  <pre is:raw><code>int numbers[] = {10, 20, 30, 40, 50};</code></pre>
+  <p>Data structures are closely linked with **algorithms**. While data structures provide the physical or logical organization of information, algorithms provide the step-by-step instructions to process that information. Together, they form the foundation of all software engineering.</p>
 
-  <h2>Linked List</h2>
-  <p>A <strong>linked list</strong> stores elements as nodes, each pointing to the next. Insertions and deletions are O(1) at the head, but accessing an element requires traversal — O(n).</p>
+  <h2>Classifying Data Structures</h2>
+  <p>Data structures are broadly divided into two main categories based on how their elements are organized and linked in memory:</p>
+  <ol>
+    <li><strong>Linear Data Structures:</strong> Elements are arranged sequentially or linearly, where each element is attached to its previous and next adjacent elements. Examples include Arrays, Linked Lists, Stacks, and Queues.</li>
+    <li><strong>Non-Linear Data Structures:</strong> Elements are not arranged sequentially. Instead, elements are connected hierarchically or in complex networks, where an element can be linked to multiple other elements. Examples include Trees, Graphs, and Hash Tables.</li>
+  </ol>
+
+  <h2>Linear Data Structures: Sequential Layouts</h2>
+
+  <h3>1. Arrays</h3>
+  <p>An **array** is the simplest and most common linear data structure. It stores elements of the same data type in contiguous (adjacent) blocks of physical memory. Because memory is contiguous, the computer can calculate the exact memory address of any element using its index number. This makes accessing an element by index extremely fast—an **O(1)** time complexity operation. However, because arrays have a fixed size declared at the start, inserting or deleting elements in the middle requires shifting all subsequent elements, making those operations slow—**O(n)** time complexity.</p>
+
+  <h3>2. Linked Lists</h3>
+  <p>A **linked list** is a dynamic linear structure where elements (called **nodes**) are not stored in contiguous memory. Instead, each node consists of two parts: the actual data, and a reference (pointer) to the next node in the list. This allows the list to grow or shrink dynamically without needing a large, unbroken block of memory. The trade-off is that you cannot access an element directly by index; you must traverse the list node-by-node starting from the head, resulting in an **O(n)** search time.</p>
   <ul>
-    <li><strong>Singly Linked List</strong> — Each node points to the next.</li>
-    <li><strong>Doubly Linked List</strong> — Each node points both forward and backward.</li>
-    <li><strong>Circular Linked List</strong> — The last node points back to the first.</li>
+    <li><strong>Singly Linked List:</strong> Each node points only to the next node.</li>
+    <li><strong>Doubly Linked List:</strong> Each node points to both the next node and the previous node, allowing bidirectional traversal.</li>
+    <li><strong>Circular Linked List:</strong> The last node points back to the first node, forming a loop.</li>
   </ul>
 
-  <h2>Stack</h2>
-  <p>A <strong>stack</strong> follows <strong>LIFO</strong> (Last In, First Out). Think of a stack of plates — you only add or remove from the top. Used in function call management, undo features, and expression parsing.</p>
+  <h3>3. Stacks (LIFO)</h3>
+  <p>A **stack** is a restricted linear structure that follows the **LIFO (Last In, First Out)** principle. Think of a stack of plates in a cafeteria: you can only add a plate to the top, and you can only take a plate off the top. Stacks have three core operations:</p>
+  <ul>
+    <li><strong>Push:</strong> Adds an element to the top of the stack.</li>
+    <li><strong>Pop:</strong> Removes the top element from the stack.</li>
+    <li><strong>Peek (or Top):</strong> Views the top element without removing it.</li>
+  </ul>
+  <p>Stacks are critical for managing function calls in programming (the **Call Stack**), executing Undo/Redo features, and parsing mathematical expressions.</p>
 
-  <h2>Queue</h2>
-  <p>A <strong>queue</strong> follows <strong>FIFO</strong> (First In, First Out). Like a line at a store — the first person in is the first served. Used in task scheduling and breadth-first search.</p>
+  <h3>4. Queues (FIFO)</h3>
+  <p>A **queue** follows the **FIFO (First In, First Out)** principle, operating exactly like a line of customers at a store. The first customer to join the line is the first to be served. Queues use two primary operations:</p>
+  <ul>
+    <li><strong>Enqueue:</strong> Adds an element to the tail (end) of the queue.</li>
+    <li><strong>Dequeue:</strong> Removes an element from the head (front) of the queue.</li>
+  </ul>
+  <p>Queues are used in scenarios where resources are shared among multiple files or tasks, such as printer spooling, network packet buffering, and CPU process scheduling.</p>
 
-  <h2>Tree</h2>
-  <p>A <strong>tree</strong> is a hierarchical structure with a root node and child nodes. The most common type is the <strong>Binary Search Tree (BST)</strong> where the left child is smaller and the right child is larger than the parent — enabling fast O(log n) search.</p>
+  <h2>Non-Linear Data Structures: Hierarchies and Connections</h2>
 
-  <h2>Hash Table</h2>
-  <p>A <strong>hash table</strong> maps keys to values using a hash function. Average-case lookup, insertion, and deletion are all O(1). Used heavily in databases, caches, and language interpreters.</p>
+  <h3>1. Trees</h3>
+  <p>A **tree** is a hierarchical data structure consisting of nodes connected by edges. It starts with a single **root node**, and every node can have zero or more **child nodes**. The most common type of tree is the **Binary Tree**, where each node can have a maximum of two children (left and right). A specialized variant is the **Binary Search Tree (BST)**, which maintains a strict sorting property: the value of the left child must be less than the parent, and the value of the right child must be greater. This sorting enables incredibly fast search, insertion, and deletion operations, typically requiring **O(log n)** time.</p>
 
-  <h2>Graph</h2>
-  <p>A <strong>graph</strong> consists of nodes (vertices) connected by edges. Used to model networks, maps, social connections, and dependencies. Key algorithms include BFS, DFS, Dijkstra's shortest path, and more.</p>
+  <h3>2. Hash Tables (Hash Maps)</h3>
+  <p>A **hash table** is a structure that stores data in key-value pairs. It uses a mathematical formula called a **hash function** to translate a key (like a username) into a numeric index in an array. This allows the computer to find, insert, or delete the value associated with a key almost instantly, with an average time complexity of **O(1)**. If two different keys generate the same index, a **collision** occurs. Hash tables resolve collisions using methods like **chaining** (creating linked lists at each index) or **open addressing** (searching for the next empty slot).</p>
+
+  <h3>3. Graphs</h3>
+  <p>A **graph** is a network of nodes (called **vertices**) connected by pathways (called **edges**). Unlike trees, graphs do not have a root node or hierarchical parent-child relationships; nodes can connect in any pattern, including loops. Graphs are classified as:</p>
+  <ul>
+    <li><strong>Directed vs. Undirected:</strong> Directed graphs have edges with arrows indicating one-way paths (like a Twitter follow relation). Undirected graphs have bidirectional edges (like a Facebook friendship).</li>
+    <li><strong>Weighted vs. Unweighted:</strong> Weighted graphs have values assigned to edges (like the mileage between two cities on a map).</li>
+  </ul>
+
+  <h2>Data Structure Complexity & Use Case Reference</h2>
+  <p>The table below summarizes the average-case time complexities of core operations across different data structures, along with their ideal real-world applications:</p>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Data Structure</th>
+          <th>Access</th>
+          <th>Search</th>
+          <th>Insertion</th>
+          <th>Deletion</th>
+          <th>Ideal Real-World Use Case</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Array</strong></td>
+          <td>O(1)</td>
+          <td>O(n)</td>
+          <td>O(n)</td>
+          <td>O(n)</td>
+          <td>Storing a fixed list of lookup coordinates or months of the year.</td>
+        </tr>
+        <tr>
+          <td><strong>Linked List</strong></td>
+          <td>O(n)</td>
+          <td>O(n)</td>
+          <td>O(1)</td>
+          <td>O(1)</td>
+          <td>Implementing undo histories or photo playlist queues.</td>
+        </tr>
+        <tr>
+          <td><strong>Stack</strong></td>
+          <td>O(n)</td>
+          <td>O(n)</td>
+          <td>O(1)</td>
+          <td>O(1)</td>
+          <td>Browser back-button history navigation.</td>
+        </tr>
+        <tr>
+          <td><strong>Queue</strong></td>
+          <td>O(n)</td>
+          <td>O(n)</td>
+          <td>O(1)</td>
+          <td>O(1)</td>
+          <td>Print job scheduling queues, network packet routing.</td>
+        </tr>
+        <tr>
+          <td><strong>BST (Balanced)</strong></td>
+          <td>O(log n)</td>
+          <td>O(log n)</td>
+          <td>O(log n)</td>
+          <td>O(log n)</td>
+          <td>Autocompletion dictionaries, database indexes.</td>
+        </tr>
+        <tr>
+          <td><strong>Hash Table</strong></td>
+          <td>N/A</td>
+          <td>O(1)</td>
+          <td>O(1)</td>
+          <td>O(1)</td>
+          <td>Caching web pages, phonebooks, dictionary structures.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq-section">
+    <h3>What is the difference between a static and a dynamic data structure?</h3>
+    <p>Static data structures (like standard arrays) have a fixed size allocated in memory at compile time; their capacity cannot change during program execution. Dynamic data structures (like linked lists or dynamic arrays/vectors) can grow or shrink in size during runtime, allocating memory dynamically as elements are added or removed.</p>
+
+    <h3>What is a hash collision, and how is it resolved?</h3>
+    <p>A hash collision occurs when two distinct keys are fed into a hash function and produce the exact same array index. It is resolved using **Chaining** (each index of the hash table points to a linked list of entries sharing that index) or **Open Addressing** (the table searches neighboring indices using a probe sequence until an empty slot is found).</p>
+
+    <h3>When would you use a linked list instead of an array?</h3>
+    <p>You should use a linked list when you do not know how many elements your list will hold, when you expect to perform constant insertions and deletions at the head or tail, and when you do not need index-based random access. If you need immediate index access and know the collection size beforehand, an array is much more efficient.</p>
+
+    <h3>Why is a Stack referred to as LIFO?</h3>
+    <p>LIFO stands for Last In, First Out. It means that the last element added to the stack (via the push operation) is mathematically guaranteed to be the first element removed (via the pop operation). This operates like a stack of trays in a cafeteria.</p>
+  </div>
 
   <h2>What's Next?</h2>
-  <p>Explore <a href="/cs-basics/algorithms">Algorithms</a> to learn how to process these structures efficiently, or check out <a href="/cs-basics/dbms">DBMS</a> to see how databases organize data at scale.</p>
+  <p>Now that you know how data is structured in memory, the next step is to understand the logic used to manipulate these structures. Read our guide on <a href="/cs-basics/algorithms">Algorithms &amp; Complexity</a> to explore search, sorting, and Big O notation.</p>
 </TopicLayout>

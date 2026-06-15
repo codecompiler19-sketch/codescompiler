@@ -1,47 +1,125 @@
 ---
 import TopicLayout from '../../layouts/TopicLayout.astro';
 ---
-<TopicLayout title="TCP/IP — The Internet Protocol Suite" description="Learn how TCP and IP work together to transmit data reliably across the internet." section="networking">
-  <h2>What is TCP/IP?</h2>
-  <p><strong>TCP/IP</strong> (Transmission Control Protocol / Internet Protocol) is the fundamental suite of protocols that powers the internet. While the OSI model has 7 layers, the TCP/IP model simplifies this into <strong>4 layers</strong>.</p>
+<TopicLayout title="TCP/IP Model" description="Explore the four layers of the TCP/IP protocol suite. Learn about encapsulation, decapsulation, and how the TCP/IP model compares to the OSI model." section="networking">
+  <h2>What is the TCP/IP Model?</h2>
+  <p>The <strong>TCP/IP Model</strong> (Transmission Control Protocol/Internet Protocol)—also known as the **Internet Protocol Suite**—is the practical, real-world communication model that the global Internet is built upon. Developed by the United States Department of Defense (DARPA) in the 1970s, it designed a highly resilient network (ARPANET) capable of maintaining communication even if parts of the physical network were destroyed.</p>
+  
+  <p>Unlike the conceptual 7-layer OSI model, the TCP/IP model is based on four functional layers. The model is named after its two most important protocols: TCP (for reliable connection management) and IP (for packet routing). Every device connected to the Internet uses the TCP/IP stack to transmit and receive data.</p>
 
-  <h2>The TCP/IP Model Layers</h2>
+  <h2>The 4 Layers of the TCP/IP Model</h2>
+  <p>The TCP/IP model simplifies network operations into four vertical layers, running from the physical media up to the application software:</p>
+
+  <h3>1. Network Interface (Link) Layer</h3>
+  <p>The Network Interface Layer corresponds to the Physical and Data Link layers (Layers 1 and 2) of the OSI model. It defines how data is physically sent through the network, managing cables, wireless links, and physical addressing (MAC addresses). It takes packets from the Internet Layer and converts them into physical signals (electrical pulses, light waves, or radio frequencies) to travel across the local network media.</p>
   <ul>
-    <li><strong>Application Layer</strong> — HTTP, FTP, DNS, SMTP. What users and apps interact with.</li>
-    <li><strong>Transport Layer</strong> — TCP and UDP. Handles end-to-end communication.</li>
-    <li><strong>Internet Layer</strong> — IP protocol. Handles addressing and routing packets.</li>
-    <li><strong>Network Access Layer</strong> — Ethernet, Wi-Fi. Physical transmission of data.</li>
+    <li><strong>Common Protocols:</strong> Ethernet (802.3), Wi-Fi (802.11), PPP (Point-to-Point Protocol), ARP (Address Resolution Protocol).</li>
   </ul>
 
-  <h2>IP — Internet Protocol</h2>
-  <p><strong>IP</strong> is responsible for addressing and routing packets from source to destination across networks.</p>
+  <h3>2. Internet Layer</h3>
+  <p>The Internet Layer corresponds to the Network Layer (Layer 3) of the OSI model. Its primary function is to package data into **IP packets** (datagrams) and route them across different networks from the source host to the destination host. It handles logical addressing (IP addresses) and path selection. This layer is connectionless, meaning packets are routed independently and may arrive out of order.</p>
   <ul>
-    <li><strong>IPv4</strong> — 32-bit addresses (e.g., 192.168.0.1). About 4.3 billion addresses. Nearly exhausted.</li>
-    <li><strong>IPv6</strong> — 128-bit addresses (e.g., 2001:db8::1). Virtually unlimited addresses. The future of networking.</li>
+    <li><strong>Common Protocols:</strong> IP (IPv4 and IPv6), ICMP (Internet Control Message Protocol), IPsec (IP Security).</li>
   </ul>
 
-  <h2>TCP — Transmission Control Protocol</h2>
-  <p><strong>TCP</strong> provides <strong>reliable, ordered, error-checked</strong> delivery of data. Before sending data, TCP performs a <strong>3-way handshake</strong>:</p>
-  <ol>
-    <li><strong>SYN</strong> — Client says "I want to connect."</li>
-    <li><strong>SYN-ACK</strong> — Server replies "Acknowledged, go ahead."</li>
-    <li><strong>ACK</strong> — Client confirms "Connected."</li>
-  </ol>
-  <p>Used for: web browsing (HTTP/HTTPS), email, file transfers.</p>
-
-  <h2>UDP — User Datagram Protocol</h2>
-  <p><strong>UDP</strong> is <strong>fast but unreliable</strong>. It sends data without establishing a connection and without guaranteeing delivery or order. Used for: video streaming, online gaming, DNS lookups — where speed matters more than perfection.</p>
-
-  <h2>Ports</h2>
-  <p>Ports allow a single IP address to run multiple services simultaneously. Common port numbers:</p>
+  <h3>3. Transport Layer</h3>
+  <p>The Transport Layer corresponds to the Transport Layer (Layer 4) of the OSI model. It is responsible for establishing end-to-end communication channels between host devices. It manages flow control, error detection, and controls how packets are sequenced. This layer uses port numbers to identify which specific application is sending or receiving the data. It offers two primary transmission protocols:</p>
   <ul>
-    <li><strong>Port 80</strong> — HTTP</li>
-    <li><strong>Port 443</strong> — HTTPS</li>
-    <li><strong>Port 22</strong> — SSH</li>
-    <li><strong>Port 25</strong> — SMTP (Email)</li>
-    <li><strong>Port 53</strong> — DNS</li>
+    <li><strong>TCP (Transmission Control Protocol):</strong> A connection-oriented protocol that guarantees reliable, ordered delivery of data packets via error checking and retransmission of lost packets.</li>
+    <li><strong>UDP (User Datagram Protocol):</strong> A connectionless, lightweight protocol that sends packets quickly without verifying delivery or ordering. Ideal for real-time video and audio streaming.</li>
   </ul>
+
+  <h3>4. Application Layer</h3>
+  <p>The Application Layer combines the Application, Presentation, and Session layers (Layers 5, 6, and 7) of the OSI model. It provides software programs with access to network services. It handles user authentication, data formatting, encryption (like TLS), and coordinates application-specific protocols (like web browsing or file transfers).</p>
+  <ul>
+    <li><strong>Common Protocols:</strong> HTTP, HTTPS, DNS, SMTP (email), FTP (file transfer), SSH (secure terminal), DHCP.</li>
+  </ul>
+
+  <h2>OSI vs. TCP/IP Model Comparison</h2>
+  <p>While both models break down network communication, their design philosophies are different:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Aspect</th>
+        <th>OSI Reference Model</th>
+        <th>TCP/IP Protocol Suite</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Development</strong></td>
+        <td>Developed by ISO in 1984 as a conceptual standard.</td>
+        <td>Developed by DARPA in the 1970s as a working protocol stack.</td>
+      </tr>
+      <tr>
+        <td><strong>Number of Layers</strong></td>
+        <td>7 Layers.</td>
+        <td>4 Layers.</td>
+      </tr>
+      <tr>
+        <td><strong>Approach</strong></td>
+        <td>Rigid, theoretical separation of concerns.</td>
+        <td>Practical, protocol-oriented architecture.</td>
+      </tr>
+      <tr>
+        <td><strong>Layer Mapping</strong></td>
+        <td>
+          Application, Presentation, Session (Layers 5-7)
+          <br />Transport (Layer 4)
+          <br />Network (Layer 3)
+          <br />Data Link, Physical (Layers 1-2)
+        </td>
+        <td>
+          Application Layer
+          <br />Transport Layer
+          <br />Internet Layer
+          <br />Network Interface (Link) Layer
+        </td>
+      </tr>
+      <tr>
+        <td><strong>Key Protocols</strong></td>
+        <td>Conceptual (rarely implemented directly).</td>
+        <td>TCP, UDP, IP, HTTP, DNS (used everywhere).</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>The Encapsulation &amp; Decapsulation Process</h2>
+  <p>As data travels through the TCP/IP stack, it undergoes a transformation process. This is how data is packaged and sent:</p>
+  
+  <h3>1. Data Encapsulation (Sending)</h3>
+  <p>When you send an email or request a webpage, the data travels *down* the TCP/IP stack. Each layer wraps the data with its own control information, called a **Header** (and sometimes a **Trailer**):</p>
+  <ul>
+    <li><strong>Application Layer:</strong> Generates the raw user data (e.g., HTTP request).</li>
+    <li><strong>Transport Layer:</strong> Wraps the data with a Transport Header (containing source and destination ports), forming a **Segment**.</li>
+    <li><strong>Internet Layer:</strong> Wraps the segment with an IP Header (containing source and destination IP addresses), forming a **Packet**.</li>
+    <li><strong>Network Interface Layer:</strong> Wraps the packet with a Link Header (MAC addresses) and a Link Trailer (error checking bits), forming a **Frame**. This frame is converted into electrical signals and sent over the physical wire.</li>
+  </ul>
+
+  <h3>2. Data Decapsulation (Receiving)</h3>
+  <p>When the receiving host gets the signals, the process is reversed as the data travels *up* the stack. Each layer strips away its corresponding header, checks for errors, and passes the remaining data up to the next layer, until the raw application data reaches the browser or email client.</p>
+
+  <h2>Frequently Asked Questions (FAQ)</h2>
+
+  <h3>❓ Why did the TCP/IP model win over the OSI model in the real world?</h3>
+  <p>The TCP/IP model was designed, tested, and implemented in code *before* the OSI model was officially standardized. Because the early internet (ARPANET) was already running successfully on TCP/IP protocols, hardware manufacturers and software developers built their systems around it. The OSI model was developed later by a committee and was seen as overly complex and theoretical.</p>
+
+  <h3>❓ What is the difference between TCP and IP?</h3>
+  <p>TCP and IP are two separate protocols that work together. **IP (Internet Protocol)** is responsible for addressing and routing individual packets from computer to computer across networks. **TCP (Transmission Control Protocol)** runs on top of IP and is responsible for establishing a reliable connection, checking for lost packets, and putting them back in the correct order for the application.</p>
+
+  <h3>❓ How does a port number differ from an IP address?</h3>
+  <p>An IP address locates a specific **computer** on a network (like a building's street address). A port number identifies the specific **application or service** running on that computer (like an apartment number inside the building). For example, web traffic goes to Port 80/443, while SSH secure terminal traffic goes to Port 22.</p>
+
+  <h3>❓ What is a header in networking?</h3>
+  <p>A header is a block of control data added to the beginning of a packet or segment by a network protocol. It contains vital routing and management information, such as source and destination addresses, packet length, sequence numbers, and protocol types, allowing network devices to process and deliver the data correctly.</p>
 
   <h2>What's Next?</h2>
-  <p>See TCP/IP in action with <a href="/networking/http-https">HTTP &amp; HTTPS</a>, or learn how domain names map to IP addresses with <a href="/networking/dns-explained">DNS Explained</a>.</p>
+  <p>Advance your network protocol studies:</p>
+  <ul>
+    <li>Explore how logical IP addresses are calculated in <a href="/networking/ip-addressing-subnetting">IP Addressing &amp; Subnetting</a>.</li>
+    <li>Learn about the specific protocols of the TCP/IP suite in <a href="/networking/network-protocols">Network Protocols</a>.</li>
+    <li>Learn how web browsers use HTTP/HTTPS at the Application Layer in <a href="/networking/http-https">HTTP &amp; HTTPS</a>.</li>
+    <li>Study the conceptual 7-layer reference model in <a href="/networking/osi-model">OSI Model</a>.</li>
+  </ul>
 </TopicLayout>

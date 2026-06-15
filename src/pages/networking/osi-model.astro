@@ -1,38 +1,167 @@
 ---
 import TopicLayout from '../../layouts/TopicLayout.astro';
 ---
-<TopicLayout title="The OSI Model" description="Understand the 7-layer OSI model and how each layer plays a role in network communication." section="networking">
+<TopicLayout title="OSI Model" description="Master the 7 layers of the OSI reference model. Explore Physical, Data Link, Network, Transport, Session, Presentation, and Application layers with their PDUs." section="networking">
   <h2>What is the OSI Model?</h2>
-  <p>The <strong>Open Systems Interconnection (OSI) Model</strong> is a conceptual framework that divides network communication into <strong>7 distinct layers</strong>. It helps engineers understand, design, and troubleshoot networks by providing a common language.</p>
+  <p>The <strong>OSI (Open Systems Interconnection) Model</strong> is a conceptual framework developed by the International Organization for Standardization (ISO) in 1984. It divides computer network communication into seven logical layers. The model provides a standardized set of rules that allows diverse, heterogeneous computing systems (regardless of their underlying hardware or software architecture) to communicate seamlessly.</p>
+  
+  <p>The OSI model is a reference model, not a physical implementation. It is used extensively by network engineers, software developers, and security analysts to troubleshoot network issues, design network protocols, and isolate software flaws to specific communication layers.</p>
 
-  <blockquote>Memory tip: <strong>"Please Do Not Throw Sausage Pizza Away"</strong> — Physical, Data Link, Network, Transport, Session, Presentation, Application.</blockquote>
+  <h2>The 7 Layers of the OSI Model</h2>
+  <p>The OSI model operates from the physical hardware (Layer 1) up to the software interface used by the end-user (Layer 7). Let's explore each layer in detail, moving from the bottom up:</p>
 
-  <h2>The 7 Layers (Top to Bottom)</h2>
+  <h3>Layer 1: The Physical Layer</h3>
+  <p>The Physical Layer is responsible for the actual physical transmission of raw, unstructured bit streams over a physical medium. It defines the electrical, mechanical, and physical specifications for devices, cables, connectors, and wireless frequencies. It deals with voltage levels, signal timing, and pin layouts.</p>
+  <ul>
+    <li><strong>Protocol Data Unit (PDU):</strong> Bits (0s and 1s).</li>
+    <li><strong>Hardware / Media:</strong> Ethernet cables (CAT6), fiber optics, coaxial cables, hubs, repeaters, wireless radio waves.</li>
+    <li><strong>Common Protocols / Standards:</strong> RJ-45, Ethernet (802.3), Wi-Fi (802.11), Bluetooth.</li>
+  </ul>
 
-  <h3>Layer 7 — Application</h3>
-  <p>The layer you interact with directly. Provides network services to end-user applications. Protocols: <strong>HTTP, HTTPS, FTP, DNS, SMTP</strong>.</p>
+  <h3>Layer 2: The Data Link Layer</h3>
+  <p>The Data Link Layer establishes and terminates a connection between two physically adjacent nodes on the same network. It packages raw bits from the Physical Layer into organized packets called **Frames**. It is responsible for physical addressing, error detection (using cyclic redundancy checks), and flow control within a single local link. It is split into two sublayers:</p>
+  <ul>
+    <li>*Media Access Control (MAC):* Governs how devices gain access to the physical media (using MAC addresses).</li>
+    <li>*Logical Link Control (LLC):* Manages frame synchronization, flow control, and identifies network layer protocols.</li>
+    <li><strong>Protocol Data Unit (PDU):</strong> Frames.</li>
+    <li><strong>Hardware:</strong> Network switches, Network Interface Cards (NICs), bridges.</li>
+    <li><strong>Common Protocols:</strong> Ethernet, PPP (Point-to-Point Protocol), ARP (Address Resolution Protocol), VLAN (802.1Q).</li>
+  </ul>
 
-  <h3>Layer 6 — Presentation</h3>
-  <p>Translates data between the application and the network. Handles encryption, compression, and data formatting. Example: <strong>SSL/TLS encryption</strong>.</p>
+  <h3>Layer 3: The Network Layer</h3>
+  <p>The Network Layer is responsible for routing and forwarding data packets across multiple networks. It handles **logical addressing** (IP addresses), allowing routers to determine the best physical path for data to travel from a source on one network to a destination on another. It manages packet fragmentation and reassembly.</p>
+  <ul>
+    <li><strong>Protocol Data Unit (PDU):</strong> Packets.</li>
+    <li><strong>Hardware:</strong> Routers, Layer 3 switches.</li>
+    <li><strong>Common Protocols:</strong> IPv4, IPv6, ICMP (ping), IPsec, RIP, OSPF, BGP.</li>
+  </ul>
 
-  <h3>Layer 5 — Session</h3>
-  <p>Manages sessions (connections) between applications. Establishes, maintains, and terminates communication sessions. Example: <strong>NetBIOS, RPC</strong>.</p>
+  <h3>Layer 4: The Transport Layer</h3>
+  <p>The Transport Layer manages end-to-end communication, flow control, and error recovery between host applications. It takes data from the Session Layer, breaks it into smaller segments, and ensures they are delivered reliably and in the correct order. It manages connection setups (like the TCP 3-way handshake) and port addressing (identifying specific applications on a device).</p>
+  <ul>
+    <li><strong>Protocol Data Unit (PDU):</strong> Segments (for TCP) or Datagrams (for UDP).</li>
+    <li><strong>Common Protocols:</strong> TCP (Transmission Control Protocol - reliable, connection-oriented), UDP (User Datagram Protocol - fast, connectionless).</li>
+  </ul>
 
-  <h3>Layer 4 — Transport</h3>
-  <p>Provides reliable data transfer between endpoints. Handles segmentation, flow control, and error correction. Protocols: <strong>TCP</strong> (reliable) and <strong>UDP</strong> (fast, no guarantees).</p>
+  <h3>Layer 5: The Session Layer</h3>
+  <p>The Session Layer establishes, manages, and terminates sessions (connections) between applications on different devices. It acts as a coordinator, managing dialogue control, synchronization, and checkpointing. If a connection drops, the Session Layer can attempt to resume the session from the last established checkpoint.</p>
+  <ul>
+    <li><strong>Protocol Data Unit (PDU):</strong> Data.</li>
+    <li><strong>Common Protocols / APIs:</strong> NetBIOS, PPTP, SOCKS, RPC (Remote Procedure Call).</li>
+  </ul>
 
-  <h3>Layer 3 — Network</h3>
-  <p>Handles routing of packets across different networks using <strong>IP addresses</strong>. Routers operate at this layer. Protocol: <strong>IP (IPv4 / IPv6)</strong>.</p>
+  <h3>Layer 6: The Presentation Layer</h3>
+  <p>The Presentation Layer acts as a translator. It ensures that data is presented in a format that the receiving application layer can understand. It handles data formatting, syntax translation, compression (reducing data size for transit), and encryption/decryption (like SSL/TLS encryption for HTTPS traffic).</p>
+  <ul>
+    <li><strong>Protocol Data Unit (PDU):</strong> Data.</li>
+    <li><strong>Common Standards / Formats:</strong> JPEG, PNG, MP3, ASCII, UTF-8, SSL/TLS, JSON, XML.</li>
+  </ul>
 
-  <h3>Layer 2 — Data Link</h3>
-  <p>Handles node-to-node data transfer within the same network segment. Uses <strong>MAC addresses</strong>. Switches operate here. Protocol: <strong>Ethernet, Wi-Fi (802.11)</strong>.</p>
+  <h3>Layer 7: The Application Layer</h3>
+  <p>The Application Layer is the top layer, interacting directly with software applications. It provides network services directly to end-user applications (like web browsers, email clients, and file transfer tools). It handles resource availability checking, user authentication, and coordinates data transfer protocols.</p>
+  <ul>
+    <li><strong>Protocol Data Unit (PDU):</strong> Data.</li>
+    <li><strong>Common Protocols:</strong> HTTP, HTTPS, DNS, SMTP, FTP, SSH, DHCP, IMAP.</li>
+  </ul>
 
-  <h3>Layer 1 — Physical</h3>
-  <p>The actual hardware — cables, fibre optic, radio waves. Transmits raw bits (0s and 1s). Examples: <strong>RJ45 cables, Ethernet ports, Wi-Fi antennas</strong>.</p>
+  <h2>OSI Layers Summary Table</h2>
+  <p>Here is a comprehensive summary of the seven layers of the OSI model:</p>
 
-  <h2>Why Does It Matter?</h2>
-  <p>The OSI model helps isolate problems. If a website won't load, you can check layer by layer: Is the cable plugged in (Layer 1)? Is the IP configured (Layer 3)? Is the web server running (Layer 7)?</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Layer #</th>
+        <th>Layer Name</th>
+        <th>PDU</th>
+        <th>Key Function</th>
+        <th>Typical Hardware / Protocols</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>7</strong></td>
+        <td>Application</td>
+        <td>Data</td>
+        <td>User interface and network services.</td>
+        <td>HTTP, HTTPS, DNS, SMTP, FTP.</td>
+      </tr>
+      <tr>
+        <td><strong>6</strong></td>
+        <td>Presentation</td>
+        <td>Data</td>
+        <td>Data translation, encryption, and compression.</td>
+        <td>SSL/TLS, ASCII, JPEG, JSON.</td>
+      </tr>
+      <tr>
+        <td><strong>5</strong></td>
+        <td>Session</td>
+        <td>Data</td>
+        <td>Manages and synchronizes connections.</td>
+        <td>NetBIOS, RPC, SOCKS.</td>
+      </tr>
+      <tr>
+        <td><strong>4</strong></td>
+        <td>Transport</td>
+        <td>Segment</td>
+        <td>End-to-end reliability, flow control, port numbers.</td>
+        <td>TCP, UDP.</td>
+      </tr>
+      <tr>
+        <td><strong>3</strong></td>
+        <td>Network</td>
+        <td>Packet</td>
+        <td>Logical addressing (IP) and routing paths.</td>
+        <td>IPv4, IPv6, Routers, ICMP.</td>
+      </tr>
+      <tr>
+        <td><strong>2</strong></td>
+        <td>Data Link</td>
+        <td>Frame</td>
+        <td>Physical addressing (MAC) and link access.</td>
+        <td>Switches, Ethernet (802.3), ARP.</td>
+      </tr>
+      <tr>
+        <td><strong>1</strong></td>
+        <td>Physical</td>
+        <td>Bits</td>
+        <td>Physical transmission of electrical/optical signals.</td>
+        <td>Cables, Hubs, Wi-Fi (802.11).</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>The Postal Analogy: How the OSI Model Works</h2>
+  <p>To visualize the OSI model, think of sending a physical letter through the postal service:</p>
+  <ol>
+    <li><strong>Application (Layer 7):</strong> You write a letter (data) to a friend.</li>
+    <li><strong>Presentation (Layer 6):</strong> You translate the letter into English (formatting) and put it inside a sealed envelope (encryption).</li>
+    <li><strong>Session (Layer 5):</strong> You check if your friend is currently at home and ready to receive mail (establishing a session).</li>
+    <li><strong>Transport (Layer 4):</strong> If your letter is too long, you split it into three separate numbered pages (segmentation) so they can be reassembled in order, and note that you require a signature confirmation (reliability).</li>
+    <li><strong>Network (Layer 3):</strong> You write your friend's full home address and zip code on the envelope (logical IP addressing).</li>
+    <li><strong>Data Link (Layer 2):</strong> The local post office sorts the envelope and puts it in a delivery truck bound for a specific sorting facility (physical routing/MAC addressing).</li>
+    <li><strong>Physical (Layer 1):</strong> The truck physically drives down the asphalt road (transmission media) to deliver the letter.</li>
+  </ol>
+
+  <h2>Frequently Asked Questions (FAQ)</h2>
+
+  <h3>❓ Why is the OSI model important if the Internet uses the TCP/IP model?</h3>
+  <p>The OSI model is used primarily as a **conceptual and educational tool**. While the Internet is built on the simpler TCP/IP model, the OSI model provides a more detailed, standardized terminology. When an engineer says "this is a Layer 3 issue," everyone instantly knows they are talking about IP addressing or routing, regardless of what specific protocol suite is running.</p>
+
+  <h3>❓ At which layers do switches and routers operate?</h3>
+  <p>Standard network switches operate at **Layer 2 (Data Link Layer)** because they read physical MAC addresses to forward frames. Routers operate at **Layer 3 (Network Layer)** because they read logical IP addresses to route packets across different network boundaries.</p>
+
+  <h3>❓ What is a PDU (Protocol Data Unit)?</h3>
+  <p>A PDU is the specific unit of data structure defined at each layer of the OSI model. As data moves down the stack, each layer wraps the data with its own header (encapsulation), changing the PDU name: from raw data, to segments (Layer 4), to packets (Layer 3), to frames (Layer 2), and finally to bits (Layer 1) for physical transmission.</p>
+
+  <h3>❓ What is the difference between Layer 4 (Transport) and Layer 3 (Network)?</h3>
+  <p>Layer 3 (Network) handles routing packets between host computers on different networks using IP addresses. Layer 4 (Transport) handles delivering those packets to the *specific application* on the target computer (like a web browser vs. an email client) using port numbers, and ensures the data transfer is reliable.</p>
 
   <h2>What's Next?</h2>
-  <p>Learn how the internet practically implements these concepts with <a href="/networking/tcp-ip">TCP/IP</a>, or explore <a href="/networking/http-https">HTTP &amp; HTTPS</a> for Layer 7 in action.</p>
+  <p>Advance your network modeling path:</p>
+  <ul>
+    <li>Compare the OSI framework to the practical Internet model in <a href="/networking/tcp-ip">TCP/IP</a>.</li>
+    <li>Explore how logical addressing routes packets at Layer 3 in <a href="/networking/ip-addressing-subnetting">IP Addressing &amp; Subnetting</a>.</li>
+    <li>Learn how Layer 2 and Layer 3 protocols operate in <a href="/networking/network-protocols">Network Protocols</a>.</li>
+    <li>Study the physical boundary devices in <a href="/networking/network-topologies-hardware">Topologies &amp; Hardware</a>.</li>
+  </ul>
 </TopicLayout>

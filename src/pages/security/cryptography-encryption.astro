@@ -1,52 +1,123 @@
 ---
 import TopicLayout from '../../layouts/TopicLayout.astro';
 ---
-<TopicLayout title="Cryptography & Encryption" description="Understand how encryption, hashing, and digital certificates secure our data on the internet." section="security">
+<TopicLayout title="Cryptography & Encryption" description="Explore the mathematics of data security. Learn about Caesar ciphers, symmetric vs. asymmetric encryption, hashing, salting, digital certificates, and post-quantum security." section="security">
   <h2>What is Cryptography?</h2>
-  <p><strong>Cryptography</strong> is the practice of securing information and communication through the use of codes, so that only those for whom the information is intended can read and process it. In the digital world, cryptography is the foundation of data confidentiality, integrity, and authenticity.</p>
+  <p><strong>Cryptography</strong> is the scientific practice and study of techniques for securing communication and data in the presence of adversarial third parties. In the digital era, cryptography has evolved from simple secret codes into a highly mathematical discipline that forms the security foundation for online banking, e-commerce, virtual private networks (VPNs), and encrypted messaging applications.</p>
+  
+  <p>Modern cryptography serves four primary pillars of information security:</p>
+  <ul>
+    <li><strong>Confidentiality</strong> — Ensuring that only the intended recipient can read the transmitted data (achieved via encryption).</li>
+    <li><strong>Integrity</strong> — Verifying that the data was not altered or tampered with during transit or storage (achieved via cryptographic hashing).</li>
+    <li><strong>Authenticity</strong> — Confirming the true identity of the sender or server (achieved via digital signatures).</li>
+    <li><strong>Non-repudiation</strong> — Preventing a sender from denying they sent a message (achieved via asymmetric keys).</li>
+  </ul>
+
+  <h2>A Brief History of Cryptography</h2>
+  <p>Cryptography is ancient. Reviewing historical ciphers shows how the field transitioned from simple letter shifting to complex mathematical algorithms:</p>
+  
+  <h3>1. The Caesar Cipher (Substitution)</h3>
+  <p>Used by Julius Caesar to protect military communications, this is a basic **substitution cipher**. Each letter in the plaintext is shifted a fixed number of positions down the alphabet. For example, with a shift of 3, the letter 'A' becomes 'D', 'B' becomes 'E', and so on.</p>
+  <p>While historically innovative, substitution ciphers are easily cracked today using **frequency analysis** (analyzing how often letters appear in a language) and basic brute-force testing.</p>
+
+  <h3>2. The Enigma Machine (World War II)</h3>
+  <p>The Enigma machine was an electro-mechanical rotor cipher machine used extensively by the German military during World War II. It used a series of rotating gears (rotors) to create a polyalphabetic substitution cipher, meaning the alphabet shift changed with every single letter typed. The configuration changed daily, creating billions of possible settings.</p>
+  <p>Breaking the Enigma code—led by Alan Turing and his team at Bletchley Park using early mechanical computers called "Bombes"—shortened the war by years and laid the early foundation for modern computer science.</p>
 
   <h2>Symmetric vs. Asymmetric Encryption</h2>
-  <p>Encryption converts plaintext (readable data) into ciphertext (unreadable scrambled data). There are two main categories of encryption based on the keys used:</p>
+  <p>Encryption converts plaintext (readable data) into ciphertext (scrambled data). Modern digital encryption is divided into two main categories based on key management:</p>
 
-  <h3>1. Symmetric Encryption</h3>
-  <p>Symmetric encryption uses the <strong>same key</strong> for both encrypting and decrypting data. It is fast and efficient, making it ideal for encrypting large amounts of data (such as files on a hard drive).</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Aspect</th>
+        <th>Symmetric Encryption</th>
+        <th>Asymmetric Encryption (Public Key)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Key Count</strong></td>
+        <td>Uses the **same key** for encryption and decryption.</td>
+        <td>Uses a **mathematically linked key pair** (Public and Private keys).</td>
+      </tr>
+      <tr>
+        <td><strong>Algorithm Speed</strong></td>
+        <td>Extremely fast; highly efficient.</td>
+        <td>Significantly slower; resource-intensive.</td>
+      </tr>
+      <tr>
+        <td><strong>Key Length (Standard)</strong></td>
+        <td>128 or 256 bits.</td>
+        <td>2048 to 4096 bits.</td>
+      </tr>
+      <tr>
+        <td><strong>Main Use Cases</strong></td>
+        <td>Encrypting files at rest, databases, bulk hard drives.</td>
+        <td>Key exchanges, digital signatures, securing connections.</td>
+      </tr>
+      <tr>
+        <td><strong>Common Algorithms</strong></td>
+        <td>AES (Advanced Encryption Standard), Blowfish, ChaCha20.</td>
+        <td>RSA, ECC (Elliptic Curve Cryptography), Diffie-Hellman.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>The Hybrid Encryption Approach (SSL/TLS Handshake)</h3>
+  <p>To get the security advantages of asymmetric cryptography alongside the speed of symmetric cryptography, modern internet protocols (like HTTPS and TLS) use a **hybrid encryption** system. During the initial connection handshake, asymmetric encryption is used to securely verify the server's identity and exchange a temporary "session key." Once both sides agree on this session key, they switch to fast symmetric encryption (usually AES-256) to encrypt the rest of the actual webpage traffic.</p>
+
+  <h2>Hashing: One-Way Data Integrity</h2>
+  <p>A <strong>cryptographic hash function</strong> takes an input of any size (a word, a file, or a movie) and outputs a fixed-length string of alphanumeric characters, typically a hexadecimal checksum. Hashing is a **one-way function**—it is mathematically impossible to reconstruct the original input from the output hash.</p>
+  <p>Hash functions exhibit the **avalanche effect**: if you change even a single character or bit in the input file, the resulting hash changes entirely, making it easy to identify data tampering.</p>
+  
+  <h3>Salting Passwords: Protecting Hash Databases</h3>
+  <p>When you register an account on a secure website, the server should never store your password in plaintext. Instead, they hash the password using algorithms like bcrypt or Argon2. However, if two users have the same password, they will have the same hash. Hackers use pre-calculated databases of common passwords and their hashes, known as **Rainbow Tables**, to crack stolen hash files instantly.</p>
+  <p>To prevent this, security systems use **Salting**. A salt is a unique, randomly generated string added to each user's password before hashing. Even if two users choose the password <code>123456</code>, their salted hashes will look completely different, neutralizing rainbow table attacks.</p>
+
+  <h2>Digital Signatures and Certificates</h2>
+  <p>Trust online requires verifying who you are communicating with. Cryptography solves this via:</p>
   <ul>
-    <li><strong>Pros:</strong> Very fast execution speed.</li>
-    <li><strong>Cons:</strong> Key distribution problem. How do you securely share the key with the recipient without someone intercepting it?</li>
-    <li><strong>Common Algorithms:</strong> AES (Advanced Encryption Standard - the industry standard), DES, 3DES, Blowfish.</li>
+    <li><strong>Digital Signatures</strong> — Proves that a message or document was created by a specific sender and was not altered in transit. The sender hashes the message and encrypts the hash with their *private key*. The recipient decrypts the hash using the sender's *public key* and compares it to a fresh hash of the message. If they match, authenticity and integrity are verified.</li>
+    <li><strong>Digital Certificates (SSL/TLS)</strong> — A digital document that binds a public key to an organization's identity (like their website domain). These certificates are issued and cryptographically signed by trusted third-party companies called **Certificate Authorities (CAs)**. Your web browser comes pre-programmed to trust certificates signed by these CAs, confirming you are connecting to the real site, not an imposter.</li>
   </ul>
 
-  <h3>2. Asymmetric Encryption (Public Key Cryptography)</h3>
-  <p>Asymmetric encryption solves the key distribution problem by using a <strong>mathematically linked key pair</strong>:</p>
-  <ul>
-    <li><strong>Public Key</strong> — Can be shared with anyone. Used to <em>encrypt</em> the data.</li>
-    <li><strong>Private Key</strong> — Must be kept secret. Used to <em>decrypt</em> the data.</li>
-  </ul>
-  <p>If Alice wants to send a secure message to Bob, Alice encrypts it using Bob's public key. Only Bob's private key can decrypt it. Anyone intercepting the message cannot read it without the private key.</p>
-  <ul>
-    <li><strong>Pros:</strong> Highly secure key distribution.</li>
-    <li><strong>Cons:</strong> Much slower than symmetric encryption due to complex mathematical operations.</li>
-    <li><strong>Common Algorithms:</strong> RSA (Rivest-Shamir-Adleman), ECC (Elliptic Curve Cryptography), Diffie-Hellman.</li>
-  </ul>
+  <h2>The Future: Quantum Cryptography</h2>
+  <p>As scientists develop powerful quantum computers, traditional asymmetric cryptography algorithms (like RSA and ECC) will become vulnerable. Quantum computers can solve the complex mathematical factoring problems underpinning these algorithms in minutes rather than millennia.</p>
+  <p>To prepare, the security industry is developing **Post-Quantum Cryptography (PQC)**—new cryptographic algorithms based on mathematical problems that are secure against both classical and quantum computers. Organizations like NIST are already standardizing these algorithms to secure future data transmission.</p>
 
-  <blockquote><strong>Hybrid Approach:</strong> Modern secure protocols (like HTTPS and TLS) use a hybrid system. Asymmetric encryption is used at the start of a connection to securely exchange a temporary symmetric key, which is then used to encrypt the rest of the session data. This gives you the speed of symmetric encryption with the security of asymmetric encryption.</blockquote>
+  <h2>Frequently Asked Questions (FAQ)</h2>
 
-  <h2>Hashing: One-Way Security</h2>
-  <p>A <strong>cryptographic hash function</strong> takes an input of any size and produces a fixed-size string of characters, typically a hexadecimal number. Unlike encryption, hashing is a <strong>one-way function</strong> — you cannot convert a hash back into the original input.</p>
-  <p>Hashing is used to verify the <strong>integrity</strong> of data (ensuring it hasn't been altered). If even a single character in the input changes, the resulting hash will be completely different (known as the <em>avalanche effect</em>).</p>
-  <ul>
-    <li><strong>Password Storage</strong> — Websites should never store passwords in plaintext. Instead, they hash the password. When you log in, the site hashes your input and compares it to the stored hash.</li>
-    <li><strong>File Integrity</strong> — Software downloads often provide a SHA-256 checksum (hash). After downloading, you can hash the file to verify it hasn't been tampered with or corrupted.</li>
-    <li><strong>Common Hashing Algorithms:</strong> SHA-256, SHA-3, MD5 (legacy, insecure), SHA-1 (legacy, insecure).</li>
-  </ul>
+  <h3>❓ What is the difference between encryption, hashing, and encoding?</h3>
+  <p>
+    <ul>
+      <li><strong>Encryption</strong> is two-way: it scrambles data to keep it secret and requires a key to decrypt it back into plaintext.</li>
+      <li><strong>Hashing</strong> is one-way: it generates a fixed-size signature to verify data integrity and cannot be reversed.</li>
+      <li><strong>Encoding</strong> is NOT for security: it transforms data into a different format (like Base64 or URL encoding) to ensure it can be read or transmitted across different systems. It does not use keys and is easily reversed by anyone.</li>
+    </ul>
+  </p>
 
-  <h2>Digital Signatures &amp; Certificates</h2>
-  <p>To verify the authenticity of a sender or website, cryptography uses digital certificates:</p>
-  <ul>
-    <li><strong>Digital Signature</strong> — A mathematical scheme that proves a message was created by a known sender (authenticity) and was not altered in transit (integrity). It is created by hashing the message and encrypting the hash with the sender's private key.</li>
-    <li><strong>Digital Certificate (SSL/TLS)</strong> — Issued by a trusted third party called a <strong>Certificate Authority (CA)</strong>. It binds a public key to an entity (like a website's domain name) to verify that you are connecting to the genuine server, not an imposter.</li>
-  </ul>
+  <h3>❓ Can AES-256 encryption be cracked by brute force?</h3>
+  <p>No, not with current classical computing power. AES-256 has \(2^&lbrace;256&rbrace;\) possible key combinations. Brute-forcing it would take a supercomputer longer than the age of the universe. The only way AES-256 is compromised is through human errors, such as weak keys, side-channel attacks, or insecure key storage.</p>
+
+  <h3>❓ What makes a hashing algorithm "secure"?</h3>
+  <p>A secure cryptographic hash function must possess three properties:
+    <ul>
+      <li><strong>Pre-image resistance:</strong> Given a hash, it is extremely difficult to find the original input.</li>
+      <li><strong>Second pre-image resistance:</strong> Given an input, it is extremely difficult to find a *different* input that produces the same hash.</li>
+      <li><strong>Collision resistance:</strong> It is mathematically highly improbable to find *any* two different inputs that produce the exact same hash (known as a hash collision). Older algorithms like MD5 and SHA-1 are now considered insecure because collisions can be forced.</li>
+    </ul>
+  </p>
+
+  <h3>❓ How does public key cryptography allow secure communication without sharing a secret key?</h3>
+  <p>Public key cryptography uses two different keys. Your public key can be given to anyone. Anyone can use your public key to encrypt a message for you. However, once encrypted, only your private key (which you never share) can decrypt it. This solves the "key distribution problem" of symmetric cryptography.</p>
 
   <h2>What's Next?</h2>
-  <p>Learn how cryptography is used to secure web traffic in <a href="/networking/http-https">HTTP &amp; HTTPS</a>, or explore the physical boundary tools in <a href="/security/vpn-firewall">VPN &amp; Firewall</a>.</p>
+  <p>Explore the other pillars of digital security:</p>
+  <ul>
+    <li>Learn how cryptographic certificates secure web traffic in <a href="/networking/http-https">HTTP &amp; HTTPS</a>.</li>
+    <li>Discover how VPNs use symmetric/asymmetric keys to encrypt network traffic in <a href="/security/vpn-firewall">VPN &amp; Firewall</a>.</li>
+    <li>Understand how password hashes are protected in <a href="/security/passwords-privacy">Passwords &amp; Privacy</a>.</li>
+    <li>Study the broader discipline of cyber defense in <a href="/security/cyber-security">Cyber Security</a>.</li>
+  </ul>
 </TopicLayout>

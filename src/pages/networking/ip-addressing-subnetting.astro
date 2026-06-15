@@ -1,56 +1,132 @@
 ---
 import TopicLayout from '../../layouts/TopicLayout.astro';
 ---
-<TopicLayout title="IP Addressing & Subnetting" description="Learn about IPv4 and IPv6 addresses, network masks, classes, CIDR notation, and how subnetting divides networks." section="networking">
+<TopicLayout title="IP & Subnetting" description="Learn the mechanics of IP addressing and subnetting. Explore IPv4 vs. IPv6, RFC 1918 private ranges, CIDR notation, and step-by-step subnet calculations." section="networking">
   <h2>What is an IP Address?</h2>
-  <p>An <strong>IP (Internet Protocol) Address</strong> is a unique numerical label assigned to each device connected to a computer network. It serves two primary functions: host or network interface identification, and location addressing.</p>
+  <p>An <strong>IP (Internet Protocol) Address</strong> is a logical numerical label assigned to every device connected to a computer network that uses the Internet Protocol for communication. Operating at Layer 3 (Network Layer) of the OSI model, an IP address serves two primary functions: host or network interface identification, and location addressing (providing the logical path to reach the device).</p>
+  
+  <p>Unlike physical MAC addresses, which are static and burned into hardware, IP addresses are logical and assigned dynamically via software (such as DHCP) or configured statically. This allows devices to move across different networks and maintain communication.</p>
 
-  <h2>IPv4 vs. IPv6</h2>
-  <p>There are two main versions of IP addresses in use today:</p>
+  <h2>IPv4 vs. IPv6 Comparison</h2>
+  <p>Due to the explosive growth of the Internet, the original addressing system (IPv4) ran out of unassigned addresses, prompting the development of the next-generation protocol (IPv6):</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Aspect</th>
+        <th>IPv4 (Internet Protocol Version 4)</th>
+        <th>IPv6 (Internet Protocol Version 6)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Address Size</strong></td>
+        <td>32 bits.</td>
+        <td>128 bits.</td>
+      </tr>
+      <tr>
+        <td><strong>Address Format</strong></td>
+        <td>Four decimal octets separated by dots (e.g., <code>192.168.1.1</code>).</td>
+        <td>Eight hexadecimal groups separated by colons (e.g., <code>2001:db8::ff00:42:8329</code>).</td>
+      </tr>
+      <tr>
+        <td><strong>Total Addresses</strong></td>
+        <td>\(2^&lbrace;32&rbrace;\) (~4.3 Billion addresses).</td>
+        <td>\(2^&lbrace;128&rbrace;\) (~340 Undecillion addresses—effectively infinite).</td>
+      </tr>
+      <tr>
+        <td><strong>Configuration</strong></td>
+        <td>Manual or dynamic assignment via DHCP.</td>
+        <td>Supports SLAAC (Stateless Address Autoconfiguration) and DHCPv6.</td>
+      </tr>
+      <tr>
+        <td><strong>Security (IPsec)</strong></td>
+        <td>Optional security add-on.</td>
+        <td>Built-in security support as part of the core standard.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Classful Addressing &amp; Private IP Ranges (RFC 1918)</h2>
+  <p>In the early days of the Internet, IPv4 addresses were divided into five distinct **Classes** based on the first octet, defining how many bits belonged to the network portion versus the host portion:</p>
   <ul>
-    <li><strong>IPv4 (IP version 4)</strong> — 32-bit address represented in dotted-decimal format (e.g., <code>192.168.1.1</code>). It allows for approximately 4.3 billion unique addresses, which is no longer enough for all the devices in the world.</li>
-    <li><strong>IPv6 (IP version 6)</strong> — 128-bit address represented in hexadecimal colon-separated format (e.g., <code>2001:db8:3333:4444:5555:6666:7777:8888</code>). It provides an astronomically large number of addresses (3.4 &times; 10<sup>38</sup>).</li>
+    <li><strong>Class A:</strong> Octet range 1–126. Subnet mask `255.0.0.0` (/8). Designed for massive networks (16.7 million hosts per network).</li>
+    <li><strong>Class B:</strong> Octet range 128–191. Subnet mask `255.255.0.0` (/16). Designed for medium-large networks (65,536 hosts per network).</li>
+    <li><strong>Class C:</strong> Octet range 192–223. Subnet mask `255.255.255.0` (/24). Designed for small networks (254 hosts per network).</li>
+    <li><strong>Class D:</strong> Octet range 224–239. Reserved for multicast traffic.</li>
+    <li><strong>Class E:</strong> Octet range 240–254. Reserved for experimental and research use.</li>
+  </ul>
+  
+  <blockquote><strong>Loopback Address:</strong> The IP range `127.0.0.0/8` is reserved for loopback testing. The address <code>127.0.0.1</code> refers to your own local computer ("localhost").</blockquote>
+
+  <h3>Private IP Address Ranges (RFC 1918)</h3>
+  <p>To slow down the exhaustion of IPv4 addresses, **RFC 1918** reserved specific ranges of IP addresses for private internal networks. These private addresses are not routable on the public Internet. Internal routers and firewalls translate them to a single public IP address using NAT before sending traffic to the Internet:</p>
+  <ul>
+    <li><strong>Class A Private Range:</strong> <code>10.0.0.0</code> to <code>10.255.255.255</code></li>
+    <li><strong>Class B Private Range:</strong> <code>172.16.0.0</code> to <code>172.31.255.255</code></li>
+    <li><strong>Class C Private Range:</strong> <code>192.168.0.0</code> to <code>192.168.255.255</code></li>
   </ul>
 
-  <h2>IPv4 Structure & Subnet Masks</h2>
-  <p>An IPv4 address consists of two parts: the <strong>Network ID</strong> and the <strong>Host ID</strong>. The division is determined by the <strong>Subnet Mask</strong>.</p>
-  <ul>
-    <li>An IP of <code>192.168.1.50</code> with a Subnet Mask of <code>255.255.255.0</code> means:
-      <ul>
-        <li>Network ID: <code>192.168.1.0</code></li>
-        <li>Host ID: <code>.50</code></li>
-      </ul>
+  <h2>Subnetting Mathematics: CIDR and Calculations</h2>
+  <p>Classful addressing was highly inefficient. If an organization needed 300 hosts, they were forced to take a Class B network block (65,536 IPs), wasting over 65,000 addresses. To solve this, the industry introduced **CIDR (Classless Inter-Domain Routing)** and **Subnetting**—the mathematical process of splitting a single large network block into smaller, custom-sized sub-networks (subnets).</p>
+  <p>A subnet mask is a 32-bit sequence of 1s followed by 0s. The 1s represent the **Network portion** of the address, and the 0s represent the **Host portion**. In CIDR notation, the subnet mask is written as a slash followed by the number of 1-bits (e.g., `/24` represents a subnet mask of 24 ones: `255.255.255.0`).</p>
+
+  <h3>Subnet Calculation Formula</h3>
+  <p>To calculate the sizes of subnets, we use powers of 2:
+    <ul>
+      <li><strong>Total IP Addresses</strong> in a subnet: \(2^&lbrace;(32 - n)&rbrace;\), where \(n\) is the CIDR prefix number.</li>
+      <li><strong>Usable Host Addresses</strong> in a subnet: \(2^&lbrace;(32 - n)&rbrace; - 2\). We must subtract two because the **first address** is reserved as the **Network Address** (identifying the subnet), and the **last address** is reserved as the **Broadcast Address** (used to send packets to all hosts in the subnet simultaneously).</li>
+    </ul>
+  </p>
+
+  <h3>Step-by-Step Subnetting Example</h3>
+  <p>Let's take the IP block <code>192.168.10.0 /26</code> and calculate the subnet details:</p>
+  <ol>
+    <li><strong>Determine the prefix length:</strong> The CIDR is `/26`. The subnet mask contains 26 ones and 6 zeros.
+      <br />Binary: `11111111.11111111.11111111.11000000`
+      <br />Decimal: `255.255.255.192`
     </li>
-  </ul>
-
-  <h2>CIDR Notation</h2>
-  <p>Classless Inter-Domain Routing (CIDR) simplifies subnet masks by representing the number of "1" bits in the mask with a slash followed by a number:</p>
-  <ul>
-    <li><code>255.255.255.0</code> is written as <code>/24</code> (24 bits of 1s: <code>11111111.11111111.11111111.00000000</code>).</li>
-    <li><code>255.255.0.0</code> is written as <code>/16</code>.</li>
-    <li><code>255.0.0.0</code> is written as <code>/8</code>.</li>
-  </ul>
-
-  <h2>Public vs. Private IP Addresses</h2>
-  <ul>
-    <li><strong>Public IP Addresses</strong> — Unique worldwide. Routeable on the internet. Assigned by ISPs.</li>
-    <li><strong>Private IP Addresses</strong> — Used inside local networks (LANs). Non-routeable on the internet. Reusable across different LANs. Defined by RFC 1918:
-      <ul>
-        <li><code>10.0.0.0</code> to <code>10.255.255.255</code></li>
-        <li><code>172.16.0.0</code> to <code>172.31.255.255</code></li>
-        <li><code>192.168.0.0</code> to <code>192.168.255.255</code></li>
-      </ul>
+    <li><strong>Calculate total and usable hosts:</strong>
+      <br />Total IPs = \(2^&lbrace;(32 - 26)&rbrace; = 2^6 = 64\) addresses.
+      <br />Usable hosts = \(64 - 2 = 62\) host addresses.
     </li>
-  </ul>
+    <li><strong>Find the Network Address:</strong> The first address in this block.
+      <br />Network Address: <code>192.168.10.0</code>
+    </li>
+    <li><strong>Find the Broadcast Address:</strong> The last address in the block.
+      <br />Broadcast Address = Network Address + (Total IPs - 1) = <code>192.168.10.63</code>.
+    </li>
+    <li><strong>Determine the Usable Host Range:</strong> All addresses lying between the network and broadcast addresses.
+      <br />Usable Host Range: <code>192.168.10.1</code> through <code>192.168.10.62</code>.
+    </li>
+  </ol>
 
-  <h2>What is Subnetting?</h2>
-  <p><strong>Subnetting</strong> is the practice of dividing a large network into smaller, logical subnetworks (subnets). Benefits include:</p>
-  <ul>
-    <li><strong>Security</strong> — Separates departments or systems so they cannot communicate directly without a router.</li>
-    <li><strong>Performance</strong> — Reduces broadcast traffic size.</li>
-    <li><strong>Management</strong> — Makes troubleshooting and organizing IP allocations easier.</li>
-  </ul>
+  <h2>Frequently Asked Questions (FAQ)</h2>
+
+  <h3>❓ What is the purpose of subnetting?</h3>
+  <p>Subnetting serves three key purposes:
+    <ul>
+      <li><strong>Security:</strong> Isolating sensitive departments (like finance or HR) into separate subnets to prevent unauthorized traffic access.</li>
+      <li><strong>Performance:</strong> Limiting the size of broadcast domains. Fewer devices on a subnet means less broadcast traffic, reducing local network congestion.</li>
+      <li><strong>Address Conservation:</strong> Efficiently allocating address blocks to departments without wasting large numbers of IP addresses.</li>
+    </ul>
+  </p>
+
+  <h3>❓ What is an APIPA address?</h3>
+  <p>APIPA (Automatic Private IP Addressing) is a feature in Windows and other operating systems. If a device is configured to get an IP address dynamically (DHCP) but cannot contact the DHCP server, it automatically assigns itself an IP address in the link-local range **<code>169.254.0.1</code> to <code>169.254.255.254</code>**. If you see a `169.254.x.x` IP address, it indicates your computer failed to connect to the router's DHCP server.</p>
+
+  <h3>❓ What is a default gateway?</h3>
+  <p>The default gateway is the IP address of the local router interface connected to your subnet. When your computer wants to send packets to an IP address outside its local subnet (such as a public website), it sends those packets to the default gateway router, which handles routing it across network boundaries.</p>
+
+  <h3>❓ Why does IPv6 eliminate the need for NAT?</h3>
+  <p>IPv6 has a massive address space (\(3.4 \times 10^&lbrace;38&rbrace;\) IPs). This allows every single device on Earth to have a unique, public, globally routable IP address. NAT was created as a temporary workaround to conserve the limited IPv4 address pool. Because IPv6 removes this limit, NAT is no longer required, restoring end-to-end direct communication between hosts.</p>
 
   <h2>What's Next?</h2>
-  <p>Learn how routers use IP addresses to send data in <a href="/networking/routing-switching">Routing &amp; Switching</a>, or discover how we map human-friendly names to these numbers in <a href="/networking/dns-explained">DNS Explained</a>.</p>
+  <p>Advance your network routing studies:</p>
+  <ul>
+    <li>Learn how private IP addresses are translated to public IPs in <a href="/networking/nat-pat">NAT &amp; PAT Explained</a>.</li>
+    <li>Explore how routers forward packets between subnets in <a href="/networking/routing-switching">Routing &amp; Switching</a>.</li>
+    <li>Learn about the transport protocols carrying packets in <a href="/networking/network-protocols">Network Protocols</a>.</li>
+    <li>Explore the conceptual 7-layer model in <a href="/networking/osi-model">OSI Model</a>.</li>
+  </ul>
 </TopicLayout>

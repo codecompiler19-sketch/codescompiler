@@ -1,5 +1,6 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
 
 interface Props {
   title: string;
@@ -29,81 +30,91 @@ const next = currentIdx < kidsTopics.length - 1 ? kidsTopics[currentIdx + 1] : n
 ---
 
 <BaseLayout title={title} description={description}>
-  <!-- TUTORIAL SUB-HEADER FOR MOBILE SIDEBAR -->
-  <div slot="sub-header" class="md:hidden bg-[#1b1b2f] text-white flex items-center px-4 py-2 w-full relative z-10 shadow-md">
-    <button id="sidebar-toggle" class="p-1 mr-3 rounded hover:bg-white/10 transition-colors" aria-label="Toggle sidebar">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <!-- MOBILE SUB-HEADER with sidebar toggle -->
+  <div slot="sub-header" class="md:hidden bg-gray-50 flex items-center px-3 py-2 border-b border-gray-200 w-full relative z-10 shadow-sm">
+    <button id="sidebar-toggle" class="p-1.5 mr-2 rounded hover:bg-gray-200 transition-colors text-gray-700" aria-label="Toggle sidebar">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
       </svg>
     </button>
-    <span class="font-semibold text-sm tracking-wide truncate flex-1 text-center pr-10">{title}</span>
+    <nav class="text-[11px] text-gray-500 flex items-center gap-1.5 flex-wrap font-medium" aria-label="Breadcrumb">
+      <a href="/" class="hover:text-[#04AA6D] transition-colors">Home</a>
+      <span>/</span>
+      <a href="/kids" class="hover:text-[#04AA6D] transition-colors">Kids</a>
+      <span>/</span>
+      <span class="text-gray-900 font-semibold truncate max-w-[140px]">{title}</span>
+    </nav>
   </div>
 
-  <div class="flex-1 flex overflow-hidden">
+  <!-- ============================================================ -->
+  <!-- CENTERED WRAPPER — matches TutorialLayout / TopicLayout      -->
+  <!-- ============================================================ -->
+  <div class="w-full" style="max-width: 1600px; margin: 0 auto;">
+    <div class="flex overflow-hidden" style="min-height: calc(100vh - 120px);">
 
-    <!-- ============================================================ -->
-    <!-- LEFT SIDEBAR — Kids Topics List                               -->
-    <!-- ============================================================ -->
-    <aside
-      id="page-sidebar"
-      class="fixed top-[150px] bottom-0 left-0 z-50 md:z-0 w-64 bg-white border-r border-gray-100 transform -translate-x-full transition-transform duration-200 ease-in-out md:relative md:top-0 md:translate-x-0 overflow-y-auto"
-    >
-      <!-- Category badge -->
-      <div class="px-3 py-3 border-b border-gray-200 bg-gray-50 sticky top-0">
-        <span class="inline-block text-xs font-bold uppercase tracking-widest px-2 py-1 rounded bg-green-100 text-green-700">
-          Kids Tutorial
-        </span>
-      </div>
+      <!-- ========================================================== -->
+      <!-- LEFT SIDEBAR — Kids Topics List                             -->
+      <!-- ========================================================== -->
+      <aside
+        id="page-sidebar"
+        class="fixed top-[150px] bottom-0 left-0 z-50 md:z-0 w-64 bg-white border-r border-gray-100 transform -translate-x-full transition-transform duration-200 ease-in-out md:relative md:top-0 md:translate-x-0 overflow-y-auto flex-shrink-0"
+      >
+        <!-- Category badge -->
+        <div class="px-3 py-3 border-b border-gray-200 bg-gray-50 sticky top-0">
+          <span class="inline-block text-xs font-bold uppercase tracking-widest px-2 py-1 rounded bg-green-100 text-green-700">
+            Kids Tutorial
+          </span>
+        </div>
 
-      <!-- Topic links -->
-      <nav class="py-2 flex flex-col" aria-label="Kids topics">
-        {kidsTopics.map((topic) => {
-          const isActive = topic.slug === currentSlug;
-          return (
-            <a
-              href={`/kids/${topic.slug}`}
-              aria-current={isActive ? 'page' : undefined}
-              class={`block px-4 py-2 text-[0.82rem] font-medium border-l-4 transition-colors flex items-center gap-2 ${
-                isActive
-                  ? 'border-[#04AA6D] bg-[#04AA6D] text-white'
-                  : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-[#04AA6D]'
-              }`}
-            >
-              <span class="text-base">{topic.icon}</span>
-              <span>{topic.label}</span>
-            </a>
-          );
-        })}
-      </nav>
+        <!-- Topic links -->
+        <nav class="py-2 flex flex-col" aria-label="Kids topics">
+          {kidsTopics.map((topic) => {
+            const isActive = topic.slug === currentSlug;
+            return (
+              <a
+                href={`/kids/${topic.slug}`}
+                aria-current={isActive ? 'page' : undefined}
+                class={`block px-4 py-2 text-[0.82rem] font-medium border-l-4 transition-colors flex items-center gap-2 ${
+                  isActive
+                    ? 'border-[#04AA6D] bg-[#04AA6D] text-white'
+                    : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-[#04AA6D]'
+                }`}
+              >
+                <span class="text-base">{topic.icon}</span>
+                <span>{topic.label}</span>
+              </a>
+            );
+          })}
+        </nav>
 
-      <!-- Back to Kids Home -->
-      <div class="px-3 py-4 border-t border-gray-100">
-        <a
-          href="/kids"
-          class="flex items-center gap-2 text-xs font-semibold text-gray-400 hover:text-[#04AA6D] transition-colors"
-        >
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-          </svg>
-          Back to Kids Home
-        </a>
-      </div>
-    </aside>
+        <!-- Back to Kids Home -->
+        <div class="px-3 py-4 border-t border-gray-100">
+          <a
+            href="/kids"
+            class="flex items-center gap-2 text-xs font-semibold text-gray-400 hover:text-[#04AA6D] transition-colors"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Back to Kids Home
+          </a>
+        </div>
+      </aside>
 
-    <!-- Overlay backdrop (mobile) -->
-    <div
-      id="sidebar-backdrop"
-      class="fixed top-[150px] bottom-0 left-0 right-0 bg-black/50 z-30 hidden md:hidden"
-    ></div>
+      <!-- Overlay backdrop (mobile) -->
+      <div
+        id="sidebar-backdrop"
+        class="fixed top-[150px] bottom-0 left-0 right-0 bg-black/50 z-30 hidden md:hidden"
+      ></div>
 
-    <!-- ============================================================ -->
-    <!-- MAIN ARTICLE AREA                                             -->
-    <!-- ============================================================ -->
-    <div class="flex flex-1 min-w-0">
+      <!-- ========================================================== -->
+      <!-- MAIN ARTICLE + RIGHT AD SIDEBAR                             -->
+      <!-- ========================================================== -->
+      <div class="flex flex-1 min-w-0">
       <article class="flex-1 min-w-0 px-5 sm:px-8 lg:px-14 py-8 bg-white">
 
-        <!-- Breadcrumb -->
-        <nav class="text-xs text-gray-400 mb-6 flex items-center gap-1 flex-wrap" aria-label="Breadcrumb">
+        <!-- Breadcrumb (Desktop) -->
+        <nav class="hidden md:flex text-xs text-gray-400 mb-6 items-center gap-1 flex-wrap" aria-label="Breadcrumb">
           <a href="/" class="hover:text-[#04AA6D] transition-colors">Home</a>
           <span>/</span>
           <a href="/kids" class="hover:text-[#04AA6D] transition-colors">Kids</a>
@@ -159,10 +170,20 @@ const next = currentIdx < kidsTopics.length - 1 ? kidsTopics[currentIdx + 1] : n
           </div>
         )}
       </article>
-    </div>
-  </div>
 
-  <!-- Mobile sidebar toggle script (same as TutorialLayout) -->
+      <!-- Right Sidebar — Google Ad -->
+      <aside class="hidden xl:block w-72 flex-shrink-0 pt-8 pr-8 pb-8">
+        <div class="sticky top-20 flex flex-col gap-6">
+          <AdSlot format="vertical" />
+        </div>
+      </aside>
+
+      </div><!-- /.flex article+ad -->
+
+    </div><!-- /.flex -->
+  </div><!-- /.wrapper -->
+
+  <!-- Mobile sidebar toggle script -->
   <script is:inline>
     (function () {
       const btn      = document.getElementById('sidebar-toggle');

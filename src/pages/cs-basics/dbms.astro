@@ -2,40 +2,124 @@
 import TopicLayout from '../../layouts/TopicLayout.astro';
 ---
 <TopicLayout title="DBMS — Database Management Systems" description="Learn what databases are, how they store data, and the difference between SQL and NoSQL database systems." section="cs-basics">
-  <h2>What is a Database?</h2>
-  <p>A <strong>database</strong> is an organized collection of structured data stored electronically. A <strong>Database Management System (DBMS)</strong> is the software that interacts with users, applications, and the database itself to capture and analyze data.</p>
+  <h2>The Backbone of Information: What is a Database?</h2>
+  <p>In the early days of computing, programs stored their data in flat text files. While simple, this approach quickly became a nightmare as data grew. Multiple programs attempting to write to the same file caused corruption, searching through millions of lines of text was painfully slow, and enforcing security permissions was nearly impossible. To solve these problems, computer scientists developed the **Database Management System (DBMS)**.</p>
+  
+  <p>A <strong>database</strong> is an organized, structured collection of data stored electronically in a computer system. A <strong>DBMS</strong> is the specialized software package that serves as the interface between the database, the end-user, and application programs. It manages the storage, retrieval, security, and integrity of data, ensuring that information remains accurate, consistent, and instantly accessible.</p>
 
-  <h2>Why Use a DBMS?</h2>
+  <h2>Core Functions: Why Use a DBMS?</h2>
+  <p>Rather than letting application code interact directly with storage drives, a DBMS provides a unified, protected gateway that enforces several critical logical properties:</p>
   <ul>
-    <li><strong>Data Integrity</strong> — Enforces rules to keep data accurate and consistent.</li>
-    <li><strong>Concurrent Access</strong> — Allows multiple users to read/write data simultaneously.</li>
-    <li><strong>Security</strong> — Controls who can access or modify data.</li>
-    <li><strong>Backup &amp; Recovery</strong> — Protects data from crashes and corruption.</li>
-    <li><strong>Reduced Redundancy</strong> — Eliminates storing the same data in multiple places.</li>
+    <li><strong>Data Integrity:</strong> Enforces rules (constraints) to ensure data remains logical and accurate. For example, a DBMS can prevent a user from entering text into a "birth date" column or creating an order for a customer ID that does not exist.</li>
+    <li><strong>Concurrency Control:</strong> Allows thousands of users to read and write to the same database simultaneously without conflict. It uses locking mechanisms to prevent two updates from corrupting the same data record at the exact same moment.</li>
+    <li><strong>Data Independence:</strong> Separates the physical storage structure of the data from the logical application structure. You can move the database to a new server or change the hardware setup without rewriting your application code.</li>
+    <li><strong>Robust Security:</strong> Restricts access permissions, ensuring that specific users (like support staff) can only view customer info, while other accounts (like billing processors) can modify payment records.</li>
+    <li><strong>Backup and Recovery:</strong> Maintains transactional logs to recover the database to a consistent state in the event of power failures, system crashes, or hardware malfunctions.</li>
   </ul>
 
-  <h2>Relational Databases (SQL)</h2>
-  <p>Relational databases store data in <strong>tables</strong> with rows and columns. They use <strong>SQL (Structured Query Language)</strong> to query and manipulate data. Relationships between tables are defined using <strong>foreign keys</strong>.</p>
-  <pre><code>SELECT name, email FROM users WHERE age &gt; 18;</code></pre>
-  <p>Popular SQL databases: <strong>MySQL</strong>, <strong>PostgreSQL</strong>, <strong>SQLite</strong>, <strong>Microsoft SQL Server</strong>.</p>
+  <h2>Relational Databases (RDBMS) & SQL</h2>
+  <p>The most dominant database model since the 1970s is the **Relational Database Management System (RDBMS)**, pioneered by Edgar F. Codd. In a relational database, data is organized into two-dimensional **tables** (also called relations). Each table consists of **rows** (records or tuples) and **columns** (attributes or fields).</p>
 
-  <h2>NoSQL Databases</h2>
-  <p><strong>NoSQL</strong> databases are non-relational and store data in flexible formats. They scale horizontally and are ideal for large, unstructured, or rapidly changing datasets.</p>
+  <h3>Keys and Relationships</h3>
+  <p>Tables in an RDBMS are linked together using special identifiers:</p>
   <ul>
-    <li><strong>Document Stores</strong> — Store JSON-like documents. Example: MongoDB.</li>
-    <li><strong>Key-Value Stores</strong> — Simple key → value pairs. Example: Redis.</li>
-    <li><strong>Column Stores</strong> — Store data by column. Example: Apache Cassandra.</li>
-    <li><strong>Graph Databases</strong> — Store nodes and relationships. Example: Neo4j.</li>
+    <li><strong>Primary Key:</strong> A column (or group of columns) that uniquely identifies each row in a table. It cannot contain null values. Example: <code>CustomerID</code>.</li>
+    <li><strong>Foreign Key:</strong> A column in one table that references the Primary Key of another table, creating a logical relationship between them. Example: An <code>Orders</code> table containing a <code>CustomerID</code> column.</li>
+  </ul>
+  <p>Relationships can be **One-to-One** (one user has one profile), **One-to-Many** (one customer places many orders), or **Many-to-Many** (many students enroll in many courses, resolved using a junction table).</p>
+
+  <h3>Structured Query Language (SQL)</h3>
+  <p>RDBMS systems use **SQL** as their standard interface for querying and manipulating data. SQL is a declarative language, meaning you describe what data you want, rather than how to retrieve it. Example: retrieving user names and emails for active accounts:</p>
+  <pre><code>SELECT name, email 
+FROM users 
+WHERE status = 'active' 
+ORDER BY name ASC;</code></pre>
+  <p>Popular RDBMS engines include **PostgreSQL** (advanced open-source), **MySQL** (widely used in web hosting), **SQLite** (lightweight file-based database for mobile devices), and **Oracle** (enterprise commercial).</p>
+
+  <h2>NoSQL Databases: Flexible Alternatives</h2>
+  <p>As the web expanded in the late 2000s, developers faced massive scales of data and rapid schema changes that traditional RDBMS systems struggled to handle. This led to the rise of **NoSQL (Not Only SQL)** databases, which sacrifice relational rigidity for horizontal scaling and schema flexibility.</p>
+  <p>NoSQL databases fall into four primary categories:</p>
+  <ol>
+    <li><strong>Document Databases:</strong> Store data as semi-structured documents (typically JSON or BSON formats). There is no fixed schema; different documents in the same collection can contain different fields. Example: **MongoDB**.</li>
+    <li><strong>Key-Value Stores:</strong> The simplest model, storing data as a dictionary of keys mapping to arbitrary values. They are extremely fast and commonly used for caching sessions. Example: **Redis**.</li>
+    <li><strong>Column-Family (Wide-Column) Stores:</strong> Store data in columns rather than rows, allowing high performance for massive analytical queries across billions of records. Example: **Apache Cassandra**.</li>
+    <li><strong>Graph Databases:</strong> Store data as nodes (entities) and edges (relationships), optimized for querying complex interconnected networks. Example: **Neo4j** (used for social networks and fraud detection).</li>
+  </ol>
+
+  <h2>SQL vs. NoSQL: Key Differences</h2>
+  <p>The table below summarizes the technical differences between traditional relational databases and modern NoSQL architectures:</p>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Relational Databases (SQL)</th>
+          <th>Non-Relational Databases (NoSQL)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Data Model</strong></td>
+          <td>Tabular (rows and columns).</td>
+          <td>Documents, Key-Value, Columns, or Graphs.</td>
+        </tr>
+        <tr>
+          <td><strong>Schema</strong></td>
+          <td>Strict, predefined static schema.</td>
+          <td>Dynamic, schema-less (add fields on the fly).</td>
+        </tr>
+        <tr>
+          <td><strong>Scaling</strong></td>
+          <td>**Vertical** (increase CPU/RAM on a single server).</td>
+          <td>**Horizontal** (distribute load across many cheap servers).</td>
+        </tr>
+        <tr>
+          <td><strong>Transactions</strong></td>
+          <td>Highly reliable, guarantees strict ACID properties.</td>
+          <td>Prioritizes speed and availability (guarantees BASE properties).</td>
+        </tr>
+        <tr>
+          <td><strong>Relationships</strong></td>
+          <td>Excellent for complex joins and related data structures.</td>
+          <td>Poor for complex joins; data is typically nested or duplicated.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Ensuring Reliability: The ACID Properties</h2>
+  <p>To ensure that databases remain correct and reliable even in the presence of crashes or concurrent updates, traditional systems must enforce the **ACID** properties for every transaction (a logical unit of work):</p>
+  <ul>
+    <li><strong>Atomicity:</strong> The "All-or-Nothing" property. A transaction consisting of multiple database updates must either succeed completely or fail completely. If a system crashes halfway through transferring money from Account A to Account B, the entire transaction is rolled back, leaving account balances unchanged.</li>
+    <li><strong>Consistency:</strong> Ensures that a transaction moves the database from one valid state to another, respecting all constraints, keys, and triggers.</li>
+    <li><strong>Isolation:</strong> Guarantees that concurrent execution of transactions results in a system state identical to executing them sequentially. Transactions running at the same time cannot see each other's intermediate states.</li>
+    <li><strong>Durability:</strong> Once a transaction is committed, its changes are written to non-volatile storage and are guaranteed to persist, even during a subsequent power loss or crash.</li>
   </ul>
 
-  <h2>Key Concepts</h2>
+  <h2>Database Normalization</h2>
+  <p>Normalization is a systematic process of organizing the columns and tables of a relational database to minimize **data redundancy** (storing the same data in multiple places) and prevent **update anomalies** (updating an address in one place but forgetting to update it in another). Normalization divides large tables into smaller tables and defines relationships between them. The standard stages are:</p>
   <ul>
-    <li><strong>ACID</strong> — Atomicity, Consistency, Isolation, Durability. Properties ensuring reliable transactions.</li>
-    <li><strong>Normalization</strong> — Organizing data to reduce redundancy.</li>
-    <li><strong>Indexing</strong> — Data structures that speed up data retrieval.</li>
-    <li><strong>Transactions</strong> — A group of operations that succeed or fail together.</li>
+    <li><strong>First Normal Form (1NF):</strong> All columns must contain only atomic (single, indivisible) values, and there must be no repeating groups.</li>
+    <li><strong>Second Normal Form (2NF):</strong> Must be in 1NF, and all non-key columns must be fully dependent on the primary key (no partial dependencies on a composite key).</li>
+    <li><strong>Third Normal Form (3NF):</strong> Must be in 2NF, and no non-key column can depend transitively on another non-key column. This ensures every column depends "on the key, the whole key, and nothing but the key."</li>
   </ul>
+
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq-section">
+    <h3>What is database indexing, and how does it speed up queries?</h3>
+    <p>An index is a separate data structure (typically a B-Tree) created by the DBMS that stores a sorted copy of specific columns, along with pointers to their actual rows in the main table. This allows the DBMS to search for records in logarithmic time (like an index at the back of a textbook) instead of performing a slow linear scan of the entire table. The trade-off is that indexes consume disk space and slow down write operations (INSERT, UPDATE, DELETE), as the index must be updated alongside the table.</p>
+
+    <h3>What is the difference between a primary key and a unique key?</h3>
+    <p>A primary key uniquely identifies each row in a table, and there can be only one primary key per table. It cannot accept null values. A unique key also enforces uniqueness on a column, but a table can have multiple unique keys, and they can accept null values.</p>
+
+    <h3>What is the CAP Theorem?</h3>
+    <p>The CAP Theorem states that a distributed data store can guarantee at most two of the following three properties simultaneously: **Consistency** (every read receives the most recent write or an error), **Availability** (every request receives a non-error response), and **Partition Tolerance** (the system continues to operate despite arbitrary packet loss or node failures). In practice, since networks can always fail, distributed databases must choose between Consistency or Availability.</p>
+
+    <h3>What is an ORM (Object-Relational Mapping)?</h3>
+    <p>An ORM is a programming technique that lets developers query and manipulate database files using the object-oriented syntax of their preferred programming language (like Python or JavaScript), automatically translating those code actions into SQL commands behind the scenes (e.g., Hibernate, Sequelize, Prisma).</p>
+  </div>
 
   <h2>What's Next?</h2>
-  <p>Learn SQL hands-on in our <a href="/tutorial/sql-guide">SQL Tutorial</a>, or explore <a href="/cs-basics/software-engineering">Software Engineering</a> to see how databases fit into the full development lifecycle.</p>
+  <p>Now that you know how software stores, manages, and queries structured data, you can explore the processes developers use to build complete software programs. Read our guide on <a href="/cs-basics/software-engineering">Software Engineering</a> to learn about the SDLC, Agile methodology, Git, and testing.</p>
 </TopicLayout>

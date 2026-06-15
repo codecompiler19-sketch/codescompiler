@@ -1,106 +1,157 @@
 ---
 import TopicLayout from '../../layouts/TopicLayout.astro';
 ---
-<TopicLayout title="Common Network Protocols" description="A comprehensive guide to the application layer protocols that make everyday internet services work, including SSH, FTP, SMTP, and DHCP." section="networking">
-  <h2>What is a Protocol?</h2>
-  <p>A <strong>protocol</strong> is a set of formal rules that govern how data is transmitted and received over a network. Without protocols, devices would send unstructured bits that other machines wouldn't know how to interpret.</p>
+<TopicLayout title="Network Protocols" description="Master the core protocols of computer networks. Explore TCP vs. UDP, the TCP 3-way handshake, IP, ICMP, DHCP, DNS, ARP, and common ports." section="networking">
+  <h2>What is a Network Protocol?</h2>
+  <p>A <strong>Network Protocol</strong> is a standardized set of rules, formats, and procedures that govern how computers and devices format, transmit, receive, and interpret data packets across a network. Without protocols, devices from different manufacturers running different operating systems would be unable to decode each other's electronic signals, rendering communication impossible.</p>
+  
+  <p>Protocols exist at every layer of the network stack. They handle everything from error correction and flow control to data formatting, encryption, and logical address resolution.</p>
 
-  <h2>Essential Application Layer Protocols</h2>
+  <h2>Core Network Protocols Comparison Table</h2>
+  <p>This table compares the most important protocols that power local networks and the Internet:</p>
 
-  <h3>1. DHCP (Dynamic Host Configuration Protocol)</h3>
-  <p>Automatically assigns IP addresses, subnet masks, default gateways, and DNS servers to devices when they connect to a network. Without DHCP, you would have to manually configure every device's network settings.</p>
-  <ul>
-    <li><strong>Port:</strong> UDP 67 (server), UDP 68 (client)</li>
-  </ul>
-
-  <h3>2. DNS (Domain Name System)</h3>
-  <p>Translates human-readable domain names (like <code>google.com</code>) into computer-readable IP addresses (like <code>142.250.190.46</code>). See <a href="/networking/dns-explained">DNS Explained</a> for more details.</p>
-  <ul>
-    <li><strong>Port:</strong> UDP/TCP 53</li>
-  </ul>
-
-  <h3>3. SSH (Secure Shell)</h3>
-  <p>Allows secure remote command-line access to servers and network devices. All traffic is encrypted to prevent password sniffing.</p>
-  <ul>
-    <li><strong>Port:</strong> TCP 22</li>
-  </ul>
-
-  <h3>4. FTP & SFTP (File Transfer Protocol)</h3>
-  <ul>
-    <li><strong>FTP</strong> — Used to transfer files between client and server. Plaintext, insecure. (Ports TCP 20, 21).</li>
-    <li><strong>SFTP (SSH File Transfer Protocol)</strong> — Moves files over an encrypted SSH connection. Secure. (Port TCP 22).</li>
-  </ul>
-
-  <h3>5. Email Protocols</h3>
-  <p>Three protocols work together to send and receive emails:</p>
-  <ul>
-    <li><strong>SMTP (Simple Mail Transfer Protocol)</strong> — Used for <em>sending</em> emails from client to server or between servers. (Ports: 25, 587, or 465).</li>
-    <li><strong>IMAP (Internet Message Access Protocol)</strong> — Used for <em>retrieving</em> emails. Messages stay on the server, allowing sync across multiple devices. (Ports: 143 or 993 secure).</li>
-    <li><strong>POP3 (Post Office Protocol v3)</strong> — Downloads emails to a single device and deletes them from the server. Legacy protocol. (Ports: 110 or 995 secure).</li>
-  </ul>
-
-  <h3>6. NTP (Network Time Protocol)</h3>
-  <p>Synchronizes the clocks of computers and servers on a network. Critical for security logs, authentication systems, and database consistency.</p>
-  <ul>
-    <li><strong>Port:</strong> UDP 123</li>
-  </ul>
-
-  <h2>Protocol Port Summary Table</h2>
   <table>
     <thead>
       <tr>
-        <th>Protocol</th>
-        <th>Description</th>
-        <th>Transport</th>
+        <th>Protocol Name</th>
+        <th>OSI Layer</th>
         <th>Default Port</th>
+        <th>Primary Function</th>
+        <th>Underlying Transport</th>
       </tr>
     </thead>
     <tbody>
       <tr>
-        <td><strong>SSH</strong></td>
-        <td>Secure Remote Login</td>
-        <td>TCP</td>
-        <td>22</td>
+        <td><strong>TCP</strong></td>
+        <td>Transport (Layer 4)</td>
+        <td>N/A</td>
+        <td>Guarantees reliable, ordered end-to-end data delivery.</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td><strong>UDP</strong></td>
+        <td>Transport (Layer 4)</td>
+        <td>N/A</td>
+        <td>Fast, connectionless, lightweight data transmission.</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td><strong>IP</strong></td>
+        <td>Network (Layer 3)</td>
+        <td>N/A</td>
+        <td>Handles packet addressing and routing across networks.</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td><strong>ICMP</strong></td>
+        <td>Network (Layer 3)</td>
+        <td>N/A</td>
+        <td>Sends error messages and operational info (e.g., ping).</td>
+        <td>N/A (Encapsulated in IP)</td>
+      </tr>
+      <tr>
+        <td><strong>ARP</strong></td>
+        <td>Data Link (Layer 2)</td>
+        <td>N/A</td>
+        <td>Resolves logical IP addresses to physical MAC addresses.</td>
+        <td>N/A</td>
       </tr>
       <tr>
         <td><strong>DNS</strong></td>
-        <td>Domain Name Resolution</td>
-        <td>UDP/TCP</td>
+        <td>Application (Layer 7)</td>
         <td>53</td>
+        <td>Translates domain names (e.g., google.com) to IP addresses.</td>
+        <td>UDP (queries) / TCP (zone transfers)</td>
       </tr>
       <tr>
         <td><strong>DHCP</strong></td>
-        <td>IP Auto-Configuration</td>
+        <td>Application (Layer 7)</td>
+        <td>67 / 68</td>
+        <td>Dynamically assigns IP addresses to devices on boot.</td>
         <td>UDP</td>
-        <td>67/68</td>
       </tr>
       <tr>
-        <td><strong>HTTP</strong></td>
-        <td>Unencrypted Web Traffic</td>
+        <td><strong>HTTP / HTTPS</strong></td>
+        <td>Application (Layer 7)</td>
+        <td>80 / 443</td>
+        <td>Transmits web pages and resources. HTTPS adds TLS security.</td>
         <td>TCP</td>
-        <td>80</td>
       </tr>
       <tr>
-        <td><strong>HTTPS</strong></td>
-        <td>Encrypted Web Traffic</td>
+        <td><strong>SSH</strong></td>
+        <td>Application (Layer 7)</td>
+        <td>22</td>
+        <td>Securely logs into remote systems and terminals.</td>
         <td>TCP</td>
-        <td>443</td>
       </tr>
       <tr>
-        <td><strong>SMTP</strong></td>
-        <td>Sending Email</td>
+        <td><strong>FTP</strong></td>
+        <td>Application (Layer 7)</td>
+        <td>20 / 21</td>
+        <td>Transfers files between client and server.</td>
         <td>TCP</td>
-        <td>25/587</td>
-      </tr>
-      <tr>
-        <td><strong>IMAP</strong></td>
-        <td>Receiving Email (Sync)</td>
-        <td>TCP</td>
-        <td>993</td>
       </tr>
     </tbody>
   </table>
 
+  <h2>Transport Layer: TCP vs. UDP</h2>
+  <p>The Transport Layer relies on two distinct protocols, chosen based on the speed and reliability requirements of the application:</p>
+  <ul>
+    <li><strong>TCP (Transmission Control Protocol)</strong> — A **connection-oriented** protocol. Before sending data, it establishes a virtual connection between the sender and receiver. It monitors packet delivery, resends lost packets, and guarantees that packets are reassembled in the correct order.
+      <br />*Best For:* Web browsing (HTTP/S), email (SMTP/IMAP), file transfers (FTP), secure shells (SSH).
+    </li>
+    <li><strong>UDP (User Datagram Protocol)</strong> — A **connectionless** protocol. It sends packets (datagrams) directly without establishing a connection or verifying delivery. It has no overhead, making it extremely fast.
+      <br />*Best For:* Real-time video streaming, VoIP calls, online gaming, DNS queries.
+    </li>
+  </ul>
+
+  <h3>The TCP 3-Way Handshake (Connection Setup)</h3>
+  <p>To establish a reliable connection, TCP uses a three-step handshake process:</p>
+  <ol>
+    <li><strong>SYN (Synchronize)</strong> — The client sends a packet containing a SYN flag and a random initial sequence number (e.g., Seq=X) to the server to request a connection.</li>
+    <li><strong>SYN-ACK (Synchronize-Acknowledge)</strong> — The server receives the request, allocates resources, and responds with a packet containing a SYN-ACK flag. It sets the acknowledgement number to X+1, and generates its own sequence number (Seq=Y).</li>
+    <li><strong>ACK (Acknowledge)</strong> — The client receives the response and sends an ACK packet back to the server, setting the acknowledgement number to Y+1. The connection is now established, and data transfer can begin.</li>
+  </ol>
+  
+  <blockquote><strong>Connection Teardown:</strong> When data transfer is complete, TCP closes the connection using a 4-step exchange utilizing **FIN** (Finish) and **ACK** flags from both sides.</blockquote>
+
+  <h3>TCP Flow Control and Error Recovery</h3>
+  <p>TCP maintains reliability through advanced flow-control mechanisms:</p>
+  <ul>
+    <li><strong>Sliding Window</strong> — To prevent the sender from overwhelming the receiver with too much data, the receiver advertises a "window size" (the amount of data it can buffer). The sender adjusts its transmission speed dynamically based on this window.</li>
+    <li><strong>Sequence Numbers &amp; Retransmissions:</strong> Every byte of data is assigned a sequence number. If the recipient detects a gap in sequence numbers, it requests a retransmission of the missing packet.</li>
+  </ul>
+
+  <h2>Address Resolution Protocol (ARP)</h2>
+  <p>While routers and software use IP addresses to direct packets, switches and local network cards use MAC addresses. **ARP** is the translation mechanism between Layer 2 and Layer 3. When your computer wants to send a packet to a local IP address (e.g., `192.168.1.1`), it broadcasts an ARP request: *"Who has IP 192.168.1.1? Tell MAC address [My MAC]."* The target device replies with its MAC address. Your computer then caches this in its **ARP Table** to prevent repeating the query.</p>
+
+  <h2>Frequently Asked Questions (FAQ)</h2>
+
+  <h3>❓ What is the difference between TCP and UDP?</h3>
+  <p>TCP is connection-oriented, reliable, guarantees packet ordering, and handles error correction, making it slower due to protocol overhead. UDP is connectionless, fast, has zero delivery guarantees, and does not reorder packets, making it ideal for real-time applications where speed is more important than perfect accuracy.</p>
+
+  <h3>❓ How does DHCP dynamically assign IP addresses?</h3>
+  <p>DHCP operates using the **DORA** process:
+    <ol>
+      <li><strong>Discovery:</strong> The client broadcasts a request looking for a DHCP server.</li>
+      <li><strong>Offer:</strong> The DHCP server offers an available IP address.</li>
+      <li><strong>Request:</strong> The client requests to lease that IP address.</li>
+      <li><strong>Acknowledgement:</strong> The server confirms the lease and provides DNS and gateway details.</li>
+    </ol>
+  </p>
+
+  <h3>❓ What is the purpose of ICMP?</h3>
+  <p>ICMP (Internet Control Message Protocol) is a network-layer protocol used by routers and hosts to communicate diagnostic and error information. It is not used to transmit user data. The most common use cases are the `ping` utility (which uses ICMP Echo Request and Echo Reply packets) and `traceroute` (which uses ICMP Time Exceeded messages to map network paths).</p>
+
+  <h3>❓ What happens if ARP gets spoofed?</h3>
+  <p>ARP Spoofing is a cyber attack where a hacker sends forged ARP messages onto a local network. The hacker associates their own MAC address with the IP address of a legitimate device (like the default gateway router). As a result, all local traffic meant for the router is sent to the hacker instead, enabling Man-in-the-Middle (MitM) attacks.</p>
+
   <h2>What's Next?</h2>
-  <p>Learn how the web protocol works in <a href="/networking/http-https">HTTP &amp; HTTPS</a>, or explore the underlying transport protocols in <a href="/networking/tcp-ip">TCP/IP</a>.</p>
+  <p>Advance your network protocol studies:</p>
+  <ul>
+    <li>Learn how web browsers use HTTP/HTTPS at the Application Layer in <a href="/networking/http-https">HTTP &amp; HTTPS</a>.</li>
+    <li>Explore how DNS resolves domain names in <a href="/networking/dns-explained">DNS Explained</a>.</li>
+    <li>Learn subnet calculations and IP ranges in <a href="/networking/ip-addressing-subnetting">IP Addressing &amp; Subnetting</a>.</li>
+    <li>Study the physical boundary devices in <a href="/networking/network-topologies-hardware">Topologies &amp; Hardware</a>.</li>
+  </ul>
 </TopicLayout>

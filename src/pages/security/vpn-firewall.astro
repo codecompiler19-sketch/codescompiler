@@ -1,41 +1,139 @@
 ---
 import TopicLayout from '../../layouts/TopicLayout.astro';
 ---
-<TopicLayout title="VPN & Firewall" description="Learn how VPNs encrypt your internet traffic and how firewalls protect networks from unauthorized access." section="security">
+<TopicLayout title="VPN & Firewall" description="Learn how VPNs and firewalls secure your network. Explore VPN protocols, logging policies, firewall filtering types, and hardware vs. software firewalls." section="security">
   <h2>What is a VPN?</h2>
-  <p>A <strong>VPN (Virtual Private Network)</strong> creates an encrypted "tunnel" between your device and a VPN server. All your internet traffic flows through this tunnel, hiding your activity from your ISP, hackers on public Wi-Fi, and websites tracking your real IP address.</p>
+  <p>A <strong>VPN</strong> (or <strong>Virtual Private Network</strong>) is a security service that establishes a secure, encrypted connection—often described as a tunnel—between your device and a remote VPN server. All of your outbound and inbound internet traffic is routed through this encrypted tunnel, protecting your data from interception by hackers, Internet Service Providers (ISPs), and network administrators.</p>
+  
+  <p>Additionally, a VPN masks your device's actual public IP address, replacing it with the IP address of the VPN server. To the websites you visit and the services you access, you appear to be browsing from the physical location of the VPN server, which could be in a different city or country. This aids in preventing ad networks from tracking your geographic browsing history.</p>
 
   <h2>How a VPN Works</h2>
+  <p>The journey of data when using a VPN follows a highly secure, automated sequence:</p>
   <ol>
-    <li>Your device connects to a VPN server.</li>
-    <li>Your traffic is <strong>encrypted</strong> before leaving your device.</li>
-    <li>The VPN server <strong>decrypts</strong> your traffic and sends it to the destination.</li>
-    <li>Responses are encrypted by the VPN server and sent back to you.</li>
-    <li>Websites see the VPN server's IP, not yours.</li>
+    <li><strong>Client Initiation</strong> — You launch your VPN software and connect to a server. The client and server complete a cryptographic handshake to establish a secure session.</li>
+    <li><strong>Local Encryption</strong> — When you request a webpage, your VPN client encrypts the request locally on your device.</li>
+    <li><strong>Transit Through ISP</strong> — The encrypted data is transmitted across the internet via your ISP. Your ISP can see that you are sending data to a VPN server, but they cannot read the contents of the payload or see the final destination website.</li>
+    <li><strong>Server Decryption</strong> — The VPN server receives the data packets, decrypts them, and forwards the request to the target website's server.</li>
+    <li><strong>Encrypted Return</strong> — The website sends the response back to the VPN server, which encrypts it and routes it back through the tunnel to your device, where the client software decrypts it for your browser.</li>
   </ol>
 
-  <h2>When to Use a VPN</h2>
+  <h2>VPN Protocols Compared</h2>
+  <p>VPN protocols are the set of mathematical rules and processes that determine how the client and server establish the secure tunnel. Different protocols balance speed, security, and device compatibility differently:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Protocol</th>
+        <th>Speed</th>
+        <th>Security Level</th>
+        <th>Pros / Cons</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>WireGuard</strong></td>
+        <td>Fastest</td>
+        <td>Maximum (Modern Cryptography)</td>
+        <td>Extremely lightweight code, high performance; newer protocol, but widely accepted as the industry standard.</td>
+      </tr>
+      <tr>
+        <td><strong>OpenVPN</strong></td>
+        <td>Fast / Moderate</td>
+        <td>High</td>
+        <td>Highly customizable, open-source, bypasses firewalls easily; complex code base, heavier resource usage.</td>
+      </tr>
+      <tr>
+        <td><strong>IKEv2 / IPSec</strong></td>
+        <td>Fast</td>
+        <td>High</td>
+        <td>Excellent at handling connection drops and switching between Wi-Fi and mobile networks; less customization.</td>
+      </tr>
+      <tr>
+        <td><strong>L2TP / IPSec</strong></td>
+        <td>Moderate</td>
+        <td>Medium-High</td>
+        <td>Built-in support on many older devices; slower due to double encapsulation of data, suspected vulnerabilities if poorly configured.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>VPN Privacy: Logs and Jurisdictions</h2>
+  <p>When using a VPN, you are shifting trust from your Internet Service Provider to your VPN provider. Therefore, understanding the provider's privacy practices is critical:</p>
   <ul>
-    <li><strong>Public Wi-Fi</strong> — Cafés, airports, hotels. VPNs protect against eavesdroppers.</li>
-    <li><strong>Privacy</strong> — Prevent ISPs and advertisers from tracking your browsing.</li>
-    <li><strong>Geo-restrictions</strong> — Access content that's blocked in your region.</li>
-    <li><strong>Remote Work</strong> — Securely access company resources from home.</li>
+    <li><strong>No-Logs Policy</strong> — A guarantee that the VPN provider does not monitor, collect, or store your browsing history, connection timestamps, DNS queries, or IP history. Top-tier providers undergo independent security audits to verify these claims.</li>
+    <li><strong>RAM-Only Servers</strong> — Servers that run their operating systems and databases entirely in volatile memory (RAM) rather than writing to hard drives. If a server is physically seized or loses power, all data on the machine instantly vanishes.</li>
+    <li><strong>Jurisdiction &amp; Surveillance Alliances</strong> — The country where the VPN company is legally registered determines what laws govern their operations. Companies located in countries belonging to intelligence-sharing alliances (like the **5 Eyes, 9 Eyes, and 14 Eyes** groups, which include the US, UK, Canada, and Australia) can be legally compelled to log and hand over user data secretly.</li>
   </ul>
 
   <h2>What is a Firewall?</h2>
-  <p>A <strong>firewall</strong> is a network security device (hardware or software) that monitors and controls incoming and outgoing network traffic based on predetermined security rules. It acts as a barrier between trusted internal networks and untrusted external networks.</p>
+  <p>A <strong>firewall</strong> is a network security system (deployed as hardware, software, or a cloud service) that monitors and controls incoming and outgoing network traffic based on a predefined set of security rules. It serves as a digital barrier separating a trusted, secure internal network (like your home or office network) from an untrusted external network (like the Internet).</p>
+  
+  <p>Firewalls are the gatekeepers of networks, blocking malicious packets from entering and preventing internal malware from transmitting data back to external attackers.</p>
 
   <h2>Types of Firewalls</h2>
+  <p>Firewalls have evolved from basic packet filters into highly intelligent inspection engines:</p>
   <ul>
-    <li><strong>Packet Filtering</strong> — Inspects packets and blocks/allows based on IP, port, and protocol rules. Fast but limited.</li>
-    <li><strong>Stateful Inspection</strong> — Tracks active connections and makes decisions based on the state of the traffic. More intelligent.</li>
-    <li><strong>Application Layer (Proxy) Firewall</strong> — Inspects traffic at the application level. Most thorough protection.</li>
-    <li><strong>Next-Generation Firewall (NGFW)</strong> — Combines traditional firewall + intrusion prevention, deep packet inspection, and application awareness.</li>
+    <li><strong>Packet Filtering Firewall</strong> — The simplest type. It inspects individual packets and compares them against static rules (checking source IP, destination IP, port number, and protocol). It is fast and efficient but lacks context—it cannot determine if a packet is part of an active malicious payload.</li>
+    <li><strong>Stateful Inspection Firewall</strong> — More advanced than packet filters, stateful firewalls track the state of active network connections. They remember previous packets and ensure incoming traffic is only allowed if it is a direct response to a request initiated from *inside* the network.</li>
+    <li><strong>Application Layer (Proxy) Firewall</strong> — Operates at the application layer of the OSI model. It acts as an intermediary (proxy) between the client and server, decrypting and analyzing the traffic payload (e.g., checking HTTP or FTP content) to block threats before they reach the network.</li>
+    <li><strong>Next-Generation Firewall (NGFW)</strong> — Combines traditional stateful inspection with advanced capabilities, including Deep Packet Inspection (DPI) (analyzing the actual data payload), built-in Intrusion Prevention Systems (IPS), SSL decryption, and application awareness to block specific software features.</li>
   </ul>
 
-  <h2>Firewall Rules</h2>
-  <p>Firewalls work by <strong>allowing or blocking</strong> traffic based on rules. A good default rule is "<strong>deny all, permit by exception</strong>" — block everything and only allow what is explicitly needed.</p>
+  <h2>Hardware vs. Software Firewalls</h2>
+  <p>For complete protection, modern security strategies combine both hardware and software firewalls:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Aspect</th>
+        <th>Hardware Firewall</th>
+        <th>Software Firewall</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Deployment</strong></td>
+        <td>A physical device placed between the router and the internet connection.</td>
+        <td>An application installed directly on an individual host (computer, server).</td>
+      </tr>
+      <tr>
+        <td><strong>Scope of Protection</strong></td>
+        <td>Protects the entire network of connected devices.</td>
+        <td>Protects only the specific host machine it is installed on.</td>
+      </tr>
+      <tr>
+        <td><strong>Resource Usage</strong></td>
+        <td>Uses its own dedicated CPU and memory; does not slow down computers.</td>
+        <td>Uses the host machine's RAM and CPU resources.</td>
+      </tr>
+      <tr>
+        <td><strong>Mobility</strong></td>
+        <td>Stationary; does not protect devices when they leave the local network.</td>
+        <td>Mobile; continues to protect laptops when connected to public Wi-Fi.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Frequently Asked Questions (FAQ)</h2>
+
+  <h3>❓ Does a VPN make me 100% anonymous online?</h3>
+  <p>No. A VPN encrypts your traffic and hides your IP address, which prevents your ISP and third-party sniffers from tracking you. However, you can still be tracked if you log into accounts (like Google or Facebook), if you authorize browser cookies, or via browser fingerprinting. A VPN is a privacy tool, not an absolute anonymity tool.</p>
+
+  <h3>❓ Do I need a VPN if a website already uses HTTPS?</h3>
+  <p>Yes, for complete privacy. HTTPS encrypts the connection between your browser and the specific website, meaning attackers cannot read your passwords or read what pages you visit. However, without a VPN, your ISP and local network administrators can still see the domain name of the websites you visit (via DNS requests and SNI headers), and websites can still see your real public IP address.</p>
+
+  <h3>❓ Can a firewall block malware or viruses?</h3>
+  <p>Traditional firewalls only block unauthorized network connections and port scans. They cannot analyze file content for viruses. However, Next-Generation Firewalls (NGFW) with Deep Packet Inspection and built-in antivirus integrations can actively scan files as they cross the network boundary and block malware payloads before they reach host devices.</p>
+
+  <h3>❓ Should I use a free VPN?</h3>
+  <p>Generally, no. Operating a global server network is highly expensive. If a VPN service is free, they often monetize their service by logging your browsing data and selling it to advertising networks, injecting ads into your web traffic, or restricting your bandwidth and security protocols. The adage holds true: "If you aren't paying for the product, you are the product."</p>
 
   <h2>What's Next?</h2>
-  <p>Learn how cryptographic protocols secure your connections in <a href="/security/cryptography-encryption">Cryptography &amp; Encryption</a>, protect against device-level threats in <a href="/security/viruses-malware">Viruses &amp; Malware</a>, or explore <a href="/security/cyber-security">Cyber Security</a> as a whole discipline.</p>
+  <p>Explore related cyber defense modules:</p>
+  <ul>
+    <li>Learn about the mathematical keys behind VPN tunnels in <a href="/security/cryptography-encryption">Cryptography &amp; Encryption</a>.</li>
+    <li>Understand how password hygiene secures VPN endpoints in <a href="/security/passwords-privacy">Passwords &amp; Privacy</a>.</li>
+    <li>Learn how malware bypasses firewalls via human targets in <a href="/security/social-engineering">Social Engineering</a>.</li>
+    <li>Study the broader concepts of digital defense in <a href="/security/cyber-security">Cyber Security</a>.</li>
+  </ul>
 </TopicLayout>
