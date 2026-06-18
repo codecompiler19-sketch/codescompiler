@@ -1,0 +1,58 @@
+---
+title: "SQL – FOREIGN KEY"
+description: "Link tables together and enforce referential integrity using FOREIGN KEY constraints."
+category: "sql"
+order: 59
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+A **foreign key** is a column that references the primary key of another table, creating a guaranteed link between related records. The FOREIGN KEY constraint enforces **referential integrity** — it prevents orphaned records (e.g., an enrollment referencing a student that doesn't exist) and prevents accidentally deleting a parent record that still has children.
+
+In SQLite, foreign keys must be explicitly enabled per connection with `PRAGMA foreign_keys = ON;` — they are off by default for backward compatibility.
+
+**ON DELETE actions**
+| Option | What happens to children when parent is deleted |
+|---|---|
+| CASCADE | Children are also deleted automatically |
+| SET NULL | Child foreign key becomes NULL |
+| RESTRICT | Delete blocked if children exist |
+| NO ACTION | Default — similar to RESTRICT |
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={``}
+  querySql={`PRAGMA foreign_keys = ON;
+
+CREATE TABLE departments (
+  id   INTEGER PRIMARY KEY,
+  name TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE staff (
+  id      INTEGER PRIMARY KEY,
+  name    TEXT NOT NULL,
+  dept_id INTEGER REFERENCES departments(id) ON DELETE SET NULL
+);
+
+INSERT INTO departments VALUES (1,'Engineering'),(2,'Design'),(3,'Analytics');
+INSERT INTO staff VALUES (1,'Alice',1),(2,'Bob',2),(3,'Carol',1),(4,'Dev',3);
+
+SELECT s.name, d.name AS department
+FROM staff s
+JOIN departments d ON s.dept_id = d.id;`}
+/>
+
+## Key Points
+
+- Foreign keys link child rows to valid parent rows
+- Prevents orphaned records and broken references
+- SQLite requires PRAGMA foreign_keys = ON; to enforce them
+- ON DELETE CASCADE auto-removes children when the parent is deleted
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

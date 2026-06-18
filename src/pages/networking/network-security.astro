@@ -1,0 +1,97 @@
+---
+import TopicLayout from '../../layouts/TopicLayout.astro';
+---
+<TopicLayout title="Network Security" description="Understand how to defend computer networks from attacks. Learn about threat vectors (MitM, DDoS, spoofing), firewalls, IDS/IPS, and the AAA security framework." section="networking">
+  <h2>What is Network Security?</h2>
+  <p><strong>Network Security</strong> consists of the policies, processes, and technologies deployed to prevent, detect, and monitor unauthorized access, misuse, modification, or denial of a computer network and network-accessible resources. Operating across multiple layers of the OSI model, network security targets both external threats (like internet hackers) and internal threats (like compromised corporate devices or malicious insiders).</p>
+  
+  <p>Because computer networks carry critical business transactions, proprietary data, and personal credentials, establishing a robust network security posture is a fundamental component of information assurance and compliance programs.</p>
+
+  <h2>Common Network Threat Vectors</h2>
+  <p>Network attacks exploit vulnerabilities in protocols, hardware configurations, or human choices. Common attacks include:</p>
+  <ul>
+    <li><strong>Man-in-the-Middle (MitM)</strong> — An attacker intercepts and potentially alters communication between two nodes without their knowledge. Commonly executed on unencrypted public Wi-Fi networks using tools to capture logins or session cookies.</li>
+    <li><strong>DDoS (Distributed Denial of Service)</strong> — A coordinated attack using a network of compromised machines (botnets) to flood a target server or network boundary with traffic, exhausting resources and making services unavailable to legitimate users.</li>
+    <li><strong>ARP Poisoning (ARP Spoofing)</strong> — A local link attack where an attacker broadcasts forged Address Resolution Protocol messages to associate their MAC address with the IP address of a legitimate gateway router, routing local traffic through the hacker's machine.</li>
+    <li><strong>IP Spoofing</strong> — The creation of IP packets with a forged source IP address to impersonate a trusted computer system or hide the identity of the sender during DDoS attacks.</li>
+    <li><strong>Eavesdropping (Sniffing)</strong> — The unauthorized capture and analysis of raw network packets using software like Wireshark. If traffic is unencrypted, the sniffer can read passwords and private payloads.</li>
+  </ul>
+
+  <h2>Core Network Defense Mechanisms</h2>
+  <p>Organizations deploy multiple layers of defensive technologies to block and mitigate these threats:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Defense Tool</th>
+        <th>Primary Layer</th>
+        <th>Key Function</th>
+        <th>How It Blocks Threats</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Firewall (NGFW)</strong></td>
+        <td>Layers 3 / 4 / 7</td>
+        <td>Monitors and filters traffic based on security rules.</td>
+        <td>Blocks unauthorized port connections and inspects packet payloads. See <a href="/security/vpn-firewall">VPN &amp; Firewall</a>.</td>
+      </tr>
+      <tr>
+        <td><strong>IDS / IPS</strong></td>
+        <td>Layers 3 / 4 / 7</td>
+        <td>Intrusion Detection (IDS) monitors and alerts; Intrusion Prevention (IPS) actively blocks.</td>
+        <td>Analyzes packet patterns for known signatures of attacks (like port scans or malware execution).</td>
+      </tr>
+      <tr>
+        <td><strong>VPN</strong></td>
+        <td>Layer 3 / 4</td>
+        <td>Creates an encrypted tunnel for remote data transit.</td>
+        <td>Secures connections across untrusted WANs (like public Wi-Fi), preventing eavesdropping.</td>
+      </tr>
+      <tr>
+        <td><strong>NAC (Network Access Control)</strong></td>
+        <td>Layer 2</td>
+        <td>Enforces security policies before allowing devices to connect.</td>
+        <td>Verifies device security posture (updated antivirus, patches) before granting network access.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>The AAA Security Framework</h2>
+  <p>To control access to critical systems and document administrator actions, network security relies on the **AAA Framework**:</p>
+  <ol>
+    <li><strong>Authentication</strong> — Verifying the identity of the user requesting access. This answers the question: *"Who are you?"* (Achieved via usernames, passwords, MFA tokens, or biometric scans).</li>
+    <li><strong>Authorization</strong> — Determining what resources and actions the authenticated user is allowed to access. This answers the question: *"What are you allowed to do?"* (Achieved via Access Control Lists (ACLs) and Role-Based Access Control (RBAC)).</li>
+    <li><strong>Accounting</strong> — Tracking and logging the user's activity while they are connected to the network. This answers the question: *"What did you do?"* (Logs file edits, commands run, connection duration, and login timestamps). Accounting is vital for security audits and forensic analysis.</li>
+  </ol>
+
+  <h2>Data in Transit vs. Data at Rest Encryption</h2>
+  <p>Comprehensive security requires protecting data at all stages of its lifecycle:</p>
+  <ul>
+    <li><strong>Data in Transit Encryption:</strong> Protecting packets as they travel across network cables or wireless links. This prevents eavesdropping and sniffing attacks. Standard protocols include **HTTPS (TLS)**, **SSH**, and **IPsec VPNs**.</li>
+    <li><strong>Data at Rest Encryption:</strong> Protecting data when it is stored on physical media (hard drives, database servers, backup tapes). This ensures that if the physical drive is stolen, the data remains unreadable without the decryption key. Standard methods include BitLocker, database encryption, and cloud storage bucket encryption.</li>
+  </ul>
+
+  <h2>Frequently Asked Questions (FAQ)</h2>
+
+  <h3>❓ What is the difference between an IDS and an IPS?</h3>
+  <p>An **IDS (Intrusion Detection System)** is a passive monitoring tool. It analyzes traffic and sends alerts to security administrators if it detects suspicious activity, but does not block the traffic. An **IPS (Intrusion Prevention System)** is an active inline device that analyzes traffic and immediately blocks packets or resets connections if an attack signature is identified.</p>
+
+  <h3>❓ How does a DDoS attack work and how can it be mitigated?</h3>
+  <p>A DDoS attack uses thousands of distributed computers (botnets) to flood a target with traffic, exhausting server CPU, RAM, or bandwidth. Mitigation involves using scrubbing centers (like Cloudflare) that filter incoming traffic, dropping malicious botnet packets at the network edge while allowing legitimate user packets to reach the web server.</p>
+
+  <h3>❓ What is a Network Access Control (NAC) system?</h3>
+  <p>A NAC system is a gatekeeper for local networks. When a laptop or IoT device connects (via Ethernet or Wi-Fi), the NAC inspects the device. If the device lacks required security updates, has disabled firewalls, or shows signs of infection, the NAC places it in an isolated guest VLAN to prevent it from infecting the rest of the corporate network.</p>
+
+  <h3>❓ Why is the Accounting phase of AAA critical for incident response?</h3>
+  <p>Accounting is critical because it creates an unalterable audit trail. If a security breach occurs, security teams consult the accounting logs to determine exactly which user account was used, what files were accessed, what commands were executed, and the exact timestamp of the compromise, allowing them to contain the breach and patch the entry point.</p>
+
+  <h2>What's Next?</h2>
+  <p>Advance your network technology studies:</p>
+  <ul>
+    <li>Learn diagnostic tools to detect network vulnerabilities in <a href="/networking/network-troubleshooting">Network Troubleshooting</a>.</li>
+    <li>Explore how virtualization shifts security boundaries in <a href="/networking/sdn-virtualization">SDN &amp; Virtualization</a>.</li>
+    <li>Learn how TLS encrypts web data in <a href="/networking/http-https">HTTP &amp; HTTPS</a>.</li>
+    <li>Study the core security guidelines in <a href="/security/cyber-security">Cyber Security</a>.</li>
+  </ul>
+</TopicLayout>

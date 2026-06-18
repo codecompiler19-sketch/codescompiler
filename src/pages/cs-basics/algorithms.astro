@@ -1,0 +1,133 @@
+---
+import TopicLayout from '../../layouts/TopicLayout.astro';
+---
+<TopicLayout title="Algorithms & Complexity" description="Understand what algorithms are, how to measure their efficiency, and explore common sorting and searching techniques." section="cs-basics">
+  <h2>The Logic of Action: What is an Algorithm?</h2>
+  <p>In computer science, an **algorithm** is a self-contained, step-by-step sequence of instruction parameters designed to perform a specific task, solve a logical problem, or perform a calculation. Every program on your computer, every app on your phone, and every service on the internet is fundamentally composed of algorithms. Whether it is Google Maps calculating the fastest traffic-aware route, Amazon recommending products, or a cryptography module securing a bank transfer, algorithms are the logic engine of code.</p>
+
+  <p>To be considered a valid algorithm, a sequence of steps must satisfy several core characteristics:</p>
+  <ul>
+    <li><strong>Finiteness:</strong> The algorithm must terminate after a finite number of steps; it cannot run in an infinite loop.</li>
+    <li><strong>Definiteness:</strong> Each step must be clear, unambiguous, and precisely defined.</li>
+    <li><strong>Input & Output:</strong> It must accept zero or more inputs, and produce at least one defined output.</li>
+    <li><strong>Effectiveness:</strong> Each step must be simple enough to be performed mentally or using a pen and paper in a finite duration.</li>
+  </ul>
+
+  <h2>Measuring Efficiency: Big O Notation</h2>
+  <p>If you have two different algorithms that solve the exact same problem, how do you decide which one is better? Computer scientists measure algorithm performance using **Big O Notation**. Big O measures how the execution time or memory space of an algorithm scales as the size of the input data (represented as <code>n</code>) grows toward infinity. It focuses on the **worst-case scenario**, representing the maximum bounds of execution.</p>
+
+  <h3>Common Complexity Classes (Fastest to Slowest)</h3>
+  <ul>
+    <li><strong>O(1) - Constant Time:</strong> The execution time remains identical, regardless of the input data size. Example: accessing an array element by its index, or checking if a number is even or odd.</li>
+    <li><strong>O(log n) - Logarithmic Time:</strong> The execution time halves with each step. Algorithms in this class are exceptionally fast, especially for large inputs. Example: Binary Search.</li>
+    <li><strong>O(n) - Linear Time:</strong> Execution time grows in direct, 1-to-1 proportion with the input size. Example: finding a specific value in an unsorted list by checking every element.</li>
+    <li><strong>O(n log n) - Linearithmic Time:</strong> Slightly slower than linear time, typical of efficient sorting algorithms. Example: Merge Sort, Heap Sort.</li>
+    <li><strong>O(n²) - Quadratic Time:</strong> Execution time grows quadratically, typical of nested loops. Double the input size, and execution time increases fourfold. Example: Bubble Sort, Selection Sort.</li>
+    <li><strong>O(2ⁿ) - Exponential Time:</strong> Execution time doubles with every single addition to the input size. These algorithms quickly become unrunnable even for small inputs. Example: solving the Traveling Salesperson Problem using brute force.</li>
+  </ul>
+
+  <h2>Searching Algorithms: Finding Data</h2>
+  <p>Searching is the process of finding the location of a target element within a collection of data. The two primary techniques represent a key trade-off:</p>
+
+  <h3>1. Linear Search (Sequential Search)</h3>
+  <p>The simplest search method. The algorithm starts at the beginning of a list and checks each element one by one until it finds the target or reaches the end. It has a time complexity of **O(n)**. Its main advantage is that it works on both sorted and unsorted lists.</p>
+
+  <h3>2. Binary Search (Divide and Conquer)</h3>
+  <p>An exceptionally fast search algorithm that operates on the divide-and-conquer principle. **Binary Search requires the list to be pre-sorted.** The algorithm compares the target value to the middle element of the array:</p>
+  <ol>
+    <li>If the target matches the middle element, the search is complete.</li>
+    <li>If the target is smaller, the algorithm discards the right half of the array and repeats the search on the left half.</li>
+    <li>If the target is larger, it discards the left half and repeats on the right.</li>
+  </ol>
+  <p>By halving the search space at each step, Binary Search achieves a time complexity of **O(log n)**. Searching a database of 1 million sorted records takes at most 20 comparisons using Binary Search, compared to up to 1 million checks using Linear Search.</p>
+
+  <h2>Sorting Algorithms: Ordering Data</h2>
+  <p>Sorting is the process of arranging elements in a logical order (e.g., ascending numbers or alphabetical letters). Different sorting algorithms offer various trade-offs in speed, memory usage, and stability:</p>
+
+  <h3>Bubble Sort (Quadratic)</h3>
+  <p>A simple, comparison-based algorithm. It repeatedly steps through the list, compares adjacent elements, and swaps them if they are in the wrong order. This process repeats until the list is sorted. Because it requires nested loops, its worst-case complexity is **O(n²)**, making it highly inefficient for large datasets.</p>
+
+  <h3>Insertion Sort (Quadratic)</h3>
+  <p>Operates similarly to sorting a hand of playing cards. It iterates through the list, picking one element at a time and inserting it into its correct position within the sorted subset. While worst-case is **O(n²)**, it is highly efficient for small datasets or lists that are already nearly sorted, where it runs in **O(n)** time.</p>
+
+  <h3>Merge Sort (Linearithmic)</h3>
+  <p>A recursive, divide-and-conquer sorting algorithm. It divides the unsorted list into <code>n</code> sub-lists (each containing 1 element), then repeatedly merges sub-lists back together in sorted order until only a single sorted list remains. It guarantees a time complexity of **O(n log n)** in all cases (best, average, and worst) but requires extra memory space (**O(n)**) to hold the temporary merged sub-lists.</p>
+
+  <h3>Quick Sort (Linearithmic / Quadratic)</h3>
+  <p>Another divide-and-conquer algorithm. It selects a "pivot" element from the array and partitions the other elements into two sub-arrays, depending on whether they are smaller or larger than the pivot. It then recursively sorts the sub-arrays. Quick Sort is extremely fast in practice, averaging **O(n log n)**. However, if the pivot selection is poor (e.g., picking the smallest element in an already sorted list), its complexity degrades to **O(n²)**.</p>
+
+  <h2>Sorting Algorithm Complexity Comparison</h2>
+  <p>The table below summarizes and compares the performance characteristics of the primary sorting algorithms:</p>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Algorithm</th>
+          <th>Best Case Time</th>
+          <th>Average Case Time</th>
+          <th>Worst Case Time</th>
+          <th>Space Complexity</th>
+          <th>Stable?</th>
+          <th>Key Characteristic</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Bubble Sort</strong></td>
+          <td>O(n)</td>
+          <td>O(n²)</td>
+          <td>O(n²)</td>
+          <td>O(1) (In-place)</td>
+          <td>Yes</td>
+          <td>Simple logic, poor performance.</td>
+        </tr>
+          <tr>
+          <td><strong>Insertion Sort</strong></td>
+          <td>O(n)</td>
+          <td>O(n²)</td>
+          <td>O(n²)</td>
+          <td>O(1) (In-place)</td>
+          <td>Yes</td>
+          <td>Fastest for small or nearly sorted lists.</td>
+        </tr>
+        <tr>
+          <td><strong>Merge Sort</strong></td>
+          <td>O(n log n)</td>
+          <td>O(n log n)</td>
+          <td>O(n log n)</td>
+          <td>O(n) (Extra memory)</td>
+          <td>Yes</td>
+          <td>Guaranteed time bounds, stable.</td>
+        </tr>
+        <tr>
+          <td><strong>Quick Sort</strong></td>
+          <td>O(n log n)</td>
+          <td>O(n log n)</td>
+          <td>O(n²)</td>
+          <td>O(log n) (Stack)</td>
+          <td>No</td>
+          <td>Very fast in-memory sorting.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq-section">
+    <h3>What is the difference between time complexity and space complexity?</h3>
+    <p>Time complexity measures the amount of time (or number of processing operations) an algorithm takes to run as a function of the input data size. Space complexity measures the amount of temporary memory (RAM) an algorithm requires to run to completion as a function of the input size.</p>
+
+    <h3>What does it mean for a sorting algorithm to be "stable"?</h3>
+    <p>A sorting algorithm is considered stable if it preserves the relative order of duplicate elements. For example, if you sort a list of employees by last name, and then by department, a stable sort will ensure that employees within the same department remain sorted alphabetically by their last name.</p>
+
+    <h3>Why is O(log n) considered highly efficient?</h3>
+    <p>Logarithmic growth is the inverse of exponential growth. As the input data size increases exponentially, the number of steps required grows by only a constant value. For example, search time for an input of size 1,000 takes about 10 steps, while an input of size 1,000,000 takes only about 20 steps, making it incredibly scalable.</p>
+
+    <h3>What is a divide-and-conquer algorithm?</h3>
+    <p>Divide-and-conquer is an algorithmic design paradigm. It works by recursively breaking a complex problem down into two or more smaller sub-problems of the same or related type, solving these sub-problems directly, and then combining their results to solve the original problem (as seen in Merge Sort and Binary Search).</p>
+  </div>
+
+  <h2>What's Next?</h2>
+  <p>Now that you know how to build efficient algorithms, you can explore how large volumes of structured data are stored permanently in databases. Read <a href="/cs-basics/dbms">Database Management Systems (DBMS)</a> to explore relational structures, SQL queries, and normalization.</p>
+</TopicLayout>

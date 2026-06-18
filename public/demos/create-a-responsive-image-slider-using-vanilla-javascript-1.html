@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="canonical" href="https://codescompiler.com/blog/create-a-responsive-image-slider-using-vanilla-javascript-1/" />
+  <script>
+    if (window.self === window.top) {
+      window.location.replace('/blog-demo/' + window.location.pathname.split('/').pop().replace('.html', '') + '/');
+    }
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Slider | Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+    
+    body {
+      background: #0f172a;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .slider-container {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      height: 450px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+
+    .slide {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 40px;
+    }
+    
+    .slide.active { opacity: 1; z-index: 1; }
+
+    .slide img {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    .slide-content {
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(5px);
+      padding: 20px 30px;
+      border-radius: 12px;
+      color: white;
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all 0.5s ease 0.3s;
+    }
+    
+    .slide.active .slide-content {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .slide-title { font-size: 2rem; font-weight: 600; margin-bottom: 10px; }
+    .slide-desc { font-size: 1rem; color: #cbd5e1; }
+
+    /* Navigation Arrows */
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(5px);
+      color: white;
+      border: none;
+      width: 50px; height: 50px;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      cursor: pointer;
+      z-index: 10;
+      transition: background 0.2s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .arrow:hover { background: rgba(255,255,255,0.4); }
+    .prev { left: 20px; }
+    .next { right: 20px; }
+
+    /* Dots */
+    .dots {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+    }
+    
+    .dot {
+      width: 12px; height: 12px;
+      background: rgba(255,255,255,0.4);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .dot.active {
+      background: white;
+      transform: scale(1.2);
+    }
+
+    @media (max-width: 600px) {
+      .slider-container { height: 350px; }
+      .slide-content { padding: 15px; }
+      .slide-title { font-size: 1.5rem; }
+      .arrow { width: 40px; height: 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="slider-container">
+    
+    <div class="slide active">
+      <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=1000&q=80" alt="Nature">
+      <div class="slide-content">
+        <h2 class="slide-title">Majestic Mountains</h2>
+        <p class="slide-desc">Explore the beauty of the high peaks.</p>
+      </div>
+    </div>
+    
+    <div class="slide">
+      <img src="https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1000&q=80" alt="Forest">
+      <div class="slide-content">
+        <h2 class="slide-title">Deep Forest</h2>
+        <p class="slide-desc">Lose yourself in the ancient woods.</p>
+      </div>
+    </div>
+    
+    <div class="slide">
+      <img src="https://images.unsplash.com/photo-1498623116890-37e912163d5d?auto=format&fit=crop&w=1000&q=80" alt="Ocean">
+      <div class="slide-content">
+        <h2 class="slide-title">Crystal Ocean</h2>
+        <p class="slide-desc">Dive into the pristine blue waters.</p>
+      </div>
+    </div>
+
+    <button class="arrow prev" onclick="moveSlide(-1)">❮</button>
+    <button class="arrow next" onclick="moveSlide(1)">❯</button>
+
+    <div class="dots">
+      <div class="dot active" onclick="currentSlide(0)"></div>
+      <div class="dot" onclick="currentSlide(1)"></div>
+      <div class="dot" onclick="currentSlide(2)"></div>
+    </div>
+  </div>
+
+  <script>
+    let slideIndex = 0;
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    let timer;
+
+    function showSlide(n) {
+      if (n >= slides.length) slideIndex = 0;
+      if (n < 0) slideIndex = slides.length - 1;
+
+      slides.forEach(slide => slide.classList.remove('active'));
+      dots.forEach(dot => dot.classList.remove('active'));
+
+      slides[slideIndex].classList.add('active');
+      dots[slideIndex].classList.add('active');
+    }
+
+    function moveSlide(n) {
+      slideIndex += n;
+      showSlide(slideIndex);
+      resetTimer(); 
+    }
+
+    function currentSlide(n) {
+      slideIndex = n;
+      showSlide(slideIndex);
+      resetTimer();
+    }
+
+    function autoPlay() {
+      slideIndex++;
+      showSlide(slideIndex);
+    }
+
+    function resetTimer() {
+      clearInterval(timer);
+      timer = setInterval(autoPlay, 5000); 
+    }
+
+    resetTimer();
+  </script>
+</body>
+</html>

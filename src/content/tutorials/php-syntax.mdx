@@ -1,0 +1,95 @@
+---
+title: "PHP – Syntax"
+description: "Master PHP syntax fundamentals: how PHP scripts start, how statements end, case sensitivity rules, and how PHP embeds inside HTML documents."
+category: "php"
+order: 7
+---
+
+# PHP Syntax & Structure
+
+Before writing complex server backend operations, you must thoroughly understand how the PHP interpreter reads and executes a document. A standard PHP script is essentially a plain text file saved with the `.php` extension. 
+
+## The Standard PHP Tags
+
+Inside your `.php` file, the server reads the document just like normal HTML. It completely ignores everything until it encounters a special **opening tag**. At that exact moment, the server switches into "PHP Processing" mode.
+
+A PHP block begins with `<?php` and officially ends with `?>`.
+
+```php
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>My First PHP Page</h1>
+
+<?php
+  // This area is processed by the PHP Engine!
+  echo "<p>Hello World!</p>";
+?>
+
+</body>
+</html>
+```
+
+### The "Omitted" Closing Tag
+> [!TIP]
+> If your entire file contains **only** PHP code (like a configuration settings file or an OOP class definition), it is actually a standard best practice to completely omit the closing `?>` tag. Removing it prevents accidental empty whitespace and blank lines from being transmitted to the browser, which strictly breaks critical Header and Session features.
+
+## Statements and Semicolons
+
+Just like C, C++, and Java, every standard statement executed in PHP **must end with a semicolon (`;`)**. 
+
+The semicolon acts as a period at the end of a sentence. It explicitly commands the PHP engine that the current instruction has ended and a new instruction is beginning.
+
+```php
+<?php
+  echo "This is statement one.";
+  echo "This is statement two.";
+  $x = 5 + 5;
+?>
+```
+If you forget a semicolon, you will encounter the infamous `PHP Parse Error: syntax error, unexpected...` message!
+
+## Case Sensitivity Rules
+
+One of the most unique aspects of PHP's syntax is its rule system regarding capitalized letters. It is split into two behaviors:
+
+### 1. Variables ARE Case-Sensitive
+All variables initialized using the `$` sign are strictly case-sensitive. `$color`, `$Color`, and `$COLOR` are treated as three entirely separate and distinct data points.
+
+### 2. Keywords and Functions are NOT Case-Sensitive
+All core PHP keywords (like `if`, `else`, `while`, `echo`) and user-defined functions and classes are **NOT** case-sensitive.
+
+```php
+<?php
+  // Both echo statements will work perfectly
+  ECHO "Hello World!<br>";
+  echo "Hello World!<br>";
+  
+  $fruit = "Apple"; // Initializing variable
+  
+  // This will throw a Warning! $Fruit does not exist!
+  echo "I love " . $Fruit; 
+?>
+```
+
+## Interactive Syntax Practice
+
+Use the Editor below to test out the case sensitivity logic! Try changing `Echo` to `EcHo` and see how PHP processes it without issue. Then, try changing the variable `$websiteURL` slightly inside the echo string and watch it fail!
+
+
+<Editor 
+  initialPhp={`<?php
+// Variables ARE strictly case sensitive
+$websiteURL = "CodesCompiler.com";
+$WebsiteURL = "Google.com";
+
+// Keywords are NOT case sensitive
+ECHO "<b>System is Online</b><br>";
+echo "Welcome to " . $websiteURL . "<br>";
+eCHo "Alternative directory: " . $WebsiteURL . "<br>";
+
+/// Try modifying the $websiteURL casing above and see what happens!
+?>`}
+  activeTab="php" 
+/>

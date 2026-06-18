@@ -1,0 +1,107 @@
+---
+title: "SQL – Comments"
+description: "Add explanatory notes to your SQL code using single-line and multi-line comment syntax."
+category: "sql"
+order: 46
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+Good SQL code is thoroughly commented, especially in complex stored procedures, views, and multi-join queries. SQL supports two comment styles: **single-line** comments starting with `--` (everything after the dashes is ignored), and **multi-line** comments enclosed between `/*` and `*/`.
+
+Comments are invisible to the SQL engine — they exist purely for humans. Use them to explain *why* a query does something, not just *what* it does. The "what" is usually apparent from the code; the "why" requires context.
+
+**Comment styles**
+```sql
+-- This is a single-line comment
+
+SELECT name -- you can comment mid-line too
+FROM students;
+
+/*
+  This is a multi-line comment.
+  Useful for documenting complex logic or
+  temporarily disabling blocks of SQL.
+*/
+```
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={`CREATE TABLE students (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  age INTEGER,
+  city TEXT,
+  score REAL,
+  grade TEXT
+);
+INSERT INTO students VALUES
+  (1,'Aria Chen',22,'Mumbai',94.5,'A'),
+  (2,'Ben Torres',19,'Delhi',78.2,'B'),
+  (3,'Cleo Park',24,'Bangalore',88.0,'A'),
+  (4,'Dev Patel',21,'Chennai',65.5,'C'),
+  (5,'Eva Müller',20,'Hyderabad',91.3,'A'),
+  (6,'Finn Walsh',23,'Pune',72.8,'B'),
+  (7,'Gina Lopez',22,'Kolkata',55.1,'D'),
+  (8,'Hiro Sato',25,'Mumbai',83.6,'B');
+
+CREATE TABLE courses (
+  id INTEGER PRIMARY KEY,
+  title TEXT,
+  instructor TEXT,
+  category TEXT,
+  price REAL,
+  rating REAL
+);
+INSERT INTO courses VALUES
+  (1,'Python Mastery','Dr. Ada Lovelace','Programming',2999,4.9),
+  (2,'SQL Foundations','Prof. Edgar Codd','Database',1999,4.8),
+  (3,'Web Design','Ms. Grace Hopper','Design',1499,4.7),
+  (4,'Data Science','Dr. Alan Turing','Analytics',3999,4.9),
+  (5,'Cybersecurity','Mr. Kevin Mitnick','Security',2499,4.6);
+
+CREATE TABLE enrollments (
+  student_id INTEGER,
+  course_id INTEGER,
+  enroll_date TEXT,
+  status TEXT,
+  final_score REAL
+);
+INSERT INTO enrollments VALUES
+  (1,1,'2024-01-15','completed',95),
+  (1,2,'2024-02-01','completed',88),
+  (2,3,'2024-01-20','active',NULL),
+  (3,1,'2024-03-05','completed',90),
+  (4,4,'2024-02-10','dropped',45),
+  (5,2,'2024-01-10','completed',96),
+  (6,5,'2024-03-15','active',NULL),
+  (7,3,'2024-02-20','completed',60),
+  (8,1,'2024-04-01','active',NULL);`}
+  querySql={`/*
+  Query: Student Leaderboard Report
+  Author: CodesCompiler Academy
+  Purpose: Shows top 5 students with performance tiers
+*/
+SELECT
+  name,      -- Student full name
+  city,      -- Home location
+  score,     -- Final exam score
+  grade      -- Letter grade assigned
+FROM students
+ORDER BY score DESC -- Highest first
+LIMIT 5; -- Top 5 only`}
+/>
+
+## Key Points
+
+- -- is the standard single-line comment in all SQL dialects
+- /* */ wraps multi-line comments
+- Comments are stripped by the parser — zero performance impact
+- Use comments to explain business logic, not just repeat the code
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

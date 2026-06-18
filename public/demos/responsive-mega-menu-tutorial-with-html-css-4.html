@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="canonical" href="https://codescompiler.com/blog/responsive-mega-menu-tutorial-with-html-css-4/" />
+  <script>
+    if (window.self === window.top) {
+      window.location.replace('/blog-demo/' + window.location.pathname.split('/').pop().replace('.html', '') + '/');
+    }
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mega Menu | Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+    
+    body {
+      background: #f8fafc;
+      min-height: 100vh;
+    }
+
+    /* Navbar Container */
+    .navbar {
+      background: white;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      padding: 0 50px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: relative;
+    }
+
+    .logo { font-size: 1.5rem; font-weight: 700; color: #0f172a; text-decoration: none; }
+
+    /* Nav Links */
+    .nav-links {
+      display: flex;
+      list-style: none;
+    }
+
+    .nav-item { position: static; /* Important for full-width dropdown */ }
+
+    .nav-btn {
+      display: block;
+      padding: 25px 20px;
+      color: #334155;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav-btn:hover { color: #3b82f6; }
+
+    /* Mega Menu Dropdown */
+    .mega-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      background: white;
+      border-top: 1px solid #e2e8f0;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      
+      /* Animation setup */
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      transition: all 0.3s ease;
+      z-index: 100;
+    }
+
+    /* Show on Hover */
+    .nav-item:hover .mega-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    /* Mega Menu Content Grid */
+    .mega-content {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 30px;
+      padding: 40px 50px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .column h3 {
+      font-size: 1.1rem;
+      color: #0f172a;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #3b82f6;
+      padding-bottom: 10px;
+      display: inline-block;
+    }
+
+    .mega-links { list-style: none; }
+    
+    .mega-links li { margin-bottom: 12px; }
+    
+    .mega-links a {
+      color: #64748b;
+      text-decoration: none;
+      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mega-links a:hover { color: #3b82f6; }
+    
+    /* Image column */
+    .promo-card {
+      background: #f1f5f9;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+    .promo-card img { width: 100%; border-radius: 8px; margin-bottom: 15px; }
+    .promo-card p { font-weight: 500; margin-bottom: 15px; }
+    .promo-btn {
+      background: #3b82f6; color: white; padding: 8px 20px; 
+      border-radius: 20px; text-decoration: none; font-size: 0.9rem;
+    }
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      padding: 100px 20px;
+      background: #e0e7ff;
+    }
+    .hero h1 { font-size: 3rem; color: #1e293b; margin-bottom: 20px; }
+    .hero p { color: #475569; font-size: 1.2rem; }
+
+    /* Mobile */
+    @media (max-width: 900px) {
+      .mega-content { grid-template-columns: 1fr; padding: 20px; }
+      .nav-links { display: none; /* In a real app, use a hamburger menu here */ }
+      .hero { padding: 50px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <a href="#" class="logo">StoreBrand</a>
+    
+    <ul class="nav-links">
+      <li><a href="#" class="nav-btn">Home</a></li>
+      
+      <!-- Mega Menu Trigger -->
+      <li class="nav-item">
+        <a href="#" class="nav-btn">Categories ▼</a>
+        
+        <!-- The Mega Menu -->
+        <div class="mega-menu">
+          <div class="mega-content">
+            
+            <div class="column">
+              <h3>Electronics</h3>
+              <ul class="mega-links">
+                <li><a href="#">💻 Laptops & PCs</a></li>
+                <li><a href="#">📱 Smartphones</a></li>
+                <li><a href="#">⌚ Smartwatches</a></li>
+                <li><a href="#">🎧 Audio & Headphones</a></li>
+              </ul>
+            </div>
+            
+            <div class="column">
+              <h3>Home & Living</h3>
+              <ul class="mega-links">
+                <li><a href="#">🛋️ Furniture</a></li>
+                <li><a href="#">🍳 Kitchen Appliances</a></li>
+                <li><a href="#">🖼️ Home Decor</a></li>
+                <li><a href="#">🪴 Garden & Outdoors</a></li>
+              </ul>
+            </div>
+            
+            <div class="column">
+              <h3>Fashion</h3>
+              <ul class="mega-links">
+                <li><a href="#">👕 Men's Clothing</a></li>
+                <li><a href="#">👗 Women's Clothing</a></li>
+                <li><a href="#">👟 Shoes & Sneakers</a></li>
+                <li><a href="#">👜 Accessories</a></li>
+              </ul>
+            </div>
+            
+            <!-- Promo Column -->
+            <div class="column promo-card">
+              <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=300&q=80" alt="Promo">
+              <p>Summer Sale! Up to 50% Off</p>
+              <a href="#" class="promo-btn">Shop Now</a>
+            </div>
+
+          </div>
+        </div>
+      </li>
+      
+      <li><a href="#" class="nav-btn">About</a></li>
+      <li><a href="#" class="nav-btn">Contact</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <h1>Hover over "Categories"</h1>
+    <p>Watch the full-width CSS Mega Menu gracefully slide into view.</p>
+  </section>
+
+</body>
+</html>

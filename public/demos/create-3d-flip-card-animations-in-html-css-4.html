@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="canonical" href="https://codescompiler.com/blog/create-3d-flip-card-animations-in-html-css-4/" />
+  <script>
+    if (window.self === window.top) {
+      window.location.replace('/blog-demo/' + window.location.pathname.split('/').pop().replace('.html', '') + '/');
+    }
+  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Flip Card</title>
+    <style>
+        body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: #f1f2f6; font-family: 'Inter', sans-serif; }
+
+        .flip-card {
+          background-color: transparent;
+          width: 300px;
+          height: 400px;
+          perspective: 1000px;
+        }
+
+        .flip-card-inner {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          text-align: center;
+          transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          transform-style: preserve-3d;
+          box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+          border-radius: 15px;
+        }
+
+        .flip-card:hover .flip-card-inner {
+          transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          -webkit-backface-visibility: hidden;
+          backface-visibility: hidden;
+          border-radius: 15px;
+          overflow: hidden;
+        }
+
+        .flip-card-front {
+          background-color: #fff;
+          color: black;
+        }
+
+        .flip-card-front img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .flip-card-front h2 {
+          position: absolute;
+          bottom: 20px;
+          left: 0;
+          width: 100%;
+          color: white;
+          text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .flip-card-back {
+          background: linear-gradient(135deg, #6e8efb, #a777e3);
+          color: white;
+          transform: rotateY(180deg);
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          padding: 20px;
+        }
+
+        .flip-card-back h1 { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="flip-card">
+      <div class="flip-card-inner">
+        <div class="flip-card-front">
+          <img src="https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&w=400&q=80" alt="Avatar">
+          <h2>Hover Me</h2>
+        </div>
+        <div class="flip-card-back">
+          <h1>John Doe</h1>
+          <p>Architect & Engineer</p>
+          <p>We love that guy</p>
+        </div>
+      </div>
+    </div>
+</body>
+</html>

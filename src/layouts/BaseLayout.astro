@@ -1,12 +1,38 @@
 ---
+import { ViewTransitions } from 'astro:transitions';
+import AdSlot from '../components/AdSlot.astro';
+import navData from '../data/navigation.json';
+const { navItems } = navData;
+
 export interface Props {
-  title: string;
-  description: string;
   image?: string;
   canonicalURL?: string | URL;
+  // Extended SEO props from blog/tutorial frontmatter
+  seoTitle?: string;      // Custom browser-tab/Google title (overrides title)
+  ogImage?: string;       // Custom OG image (overrides image)
+  noindex?: boolean;      // Add noindex meta tag
+  schemaData?: object[];  // Array of Schema.org JSON-LD objects
 }
 
-const { title, description, image = '/og-image.png', canonicalURL = new URL(Astro.url.pathname, Astro.site) } = Astro.props;
+const {
+  title,
+  description,
+  image = '/og-image.png',
+  canonicalURL = new URL(Astro.url.pathname, Astro.site),
+  seoTitle,
+  ogImage,
+  noindex = false,
+  schemaData = [],
+} = Astro.props;
+
+// The title that goes in <title> tag and OG title
+const pageTitle = seoTitle || title;
+const displayTitle = pageTitle.includes('CodesCompiler') ? pageTitle : `${pageTitle} — CodesCompiler`;
+// The image used for OG/Twitter cards
+const socialImage = ogImage || image;
+
+// og:type is article only for blog posts; otherwise website
+const ogType = Astro.url.pathname.startsWith('/blog/') ? 'article' : 'website';
 
 // All tutorials for the search index (flat list for auto-suggest)
 const tutorialLinks = [
@@ -15,30 +41,47 @@ const tutorialLinks = [
   { label: 'JavaScript Tutorial', href: '/tutorial/js-introduction', cat: 'JavaScript' },
   { label: 'SEO Tutorial', href: '/tutorial/seo-overview', cat: 'SEO' },
   { label: 'Python Tutorial', href: '/tutorial/python-guide', cat: 'Python' },
+  { label: 'SQL Tutorial', href: '/tutorial/sql-guide', cat: 'SQL' },
+  { label: 'PHP Tutorial', href: '/tutorial/php-guide', cat: 'PHP' },
 ];
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-E4RQHDFMTX"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-E4RQHDFMTX');
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title} | CodesCompiler</title>
-    <meta name="title" content={`${title} | CodesCompiler`} />
+    <title>{displayTitle}</title>
+    <meta name="title" content={displayTitle} />
     <meta name="description" content={description} />
-    <meta property="og:type" content="website" />
+    <link rel="canonical" href={String(canonicalURL)} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonicalURL} />
-    <meta property="og:title" content={`${title} | CodesCompiler`} />
+    <meta property="og:title" content={displayTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={new URL(image, Astro.url)} />
+    <meta property="og:image" content={new URL(socialImage, Astro.url)} />
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={canonicalURL} />
-    <meta property="twitter:title" content={`${title} | CodesCompiler`} />
+    <meta property="twitter:title" content={displayTitle} />
     <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content={new URL(image, Astro.url)} />
+    <meta property="twitter:image" content={new URL(socialImage, Astro.url)} />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+    {schemaData.map((schema) => (
+      <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    ))}
 
     {Astro.url.pathname.includes('/tutorial/python-') && (
       <>
@@ -46,88 +89,142 @@ const tutorialLinks = [
         <script defer src="https://pyscript.net/latest/pyscript.js"></script>
       </>
     )}
+  <!-- ADMIN-INJECTED-START -->
+    <meta http-equiv="Cache-Control" content="public, max-age=3600" />
+    <!-- ADMIN-INJECTED-END -->
+    <!-- Dark Mode Init -->
+    <script is:inline>
+      if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark-theme');
+      } else {
+        document.documentElement.classList.remove('dark-theme');
+      }
+    </script>
   </head>
   <body class="min-h-screen flex flex-col bg-white text-gray-900 antialiased" style="font-family: 'Source Sans 3', sans-serif;">
 
     <!-- ============================================================ -->
-    <!-- TOP WHITE NAV BAR                                            -->
+    <!-- NEW HEADER & NAVBAR                                          -->
     <!-- ============================================================ -->
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
-      <div class="max-w-screen-2xl mx-auto px-3 sm:px-5">
-        <div class="flex items-center h-14 gap-3">
+    <header class="bg-white sticky top-0 z-50 shadow-sm flex flex-col relative">
+      <!-- ROW 1: Mobile Hamburger, Logo, Desktop Search, Theme Toggle -->
+      <div class="max-w-screen-2xl w-full mx-auto px-3 sm:px-5 py-3 flex items-center justify-between gap-4 relative z-20 bg-white">
+        
+        <!-- Mobile Global Hamburger -->
+        <button class="hamburger md:hidden" id="ham" onclick="toggleMenu()" aria-label="Toggle Global Menu">
+          <span></span><span></span><span></span>
+        </button>
 
-          <!-- Hamburger (mobile sidebar toggle) -->
-          <button id="sidebar-toggle" class="flex-shrink-0 p-2 rounded hover:bg-gray-100 transition-colors md:hidden" aria-label="Toggle sidebar">
-            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-            </svg>
-          </button>
+        <!-- Logo -->
+        <a href="/" class="logo !py-0 flex-shrink-0">Codes<span>Compiler</span></a>
 
-          <!-- Logo -->
-          <a href="/" class="flex-shrink-0 flex items-center gap-1.5 no-underline">
-            <span class="font-bold text-lg text-gray-900 tracking-tight whitespace-nowrap">
-              <span class="text-[#04AA6D]">Codes</span>Compiler
-            </span>
-          </a>
-
-          <!-- Center Search Bar -->
-          <div class="flex-1 min-w-0 flex justify-center px-2 sm:px-6 max-w-2xl mx-auto relative" id="search-wrapper">
-            <div class="w-full relative min-w-0">
-              <input
-                id="main-search"
-                type="text"
-                placeholder="Search tutorials, e.g. HTML"
-                autocomplete="off"
-                class="w-full pl-4 pr-12 py-2 border-2 border-gray-200 focus:border-[#04AA6D] rounded-md text-sm outline-none transition-colors bg-gray-50 focus:bg-white"
-              />
-              <button class="absolute right-0 top-0 h-full px-4 bg-[#04AA6D] hover:bg-[#038a58] rounded-r-md transition-colors flex items-center justify-center" aria-label="Search">
-                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                </svg>
-              </button>
-              <!-- Autocomplete Dropdown -->
-              <div id="search-dropdown" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border border-gray-200 rounded-md shadow-xl z-50 overflow-hidden max-h-80 overflow-y-auto">
-                <!-- Results injected by JS -->
-              </div>
-            </div>
+        <!-- Desktop Search -->
+        <div class="hidden md:block flex-1 max-w-2xl mx-auto relative" id="search-wrapper">
+          <div class="search-wrap w-full !max-w-none">
+            <input type="text" id="main-search" placeholder="Search tutorials, e.g. HTML" autocomplete="off" class="w-full">
+            <span class="search-icon">🔍</span>
+            <div id="search-dropdown" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border border-gray-200 rounded-md shadow-xl z-50 overflow-hidden max-h-80 overflow-y-auto"></div>
           </div>
+        </div>
 
-          <!-- Nav links (desktop only) -->
-          <nav class="hidden lg:flex items-center gap-1 flex-shrink-0">
-            <a href="/blog" class="text-sm font-medium text-gray-600 hover:text-[#04AA6D] px-3 py-2 rounded hover:bg-gray-50 transition-colors whitespace-nowrap">Posts</a>
-            <a href="/about" class="text-sm font-medium text-gray-600 hover:text-[#04AA6D] px-3 py-2 rounded hover:bg-gray-50 transition-colors whitespace-nowrap">About</a>
-            <a href="/contact" class="text-sm font-medium text-gray-600 hover:text-[#04AA6D] px-3 py-2 rounded hover:bg-gray-50 transition-colors whitespace-nowrap">Contact</a>
-            <a href="/tutorial/html-introduction" class="ml-2 text-sm font-semibold text-white bg-[#04AA6D] hover:bg-[#038a58] px-4 py-2 rounded transition-colors whitespace-nowrap">Get Started</a>
-          </nav>
+        <!-- Dark Mode Toggle -->
+        <button id="theme-toggle" class="flex-shrink-0 p-2 rounded-full hover:bg-gray-100 transition-colors text-gray-600 dark-hover-bg" aria-label="Toggle Dark Mode" onclick="toggleDarkMode()">
+          <svg id="theme-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <!-- Default Moon -->
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- ROW 2 (Mobile only): Full Width Search -->
+      <div class="md:hidden px-3 pb-3 bg-white relative z-20" id="mobile-search-wrapper">
+        <div class="search-wrap w-full !max-w-none">
+          <input type="text" id="mobile-search" placeholder="Search tutorials..." autocomplete="off" class="w-full">
+          <span class="search-icon">🔍</span>
+          <div id="mobile-search-dropdown" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border border-gray-200 rounded-md shadow-xl z-50 overflow-hidden max-h-80 overflow-y-auto"></div>
         </div>
       </div>
-    </header>
 
-    <!-- ============================================================ -->
-    <!-- DARK LANGUAGE NAV STRIP (W3Schools-style)                    -->
-    <!-- ============================================================ -->
-    <div class="bg-[#282A35] border-b border-gray-700 sticky top-14 z-40 overflow-x-auto scrollbar-hide">
-      <div class="max-w-screen-2xl mx-auto flex items-center min-w-max px-3 sm:px-5 h-10">
-        {[
-          { label: 'HTML', href: '/tutorial/html-introduction', color: '#E34F26' },
-          { label: 'CSS', href: '/tutorial/css-introduction', color: '#264DE4' },
-          { label: 'JavaScript', href: '/tutorial/js-introduction', color: '#F7DF1E' },
-          { label: 'SEO', href: '/tutorial/seo-overview', color: '#04AA6D' },
-          { label: 'Python', href: '/tutorial/python-guide', color: '#3776AB' },
-          { label: 'Posts', href: '/blog', color: '#04AA6D' },
-          { label: 'Privacy', href: '/privacy-policy', color: '#9CA3AF' },
-          { label: 'About', href: '/about', color: '#9CA3AF' },
-          { label: 'Contact', href: '/contact', color: '#9CA3AF' },
-        ].map(item => (
-          <a
-            href={item.href}
-            class="flex-shrink-0 text-xs font-semibold text-gray-300 hover:text-white hover:bg-white/10 px-4 py-2 transition-colors rounded whitespace-nowrap"
-          >
-            {item.label}
-          </a>
-        ))}
+      <!-- ROW 2 (Desktop): Navigation Links -->
+      <div class="hidden md:block w-full border-t border-gray-800 bg-[#1b1b2f]">
+        <div class="max-w-screen-2xl mx-auto flex items-center justify-center">
+          <ul class="nav-links !h-[48px]">
+            {navItems.map((item: any) => {
+              if (item.type === 'link') {
+                return <li><a href={item.href}>{item.label}</a></li>;
+              }
+              if (item.type === 'dropdown') {
+                return (
+                  <li>
+                    <a href="#">{item.label} <span class="arr">▼</span></a>
+                    <div class="dropdown">
+                      {item.sections.map((sec: any, idx: number) => (
+                        <>
+                          {idx > 0 && <hr />}
+                          {sec.title && <div class="section-label">{sec.title}</div>}
+                          {sec.links.map((link: any) => (
+                            <a href={link.href}>
+                              {link.icon && <span class="di">{link.icon}</span>} {link.label}
+                              {link.badge && (
+                                <span class={`badge ${link.badgeColor === 'orange' ? 'soon' : ''}`}>
+                                  {link.badge}
+                                </span>
+                              )}
+                            </a>
+                          ))}
+                        </>
+                      ))}
+                    </div>
+                  </li>
+                );
+              }
+            })}
+          </ul>
+        </div>
       </div>
+      
+      <!-- Slot for Tutorial Sub-Header (Kids/Tutorial sidebars) -->
+      <slot name="sub-header" />
+
+      <!-- Mobile Drawer -->
+      <div class="mobile-drawer" id="drawer">
+        {navItems.map((item: any) => {
+          if (item.type === 'dropdown') {
+            return (
+              <div class="m-item">
+                <div class="m-header" onclick="toggleSection(this)">
+                  {item.label} <span class="m-arr">▼</span>
+                </div>
+                <div class="m-body">
+                  {item.sections.map((sec: any) => (
+                    <>
+                      {sec.links.map((link: any) => (
+                        <a href={link.href}>
+                          {link.icon && <span class="di">{link.icon}</span>} {link.label}
+                          {link.badge && (
+                            <span class={`mbadge ${link.badgeColor === 'orange' ? 'soon' : ''}`}>
+                              {link.badge}
+                            </span>
+                          )}
+                        </a>
+                      ))}
+                    </>
+                  ))}
+                </div>
+              </div>
+            );
+          } else if (item.type === 'link') {
+            return <a href={item.href} class="m-single">{item.label}</a>;
+          }
+        })}
+
+        <a href="/about" class="m-single">About</a>
+        <a href="/contact" class="m-single">Contact</a>
+
+
+      <a href="/tutorial/html-introduction" class="m-getstarted">🚀 Get Started Free</a>
     </div>
+  </header>
 
     <!-- ============================================================ -->
     <!-- MAIN CONTENT + SIDEBAR WRAPPER                               -->
@@ -165,12 +262,14 @@ const tutorialLinks = [
     <script is:inline define:vars={{ tutorialLinks }}>
       const searchInput = document.getElementById('main-search');
       const dropdown = document.getElementById('search-dropdown');
+      const mobileSearchInput = document.getElementById('mobile-search');
+      const mobileDropdown = document.getElementById('mobile-search-dropdown');
 
       const allItems = tutorialLinks;
 
-      function renderDropdown(query) {
+      function renderDropdown(query, ddEl) {
         if (!query || query.length < 1) {
-          dropdown.classList.add('hidden');
+          ddEl.classList.add('hidden');
           return;
         }
         const q = query.toLowerCase();
@@ -178,33 +277,648 @@ const tutorialLinks = [
           item => item.label.toLowerCase().includes(q) || item.cat.toLowerCase().includes(q)
         );
         if (matches.length === 0) {
-          dropdown.innerHTML = `<div class="px-4 py-3 text-sm text-gray-400 italic">No results found</div>`;
-          dropdown.classList.remove('hidden');
+          ddEl.innerHTML = `<div class="px-4 py-3 text-sm text-gray-400 italic">No results found</div>`;
+          ddEl.classList.remove('hidden');
           return;
         }
-        dropdown.innerHTML = matches.map(item => `
+        ddEl.innerHTML = matches.map(item => `
           <a href="${item.href}" class="flex items-center gap-4 px-4 py-2.5 hover:bg-gray-50 border-b border-gray-100 last:border-none group">
             <span class="text-xs font-bold text-[#04AA6D] uppercase w-16 flex-shrink-0">${item.cat}</span>
             <span class="text-sm text-gray-800 group-hover:text-[#04AA6D]">${item.label}</span>
           </a>
         `).join('');
-        dropdown.classList.remove('hidden');
+        ddEl.classList.remove('hidden');
       }
 
-      searchInput?.addEventListener('input', (e) => renderDropdown(e.target.value));
-      searchInput?.addEventListener('focus', (e) => renderDropdown(e.target.value));
+      searchInput?.addEventListener('input', (e) => renderDropdown(e.target.value, dropdown));
+      searchInput?.addEventListener('focus', (e) => renderDropdown(e.target.value, dropdown));
+
+      mobileSearchInput?.addEventListener('input', (e) => renderDropdown(e.target.value, mobileDropdown));
+      mobileSearchInput?.addEventListener('focus', (e) => renderDropdown(e.target.value, mobileDropdown));
 
       document.addEventListener('click', (e) => {
         if (!document.getElementById('search-wrapper')?.contains(e.target)) {
           dropdown?.classList.add('hidden');
         }
+        if (!document.getElementById('mobile-search-wrapper')?.contains(e.target)) {
+          mobileDropdown?.classList.add('hidden');
+        }
       });
+
+      // Mobile Menu JS
+      function toggleMenu() {
+        const ham = document.getElementById('ham');
+        const drawer = document.getElementById('drawer');
+        if(ham && drawer) {
+          ham.classList.toggle('open');
+          drawer.classList.toggle('open');
+        }
+      }
+
+      function toggleSection(header) {
+        const body = header.nextElementSibling;
+        const isOpen = body.classList.contains('open');
+
+        // Close all
+        document.querySelectorAll('.m-body').forEach(b => b.classList.remove('open'));
+        document.querySelectorAll('.m-header').forEach(h => h.classList.remove('active'));
+
+        // Open clicked if it was closed
+        if (!isOpen) {
+          body.classList.add('open');
+          header.classList.add('active');
+        }
+      }
+
+      // Dark Mode JS
+      const themeIcon = document.getElementById('theme-icon');
+      const sunIcon = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />`;
+      const moonIcon = `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>`;
+
+      // Set initial icon
+      if (document.documentElement.classList.contains('dark-theme')) {
+        if(themeIcon) themeIcon.innerHTML = sunIcon;
+      }
+
+      function toggleDarkMode() {
+        if (document.documentElement.classList.contains('dark-theme')) {
+            document.documentElement.classList.remove('dark-theme');
+            localStorage.setItem('color-theme', 'light');
+            if(themeIcon) themeIcon.innerHTML = moonIcon;
+        } else {
+            document.documentElement.classList.add('dark-theme');
+            localStorage.setItem('color-theme', 'dark');
+            if(themeIcon) themeIcon.innerHTML = sunIcon;
+        }
+      }
+
+      // Add to window so inline onclicks work
+      window.toggleMenu = toggleMenu;
+      window.toggleSection = toggleSection;
+      window.toggleDarkMode = toggleDarkMode;
     </script>
 
     <style is:global>
-      /* Hide scrollbar on language nav strip */
+      /* Smooth scrolling for anchor links */
+      html { scroll-behavior: smooth; }
+
+      /* ============================================================ */
+      /* QUICK DARK MODE OVERRIDES                                    */
+      /* ============================================================ */
+      html.dark-theme body { background-color: #0f172a; color: #cbd5e1; }
+      html.dark-theme .bg-white, 
+      html.dark-theme header, 
+      html.dark-theme aside, 
+      html.dark-theme .mobile-drawer, 
+      html.dark-theme .dropdown,
+      html.dark-theme article { background-color: #0f172a !important; }
+      html.dark-theme .bg-\[\#f9f9f9\], html.dark-theme .bg-gray-50 { background-color: #1e293b !important; }
+      html.dark-theme .text-gray-900, html.dark-theme .text-gray-800, html.dark-theme .logo, html.dark-theme .m-header,
+      html.dark-theme h1, html.dark-theme h2, html.dark-theme h3 { color: #f8fafc !important; }
+      html.dark-theme .text-gray-600, html.dark-theme .text-gray-500, html.dark-theme p { color: #94a3b8 !important; }
+      html.dark-theme .border-gray-100, html.dark-theme .border-gray-200, html.dark-theme .border-b, html.dark-theme .border-t, html.dark-theme .border-r { border-color: #334155 !important; }
+      html.dark-theme input { background-color: #1e293b !important; color: #f8fafc !important; border-color: #334155 !important; }
+      html.dark-theme .hover\:bg-gray-100:hover, html.dark-theme .hover\:bg-gray-50:hover, html.dark-theme .dropdown a:hover, html.dark-theme .m-body a:hover, html.dark-theme .dark-hover-bg:hover { background-color: #334155 !important; color: #04AA6D !important; }
+      html.dark-theme .hamburger span { background: #cbd5e1; }
+      html.dark-theme .prose code, html.dark-theme .post-content code { background-color: #1e293b; color: #f472b6; }
+      html.dark-theme .prose blockquote, html.dark-theme .post-content blockquote { background-color: #1e293b; border-left-color: #04AA6D; color: #94a3b8; }
+      html.dark-theme .prose th, html.dark-theme .post-content th { background-color: #1e293b; color: #f8fafc; border-color: #334155; }
+      html.dark-theme .prose td, html.dark-theme .post-content td { border-color: #334155; color: #cbd5e1; }
+      html.dark-theme .prose tr:nth-child(even) td, html.dark-theme .post-content tr:nth-child(even) td { background-color: #1e293b; }
+      
+      /* ============================================================ */
+      /* NEW HEADER CSS                                               */
+      /* ============================================================ */
+      .top-bar { background: #1b1b2f; padding: 7px 32px; display: flex; align-items: center; justify-content: flex-end; gap: 22px; }
+      .top-bar a { color: #bbb; text-decoration: none; font-size: 13px; transition: color 0.2s; }
+      .top-bar a:hover { color: #04AA6D; }
+      .top-bar .btn-started { background: #04AA6D; color: #fff !important; padding: 5px 16px; border-radius: 5px; font-weight: 600; font-size: 13px; }
+      .top-bar .btn-started:hover { background: #038a58 !important; }
+
+      .navbar { background: #fff; border-bottom: 3px solid #04AA6D; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; gap: 16px; position: sticky; top: 0; z-index: 9999; box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
+      .logo { font-size: 22px; font-weight: 800; color: #1b1b2f; text-decoration: none; white-space: nowrap; padding: 14px 0; flex-shrink: 0; }
+      .logo span { color: #04AA6D; }
+
+      .search-wrap { flex: 1; max-width: 340px; position: relative; }
+      .search-wrap input { width: 100%; padding: 8px 40px 8px 16px; border: 1.5px solid #ddd; border-radius: 50px; font-size: 13.5px; outline: none; background: #f9f9f9; color: #333; transition: border 0.2s, box-shadow 0.2s; }
+      .search-wrap input:focus { border-color: #04AA6D; box-shadow: 0 0 0 3px rgba(4,170,109,0.12); background: #fff; }
+      .search-wrap input::placeholder { color: #aaa; }
+      .search-wrap .search-icon { position: absolute; right: 13px; top: 50%; transform: translateY(-50%); color: #04AA6D; font-size: 15px; pointer-events: none; }
+
+      .nav-links { display: flex; align-items: stretch; list-style: none; gap: 0; height: 56px; flex-shrink: 0; margin: 0; padding: 0; }
+      .nav-links > li { position: relative; display: flex; align-items: stretch; }
+      .nav-links > li > a { display: flex; align-items: center; gap: 6px; padding: 0 16px; color: #f8fafc; text-decoration: none; font-size: 13.5px; font-weight: 600; white-space: nowrap; transition: all 0.2s; border-bottom: 3px solid transparent; margin-bottom: -3px; }
+      .nav-links > li > a:hover, .nav-links > li:hover > a { color: #04AA6D; background: rgba(4, 170, 109, 0.1); border-bottom-color: #04AA6D; }
+      .nav-links > li > a .arr { font-size: 9px; margin-top: 1px; transition: transform 0.2s; opacity: 0.7; }
+      .nav-links > li:hover > a .arr { transform: rotate(180deg); }
+
+      .dropdown { display: none; position: absolute; top: calc(100% + 3px); left: 0; background: #fff; border: 1px solid #e5e5e5; border-top: 3px solid #04AA6D; border-radius: 0 0 10px 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.11); min-width: 210px; z-index: 99999; padding: 6px 0; animation: dropFade 0.15s ease; }
+      @keyframes dropFade { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+      .nav-links > li:hover .dropdown { display: block; }
+      .dropdown a { display: flex; align-items: center; gap: 10px; padding: 9px 18px; color: #333; text-decoration: none; font-size: 13.5px; transition: background 0.15s, color 0.15s; font-weight: 500; }
+      .dropdown a:hover { background: #f0fff8; color: #04AA6D; }
+      .dropdown a .di { font-size: 15px; width: 20px; text-align: center; }
+      .dropdown .badge { margin-left: auto; background: #04AA6D; color: #fff; font-size: 10px; padding: 1px 7px; border-radius: 20px; font-weight: 700; }
+      .dropdown .badge.soon { background: #ff9800; }
+      .dropdown hr { border: none; border-top: 1px solid #f0f0f0; margin: 5px 0; }
+      .dropdown .section-label { padding: 6px 18px 2px; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #aaa; font-weight: 700; }
+
+      .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 10px 6px; background: none; border: none; flex-shrink: 0; }
+      .hamburger span { display: block; width: 24px; height: 2.5px; background: #333; border-radius: 2px; transition: all 0.3s; }
+      .hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+      .hamburger.open span:nth-child(2) { opacity: 0; }
+      .hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+      .mobile-drawer { display: none; flex-direction: column; background: #fff; border-top: 1px solid #eee; max-height: 80vh; overflow-y: auto; position: absolute; top: 100%; left: 0; z-index: 9998; width: 100%; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+      .mobile-drawer.open { display: flex; }
+      .mobile-search { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; position: relative; }
+      .mobile-search input { width: 100%; padding: 9px 40px 9px 16px; border: 1.5px solid #ddd; border-radius: 50px; font-size: 13.5px; outline: none; background: #f9f9f9; }
+      .mobile-search input:focus { border-color: #04AA6D; }
+      .mobile-search .si { position: absolute; right: 28px; top: 50%; transform: translateY(-50%); color: #04AA6D; }
+      .m-item { border-bottom: 1px solid #f2f2f2; }
+      .m-header { display: flex; align-items: center; justify-content: space-between; padding: 13px 18px; font-size: 14px; font-weight: 600; color: #1b1b2f; cursor: pointer; background: #fafafa; user-select: none; }
+      .m-header:hover { background: #f0fff8; color: #04AA6D; }
+      .m-header .m-arr { font-size: 11px; color: #04AA6D; transition: transform 0.25s; }
+      .m-header.active .m-arr { transform: rotate(180deg); }
+      .m-header.active { color: #04AA6D; background: #f0fff8; }
+      .m-body { display: none; flex-direction: column; background: #fff; padding: 4px 0 8px; }
+      .m-body.open { display: flex; }
+      .m-body a { display: flex; align-items: center; gap: 10px; padding: 9px 32px; color: #444; text-decoration: none; font-size: 13.5px; transition: color 0.15s, background 0.15s; }
+      .m-body a:hover { color: #04AA6D; background: #f5fff9; }
+      .m-body a .di { font-size: 14px; width: 18px; text-align: center; }
+      .m-body .mbadge { margin-left: auto; background: #04AA6D; color: #fff; font-size: 10px; padding: 1px 7px; border-radius: 20px; font-weight: 700; }
+      .m-body .mbadge.soon { background: #ff9800; }
+      .m-single { display: flex; align-items: center; gap: 10px; padding: 13px 18px; font-size: 14px; font-weight: 500; color: #333; text-decoration: none; border-bottom: 1px solid #f2f2f2; transition: color 0.15s, background 0.15s; }
+      .m-single:hover { color: #04AA6D; background: #f5fff9; }
+      .m-getstarted { margin: 14px 18px; display: block; background: #04AA6D; color: #fff; text-align: center; padding: 11px; border-radius: 6px; font-weight: 700; font-size: 14px; text-decoration: none; }
+
+      @media (max-width: 900px) {
+        .nav-links, #search-wrapper, .top-bar { display: none; }
+        .hamburger { display: flex; }
+        .navbar { padding: 0 16px; position: relative; }
+      }
+
+      /* Hide scrollbar on language nav strip (if needed elsewhere) */
       .scrollbar-hide::-webkit-scrollbar { display: none; }
       .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+      /* ============================================================ */
+      /* GLOBAL TYPOGRAPHY FOR MDX (Tutorials & Posts)                */
+      /* ============================================================ */
+      .prose h1, .prose h2, .prose h3, .prose h4, .prose h5, .prose h6,
+      .post-content h1, .post-content h2, .post-content h3, .post-content h4, .post-content h5, .post-content h6 {
+        scroll-margin-top: 160px; /* Prevents sticky navbar from covering heading */
+      }
+
+      .prose, .post-content {
+        color: #374151;
+        line-height: 1.75;
+        font-size: 1.05rem;
+      }
+      
+      .prose h1, .post-content h1 {
+        font-size: 2.25rem;
+        font-weight: 800;
+        margin-top: 1.5em;
+        margin-bottom: 0.8em;
+        line-height: 1.2;
+        color: #111827;
+        border-bottom: 2px solid #e5e7eb;
+        padding-bottom: 0.3em;
+      }
+
+      .prose h2, .post-content h2 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-top: 2em;
+        margin-bottom: 1em;
+        color: #1f2937;
+        border-left: 4px solid #04AA6D;
+        padding-left: 12px;
+        line-height: 1.3;
+      }
+
+      .prose h3, .post-content h3 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-top: 1.6em;
+        margin-bottom: 0.6em;
+        color: #374151;
+        line-height: 1.4;
+      }
+
+      .prose h4, .post-content h4 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+        color: #4b5563;
+      }
+
+      .prose p, .post-content p {
+        margin-top: 1em;
+        margin-bottom: 1.25em;
+      }
+
+      .prose a, .post-content a {
+        color: #04AA6D;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+        font-weight: 500;
+        transition: color 0.15s ease;
+      }
+      .prose a:hover, .post-content a:hover {
+        color: #038a58;
+      }
+
+      .prose ul, .post-content ul {
+        list-style-type: disc;
+        padding-left: 1.5em;
+        margin-top: 1em;
+        margin-bottom: 1.25em;
+      }
+
+      .prose ol, .post-content ol {
+        list-style-type: decimal;
+        padding-left: 1.5em;
+        margin-top: 1em;
+        margin-bottom: 1.25em;
+      }
+
+      .prose li, .post-content li {
+        margin-bottom: 0.5em;
+      }
+
+      .prose li > ul, .prose li > ol,
+      .post-content li > ul, .post-content li > ol {
+        margin-top: 0.5em;
+        margin-bottom: 0;
+      }
+
+      .prose blockquote, .post-content blockquote {
+        border-left: 4px solid #04AA6D;
+        background: #f0fdf4;
+        padding: 1rem 1.2rem;
+        margin: 1.5em 0;
+        font-style: italic;
+        color: #4b5563;
+        border-radius: 0 8px 8px 0;
+      }
+
+      /* Inline code vs Block code */
+      .prose code:not(pre code), .post-content code:not(pre code) {
+        background-color: #f3f4f6;
+        color: #c7254e;
+        padding: 0.2em 0.4em;
+        border-radius: 4px;
+        font-size: 0.85em;
+        font-family: 'Fira Code', monospace;
+        word-break: break-word;
+      }
+
+      .prose pre, .post-content pre {
+        background-color: #282A35;
+        color: #f8f8f2;
+        padding: 1.25em;
+        border-radius: 8px;
+        overflow-x: auto;
+        margin: 1.5em 0;
+        font-family: 'Fira Code', monospace;
+        font-size: 0.9em;
+        line-height: 1.6;
+        border: 1px solid rgba(0,0,0,0.1);
+      }
+
+      .prose pre code, .post-content pre code {
+        background-color: transparent;
+        color: inherit;
+        padding: 0;
+        border-radius: 0;
+        font-size: 1em;
+      }
+
+      .prose img, .post-content img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 2em auto;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        display: block;
+      }
+
+      .prose table, .post-content table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.5em 0;
+        font-size: 0.95em;
+      }
+
+      .prose th, .post-content th {
+        background-color: #f9fafb;
+        font-weight: 700;
+        text-align: left;
+        padding: 0.75em 1em;
+        border: 1px solid #e5e7eb;
+        color: #111827;
+      }
+
+      .prose td, .post-content td {
+        padding: 0.75em 1em;
+        border: 1px solid #e5e7eb;
+        color: #374151;
+      }
+
+      .prose tr:nth-child(even) td, .post-content tr:nth-child(even) td {
+        background-color: #f9fafb;
+      }
+
+      .prose hr, .post-content hr {
+        border: none;
+        border-top: 1px solid #e5e7eb;
+        margin: 2.5em 0;
+      }
+      
+      .prose strong, .post-content strong {
+        font-weight: 700;
+        color: #111827;
+      }
+
+      /* ============================================================ */
+      /* STICKY SOCIAL MEDIA SIDEBAR CSS                             */
+      /* ============================================================ */
+      .social-sidebar {
+        position: fixed;
+        left: 0;
+        top: 55%;
+        transform: translateY(-50%);
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(229, 231, 235, 0.6);
+        border-left: none;
+        border-radius: 0 16px 16px 0;
+        padding: 12px 8px;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s, border-color 0.3s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .social-sidebar.collapsed {
+        transform: translate(-100%, -50%);
+      }
+
+      .social-sidebar-toggle {
+        position: absolute;
+        right: -12px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 24px;
+        height: 24px;
+        background: #04AA6D;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        color: #ffffff;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 10px rgba(4, 170, 109, 0.35);
+        transition: background-color 0.2s, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        padding: 0;
+      }
+
+      .social-sidebar-toggle:hover {
+        background: #038a58;
+      }
+
+      .social-sidebar.collapsed .social-sidebar-toggle {
+        transform: translateY(-50%) rotate(180deg);
+      }
+
+      .social-sidebar-toggle .toggle-icon {
+        transition: transform 0.3s;
+      }
+
+      .social-items {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .social-item {
+        width: 38px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        color: #4b5563;
+        background: rgba(243, 244, 246, 0.8);
+        position: relative;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        text-decoration: none;
+      }
+
+      /* Hover States with Brand Custom Settings */
+      .social-item.youtube:hover {
+        background: #FF0000;
+        color: #ffffff;
+        box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4);
+      }
+      .social-item.instagram:hover {
+        background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        color: #ffffff;
+        box-shadow: 0 5px 15px rgba(220, 39, 67, 0.4);
+      }
+      .social-item.facebook:hover {
+        background: #1877F2;
+        color: #ffffff;
+        box-shadow: 0 5px 15px rgba(24, 119, 242, 0.4);
+      }
+      .social-item.threads:hover {
+        background: #101010;
+        color: #ffffff;
+        box-shadow: 0 5px 15px rgba(16, 16, 16, 0.4);
+      }
+      .social-item.linkedin:hover {
+        background: #0A66C2;
+        color: #ffffff;
+        box-shadow: 0 5px 15px rgba(10, 102, 194, 0.4);
+      }
+      .social-item.pinterest:hover {
+        background: #BD081C;
+        color: #ffffff;
+        box-shadow: 0 5px 15px rgba(189, 8, 28, 0.4);
+      }
+
+      /* Tooltip Styles */
+      .social-tooltip {
+        position: absolute;
+        left: 50px;
+        top: 50%;
+        transform: translateY(-50%) translateX(-8px);
+        background: #1b1b2f;
+        color: #ffffff;
+        padding: 5px 10px;
+        border-radius: 6px;
+        font-size: 11px;
+        font-weight: 600;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        white-space: nowrap;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+      }
+
+      .social-tooltip::before {
+        content: '';
+        position: absolute;
+        right: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+        border-width: 5px;
+        border-style: solid;
+        border-color: transparent #1b1b2f transparent transparent;
+      }
+
+      .social-item:hover .social-tooltip {
+        opacity: 1;
+        transform: translateY(-50%) translateX(0);
+      }
+
+      /* Dark Mode overrides */
+      html.dark-theme .social-sidebar {
+        background: rgba(15, 23, 42, 0.85) !important;
+        border-color: rgba(51, 65, 85, 0.6) !important;
+      }
+      html.dark-theme .social-item {
+        color: #94a3b8;
+        background: rgba(30, 41, 59, 0.8);
+      }
+      html.dark-theme .social-tooltip {
+        background: #f8fafc;
+        color: #0f172a;
+      }
+      html.dark-theme .social-tooltip::before {
+        border-color: transparent #f8fafc transparent transparent;
+      }
+
+      /* Mobile adjustment */
+      @media (max-width: 768px) {
+        .social-sidebar {
+          padding: 8px 5px;
+          border-radius: 0 12px 12px 0;
+          top: 60%; /* Position slightly lower on mobile to stay clear of other UI elements */
+        }
+        .social-item {
+          width: 34px;
+          height: 34px;
+        }
+        .social-item svg {
+          width: 17px;
+          height: 17px;
+        }
+        .social-tooltip {
+          display: none; /* Hide tooltips on mobile since there's no hover */
+        }
+      }
     </style>
+
+    <!-- Social Media Sidebar HTML Markup -->
+    <div id="social-sidebar" class="social-sidebar collapsed shadow-lg">
+      <button id="social-sidebar-toggle" aria-label="Toggle Social Links" class="social-sidebar-toggle">
+        <svg class="toggle-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+      <div class="social-items">
+        <a href="https://www.youtube.com/@CodeCompiler19" target="_blank" rel="noopener noreferrer" class="social-item youtube" aria-label="YouTube">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.11C19.517 3.545 12 3.545 12 3.545s-7.516 0-9.387.507a3.003 3.003 0 0 0-2.11 2.11C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.11c1.871.507 9.387.507 9.387.507s7.517 0 9.387-.507a3.003 3.003 0 0 0 2.11-2.11C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+          </svg>
+          <span class="social-tooltip">YouTube</span>
+        </a>
+        <a href="https://www.instagram.com/codescompiler/" target="_blank" rel="noopener noreferrer" class="social-item instagram" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+          </svg>
+          <span class="social-tooltip">Instagram</span>
+        </a>
+        <a href="https://www.facebook.com/CodesCompiler/" target="_blank" rel="noopener noreferrer" class="social-item facebook" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+          </svg>
+          <span class="social-tooltip">Facebook</span>
+        </a>
+        <a href="https://www.threads.net/@codescompiler" target="_blank" rel="noopener noreferrer" class="social-item threads" aria-label="Threads">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M12.986 1.05c-5.748-.288-10.73 3.633-11.754 9.178-1.149 6.223 2.894 12.029 9.07 13.01 5.938.94 11.533-2.616 12.87-8.246.545-2.288.543-4.666-.007-6.953a1.002 1.002 0 0 0-1.944.464c.489 2.052.492 4.184.004 6.236-1.12 4.71-5.803 7.688-10.778 6.9-5.166-.82-8.548-5.674-7.587-10.875.856-4.637 5.023-7.915 9.83-7.674 4.542.228 8.016 3.642 8.358 8.043.208 2.673-.655 5.244-2.433 7.24-1.664 1.867-3.957 2.682-6.136 2.18-2.077-.478-3.32-2.146-3.313-4.306.007-2.008 1.157-3.948 2.946-4.973 1.637-.938 3.51-.97 5.01-.088v-.03a.999.999 0 0 0 2 0v-3.003a1.002 1.002 0 0 0-1.62-.78l-1.396 1.12c-1.33-.769-3.013-.815-4.498-.12-2.484 1.162-4.14 3.73-4.15 6.643-.01 3.284 2.062 6.002 5.178 6.72 3.125.72 6.438-.403 8.818-3.076 2.457-2.757 3.647-6.388 3.352-10.174C23.01 5.485 18.736 1.338 12.986 1.05zm1.02 11.02c-.896-.407-1.884-.366-2.71.108-1.077.617-1.748 1.745-1.752 2.944-.004 1.25.688 2.106 1.696 2.338.995.23 2.08-.124 2.87-1.01 1.066-1.196 1.583-2.738 1.488-4.38h-1.592z"/>
+          </svg>
+          <span class="social-tooltip">Threads</span>
+        </a>
+        <a href="https://www.linkedin.com/in/codescompiler/" target="_blank" rel="noopener noreferrer" class="social-item linkedin" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0z"/>
+          </svg>
+          <span class="social-tooltip">LinkedIn</span>
+        </a>
+        <a href="https://in.pinterest.com/codecompiler19/" target="_blank" rel="noopener noreferrer" class="social-item pinterest" aria-label="Pinterest">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.966 1.406-5.966s-.359-.72-.359-1.781c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.27 1.043-1.002 2.35-1.492 3.146 1.124.347 2.317.535 3.554.535 6.607 0 11.985-5.36 11.985-11.988C24.005 5.368 18.625 0 12.017 0z"/>
+          </svg>
+          <span class="social-tooltip">Pinterest</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Client-side script to handle social sidebar toggle and persistence -->
+    <script is:inline>
+      function initSocialSidebar() {
+        const sidebar = document.getElementById('social-sidebar');
+        if (!sidebar) return;
+
+        const storedState = sessionStorage.getItem('social-sidebar-state');
+        const isMobile = window.innerWidth < 768;
+
+        if (storedState) {
+          if (storedState === 'collapsed') {
+            sidebar.classList.add('collapsed');
+          } else {
+            sidebar.classList.remove('collapsed');
+          }
+        } else {
+          // Collapse by default on mobile, expand on desktop
+          if (isMobile) {
+            sidebar.classList.add('collapsed');
+          } else {
+            sidebar.classList.remove('collapsed');
+          }
+        }
+      }
+
+      // Initial execution
+      initSocialSidebar();
+
+      // Listeners for standard load, back/forward cache, and astro route changes
+      document.addEventListener('DOMContentLoaded', initSocialSidebar);
+      document.addEventListener('astro:after-swap', initSocialSidebar);
+
+      // Delegate click listener to avoid duplicate bindings during route transitions
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('#social-sidebar-toggle');
+        if (btn) {
+          const sidebar = document.getElementById('social-sidebar');
+          if (sidebar) {
+            sidebar.classList.toggle('collapsed');
+            const newState = sidebar.classList.contains('collapsed') ? 'collapsed' : 'expanded';
+            sessionStorage.setItem('social-sidebar-state', newState);
+          }
+        }
+      });
+    </script>
   </body>
 </html>

@@ -1,0 +1,106 @@
+---
+import TopicLayout from '../../layouts/TopicLayout.astro';
+---
+<TopicLayout title="Operating Systems" description="Understand what an operating system does, how it manages hardware, and the differences between major OS families." section="cs-basics">
+  <h2>The Master Conductor: What is an Operating System?</h2>
+  <p>If you were to write a computer program without an <strong>Operating System (OS)</strong>, your code would have to include instructions to spin up the hard drive disk platters, manually move the read/write head to a specific sector, interface directly with the display controller to draw individual pixels, and capture raw electrical voltage fluctuations from the keyboard. An Operating System is the system software that acts as the intermediary between computer hardware and user-level application software. It abstracts the raw hardware complexities, manages system resources, and provides a standardized platform for running user programs.</p>
+
+  <p>Whenever you open a web browser, save a document, or print a receipt, you are relying on the OS to coordinate the millions of micro-actions required to make that hardware interaction happen smoothly and securely.</p>
+
+  <h2>The Core Subsystems of an Operating System</h2>
+  <p>To keep a computer running efficiently and prevent applications from interfering with one another, the OS is split into several highly specialized subsystems:</p>
+
+  <h3>1. Process Management</h3>
+  <p>A **process** is an active instance of a running program loaded into memory. Inside a process, there can be multiple **threads**—smaller units of execution that run concurrently and share the process's memory space. Because most computers have a finite number of CPU cores, the OS uses a **CPU Scheduler** to allocate processor time. The scheduler rapidly switches CPU execution between different processes (a technique called **multitasking**). Common scheduling algorithms include:</p>
+  <ul>
+    <li><strong>First-Come, First-Served (FCFS):</strong> Processes are executed in the order they arrive in the queue.</li>
+    <li><strong>Round Robin (RR):</strong> Each process is assigned a small, fixed time slice (quantum) before the CPU switches to the next task in rotation.</li>
+    <li><strong>Priority Scheduling:</strong> Tasks are executed based on their urgency or importance assigned by the system.</li>
+  </ul>
+
+  <h3>2. Memory Management</h3>
+  <p>Every running application requires a portion of the system's RAM. The memory management subsystem keeps track of which parts of RAM are currently in use, allocates memory blocks to new processes, and deallocates (frees) memory when a program terminates. It uses techniques like **paging** (dividing memory into fixed-size pages) and **virtual memory** to prevent programs from overwriting each other's data, which would lead to crashes or security breaches.</p>
+
+  <h3>3. File System Management</h3>
+  <p>Storage drives are simply arrays of physical sectors. The file system organizes these raw sectors into a logical structure of files and folders (directories). It manages metadata (file creation date, file size, permissions) and handles the reading and writing of data. The file system also manages access controls, ensuring that users can only read or edit files they have permission to access.</p>
+
+  <h3>4. Device Management</h3>
+  <p>Computers must communicate with a vast array of third-party hardware devices (keyboards, printers, graphic tablets, network cards). The OS uses **device drivers**—translation scripts written by hardware manufacturers—to provide a unified interface, allowing the OS to command hardware without knowing its internal electronics.</p>
+
+  <h2>The Heart of the OS: Kernel vs. User Space</h2>
+  <p>To protect system stability and security, operating systems split their running environment into two distinct modes of operation, enforced by the CPU hardware (Protection Rings):</p>
+  <ul>
+    <li><strong>Kernel Space:</strong> The privileged execution environment where the core of the OS—the **kernel**—resides. The kernel has complete, unrestricted access to the CPU, RAM, and hardware devices. Any crash in kernel space can crash the entire computer (resulting in a Blue Screen of Death on Windows or a Kernel Panic on Linux/macOS).</li>
+    <li><strong>User Space:</strong> The restricted environment where standard user applications (web browsers, text editors, games) execute. Programs running in user space cannot access hardware directly. If they need to read a file or send a packet over the network, they must make a request to the kernel using a **System Call** (syscall).</li>
+  </ul>
+
+  <blockquote>
+    <strong>The Protection Ring Analogy:</strong> Think of the kernel as the high-security bank vault (Ring 0) and user programs as customers (Ring 3) standing in the lobby. Customers cannot walk into the vault and grab money themselves; they must fill out a slip (system call) and hand it to a bank teller (the kernel API), who fetches the cash for them.
+  </blockquote>
+
+  <h2>Comparing Kernel Architectures</h2>
+  <p>Operating systems are designed around different kernel structures, depending on priorities like speed, modularity, and security:</p>
+  <ol>
+    <li><strong>Monolithic Kernels:</strong> All OS services (process scheduler, file system, virtual memory, device drivers) run together inside a single, massive program in kernel space. This design is highly efficient and offers fast execution speeds, but a bug in any single driver can crash the entire system. Examples: Linux, FreeBSD.</li>
+    <li><strong>Microkernels:</strong> Keep the kernel as small as possible, running only essential services (low-level memory and CPU scheduling) in kernel space. All other services (file systems, device drivers) run as standard user-space programs. This design is highly stable and secure (if a driver crashes, it is simply restarted without bringing down the OS), but has slower performance due to constant communication overhead. Examples: MINIX, QNX.</li>
+    <li><strong>Hybrid Kernels:</strong> A compromise that runs key services in kernel space for speed, but uses a modular structure to load and unload drivers. Examples: Windows NT kernel, Apple XNU (macOS/iOS).</li>
+  </ol>
+
+  <h2>Major Desktop Operating Systems Compared</h2>
+  <p>The table below summarizes the key differences between the three dominant desktop operating system families in the modern computing landscape:</p>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Operating System</th>
+          <th>Kernel Family</th>
+          <th>License / Cost</th>
+          <th>Primary Advantages</th>
+          <th>Common Criticisms</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Microsoft Windows</strong></td>
+          <td>Proprietary Hybrid (NT)</td>
+          <td>Commercial (Paid License)</td>
+          <td>Massive software/game library, excellent hardware compatibility.</td>
+          <td>Heavy system resource usage, constant update prompts, telemetry tracking.</td>
+        </tr>
+        <tr>
+          <td><strong>Apple macOS</strong></td>
+          <td>Unix Hybrid (XNU)</td>
+          <td>Proprietary (Bundled with Mac hardware)</td>
+          <td>Exceptional UI/UX, robust security, highly stable Unix core, creative app integration.</td>
+          <td>Locked to expensive Apple hardware, limited gaming support, lack of hardware upgrades.</td>
+        </tr>
+        <tr>
+          <td><strong>Linux</strong></td>
+          <td>Open-Source Monolithic</td>
+          <td>Free and Open Source (FOSS)</td>
+          <td>High performance, extreme customization, free, secure, ideal for developers.</td>
+          <td>Steeper learning curve, fragmented distributions, lacks native support for some commercial apps.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq-section">
+    <h3>What is a deadlock in operating systems?</h3>
+    <p>A deadlock occurs in multitasking environments when two or more processes are unable to proceed because each is waiting for a resource that the other process currently holds. For example, Process A holds Resource 1 and wants Resource 2, while Process B holds Resource 2 and wants Resource 1. Neither can proceed, resulting in a system freeze unless the OS terminates one of the processes.</p>
+
+    <h3>What is the difference between a process and a thread?</h3>
+    <p>A process is a fully isolated running program with its own dedicated memory space allocated by the OS. A thread is a lightweight execution path within a process. Multiple threads belonging to the same process share that process's memory space and files, making communication between them fast but requiring careful synchronization to prevent data corruption.</p>
+
+    <h3>What is the purpose of a system call?</h3>
+    <p>A system call is the program-level programmatic interface used by user-space applications to request services from the operating system kernel. Since user programs are restricted from accessing hardware directly for security reasons, system calls provide the safe, validated gateway to perform tasks like file reading, writing, network packet delivery, or creating new processes.</p>
+
+    <h3>What is a Real-Time Operating System (RTOS)?</h3>
+    <p>An RTOS is a specialized operating system designed for systems where processing must occur within strict, deterministic time limits. Unlike desktop systems, where an app update can stutter for a second, an RTOS guarantees that critical tasks complete within microseconds. They are used in high-risk environments like automotive anti-lock brakes, pacemakers, and spacecraft control systems.</p>
+  </div>
+
+  <h2>What's Next?</h2>
+  <p>Once you understand how the operating system coordinates programs and RAM, the next step is to explore how those programs organize data internally to perform calculations efficiently. Read our guide on <a href="/cs-basics/data-structures">Data Structures</a> to explore arrays, stacks, trees, and hash tables.</p>
+</TopicLayout>

@@ -1,0 +1,98 @@
+---
+title: "SQL – Indexes"
+description: "Speed up query performance dramatically by creating indexes on frequently searched columns."
+category: "sql"
+order: 62
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+An **index** is a separate data structure that the database maintains alongside a table to speed up lookups. Think of a book's index at the back — instead of reading every page to find "photosynthesis," you jump directly to page 247. Database indexes work the same way, allowing the engine to find rows matching a WHERE condition without scanning every row.
+
+The trade-off: indexes speed up reads but slightly slow down writes (INSERT, UPDATE, DELETE) because the index must be updated along with the table. Index the columns you query most frequently; leave rarely-queried columns unindexed.
+
+**When to create an index**
+✅ Columns used in WHERE conditions
+✅ Columns used in JOIN ON clauses
+✅ Columns used in ORDER BY
+❌ Columns rarely filtered on
+❌ Very small tables (full scan is fine)
+❌ Columns with very low cardinality (e.g., boolean)
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={`CREATE TABLE students (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  age INTEGER,
+  city TEXT,
+  score REAL,
+  grade TEXT
+);
+INSERT INTO students VALUES
+  (1,'Aria Chen',22,'Mumbai',94.5,'A'),
+  (2,'Ben Torres',19,'Delhi',78.2,'B'),
+  (3,'Cleo Park',24,'Bangalore',88.0,'A'),
+  (4,'Dev Patel',21,'Chennai',65.5,'C'),
+  (5,'Eva Müller',20,'Hyderabad',91.3,'A'),
+  (6,'Finn Walsh',23,'Pune',72.8,'B'),
+  (7,'Gina Lopez',22,'Kolkata',55.1,'D'),
+  (8,'Hiro Sato',25,'Mumbai',83.6,'B');
+
+CREATE TABLE courses (
+  id INTEGER PRIMARY KEY,
+  title TEXT,
+  instructor TEXT,
+  category TEXT,
+  price REAL,
+  rating REAL
+);
+INSERT INTO courses VALUES
+  (1,'Python Mastery','Dr. Ada Lovelace','Programming',2999,4.9),
+  (2,'SQL Foundations','Prof. Edgar Codd','Database',1999,4.8),
+  (3,'Web Design','Ms. Grace Hopper','Design',1499,4.7),
+  (4,'Data Science','Dr. Alan Turing','Analytics',3999,4.9),
+  (5,'Cybersecurity','Mr. Kevin Mitnick','Security',2499,4.6);
+
+CREATE TABLE enrollments (
+  student_id INTEGER,
+  course_id INTEGER,
+  enroll_date TEXT,
+  status TEXT,
+  final_score REAL
+);
+INSERT INTO enrollments VALUES
+  (1,1,'2024-01-15','completed',95),
+  (1,2,'2024-02-01','completed',88),
+  (2,3,'2024-01-20','active',NULL),
+  (3,1,'2024-03-05','completed',90),
+  (4,4,'2024-02-10','dropped',45),
+  (5,2,'2024-01-10','completed',96),
+  (6,5,'2024-03-15','active',NULL),
+  (7,3,'2024-02-20','completed',60),
+  (8,1,'2024-04-01','active',NULL);`}
+  querySql={`-- Create indexes on frequently queried columns
+CREATE INDEX idx_students_city  ON students (city);
+CREATE INDEX idx_students_grade ON students (grade);
+CREATE INDEX idx_students_score ON students (score DESC);
+
+-- Now list all indexes in the database
+SELECT name, tbl_name, sql
+FROM   sqlite_master
+WHERE  type = 'index'
+ORDER  BY tbl_name;`}
+/>
+
+## Key Points
+
+- Indexes dramatically reduce query time on large tables
+- Created separately from the table with CREATE INDEX
+- Automatically used by the query optimizer — no query changes needed
+- Too many indexes slow down writes — be selective
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

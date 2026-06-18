@@ -1,0 +1,121 @@
+---
+import TopicLayout from '../../layouts/TopicLayout.astro';
+---
+<TopicLayout title="Network Topologies & Hardware" description="Understand the structural design of networks and the physical equipment that powers them. Learn about topology comparison, hubs, switches, routers, and access points." section="networking">
+  <h2>Physical vs. Logical Topologies</h2>
+  <p>In network engineering, a **Topology** defines how devices are arranged and connect to one another. There is a critical distinction between how the network looks physically versus how data moves logically:</p>
+  <ul>
+    <li><strong>Physical Topology</strong> — The physical layout of cables, devices, and wireless links. It defines where servers, switches, and patch panels are physically mounted and wired.</li>
+    <li><strong>Logical Topology</strong> — The path that data packets take across the physical connections. For example, a network can be physically wired as a Star (all cables leading to a central switch) but behave logically as a Bus (data is broadcast to all devices simultaneously).</li>
+  </ul>
+
+  <h2>Comprehensive Network Topologies</h2>
+  <p>Different network layouts offer distinct trade-offs in cost, cabling, speed, and fault tolerance:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Topology</th>
+        <th>Description</th>
+        <th>Fault Tolerance</th>
+        <th>Installation Cost / Cable Load</th>
+        <th>Typical Use Case</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Star</strong></td>
+        <td>All devices connect to a central Hub or Switch.</td>
+        <td>High (individual cable cuts only affect that device). If central device fails, the whole network goes offline.</td>
+        <td>Moderate (requires a separate cable run for every node).</td>
+        <td>Standard home networks, modern office spaces.</td>
+      </tr>
+      <tr>
+        <td><strong>Mesh (Full / Partial)</strong></td>
+        <td>Nodes connect to multiple neighbors. Full mesh connects everything.</td>
+        <td>Maximum (multiple redundant paths prevent network drops).</td>
+        <td>Extremely High (cabling scales exponentially with nodes).</td>
+        <td>Critical backbone infrastructure, server networks, WAN routing.</td>
+      </tr>
+      <tr>
+        <td><strong>Bus</strong></td>
+        <td>All nodes tap into a single, shared backbone coaxial cable.</td>
+        <td>Low (a single break in the main backbone drops the entire network).</td>
+        <td>Very Low (simple, short cable runs).</td>
+        <td>Legacy systems, simple localized environments.</td>
+      </tr>
+      <tr>
+        <td><strong>Ring</strong></td>
+        <td>Devices connect in a closed circular loop.</td>
+        <td>Low (one node or cable failure breaks the token-passing path).</td>
+        <td>Low.</td>
+        <td>Industrial control loops, legacy fiber rings (FDDI).</td>
+      </tr>
+      <tr>
+        <td><strong>Tree (Hierarchical)</strong></td>
+        <td>Star networks connected to a central trunk cable or root switch.</td>
+        <td>Moderate (root switch failure drops everything; leaf node failure has low impact).</td>
+        <td>High (structured hierarchical cabling).</td>
+        <td>Large enterprise office networks, university campuses.</td>
+      </tr>
+      <tr>
+        <td><strong>Hybrid</strong></td>
+        <td>A combination of two or more different topologies (e.g., Star-Ring).</td>
+        <td>Depends on design (usually high due to built-in fallback paths).</td>
+        <td>High (complex configuration).</td>
+        <td>Multinational corporate networks, global ISPs.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Essential Networking Hardware</h2>
+  <p>To move data packets across these topologies, networks utilize specialized hardware devices operating at different layers of the OSI model:</p>
+
+  <h3>1. Network Interface Card (NIC)</h3>
+  <p>A **NIC** is the physical circuit board or chip built into a device (computer, phone, printer) that enables it to connect to network media. It converts data from the system CPU into electrical, optical, or radio signals for transmission. Every NIC contains a permanently burned-in physical address called a **MAC Address**.</p>
+
+  <h3>2. Hubs vs. Switches (Layer 2)</h3>
+  <p>While hubs and switches look similar, their internal operations are vastly different:</p>
+  <ul>
+    <li><strong>Hub (Layer 1)</strong> — A legacy device. When a hub receives a data packet on one port, it blindly copies and broadcasts it to *every* other port on the device. This creates a single **Collision Domain** (where data packets collide and corrupt each other) and poses a massive security risk, as any device can sniff all network traffic.</li>
+    <li><strong>Switch (Layer 2)</strong> — An intelligent network device. A switch reads the destination MAC address of incoming data frames and forwards them *only* to the specific port where the target device is connected. It does this by building and maintaining a dynamic **MAC Address Table**. Each port on a switch is its own collision domain, eliminating collisions entirely.</li>
+  </ul>
+
+  <h3>3. Router (Layer 3)</h3>
+  <p>A **Router** is an intelligent gateway device that connects different networks together (such as connecting your home LAN to the public WAN/Internet). Routers operate at Layer 3 of the OSI model. They read destination **IP Addresses** on data packets, consult their routing tables, and determine the most efficient path (next hop) to forward the packet toward its final destination across global networks.</p>
+
+  <h3>4. Repeaters and Bridges</h3>
+  <ul>
+    <li><strong>Repeater</strong> — A simple Layer 1 hardware booster. Over long distances, electrical signals degrade (attenuation). A repeater amplifies and regenerates the signal to extend the physical range of network cables.</li>
+    <li><strong>Bridge</strong> — An older Layer 2 device used to connect two separate network segments together, filtering traffic based on MAC addresses to reduce local network congestion. Modern switches are essentially multi-port bridges.</li>
+  </ul>
+
+  <h3>5. Wireless Access Point (WAP)</h3>
+  <p>A **WAP** connects directly to a wired switch or router and broadcasts radio signals, allowing wireless devices (laptops, phones) to connect to the wired network. *Note:* A home Wi-Fi router is actually a hybrid device containing a router, a switch, a WAP, and a firewall all in one plastic chassis.</p>
+
+  <h3>6. Gateway</h3>
+  <p>A **Gateway** is a device or software system that acts as a translator between two completely different network architectures, communication protocols, or data formats. It translates data at the application layer so incompatible systems can share information.</p>
+
+  <h2>Frequently Asked Questions (FAQ)</h2>
+
+  <h3>❓ Why did network switches completely replace hubs?</h3>
+  <p>Switches completely replaced hubs because switches are intelligent and prevent collisions. By reading MAC addresses and forwarding frames only to their intended destinations, switches increase network speed, reduce unnecessary bandwidth waste, and prevent devices on the network from snooping on traffic meant for other machines.</p>
+
+  <h3>❓ What is the difference between physical and logical topologies?</h3>
+  <p>The physical topology is the actual layout of physical cables, wires, and devices. The logical topology is the path that the data travels across those connections. For example, a Token Ring network can be wired in a physical Star layout connected to a central hub, but the data flows logically in a circular ring format from device to device.</p>
+
+  <h3>❓ How does a network switch learn where devices are located?</h3>
+  <p>A switch learns device locations by building a **MAC Address Table**. When a device sends a packet, the switch reads the sender's MAC address and records it in the table alongside the physical port the packet came from. If the switch receives a packet for an unknown destination MAC address, it broadcasts (floods) it to all ports, and records the target's port when it replies.</p>
+
+  <h3>❓ Do I need a switch if I already have a router?</h3>
+  <p>For a basic home network, your consumer router has a built-in switch (usually with 4 ports on the back). However, for larger offices or enterprise setups with dozens or hundreds of wired devices (IP cameras, servers, VoIP phones), you must connect external switches to your router to provide enough physical Ethernet ports and handle high local traffic volumes.</p>
+
+  <h2>What's Next?</h2>
+  <p>Deepen your network infrastructure studies:</p>
+  <ul>
+    <li>Learn how protocols govern communication across these devices in <a href="/networking/network-protocols">Network Protocols</a>.</li>
+    <li>Explore how routers forward packets using logical paths in <a href="/networking/routing-switching">Routing &amp; Switching</a>.</li>
+    <li>Understand the 7-layer framework in <a href="/networking/osi-model">OSI Model</a>.</li>
+    <li>Explore subnets and IP structures in <a href="/networking/ip-addressing-subnetting">IP Addressing &amp; Subnetting</a>.</li>
+  </ul>
+</TopicLayout>

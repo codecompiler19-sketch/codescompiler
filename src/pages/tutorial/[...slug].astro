@@ -2,21 +2,24 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import TutorialLayout from '../../layouts/TutorialLayout.astro';
 import Editor from '../../components/Editor.astro';
+import SqlEditor from '../../components/SqlEditor.astro';
+import PythonEditor from '../../components/PythonEditor.astro';
 
 export async function getStaticPaths() {
   const tutorials = await getCollection('tutorials');
   return tutorials.map(tutorial => ({
-    params: { slug: tutorial.slug },
-    props: { tutorial },
+    params: { slug: tutorial.data.permalink || tutorial.slug },
+    props: { tutorial, currentSlug: tutorial.data.permalink || tutorial.slug },
   }));
 }
 
 interface Props {
   tutorial: CollectionEntry<'tutorials'>;
+  currentSlug: string;
 }
 
-const { tutorial } = Astro.props;
-const { Content } = await tutorial.render();
+const { tutorial, currentSlug } = Astro.props;
+const { Content, headings } = await tutorial.render();
 
 const categoryLabel = {
   html: 'HTML',
@@ -24,14 +27,18 @@ const categoryLabel = {
   javascript: 'JavaScript',
   seo: 'SEO',
   python: 'Python',
+  sql: 'SQL',
 }[tutorial.data.category] ?? tutorial.data.category;
 ---
 
 <TutorialLayout
   title={tutorial.data.title}
+  seoTitle={tutorial.data.seoTitle}
   description={tutorial.data.description ?? ''}
   category={tutorial.data.category}
   categoryLabel={categoryLabel}
+  headings={headings}
+  currentSlug={currentSlug}
 >
-  <Content components={{ Editor }} />
+  <Content components={{ Editor, SqlEditor, PythonEditor }} />
 </TutorialLayout>

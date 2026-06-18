@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="canonical" href="https://codescompiler.com/blog/how-to-manipulate-the-dom-with-vanilla-javascript-2/" />
+  <script>
+    if (window.self === window.top) {
+      window.location.replace('/blog-demo/' + window.location.pathname.split('/').pop().replace('.html', '') + '/');
+    }
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DOM Manipulation | Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+    
+    body { background: #f1f5f9; color: #1e293b; display: flex; justify-content: center; padding: 50px 20px; }
+
+    .container {
+      background: white; width: 100%; max-width: 600px;
+      border-radius: 16px; padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
+
+    h1 { text-align: center; margin-bottom: 20px; color: #0f172a; }
+    
+    .panel { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-bottom: 20px; transition: all 0.3s; }
+    
+    .btn {
+      background: #3b82f6; color: white; border: none;
+      padding: 10px 20px; border-radius: 8px; font-weight: 600;
+      cursor: pointer; transition: background 0.2s; margin-right: 10px; margin-bottom: 10px;
+    }
+    .btn:hover { background: #2563eb; }
+    .btn-danger { background: #ef4444; }
+    .btn-danger:hover { background: #dc2626; }
+    .btn-success { background: #10b981; }
+    .btn-success:hover { background: #059669; }
+
+    #targetBox {
+      width: 100%; height: 100px; background: #e2e8f0;
+      border-radius: 8px; display: flex; justify-content: center; align-items: center;
+      font-weight: 600; color: #64748b; transition: all 0.5s;
+    }
+
+    .highlight { background: #fef08a !important; color: #854d0e !important; border: 2px solid #eab308; }
+    .rounded { border-radius: 50px !important; }
+
+    ul { list-style-position: inside; margin-top: 10px; }
+    li { background: white; padding: 10px; border: 1px solid #e2e8f0; margin-bottom: 5px; border-radius: 6px; }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Vanilla JS DOM Playground</h1>
+
+    <div class="panel">
+      <h3>1. Style Manipulation</h3>
+      <p style="margin: 10px 0; color:#64748b; font-size: 0.9rem;">Click the buttons to change the styles of the box below using JavaScript.</p>
+      
+      <div id="targetBox">Target Element</div>
+      <br>
+      
+      <button class="btn" id="btnColor">Change Color</button>
+      <button class="btn" id="btnShape">Toggle Shape</button>
+      <button class="btn btn-danger" id="btnReset">Reset</button>
+    </div>
+
+    <div class="panel">
+      <h3>2. Element Creation & Deletion</h3>
+      <p style="margin: 10px 0; color:#64748b; font-size: 0.9rem;">Dynamically add and remove elements from the DOM.</p>
+      
+      <button class="btn btn-success" id="btnAdd">Add List Item</button>
+      <button class="btn btn-danger" id="btnRemove">Remove Last Item</button>
+
+      <ul id="dynamicList">
+        <li>Starting Item 1</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    // --- Section 1: Style Manipulation ---
+    const targetBox = document.getElementById('targetBox');
+    const btnColor = document.getElementById('btnColor');
+    const btnShape = document.getElementById('btnShape');
+    const btnReset = document.getElementById('btnReset');
+
+    btnColor.addEventListener('click', () => {
+      // Toggle a CSS class
+      targetBox.classList.toggle('highlight');
+      
+      // Direct style manipulation
+      if (targetBox.classList.contains('highlight')) {
+        targetBox.textContent = "Highlighted!";
+      } else {
+        targetBox.textContent = "Target Element";
+      }
+    });
+
+    btnShape.addEventListener('click', () => {
+      targetBox.classList.toggle('rounded');
+    });
+
+    btnReset.addEventListener('click', () => {
+      targetBox.className = ''; // Remove all classes
+      targetBox.textContent = "Target Element";
+    });
+
+    // --- Section 2: Element Creation & Deletion ---
+    const dynamicList = document.getElementById('dynamicList');
+    const btnAdd = document.getElementById('btnAdd');
+    const btnRemove = document.getElementById('btnRemove');
+    let itemCount = 1;
+
+    btnAdd.addEventListener('click', () => {
+      itemCount++;
+      // Create a new element
+      const newLi = document.createElement('li');
+      newLi.textContent = `Dynamically Added Item ${itemCount}`;
+      
+      // Append it to the parent
+      dynamicList.appendChild(newLi);
+    });
+
+    btnRemove.addEventListener('click', () => {
+      // Check if there are children to remove
+      if (dynamicList.lastElementChild) {
+        // Remove the child from the parent
+        dynamicList.removeChild(dynamicList.lastElementChild);
+      } else {
+        alert("The list is empty!");
+      }
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,148 @@
+---
+import TopicLayout from '../../layouts/TopicLayout.astro';
+---
+<TopicLayout title="Network Troubleshooting" description="Learn to diagnose and repair network issues. Explore command-line tools (ping, tracert, nslookup, netstat), troubleshooting methodologies, and common fixes." section="networking">
+  <h2>The Art of Network Troubleshooting</h2>
+  <p>Network failures—ranging from minor slowdowns to complete office outages—can halt business operations instantly. **Network Troubleshooting** is the structured, logical process of identifying, isolating, and resolving issues within a computer network. Rather than randomly changing settings (which can introduce new problems), professional network engineers rely on standardized methodologies and diagnostic command-line utilities to locate the root cause of failures.</p>
+  
+  <p>Diagnosing network issues requires a solid understanding of how data moves across the layers of the OSI model, allowing you to systematically check physical links, IP configurations, routing tables, and application settings.</p>
+
+  <h2>Essential Network Diagnostic Tools</h2>
+  <p>Every operating system (Windows, macOS, Linux) includes built-in command-line diagnostic tools. These tools are the starting point for network investigations:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Command</th>
+        <th>OS Version</th>
+        <th>Layer</th>
+        <th>Primary Diagnostic Function</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>ping</code></td>
+        <td>All OS</td>
+        <td>Network (Layer 3)</td>
+        <td>Tests basic connectivity and latency between host and target IP using ICMP packets.</td>
+      </tr>
+      <tr>
+        <td><code>traceroute</code> / <code>tracert</code></td>
+        <td>Linux / Windows</td>
+        <td>Network (Layer 3)</td>
+        <td>Maps the exact route packets take to a target, displaying each router hop and round-trip delay.</td>
+      </tr>
+      <tr>
+        <td><code>nslookup</code> / <code>dig</code></td>
+        <td>All OS</td>
+        <td>Application (Layer 7)</td>
+        <td>Queries DNS servers to test name resolution and lookup specific domain records (A, MX, etc.).</td>
+      </tr>
+      <tr>
+        <td><code>ipconfig</code> / <code>ifconfig</code> / <code>ip a</code></td>
+        <td>Windows / Unix</td>
+        <td>Network / Data Link</td>
+        <td>Displays local network adapter settings (IP address, subnet mask, default gateway, MAC address).</td>
+      </tr>
+      <tr>
+        <td><code>netstat</code> / <code>ss</code></td>
+        <td>All OS</td>
+        <td>Transport (Layer 4)</td>
+        <td>Displays active network connections, routing tables, and listening ports on the local machine.</td>
+      </tr>
+      <tr>
+        <td><code>arp -a</code></td>
+        <td>All OS</td>
+        <td>Data Link (Layer 2)</td>
+        <td>Displays the local ARP cache, showing mapped IP-to-MAC address translations.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Diagnostic Commands Syntax &amp; Usage</h2>
+  <p>Here is how to run these diagnostic utilities inside your terminal or PowerShell console:</p>
+
+  <h3>1. Testing Basic Connectivity with Ping</h3>
+  <p>Pings send ICMP Echo Request packets to a target IP or domain and wait for Echo Replies. It shows if the target is online and the round-trip latency:</p>
+  <pre><code>{`# Ping a public server 4 times
+ping google.com
+
+# Ping continuously (stop with Ctrl+C)
+ping -t 192.168.1.1`}</code></pre>
+  <p>If you receive "Request Timed Out," it indicates a physical disconnect, routing failure, or that the target's firewall is blocking ICMP packets.</p>
+
+  <h3>2. Tracking Paths with Traceroute</h3>
+  <p>Traceroute is used to find where packets are getting dropped or delayed along the path. It increments the TTL (Time to Live) of packets starting at 1, causing each router along the path to return an ICMP "Time Exceeded" message:</p>
+  <pre><code>{`# Windows syntax
+tracert codescompiler.com
+
+# Linux/macOS syntax
+traceroute codescompiler.com`}</code></pre>
+
+  <h3>3. Inspecting Local IP configuration</h3>
+  <p>If your computer cannot connect to the internet, verify your local IP and gateway settings first:</p>
+  <pre><code>{`# Windows configuration details
+ipconfig /all
+
+# Linux adapter details
+ip address show`}</code></pre>
+  <p>Look for the **IPv4 Address** and **Default Gateway**. If your IP address begins with `169.254.x.x`, it indicates your computer failed to contact the DHCP server on the router.</p>
+
+  <h2>Structured Troubleshooting Methodologies</h2>
+  <p>When an issue occurs, engineers use the OSI model to guide their investigation using one of three logical approaches:</p>
+  <ul>
+    <li><strong>Bottom-Up Method:</strong> Start at Layer 1 and work up.
+      <br />*Process:* Check if the Ethernet cable is plugged in and the link lights are on (Physical) → Check if the switch port has learned the MAC address (Data Link) → Check if the device has a valid IP address and can ping its gateway (Network) → Verify port configurations (Transport) → Test the browser application (Application).
+    </li>
+    <li><strong>Top-Down Method:</strong> Start at the application layer and work down.
+      <br />*Process:* Check if the browser can load the page (Application) → Verify if the DNS server resolves the domain (Application/DNS) → Check if a local firewall is blocking outbound ports (Transport/Network) → Verify physical cable connections. (Best used for software-specific issues).
+    </li>
+    <li><strong>Divide-and-Conquer Method:</strong> Start in the middle (Layer 3/Network) and branch.
+      <br />*Process:* Run a `ping 8.8.8.8` to test public internet connectivity. If it succeeds, the issue is above Layer 3 (usually a DNS issue at Layer 7). If it fails, the issue is at Layer 3 or below, directing you to check your gateway connection, local switch, or cables.
+    </li>
+  </ul>
+
+  <h2>Practical Scenarios &amp; Solutions</h2>
+  <p>Here are three common networking problems and how to resolve them:</p>
+
+  <h3>Scenario A: "Server Not Found" (DNS Failure)</h3>
+  <p>You can connect to local network shares, but typing a website name fails.
+    <br />*Diagnosis:* Open your terminal and run <code>ping 8.8.8.8</code>. If the ping succeeds, but <code>ping google.com</code> fails with "host not found," your computer has a DNS resolution failure.
+    <br />*Resolution:* Change your local DNS server settings to public resolvers like Cloudflare (`1.1.1.1`) or Google (`8.8.8.8`). You can also clear local cache conflicts by running <code>ipconfig /flushdns</code>.
+  </p>
+
+  <h3>Scenario B: IP Address Conflict</h3>
+  <p>Two devices on the same network are assigned the exact same IP address, causing both to intermittently disconnect.
+    <br />*Diagnosis:* Check your OS network settings for "Duplicate IP Address detected" errors.
+    <br />*Resolution:* If using dynamic addressing, disconnect the device, log into the router, and check the DHCP lease table. On Windows, open cmd and run <code>ipconfig /release</code> followed by <code>ipconfig /renew</code> to request a new, unique IP address from the DHCP server.
+  </p>
+
+  <h3>Scenario C: High Latency and Packet Jitter</h3>
+  <p>Your connection works, but real-time video calls stutter and drop packets.
+    <br />*Diagnosis:* Run a continuous ping to your default gateway (e.g., `ping -t 192.168.1.1`). If you see varying response times (high jitter) or frequent "Request Timed Out" entries (packet loss), the issue is on your local link.
+    <br />*Resolution:* If on Wi-Fi, move closer to the router, switch from the congested 2.4 GHz band to the 5 GHz band, or use a wired Ethernet cable to eliminate radio interference.
+  </p>
+
+  <h2>Frequently Asked Questions (FAQ)</h2>
+
+  <h3>❓ What is the difference between ping and traceroute?</h3>
+  <p>Ping tests basic, round-trip connectivity between your device and a target IP, letting you know if the target is online and the latency. Traceroute maps the exact route the packets take, displaying every intermediate router hop. If a link fails, traceroute shows you the exact router where the connection dropped.</p>
+
+  <h3>❓ How do I clear my computer's DNS cache?</h3>
+  <p>If a website has changed its IP address but your computer keeps trying to connect to the old IP, you can force it to clear its cache. On Windows, run the command **<code>ipconfig /flushdns</code>** in cmd. On macOS, open the terminal and run **<code>sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder</code>**.</p>
+
+  <h3>❓ Why does my IP start with 169.254.x.x?</h3>
+  <p>An IP address starting with **<code>169.254.x.x</code>** indicates that your computer failed to receive an IP address from a DHCP server (APIPA). This usually means there is a physical cabling disconnect, the router is offline, or the router's DHCP IP pool is completely full.</p>
+
+  <h3>❓ What is netstat used for?</h3>
+  <p>Netstat (Network Statistics) is a command-line tool that displays all active TCP and UDP connections on your computer. It shows what local ports are currently listening for incoming connections, what remote IP addresses you are communicating with, and which local programs/process IDs (PIDs) are using those connections, making it vital for security audits.</p>
+
+  <h2>What's Next?</h2>
+  <p>Advance your network technology studies:</p>
+  <ul>
+    <li>Learn how security devices block diagnostic tools in <a href="/networking/network-security">Network Security</a>.</li>
+    <li>Explore how virtualization shifts diagnostic boundaries in <a href="/networking/sdn-virtualization">SDN &amp; Virtualization</a>.</li>
+    <li>Learn how HTTP requests are structured in <a href="/networking/http-https">HTTP &amp; HTTPS</a>.</li>
+    <li>Study the core protocols of the Internet in <a href="/networking/network-protocols">Network Protocols</a>.</li>
+  </ul>
+</TopicLayout>

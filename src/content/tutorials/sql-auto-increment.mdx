@@ -1,0 +1,62 @@
+---
+title: "SQL – Auto Increment"
+description: "Automatically generate unique sequential IDs for new rows using AUTOINCREMENT."
+category: "sql"
+order: 63
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+`AUTOINCREMENT` (or AUTO_INCREMENT in MySQL, SERIAL in PostgreSQL) automatically assigns the next available integer to a column whenever a new row is inserted. This eliminates the need to manually track and supply primary key values — the database handles it for you.
+
+The guarantee: once an ID is used, it is never reused — even if the row is deleted. This is important for audit trails and references stored outside the database (logs, URLs).
+
+**Syntax by database**
+```sql
+-- SQLite
+id INTEGER PRIMARY KEY AUTOINCREMENT
+
+-- MySQL
+id INT AUTO_INCREMENT PRIMARY KEY
+
+-- PostgreSQL
+id SERIAL PRIMARY KEY
+-- or: id INTEGER GENERATED ALWAYS AS IDENTITY
+```
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={``}
+  querySql={`CREATE TABLE orders (
+  order_id   INTEGER PRIMARY KEY AUTOINCREMENT,
+  customer   TEXT    NOT NULL,
+  product    TEXT    NOT NULL,
+  quantity   INTEGER DEFAULT 1,
+  order_date TEXT    DEFAULT (date('now'))
+);
+
+-- IDs are generated automatically
+INSERT INTO orders (customer, product, quantity)
+VALUES ('Aria Chen', 'SQL Textbook', 2),
+       ('Ben Torres', 'Keyboard', 1),
+       ('Cleo Park', 'Monitor Stand', 3);
+
+-- Delete order 2 (its ID is never reused)
+DELETE FROM orders WHERE order_id = 2;
+
+SELECT * FROM orders;`}
+/>
+
+## Key Points
+
+- AUTOINCREMENT generates the next unique ID automatically
+- IDs are never reused even after row deletion (in SQLite)
+- Manual ID values can still be inserted if specified explicitly
+- Do not use AUTOINCREMENT as a meaningful business identifier — use it as a technical key only
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

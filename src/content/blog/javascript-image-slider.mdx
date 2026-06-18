@@ -1,130 +1,180 @@
 ---
-title: "JavaScript Auto Image Slider / Carousel"
-description: "Build a smooth, auto-playing image slider with touch swipe support, dot indicators, and prev/next controls from scratch in vanilla JavaScript."
-date: "2026-04-04"
+title: "Premium Fullscreen Hero Slider"
+seoTitle: "Premium Fullscreen Hero Slider in JavaScript"
+description: "Create a massive, fullscreen hero slider with animated text overlays for landing pages."
+date: "2026-06-09"
 category: "Image Slider"
-tags: ["javascript", "slider", "carousel", "css", "animation"]
-image: "/images/posts/image-slider.png"
+tags: ["slider","hero","javascript"]
+image: "/images/posts/premium-fullscreen-hero-slider.png"
 featured: false
 hasDemo: true
 author: "CodesCompiler"
 ---
 
-Image sliders are everywhere on the web. This tutorial shows you how to build a **production-quality carousel** with auto-play, smooth CSS transitions, dot navigation, and touch swipe — all without any library.
+Welcome to this tutorial on **Premium Fullscreen Hero Slider**.
 
-## The Core CSS: The "Window" Trick
+## HTML Structure
+
+```html
+<div class="hero-slider">
+  <div class="hero-slide active">
+    <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1920&q=80" alt="Travel">
+    <div class="hero-content">
+      <h1 class="hero-title">Wanderlust</h1>
+      <p class="hero-subtitle">Discover the uncharted territories of our beautiful planet.</p>
+      <a href="#" class="hero-btn">Explore Now</a>
+    </div>
+  </div>
+  <div class="hero-slide">
+    <img src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?auto=format&fit=crop&w=1920&q=80" alt="Mountains">
+    <div class="hero-content">
+      <h1 class="hero-title">Elevation</h1>
+      <p class="hero-subtitle">Reach new heights and breathe the crisp mountain air.</p>
+      <a href="#" class="hero-btn">View Tours</a>
+    </div>
+  </div>
+  <div class="hero-slide">
+    <img src="https://images.unsplash.com/photo-1533446002934-2e9b110bc595?auto=format&fit=crop&w=1920&q=80" alt="Desert">
+    <div class="hero-content">
+      <h1 class="hero-title">Serenity</h1>
+      <p class="hero-subtitle">Find peace in the vast emptiness of the golden dunes.</p>
+      <a href="#" class="hero-btn">Start Journey</a>
+    </div>
+  </div>
+  
+  <div class="hero-nav">
+    <button class="hero-arrow prev">&#10094;</button>
+    <button class="hero-arrow next">&#10095;</button>
+  </div>
+</div>
+```
+
+## CSS Styling
 
 ```css
-/* The outer container clips the overflow */
-.slider-window {
-  width: 100%;
-  overflow: hidden;        /* hides slides that are off-screen */
-  border-radius: 20px;
+body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+.hero-slider {
   position: relative;
-}
-
-/* The track holds all slides side by side */
-.slider-track {
-  display: flex;
-  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  will-change: transform;
-}
-
-/* Each slide is exactly as wide as the window */
-.slide {
-  min-width: 100%;
-  height: 480px;
-  position: relative;
+  width: 100vw;
+  height: 100vh;
   overflow: hidden;
+  background-color: #000;
 }
-
-.slide img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-```
-
-## JavaScript Slide Logic
-
-```javascript
-const slides  = document.querySelectorAll('.slide');
-const track   = document.querySelector('.slider-track');
-const dots    = document.querySelectorAll('.dot');
-let current   = 0;
-let autoTimer;
-
-function goTo(index) {
-  // Wrap around at both ends
-  current = ((index % slides.length) + slides.length) % slides.length;
-
-  // Move the track using CSS transform
-  track.style.transform = `translateX(-${current * 100}%)`;
-
-  // Update dot indicators
-  dots.forEach((dot, i) => dot.classList.toggle('active', i === current));
-}
-
-function next() { goTo(current + 1); }
-function prev() { goTo(current - 1); }
-
-// Auto-play every 4 seconds
-function startAuto() {
-  autoTimer = setInterval(next, 4000);
-}
-function stopAuto() {
-  clearInterval(autoTimer);
-}
-
-// Pause on hover, resume on mouse leave
-document.querySelector('.slider-window').addEventListener('mouseenter', stopAuto);
-document.querySelector('.slider-window').addEventListener('mouseleave', startAuto);
-
-// Button controls
-document.getElementById('prevBtn').addEventListener('click', () => { stopAuto(); prev(); startAuto(); });
-document.getElementById('nextBtn').addEventListener('click', () => { stopAuto(); next(); startAuto(); });
-
-// Dot navigation
-dots.forEach((dot, i) => dot.addEventListener('click', () => { stopAuto(); goTo(i); startAuto(); }));
-
-goTo(0);
-startAuto();
-```
-
-## Touch Swipe Support
-
-```javascript
-let touchStartX = 0;
-
-document.querySelector('.slider-window').addEventListener('touchstart', e => {
-  touchStartX = e.touches[0].clientX;
-}, { passive: true });
-
-document.querySelector('.slider-window').addEventListener('touchend', e => {
-  const diff = touchStartX - e.changedTouches[0].clientX;
-  if (Math.abs(diff) > 50) {   // minimum swipe distance
-    stopAuto();
-    diff > 0 ? next() : prev();
-    startAuto();
-  }
-}, { passive: true });
-```
-
-## Slide Caption Overlay
-
-```css
-.slide-caption {
+.hero-slide {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 40px 32px 28px;
-  background: linear-gradient(transparent, rgba(0,0,0,0.7));
-  color: #fff;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  z-index: 1;
 }
-.slide-caption h3 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
-.slide-caption p  { font-size: 14px; opacity: 0.8; }
+.hero-slide.active { opacity: 1; z-index: 2; }
+.hero-slide img {
+  width: 100%; height: 100%; object-fit: cover;
+  transform: scale(1.1);
+  transition: transform 6s linear;
+  filter: brightness(0.6);
+}
+.hero-slide.active img { transform: scale(1); }
+.hero-content {
+  position: absolute;
+  top: 50%; left: 10%;
+  transform: translateY(-50%);
+  color: white;
+  max-width: 600px;
+}
+.hero-title {
+  font-size: 5rem;
+  margin: 0 0 10px 0;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transform: translateY(30px);
+  opacity: 0;
+  transition: transform 0.8s ease 0.3s, opacity 0.8s ease 0.3s;
+}
+.hero-subtitle {
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+  line-height: 1.5;
+  transform: translateY(30px);
+  opacity: 0;
+  transition: transform 0.8s ease 0.5s, opacity 0.8s ease 0.5s;
+}
+.hero-btn {
+  display: inline-block;
+  padding: 15px 40px;
+  background: white;
+  color: black;
+  text-decoration: none;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 30px;
+  transform: translateY(30px);
+  opacity: 0;
+  transition: transform 0.8s ease 0.7s, opacity 0.8s ease 0.7s, background 0.3s;
+}
+.hero-btn:hover { background: #ccc; }
+.hero-slide.active .hero-title,
+.hero-slide.active .hero-subtitle,
+.hero-slide.active .hero-btn {
+  transform: translateY(0);
+  opacity: 1;
+}
+.hero-nav {
+  position: absolute;
+  bottom: 50px;
+  right: 10%;
+  z-index: 10;
+  display: flex;
+  gap: 20px;
+}
+.hero-arrow {
+  background: transparent;
+  color: white;
+  border: 1px solid white;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.hero-arrow:hover { background: white; color: black; }
+@media (max-width: 768px) {
+  .hero-title { font-size: 3rem; }
+  .hero-subtitle { font-size: 1.2rem; }
+  .hero-nav { right: 50%; transform: translateX(50%); }
+}
 ```
 
-> **Performance Tip:** Use `will-change: transform` on the `.slider-track` to hint the browser to use GPU compositing for smoother animation.
+## JavaScript Logic
+
+```javascript
+document.addEventListener('DOMContentLoaded', () => {
+    const slides = document.querySelectorAll('.hero-slide');
+    const nextBtn = document.querySelector('.hero-arrow.next');
+    const prevBtn = document.querySelector('.hero-arrow.prev');
+    if(!slides.length || !nextBtn || !prevBtn) return;
+
+    let currentIndex = 0;
+
+    function nextSlide() {
+        slides[currentIndex].classList.remove('active');
+        currentIndex = (currentIndex + 1) % slides.length;
+        slides[currentIndex].classList.add('active');
+    }
+
+    function prevSlide() {
+        slides[currentIndex].classList.remove('active');
+        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+        slides[currentIndex].classList.add('active');
+    }
+
+    nextBtn.addEventListener('click', nextSlide);
+    prevBtn.addEventListener('click', prevSlide);
+    
+    // Auto play
+    setInterval(nextSlide, 7000);
+});
+```

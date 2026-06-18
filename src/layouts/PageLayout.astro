@@ -1,0 +1,21 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  seoTitle?: string;
+  noindex?: boolean;
+}
+
+const { title, description, seoTitle, noindex } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} seoTitle={seoTitle} noindex={noindex}>
+  <div class="max-w-3xl mx-auto py-12 px-4 sm:px-6 lg:px-8 bg-white shadow-sm my-8 rounded-lg">
+    <h1 class="text-4xl font-extrabold text-gray-900 mb-6">{title}</h1>
+    <div class="prose prose-brand prose-lg">
+      <slot />
+    </div>
+  </div>
+</BaseLayout>

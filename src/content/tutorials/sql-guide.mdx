@@ -1,0 +1,91 @@
+---
+title: "SQL – Guide"
+description: "Start your SQL journey with an overview of what SQL is, why it matters, and how it powers every app you use."
+category: "sql"
+order: 1
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+Think of every app you use daily — Instagram, Netflix, your bank. Behind the scenes, each one asks a database thousands of questions every second: *"Who is this user? What videos should I recommend? What is their balance?"* **SQL (Structured Query Language)** is the universal language used to ask those questions and get answers instantly.
+
+SQL is not a programming language in the traditional sense — it is a **query language**. Instead of telling the computer *how* to find data, you simply describe *what* you want, and the database engine figures out the rest. That simplicity is its superpower.
+
+**Quick Facts**
+- SQL stands for **S**tructured **Q**uery **L**anguage
+- Invented at IBM in the 1970s by Edgar F. Codd
+- Works with virtually every database: MySQL, PostgreSQL, SQLite, SQL Server, Oracle
+- Powers 90%+ of the world's data-driven applications
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={`CREATE TABLE students (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  age INTEGER,
+  city TEXT,
+  score REAL,
+  grade TEXT
+);
+INSERT INTO students VALUES
+  (1,'Aria Chen',22,'Mumbai',94.5,'A'),
+  (2,'Ben Torres',19,'Delhi',78.2,'B'),
+  (3,'Cleo Park',24,'Bangalore',88.0,'A'),
+  (4,'Dev Patel',21,'Chennai',65.5,'C'),
+  (5,'Eva Müller',20,'Hyderabad',91.3,'A'),
+  (6,'Finn Walsh',23,'Pune',72.8,'B'),
+  (7,'Gina Lopez',22,'Kolkata',55.1,'D'),
+  (8,'Hiro Sato',25,'Mumbai',83.6,'B');
+
+CREATE TABLE courses (
+  id INTEGER PRIMARY KEY,
+  title TEXT,
+  instructor TEXT,
+  category TEXT,
+  price REAL,
+  rating REAL
+);
+INSERT INTO courses VALUES
+  (1,'Python Mastery','Dr. Ada Lovelace','Programming',2999,4.9),
+  (2,'SQL Foundations','Prof. Edgar Codd','Database',1999,4.8),
+  (3,'Web Design','Ms. Grace Hopper','Design',1499,4.7),
+  (4,'Data Science','Dr. Alan Turing','Analytics',3999,4.9),
+  (5,'Cybersecurity','Mr. Kevin Mitnick','Security',2499,4.6);
+
+CREATE TABLE enrollments (
+  student_id INTEGER,
+  course_id INTEGER,
+  enroll_date TEXT,
+  status TEXT,
+  final_score REAL
+);
+INSERT INTO enrollments VALUES
+  (1,1,'2024-01-15','completed',95),
+  (1,2,'2024-02-01','completed',88),
+  (2,3,'2024-01-20','active',NULL),
+  (3,1,'2024-03-05','completed',90),
+  (4,4,'2024-02-10','dropped',45),
+  (5,2,'2024-01-10','completed',96),
+  (6,5,'2024-03-15','active',NULL),
+  (7,3,'2024-02-20','completed',60),
+  (8,1,'2024-04-01','active',NULL);`}
+  querySql={`-- Welcome to CodesCompiler SQL!
+-- This query shows all students in our academy database.
+SELECT id, name, city, grade
+FROM   students
+ORDER  BY grade;`}
+/>
+
+## Key Points
+
+- SQL is declarative — describe the result, not the steps
+- One SQL query can replace hundreds of lines of code
+- SQL databases store data in organized tables (rows & columns)
+- Learning SQL is one of the highest-ROI tech skills available
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

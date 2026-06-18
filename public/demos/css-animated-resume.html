@@ -1,50 +1,522 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="canonical" href="https://codescompiler.com/blog/css-animated-resume/" />
+  <script>
+    if (window.self === window.top) {
+      window.location.replace('/blog-demo/' + window.location.pathname.split('/').pop().replace('.html', '') + '/');
+    }
+  </script>
   <meta charset="UTF-8">
-  <title>Animated Timeline Resume</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animated Resume Timeline</title>
   <style>
-    body { background: #1f2937; color: white; font-family: sans-serif; margin: 0; padding: 50px; }
-    h1 { text-align: center; font-size: 3rem; margin-bottom: 50px; color: #38bdf8; }
-    .timeline { position: relative; max-width: 800px; margin: 0 auto; }
-    /* The line */
-    .timeline::after { content: ''; position: absolute; width: 6px; background-color: #334155; top: 0; bottom: 0; left: 50%; margin-left: -3px; border-radius: 3px;}
-    .container { padding: 10px 40px; position: relative; width: 50%; box-sizing: border-box; }
-    .left { left: 0; text-align: right;} .right { left: 50%; }
-    /* Timeline Dots */
-    .container::after { content: ''; position: absolute; width: 20px; height: 20px; right: -13px; background-color: #38bdf8; border: 4px solid #1f2937; top: 15px; border-radius: 50%; z-index: 1;}
-    .right::after { left: -14px; }
-    .content { padding: 20px 30px; background-color: #334155; position: relative; border-radius: 12px; }
-    .content h2 { margin-top: 0; color: #38bdf8; }
-    
-    /* Animation Classes */
-    .fade-in { opacity: 0; transition: all 1s ease-out; }
-    .left.fade-in { transform: translateX(-50px); }
-    .right.fade-in { transform: translateX(50px); }
-    .fade-in.show { opacity: 1; transform: translateX(0); }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0f172a;
+      color: #e2e8f0;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      padding: 2rem 1rem 4rem;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ─────────────────────────────────────────────────── */
+    .profile {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 3.5rem;
+      padding: 0 1rem;
+    }
+    .avatar {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.4rem;
+      margin: 0 auto 1.1rem;
+      box-shadow: 0 0 0 4px rgba(56,189,248,0.2), 0 8px 30px rgba(56,189,248,0.3);
+      animation: avatarPop 0.7s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    @keyframes avatarPop {
+      from { transform: scale(0) rotate(-15deg); opacity: 0; }
+      to   { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    .profile h1 {
+      font-size: clamp(1.6rem, 5vw, 2.4rem);
+      font-weight: 800;
+      color: #f8fafc;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.3rem;
+    }
+    .profile .role {
+      font-size: 0.95rem;
+      color: #38bdf8;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+    .profile .bio {
+      font-size: 0.88rem;
+      color: rgba(226,232,240,0.6);
+      line-height: 1.6;
+      max-width: 420px;
+      margin: 0 auto 1.1rem;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+    }
+    .tag {
+      font-size: 0.72rem;
+      background: rgba(56,189,248,0.12);
+      color: #7dd3fc;
+      border: 1px solid rgba(56,189,248,0.25);
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-weight: 600;
+    }
+
+    /* ── SECTION LABEL ───────────────────────────────────────────── */
+    .section-label {
+      text-align: center;
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(226,232,240,0.35);
+      font-weight: 700;
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── TIMELINE ────────────────────────────────────────────────── */
+    .timeline {
+      position: relative;
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    /* Centre vertical line */
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(180deg, #38bdf8 0%, #818cf8 60%, transparent 100%);
+      transform: translateX(-50%);
+      border-radius: 3px;
+    }
+
+    /* ── ITEM ─────────────────────────────────────────────────────── */
+    .item {
+      display: flex;
+      justify-content: flex-end;
+      padding-right: calc(50% + 32px);
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+    .item.right {
+      justify-content: flex-start;
+      padding-right: 0;
+      padding-left: calc(50% + 32px);
+    }
+
+    /* Dot on the line */
+    .item::after {
+      content: '';
+      position: absolute;
+      left: 50%;
+      top: 18px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #38bdf8;
+      border: 3px solid #0f172a;
+      transform: translateX(-50%);
+      z-index: 2;
+      box-shadow: 0 0 0 3px rgba(56,189,248,0.25);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .item.purple::after  { background: #818cf8; box-shadow: 0 0 0 3px rgba(129,140,248,0.25); }
+    .item.teal::after    { background: #2dd4bf; box-shadow: 0 0 0 3px rgba(45,212,191,0.25); }
+    .item.amber::after   { background: #fbbf24; box-shadow: 0 0 0 3px rgba(251,191,36,0.25); }
+
+    /* Card */
+    .card {
+      background: #1e293b;
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 1.2rem 1.4rem;
+      max-width: 340px;
+      width: 100%;
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+    }
+
+    /* Arrow pointing toward centre line */
+    .item:not(.right) .card::after {
+      content: '';
+      position: absolute;
+      right: -8px;
+      top: 18px;
+      width: 0; height: 0;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-left: 8px solid #1e293b;
+    }
+    .item.right .card::after {
+      content: '';
+      position: absolute;
+      left: -8px;
+      top: 18px;
+      width: 0; height: 0;
+      border-top: 8px solid transparent;
+      border-bottom: 8px solid transparent;
+      border-right: 8px solid #1e293b;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 0.6rem;
+    }
+    .card-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(56,189,248,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .item.purple .card-icon { background: rgba(129,140,248,0.12); }
+    .item.teal   .card-icon { background: rgba(45,212,191,0.12); }
+    .item.amber  .card-icon { background: rgba(251,191,36,0.12); }
+
+    .card-date {
+      font-size: 0.72rem;
+      color: #38bdf8;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    .item.purple .card-date { color: #818cf8; }
+    .item.teal   .card-date { color: #2dd4bf; }
+    .item.amber  .card-date { color: #fbbf24; }
+
+    .card h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 0.2rem;
+    }
+    .card .company {
+      font-size: 0.78rem;
+      color: rgba(226,232,240,0.5);
+      margin-bottom: 0.65rem;
+      font-weight: 500;
+    }
+    .card p {
+      font-size: 0.82rem;
+      color: rgba(226,232,240,0.65);
+      line-height: 1.6;
+      margin-bottom: 0.8rem;
+    }
+
+    /* Skill pills */
+    .skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .skill-pill {
+      font-size: 0.68rem;
+      padding: 2px 8px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.07);
+      color: rgba(226,232,240,0.6);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* Achievement bar */
+    .achievement {
+      margin-top: 0.75rem;
+      font-size: 0.75rem;
+      color: rgba(226,232,240,0.5);
+      background: rgba(56,189,248,0.07);
+      border-left: 2px solid #38bdf8;
+      padding: 5px 8px;
+      border-radius: 0 6px 6px 0;
+    }
+    .item.purple .achievement { border-color: #818cf8; background: rgba(129,140,248,0.07); }
+    .item.teal   .achievement { border-color: #2dd4bf; background: rgba(45,212,191,0.07); }
+    .item.amber  .achievement { border-color: #fbbf24; background: rgba(251,191,36,0.07); }
+
+    /* ── SKILLS SECTION ──────────────────────────────────────────── */
+    .skills-section {
+      max-width: 820px;
+      margin: 3rem auto 0;
+      padding: 0 1rem;
+    }
+    .skills-section h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: rgba(226,232,240,0.5);
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 0.72rem;
+      margin-bottom: 1.4rem;
+    }
+    .skill-bars { display: flex; flex-direction: column; gap: 0.9rem; }
+    .skill-row { display: flex; align-items: center; gap: 1rem; }
+    .skill-name { font-size: 0.8rem; color: rgba(226,232,240,0.7); font-weight: 600; width: 100px; flex-shrink: 0; }
+    .skill-track {
+      flex: 1;
+      height: 6px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .skill-fill {
+      height: 100%;
+      border-radius: 10px;
+      width: 0;
+      transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+    }
+    .skill-pct { font-size: 0.75rem; color: rgba(226,232,240,0.4); width: 38px; text-align: right; flex-shrink: 0; }
+
+    /* ── ANIMATIONS ──────────────────────────────────────────────── */
+    .fade-in {
+      opacity: 0;
+      transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+    }
+    .item.fade-in:not(.right)  { transform: translateX(-40px); }
+    .item.right.fade-in        { transform: translateX(40px); }
+    .fade-in.show {
+      opacity: 1;
+      transform: translateX(0) !important;
+    }
+    .profile.fade-in { transform: translateY(20px); }
+    .profile.fade-in.show { transform: translateY(0); }
+
+    /* ── MOBILE  ─────────────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      body { padding: 1.5rem 0.75rem 3rem; }
+
+      /* Collapse to single column — line on the LEFT */
+      .timeline::before {
+        left: 20px;
+        transform: none;
+      }
+
+      .item,
+      .item.right {
+        justify-content: flex-start;
+        padding-right: 0;
+        padding-left: 48px;
+      }
+
+      .item::after,
+      .item.right::after {
+        left: 13px;
+        transform: none;
+      }
+
+      /* Remove right-pointing arrows, show left-pointing for all */
+      .item:not(.right) .card::after,
+      .item.right .card::after {
+        content: '';
+        left: -8px;
+        right: auto;
+        border-right: 8px solid #1e293b;
+        border-left: none;
+      }
+
+      .card { max-width: 100%; }
+
+      /* Reset slide direction for mobile */
+      .item.fade-in:not(.right),
+      .item.right.fade-in {
+        transform: translateX(20px);
+      }
+    }
   </style>
 </head>
 <body>
-  <h1>Work Experience</h1>
-  <div class="timeline">
-    <div class="container left fade-in">
-      <div class="content"><h2>Senior Developer</h2><p>2023 - Present<br>Led the frontend architecture and improved load times by 40%.</p></div>
-    </div>
-    <div class="container right fade-in" style="margin-top: 150px;">
-      <div class="content"><h2>Frontend Engineer</h2><p>2020 - 2023<br>Built 50+ interactive React components and mentored juniors.</p></div>
-    </div>
-    <div class="container left fade-in" style="margin-top: 150px;">
-      <div class="content"><h2>UI Designer</h2><p>2018 - 2020<br>Created the entire design system and Figma mockups.</p></div>
-    </div>
-    <div class="container right fade-in" style="margin-top: 150px; margin-bottom: 200px;">
-      <div class="content"><h2>Intern</h2><p>2017 - 2018<br>Learned the ropes, drank lots of coffee.</p></div>
+
+  <!-- ── PROFILE HEADER ──────────────────────────────────────────── -->
+  <div class="profile fade-in">
+    <div class="avatar">👨‍💻</div>
+    <h1>Alex Morgan</h1>
+    <div class="role">Senior Frontend Engineer</div>
+    <p class="bio">Passionate developer crafting beautiful, performant web experiences. 7+ years turning complex ideas into elegant interfaces.</p>
+    <div class="tags">
+      <span class="tag">React</span>
+      <span class="tag">TypeScript</span>
+      <span class="tag">CSS / Animation</span>
+      <span class="tag">Node.js</span>
+      <span class="tag">Figma</span>
+      <span class="tag">Open to Work</span>
     </div>
   </div>
+
+  <div class="section-label">Work Experience</div>
+
+  <!-- ── TIMELINE ────────────────────────────────────────────────── -->
+  <div class="timeline">
+
+    <!-- 1 -->
+    <div class="item fade-in">
+      <div class="card">
+        <div class="card-meta">
+          <div class="card-icon">🚀</div>
+          <span class="card-date">2023 – Present</span>
+        </div>
+        <h2>Senior Developer</h2>
+        <div class="company">TechNova · San Francisco, CA</div>
+        <p>Led the frontend architecture of the core SaaS platform, coordinating a team of 6 engineers across 3 product squads.</p>
+        <div class="skills">
+          <span class="skill-pill">React</span>
+          <span class="skill-pill">TypeScript</span>
+          <span class="skill-pill">GraphQL</span>
+          <span class="skill-pill">CI/CD</span>
+        </div>
+        <div class="achievement">⚡ Reduced page load time by 40% through code-splitting and lazy loading</div>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="item right purple fade-in">
+      <div class="card">
+        <div class="card-meta">
+          <div class="card-icon">🛠️</div>
+          <span class="card-date">2020 – 2023</span>
+        </div>
+        <h2>Frontend Engineer</h2>
+        <div class="company">PixelForge · Remote</div>
+        <p>Built 50+ reusable component library widgets and design system tokens used across 12 product teams globally.</p>
+        <div class="skills">
+          <span class="skill-pill">React</span>
+          <span class="skill-pill">Storybook</span>
+          <span class="skill-pill">Sass</span>
+          <span class="skill-pill">Jest</span>
+        </div>
+        <div class="achievement">📦 Reduced onboarding time for new devs by 60% via shared component docs</div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="item teal fade-in">
+      <div class="card">
+        <div class="card-meta">
+          <div class="card-icon">🎨</div>
+          <span class="card-date">2018 – 2020</span>
+        </div>
+        <h2>UI/UX Designer</h2>
+        <div class="company">Craftly Studio · New York, NY</div>
+        <p>Designed the complete design system and Figma mockups for 3 enterprise clients, improving user retention by 28%.</p>
+        <div class="skills">
+          <span class="skill-pill">Figma</span>
+          <span class="skill-pill">CSS Grid</span>
+          <span class="skill-pill">Accessibility</span>
+        </div>
+        <div class="achievement">🏆 Won "Best UI" at the 2019 Design Awards ceremony</div>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="item right amber fade-in">
+      <div class="card">
+        <div class="card-meta">
+          <div class="card-icon">🌱</div>
+          <span class="card-date">2017 – 2018</span>
+        </div>
+        <h2>Junior Developer (Intern)</h2>
+        <div class="company">StartHub · Austin, TX</div>
+        <p>Learned core web fundamentals, contributed bug fixes, and shipped 2 internal tools used daily by the operations team.</p>
+        <div class="skills">
+          <span class="skill-pill">HTML</span>
+          <span class="skill-pill">CSS</span>
+          <span class="skill-pill">JavaScript</span>
+          <span class="skill-pill">Git</span>
+        </div>
+        <div class="achievement">☕ Perfected the art of the stand-up meeting (and great coffee)</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── SKILLS BARS ─────────────────────────────────────────────── -->
+  <div class="skills-section fade-in">
+    <h3>Technical Proficiency</h3>
+    <div class="skill-bars">
+      <div class="skill-row">
+        <span class="skill-name">JavaScript</span>
+        <div class="skill-track"><div class="skill-fill" style="background:linear-gradient(90deg,#38bdf8,#818cf8)" data-pct="95"></div></div>
+        <span class="skill-pct">95%</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">React</span>
+        <div class="skill-track"><div class="skill-fill" style="background:linear-gradient(90deg,#38bdf8,#818cf8)" data-pct="90"></div></div>
+        <span class="skill-pct">90%</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">CSS / Sass</span>
+        <div class="skill-track"><div class="skill-fill" style="background:linear-gradient(90deg,#2dd4bf,#38bdf8)" data-pct="92"></div></div>
+        <span class="skill-pct">92%</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">TypeScript</span>
+        <div class="skill-track"><div class="skill-fill" style="background:linear-gradient(90deg,#818cf8,#c084fc)" data-pct="80"></div></div>
+        <span class="skill-pct">80%</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">Node.js</span>
+        <div class="skill-track"><div class="skill-fill" style="background:linear-gradient(90deg,#fbbf24,#f97316)" data-pct="70"></div></div>
+        <span class="skill-pct">70%</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-name">Figma</span>
+        <div class="skill-track"><div class="skill-fill" style="background:linear-gradient(90deg,#f43f5e,#fb923c)" data-pct="85"></div></div>
+        <span class="skill-pct">85%</span>
+      </div>
+    </div>
+  </div>
+
   <script>
+    // Intersection observer for scroll-triggered animations
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add('show'); });
-    }, { threshold: 0.5 });
-    document.querySelectorAll('.fade-in').forEach((el) => observer.observe(el));
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('show');
+          // Animate skill bars when visible
+          e.target.querySelectorAll('.skill-fill[data-pct]').forEach(bar => {
+            bar.style.width = bar.dataset.pct + '%';
+          });
+        }
+      });
+    }, { threshold: 0.15 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    // Profile fades in immediately
+    document.querySelector('.profile').classList.add('show');
   </script>
 </body>
 </html>

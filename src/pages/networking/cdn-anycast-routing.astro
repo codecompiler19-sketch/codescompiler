@@ -1,0 +1,93 @@
+---
+import TopicLayout from '../../layouts/TopicLayout.astro';
+---
+<TopicLayout title="Content Delivery Networks (CDNs) & Anycast" description="Learn how CDNs and Anycast routing work together to deliver web pages, videos, and APIs to users instantly across the globe." section="networking">
+  <h2>The Global Delivery Challenge</h2>
+  <p>When you visit a website, data packets must travel from the server hosting the site to your device. If a website is hosted on a single server in New York, a user in London will experience a slight delay, while a user in Sydney will experience significant latency as packets travel through submarine cables across the globe. Additionally, if millions of users access the server at the same time, the server will become overloaded and crash. To solve this latency and scalability problem, modern websites rely on **Content Delivery Networks (CDNs)** and **Anycast Routing** to cache and serve data from servers located physically close to the user.</p>
+
+  <h2>What is a Content Delivery Network (CDN)?</h2>
+  <p>A **Content Delivery Network (CDN)** is a globally distributed network of proxy servers and data centers, often called **Points of Presence (PoPs)**. The primary goal of a CDN is to store cached copies of a website's static content—such as HTML files, CSS stylesheets, JavaScript code, images, and video files—closer to end-users.</p>
+  <p>When a user requests a file, the CDN intercepts the request and routes it to the nearest edge server. Instead of traveling thousands of miles back to the website's original server (known as the **Origin Server**), the file is delivered from a local server in the same city, reducing loading times from seconds to milliseconds.</p>
+
+  <h2>How CDN Caching Works</h2>
+  <p>CDNs optimize data delivery using a series of caching logic rules:</p>
+  <ul>
+    <li><strong>Cache Hit:</strong> When a user requests an image, and the local edge server already has a copy of that image in its storage. The edge server delivers it instantly without contacting the origin server.</li>
+    <li><strong>Cache Miss:</strong> When the edge server does not have the requested file. The edge server queries the origin server, saves a copy locally for future users, and delivers the file to the client.</li>
+    <li><strong>Time to Live (TTL):</strong> A configuration set by the website administrator indicating how long a file should remain cached in the edge server before it is considered "stale" and must be redownloaded from the origin.</li>
+    <li><strong>Cache Invalidation (Purging):</strong> The process of manually clearing cached files from CDN servers when a website update occurs, ensuring that users do not receive outdated content.</li>
+  </ul>
+
+  <h2>Understanding Anycast Routing</h2>
+  <p>How does a user's computer automatically find the closest CDN edge server? The answer lies in the routing protocol. Traditional internet routing uses **Unicast**, but CDNs rely on **Anycast**.</p>
+  
+  <h3>Unicast Routing</h3>
+  <p>In Unicast, every server on the internet has a unique IP address. If a website runs on a server in New York with IP <code>203.0.113.1</code>, all traffic from across the world is routed to that single physical machine. If that machine fails, the site goes offline.</p>
+  
+  <h3>Anycast Routing</h3>
+  <p>In Anycast, **multiple physical servers located in different parts of the world share the exact same IP address.** Using the **Border Gateway Protocol (BGP)**, the routers that compose the internet backbone broadcast this IP address from multiple locations. When a client sends a packet to the Anycast IP, routers automatically forward the packet along the path with the fewest hops (the shortest distance). As a result, a user in Tokyo connects to the Tokyo edge server, while a user in Paris connects to the Paris edge server using the exact same destination IP address.</p>
+
+  <h2>Unicast vs. Anycast Routing Comparison</h2>
+  <p>The table below highlights the differences between standard Unicast routing and Anycast routing architectures:</p>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Metric</th>
+          <th>Unicast Routing</th>
+          <th>Anycast Routing</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>IP Allocation</strong></td>
+          <td>One unique IP address points to one physical server.</td>
+          <td>One identical IP address is shared by many servers globally.</td>
+        </tr>
+        <tr>
+          <td><strong>Routing Goal</strong></td>
+          <td>Deliver packets to the single specific server.</td>
+          <td>Deliver packets to the closest/fastest server in the network.</td>
+        </tr>
+        <tr>
+          <td><strong>Failure Handling</strong></td>
+          <td>If the server fails, the destination goes offline (Single Point of Failure).</td>
+          <td>If a server fails, BGP automatically reroutes traffic to the next closest server.</td>
+        </tr>
+        <tr>
+          <td><strong>Latency</strong></td>
+          <td>High for users far from the server location.</td>
+          <td>Low globally (users connect to local nodes).</td>
+        </tr>
+        <tr>
+          <td><strong>DDoS Mitigation</strong></td>
+          <td>Difficult (all attack traffic targets the single server).</td>
+          <td>Easy (attack traffic is diluted across many global edge servers).</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Edge Security &amp; DDoS Mitigation</h2>
+  <p>CDNs do not just accelerate speed; they are critical for website security. Because CDNs sit in front of the origin server, they act as a protective shield against **Distributed Denial of Service (DDoS)** attacks.</p>
+  <p>In a volumetric DDoS attack, hackers use botnets to flood a website with terabytes of junk traffic to crash it. If the site uses a CDN with Anycast, the attack traffic is automatically split and routed to different edge servers across the globe. Instead of a single server absorbing the entire attack, the load is distributed across hundreds of data centers, allowing the CDN to filter out the malicious packets at the edge without the origin server ever seeing the traffic. Additionally, CDNs run **Web Application Firewalls (WAF)** at the edge to inspect HTTP requests and block malicious payloads (like SQL injection or cross-site scripting) before they reach the backend database.</p>
+
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq-section">
+    <h3>How does Anycast handle server failures?</h3>
+    <p>If a CDN server in London experiences a hardware crash or loses power, its local router stops broadcasting the Anycast IP address via BGP. The internet routing tables dynamically update in seconds, and subsequent packets sent to that IP from UK users are automatically routed to the next closest active server, such as the one in Paris or Amsterdam, preventing downtime.</p>
+
+    <h3>What is the difference between static and dynamic content in a CDN?</h3>
+    <p>Static content refers to files that do not change based on who is viewing them, such as images, logos, and stylesheets. These are easy to cache on a CDN. Dynamic content is generated in real-time for specific users, such as a user's shopping cart page or a banking balance. Dynamic content cannot be cached on edge servers and must be fetched from the origin server, though CDNs use route optimization to speed up these connections.</p>
+
+    <h3>What is an Origin Shield?</h3>
+    <p>An Origin Shield is an extra caching layer placed between the CDN edge servers and the origin server. If a website has thousands of edge nodes, and a popular file expires, all nodes might query the origin at the same time, causing a "thundering herd" bottleneck. The Origin Shield consolidates these requests, fetching the file once from the origin and distributing it to the edge nodes, protecting the backend from overload.</p>
+
+    <h3>Can I build my own Anycast network?</h3>
+    <p>Building an Anycast network requires owning your own block of IP addresses (a classless prefix, at least /24 for IPv4), an Autonomous System Number (ASN), and renting space in multiple data centers with routers capable of running BGP sessions with tier-1 internet service providers. Due to the high cost and complexity, most companies rent Anycast infrastructure from CDNs like Cloudflare, Fastly, or Akamai.</p>
+  </div>
+
+  <h2>What's Next?</h2>
+  <p>Congratulations! You have completed the advanced modules of our Networking curriculum. 🚀 To see how these networking structures integrate into overall computer basics, read our <a href="/cs-basics/computer-basics">CS Basics Guides</a>, or check out how cryptographic tunnels protect data in our <a href="/security/cryptography-encryption">Cryptography Section</a>.</p>
+</TopicLayout>

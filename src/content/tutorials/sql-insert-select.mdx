@@ -1,0 +1,51 @@
+---
+title: "SQL – INSERT INTO SELECT"
+description: "Copy rows from one table into another existing table using INSERT INTO ... SELECT."
+category: "sql"
+order: 42
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+While `CREATE TABLE AS SELECT` creates a brand new table, `INSERT INTO ... SELECT` copies rows into an **existing** table. This is the go-to pattern for data migration, ETL (Extract, Transform, Load) pipelines, and merging data from multiple sources into a reporting table.
+
+The SELECT can include any filtering, joining, or transformation — you can reshape and filter data as it is being copied, not just do a straight duplicate.
+
+**Syntax**
+```sql
+INSERT INTO destination_table (col1, col2)
+SELECT col1, col2
+FROM   source_table
+WHERE  condition;
+```
+Column count and types must be compatible.
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={`CREATE TABLE vip_students (id INTEGER PRIMARY KEY, name TEXT, score REAL, badge TEXT);
+INSERT INTO vip_students VALUES (99,'Legacy Student',100,'Gold');
+
+CREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, age INTEGER, city TEXT, score REAL, grade TEXT);
+INSERT INTO students VALUES (1,'Aria Chen',22,'Mumbai',94.5,'A'),(2,'Ben Torres',19,'Delhi',78.2,'B'),(3,'Cleo Park',24,'Bangalore',88.0,'A'),(4,'Dev Patel',21,'Chennai',65.5,'C'),(5,'Eva Müller',20,'Hyderabad',91.3,'A');`}
+  querySql={`-- Copy all A-grade students into the VIP table
+INSERT INTO vip_students (id, name, score, badge)
+SELECT id, name, score, 'Silver'
+FROM   students
+WHERE  grade = 'A';
+
+SELECT * FROM vip_students ORDER BY score DESC;`}
+/>
+
+## Key Points
+
+- Copies data into an existing table (unlike CREATE TABLE AS)
+- The SELECT can join, filter, and transform data
+- Column count must match between INSERT list and SELECT
+- Core pattern in ETL pipelines for loading data warehouses
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

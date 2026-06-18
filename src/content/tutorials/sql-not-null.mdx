@@ -1,0 +1,56 @@
+---
+title: "SQL – NOT NULL"
+description: "Require a column to always have a value using the NOT NULL constraint."
+category: "sql"
+order: 56
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+The `NOT NULL` constraint ensures a column can never have a NULL value — every row must provide an actual value for that column. Without NOT NULL, any column defaults to being nullable, and missing values silently become NULL, which can cause subtle bugs in calculations and reports.
+
+Apply NOT NULL to columns that are essential to a record's meaning. A student row without a name, an order without a customer ID, or a product without a price — these are fundamentally incomplete records and should be rejected at the database level.
+
+**NULL vs NOT NULL column behavior**
+```sql
+-- Nullable column (default)
+CREATE TABLE example (middle_name TEXT);
+
+-- Required column
+CREATE TABLE example (first_name TEXT NOT NULL);
+
+-- Inserting NULL into NOT NULL column raises an error:
+INSERT INTO example (first_name) VALUES (NULL); -- ❌ Error
+```
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={``}
+  querySql={`-- Create a table with NOT NULL constraints
+CREATE TABLE user_accounts (
+  id       INTEGER PRIMARY KEY,
+  username TEXT    NOT NULL,
+  email    TEXT    NOT NULL,
+  password TEXT    NOT NULL,
+  bio      TEXT    -- nullable, optional
+);
+
+INSERT INTO user_accounts VALUES (1,'aria_chen','aria@dev.io','hashed_pw','SQL enthusiast');
+INSERT INTO user_accounts VALUES (2,'ben_torres','ben@dev.io','hashed_pw2', NULL);
+
+SELECT * FROM user_accounts;`}
+/>
+
+## Key Points
+
+- NOT NULL prevents any row from having an empty value in that column
+- ALL columns default to nullable unless NOT NULL is specified
+- Adding NOT NULL to an existing column requires all rows to have values
+- Combine NOT NULL with DEFAULT to auto-fill required fields
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

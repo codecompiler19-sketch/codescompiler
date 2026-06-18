@@ -1,0 +1,56 @@
+---
+title: "SQL – Constraints"
+description: "Protect data integrity using SQL constraints — rules enforced at the database level on table columns."
+category: "sql"
+order: 55
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+Constraints are rules defined on a column (or table) that the database enforces automatically. They ensure data integrity — preventing invalid, inconsistent, or nonsensical data from ever entering the database. Rather than relying on your application code to validate every input, constraints build that validation directly into the database schema.
+
+The main constraints are: NOT NULL, UNIQUE, PRIMARY KEY, FOREIGN KEY, CHECK, and DEFAULT. Each plays a distinct protective role.
+
+**Constraint overview**
+| Constraint | Protection it provides |
+|---|---|
+| NOT NULL | Value cannot be empty |
+| UNIQUE | No two rows can have the same value |
+| PRIMARY KEY | Unique + not null identifier |
+| FOREIGN KEY | Must match a value in another table |
+| CHECK | Must satisfy a custom condition |
+| DEFAULT | Provides a fallback value |
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={``}
+  querySql={`-- Table with all major constraints applied
+CREATE TABLE library_books (
+  id          INTEGER PRIMARY KEY AUTOINCREMENT,
+  isbn        TEXT    NOT NULL UNIQUE,
+  title       TEXT    NOT NULL,
+  author      TEXT    NOT NULL,
+  year        INTEGER CHECK (year BETWEEN 1450 AND 2100),
+  copies      INTEGER DEFAULT 1 CHECK (copies >= 0),
+  genre       TEXT    DEFAULT 'General'
+);
+
+INSERT INTO library_books (isbn, title, author, year, copies)
+VALUES ('978-3-16-148410-0', 'SQL Mastery', 'Ada Lovelace', 2023, 5);
+
+SELECT * FROM library_books;`}
+/>
+
+## Key Points
+
+- Constraints are enforced by the DB engine — more reliable than app-level validation
+- Multiple constraints can be applied to a single column
+- Violations raise an error and prevent the INSERT/UPDATE
+- Constraints make schema self-documenting — readers see the rules immediately
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

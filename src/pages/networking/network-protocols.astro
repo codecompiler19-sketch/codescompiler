@@ -1,0 +1,157 @@
+---
+import TopicLayout from '../../layouts/TopicLayout.astro';
+---
+<TopicLayout title="Network Protocols" description="Master the core protocols of computer networks. Explore TCP vs. UDP, the TCP 3-way handshake, IP, ICMP, DHCP, DNS, ARP, and common ports." section="networking">
+  <h2>What is a Network Protocol?</h2>
+  <p>A <strong>Network Protocol</strong> is a standardized set of rules, formats, and procedures that govern how computers and devices format, transmit, receive, and interpret data packets across a network. Without protocols, devices from different manufacturers running different operating systems would be unable to decode each other's electronic signals, rendering communication impossible.</p>
+  
+  <p>Protocols exist at every layer of the network stack. They handle everything from error correction and flow control to data formatting, encryption, and logical address resolution.</p>
+
+  <h2>Core Network Protocols Comparison Table</h2>
+  <p>This table compares the most important protocols that power local networks and the Internet:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Protocol Name</th>
+        <th>OSI Layer</th>
+        <th>Default Port</th>
+        <th>Primary Function</th>
+        <th>Underlying Transport</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>TCP</strong></td>
+        <td>Transport (Layer 4)</td>
+        <td>N/A</td>
+        <td>Guarantees reliable, ordered end-to-end data delivery.</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td><strong>UDP</strong></td>
+        <td>Transport (Layer 4)</td>
+        <td>N/A</td>
+        <td>Fast, connectionless, lightweight data transmission.</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td><strong>IP</strong></td>
+        <td>Network (Layer 3)</td>
+        <td>N/A</td>
+        <td>Handles packet addressing and routing across networks.</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td><strong>ICMP</strong></td>
+        <td>Network (Layer 3)</td>
+        <td>N/A</td>
+        <td>Sends error messages and operational info (e.g., ping).</td>
+        <td>N/A (Encapsulated in IP)</td>
+      </tr>
+      <tr>
+        <td><strong>ARP</strong></td>
+        <td>Data Link (Layer 2)</td>
+        <td>N/A</td>
+        <td>Resolves logical IP addresses to physical MAC addresses.</td>
+        <td>N/A</td>
+      </tr>
+      <tr>
+        <td><strong>DNS</strong></td>
+        <td>Application (Layer 7)</td>
+        <td>53</td>
+        <td>Translates domain names (e.g., google.com) to IP addresses.</td>
+        <td>UDP (queries) / TCP (zone transfers)</td>
+      </tr>
+      <tr>
+        <td><strong>DHCP</strong></td>
+        <td>Application (Layer 7)</td>
+        <td>67 / 68</td>
+        <td>Dynamically assigns IP addresses to devices on boot.</td>
+        <td>UDP</td>
+      </tr>
+      <tr>
+        <td><strong>HTTP / HTTPS</strong></td>
+        <td>Application (Layer 7)</td>
+        <td>80 / 443</td>
+        <td>Transmits web pages and resources. HTTPS adds TLS security.</td>
+        <td>TCP</td>
+      </tr>
+      <tr>
+        <td><strong>SSH</strong></td>
+        <td>Application (Layer 7)</td>
+        <td>22</td>
+        <td>Securely logs into remote systems and terminals.</td>
+        <td>TCP</td>
+      </tr>
+      <tr>
+        <td><strong>FTP</strong></td>
+        <td>Application (Layer 7)</td>
+        <td>20 / 21</td>
+        <td>Transfers files between client and server.</td>
+        <td>TCP</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Transport Layer: TCP vs. UDP</h2>
+  <p>The Transport Layer relies on two distinct protocols, chosen based on the speed and reliability requirements of the application:</p>
+  <ul>
+    <li><strong>TCP (Transmission Control Protocol)</strong> — A **connection-oriented** protocol. Before sending data, it establishes a virtual connection between the sender and receiver. It monitors packet delivery, resends lost packets, and guarantees that packets are reassembled in the correct order.
+      <br />*Best For:* Web browsing (HTTP/S), email (SMTP/IMAP), file transfers (FTP), secure shells (SSH).
+    </li>
+    <li><strong>UDP (User Datagram Protocol)</strong> — A **connectionless** protocol. It sends packets (datagrams) directly without establishing a connection or verifying delivery. It has no overhead, making it extremely fast.
+      <br />*Best For:* Real-time video streaming, VoIP calls, online gaming, DNS queries.
+    </li>
+  </ul>
+
+  <h3>The TCP 3-Way Handshake (Connection Setup)</h3>
+  <p>To establish a reliable connection, TCP uses a three-step handshake process:</p>
+  <ol>
+    <li><strong>SYN (Synchronize)</strong> — The client sends a packet containing a SYN flag and a random initial sequence number (e.g., Seq=X) to the server to request a connection.</li>
+    <li><strong>SYN-ACK (Synchronize-Acknowledge)</strong> — The server receives the request, allocates resources, and responds with a packet containing a SYN-ACK flag. It sets the acknowledgement number to X+1, and generates its own sequence number (Seq=Y).</li>
+    <li><strong>ACK (Acknowledge)</strong> — The client receives the response and sends an ACK packet back to the server, setting the acknowledgement number to Y+1. The connection is now established, and data transfer can begin.</li>
+  </ol>
+  
+  <blockquote><strong>Connection Teardown:</strong> When data transfer is complete, TCP closes the connection using a 4-step exchange utilizing **FIN** (Finish) and **ACK** flags from both sides.</blockquote>
+
+  <h3>TCP Flow Control and Error Recovery</h3>
+  <p>TCP maintains reliability through advanced flow-control mechanisms:</p>
+  <ul>
+    <li><strong>Sliding Window</strong> — To prevent the sender from overwhelming the receiver with too much data, the receiver advertises a "window size" (the amount of data it can buffer). The sender adjusts its transmission speed dynamically based on this window.</li>
+    <li><strong>Sequence Numbers &amp; Retransmissions:</strong> Every byte of data is assigned a sequence number. If the recipient detects a gap in sequence numbers, it requests a retransmission of the missing packet.</li>
+  </ul>
+
+  <h2>Address Resolution Protocol (ARP)</h2>
+  <p>While routers and software use IP addresses to direct packets, switches and local network cards use MAC addresses. **ARP** is the translation mechanism between Layer 2 and Layer 3. When your computer wants to send a packet to a local IP address (e.g., `192.168.1.1`), it broadcasts an ARP request: *"Who has IP 192.168.1.1? Tell MAC address [My MAC]."* The target device replies with its MAC address. Your computer then caches this in its **ARP Table** to prevent repeating the query.</p>
+
+  <h2>Frequently Asked Questions (FAQ)</h2>
+
+  <h3>❓ What is the difference between TCP and UDP?</h3>
+  <p>TCP is connection-oriented, reliable, guarantees packet ordering, and handles error correction, making it slower due to protocol overhead. UDP is connectionless, fast, has zero delivery guarantees, and does not reorder packets, making it ideal for real-time applications where speed is more important than perfect accuracy.</p>
+
+  <h3>❓ How does DHCP dynamically assign IP addresses?</h3>
+  <p>DHCP operates using the **DORA** process:
+    <ol>
+      <li><strong>Discovery:</strong> The client broadcasts a request looking for a DHCP server.</li>
+      <li><strong>Offer:</strong> The DHCP server offers an available IP address.</li>
+      <li><strong>Request:</strong> The client requests to lease that IP address.</li>
+      <li><strong>Acknowledgement:</strong> The server confirms the lease and provides DNS and gateway details.</li>
+    </ol>
+  </p>
+
+  <h3>❓ What is the purpose of ICMP?</h3>
+  <p>ICMP (Internet Control Message Protocol) is a network-layer protocol used by routers and hosts to communicate diagnostic and error information. It is not used to transmit user data. The most common use cases are the `ping` utility (which uses ICMP Echo Request and Echo Reply packets) and `traceroute` (which uses ICMP Time Exceeded messages to map network paths).</p>
+
+  <h3>❓ What happens if ARP gets spoofed?</h3>
+  <p>ARP Spoofing is a cyber attack where a hacker sends forged ARP messages onto a local network. The hacker associates their own MAC address with the IP address of a legitimate device (like the default gateway router). As a result, all local traffic meant for the router is sent to the hacker instead, enabling Man-in-the-Middle (MitM) attacks.</p>
+
+  <h2>What's Next?</h2>
+  <p>Advance your network protocol studies:</p>
+  <ul>
+    <li>Learn how web browsers use HTTP/HTTPS at the Application Layer in <a href="/networking/http-https">HTTP &amp; HTTPS</a>.</li>
+    <li>Explore how DNS resolves domain names in <a href="/networking/dns-explained">DNS Explained</a>.</li>
+    <li>Learn subnet calculations and IP ranges in <a href="/networking/ip-addressing-subnetting">IP Addressing &amp; Subnetting</a>.</li>
+    <li>Study the physical boundary devices in <a href="/networking/network-topologies-hardware">Topologies &amp; Hardware</a>.</li>
+  </ul>
+</TopicLayout>

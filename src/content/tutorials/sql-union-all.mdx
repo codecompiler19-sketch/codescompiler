@@ -1,0 +1,47 @@
+---
+title: "SQL – UNION ALL"
+description: "Combine results from multiple queries keeping all rows including duplicates using UNION ALL."
+category: "sql"
+order: 35
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+`UNION ALL` is identical to `UNION` except it does **not** remove duplicates. Every row from both queries appears in the output, even if it is identical to another row. This makes `UNION ALL` significantly faster than `UNION` because it skips the expensive duplicate-detection step.
+
+Use `UNION ALL` when you know duplicates cannot exist (different tables with non-overlapping data), or when counting all occurrences is important — like a transaction log where the same entry appearing twice is meaningful.
+
+**Performance comparison**
+| | UNION | UNION ALL |
+|---|---|---|
+| Removes duplicates | ✅ Yes | ❌ No |
+| Extra sort/hash step | Yes | No |
+| Speed | Slower | Faster |
+| Use when | Data may overlap | Data is distinct |
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={`CREATE TABLE q1_sales (product TEXT, revenue REAL);
+CREATE TABLE q2_sales (product TEXT, revenue REAL);
+INSERT INTO q1_sales VALUES ('Laptop',150000),('Phone',80000),('Tablet',45000);
+INSERT INTO q2_sales VALUES ('Laptop',175000),('Phone',90000),('Watch',30000);`}
+  querySql={`-- Combine both quarters (UNION ALL preserves all rows)
+SELECT product, revenue, 'Q1' AS quarter FROM q1_sales
+UNION ALL
+SELECT product, revenue, 'Q2' AS quarter FROM q2_sales
+ORDER BY product, quarter;`}
+/>
+
+## Key Points
+
+- UNION ALL keeps all rows including duplicates
+- Faster than UNION because it skips duplicate removal
+- Preferred when you know data sets do not overlap
+- Use UNION ALL when building audit trails or logging all events
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

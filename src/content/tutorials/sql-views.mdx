@@ -1,0 +1,104 @@
+---
+title: "SQL – Views"
+description: "Create virtual tables from saved SQL queries using views to simplify complex queries and control data access."
+category: "sql"
+order: 65
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+A **view** is a saved SELECT query that acts like a virtual table. Instead of rewriting a complex 5-table join every time you need a particular report, you create a view once and then query it like a simple table. Views also serve as a security layer — you can grant users access to a view without giving them access to the underlying tables.
+
+Views are always computed fresh — they do not store data (unless they are materialized views, a more advanced concept). Every time you query a view, the underlying SELECT runs.
+
+**Views vs Tables**
+| | View | Table |
+|---|---|---|
+| Stores data | ❌ (virtual) | ✅ (physical) |
+| Always current | ✅ | ✅ |
+| Can simplify | ✅ complex joins | N/A |
+| Can limit access | ✅ | Indirectly |
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={`CREATE TABLE students (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  age INTEGER,
+  city TEXT,
+  score REAL,
+  grade TEXT
+);
+INSERT INTO students VALUES
+  (1,'Aria Chen',22,'Mumbai',94.5,'A'),
+  (2,'Ben Torres',19,'Delhi',78.2,'B'),
+  (3,'Cleo Park',24,'Bangalore',88.0,'A'),
+  (4,'Dev Patel',21,'Chennai',65.5,'C'),
+  (5,'Eva Müller',20,'Hyderabad',91.3,'A'),
+  (6,'Finn Walsh',23,'Pune',72.8,'B'),
+  (7,'Gina Lopez',22,'Kolkata',55.1,'D'),
+  (8,'Hiro Sato',25,'Mumbai',83.6,'B');
+
+CREATE TABLE courses (
+  id INTEGER PRIMARY KEY,
+  title TEXT,
+  instructor TEXT,
+  category TEXT,
+  price REAL,
+  rating REAL
+);
+INSERT INTO courses VALUES
+  (1,'Python Mastery','Dr. Ada Lovelace','Programming',2999,4.9),
+  (2,'SQL Foundations','Prof. Edgar Codd','Database',1999,4.8),
+  (3,'Web Design','Ms. Grace Hopper','Design',1499,4.7),
+  (4,'Data Science','Dr. Alan Turing','Analytics',3999,4.9),
+  (5,'Cybersecurity','Mr. Kevin Mitnick','Security',2499,4.6);
+
+CREATE TABLE enrollments (
+  student_id INTEGER,
+  course_id INTEGER,
+  enroll_date TEXT,
+  status TEXT,
+  final_score REAL
+);
+INSERT INTO enrollments VALUES
+  (1,1,'2024-01-15','completed',95),
+  (1,2,'2024-02-01','completed',88),
+  (2,3,'2024-01-20','active',NULL),
+  (3,1,'2024-03-05','completed',90),
+  (4,4,'2024-02-10','dropped',45),
+  (5,2,'2024-01-10','completed',96),
+  (6,5,'2024-03-15','active',NULL),
+  (7,3,'2024-02-20','completed',60),
+  (8,1,'2024-04-01','active',NULL);`}
+  querySql={`-- Create a view that shows a clean enrollment report
+CREATE VIEW enrollment_report AS
+SELECT s.name        AS student,
+       s.city,
+       c.title        AS course,
+       c.price,
+       e.status,
+       e.final_score
+FROM   enrollments e
+JOIN   students   s ON s.id = e.student_id
+JOIN   courses    c ON c.id = e.course_id;
+
+-- Query the view just like a table!
+SELECT * FROM enrollment_report
+WHERE  status = 'completed'
+ORDER  BY final_score DESC;`}
+/>
+
+## Key Points
+
+- Views are saved SELECT queries — virtual tables
+- No data duplication — views always reflect current table data
+- Simplify complex joins into a single reusable table-like object
+- Use views to restrict which columns users can see (security layer)
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

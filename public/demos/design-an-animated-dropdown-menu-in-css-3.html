@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="canonical" href="https://codescompiler.com/blog/design-an-animated-dropdown-menu-in-css-3/" />
+  <script>
+    if (window.self === window.top) {
+      window.location.replace('/blog-demo/' + window.location.pathname.split('/').pop().replace('.html', '') + '/');
+    }
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Premium Animated CSS3 Dropdown Menu Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #0b0f19;
+      --bg-card: #151b2d;
+      --bg-input: #1e2640;
+      --border-color: #273155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #6366f1;
+      --accent-glow: rgba(99, 102, 241, 0.15);
+      --success: #10b981;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      overflow-x: hidden;
+    }
+
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-main);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent);
+    }
+
+    header {
+      max-width: 1400px;
+      margin: 0 auto 24px auto;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .logo-area h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #a5b4fc 0%, #6366f1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 4px;
+    }
+
+    .logo-area p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .badge {
+      background: var(--accent-glow);
+      color: #c7d2fe;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      padding: 6px 12px;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* Main Grid Layout */
+    .playground-container {
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 24px;
+      flex-grow: 1;
+    }
+
+    /* Control Panel styling */
+    .control-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      height: fit-content;
+    }
+
+    .panel-section-title {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-pill {
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      padding: 12px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .option-pill:hover {
+      border-color: rgba(99, 102, 241, 0.5);
+      transform: translateX(4px);
+    }
+
+    .option-pill.active {
+      background: var(--accent-glow);
+      border-color: var(--accent);
+      box-shadow: 0 0 12px rgba(99, 102, 241, 0.15);
+    }
+
+    .option-pill-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .option-title {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    .option-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .pill-radio {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .option-pill.active .pill-radio {
+      border-color: var(--accent);
+    }
+
+    .option-pill.active .pill-radio::after {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    /* Main Workspace area */
+    .workspace {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Live Preview Section */
+    .preview-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 320px;
+      position: relative;
+      background-image: 
+        radial-gradient(circle at 100% 100%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.05) 0%, transparent 30%);
+      transition: background 0.3s;
+    }
+
+    .preview-backdrop-toggle {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      display: flex;
+      gap: 8px;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      padding: 4px;
+      border-radius: 8px;
+    }
+
+    .backdrop-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 6px 12px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .backdrop-btn.active {
+      background: var(--bg-card);
+      color: var(--text-main);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Code Generator Section */
+    .code-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .code-header {
+      background: rgba(21, 27, 45, 0.6);
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .code-tabs {
+      display: flex;
+      gap: 8px;
+    }
+
+    .code-tab {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 8px 16px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .code-tab.active {
+      background: var(--bg-input);
+      color: var(--text-main);
+      box-shadow: inset 0 0 0 1px var(--border-color);
+    }
+
+    .copy-btn {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .copy-btn:hover {
+      background: #4f46e5;
+      transform: translateY(-1px);
+    }
+
+    .copy-btn:active {
+      transform: translateY(0);
+    }
+
+    .code-content {
+      padding: 24px;
+      overflow-x: auto;
+      max-height: 400px;
+    }
+
+    .code-content pre {
+      margin: 0;
+    }
+
+    .code-content code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: #cbd5e1;
+    }
+
+    /* ==============================================
+       LIVE PREVIEW DEMO COMPONENT RULES
+       ============================================== */
+    
+    .nav-container {
+      width: 100%;
+      max-width: 680px;
+    }
+
+    .demo-navbar {
+      background: rgba(30, 41, 59, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 14px;
+      padding: 12px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      position: relative;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .nav-brand {
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: -0.02em;
+      color: var(--text-main);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 12px;
+      list-style: none;
+      align-items: center;
+    }
+
+    .demo-nav-item {
+      position: relative;
+      perspective: 1000px; /* Essential for 3D flip effects */
+    }
+
+    /* Safe-zone bridge to avoid premature hover triggers */
+    .demo-nav-item::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 16px;
+      bottom: -16px;
+      left: 0;
+      z-index: 1;
+    }
+
+    .demo-nav-link {
+      color: #cbd5e1;
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .demo-nav-link:hover, 
+    .demo-nav-item.is-active .demo-nav-link {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .demo-nav-link svg {
+      width: 14px;
+      height: 14px;
+      opacity: 0.7;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .demo-nav-item.is-active .demo-nav-link svg {
+      transform: rotate(180deg);
+      opacity: 1;
+    }
+
+    /* THE DROPDOWN CONTAINER */
+    .demo-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-top: 16px;
+      width: 280px;
+      border-radius: 12px;
+      padding: 8px;
+      z-index: 100;
+      transform-origin: top center;
+      
+      /* Animation Off States Default */
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    /* Triangle anchor at top */
+    .demo-dropdown::before {
+      content: '';
+      position: absolute;
+      top: -6px;
+      left: 50%;
+      transform: translateX(-50%) rotate(45deg);
+      width: 12px;
+      height: 12px;
+      z-index: -1;
+      border-top-left-radius: 2px;
+      transition: background 0.3s, border 0.3s;
+    }
+
+    /* Active Animation States: HOVER trigger rule */
+    .demo-nav-item.trigger-hover:hover .demo-dropdown {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+    .demo-nav-item.trigger-hover:hover .demo-nav-link svg {
+      transform: rotate(180deg);
+    }
+
+    /* Active Animation States: CLICK trigger rule */
+    .demo-nav-item.trigger-click.is-active .demo-dropdown {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    /* Dropdown Items styling */
+    .demo-drop-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      margin-bottom: 2px;
+    }
+
+    .demo-drop-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .demo-drop-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: all 0.2s;
+    }
+
+    .demo-drop-details {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .demo-drop-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    .demo-drop-desc {
+      font-size: 0.75rem;
+      font-weight: 400;
+    }
+
+    /* ==============================================
+       DYNAMIC DROPDOWN THEMES (PREVIEW ONLY)
+       ============================================== */
+
+    /* 1. GLASSMORPHISM */
+    .theme-glass {
+      background: rgba(21, 27, 45, 0.7);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    }
+    .theme-glass::before {
+      background: rgba(21, 27, 45, 0.75);
+      border-left: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .theme-glass .demo-drop-item {
+      color: #e2e8f0;
+    }
+    .theme-glass .demo-drop-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateX(4px);
+    }
+    .theme-glass .demo-drop-icon {
+      background: rgba(255, 255, 255, 0.06);
+    }
+    .theme-glass .demo-drop-item:hover .demo-drop-icon {
+      background: var(--accent);
+      color: white;
+    }
+    .theme-glass .demo-drop-title {
+      color: #f8fafc;
+    }
+    .theme-glass .demo-drop-desc {
+      color: #94a3b8;
+    }
+
+    /* 2. NEON DARK */
+    .theme-neon {
+      background: #090d16;
+      border: 2px solid var(--accent);
+      box-shadow: 0 10px 30px rgba(99, 102, 241, 0.25), inset 0 0 10px rgba(99, 102, 241, 0.15);
+    }
+    .theme-neon::before {
+      background: #090d16;
+      border-left: 2px solid var(--accent);
+      border-top: 2px solid var(--accent);
+      top: -8px;
+    }
+    .theme-neon .demo-drop-item {
+      color: #cbd5e1;
+    }
+    .theme-neon .demo-drop-item:hover {
+      background: rgba(99, 102, 241, 0.12);
+      transform: translateX(4px);
+    }
+    .theme-neon .demo-drop-icon {
+      background: #141b2e;
+      border: 1px solid var(--border-color);
+      color: var(--accent);
+    }
+    .theme-neon .demo-drop-item:hover .demo-drop-icon {
+      background: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 0 8px var(--accent);
+    }
+    .theme-neon .demo-drop-title {
+      color: #ffffff;
+    }
+    .theme-neon .demo-drop-desc {
+      color: #64748b;
+    }
+
+    /* 3. CLEAN LIGHT */
+    .theme-light {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08), 0 5px 15px rgba(0, 0, 0, 0.03);
+    }
+    .theme-light::before {
+      background: #ffffff;
+      border-left: 1px solid #e2e8f0;
+      border-top: 1px solid #e2e8f0;
+    }
+    .theme-light .demo-drop-item {
+      color: #334155;
+    }
+    .theme-light .demo-drop-item:hover {
+      background: #f1f5f9;
+      transform: translateX(4px);
+    }
+    .theme-light .demo-drop-icon {
+      background: #f8fafc;
+      color: #475569;
+      border: 1px solid #e2e8f0;
+    }
+    .theme-light .demo-drop-item:hover .demo-drop-icon {
+      background: #f1f5f9;
+      color: var(--accent);
+      border-color: rgba(99, 102, 241, 0.3);
+    }
+    .theme-light .demo-drop-title {
+      color: #0f172a;
+    }
+    .theme-light .demo-drop-desc {
+      color: #64748b;
+    }
+
+    /* ==============================================
+       DYNAMIC CSS3 ANIMATION EFFECTS (PREVIEW ONLY)
+       ============================================== */
+
+    /* 1. SLIDE & FADE */
+    .anim-slide {
+      transform: translateX(-50%) translateY(16px);
+      transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s;
+    }
+    /* Triggered states */
+    .demo-nav-item.trigger-hover:hover .anim-slide,
+    .demo-nav-item.trigger-click.is-active .anim-slide {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* 2. 3D FLIP */
+    .anim-flip {
+      transform: translateX(-50%) rotateX(-20deg);
+      transform-origin: top center;
+      transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), visibility 0.3s;
+    }
+    .demo-nav-item.trigger-hover:hover .anim-flip,
+    .demo-nav-item.trigger-click.is-active .anim-flip {
+      transform: translateX(-50%) rotateX(0deg);
+    }
+
+    /* 3. SCALE & BOUNCE */
+    .anim-scale {
+      transform: translateX(-50%) scale(0.85) translateY(5px);
+      transform-origin: top center;
+      transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), visibility 0.3s;
+    }
+    .demo-nav-item.trigger-hover:hover .anim-scale,
+    .demo-nav-item.trigger-click.is-active .anim-scale {
+      transform: translateX(-50%) scale(1) translateY(0);
+    }
+
+    /* 4. RADIAL CLIP PATH */
+    .anim-clip {
+      transform: translateX(-50%) translateY(0);
+      clip-path: circle(0% at 50% 0%);
+      transition: clip-path 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease, visibility 0.35s;
+    }
+    .demo-nav-item.trigger-hover:hover .anim-clip,
+    .demo-nav-item.trigger-click.is-active .anim-clip {
+      clip-path: circle(145% at 50% 0%);
+    }
+
+    /* ==============================================
+       PREVIEW WORKSPACE BACKDROP PRESETS
+       ============================================== */
+    
+    .bg-workspace-light {
+      background: #f8fafc !important;
+      background-image: 
+        radial-gradient(circle at 100% 100%, rgba(99, 102, 241, 0.04) 0%, transparent 40%),
+        radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.03) 0%, transparent 30%) !important;
+      border-color: #cbd5e1;
+    }
+    .bg-workspace-light .demo-navbar {
+      background: #ffffff;
+      border-color: #e2e8f0;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    }
+    .bg-workspace-light .demo-nav-link {
+      color: #475569;
+    }
+    .bg-workspace-light .nav-brand {
+      color: #0f172a;
+    }
+    .bg-workspace-light .demo-nav-link:hover,
+    .bg-workspace-light .demo-nav-item.is-active .demo-nav-link {
+      color: var(--accent);
+      background: #f1f5f9;
+    }
+
+    .bg-workspace-gradient {
+      background: radial-gradient(circle at 50% 50%, #111827, #030712) !important;
+      background-image: 
+        radial-gradient(at 10% 20%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+        radial-gradient(at 90% 80%, rgba(139, 92, 246, 0.1) 0px, transparent 50%) !important;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 900px) {
+      .playground-container {
+        grid-template-columns: 1fr;
+      }
+      .control-panel {
+        order: 2;
+      }
+      .workspace {
+        order: 1;
+      }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 16px;
+      }
+      .preview-card {
+        padding: 24px;
+        min-height: 280px;
+      }
+      .demo-navbar {
+        padding: 10px 16px;
+      }
+      .demo-nav-link {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+      }
+      .demo-dropdown {
+        width: 250px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo-area">
+      <h1>Animated Dropdown Menu</h1>
+      <p>Customize and export ultra-smooth CSS3 animated menus</p>
+    </div>
+    <div class="badge">Pure CSS3 + Adaptive Trigger</div>
+  </header>
+
+  <main class="playground-container">
+    
+    <!-- Controls Sidebar -->
+    <aside class="control-panel">
+      
+      <!-- Trigger Mode Selector -->
+      <div class="control-group">
+        <h3 class="panel-section-title">Trigger Action</h3>
+        
+        <div class="option-pill active" data-type="trigger" data-value="hover">
+          <div class="option-pill-info">
+            <span class="option-title">Hover (Desktop Focus)</span>
+            <span class="option-desc">Toggles automatically on hover</span>
+          </div>
+          <div class="pill-radio"></div>
+        </div>
+
+        <div class="option-pill" data-type="trigger" data-value="click">
+          <div class="option-pill-info">
+            <span class="option-title">Click / Tap Toggle</span>
+            <span class="option-desc">Toggle manually on click</span>
+          </div>
+          <div class="pill-radio"></div>
+        </div>
+      </div>
+
+      <!-- Animation Style Selector -->
+      <div class="control-group">
+        <h3 class="panel-section-title">CSS3 Animation Style</h3>
+        
+        <div class="option-pill active" data-type="animation" data-value="slide">
+          <div class="option-pill-info">
+            <span class="option-title">Slide & Fade</span>
+            <span class="option-desc">Classic slide down transition</span>
+          </div>
+          <div class="pill-radio"></div>
+        </div>
+
+        <div class="option-pill" data-type="animation" data-value="flip">
+          <div class="option-pill-info">
+            <span class="option-title">3D Flip Reveal</span>
+            <span class="option-desc">Rotating 3D perspective transition</span>
+          </div>
+          <div class="pill-radio"></div>
+        </div>
+
+        <div class="option-pill" data-type="animation" data-value="scale">
+          <div class="option-pill-info">
+            <span class="option-title">Scale & Bounce</span>
+            <span class="option-desc">Scale morph with spring feel</span>
+          </div>
+          <div class="pill-radio"></div>
+        </div>
+
+        <div class="option-pill" data-type="animation" data-value="clip">
+          <div class="option-pill-info">
+            <span class="option-title">Radial Clip Path</span>
+            <span class="option-desc">Modern circular paint overlay</span>
+          </div>
+          <div class="pill-radio"></div>
+        </div>
+      </div>
+
+      <!-- Themes Selector -->
+      <div class="control-group">
+        <h3 class="panel-section-title">Dropdown Theme</h3>
+        
+        <div class="option-pill active" data-type="theme" data-value="glass">
+          <div class="option-pill-info">
+            <span class="option-title">Modern Glassmorphism</span>
+            <span class="option-desc">Blur filter, semi-transparent</span>
+          </div>
+          <div class="pill-radio"></div>
+        </div>
+
+        <div class="option-pill" data-type="theme" data-value="neon">
+          <div class="option-pill-info">
+            <span class="option-title">Deep Cyber Neon</span>
+            <span class="option-desc">Dark background with indigo glow</span>
+          </div>
+          <div class="pill-radio"></div>
+        </div>
+
+        <div class="option-pill" data-type="theme" data-value="light">
+          <div class="option-pill-info">
+            <span class="option-title">Clean Minimal Light</span>
+            <span class="option-desc">Crisp white with clean borders</span>
+          </div>
+          <div class="pill-radio"></div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- Workspace Panel (Preview + Code Output) -->
+    <section class="workspace">
+      
+      <!-- Live Interactive Demo Window -->
+      <div class="preview-card" id="preview-viewport">
+        
+        <!-- Backdrop presets toggle -->
+        <div class="preview-backdrop-toggle">
+          <button class="backdrop-btn" data-bg="dark">Dark</button>
+          <button class="backdrop-btn active" data-bg="gradient">Mesh</button>
+          <button class="backdrop-btn" data-bg="light">Light</button>
+        </div>
+
+        <!-- The Interactive Nav Container -->
+        <div class="nav-container">
+          <nav class="demo-navbar">
+            <a href="#" class="nav-brand">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="color: var(--accent);">
+                <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="currentColor"/>
+                <path d="M2 17L12 22L22 17M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>Antigravity</span>
+            </a>
+
+            <ul class="nav-links">
+              <li class="demo-nav-item">
+                <a class="demo-nav-link">Home</a>
+              </li>
+              
+              <!-- Dropdown Trigger Container -->
+              <li class="demo-nav-item trigger-hover" id="demo-menu-trigger">
+                <a class="demo-nav-link">
+                  Products
+                  <svg viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                  </svg>
+                </a>
+                
+                <!-- The Animated Dropdown Menu -->
+                <div class="demo-dropdown theme-glass anim-slide" id="demo-dropdown-menu">
+                  <a href="#" class="demo-drop-item">
+                    <div class="demo-drop-icon">🚀</div>
+                    <div class="demo-drop-details">
+                      <span class="demo-drop-title">Dashboard</span>
+                      <span class="demo-drop-desc">Realtime stats & activity</span>
+                    </div>
+                  </a>
+                  <a href="#" class="demo-drop-item">
+                    <div class="demo-drop-icon">🔒</div>
+                    <div class="demo-drop-details">
+                      <span class="demo-drop-title">Security</span>
+                      <span class="demo-drop-desc">Manage API access keys</span>
+                    </div>
+                  </a>
+                  <a href="#" class="demo-drop-item">
+                    <div class="demo-drop-icon">⚡</div>
+                    <div class="demo-drop-details">
+                      <span class="demo-drop-title">Integrations</span>
+                      <span class="demo-drop-desc">Sync external platform tools</span>
+                    </div>
+                  </a>
+                </div>
+              </li>
+
+              <li class="demo-nav-item">
+                <a class="demo-nav-link">Pricing</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
+      </div>
+
+      <!-- Generated Source Code Viewer -->
+      <div class="code-panel">
+        <div class="code-header">
+          <div class="code-tabs">
+            <button class="code-tab active" id="tab-css">CSS3 Stylesheet</button>
+            <button class="code-tab" id="tab-html">HTML Blueprint</button>
+          </div>
+          <button class="copy-btn" id="btn-copy">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <span>Copy Code</span>
+          </button>
+        </div>
+        <div class="code-content">
+          <pre><code id="code-display"></code></pre>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script>
+    // State management
+    const state = {
+      trigger: 'hover',      // 'hover' | 'click'
+      animation: 'slide',    // 'slide' | 'flip' | 'scale' | 'clip'
+      theme: 'glass',        // 'glass' | 'neon' | 'light'
+      activeTab: 'css'       // 'css' | 'html'
+    };
+
+    // DOM Elements
+    const triggerPills = document.querySelectorAll('[data-type="trigger"]');
+    const animationPills = document.querySelectorAll('[data-type="animation"]');
+    const themePills = document.querySelectorAll('[data-type="theme"]');
+    
+    const previewTrigger = document.getElementById('demo-menu-trigger');
+    const previewDropdown = document.getElementById('demo-dropdown-menu');
+    const previewViewport = document.getElementById('preview-viewport');
+    
+    const codeDisplay = document.getElementById('code-display');
+    const tabCss = document.getElementById('tab-css');
+    const tabHtml = document.getElementById('tab-html');
+    const btnCopy = document.getElementById('btn-copy');
+    
+    const backdropBtns = document.querySelectorAll('.backdrop-btn');
+
+    // Setup active listeners for controls
+    function setupControllers() {
+      // Trigger mode
+      triggerPills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          triggerPills.forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          state.trigger = pill.dataset.value;
+          updatePreview();
+        });
+      });
+
+      // Animations
+      animationPills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          animationPills.forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          state.animation = pill.dataset.value;
+          updatePreview();
+        });
+      });
+
+      // Themes
+      themePills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          themePills.forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          state.theme = pill.dataset.value;
+          updatePreview();
+        });
+      });
+
+      // Backdrop presets
+      backdropBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          backdropBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          
+          previewViewport.className = 'preview-card';
+          if (btn.dataset.bg === 'light') {
+            previewViewport.classList.add('bg-workspace-light');
+          } else if (btn.dataset.bg === 'gradient') {
+            previewViewport.classList.add('bg-workspace-gradient');
+          }
+        });
+      });
+
+      // Code Tab selector
+      tabCss.addEventListener('click', () => {
+        tabCss.classList.add('active');
+        tabHtml.classList.remove('active');
+        state.activeTab = 'css';
+        renderCode();
+      });
+
+      tabHtml.addEventListener('click', () => {
+        tabHtml.classList.add('active');
+        tabCss.classList.remove('active');
+        state.activeTab = 'html';
+        renderCode();
+      });
+
+      // Copy to Clipboard
+      btnCopy.addEventListener('click', () => {
+        const text = codeDisplay.textContent;
+        navigator.clipboard.writeText(text).then(() => {
+          const originalText = btnCopy.innerHTML;
+          btnCopy.style.background = 'var(--success)';
+          btnCopy.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>Copied!</span>
+          `;
+          setTimeout(() => {
+            btnCopy.style.background = 'var(--accent)';
+            btnCopy.innerHTML = originalText;
+          }, 2000);
+        });
+      });
+    }
+
+    // Toggle logic for Preview menu
+    function setupDropdownInteractions() {
+      const link = previewTrigger.querySelector('.demo-nav-link');
+      
+      // Toggle dropdown on trigger click if in click mode
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (state.trigger === 'click') {
+          previewTrigger.classList.toggle('is-active');
+        }
+      });
+
+      // Close on clicking outside
+      document.addEventListener('click', (e) => {
+        if (!previewTrigger.contains(e.target)) {
+          previewTrigger.classList.remove('is-active');
+        }
+      });
+
+      // Touch screen support for hover mode
+      link.addEventListener('touchstart', (e) => {
+        if (state.trigger === 'hover') {
+          // If the menu is already active, let hover close it or tap again.
+          const isOpened = previewTrigger.classList.contains('is-active');
+          if (!isOpened) {
+            e.preventDefault();
+            previewTrigger.classList.add('is-active');
+          } else {
+            previewTrigger.classList.remove('is-active');
+          }
+        }
+      }, { passive: false });
+    }
+
+    // Synchronize HTML classes & config variables
+    function updatePreview() {
+      // 1. Reset state trigger classes on DOM element
+      previewTrigger.classList.remove('trigger-hover', 'trigger-click', 'is-active');
+      previewTrigger.classList.add(`trigger-${state.trigger}`);
+
+      // 2. Clear old classes on preview menu
+      previewDropdown.className = 'demo-dropdown';
+      
+      // 3. Add dynamic styling and animation class
+      previewDropdown.classList.add(`theme-${state.theme}`);
+      previewDropdown.classList.add(`anim-${state.animation}`);
+
+      // Update displayed code view
+      renderCode();
+    }
+
+    // Generates formatting templates for CSS / HTML output
+    function renderCode() {
+      if (state.activeTab === 'html') {
+        const htmlCode = `<!-- Nav Item Wrapper -->
+<li class="nav-item${state.trigger === 'hover' ? ' trigger-hover' : ''}">
+  <a href="#" class="nav-link">
+    Products
+    <svg class="chevron" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+    </svg>
+  </a>
+
+  <!-- Animated Dropdown -->
+  <div class="dropdown theme-${state.theme} anim-${state.animation}">
+    <a href="#" class="dropdown-item">
+      <div class="item-icon">🚀</div>
+      <div class="item-details">
+        <span class="item-title">Dashboard</span>
+        <span class="item-desc">Realtime stats & activity</span>
+      </div>
+    </a>
+    <a href="#" class="dropdown-item">
+      <div class="item-icon">🔒</div>
+      <div class="item-details">
+        <span class="item-title">Security</span>
+        <span class="item-desc">Manage API access keys</span>
+      </div>
+    </a>
+  </div>
+</li>`;
+        codeDisplay.textContent = htmlCode;
+      } else {
+        const cssCode = `/* Base Navigation Wrapper */
+.nav-item {
+  position: relative;
+  list-style: none;
+  perspective: 1000px; /* Essential for 3D rotations */
+}
+
+/* Bridges the physical hover gap */
+.nav-item::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 16px;
+  bottom: -16px;
+  left: 0;
+  z-index: 1;
+}
+
+.nav-link svg.chevron {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Base Dropdown Layout */
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 16px;
+  width: 280px;
+  border-radius: 12px;
+  padding: 8px;
+  z-index: 100;
+  transform-origin: top center;
+  
+  /* Initial Invisible Off-state */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Triangle Anchor Indicator */
+.dropdown::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 12px;
+  height: 12px;
+  z-index: -1;
+  border-top-left-radius: 2px;
+}
+
+${getTriggerCSS()}
+${getThemeCSS()}
+${getAnimationCSS()}`;
+        codeDisplay.textContent = cssCode;
+      }
+    }
+
+    function getTriggerCSS() {
+      if (state.trigger === 'hover') {
+        return `/* Active Hover Rule */
+.nav-item.trigger-hover:hover .dropdown {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+.nav-item.trigger-hover:hover .nav-link svg.chevron {
+  transform: rotate(180deg);
+}`;
+      } else {
+        return `/* Active Class Trigger Rule (JS Toggle) */
+.nav-item.is-active .dropdown {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+.nav-item.is-active .nav-link svg.chevron {
+  transform: rotate(180deg);
+}`;
+      }
+    }
+
+    function getThemeCSS() {
+      switch(state.theme) {
+        case 'glass':
+          return `/* Theme: Glassmorphism */
+.theme-glass {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+.theme-glass::before {
+  background: rgba(30, 41, 59, 0.9);
+  border-left: 1px solid rgba(255, 255, 255, 0.07);
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+.dropdown-item {
+  color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateX(4px);
+}`;
+        case 'neon':
+          return `/* Theme: Cyber Dark Neon */
+.theme-neon {
+  background: #090d16;
+  border: 2px solid #6366f1;
+  box-shadow: 0 10px 30px rgba(99, 102, 241, 0.25), inset 0 0 10px rgba(99, 102, 241, 0.15);
+}
+.theme-neon::before {
+  background: #090d16;
+  border-left: 2px solid #6366f1;
+  border-top: 2px solid #6366f1;
+  top: -8px;
+}
+.dropdown-item {
+  color: #cbd5e1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.dropdown-item:hover {
+  background: rgba(99, 102, 241, 0.12);
+  transform: translateX(4px);
+  color: #ffffff;
+}`;
+        case 'light':
+          return `/* Theme: Minimal Light */
+.theme-light {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+}
+.theme-light::before {
+  background: #ffffff;
+  border-left: 1px solid #e2e8f0;
+  border-top: 1px solid #e2e8f0;
+}
+.dropdown-item {
+  color: #334155;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.dropdown-item:hover {
+  background: #f1f5f9;
+  transform: translateX(4px);
+  color: #6366f1;
+}`;
+      }
+    }
+
+    function getAnimationCSS() {
+      switch(state.animation) {
+        case 'slide':
+          return `/* Animation: Slide & Fade */
+.anim-slide {
+  transform: translateX(-50%) translateY(16px);
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s;
+}
+/* Trigger Active */
+.nav-item:hover .anim-slide,
+.nav-item.is-active .anim-slide {
+  transform: translateX(-50%) translateY(0);
+}`;
+        case 'flip':
+          return `/* Animation: 3D Flip Reveal */
+.anim-flip {
+  transform: translateX(-50%) rotateX(-20deg);
+  transform-origin: top center;
+  transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), visibility 0.3s;
+}
+/* Trigger Active */
+.nav-item:hover .anim-flip,
+.nav-item.is-active .anim-flip {
+  transform: translateX(-50%) rotateX(0deg);
+}`;
+        case 'scale':
+          return `/* Animation: Scale & Bounce */
+.anim-scale {
+  transform: translateX(-50%) scale(0.85) translateY(5px);
+  transform-origin: top center;
+  transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), visibility 0.3s;
+}
+/* Trigger Active */
+.nav-item:hover .anim-scale,
+.nav-item.is-active .anim-scale {
+  transform: translateX(-50%) scale(1) translateY(0);
+}`;
+        case 'clip':
+          return `/* Animation: Radial Clip Path */
+.anim-clip {
+  transform: translateX(-50%) translateY(0);
+  clip-path: circle(0% at 50% 0%);
+  transition: clip-path 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease, visibility 0.35s;
+}
+/* Trigger Active */
+.nav-item:hover .anim-clip,
+.nav-item.is-active .anim-clip {
+  clip-path: circle(145% at 50% 0%);
+}`;
+      }
+    }
+
+    // Initialize application
+    setupControllers();
+    setupDropdownInteractions();
+    updatePreview();
+  </script>
+</body>
+</html>

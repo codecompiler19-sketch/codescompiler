@@ -1,0 +1,93 @@
+---
+title: "SQL – NOT"
+description: "Invert a condition in your WHERE clause using NOT to exclude specific rows from results."
+category: "sql"
+order: 11
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+Sometimes it is easier to describe what you do NOT want than what you do. The `NOT` operator flips a condition from true to false and vice versa. `NOT IN` excludes a list of values, `NOT LIKE` skips pattern matches, and `NOT NULL` finds rows with actual values (instead of empty ones).
+
+`NOT` is particularly valuable when the exclusion list is small but the inclusion set would be enormous. Rather than listing 47 valid categories, just exclude the 3 you do not want.
+
+**NOT with different operators**
+```sql
+WHERE NOT city = 'Delhi'        -- Exclude Delhi
+WHERE city NOT IN ('Delhi','Pune') -- Exclude multiple
+WHERE grade NOT LIKE 'D%'       -- Exclude D grades
+WHERE score IS NOT NULL         -- Non-empty scores
+```
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={`CREATE TABLE students (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  age INTEGER,
+  city TEXT,
+  score REAL,
+  grade TEXT
+);
+INSERT INTO students VALUES
+  (1,'Aria Chen',22,'Mumbai',94.5,'A'),
+  (2,'Ben Torres',19,'Delhi',78.2,'B'),
+  (3,'Cleo Park',24,'Bangalore',88.0,'A'),
+  (4,'Dev Patel',21,'Chennai',65.5,'C'),
+  (5,'Eva Müller',20,'Hyderabad',91.3,'A'),
+  (6,'Finn Walsh',23,'Pune',72.8,'B'),
+  (7,'Gina Lopez',22,'Kolkata',55.1,'D'),
+  (8,'Hiro Sato',25,'Mumbai',83.6,'B');
+
+CREATE TABLE courses (
+  id INTEGER PRIMARY KEY,
+  title TEXT,
+  instructor TEXT,
+  category TEXT,
+  price REAL,
+  rating REAL
+);
+INSERT INTO courses VALUES
+  (1,'Python Mastery','Dr. Ada Lovelace','Programming',2999,4.9),
+  (2,'SQL Foundations','Prof. Edgar Codd','Database',1999,4.8),
+  (3,'Web Design','Ms. Grace Hopper','Design',1499,4.7),
+  (4,'Data Science','Dr. Alan Turing','Analytics',3999,4.9),
+  (5,'Cybersecurity','Mr. Kevin Mitnick','Security',2499,4.6);
+
+CREATE TABLE enrollments (
+  student_id INTEGER,
+  course_id INTEGER,
+  enroll_date TEXT,
+  status TEXT,
+  final_score REAL
+);
+INSERT INTO enrollments VALUES
+  (1,1,'2024-01-15','completed',95),
+  (1,2,'2024-02-01','completed',88),
+  (2,3,'2024-01-20','active',NULL),
+  (3,1,'2024-03-05','completed',90),
+  (4,4,'2024-02-10','dropped',45),
+  (5,2,'2024-01-10','completed',96),
+  (6,5,'2024-03-15','active',NULL),
+  (7,3,'2024-02-20','completed',60),
+  (8,1,'2024-04-01','active',NULL);`}
+  querySql={`-- Everyone except D-grade students
+SELECT name, city, score, grade
+FROM   students
+WHERE  grade NOT IN ('D', 'F')
+ORDER  BY score DESC;`}
+/>
+
+## Key Points
+
+- NOT inverts any Boolean condition
+- IS NOT NULL specifically checks for non-empty values
+- NOT IN is equivalent to using != with AND for each value
+- NOT can make queries slower — ensure columns are indexed
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

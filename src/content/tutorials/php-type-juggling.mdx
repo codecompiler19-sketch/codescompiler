@@ -1,0 +1,147 @@
+---
+title: "PHP – Type Juggling"
+description: "Understand how PHP automatically converts data types behind the scenes. Learn juggling rules that affect comparisons, arithmetic, and logic."
+category: "php"
+order: 18
+---
+
+import Editor from '../../components/Editor.astro';
+
+# PHP Type Juggling
+
+**Type juggling** is one of PHP's most distinctive (and often misunderstood) behaviors. Unlike strongly typed languages, PHP automatically converts a variable's type depending on the context in which it is used. This happens silently — no explicit instruction needed.
+
+## How Type Juggling Works
+
+When PHP evaluates an expression, it looks at the context and coerces types accordingly:
+
+```php
+<?php
+  $value = "5";     // string
+  $result = $value + 3; // PHP juggles "5" to integer 5
+  echo $result;     // Output: 8
+?>
+```
+
+PHP saw an arithmetic context, converted `"5"` to the integer `5`, and returned `8`.
+
+## Common Type Juggling Scenarios
+
+### String to Number
+
+```php
+<?php
+  echo "10" + 5;       // 15 (string becomes int)
+  echo "3.5" + 1;      // 4.5 (string becomes float)
+  echo "7 apples" + 2; // 9 (leading numeric part extracted)
+  echo "apples" + 2;   // 2 (non-numeric string becomes 0)
+?>
+```
+
+### Boolean Context
+
+```php
+<?php
+  // "Falsy" values in PHP:
+  var_dump((bool) 0);      // false
+  var_dump((bool) "");     // false
+  var_dump((bool) "0");    // false
+  var_dump((bool) null);   // false
+  var_dump((bool) []);     // false
+
+  // Everything else is truthy
+  var_dump((bool) "false"); // true! (non-empty string)
+  var_dump((bool) -1);      // true
+?>
+```
+
+### The Loose Comparison Trap (`==`)
+
+Type juggling makes `==` comparisons unpredictable. This is a legendary PHP gotcha:
+
+```php
+<?php
+  var_dump(0 == "a");   // true in PHP 7, false in PHP 8
+  var_dump("1" == "01"); // true
+  var_dump(100 == "1e2"); // true
+  var_dump("" == null);  // true
+  var_dump("0" == false); // true
+?>
+```
+
+> **PHP 8 Fixed This!** In PHP 8, `0 == "a"` correctly returns `false`. Strings are no longer juggled to `0` when compared to integers.
+
+## Always Use Strict Comparison (`===`)
+
+The best defense against type juggling bugs is the **identical operator** `===`, which checks both value AND type:
+
+```php
+<?php
+  var_dump(1 === "1"); // false — types differ
+  var_dump(1 === 1);   // true
+  var_dump(0 === false); // false — types differ!
+?>
+```
+
+## Live Experiment
+
+Modify the code below to explore how PHP juggles different types:
+
+<Editor
+  initialPhp={`<?php
+// Arithmetic juggling
+$score = "100";
+$bonus = 25;
+$total = $score + $bonus;
+echo "Score type before: " . gettype($score) . "\n";
+echo "Total after juggling: $total\n";
+echo "Total type: " . gettype($total) . "\n\n";
+
+// Boolean juggling
+$items = ["apples", "oranges"];
+if ($items) {
+    echo "Non-empty array is truthy!\n";
+}
+
+$nothing = [];
+if (!$nothing) {
+    echo "Empty array is falsy!\n";
+}
+
+// Comparison pitfall
+$pin = "007";
+$input = 7;
+echo "\n== comparison: " . var_export($pin == $input, true) . "\n";
+echo "=== comparison: " . var_export($pin === $input, true) . "\n";
+?>`}
+  activeTab="php"
+/>
+
+## Type Juggling in Switch Statements
+
+`switch` uses loose comparisons internally, which can cause surprises:
+
+```php
+<?php
+  $val = 0;
+  switch ($val) {
+    case false: echo "Matched false!"; break; // This hits!
+    case 0:     echo "Matched 0"; break;
+  }
+?>
+```
+
+Use `match` (PHP 8+) for strict type-safe switching instead.
+
+## Key Takeaways
+
+| Scenario | Type Juggling Result |
+|---|---|
+| `"5" + 3` | `8` (int) |
+| `"5abc" + 3` | `8` (int, with notice) |
+| `0 == false` | `true` (loose) |
+| `0 === false` | `false` (strict) |
+| `"" == null` | `true` (loose) |
+| `null === false` | `false` (strict) |
+
+Always prefer `===` over `==` to avoid type juggling pitfalls in your PHP applications!

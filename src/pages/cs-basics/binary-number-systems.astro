@@ -1,0 +1,145 @@
+---
+import TopicLayout from '../../layouts/TopicLayout.astro';
+---
+<TopicLayout title="Binary & Number Systems" description="Understand how computers represent all data using binary, and how different number systems like decimal, octal, and hexadecimal relate to each other." section="cs-basics">
+  <h2>The Language of Silicon: Why Binary?</h2>
+  <p>To the human eye, a computer displays high-resolution photos, streamable video, complex games, and responsive text. Yet, deep inside the computer's CPU and memory chips, there is nothing but an endless sea of microscopic switches called transistors. These transistors have only two possible states: <strong>ON</strong> (representing presence of electrical voltage) or <strong>OFF</strong> (representing absence of electrical voltage). Because all digital hardware is fundamentally built upon this two-state architecture, the <strong>binary (base-2)</strong> number system is the natural language of computing.</p>
+
+  <p>If computers used the decimal (base-10) system at the hardware level, engineers would need to design transistors capable of reliably distinguishing between ten different voltage levels (e.g., 0V, 0.5V, 1.0V, up to 4.5V). In practice, electrical interference, heat, and component degradation would cause constant errors, as a 3.9V signal could easily degrade into 3.8V, misrepresenting a number. By utilizing only two states—fully on or fully off—computers achieve near-perfect reliability, speed, and noise resistance.</p>
+
+  <h2>Understanding Positional Number Systems</h2>
+  <p>All the number systems used in computer science are <strong>positional notation</strong> systems. In a positional system, the value of a digit depends on its position relative to the radix point (decimal point). Each position represents a power of the base (or radix) of that system.</p>
+
+  <p>For example, in our daily <strong>Decimal (Base-10)</strong> system, the number 345 represents:</p>
+  <pre><code>(3 * 10^2) + (4 * 10^1) + (5 * 10^0) = 300 + 40 + 5 = 345</code></pre>
+
+  <p>In computer science, four major positional number systems are widely used:</p>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>System</th>
+          <th>Base</th>
+          <th>Allowed Digits / Symbols</th>
+          <th>Common Use Case in CS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Binary</strong></td>
+          <td>2</td>
+          <td>0, 1</td>
+          <td>Machine code, logic circuits, network subnetting, bitwise operations.</td>
+        </tr>
+        <tr>
+          <td><strong>Octal</strong></td>
+          <td>8</td>
+          <td>0, 1, 2, 3, 4, 5, 6, 7</td>
+          <td>Unix file permissions (e.g., chmod 755), legacy mainframes.</td>
+          </tr>
+        <tr>
+          <td><strong>Decimal</strong></td>
+          <td>10</td>
+          <td>0, 1, 2, 3, 4, 5, 6, 7, 8, 9</td>
+          <td>Human-readable input/output, user interfaces, accounting.</td>
+        </tr>
+        <tr>
+          <td><strong>Hexadecimal</strong></td>
+          <td>16</td>
+          <td>0-9, A, B, C, D, E, F</td>
+          <td>Memory addressing (RAM), CSS color codes, debugging core dumps.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Deep Dive: Hexadecimal (Base-16)</h2>
+  <p>While binary is perfect for hardware, a 32-bit memory address looks like this in binary: <code>11000000101010000000000100000001</code>. This is extremely difficult for human developers to read, write, or debug without making mistakes. To bridge the gap, computer scientists use <strong>hexadecimal (Base-16)</strong>.</p>
+  
+  <p>Because 16 is a power of 2 (2^4 = 16), exactly one hexadecimal digit can represent a sequence of four binary digits (a **nibble**). Hexadecimal uses digits <code>0</code> through <code>9</code>, followed by letters <code>A</code> through <code>F</code> to represent values 10 through 15:</p>
+  <ul>
+    <li><code>A = 10, B = 11, C = 12, D = 13, E = 14, F = 15</code></li>
+  </ul>
+  <p>Using hex, that massive 32-bit address simplifies to a clean, readable string: <code>0xC0A80101</code> (where the <code>0xC0</code> corresponds to <code>11000000</code>, <code>0xA8</code> to <code>10101000</code>, and so on). The <code>0x</code> prefix is commonly used in programming to signal that the following digits are hexadecimal.</p>
+
+  <h2>Step-by-Step Number System Conversions</h2>
+  
+  <h3>1. Converting Binary to Decimal</h3>
+  <p>To convert a binary number to decimal, multiply each bit by 2 raised to the power of its position index (starting at 0 from the rightmost bit) and sum the results. Let's convert <code>1101</code> to decimal:</p>
+  <pre><code>Binary Digit:  1      1      0      1
+Position:      3      2      1      0
+Multiplier:   2^3    2^2    2^1    2^0
+Value:         8      4      0      1
+Calculation:  (1 * 8) + (1 * 4) + (0 * 2) + (1 * 1) = 8 + 4 + 0 + 1 = 13</code></pre>
+
+  <h3>2. Converting Decimal to Binary (Successive Division)</h3>
+  <p>To convert a decimal number to binary, divide the decimal number by 2 repeatedly, recording the remainder (which will always be 0 or 1). Read the remainders from the bottom up. Let's convert decimal <code>19</code> to binary:</p>
+  <pre><code>19 / 2 = 9 remainder 1  (Least Significant Bit - rightmost)
+9 / 2  = 4 remainder 1
+4 / 2  = 2 remainder 0
+2 / 2  = 1 remainder 0
+1 / 2  = 0 remainder 1  (Most Significant Bit - leftmost)
+
+Result (bottom to top): 10011</code></pre>
+
+  <h3>3. Converting Binary to Hexadecimal</h3>
+  <p>Group the binary number into sets of four bits starting from the right. If the leftmost group has fewer than four bits, pad it with leading zeroes. Then, replace each group of four bits with its equivalent hexadecimal character. Let's convert <code>110101111</code> to hex:</p>
+  <pre><code>Step 1: Group into fours:  [0001] [1010] [1111] (padded leftmost with three 0s)
+Step 2: Convert each:      [1]    [10]   [15]
+Step 3: Map to Hex digits:  1      A      F
+
+Result: 1AF (or 0x1AF)</code></pre>
+
+  <h2>Binary Arithmetic: The Mechanics of the ALU</h2>
+  <p>Digital processors perform addition and subtraction using circuits designed around logic gates. The rules of binary arithmetic are incredibly straightforward because there are no tables to memorize beyond 0 and 1.</p>
+
+  <h3>Binary Addition Rules</h3>
+  <ul>
+    <li><code>0 + 0 = 0</code></li>
+    <li><code>0 + 1 = 1</code></li>
+    <li><code>1 + 0 = 1</code></li>
+    <li><code>1 + 1 = 0</code> (carry 1 to the next column)</li>
+    <li><code>1 + 1 + 1 = 1</code> (carry 1 to the next column)</li>
+  </ul>
+  <p>Example: Adding <code>1011</code> (11) and <code>0101</code> (5):</p>
+  <pre><code>  Carry: 1 1 1 
+         1 0 1 1  (11)
+       + 0 1 0 1  (5)
+       ---------
+        1 0 0 0 0  (16)</code></pre>
+
+  <h3>Binary Subtraction and Two's Complement</h3>
+  <p>CPUs do not have separate physical circuits for subtraction. Instead, they convert subtraction into addition using a mathematical representation called <strong>Two's Complement</strong>. To make a binary number negative:</p>
+  <ol>
+    <li>Perform the **bitwise NOT** operation (flip all 1s to 0s, and 0s to 1s). This is the One's Complement.</li>
+    <li>Add `1` to the resulting value. This yields the Two's Complement.</li>
+  </ol>
+  <p>To subtract <code>A - B</code>, the CPU calculates <code>A + (-B)</code> using the Two's Complement representation of <code>B</code>. This elegant system eliminates hardware complexity, allowing the exact same adder circuits to handle both positive and negative math.</p>
+
+  <h2>Digital Encoding of Text: ASCII and Unicode</h2>
+  <p>If computers only understand binary, how do they represent letters, punctuation, and emoji? The answer is **character encoding schemas**.</p>
+  <ul>
+    <li><strong>ASCII (American Standard Code for Information Interchange):</strong> A legacy 7-bit encoding standard developed in the 1963. It maps numbers 0–127 to English letters, numbers, and system commands (e.g., capital letter 'A' is mapped to decimal 65, which is binary <code>01000001</code>). ASCII is highly efficient but cannot represent non-English alphabets or symbols.</li>
+    <li><strong>Unicode:</strong> A universal standard that assigns a unique number (a code point) to every character, symbol, and emoji across all writing systems globally.</li>
+    <li><strong>UTF-8:</strong> A variable-width encoding for Unicode that is backwards-compatible with ASCII. It uses between 1 and 4 bytes (8 to 32 bits) per character. Because it is highly space-efficient for English text while supporting any language, UTF-8 is the dominant encoding standard for the World Wide Web.</li>
+  </ul>
+
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq-section">
+    <h3>What is the difference between a bit and a byte?</h3>
+    <p>A bit (binary digit) is the absolute smallest unit of digital data, representing a simple choice of 0 or 1. A byte is a collection of exactly 8 bits. Bytes are the standard building blocks of computer memory, as they are large enough to store a single ASCII character or integer values between 0 and 255.</p>
+
+    <h3>Why do hexadecimal numbers often start with 0x?</h3>
+    <p>The 0x prefix is a syntax convention used in programming languages (like C, C++, Java, and JavaScript) to tell the compiler or interpreter that the following text represents a hexadecimal value rather than a decimal integer or variable name.</p>
+
+    <h3>What is a byte overflow?</h3>
+    <p>A byte overflow occurs when a mathematical operation produces a number that is too large to fit within the allocated memory width. For example, an unsigned 8-bit byte can store values from 0 to 255. If you add 1 to 255 (binary <code>11111111</code>), the result rolls over back to 0 (binary <code>00000000</code>) because there is no 9th bit available to hold the carry value, leading to logic bugs.</p>
+
+    <h3>How many different values can be represented by n bits?</h3>
+    <p>The number of unique values that can be represented by <code>n</code> bits is calculated as 2 raised to the power of <code>n</code> (2^n). For example, 8 bits can represent 2^8 = 256 unique values, while 16 bits can represent 2^16 = 65,536 values.</p>
+  </div>
+
+  <h2>What's Next?</h2>
+  <p>Now that you know how computers represent data numerically and textually using binary, you can explore where this binary data is physically stored while processing. Read our next guide on <a href="/cs-basics/memory-storage">Memory &amp; Storage</a> to understand the memory hierarchy, registers, cache, and permanent storage media.</p>
+</TopicLayout>

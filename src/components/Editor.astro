@@ -3,6 +3,8 @@ export interface Props {
   initialHtml?: string;
   initialCss?: string;
   initialJs?: string;
+  initialPhp?: string;
+  activeTab?: string;
   height?: string;
 }
 
@@ -10,6 +12,8 @@ const {
   initialHtml = `<h1>Hello, CodesCompiler!</h1>\n<p>Edit this code and click <b>Run ▶</b></p>`,
   initialCss  = `body {\n  font-family: sans-serif;\n  padding: 2rem;\n  background: #f0f4f8;\n}\nh1 { color: #04AA6D; }\np  { color: #555; }`,
   initialJs   = `// Your JavaScript here\nconsole.log("Welcome to CodesCompiler!");`,
+  initialPhp  = ``,
+  activeTab   = `html`,
   height = '520px',
 } = Astro.props;
 
@@ -18,11 +22,13 @@ const uid = Math.random().toString(36).slice(2, 9);
 ---
 
 <div
-  class="tiy-root my-8 rounded-xl border border-gray-200 shadow-lg overflow-hidden bg-[#1e1e2e]"
+  class="not-prose tiy-root my-8 rounded-xl border border-gray-200 shadow-lg overflow-hidden bg-[#1e1e2e]"
   style={`height:${height}`}
   data-html={initialHtml}
   data-css={initialCss}
   data-js={initialJs}
+  data-php={initialPhp}
+  data-active={activeTab}
   data-uid={uid}
 >
   <!-- ── Header ──────────────────────────────────────────── -->
@@ -36,9 +42,10 @@ const uid = Math.random().toString(36).slice(2, 9);
 
     <!-- Tab buttons -->
     <div class="flex rounded-md overflow-hidden border border-white/10" role="tablist">
-      <button role="tab" aria-selected="true"  class="tiy-tab active-tab px-4 py-1.5 text-xs font-bold font-mono" data-lang="html">HTML</button>
-      <button role="tab" aria-selected="false" class="tiy-tab px-4 py-1.5 text-xs font-bold font-mono" data-lang="css">CSS</button>
-      <button role="tab" aria-selected="false" class="tiy-tab px-4 py-1.5 text-xs font-bold font-mono" data-lang="js">JS</button>
+      <button role="tab" aria-selected={activeTab === 'html' ? 'true' : 'false'} class={`tiy-tab px-4 py-1.5 text-xs font-bold font-mono ${activeTab === 'html' ? 'active-tab' : ''}`} data-lang="html">HTML</button>
+      <button role="tab" aria-selected={activeTab === 'css' ? 'true' : 'false'} class={`tiy-tab px-4 py-1.5 text-xs font-bold font-mono ${activeTab === 'css' ? 'active-tab' : ''}`} data-lang="css">CSS</button>
+      <button role="tab" aria-selected={activeTab === 'js' ? 'true' : 'false'} class={`tiy-tab px-4 py-1.5 text-xs font-bold font-mono ${activeTab === 'js' ? 'active-tab' : ''}`} data-lang="js">JS</button>
+      {initialPhp !== '' && <button role="tab" aria-selected={activeTab === 'php' ? 'true' : 'false'} class={`tiy-tab px-4 py-1.5 text-xs font-bold font-mono ${activeTab === 'php' ? 'active-tab' : ''}`} data-lang="php">PHP</button>}
     </div>
 
     <!-- Run button -->
@@ -91,6 +98,7 @@ const uid = Math.random().toString(36).slice(2, 9);
         { html:   htmlLang  },
         { css:    cssLang   },
         { javascript: jsLang },
+        { php:    phpLang   },
         { oneDark },
         { autocompletion, completionKeymap },
         { bracketMatching },
@@ -102,6 +110,7 @@ const uid = Math.random().toString(36).slice(2, 9);
         import(`${BASE}/@codemirror/lang-html`),
         import(`${BASE}/@codemirror/lang-css`),
         import(`${BASE}/@codemirror/lang-javascript`),
+        import(`${BASE}/@codemirror/lang-php`),
         import(`${BASE}/@codemirror/theme-one-dark`),
         import(`${BASE}/@codemirror/autocomplete`),
         import(`${BASE}/@codemirror/language`),
@@ -128,7 +137,7 @@ const uid = Math.random().toString(36).slice(2, 9);
         EditorView.lineWrapping,
       ];
 
-      const langExt = { html: htmlLang(), css: cssLang(), js: jsLang() };
+      const langExt = { html: htmlLang(), css: cssLang(), js: jsLang(), php: phpLang() };
 
       // Init each editor on the page independently
       document.querySelectorAll('.tiy-root').forEach(wrapper => {
@@ -138,13 +147,19 @@ const uid = Math.random().toString(36).slice(2, 9);
         const tabs     = wrapper.querySelectorAll('.tiy-tab');
 
         // Read initial code from data attributes
-        const docs = {
-          html: wrapper.dataset.html || '',
-          css:  wrapper.dataset.css  || '',
-          js:   wrapper.dataset.js   || '',
+        const unescapeText = (txt) => {
+          if (!txt) return '';
+          return txt.replace(/\\n/g, '\n');
         };
 
-        let currentLang = 'html';
+        const docs = {
+          html: unescapeText(wrapper.dataset.html),
+          css:  unescapeText(wrapper.dataset.css),
+          js:   unescapeText(wrapper.dataset.js),
+          php:  unescapeText(wrapper.dataset.php),
+        };
+
+        let currentLang = wrapper.dataset.active || 'html';
         let view = null;
 
         function createEditor(lang) {
@@ -164,9 +179,81 @@ const uid = Math.random().toString(36).slice(2, 9);
 
         function runPreview() {
           if (view) docs[currentLang] = view.state.doc.toString();
-          const fullDoc = `<!DOCTYPE html>\n<html>\n<head>\n  <meta charset="UTF-8"/>\n  <meta name="viewport" content="width=device-width,initial-scale=1"/>\n  <style>${docs.css}</style>\n</head>\n<body>\n${docs.html}\n<script>\ntry {\n  ${docs.js}\n} catch(e) { console.error(e); }\n<\/script>\n</body>\n</html>`;
+          
+          let fullDoc = '';
+
+          // Determine the runtime environment
+          if (wrapper.dataset.php !== '') {
+            // PHP WASM Environment — pass code via JSON.stringify to avoid HTML-escaping issues
+            let phpCode = docs.php;
+            if (!phpCode.trimStart().startsWith('<?php') && !phpCode.trimStart().startsWith('<?')) {
+              phpCode = '<?php\n' + phpCode;
+            }
+            const jsonCode = JSON.stringify(phpCode);
+            fullDoc = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <style>body { font-family: sans-serif; padding: 1.5rem; background: #fff; }</style>
+</head>
+<body>
+<div id="output"><span style="color:#aaa;font-family:monospace;">Executing PHP...</span></div>
+<script type="module">
+  import { PhpWeb } from 'https://cdn.jsdelivr.net/npm/php-wasm/PhpWeb.mjs';
+  const php = new PhpWeb();
+  const outputDiv = document.getElementById('output');
+  const code = ${jsonCode};
+
+  php.addEventListener('output', (event) => {
+    outputDiv.innerHTML += event.detail;
+  });
+
+  php.addEventListener('error', (event) => {
+    outputDiv.innerHTML += '<br><span style="color:red">' + event.detail + '</span>';
+  });
+
+  php.addEventListener('ready', () => {
+    outputDiv.innerHTML = '';
+    php.run(code).catch(err => {
+      outputDiv.innerHTML += '<br><span style="color:red">Error: ' + err + '</span>';
+    });
+  });
+<\/script>
+</body>
+</html>`;
+          } else {
+            // Standard Web Environment (HTML/CSS/JS)
+            // IMPORTANT: JS runs at top-level so function declarations are globally accessible.
+            // If wrapped in try{}, block-scoped function declarations break onclick handlers.
+            const safeJs = docs.js.replace(/<\/script>/gi, '<\\/script>');
+            fullDoc = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <style>${docs.css}</style>
+</head>
+<body>
+${docs.html}
+<script>
+${safeJs}
+<\/script>
+</body>
+</html>`;
+          }
+
+          // PHP-WASM needs Web Workers → requires allow-same-origin.
+          // HTML/CSS/JS keeps allow-scripts only for security.
+          if (wrapper.dataset.php !== '') {
+            preview.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+          } else {
+            preview.setAttribute('sandbox', 'allow-scripts');
+          }
+
           const blob = new Blob([fullDoc], { type: 'text/html' });
-          preview.src = URL.createObjectURL(blob);
+          const blobUrl = URL.createObjectURL(blob);
+          preview.src = blobUrl;
         }
 
         // Tab switching
@@ -184,8 +271,8 @@ const uid = Math.random().toString(36).slice(2, 9);
 
         runBtn?.addEventListener('click', runPreview);
 
-        // Boot: init HTML editor and auto-run preview
-        createEditor('html');
+        // Boot: init editor to default active tab and auto-run preview
+        createEditor(currentLang);
         runPreview();
       });
     }

@@ -1,0 +1,118 @@
+---
+import TopicLayout from '../../layouts/TopicLayout.astro';
+---
+<TopicLayout title="Cloud Security & DevSecOps" description="Learn the fundamentals of Cloud Security, the Shared Responsibility Model, cloud vulnerabilities, and how DevSecOps integrates security into modern CI/CD pipelines." section="security">
+  <h2>Introduction to Cloud Security</h2>
+  <p>Cloud computing has revolutionized how businesses build, deploy, and scale software. By replacing physical data centers with virtualized resources, organizations can provision computing power, databases, and networks in seconds. However, this flexibility introduces new security challenges. The traditional network perimeter—the "castle-and-moat" security model—does not exist in the cloud. Instead, cloud resources are public by default, accessible via APIs, and constantly changing.</p>
+  
+  <p><strong>Cloud Security</strong> is the broad set of technologies, policies, controls, and services designed to protect cloud-based data, applications, and infrastructure from cyber threats. Achieving robust cloud security requires understanding that the cloud is not inherently less secure than on-premises systems, but it requires a different approach to identity, architecture, and automation.</p>
+
+  <h2>The Shared Responsibility Model</h2>
+  <p>One of the most critical concepts in cloud security is the <strong>Shared Responsibility Model</strong>. It dictates that security is a partnership between the Cloud Service Provider (CSP)—such as Amazon Web Services (AWS), Microsoft Azure, or Google Cloud Platform (GCP)—and the customer. The exact division of labor depends on whether you are using Infrastructure as a Service (IaaS), Platform as a Service (PaaS), or Software as a Service (SaaS):</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Service Model</th>
+        <th>What the Cloud Provider (CSP) Secures</th>
+        <th>What the Customer Secures</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>IaaS</strong> (e.g., EC2, Compute Engine)</td>
+        <td>Physical security of data centers, hypervisor virtualization layer, hardware, and physical networking.</td>
+        <td>Operating system (patching, configuration), applications, data, network firewall rules (Security Groups), and IAM roles.</td>
+      </tr>
+      <tr>
+        <td><strong>PaaS</strong> (e.g., Heroku, AWS Elastic Beanstalk)</td>
+        <td>Physical security, hardware, hypervisor, operating system, and the application runtime environment.</td>
+        <td>Application code, database configurations, user access control, and data classification.</td>
+      </tr>
+      <tr>
+        <td><strong>SaaS</strong> (e.g., Google Workspace, Salesforce)</td>
+        <td>Almost the entire stack: hardware, virtualization, OS, runtime, application code, and infrastructure.</td>
+        <td>User identities, device security posture, and data access permissions (preventing data exfiltration).</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p><em>Rule of thumb:</em> The cloud provider is responsible for the security <strong>of</strong> the cloud (hardware, infrastructure), while the customer is responsible for security <strong>in</strong> the cloud (their data, applications, and configurations).</p>
+
+  <h2>Top Cloud Security Threats &amp; Vulnerabilities</h2>
+  <p>As organizations migrate to the cloud, they often carry over legacy security assumptions, leading to severe vulnerabilities. The most common threats in modern cloud environments include:</p>
+  <ul>
+    <li><strong>Cloud Misconfigurations</strong> — The single largest cause of cloud data breaches. Examples include leaving storage buckets (like AWS S3) open to the public, leaving database ports exposed to the Internet, or using default security group settings.</li>
+    <li><strong>Insecure APIs</strong> — Cloud infrastructure is managed entirely through Application Programming Interfaces (APIs). If APIs lack proper authentication, authorization, or rate limiting, attackers can exploit them to manipulate cloud resources or steal data.</li>
+    <li><strong>Credential &amp; Token Leaks</strong> — Developers sometimes accidentally commit hardcoded API keys, database passwords, or private SSH keys to public version control repositories (like public GitHub repos), allowing automated bots to harvest them within minutes.</li>
+    <li><strong>Insufficient Identity &amp; Access Management (IAM)</strong> — Granting overly broad administrative privileges to users, applications, or service accounts. If a service account with "admin" access is compromised, the entire cloud account is compromised.</li>
+    <li><strong>Lack of Visibility</strong> — Because cloud resources can be spun up and torn down instantly, security teams often struggle to maintain an accurate inventory of active assets, leading to "shadow IT" and unmonitored systems.</li>
+  </ul>
+
+  <h2>Introducing DevSecOps: Security at DevOps Speed</h2>
+  <p>Traditionally, security was treated as a final inspection phase before software release. Developers wrote code, operations teams compiled and prepared it, and security teams conducted a manual audit. This model creates a bottleneck in modern development cycles where code is deployed multiple times per day. The solution is <strong>DevSecOps</strong>.</p>
+  
+  <p>DevSecOps is the practice of integrating security considerations and automated checks directly into every stage of the software development lifecycle (SDLC), from initial design to production operations. By shifting security to the left, organizations identify and remediate vulnerabilities early when they are cheap and simple to fix.</p>
+
+  <h3>The "Shift-Left" Concept</h3>
+  <p>To "shift left" means to introduce testing, security feedback, and quality assurance processes as early as possible in the development pipeline. Instead of running a vulnerability scan on a running production server, security teams write automated tests that scan the source code during the build process. If a vulnerability is found, the build fails, and the developer is notified immediately, preventing the bug from ever reaching production.</p>
+
+  <h2>Key Security Testing Methodologies</h2>
+  <p>To implement DevSecOps effectively, security processes must be automated. The three main automated testing methodologies integrated into CI/CD pipelines are:</p>
+  
+  <ol>
+    <li><strong>SAST (Static Application Security Testing)</strong>
+      <ul>
+        <li>Scans the application's source code, byte code, or binaries without executing the program.</li>
+        <li>Identifies potential vulnerabilities such as SQL injection, hardcoded passwords, buffer overflows, and cross-site scripting (XSS).</li>
+        <li>Runs early in the CI/CD pipeline, providing rapid feedback directly to developers inside their pull requests.</li>
+      </ul>
+    </li>
+    <li><strong>DAST (Dynamic Application Security Testing)</strong>
+      <ul>
+        <li>Analyzes a running application from the outside, mimicking a malicious attacker.</li>
+        <li>Tests the application's responses to malicious inputs, checks for authentication issues, and identifies runtime vulnerabilities.</li>
+        <li>Runs later in the pipeline on a staging or preview deployment.</li>
+      </ul>
+    </li>
+    <li><strong>SCA (Software Composition Analysis) &amp; Container Scanning</strong>
+      <ul>
+        <li>Scans the third-party open-source libraries, packages, and frameworks used in the application.</li>
+        <li>Compares the project's dependency graph against databases of Known Vulnerabilities (like CVEs).</li>
+        <li>Container scanning also audits Docker base images to ensure they do not contain outdated operating system packages with known exploits.</li>
+      </ul>
+    </li>
+  </ol>
+
+  <h2>Best Practices for Cloud Security &amp; DevSecOps</h2>
+  <p>Implementing a modern cloud security posture involves combining policy, configuration hygiene, and automated enforcement:</p>
+  <ul>
+    <li><strong>Secure Infrastructure as Code (IaC)</strong> — Manage cloud infrastructure using code templates (such as Terraform, CloudFormation, or Ansible). Scan these templates using tools like Checkov or tfsec to identify security misconfigurations before the infrastructure is provisioned.</li>
+    <li><strong>Implement Centralized Secrets Management</strong> — Never hardcode credentials. Use specialized services like HashiCorp Vault, AWS Secrets Manager, or Azure Key Vault to dynamically inject credentials into application runtimes, and rotate keys regularly.</li>
+    <li><strong>Enforce Least Privilege IAM</strong> — Grant users and automated services only the minimum permissions necessary to complete their specific tasks. Use temporary, role-based access instead of long-lived access keys.</li>
+    <li><strong>Establish Continuous Monitoring &amp; Drift Detection</strong> — Use cloud monitoring tools to continuously audit configurations. If a resource's configuration changes from its declared code baseline (known as configuration drift), automatically flag or revert the change.</li>
+  </ul>
+
+  <h2>Frequently Asked Questions (FAQ)</h2>
+
+  <h3>❓ What is the difference between DevOps and DevSecOps?</h3>
+  <p>DevOps focuses on accelerating software delivery and improving collaboration between developers and system operators. DevSecOps builds upon DevOps by ensuring that security is a core, shared responsibility integrated throughout this automated pipeline, rather than an afterthought handled by a separate team.</p>
+
+  <h3>❓ How does Static Analysis (SAST) differ from Dynamic Analysis (DAST)?</h3>
+  <p>SAST is "inside-out" testing that scans code without running it (static analysis), which helps find coding flaws early. DAST is "outside-in" testing that probes a running application (dynamic analysis), finding issues that only occur during execution, such as network setup errors, session management flaws, or deployment mistakes.</p>
+
+  <h3>❓ What is a "Shift Right" approach in security?</h3>
+  <p>While "Shift Left" focuses on prevention during development, "Shift Right" focuses on continuous monitoring, detection, and incident response in production. A mature security strategy balances both: scanning code before release (left) and monitoring logs, traffic, and user behavior in production (right).</p>
+
+  <h3>❓ Why are public cloud buckets so frequently breached?</h3>
+  <p>Cloud storage buckets are designed to scale and share data easily. Many breaches occur because users change default access controls to solve connectivity issues during development and forget to restrict access before going live. Automated scanners continuously search IP ranges for these open directories.</p>
+
+  <h2>What's Next?</h2>
+  <p>Continue expanding your cyber security foundation with these guides:</p>
+  <ul>
+    <li>Master the basics of network traffic screening in <a href="/security/vpn-firewall">VPN &amp; Firewall</a>.</li>
+    <li>Explore how cryptographic algorithms protect data in transit and at rest in <a href="/security/cryptography-encryption">Cryptography &amp; Encryption</a>.</li>
+    <li>Understand how digital identities are controlled and checked in <a href="/security/zero-trust-iam">Zero Trust &amp; IAM</a>.</li>
+    <li>Learn how security teams analyze incidents after a breach has occurred in <a href="/security/incident-response-forensics">Incident Response &amp; Forensics</a>.</li>
+  </ul>
+</TopicLayout>

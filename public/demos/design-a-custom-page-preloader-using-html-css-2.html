@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="canonical" href="https://codescompiler.com/blog/design-a-custom-page-preloader-using-html-css-2/" />
+  <script>
+    if (window.self === window.top) {
+      window.location.replace('/blog-demo/' + window.location.pathname.split('/').pop().replace('.html', '') + '/');
+    }
+  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Preloader</title>
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background-color: #f4f4f9; color: #333; }
+
+        /* Main content hidden initially */
+        .main-content {
+          display: none;
+          text-align: center;
+          padding: 100px 20px;
+        }
+
+        /* Preloader full screen overlay */
+        .preloader {
+          position: fixed;
+          top: 0; left: 0; width: 100%; height: 100%;
+          background: #ffffff;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          z-index: 9999;
+          transition: opacity 0.5s ease;
+        }
+
+        .loader-circle {
+          width: 80px;
+          height: 80px;
+          border: 8px solid #e2e8f0;
+          border-top: 8px solid #3b82f6;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+          margin-bottom: 20px;
+        }
+
+        .loader-text {
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: #64748b;
+          letter-spacing: 2px;
+          animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+    <!-- The Preloader -->
+    <div class="preloader" id="preloader">
+      <div class="loader-circle"></div>
+      <div class="loader-text">Loading...</div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="main-content">
+      <h1>Welcome to the Website!</h1>
+      <p>The page has fully loaded successfully.</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const preloader = document.getElementById('preloader');
+            const content = document.getElementById('main-content');
+            
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                    content.style.display = 'block';
+                }, 500); 
+            }, 2000); 
+        });
+    </script>
+</body>
+</html>

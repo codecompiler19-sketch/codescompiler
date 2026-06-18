@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="canonical" href="https://codescompiler.com/blog/build-beautiful-bouncing-loaders-with-css-5/" />
+  <script>
+    if (window.self === window.top) {
+      window.location.replace('/blog-demo/' + window.location.pathname.split('/').pop().replace('.html', '') + '/');
+    }
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bouncing CSS Loaders | Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Outfit', sans-serif;
+    }
+    body {
+      background-color: #1e293b;
+      color: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+    h2 {
+      margin-bottom: 50px;
+      font-weight: 600;
+      color: #38bdf8;
+      text-align: center;
+    }
+    .loaders-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      justify-content: center;
+      width: 100%;
+      max-width: 900px;
+    }
+    .loader-box {
+      background: #0f172a;
+      border-radius: 16px;
+      width: 250px;
+      height: 200px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
+      border: 1px solid #334155;
+    }
+    .loader-name {
+      margin-top: auto;
+      margin-bottom: 20px;
+      color: #94a3b8;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .loader-content {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Loader 1: Bouncing Dots */
+    .bouncing-dots {
+      display: flex;
+      gap: 8px;
+    }
+    .bouncing-dots div {
+      width: 16px;
+      height: 16px;
+      background-color: #f43f5e;
+      border-radius: 50%;
+      animation: bounce 0.5s cubic-bezier(0.19, 0.57, 0.3, 0.98) infinite alternate;
+    }
+    .bouncing-dots div:nth-child(2) {
+      animation-delay: 0.1s;
+      background-color: #fb923c;
+    }
+    .bouncing-dots div:nth-child(3) {
+      animation-delay: 0.2s;
+      background-color: #facc15;
+    }
+
+    @keyframes bounce {
+      from { transform: translateY(0); }
+      to { transform: translateY(-20px); }
+    }
+
+    /* Loader 2: Bouncing Bars */
+    .bouncing-bars {
+      display: flex;
+      gap: 6px;
+      align-items: flex-end;
+      height: 40px;
+    }
+    .bouncing-bars div {
+      width: 10px;
+      height: 10px;
+      background-color: #10b981;
+      border-radius: 5px;
+      animation: stretch 0.4s ease-in-out infinite alternate;
+    }
+    .bouncing-bars div:nth-child(2) { animation-delay: 0.1s; background-color: #0ea5e9; }
+    .bouncing-bars div:nth-child(3) { animation-delay: 0.2s; background-color: #6366f1; }
+    .bouncing-bars div:nth-child(4) { animation-delay: 0.3s; background-color: #d946ef; }
+
+    @keyframes stretch {
+      from { height: 10px; }
+      to { height: 40px; }
+    }
+
+    /* Loader 3: Shadow Bounce */
+    .shadow-bounce-wrapper {
+      position: relative;
+      width: 40px;
+      height: 40px;
+    }
+    .shadow-bounce-ball {
+      width: 40px;
+      height: 40px;
+      background-color: #38bdf8;
+      border-radius: 50%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      animation: ballBounce 0.5s ease-in infinite alternate;
+      z-index: 2;
+    }
+    .shadow-bounce-shadow {
+      width: 40px;
+      height: 8px;
+      background-color: rgba(0,0,0,0.4);
+      border-radius: 50%;
+      position: absolute;
+      bottom: -20px;
+      left: 0;
+      animation: shadowScale 0.5s ease-in infinite alternate;
+      z-index: 1;
+    }
+
+    @keyframes ballBounce {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-40px); }
+    }
+    @keyframes shadowScale {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(0.5); opacity: 0.2; }
+    }
+
+    @media (max-width: 768px) {
+      .loader-box { width: 100%; max-width: 300px; }
+    }
+  </style>
+</head>
+<body>
+  <h2>CSS Bouncing Loaders</h2>
+  <div class="loaders-container">
+    <div class="loader-box">
+      <div class="loader-content">
+        <div class="bouncing-dots">
+          <div></div><div></div><div></div>
+        </div>
+      </div>
+      <div class="loader-name">Dots Bounce</div>
+    </div>
+    
+    <div class="loader-box">
+      <div class="loader-content">
+        <div class="bouncing-bars">
+          <div></div><div></div><div></div><div></div>
+        </div>
+      </div>
+      <div class="loader-name">Bars Stretch</div>
+    </div>
+
+    <div class="loader-box">
+      <div class="loader-content">
+        <div class="shadow-bounce-wrapper">
+          <div class="shadow-bounce-ball"></div>
+          <div class="shadow-bounce-shadow"></div>
+        </div>
+      </div>
+      <div class="loader-name">Shadow Bounce</div>
+    </div>
+  </div>
+</body>
+</html>

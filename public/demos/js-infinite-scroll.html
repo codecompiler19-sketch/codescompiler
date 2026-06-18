@@ -1,51 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Infinite Scroll Demo</title>
-  <style>
-    body { background: #f3f4f6; padding: 20px; font-family: sans-serif; display: flex; flex-direction: column; align-items: center;}
-    .feed { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 20px;}
-    .post { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-    .post-header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
-    .avatar { width: 40px; height: 40px; background: #e5e7eb; border-radius: 50%; }
-    .line { height: 12px; background: #e5e7eb; border-radius: 6px; margin-bottom: 10px; }
-    .img-box { height: 200px; background: #e5e7eb; border-radius: 8px; margin-top: 15px; }
-    .loading { text-align: center; padding: 20px; font-weight: bold; color: #6b7280; font-size: 1.2rem;}
-  </style>
+  <link rel="canonical" href="https://codescompiler.com/blog/js-infinite-scroll/" />
+  <script>
+    if (window.self === window.top) {
+      window.location.replace('/blog-demo/' + window.location.pathname.split('/').pop().replace('.html', '') + '/');
+    }
+  </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vertical Scroll Image Slider</title>
+    <style>
+        body { margin: 0; padding: 0; overflow: hidden; font-family: 'Inter', sans-serif; }
+        .vertical-slider-wrapper {
+          position: relative;
+          width: 100vw;
+          height: 100vh;
+        }
+        .vertical-slider-container {
+          width: 100%;
+          height: 100%;
+          transition: transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
+        .v-slide {
+          width: 100%;
+          height: 100vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: white;
+        }
+        .v-content { text-align: center; }
+        .v-content h2 { font-size: 4rem; margin: 0; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .v-content p { font-size: 1.5rem; opacity: 0.8; }
+        .v-controls {
+          position: absolute;
+          right: 30px;
+          top: 50%;
+          transform: translateY(-50%);
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+        }
+        .v-btn {
+          background: rgba(255,255,255,0.3);
+          border: none;
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          color: white;
+          font-size: 24px;
+          cursor: pointer;
+          transition: 0.3s;
+          backdrop-filter: blur(5px);
+        }
+        .v-btn:hover { background: white; color: black; }
+    </style>
 </head>
 <body>
-  <h1>FakeGram Scroll</h1>
-  <div class="feed" id="feed">
-    <!-- Initial Post -->
-    <div class="post">
-      <div class="post-header"><div class="avatar"></div><strong>User 1</strong></div>
-      <div class="line" style="width: 80%"></div><div class="line" style="width: 60%"></div>
-      <div class="img-box"></div>
+    <div class="vertical-slider-wrapper">
+      <div class="vertical-slider-container" id="v-slider">
+        <div class="v-slide" style="background-color: #ff7675;">
+          <div class="v-content">
+            <h2>Slide One</h2>
+            <p>Scroll down or use buttons</p>
+          </div>
+        </div>
+        <div class="v-slide" style="background-color: #74b9ff;">
+          <div class="v-content">
+            <h2>Slide Two</h2>
+            <p>Vertical transitions</p>
+          </div>
+        </div>
+        <div class="v-slide" style="background-color: #55efc4;">
+          <div class="v-content">
+            <h2>Slide Three</h2>
+            <p>Smooth snapping</p>
+          </div>
+        </div>
+        <div class="v-slide" style="background-color: #a29bfe;">
+          <div class="v-content">
+            <h2>Slide Four</h2>
+            <p>End of slider</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="v-controls">
+        <button class="v-btn" id="v-up">&#8593;</button>
+        <button class="v-btn" id="v-down">&#8595;</button>
+      </div>
     </div>
-  </div>
-  <div class="loading" id="loader">Loading more posts...</div>
-  <script>
-    const feed = document.getElementById('feed');
-    let count = 2;
-    
-    function createPost() {
-      const p = document.createElement('div'); p.className = 'post';
-      p.innerHTML = `<div class="post-header"><div class="avatar" style="background:#${Math.floor(Math.random()*16777215).toString(16)}"></div><strong>User ${count++}</strong></div>
-      <div class="line" style="width: ${Math.random()*40+40}%"></div><div class="line" style="width: ${Math.random()*30+30}%"></div>
-      <div class="img-box" style="background:#${Math.floor(Math.random()*16777215).toString(16)}"></div>`;
-      feed.appendChild(p);
-    }
-    
-    // Add initial
-    for(let i=0; i<4; i++) createPost();
 
-    window.addEventListener('scroll', () => {
-      const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-      if (scrollTop + clientHeight >= scrollHeight - 30) {
-        setTimeout(() => { for(let i=0; i<3; i++) createPost(); }, 300); // slight fake delay
-      }
-    });
-  </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('v-slider');
+            const slides = document.querySelectorAll('.v-slide');
+            const upBtn = document.getElementById('v-up');
+            const downBtn = document.getElementById('v-down');
+            
+            if(!container || !slides.length) return;
+
+            let currentIndex = 0;
+            let isAnimating = false;
+
+            function goToSlide(index) {
+                if(isAnimating) return;
+                isAnimating = true;
+                
+                currentIndex = index;
+                container.style.transform = `translateY(-${currentIndex * 100}vh)`;
+                
+                setTimeout(() => { isAnimating = false; }, 600);
+            }
+
+            downBtn.addEventListener('click', () => {
+                if (currentIndex < slides.length - 1) goToSlide(currentIndex + 1);
+            });
+
+            upBtn.addEventListener('click', () => {
+                if (currentIndex > 0) goToSlide(currentIndex - 1);
+            });
+
+            window.addEventListener('wheel', (e) => {
+                if (e.deltaY > 0) {
+                    if (currentIndex < slides.length - 1) goToSlide(currentIndex + 1);
+                } else {
+                    if (currentIndex > 0) goToSlide(currentIndex - 1);
+                }
+            });
+        });
+    </script>
 </body>
 </html>

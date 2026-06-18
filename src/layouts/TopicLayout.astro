@@ -1,0 +1,210 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import AdSlot from '../components/AdSlot.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  section: string;
+}
+
+const { title, description, section } = Astro.props;
+
+type NavLink = { label: string; href: string };
+type SectionDef = { label: string; icon: string; color: { bg: string; text: string }; links: NavLink[] };
+
+const SECTION_NAV: Record<string, SectionDef> = {
+  'cs-basics': {
+    label: 'CS Basics', icon: '💻',
+    color: { bg: 'bg-blue-100', text: 'text-blue-800' },
+    links: [
+      { label: '🖥️ Computer Basics',          href: '/cs-basics/computer-basics' },
+      { label: '🔢 Binary & Number Systems',   href: '/cs-basics/binary-number-systems' },
+      { label: '💾 Memory & Storage',          href: '/cs-basics/memory-storage' },
+      { label: '🖱️ Input & Output Devices',    href: '/cs-basics/input-output-devices' },
+      { label: '⌨️ Programming Basics',        href: '/cs-basics/programming-basics' },
+      { label: '🌐 Internet & Web Basics',     href: '/cs-basics/internet-web-basics' },
+      { label: '⚙️ Operating Systems',         href: '/cs-basics/operating-systems' },
+      { label: '📊 Data Structures',           href: '/cs-basics/data-structures' },
+      { label: '🧮 Algorithms',                href: '/cs-basics/algorithms' },
+      { label: '🗄️ DBMS',                      href: '/cs-basics/dbms' },
+      { label: '🏗️ Software Engineering',      href: '/cs-basics/software-engineering' },
+      { label: '🏛️ Computer Architecture',     href: '/cs-basics/computer-architecture' },
+    ],
+  },
+  'networking': {
+    label: 'Networking', icon: '🌐',
+    color: { bg: 'bg-cyan-100', text: 'text-cyan-700' },
+    links: [
+      { label: '📡 Computer Networks',         href: '/networking/computer-networks' },
+      { label: '🔌 Topologies & Hardware',     href: '/networking/network-topologies-hardware' },
+      { label: '🔗 OSI Model',                 href: '/networking/osi-model' },
+      { label: '🌍 TCP/IP',                    href: '/networking/tcp-ip' },
+      { label: '🔢 IP & Subnetting',           href: '/networking/ip-addressing-subnetting' },
+      { label: '⚙️ NAT & PAT Explained',       href: '/networking/nat-pat' },
+      { label: '🔀 Routing & Switching',       href: '/networking/routing-switching' },
+      { label: '🛠️ Network Protocols',        href: '/networking/network-protocols' },
+      { label: '🔒 HTTP & HTTPS',              href: '/networking/http-https' },
+      { label: '📶 DNS Explained',             href: '/networking/dns-explained' },
+      { label: '📶 Wireless & Mobile',         href: '/networking/wireless-mobile-networks' },
+      { label: '☁️ WAN & Cloud Networking',     href: '/networking/wan-cloud-networking' },
+      { label: '🛡️ Network Security',          href: '/networking/network-security' },
+      { label: '🛠️ Network Troubleshooting',   href: '/networking/network-troubleshooting' },
+      { label: '🤖 SDN & Virtualization',      href: '/networking/sdn-virtualization' },
+      { label: '🤖 Network Automation',        href: '/networking/network-automation-programmability' },
+      { label: '⚡ IoT Networking & Edge',     href: '/networking/iot-networking' },
+      { label: '🚀 CDNs & Anycast',            href: '/networking/cdn-anycast-routing' },
+    ],
+  },
+  'security': {
+    label: 'Security', icon: '🔐',
+    color: { bg: 'bg-red-100', text: 'text-red-700' },
+    links: [
+      { label: '🛡️ Cyber Security',            href: '/security/cyber-security' },
+      { label: '🕵️ Ethical Hacking',           href: '/security/ethical-hacking' },
+      { label: '🔑 Passwords & Privacy',       href: '/security/passwords-privacy' },
+      { label: '🦠 Viruses & Malware',         href: '/security/viruses-malware' },
+      { label: '🔏 VPN & Firewall',            href: '/security/vpn-firewall' },
+      { label: '🎣 Social Engineering',        href: '/security/social-engineering' },
+      { label: '🔐 Cryptography & Encryption', href: '/security/cryptography-encryption' },
+      { label: '☁️ Cloud Security & DevSecOps', href: '/security/cloud-security-devsecops' },
+      { label: '🚨 Incident Response & Forensics', href: '/security/incident-response-forensics' },
+      { label: '🔐 Zero Trust & IAM',          href: '/security/zero-trust-iam' },
+    ],
+  },
+  'ai-data': {
+    label: 'AI & Data', icon: '🤖',
+    color: { bg: 'bg-purple-100', text: 'text-purple-800' },
+    links: [
+      { label: '🤖 Artificial Intelligence', href: '/ai-data/artificial-intelligence' },
+      { label: '🧠 Machine Learning',        href: '/ai-data/machine-learning' },
+      { label: '📊 Data Science',            href: '/ai-data/data-science' },
+      { label: '☁️ Big Data',                href: '/ai-data/big-data' },
+      { label: '💬 Prompt Engineering',      href: '/ai-data/prompt-engineering' },
+    ],
+  },
+  'tools': {
+    label: 'Tools', icon: '🛠️',
+    color: { bg: 'bg-orange-100', text: 'text-orange-700' },
+    links: [
+      { label: '🐙 Git & GitHub',   href: '/tools/git-github' },
+      { label: '📝 VS Code Tips',   href: '/tools/vs-code-tips' },
+      { label: '💻 Command Line',   href: '/tools/command-line' },
+      { label: '📋 Cheat Sheets',   href: '/tools/cheat-sheets' },
+      { label: '❓ Interview Q&A',  href: '/tools/interview-qa' },
+      { label: '🏆 Quizzes',        href: '/tools/quizzes' },
+    ],
+  },
+};
+
+const sd = SECTION_NAV[section] ?? { label: section, icon: '📚', color: { bg: 'bg-gray-100', text: 'text-gray-700' }, links: [] };
+const currentPath = Astro.url.pathname.replace(/\/$/, '');
+---
+
+<BaseLayout title={title} description={description}>
+  <!-- Mobile sub-header -->
+  <div slot="sub-header" class="md:hidden bg-gray-50 flex items-center px-3 py-2 border-b border-gray-200 w-full relative z-10 shadow-sm">
+    <button id="sidebar-toggle" class="p-1.5 mr-2 rounded hover:bg-gray-200 transition-colors text-gray-700" aria-label="Toggle sidebar">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+    </button>
+    <nav class="text-[11px] text-gray-500 flex items-center gap-1.5 flex-wrap font-medium">
+      <a href="/" class="hover:text-[#04AA6D]">Home</a>
+      <span>/</span>
+      <span class="text-gray-900 font-semibold truncate max-w-[200px]">{title}</span>
+    </nav>
+  </div>
+
+  <!-- Centered wrapper (matches the tutorial fix) -->
+  <div class="w-full" style="max-width: 1600px; margin: 0 auto;">
+    <div class="flex overflow-hidden" style="min-height: calc(100vh - 120px);">
+
+      <!-- Left Sidebar -->
+      <aside
+        id="page-sidebar"
+        class="fixed top-[150px] bottom-0 left-0 z-50 md:z-0 w-64 bg-white border-r border-gray-100 transform -translate-x-full transition-transform duration-200 ease-in-out md:relative md:top-0 md:translate-x-0 overflow-y-auto flex-shrink-0"
+      >
+        <div class="px-3 py-3 border-b border-gray-200 bg-gray-50 sticky top-0">
+          <span class={`inline-block text-xs font-bold uppercase tracking-widest px-2 py-1 rounded ${sd.color.bg} ${sd.color.text}`}>
+            {sd.icon} {sd.label}
+          </span>
+        </div>
+        <nav class="py-2 flex flex-col" aria-label={`${sd.label} topics`}>
+          {sd.links.map((link) => {
+            const isActive = currentPath === link.href;
+            return (
+              <a
+                href={link.href}
+                aria-current={isActive ? 'page' : undefined}
+                class={`block px-4 py-2 text-[0.82rem] font-medium border-l-4 transition-colors ${
+                  isActive
+                    ? 'border-[#04AA6D] bg-[#04AA6D] text-white'
+                    : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-[#04AA6D]'
+                }`}
+              >
+                {link.label}
+              </a>
+            );
+          })}
+        </nav>
+      </aside>
+
+      <!-- Backdrop (mobile) -->
+      <div id="sidebar-backdrop" class="fixed top-[150px] bottom-0 left-0 right-0 bg-black/50 z-30 hidden md:hidden"></div>
+
+      <!-- Main Article + Right Ad -->
+      <div class="flex flex-1 min-w-0">
+      <article class="flex-1 min-w-0 px-5 sm:px-8 lg:px-14 py-8 bg-white">
+        <!-- Breadcrumb (desktop) -->
+        <nav class="hidden md:flex text-xs text-gray-400 mb-6 items-center gap-1 flex-wrap">
+          <a href="/" class="hover:text-[#04AA6D] transition-colors">Home</a>
+          <span>/</span>
+          <span class="capitalize text-gray-500">{sd.label}</span>
+          <span>/</span>
+          <span class="text-gray-700 font-medium">{title}</span>
+        </nav>
+
+        <!-- Title -->
+        <div class="mb-6 pb-5 border-b border-gray-100">
+          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">{title}</h1>
+          <p class="text-base text-gray-500">{description}</p>
+        </div>
+
+        <!-- Content (slot) -->
+        <div class="prose prose-gray prose-sm sm:prose-base max-w-none
+          prose-headings:font-bold prose-headings:text-gray-900
+          prose-a:text-[#04AA6D] prose-a:no-underline hover:prose-a:underline
+          prose-code:bg-gray-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-[#c7254e]
+          prose-pre:bg-[#282A35] prose-pre:text-gray-100 prose-pre:rounded-lg
+          prose-blockquote:border-[#04AA6D] prose-blockquote:bg-green-50
+          prose-li:text-gray-700">
+          <slot />
+        </div>
+      </article>
+
+      <!-- Right Sidebar — Google Ad -->
+      <aside class="hidden xl:block w-72 flex-shrink-0 pt-8 pr-8 pb-8">
+        <div class="sticky top-20 flex flex-col gap-6">
+          <AdSlot format="vertical" />
+        </div>
+      </aside>
+
+      </div><!-- /.flex article+ad -->
+    </div>
+  </div>
+
+  <script is:inline>
+    (function () {
+      const btn = document.getElementById('sidebar-toggle');
+      const sidebar = document.getElementById('page-sidebar');
+      const backdrop = document.getElementById('sidebar-backdrop');
+      if (!btn || !sidebar || !backdrop) return;
+      function open() { sidebar.classList.remove('-translate-x-full'); sidebar.classList.add('translate-x-0'); backdrop.classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+      function close() { sidebar.classList.add('-translate-x-full'); sidebar.classList.remove('translate-x-0'); backdrop.classList.add('hidden'); document.body.style.overflow = ''; }
+      btn.addEventListener('click', () => sidebar.classList.contains('-translate-x-full') ? open() : close());
+      backdrop.addEventListener('click', close);
+      window.addEventListener('resize', () => { if (window.innerWidth >= 768) { backdrop.classList.add('hidden'); document.body.style.overflow = ''; } });
+    })();
+  </script>
+</BaseLayout>

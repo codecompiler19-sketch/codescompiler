@@ -1,0 +1,99 @@
+---
+title: "SQL – Backup Database"
+description: "Learn the strategies and commands used to back up and restore SQL databases to protect against data loss."
+category: "sql"
+order: 51
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+A database backup is a snapshot of your data at a specific point in time. Without regular backups, a single corrupted query, hardware failure, or accidental DROP could permanently erase months of data. Every production system must have an automated backup strategy.
+
+There are three common backup types: **full backup** (complete copy), **differential backup** (changes since last full backup), and **incremental backup** (changes since last backup of any type). Most teams use full daily backups with hourly incrementals for critical systems.
+
+**Backup commands by database**
+```bash
+# MySQL
+mysqldump -u root -p academy_db > backup.sql
+
+# PostgreSQL
+pg_dump academy_db > backup.sql
+
+# SQLite (file copy)
+cp academy.db academy_backup_2024.db
+```
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={`CREATE TABLE students (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  age INTEGER,
+  city TEXT,
+  score REAL,
+  grade TEXT
+);
+INSERT INTO students VALUES
+  (1,'Aria Chen',22,'Mumbai',94.5,'A'),
+  (2,'Ben Torres',19,'Delhi',78.2,'B'),
+  (3,'Cleo Park',24,'Bangalore',88.0,'A'),
+  (4,'Dev Patel',21,'Chennai',65.5,'C'),
+  (5,'Eva Müller',20,'Hyderabad',91.3,'A'),
+  (6,'Finn Walsh',23,'Pune',72.8,'B'),
+  (7,'Gina Lopez',22,'Kolkata',55.1,'D'),
+  (8,'Hiro Sato',25,'Mumbai',83.6,'B');
+
+CREATE TABLE courses (
+  id INTEGER PRIMARY KEY,
+  title TEXT,
+  instructor TEXT,
+  category TEXT,
+  price REAL,
+  rating REAL
+);
+INSERT INTO courses VALUES
+  (1,'Python Mastery','Dr. Ada Lovelace','Programming',2999,4.9),
+  (2,'SQL Foundations','Prof. Edgar Codd','Database',1999,4.8),
+  (3,'Web Design','Ms. Grace Hopper','Design',1499,4.7),
+  (4,'Data Science','Dr. Alan Turing','Analytics',3999,4.9),
+  (5,'Cybersecurity','Mr. Kevin Mitnick','Security',2499,4.6);
+
+CREATE TABLE enrollments (
+  student_id INTEGER,
+  course_id INTEGER,
+  enroll_date TEXT,
+  status TEXT,
+  final_score REAL
+);
+INSERT INTO enrollments VALUES
+  (1,1,'2024-01-15','completed',95),
+  (1,2,'2024-02-01','completed',88),
+  (2,3,'2024-01-20','active',NULL),
+  (3,1,'2024-03-05','completed',90),
+  (4,4,'2024-02-10','dropped',45),
+  (5,2,'2024-01-10','completed',96),
+  (6,5,'2024-03-15','active',NULL),
+  (7,3,'2024-02-20','completed',60),
+  (8,1,'2024-04-01','active',NULL);`}
+  querySql={`-- Simulate a backup-to-table strategy
+-- (Common in analytics: archive snapshots)
+CREATE TABLE students_snapshot_2024 AS
+SELECT *, date('now') AS snapshot_date
+FROM students;
+
+SELECT * FROM students_snapshot_2024;`}
+/>
+
+## Key Points
+
+- Back up databases regularly — daily at minimum for production
+- Test your backups by actually restoring them periodically
+- Store backups off-site or in cloud storage
+- Use transactions to ensure consistency during backup
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

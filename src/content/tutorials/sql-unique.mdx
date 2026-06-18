@@ -1,0 +1,59 @@
+---
+title: "SQL – UNIQUE"
+description: "Enforce that all values in a column (or combination of columns) are distinct using the UNIQUE constraint."
+category: "sql"
+order: 57
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+The `UNIQUE` constraint ensures no two rows in a table share the same value in the specified column. This is the perfect tool for enforcing natural identifiers — usernames, email addresses, SKUs, license plates — where every entry must be one-of-a-kind.
+
+Unlike a PRIMARY KEY, a UNIQUE column can contain NULL values (and typically multiple NULLs are allowed, since NULL ≠ NULL in SQL). You can also create composite UNIQUE constraints spanning multiple columns — e.g., ensuring no student can enroll twice in the same course.
+
+**UNIQUE variations**
+```sql
+-- Single column unique
+CREATE TABLE users (email TEXT UNIQUE);
+
+-- Composite unique (two columns together must be unique)
+CREATE TABLE enrollments (
+  student_id INTEGER,
+  course_id  INTEGER,
+  UNIQUE (student_id, course_id)
+);
+```
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={``}
+  querySql={`-- UNIQUE prevents duplicate usernames and emails
+CREATE TABLE members (
+  id       INTEGER PRIMARY KEY,
+  username TEXT    NOT NULL UNIQUE,
+  email    TEXT    NOT NULL UNIQUE,
+  tier     TEXT    DEFAULT 'Free'
+);
+
+INSERT INTO members VALUES (1,'aria_sql','aria@code.io','Pro');
+INSERT INTO members VALUES (2,'ben_dev','ben@code.io','Free');
+
+SELECT * FROM members;
+
+-- Uncommenting the next line would fail (duplicate username):
+-- INSERT INTO members VALUES (3,'aria_sql','new@email.io','Free');`}
+/>
+
+## Key Points
+
+- UNIQUE prevents duplicate values in the constrained column
+- Multiple UNIQUE constraints are allowed on the same table
+- NULL values are typically exempt from uniqueness checks
+- Composite UNIQUE spans multiple columns: the combination must be unique
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

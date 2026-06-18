@@ -1,0 +1,50 @@
+---
+title: "SQL – INSERT"
+description: "Add new rows to a database table using the INSERT INTO statement."
+category: "sql"
+order: 12
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+Everything in a database started as an INSERT. When a user signs up on a website, their data is inserted into a users table. When you place an order online, a new row is inserted into the orders table. The `INSERT INTO` statement is how new data enters a database, and it is one of the four fundamental SQL data-manipulation operations (alongside SELECT, UPDATE, and DELETE).
+
+You can insert a single row at a time, or insert multiple rows in one statement for efficiency. Inserting multiple rows in a single query is dramatically faster than running hundreds of individual inserts — always batch when you can.
+
+**Two ways to INSERT**
+```sql
+-- With column list (recommended)
+INSERT INTO students (name, age, city, score, grade)
+VALUES ('Zara Ali', 20, 'Delhi', 88.5, 'A');
+
+-- Multi-row insert
+INSERT INTO students (name, age, city, score, grade)
+VALUES ('Jake Kim', 23, 'Pune', 76.0, 'B'),
+       ('Luna Ray', 21, 'Mumbai', 92.1, 'A');
+```
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={`CREATE TABLE gadgets (id INTEGER PRIMARY KEY, brand TEXT, model TEXT, price REAL, stock INTEGER);
+INSERT INTO gadgets VALUES (1,'StarTech','Nova Pro',45999,120),(2,'ArcWave','Pulse X',32500,85),(3,'ByteCraft','Pixel S',28999,200),(4,'StarTech','Nova Lite',18999,340),(5,'ArcWave','Pulse Mini',15000,95);`}
+  querySql={`-- Insert two new gadgets and verify
+INSERT INTO gadgets (brand, model, price, stock)
+VALUES ('ByteCraft','Pixel Ultra',62000,50),
+       ('QuantumGear','Nano Z',9999,500);
+
+SELECT * FROM gadgets ORDER BY price DESC;`}
+/>
+
+## Key Points
+
+- Always specify column names in INSERT — safer against schema changes
+- Values must match column data types
+- INSERT with SELECT copies rows from another table or query
+- Most databases auto-generate PRIMARY KEY values when omitted
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

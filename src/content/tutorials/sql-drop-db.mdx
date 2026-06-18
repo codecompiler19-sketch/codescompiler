@@ -1,0 +1,54 @@
+---
+title: "SQL – Drop Database"
+description: "Permanently delete an entire database and all its contents using the DROP DATABASE statement."
+category: "sql"
+order: 50
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+`DROP DATABASE` permanently and irreversibly deletes an entire database — every table, every row of data, every view and index inside it. This is one of the most destructive commands in SQL and should only be used with extreme caution in production environments.
+
+In production, this operation typically requires elevated permissions, active connection termination, and often a double-confirmation mechanism. Always back up your database before dropping it, and use `IF EXISTS` to avoid errors when the database does not exist.
+
+**Syntax (MySQL/PostgreSQL)**
+```sql
+-- Safe form
+DROP DATABASE IF EXISTS old_db;
+
+-- Without IF EXISTS — errors if db not found
+DROP DATABASE old_db;
+```
+> ⚠️ There is NO undo. This is permanent.
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={``}
+  querySql={`-- Simulate DROP DB by creating and dropping a table
+-- (SQLite has no separate databases to drop)
+CREATE TABLE temp_data (id INTEGER, value TEXT);
+INSERT INTO temp_data VALUES (1,'alpha'),(2,'beta');
+
+-- Verify it exists first
+SELECT name FROM sqlite_master WHERE type='table';
+
+-- Now drop it
+DROP TABLE IF EXISTS temp_data;
+
+-- Verify it is gone
+SELECT name FROM sqlite_master WHERE type='table';`}
+/>
+
+## Key Points
+
+- DROP DATABASE permanently deletes everything — no undo
+- Always back up before dropping any database
+- IF EXISTS prevents errors when the target does not exist
+- In SQLite, "dropping the database" means deleting the .db file
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

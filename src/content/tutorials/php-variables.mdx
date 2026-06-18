@@ -1,0 +1,96 @@
+---
+title: "PHP – Variables"
+description: "Variables are the building blocks of PHP. Learn strict naming rules, dynamic typing, variable assignment, and string interpolation."
+category: "php"
+order: 10
+---
+
+# PHP Variables
+
+In programming, **variables** act like physical storage containers holding critical chunks of data. You label the container with an identifiable name, place a value deep inside, and whenever you reference that label again, the PHP engine retrieves whatever value it holds.
+
+## Declaring a Variable
+
+Unlike Java or C++, PHP is incredibly straightforward. A variable strictly begins with the **`$`** sign, followed perfectly by the name of the variable.
+
+```php
+<?php
+  $userName = "John Doe"; // Stores a string of text
+  $age = 35;              // Stores an integer
+  $price = 10.50;         // Stores a floating decimal number
+  
+  echo $userName;
+?>
+```
+> [!NOTE]
+> Have you noticed? In PHP, you do **not** declare the type of the variable (like `String x` or `int y`). Because PHP is a *loosely typed* language, it intelligently determines the correct data type on the fly depending entirely on the value loaded into it!
+
+## Strict PHP Naming Conventions
+
+The PHP engine is incredibly unforgiving if you violate its naming conventions. For a variable name to be considered valid, it **must** abide by these absolute rules:
+
+1. A variable **starts** strictly with the `$` sign.
+2. A variable name must **start** with a letter or the underscore character `_`.
+3. A variable name **cannot** start with a number! `$1name` is completely invalid.
+4. A variable name can only contain highly standardized alpha-numeric characters and underscores (`A-z`, `0-9`, and `_`).
+5. Variables are fiercely **case-sensitive** (`$price` and `$PRICE` are two completely different containers).
+
+```php
+<?php
+  // Valid Variables
+  $car = "Volvo";
+  $_location = "New York";
+  $user99 = "Admin";
+  $first_name = "Sarah";
+
+  // INVALID Variables (These crash the system!)
+  // $99user = "Admin"; (Starts with a number)
+  // $my-car = "Audi";  (Contains a hyphen)
+  // $user name = "Jim";(Contains a space)
+?>
+```
+
+## Outputting Variables inside Strings
+
+One of PHP's most famous and wildly praised features is how wonderfully simple it is to interject variables directly inside text strings using double quotes (`"`).
+
+```php
+<?php
+  $favoriteColor = "Blue";
+  
+  // Method 1: The Magic Method (Interpolation)
+  echo "My beautiful car is $favoriteColor!";
+  
+  // Method 2: The Concatenation Method (Using periods)
+  echo "My beautiful car is " . $favoriteColor . "!"; 
+?>
+```
+*(Both techniques generate the exact same HTML output!)*
+
+## Interactive Sandbox
+
+Try utilizing different variables in the live environment below. See what happens if you inadvertently create an illegal variable name!
+
+
+<Editor 
+  initialPhp={`<?php
+// Initialize our core user variables
+$product_name = "CodesCompiler Pro License";
+$price = 49.99;
+$quantity = 3;
+
+// Perform some underlying mathematics
+$total = $price * $quantity;
+
+// Output the final receipt wrapper directly to the DOM
+echo "<div style='font-family: monospace; border: 2px dashed #000; padding: 20px; width: 300px;'>";
+echo "<h3>🛍️ Purchase Receipt</h3>";
+echo "Item: <b>\$product_name</b><br>";
+echo "Price per unit: $\$$price<br>";
+echo "Units bought: \$quantity<br>";
+echo "<hr>";
+echo "<strong>Grand Total: $\$$total</strong>";
+echo "</div>";
+?>`}
+  activeTab="php" 
+/>

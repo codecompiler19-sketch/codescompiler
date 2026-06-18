@@ -1,0 +1,105 @@
+---
+import TopicLayout from '../../layouts/TopicLayout.astro';
+---
+<TopicLayout title="Zero Trust & IAM (Identity & Access Management)" description="Explore the principles of Zero Trust Architecture, Authentication vs. Authorization, MFA methods, Single Sign-On (SSO), and Access Control models like RBAC and ABAC." section="security">
+  <h2>Introduction to Identity as the New Perimeter</h2>
+  <p>In traditional network setups, securing an organization meant building a strong boundary around the corporate office. If you were physically inside the building or connected via a corporate Virtual Private Network (VPN), you were trusted. Outside connections were blocked. Today, with remote workforces, SaaS applications, and cloud computing, this castle-and-moat model has collapsed. Employees access files from home networks, personal mobile devices, and public coffee shop Wi-Fi.</p>
+  
+  <p>Because there is no longer a physical perimeter, security professionals now declare that <strong>Identity is the New Security Perimeter</strong>. Managing and securing digital identities has become the core defense against cyberattacks. This is achieved through the combined principles of Identity &amp; Access Management (IAM) and Zero Trust Architecture (ZTA).</p>
+
+  <h2>Understanding IAM: Authentication vs. Authorization</h2>
+  <p>Every IAM system is built on two distinct processes. Although often confused, they handle completely different parts of the access control equation:</p>
+  <ul>
+    <li><strong>Authentication (AuthN)</strong> — The process of verifying <em>who</em> a user is. It answers the question, "Are you who you claim to be?" The system verifies this using credentials like passwords, biometrics, or hardware keys.</li>
+    <li><strong>Authorization (AuthZ)</strong> — The process of verifying <em>what</em> an authenticated user is allowed to do. It answers the question, "Do you have permission to read this file, modify this database, or access this dashboard?" Authorization occurs only after successful authentication.</li>
+  </ul>
+
+  <h2>Core Principles of Zero Trust Architecture (ZTA)</h2>
+  <p>Zero Trust is a security framework based on a simple, uncompromising premise: <strong>"Never trust, always verify."</strong> In a Zero Trust environment, no user, device, or application is trusted by default, regardless of whether they are located inside the physical corporate network or outside. Zero Trust relies on three main principles:</p>
+  <ol>
+    <li><strong>Verify Explicitly</strong> — Always authenticate and authorize access requests based on all available data points. This includes user identity, physical location, device health and posture (e.g., does the laptop have updated antivirus?), service or workload context, and anomalies in behavior.</li>
+    <li><strong>Use Least Privilege Access</strong> — Limit user access with Just-In-Time (JIT) and Just-Enough-Access (JEA) models. This ensures users are only granted the minimum permissions necessary for the specific task they are doing, for the shortest duration necessary, protecting data from lateral movement.</li>
+    <li><strong>Assume Breach</strong> — Operate under the assumption that attackers are already inside your network. To minimize the damage, organizations segment access (micro-segmentation), encrypt all data sessions in transit and at rest, and use analytics to detect threats in real time.</li>
+  </ol>
+
+  <h2>Multi-Factor Authentication (MFA) Deep Dive</h2>
+  <p>Single passwords are no longer enough to protect accounts. Automated credential-stuffing attacks and phishing campaigns bypass passwords easily. <strong>Multi-Factor Authentication (MFA)</strong> requires users to present two or more independent credentials to gain access:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>MFA Factor Category</th>
+        <th>Common Methods</th>
+        <th>Security Level</th>
+        <th>Key Vulnerability / Threat</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Something You Know</strong> (Knowledge)</td>
+        <td>Passwords, PINs, security questions.</td>
+        <td>Low</td>
+        <td>Phishing, credential database leaks, dictionary attacks, and user reuse across sites.</td>
+      </tr>
+      <tr>
+        <td><strong>Something You Have</strong> (Possession)</td>
+        <td>SMS OTP (One-Time Passwords), Authenticator App codes (TOTP), Push Notifications.</td>
+        <td>Medium</td>
+        <td>SMS interception (SIM swapping), push-notification fatigue (bombarding a user with alerts until they click approve).</td>
+      </tr>
+      <tr>
+        <td><strong>Something You Are</strong> (Inherence)</td>
+        <td>Biometrics (fingerprints, facial recognition, retina scans).</td>
+        <td>High</td>
+        <td>Physical access replication, software-level spoofing, and device integration vulnerabilities.</td>
+      </tr>
+      <tr>
+        <td><strong>FIDO2 / WebAuthn Keys</strong> (Cryptographic Possession)</td>
+        <td>YubiKeys, Apple TouchID / Windows Hello hardware chips.</td>
+        <td>Very High</td>
+        <td>Physical theft of the physical hardware key (highly rare and still requires biometrics/PIN to unlock).</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Single Sign-On (SSO) &amp; Identity Federation</h2>
+  <p>Requiring employees to maintain dozens of separate credentials for various tools leads to "password fatigue," resulting in weak, reused passwords. <strong>Single Sign-On (SSO)</strong> solves this by allowing users to authenticate once with a centralized Identity Provider (IdP) and gain access to all authorized applications without re-entering credentials.</p>
+  
+  <p>To communicate authentication tokens securely between different corporate services and web applications, SSO systems rely on standardized protocols:</p>
+  <ul>
+    <li><strong>SAML 2.0 (Security Assertion Markup Language)</strong> — An XML-based standard used primarily in enterprise networks to exchange authentication and authorization data between an IdP and a Service Provider (SP).</li>
+    <li><strong>OIDC (OpenID Connect)</strong> — A modern, lightweight identity layer built on top of the <strong>OAuth 2.0</strong> framework. It uses JSON Web Tokens (JWT) to transmit identity information, making it the preferred standard for mobile and modern web applications.</li>
+  </ul>
+
+  <h2>Access Control Models</h2>
+  <p>Once a user is authenticated, the system determines their authorization permissions using one of two primary access control architectures:</p>
+  
+  <h3>1. Role-Based Access Control (RBAC)</h3>
+  <p>Permissions are linked to specific job roles within the organization, and users are assigned to those roles. For example, a user assigned the "Billing Manager" role automatically receives access to billing software and transaction databases, but cannot access software source repositories. RBAC is easy to manage for structured organizations but can lead to "role explosion" when too many custom roles are created.</p>
+
+  <h3>2. Attribute-Based Access Control (ABAC)</h3>
+  <p>A more flexible, dynamic model where access is granted based on attributes associated with the user, the resource, and the current environment. For example: <em>"Allow access to the Payroll Database only if the user is in the HR department, their device is corporate-managed, and the access request occurs during business hours (9 AM - 5 PM)."</em> ABAC is highly granular and supports zero-trust validation but is more complex to configure initially.</p>
+
+  <h2>Frequently Asked Questions (FAQ)</h2>
+
+  <h3>❓ Why is SMS-based multi-factor authentication considered insecure?</h3>
+  <p>SMS verification codes are vulnerable to **SIM swapping**—where a hacker social-engineers a mobile carrier employee into transferring the victim's phone number to a SIM card controlled by the hacker. Additionally, SMS messages are transmitted in cleartext over cellular networks and can be intercepted using rogue cellular base stations (IMSI catchers).</p>
+
+  <h3>❓ What is "MFA Fatigue" or an "MFA Prompt Bombing" attack?</h3>
+  <p>This occurs when an attacker obtains a user's password and repeatedly triggers login requests, causing push notification prompts to flood the victim's phone. Attackers often run these campaigns in the middle of the night, hoping the sleep-deprived victim will eventually click "Approve" just to stop the notifications.</p>
+
+  <h3>❓ How does Single Sign-On (SSO) improve security if it creates a single point of failure?</h3>
+  <p>While SSO creates a high-value target (the Identity Provider), it allows security teams to focus all their resources on securing a single gateway. It enables strict enforcement of strong password policies, mandatory MFA, device posture checking, and real-time monitoring of login locations—measures that are impossible to coordinate across dozens of fragmented individual accounts.</p>
+
+  <h3>❓ What is the difference between OAuth 2.0 and OpenID Connect (OIDC)?</h3>
+  <p>OAuth 2.0 is an **authorization** framework designed to delegate access (e.g., allowing an app to post to your social media account on your behalf without giving it your password). OpenID Connect (OIDC) is an **authentication** layer built on top of OAuth 2.0 that provides identity information, verifying who the user is.</p>
+
+  <h2>What's Next?</h2>
+  <p>Deepen your cybersecurity and access defense knowledge with these topics:</p>
+  <ul>
+    <li>Learn how to protect your personal identity credentials in <a href="/security/passwords-privacy">Passwords &amp; Privacy</a>.</li>
+    <li>Explore how VPNs and Firewalls manage traffic access boundaries in <a href="/security/vpn-firewall">VPN &amp; Firewall</a>.</li>
+    <li>Understand the broader threats that bypass authentication controls in <a href="/security/cyber-security">Cyber Security</a>.</li>
+    <li>Learn how to scan code for credentials and cloud vulnerabilities in <a href="/security/cloud-security-devsecops">Cloud Security &amp; DevSecOps</a>.</li>
+  </ul>
+</TopicLayout>

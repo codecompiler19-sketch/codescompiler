@@ -1,0 +1,214 @@
+---
+export interface Props {
+  setupSql?: string;
+  querySql?: string;
+  height?: string;
+}
+
+const {
+  setupSql = `CREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, age INTEGER, city TEXT, score REAL, grade TEXT);
+INSERT INTO students VALUES (1,'Aria Chen',22,'Mumbai',94.5,'A'),(2,'Ben Torres',19,'Delhi',78.2,'B'),(3,'Cleo Park',24,'Bangalore',88.0,'A');`,
+  querySql   = `SELECT * FROM students;`,
+  height = '480px',
+} = Astro.props;
+
+const uid = Math.random().toString(36).slice(2, 9);
+---
+
+<div
+  class="not-prose sql-root my-8 rounded-xl border border-gray-200 shadow-lg overflow-hidden bg-[#1e1e2e]"
+  style={`height:${height}`}
+  data-setup={setupSql}
+  data-query={querySql}
+  data-uid={uid}
+>
+  <!-- Header -->
+  <div class="flex items-center justify-between px-4 py-2 bg-[#181825] border-b border-white/10">
+    <div class="flex items-center gap-1.5">
+      <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+      <span class="w-3 h-3 rounded-full bg-yellow-400/80"></span>
+      <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
+      <span class="ml-3 text-xs text-gray-400 font-mono hidden sm:block">sql — CodesCompiler</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <button class="sql-reset text-xs text-gray-400 hover:text-white px-2 py-1 rounded border border-white/10 hover:border-white/30 transition-colors font-mono">Reset</button>
+      <button class="sql-run flex items-center gap-1.5 px-4 py-1.5 bg-[#336791] hover:bg-[#2a5478] text-white text-xs font-bold rounded transition-colors">
+        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M6.3 2.84A1.5 1.5 0 004 4.11v11.78a1.5 1.5 0 002.3 1.27l9.344-5.891a1.5 1.5 0 000-2.538L6.3 2.84z"/>
+        </svg>
+        Run Query ▶
+      </button>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="flex h-[calc(100%-2.5rem)]">
+
+    <!-- Left: SQL Editor -->
+    <div class="w-1/2 border-r border-white/10 flex flex-col overflow-hidden">
+      <div class="px-3 py-1 bg-[#1a1b26] border-b border-white/05 flex items-center gap-2">
+        <span class="text-[10px] text-[#336791] font-bold uppercase tracking-widest font-mono">SQLite</span>
+        <span class="text-[10px] text-gray-600 font-mono">– edit &amp; run</span>
+      </div>
+      <div class="sql-editor flex-1 overflow-auto text-sm"></div>
+    </div>
+
+    <!-- Right: Results -->
+    <div class="w-1/2 flex flex-col bg-[#0d1117]">
+      <div class="px-3 py-1.5 bg-[#161b22] border-b border-white/10 flex items-center justify-between">
+        <span class="text-xs text-gray-400 font-mono">Results</span>
+        <span class="sql-row-count text-[10px] text-gray-600 font-mono"></span>
+      </div>
+      <div class="sql-results flex-1 overflow-auto p-3 font-mono text-xs">
+        <span class="text-gray-500">← Click <strong class="text-[#336791]">Run Query ▶</strong> to see results</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script is:inline type="module">
+if (!window.__sqlEditorInit) {
+  window.__sqlEditorInit = true;
+
+  async function loadSqlJs() {
+    if (window.initSqlJs) return;
+    await new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js';
+      s.onload = res; s.onerror = rej;
+      document.head.appendChild(s);
+    });
+  }
+
+  async function initAll() {
+    const BASE = 'https://esm.sh';
+    const [
+      { EditorState },
+      { EditorView, keymap, lineNumbers, highlightActiveLineGutter, highlightActiveLine, drawSelection },
+      { defaultKeymap, history, historyKeymap, indentWithTab },
+      { sql: sqlLang },
+      { oneDark },
+      { autocompletion, completionKeymap },
+      { bracketMatching },
+      { closeBrackets, closeBracketsKeymap },
+    ] = await Promise.all([
+      import(`${BASE}/@codemirror/state`),
+      import(`${BASE}/@codemirror/view`),
+      import(`${BASE}/@codemirror/commands`),
+      import(`${BASE}/@codemirror/lang-sql`),
+      import(`${BASE}/@codemirror/theme-one-dark`),
+      import(`${BASE}/@codemirror/autocomplete`),
+      import(`${BASE}/@codemirror/language`),
+      import(`${BASE}/@codemirror/autocomplete`),
+    ]);
+
+    await loadSqlJs();
+
+    const SQL = await initSqlJs({
+      locateFile: f => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/${f}`
+    });
+
+    const baseExt = [
+      lineNumbers(), highlightActiveLineGutter(), highlightActiveLine(),
+      drawSelection(), history(), bracketMatching(), closeBrackets(),
+      autocompletion(), oneDark, sqlLang(),
+      keymap.of([...defaultKeymap, ...historyKeymap, ...completionKeymap, ...closeBracketsKeymap, indentWithTab]),
+      EditorView.lineWrapping,
+    ];
+
+    document.querySelectorAll('.sql-root').forEach(wrapper => {
+      const editorEl  = wrapper.querySelector('.sql-editor');
+      const resultsEl = wrapper.querySelector('.sql-results');
+      const rowCount  = wrapper.querySelector('.sql-row-count');
+      const runBtn    = wrapper.querySelector('.sql-run');
+      const resetBtn  = wrapper.querySelector('.sql-reset');
+
+      const setupSql  = wrapper.dataset.setup  || '';
+      const querySql  = wrapper.dataset.query  || '';
+
+      // Create fresh DB for this editor
+      const db = new SQL.Database();
+      try { db.run(setupSql); } catch(e) { console.warn('Setup SQL error:', e); }
+
+      let view = new EditorView({
+        state: EditorState.create({ doc: querySql, extensions: baseExt }),
+        parent: editorEl,
+      });
+
+      function renderTable(results) {
+        if (!results || results.length === 0) {
+          resultsEl.innerHTML = '<span style="color:#04AA6D;font-family:monospace;">✓ Query executed successfully (no rows returned)</span>';
+          rowCount.textContent = '';
+          return;
+        }
+        const { columns, values } = results[0];
+        let html = '<div style="overflow:auto;width:100%;height:100%;">';
+        html += '<table style="width:100%;border-collapse:collapse;font-size:12px;font-family:\'Fira Code\',monospace;">';
+        // Header row
+        html += '<thead><tr style="border-bottom:2px solid rgba(255,255,255,0.15);">';
+        columns.forEach(col => {
+          html += `<th style="padding:8px 14px;text-align:left;color:#7dd3fc;font-weight:700;white-space:nowrap;letter-spacing:0.03em;">${col}</th>`;
+        });
+        html += '</tr></thead><tbody>';
+        // Data rows
+        values.forEach((row, i) => {
+          const bg = i % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'transparent';
+          html += `<tr style="background:${bg};border-bottom:1px solid rgba(255,255,255,0.06);">`;
+          row.forEach(cell => {
+            const val = cell === null
+              ? '<span style="color:#6b7280;font-style:italic;">NULL</span>'
+              : String(cell);
+            html += `<td style="padding:7px 14px;color:#e2e8f0;white-space:nowrap;">${val}</td>`;
+          });
+          html += '</tr>';
+        });
+        html += '</tbody></table></div>';
+        resultsEl.innerHTML = html;
+        const total = values.length;
+        rowCount.textContent = `${total} row${total !== 1 ? 's' : ''}`;
+      }
+
+      function runQuery() {
+        const code = view.state.doc.toString().trim();
+        if (!code) return;
+        // Re-initialize DB for each run to keep setup data fresh
+        const freshDb = new SQL.Database();
+        try {
+          freshDb.run(setupSql);
+          const results = freshDb.exec(code);
+          renderTable(results);
+        } catch(err) {
+          resultsEl.innerHTML = `<span class="text-red-400">❌ ${err.message || err}</span>`;
+          rowCount.textContent = '';
+        }
+      }
+
+      runBtn?.addEventListener('click', runQuery);
+
+      resetBtn?.addEventListener('click', () => {
+        view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: querySql } });
+        resultsEl.innerHTML = '<span class="text-gray-500">← Click <strong class="text-[#336791]">Run Query ▶</strong> to see results</span>';
+        rowCount.textContent = '';
+      });
+    });
+  }
+
+  initAll().catch(console.error);
+}
+</script>
+
+<style is:global>
+  .sql-root .cm-editor {
+    height: 100%;
+    font-size: 13px;
+    font-family: 'Fira Code', 'JetBrains Mono', 'Cascadia Code', monospace;
+  }
+  .sql-root .cm-scroller { overflow: auto; }
+  .cm-editor.cm-focused { outline: none; }
+
+  @media (max-width: 640px) {
+    .sql-root > div.flex { flex-direction: column; }
+    .sql-root .w-1\/2 { width: 100%; height: 50%; }
+  }
+</style>

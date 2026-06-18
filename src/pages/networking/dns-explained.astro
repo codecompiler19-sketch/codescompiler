@@ -1,0 +1,112 @@
+---
+import TopicLayout from '../../layouts/TopicLayout.astro';
+---
+<TopicLayout title="DNS Explained" description="Demystify the Domain Name System. Learn about the DNS lookup process, recursive vs. authoritative servers, record types (A, CNAME, MX, TXT), and TTL." section="networking">
+  <h2>What is DNS?</h2>
+  <p>The <strong>DNS (Domain Name System)</strong> is a decentralized, hierarchical naming system that serves as the "phonebook of the Internet." While humans access websites using easy-to-remember domain names (like <code>google.com</code> or <code>wikipedia.org</code>), web browsers and routers interact using numerical IP addresses (like <code>142.250.190.46</code> or <code>2607:f8b0:4005:809::200e</code>).</p>
+  
+  <p>The primary job of DNS is to translate (resolve) these human-readable domain names into machine-readable IP addresses. Without DNS, you would have to memorize the exact IP address of every website you visit, making the web virtually unusable for the average person.</p>
+
+  <h2>The Step-by-Step DNS Lookup Journey</h2>
+  <p>When you type a URL into your browser and press Enter, your computer initiates a recursive lookup process, querying four distinct types of DNS servers to resolve the domain name. If the IP is not already saved in your local cache, the lookup follows this sequence:</p>
+  <ol>
+    <li><strong>The Client Query:</strong> Your browser sends a query looking for <code>www.example.com</code> to your local operating system. The OS checks its local cache and hosts file. If it's not found, it forwards the query to a **DNS Recursive Resolver** (usually hosted by your ISP, or public services like Google's `8.8.8.8` or Cloudflare's `1.1.1.1`).</li>
+    <li><strong>Querying the Root Server:</strong> The Recursive Resolver does not know the IP. It queries a **DNS Root Nameserver** (there are 13 logical root server groups globally). The Root server does not know the IP either, but it knows where to find the Top-Level Domain (TLD) servers based on the domain extension. It directs the resolver to the **.com TLD server**.</li>
+    <li><strong>Querying the TLD Server:</strong> The Resolver then queries the **.com TLD Nameserver**. The TLD server manages the registry for all domains ending in `.com`. It reads the query and directs the resolver to the **Authoritative Nameservers** for `example.com` (which are specified when the domain is registered).</li>
+    <li><strong>Querying the Authoritative Server:</strong> The Resolver queries the **Authoritative Nameserver**. This server holds the master records for `example.com`. It reads the record for `www.example.com` and returns the target IPv4 address (e.g., <code>93.184.216.34</code>) back to the Recursive Resolver.</li>
+    <li><strong>Delivering the IP:</strong> The Recursive Resolver receives the IP address, saves it in its local cache for future queries, and returns it to your browser. Your browser then initiates an HTTP/TCP connection directly to the server at that IP address to load the page.</li>
+  </ol>
+
+  <h2>Common DNS Record Types</h2>
+  <p>Domain administrators configure various types of records in their authoritative nameservers to control how traffic is routed for their domains:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Record Type</th>
+        <th>Name</th>
+        <th>What It Maps</th>
+        <th>Typical Use Case</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>A</strong></td>
+        <td>Address Record</td>
+        <td>Maps a domain name to a 32-bit **IPv4 address**.</td>
+        <td>Directing <code>example.com</code> to your web hosting server.</td>
+      </tr>
+      <tr>
+        <td><strong>AAAA</strong></td>
+        <td>IPv6 Address Record</td>
+        <td>Maps a domain name to a 128-bit **IPv6 address**.</td>
+        <td>Directing traffic to modern IPv6-compatible hosting servers.</td>
+      </tr>
+      <tr>
+        <td><strong>CNAME</strong></td>
+        <td>Canonical Name</td>
+        <td>Maps an alias domain name to another canonical domain name (alias-to-alias).</td>
+        <td>Routing <code>www.example.com</code> directly to the root domain <code>example.com</code>.</td>
+      </tr>
+      <tr>
+        <td><strong>MX</strong></td>
+        <td>Mail Exchanger</td>
+        <td>Specifies the mail servers responsible for receiving email for the domain (with priority levels).</td>
+        <td>Directing email traffic to Google Workspace or Microsoft Outlook servers.</td>
+      </tr>
+      <tr>
+        <td><strong>TXT</strong></td>
+        <td>Text Record</td>
+        <td>Holds arbitrary, unformatted text data.</td>
+        <td>Domain ownership verification (Google Search Console) and email security records (SPF, DKIM, DMARC).</td>
+      </tr>
+      <tr>
+        <td><strong>NS</strong></td>
+        <td>Name Server</td>
+        <td>Specifies which DNS servers are authoritative for the domain.</td>
+        <td>Delegating domain DNS management to Cloudflare or Route53.</td>
+      </tr>
+      <tr>
+        <td><strong>SOA</strong></td>
+        <td>Start of Authority</td>
+        <td>Contains administrative details about the zone (admin email, refresh times, serial numbers).</td>
+        <td>Required for every DNS zone to govern caching behavior and transfers.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>DNS Caching, TTL, and Propagation</h2>
+  <p>To prevent the 13 root servers and TLD servers from being overwhelmed with billions of queries every second, DNS relies heavily on **Caching** at multiple layers: your web browser, operating system, local router, and the Recursive Resolver all cache DNS records locally.</p>
+  
+  <p>Every DNS record contains a value called **TTL (Time to Live)**, measured in seconds. TTL determines how long a resolver is allowed to save the DNS record in its local cache before the record expires and a fresh query to the authoritative server must be made. For example, a TTL of `3600` means the resolver caches the IP for exactly one hour.</p>
+  
+  <p>When you update a DNS record (such as changing your web host IP), it takes time for recursive resolvers worldwide to clear their cached records and fetch the new IP. This delay is known as **DNS Propagation**, which can take anywhere from a few minutes to 48 hours to complete globally, depending on the TTL settings.</p>
+
+  <h2>Frequently Asked Questions (FAQ)</h2>
+
+  <h3>❓ What is the difference between a recursive resolver and an authoritative nameserver?</h3>
+  <p>
+    <ul>
+      <li>A <strong>Recursive Resolver</strong> acts as the client's agent. It does not own any DNS records; instead, it does the work of querying the root, TLD, and authoritative servers to find the IP for the client, caching the results.</li>
+      <li>An <strong>Authoritative Nameserver</strong> is the final database of DNS records for a specific domain. It holds the official records and provides the definitive IP address answer to the recursive resolver.</li>
+    </ul>
+  </p>
+
+  <h3>❓ What is DNS Spoofing (DNS Cache Poisoning)?</h3>
+  <p>DNS Cache Poisoning is an exploit where an attacker injects false DNS data into the cache of a Recursive Resolver. When users query that resolver for a legitimate site (like `bank.com`), the resolver returns the attacker's server IP address instead of the real bank IP, leading users to a phishing website. Developers prevent this by deploying **DNSSEC (DNS Security Extensions)**, which adds cryptographic signatures to DNS records to verify their authenticity.</p>
+
+  <h3>❓ How does a DNS lookup affect website loading speed?</h3>
+  <p>Before a browser can download a single file from a website, it must complete a DNS lookup to find the IP. A slow DNS resolver can add hundreds of milliseconds of delay to the initial page load. Using fast, public DNS resolvers like Cloudflare (`1.1.1.1`) or Google (`8.8.8.8`) can significantly speed up browsing.</p>
+
+  <h3>❓ What is a reverse DNS lookup?</h3>
+  <p>A reverse DNS lookup is the query process of resolving an IP address back to its associated domain name (using a special **PTR record**). It is commonly used by mail servers to verify if an incoming email originated from a legitimate server domain, helping block spam emails.</p>
+
+  <h2>What's Next?</h2>
+  <p>Advance your network protocol studies:</p>
+  <ul>
+    <li>Learn how web browsers use the resolved IP to send requests in <a href="/networking/http-https">HTTP &amp; HTTPS</a>.</li>
+    <li>Explore how DNS requests are routed over UDP/TCP in <a href="/networking/network-protocols">Network Protocols</a>.</li>
+    <li>Learn subnet calculations and IP ranges in <a href="/networking/ip-addressing-subnetting">IP Addressing &amp; Subnetting</a>.</li>
+    <li>Explore how firewalls block malicious DNS traffic in <a href="/networking/network-security">Network Security</a>.</li>
+  </ul>
+</TopicLayout>

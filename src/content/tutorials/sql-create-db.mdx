@@ -1,0 +1,54 @@
+---
+title: "SQL – Create Database"
+description: "Create a new database using the CREATE DATABASE statement and understand how database creation works."
+category: "sql"
+order: 49
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+The first step in any new project is creating a dedicated database to hold all your data. `CREATE DATABASE` is the command used in MySQL and PostgreSQL. In SQLite, simply opening a connection to a new file path automatically creates that database file.
+
+Best practices for naming: use lowercase with underscores (`online_store`, `hr_system`), avoid spaces and special characters, and make the name descriptive. The database name is permanent and changing it later requires migrating all data.
+
+**Syntax by database**
+```sql
+-- MySQL / SQL Server
+CREATE DATABASE academy_db;
+USE academy_db;
+
+-- PostgreSQL
+CREATE DATABASE academy_db;
+
+-- SQLite
+-- Just open/connect to a new .db file path
+```
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={``}
+  querySql={`-- In SQLite, we simulate CREATE DATABASE behavior
+-- by creating a schema with multiple tables together.
+-- This creates the entire "academy" database structure:
+
+CREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, grade TEXT);
+CREATE TABLE courses  (id INTEGER PRIMARY KEY, title TEXT, price REAL);
+CREATE TABLE instructors (id INTEGER PRIMARY KEY, name TEXT, rating REAL);
+
+-- Verify all tables exist:
+SELECT name FROM sqlite_master WHERE type='table';`}
+/>
+
+## Key Points
+
+- MySQL/PostgreSQL use CREATE DATABASE; SQLite uses file creation
+- Database names should be lowercase with underscores
+- CREATE DATABASE IF NOT EXISTS prevents errors on re-runs
+- Always USE or connect to the database before running queries on it
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

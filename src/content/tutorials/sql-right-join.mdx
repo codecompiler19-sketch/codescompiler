@@ -1,0 +1,100 @@
+---
+title: "SQL – RIGHT JOIN"
+description: "Preserve all rows from the right table using RIGHT JOIN, with NULLs for non-matching left rows."
+category: "sql"
+order: 31
+---
+
+import SqlEditor from '../../components/SqlEditor.astro';
+
+`RIGHT JOIN` is the mirror of `LEFT JOIN` — it preserves every row from the **right** table whether or not a match exists in the left. Non-matching left columns are filled with NULL. In practice, most developers rewrite RIGHT JOINs as LEFT JOINs by swapping the table order, since LEFT JOIN is more intuitive and universally understood.
+
+RIGHT JOIN is useful when you want to keep the "lookup" or "dimension" table complete — e.g., keeping all courses visible even if no student has enrolled in them yet.
+
+**Equivalent queries**
+```sql
+-- RIGHT JOIN
+SELECT * FROM enrollments e
+RIGHT JOIN courses c ON c.id = e.course_id;
+
+-- Equivalent LEFT JOIN (just swap table order)
+SELECT * FROM courses c
+LEFT JOIN enrollments e ON c.id = e.course_id;
+```
+
+## Try It Yourself — Interactive SQL Editor
+
+Edit the query below and click **Run Query ▶** to see live results powered by SQLite running directly in your browser.
+
+<SqlEditor
+  setupSql={`CREATE TABLE students (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  age INTEGER,
+  city TEXT,
+  score REAL,
+  grade TEXT
+);
+INSERT INTO students VALUES
+  (1,'Aria Chen',22,'Mumbai',94.5,'A'),
+  (2,'Ben Torres',19,'Delhi',78.2,'B'),
+  (3,'Cleo Park',24,'Bangalore',88.0,'A'),
+  (4,'Dev Patel',21,'Chennai',65.5,'C'),
+  (5,'Eva Müller',20,'Hyderabad',91.3,'A'),
+  (6,'Finn Walsh',23,'Pune',72.8,'B'),
+  (7,'Gina Lopez',22,'Kolkata',55.1,'D'),
+  (8,'Hiro Sato',25,'Mumbai',83.6,'B');
+
+CREATE TABLE courses (
+  id INTEGER PRIMARY KEY,
+  title TEXT,
+  instructor TEXT,
+  category TEXT,
+  price REAL,
+  rating REAL
+);
+INSERT INTO courses VALUES
+  (1,'Python Mastery','Dr. Ada Lovelace','Programming',2999,4.9),
+  (2,'SQL Foundations','Prof. Edgar Codd','Database',1999,4.8),
+  (3,'Web Design','Ms. Grace Hopper','Design',1499,4.7),
+  (4,'Data Science','Dr. Alan Turing','Analytics',3999,4.9),
+  (5,'Cybersecurity','Mr. Kevin Mitnick','Security',2499,4.6);
+
+CREATE TABLE enrollments (
+  student_id INTEGER,
+  course_id INTEGER,
+  enroll_date TEXT,
+  status TEXT,
+  final_score REAL
+);
+INSERT INTO enrollments VALUES
+  (1,1,'2024-01-15','completed',95),
+  (1,2,'2024-02-01','completed',88),
+  (2,3,'2024-01-20','active',NULL),
+  (3,1,'2024-03-05','completed',90),
+  (4,4,'2024-02-10','dropped',45),
+  (5,2,'2024-01-10','completed',96),
+  (6,5,'2024-03-15','active',NULL),
+  (7,3,'2024-02-20','completed',60),
+  (8,1,'2024-04-01','active',NULL);`}
+  querySql={`-- All courses, including those with zero enrollments
+-- (RIGHT JOIN keeping all courses)
+SELECT c.title         AS course,
+       c.price,
+       COUNT(e.student_id) AS enrolled_count
+FROM   enrollments e
+RIGHT  JOIN courses c ON c.id = e.course_id
+GROUP  BY c.title, c.price
+ORDER  BY enrolled_count DESC;`}
+/>
+
+## Key Points
+
+- RIGHT JOIN keeps all rows from the right table
+- Equivalent to LEFT JOIN with swapped table order
+- SQLite supports RIGHT JOIN from version 3.39+
+- Most style guides prefer LEFT JOIN for consistency
+
+> **Pro Tip from CodesCompiler:** The best way to learn SQL is to break things intentionally — modify the query above, change the WHERE conditions, try different columns. Every error teaches you something the docs cannot.
+
+In the next lesson, we continue exploring SQL's powerful feature set to build your database mastery.

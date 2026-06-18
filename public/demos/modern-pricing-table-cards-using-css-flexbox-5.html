@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="canonical" href="https://codescompiler.com/blog/modern-pricing-table-cards-using-css-flexbox-5/" />
+  <script>
+    if (window.self === window.top) {
+      window.location.replace('/blog-demo/' + window.location.pathname.split('/').pop().replace('.html', '') + '/');
+    }
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Modern Pricing Table | Flexbox</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    body {
+      background-color: #f1f5f9;
+      color: #334155;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .pricing-wrapper {
+      max-width: 1200px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .pricing-header h2 {
+      font-size: 2.5rem;
+      color: #0f172a;
+      margin-bottom: 10px;
+      font-weight: 800;
+    }
+
+    .pricing-header p {
+      color: #64748b;
+      font-size: 1.1rem;
+      margin-bottom: 50px;
+    }
+
+    /* Flexbox Container */
+    .pricing-cards {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 2rem;
+    }
+
+    /* Individual Card */
+    .pricing-card {
+      background: white;
+      border-radius: 20px;
+      padding: 40px 30px;
+      width: 320px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e2e8f0;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Highlighting the middle/Pro card */
+    .pricing-card.pro {
+      border: 2px solid #6366f1;
+      transform: scale(1.05);
+      box-shadow: 0 20px 25px -5px rgba(99, 102, 241, 0.2);
+    }
+
+    .pricing-card.pro:hover {
+      transform: scale(1.05) translateY(-10px);
+    }
+
+    .popular-badge {
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #6366f1;
+      color: white;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .plan-name {
+      font-size: 1.2rem;
+      color: #64748b;
+      font-weight: 600;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .plan-price {
+      font-size: 3.5rem;
+      color: #0f172a;
+      font-weight: 800;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .plan-price span {
+      font-size: 1.2rem;
+      color: #94a3b8;
+      margin-top: 10px;
+      margin-right: 5px;
+    }
+    
+    .plan-period {
+      font-size: 1rem !important;
+      color: #94a3b8 !important;
+      align-self: flex-end;
+      margin-bottom: 12px;
+      margin-left: 5px;
+      font-weight: 500;
+    }
+
+    .plan-desc {
+      color: #64748b;
+      margin-bottom: 30px;
+      font-size: 0.95rem;
+    }
+
+    .features-list {
+      list-style: none;
+      margin-bottom: 40px;
+      flex-grow: 1;
+      text-align: left;
+    }
+
+    .features-list li {
+      margin-bottom: 15px;
+      color: #475569;
+      display: flex;
+      align-items: center;
+      font-size: 0.95rem;
+    }
+
+    .features-list li svg {
+      width: 20px;
+      height: 20px;
+      fill: #10b981;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+
+    .features-list li.disabled {
+      color: #cbd5e1;
+      text-decoration: line-through;
+    }
+
+    .features-list li.disabled svg {
+      fill: #cbd5e1;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px 0;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: #6366f1;
+      border: 2px solid #e0e7ff;
+    }
+
+    .btn-outline:hover {
+      background: #e0e7ff;
+    }
+
+    .btn-filled {
+      background: #6366f1;
+      color: white;
+      box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.3);
+    }
+
+    .btn-filled:hover {
+      background: #4f46e5;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .pricing-cards {
+        align-items: stretch;
+      }
+      .pricing-card.pro {
+        transform: scale(1);
+      }
+      .pricing-card.pro:hover {
+        transform: translateY(-10px);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .pricing-card {
+        width: 100%;
+        max-width: 400px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="pricing-wrapper">
+    <div class="pricing-header">
+      <h2>Simple, Transparent Pricing</h2>
+      <p>Choose the plan that best fits your needs. No hidden fees.</p>
+    </div>
+
+    <div class="pricing-cards">
+      
+      <!-- Basic Plan -->
+      <div class="pricing-card">
+        <h3 class="plan-name">Basic</h3>
+        <div class="plan-price"><span>$</span>9<span class="plan-period">/mo</span></div>
+        <p class="plan-desc">Perfect for individuals starting out.</p>
+        
+        <ul class="features-list">
+          <li><svg viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg> 1 User Account</li>
+          <li><svg viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg> 10GB Storage</li>
+          <li><svg viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg> Basic Support</li>
+          <li class="disabled"><svg viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg> Custom Analytics</li>
+        </ul>
+        <a href="#" class="btn btn-outline">Get Started</a>
+      </div>
+
+      <!-- Pro Plan (Highlighted) -->
+      <div class="pricing-card pro">
+        <div class="popular-badge">Most Popular</div>
+        <h3 class="plan-name">Pro</h3>
+        <div class="plan-price"><span>$</span>29<span class="plan-period">/mo</span></div>
+        <p class="plan-desc">Ideal for small businesses and teams.</p>
+        
+        <ul class="features-list">
+          <li><svg viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg> 5 User Accounts</li>
+          <li><svg viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg> 100GB Storage</li>
+          <li><svg viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg> Priority Support</li>
+          <li><svg viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg> Custom Analytics</li>
+        </ul>
+        <a href="#" class="btn btn-filled">Get Started</a>
+      </div>
+
+      <!-- Enterprise Plan -->
+      <div class="pricing-card">
+        <h3 class="plan-name">Enterprise</h3>
+        <div class="plan-price"><span>$</span>99<span class="plan-period">/mo</span></div>
+        <p class="plan-desc">For large scale organizations.</p>
+        
+        <ul class="features-list">
+          <li><svg viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg> Unlimited Users</li>
+          <li><svg viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg> Unlimited Storage</li>
+          <li><svg viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg> 24/7 Dedicated Support</li>
+          <li><svg viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg> Custom Integrations</li>
+        </ul>
+        <a href="#" class="btn btn-outline">Contact Sales</a>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>

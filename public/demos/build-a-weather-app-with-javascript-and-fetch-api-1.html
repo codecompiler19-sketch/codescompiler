@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="canonical" href="https://codescompiler.com/blog/build-a-weather-app-with-javascript-and-fetch-api-1/" />
+  <script>
+    if (window.self === window.top) {
+      window.location.replace('/blog-demo/' + window.location.pathname.split('/').pop().replace('.html', '') + '/');
+    }
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather App | Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: #8ec5fc;
+      background-image: linear-gradient(62deg, #8ec5fc 0%, #e0c3fc 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .weather-card {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .search {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .search input {
+      flex: 1;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 30px;
+      background: #f1f5f9;
+      font-size: 1rem;
+      outline: none;
+      transition: box-shadow 0.2s;
+    }
+
+    .search input:focus {
+      box-shadow: 0 0 0 2px #a78bfa;
+    }
+
+    .search button {
+      border: none;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      background: #8b5cf6;
+      color: white;
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: background 0.2s;
+    }
+
+    .search button:hover {
+      background: #7c3aed;
+    }
+
+    .weather-info {
+      display: none; /* Hidden until data loads */
+      animation: fadeIn 0.5s ease;
+    }
+    
+    .weather-info.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .city {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 5px;
+    }
+
+    .temp {
+      font-size: 4rem;
+      font-weight: 600;
+      color: #1e293b;
+      margin: 10px 0;
+    }
+
+    .icon {
+      width: 120px;
+      margin: 0 auto;
+    }
+
+    .description {
+      font-size: 1.2rem;
+      color: #64748b;
+      text-transform: capitalize;
+      margin-bottom: 20px;
+    }
+
+    .details {
+      display: flex;
+      justify-content: space-between;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 20px;
+    }
+
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #475569;
+    }
+
+    .detail-item span {
+      font-size: 1.5rem;
+    }
+
+    .error-msg {
+      color: #ef4444;
+      font-size: 0.9rem;
+      margin-top: -20px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="weather-card">
+    <div class="search">
+      <input type="text" id="cityInput" placeholder="Enter city name..." spellcheck="false">
+      <button id="searchBtn">🔍</button>
+    </div>
+    
+    <div class="error-msg" id="errorMsg">City not found. Please try again.</div>
+
+    <div class="weather-info" id="weatherInfo">
+      <img src="" alt="Weather Icon" class="icon" id="weatherIcon">
+      <h2 class="city" id="cityName">London</h2>
+      <div class="description" id="weatherDesc">Scattered Clouds</div>
+      <div class="temp" id="temperature">24°C</div>
+      
+      <div class="details">
+        <div class="detail-item">
+          <span>💧</span>
+          <div>
+            <div id="humidity">60%</div>
+            <div style="font-size:0.8rem; color:#94a3b8;">Humidity</div>
+          </div>
+        </div>
+        <div class="detail-item">
+          <span>💨</span>
+          <div>
+            <div id="windSpeed">5 km/h</div>
+            <div style="font-size:0.8rem; color:#94a3b8;">Wind</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const searchBtn = document.getElementById('searchBtn');
+    const cityInput = document.getElementById('cityInput');
+    const weatherInfo = document.getElementById('weatherInfo');
+    const errorMsg = document.getElementById('errorMsg');
+
+    async function checkWeather(city) {
+      try {
+        // Using open-meteo API for geocoding and weather (no API key required)
+        const geoResponse = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=1&language=en&format=json`);
+        const geoData = await geoResponse.json();
+
+        if (!geoData.results || geoData.results.length === 0) {
+          throw new Error('City not found');
+        }
+
+        const { latitude, longitude, name } = geoData.results[0];
+
+        const weatherResponse = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&wind_speed_unit=kmh`);
+        const data = await weatherResponse.json();
+        
+        const code = data.current.weather_code;
+        let desc = "Clear";
+        let iconUrl = "https://cdn-icons-png.flaticon.com/512/3222/3222800.png";
+        
+        if (code >= 1 && code <= 3) { desc = "Cloudy"; iconUrl = "https://cdn-icons-png.flaticon.com/512/414/414927.png"; }
+        if (code >= 51 && code <= 67) { desc = "Rain"; iconUrl = "https://cdn-icons-png.flaticon.com/512/3076/3076129.png"; }
+        if (code >= 71 && code <= 77) { desc = "Snow"; iconUrl = "https://cdn-icons-png.flaticon.com/512/642/642102.png"; }
+        if (code >= 95) { desc = "Thunderstorm"; iconUrl = "https://cdn-icons-png.flaticon.com/512/3104/3104612.png"; }
+
+        document.getElementById('cityName').textContent = name;
+        document.getElementById('temperature').textContent = Math.round(data.current.temperature_2m) + "°C";
+        document.getElementById('humidity').textContent = data.current.relative_humidity_2m + "%";
+        document.getElementById('windSpeed').textContent = data.current.wind_speed_10m + " km/h";
+        document.getElementById('weatherDesc').textContent = desc;
+        document.getElementById('weatherIcon').src = iconUrl;
+
+        weatherInfo.classList.add('active');
+        errorMsg.style.display = 'none';
+
+      } catch (error) {
+        weatherInfo.classList.remove('active');
+        errorMsg.style.display = 'block';
+      }
+    }
+
+    searchBtn.addEventListener('click', () => {
+      if (cityInput.value.trim() !== '') {
+        checkWeather(cityInput.value);
+      }
+    });
+
+    cityInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && cityInput.value.trim() !== '') {
+        checkWeather(cityInput.value);
+      }
+    });
+
+    checkWeather("London");
+  </script>
+</body>
+</html>
