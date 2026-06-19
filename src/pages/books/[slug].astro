@@ -1,0 +1,430 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { books, formatDownloads, starsArray } from '../../data/books';
+
+export async function getStaticPaths() {
+  return books.map((book) => ({
+    params: { slug: book.slug },
+    props: { book },
+  }));
+}
+
+const { book } = Astro.props;
+
+const otherBooks = books.filter((b) => b.slug !== book.slug);
+
+const stars = starsArray(book.rating);
+const seoTitle = `${book.title} — Free PDF Download for Kids`;
+const description = `Download the free PDF book "${book.title}". ${book.tagline}. ${book.downloads}+ downloads. ${book.pages} pages. Beginner-friendly kids coding ebook.`;
+
+const shareWhatsappUrl = "https://api.whatsapp.com/send?text=" + encodeURIComponent("Free kids coding book: " + book.title + " — Download free: https://codescompiler.com/books/" + book.slug);
+const shareTwitterUrl = "https://twitter.com/intent/tweet?text=" + encodeURIComponent("Free kids coding book: " + book.title + " — https://codescompiler.com/books/" + book.slug);
+---
+
+<BaseLayout title={book.title} description={description} seoTitle={seoTitle}>
+<div class="bg-gray-50 min-h-screen" id="book-detail-root">
+
+  <!-- BREADCRUMB -->
+  <div class="bg-white border-b border-gray-200 px-5 py-3">
+    <div class="max-w-7xl mx-auto">
+      <nav class="flex items-center gap-1.5 text-xs text-gray-500 flex-wrap">
+        <a href="/" class="hover:text-[#04AA6D] transition-colors">Home</a>
+        <span class="text-gray-300">›</span>
+        <a href="/books" class="hover:text-[#04AA6D] transition-colors">Free Books</a>
+        <span class="text-gray-300">›</span>
+        <span class="text-gray-800 font-semibold">{book.title}</span>
+      </nav>
+    </div>
+  </div>
+
+  <!-- MAIN GRID -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-5 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+      <!-- LEFT: COVER (4 cols) -->
+      <div class="lg:col-span-4 flex flex-col gap-4">
+        <div class="w-full aspect-square rounded-2xl overflow-hidden shadow-lg border border-gray-200 bg-white relative select-none">
+          {book.coverImage ? (
+            <img
+              src={book.coverImage}
+              alt={`${book.title} Book Cover`}
+              class="w-full h-full object-cover block transition-transform duration-500 hover:scale-105"
+            />
+          ) : (
+            <div class={`w-full h-full bg-gradient-to-br ${book.bgGradient} text-white flex flex-col justify-between p-8 relative`}>
+              <div>
+                <span class="text-xs font-bold tracking-widest uppercase opacity-70 block mb-2">CodesCompiler</span>
+                <h2 class="text-3xl font-extrabold leading-tight drop-shadow-md">{book.title}</h2>
+              </div>
+              <p class="text-xs opacity-80 leading-snug">{book.tagline}</p>
+            </div>
+          )}
+          <div class="absolute top-3 left-3 bg-[#04AA6D] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow-md uppercase tracking-widest">
+            FREE
+          </div>
+        </div>
+
+        <!-- Trust badges -->
+        <div class="flex flex-wrap gap-2 justify-center">
+          <span class="flex items-center gap-1 text-[11px] font-semibold text-gray-500 bg-white border border-gray-100 rounded-full px-3 py-1.5 shadow-sm">
+            <span class="text-green-500">✓</span> High Quality PDF
+          </span>
+          <span class="flex items-center gap-1 text-[11px] font-semibold text-gray-500 bg-white border border-gray-100 rounded-full px-3 py-1.5 shadow-sm">
+            <span class="text-green-500">✓</span> No Sign-up
+          </span>
+          <span class="flex items-center gap-1 text-[11px] font-semibold text-gray-500 bg-white border border-gray-100 rounded-full px-3 py-1.5 shadow-sm">
+            <span class="text-green-500">✓</span> Safe Download
+          </span>
+        </div>
+      </div>
+
+      <!-- MIDDLE: INFO (5 cols) -->
+      <div class="lg:col-span-5 flex flex-col gap-5">
+
+        <div>
+          <span class={`inline-block text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3 ${book.badgeBg} ${book.badgeText}`}>
+            {book.level}
+          </span>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 leading-tight mb-2">
+            {book.title}
+          </h1>
+          <p class="text-base text-gray-500 font-medium">{book.tagline}</p>
+        </div>
+
+        <!-- STAR RATING -->
+        <div class="flex items-center gap-3 flex-wrap">
+          <div class="flex items-center gap-0.5">
+            {stars.map((type) => (
+              <span class={`text-xl leading-none ${type === 'full' ? 'text-amber-400' : type === 'half' ? 'text-amber-300' : 'text-gray-300'}`}>
+                {type === 'empty' ? '☆' : '★'}
+              </span>
+            ))}
+          </div>
+          <span class="text-amber-600 font-extrabold text-base">{book.rating}</span>
+          <span class="text-gray-400 text-sm">({book.ratingCount})</span>
+          <span class="mx-1 text-gray-200">|</span>
+          <span class="text-green-600 font-bold text-sm">{formatDownloads(book.downloads)} Downloads</span>
+        </div>
+
+        <p class="text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-4">
+          {book.description}
+        </p>
+
+        <!-- STATS -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="flex flex-col items-center justify-center bg-white border border-gray-100 rounded-xl p-3 shadow-sm text-center">
+            <span class="text-xl mb-1">📥</span>
+            <span class="text-base font-extrabold text-gray-900">{formatDownloads(book.downloads)}</span>
+            <span class="text-[10px] text-gray-400 font-semibold uppercase tracking-wide mt-0.5">Downloads</span>
+          </div>
+          <div class="flex flex-col items-center justify-center bg-white border border-gray-100 rounded-xl p-3 shadow-sm text-center">
+            <span class="text-xl mb-1">📄</span>
+            <span class="text-base font-extrabold text-gray-900">{book.pages}</span>
+            <span class="text-[10px] text-gray-400 font-semibold uppercase tracking-wide mt-0.5">Pages</span>
+          </div>
+          <div class="flex flex-col items-center justify-center bg-white border border-gray-100 rounded-xl p-3 shadow-sm text-center">
+            <span class="text-xl mb-1">🗓️</span>
+            <span class="text-xs font-extrabold text-gray-900 leading-tight">{book.updated}</span>
+            <span class="text-[10px] text-gray-400 font-semibold uppercase tracking-wide mt-0.5">Updated</span>
+          </div>
+          <div class="flex flex-col items-center justify-center bg-white border border-gray-100 rounded-xl p-3 shadow-sm text-center">
+            <span class="text-xl mb-1">⭐</span>
+            <span class="text-base font-extrabold text-gray-900">{book.rating}</span>
+            <span class="text-[10px] text-gray-400 font-semibold uppercase tracking-wide mt-0.5">Rating</span>
+          </div>
+        </div>
+
+        <!-- WHAT YOU LEARN -->
+        <div class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+          <h3 class="text-sm font-extrabold text-gray-900 uppercase tracking-wider mb-3 flex items-center gap-2">
+            <span class="text-green-500">✏️</span> What You Will Learn
+          </h3>
+          <ul class="grid grid-cols-1 gap-2">
+            {book.learnList.map((item) => (
+              <li class="flex items-start gap-2 text-sm text-gray-600">
+                <span class="text-green-500 font-extrabold text-base leading-none mt-0.5 flex-shrink-0">✓</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <!-- INFO TABS -->
+        <div class="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm" id="info-tabs-card">
+          <div class="flex overflow-x-auto border-b border-gray-100 bg-gray-50" id="info-tab-headers">
+            {book.infoTabs.map((tab, idx) => (
+              <button
+                class={`flex-shrink-0 px-4 py-3 text-xs font-bold transition-all whitespace-nowrap border-b-2 info-tab-btn ${idx === 0 ? 'border-gray-800 text-gray-900 bg-white' : 'border-transparent text-gray-500 hover:text-gray-800'}`}
+                data-tab-id={tab.id}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+          <div class="p-5 sm:p-6">
+            {book.infoTabs.map((tab, idx) => (
+              <div
+                class={`tab-prose info-tab-content ${idx !== 0 ? 'hidden' : ''}`}
+                data-content-id={tab.id}
+              >
+                <Fragment set:html={tab.content} />
+              </div>
+            ))}
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: BUY BOX (3 cols) -->
+      <div class="lg:col-span-3 flex flex-col gap-4 lg:sticky lg:top-20">
+
+        <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-md flex flex-col gap-4">
+
+          <div class="text-center border-b border-gray-100 pb-4">
+            <span class="text-xs text-gray-400 font-semibold uppercase tracking-wider block mb-1">Regular Price</span>
+            <div class="flex items-baseline justify-center gap-3">
+              <span class="text-gray-300 line-through text-sm font-semibold">₹499</span>
+              <span class="text-2xl font-extrabold text-green-600">FREE</span>
+            </div>
+            <span class="inline-block mt-1.5 bg-green-100 text-green-700 text-[10px] font-extrabold uppercase tracking-widest px-3 py-1 rounded-full">
+              100% OFF 🎉
+            </span>
+          </div>
+
+          <div class="flex flex-col gap-2.5">
+            <p class="text-xs text-gray-500 font-semibold text-center">📚 Love our free books? Stay connected!</p>
+            <a
+              href={book.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl font-bold text-sm bg-[#25d366] hover:bg-[#1eb858] text-white transition-all shadow-sm"
+            >
+              🔔 Join WhatsApp Channel
+            </a>
+            <a
+              href={book.youtubeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl font-bold text-sm bg-red-600 hover:bg-red-700 text-white transition-all shadow-sm"
+            >
+              ▶ Subscribe on YouTube
+            </a>
+          </div>
+
+          <!-- BLACK DOWNLOAD BUTTON -->
+          <div class="border-t border-gray-100 pt-4">
+            <a
+              href={book.pdfUrl}
+              download
+              id="download-btn-trigger"
+              class="w-full flex items-center justify-center gap-3 py-4 rounded-2xl font-extrabold text-white text-sm shadow-lg hover:shadow-xl bg-[#1b1b2f] hover:bg-black transition-all transform hover:-translate-y-px"
+            >
+              ⬇ Download Free PDF
+            </a>
+            <p class="text-center text-[10px] text-gray-400 mt-2 font-semibold uppercase tracking-wider">
+              🔒 Secure · No sign-up · Instant download
+            </p>
+          </div>
+
+          <div class="border-t border-gray-100 pt-4 flex flex-col gap-2">
+            <div class="flex items-start gap-2 text-xs text-gray-600">
+              <span class="text-green-500 mt-0.5 flex-shrink-0">✓</span>
+              <span><strong class="text-gray-800">Instant Access</strong> — No waiting, no email</span>
+            </div>
+            <div class="flex items-start gap-2 text-xs text-gray-600">
+              <span class="text-green-500 mt-0.5 flex-shrink-0">✓</span>
+              <span><strong class="text-gray-800">Print-friendly</strong> — Great as a classroom book</span>
+            </div>
+            <div class="flex items-start gap-2 text-xs text-gray-600">
+              <span class="text-green-500 mt-0.5 flex-shrink-0">✓</span>
+              <span><strong class="text-gray-800">Updated {book.updated}</strong> — Latest edition</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Share block -->
+        <div class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm text-center">
+          <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Share this free book</p>
+          <div class="flex items-center justify-center gap-2">
+            <a
+              href={shareWhatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="w-9 h-9 rounded-full bg-[#25d366] hover:bg-[#1eb858] text-white flex items-center justify-center transition-colors shadow-sm text-sm"
+            >
+              💬
+            </a>
+            <a
+              href={shareTwitterUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="w-9 h-9 rounded-full bg-black hover:bg-gray-800 text-white flex items-center justify-center transition-colors shadow-sm text-sm"
+            >
+              𝕏
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- OTHER BOOKS SECTION -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-5 pb-16">
+    <div class="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+        <h2 class="text-lg font-extrabold text-gray-900">More Free Books from CodesCompiler</h2>
+        <a href="/books" class="text-sm font-bold text-[#04AA6D] hover:underline">View All →</a>
+      </div>
+      <div class="flex gap-4 overflow-x-auto px-6 py-5 scrollbar-none">
+        {otherBooks.map((b) => (
+          <a
+            href={`/books/${b.slug}`}
+            class="other-book-card group flex-shrink-0 w-44 flex flex-col cursor-pointer"
+          >
+            <div class="w-full aspect-square rounded-xl overflow-hidden border border-gray-100 shadow-sm mb-3 relative">
+              {b.coverImage ? (
+                <img
+                  src={b.coverImage}
+                  alt={b.title}
+                  class="w-full h-full object-cover block group-hover:scale-105 transition-transform duration-300"
+                  loading="lazy"
+                />
+              ) : (
+                <div class={`w-full h-full bg-gradient-to-br ${b.bgGradient} text-white flex flex-col justify-center items-center p-4 text-center`}>
+                  <span class="text-3xl mb-2">📚</span>
+                  <span class="text-xs font-bold leading-tight">{b.title}</span>
+                </div>
+              )}
+              <div class="absolute top-2 left-2 bg-[#04AA6D] text-white text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase">
+                FREE
+              </div>
+            </div>
+            <h3 class="text-sm font-bold text-gray-900 group-hover:text-[#04AA6D] transition-colors line-clamp-2 mb-1">
+              {b.title}
+            </h3>
+            <div class="flex items-center gap-1 mb-1">
+              <span class="text-amber-400 text-xs">★</span>
+              <span class="text-xs font-bold text-gray-700">{b.rating}</span>
+              <span class="text-gray-300 text-xs">·</span>
+              <span class="text-xs text-gray-500">{b.pages}p</span>
+            </div>
+            <div class="flex items-baseline gap-1.5">
+              <span class="text-xs text-gray-400 line-through">₹499</span>
+              <span class="text-sm font-extrabold text-green-600">FREE</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- DOWNLOAD SUCCESS MODAL -->
+<div
+  id="success-modal"
+  class="fixed inset-0 z-[99999] flex items-center justify-center bg-black/60 backdrop-blur-sm hidden px-4"
+>
+  <div class="bg-white rounded-3xl max-w-sm w-full p-7 shadow-2xl relative transform scale-95 opacity-0 transition-all duration-300 flex flex-col items-center text-center gap-4 border border-gray-100" id="modal-box">
+    <button id="close-modal-btn" class="absolute right-4 top-4 text-gray-300 hover:text-gray-600 font-bold text-xl focus:outline-none">✕</button>
+    <span class="text-5xl">🎉</span>
+    <div>
+      <h3 class="text-xl font-black text-gray-900">Download Started!</h3>
+      <p class="text-sm text-gray-500 mt-1"><strong class="text-gray-800">{book.title}</strong> is downloading.</p>
+    </div>
+    <div class="w-full border-t border-gray-100 pt-4 flex flex-col gap-3">
+      <p class="text-xs font-bold text-[#04AA6D] uppercase tracking-wider">Stay connected for more free books:</p>
+      <a href={book.whatsappUrl} target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 w-full py-3 rounded-xl font-bold text-sm bg-[#25d366] hover:bg-[#1eb858] text-white transition-all">
+        🔔 Join our WhatsApp Channel
+      </a>
+      <a href={book.youtubeUrl} target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-2 w-full py-3 rounded-xl font-bold text-sm bg-red-600 hover:bg-red-700 text-white transition-all">
+        ▶ Subscribe on YouTube
+      </a>
+      <button id="modal-ok-btn" class="w-full py-2 border border-gray-200 text-gray-500 hover:text-gray-800 rounded-xl text-xs font-bold hover:bg-gray-50 transition-colors mt-1">
+        Continue Browsing
+      </button>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  .scrollbar-none::-webkit-scrollbar { display: none; }
+  .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+
+  .tab-prose h3 {
+    font-size: 1rem; font-weight: 800; color: #1b1b2f; margin: 0 0 0.6rem;
+  }
+  .tab-prose p {
+    font-size: 0.88rem; line-height: 1.65; color: #4a5568; margin-bottom: 0.6rem;
+  }
+  .tab-prose ul, .tab-prose ol {
+    padding-left: 1.1rem; margin-bottom: 0.75rem;
+  }
+  .tab-prose li {
+    font-size: 0.875rem; color: #4a5568; margin-bottom: 0.35rem; line-height: 1.55;
+  }
+  .tab-prose strong {
+    color: #1b1b2f; font-weight: 700;
+  }
+  .tab-prose table {
+    font-size: 0.85rem; width: 100%; border-collapse: collapse;
+  }
+</style>
+
+<script is:inline>
+(function() {
+  // TAB SWITCHING
+  document.addEventListener('DOMContentLoaded', function() {
+    var tabBtns = document.querySelectorAll('.info-tab-btn');
+    var tabContents = document.querySelectorAll('.info-tab-content');
+
+    tabBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var id = btn.getAttribute('data-tab-id');
+
+        tabBtns.forEach(function(b) {
+          b.classList.remove('border-gray-800', 'text-gray-900', 'bg-white');
+          b.classList.add('border-transparent', 'text-gray-500');
+        });
+        btn.classList.add('border-gray-800', 'text-gray-900', 'bg-white');
+        btn.classList.remove('border-transparent', 'text-gray-500');
+
+        tabContents.forEach(function(c) {
+          if (c.getAttribute('data-content-id') === id) {
+            c.classList.remove('hidden');
+          } else {
+            c.classList.add('hidden');
+          }
+        });
+      });
+    });
+
+    // DOWNLOAD MODAL
+    var downloadBtn = document.getElementById('download-btn-trigger');
+    var modal = document.getElementById('success-modal');
+    var modalBox = document.getElementById('modal-box');
+    var closeBtn = document.getElementById('close-modal-btn');
+    var okBtn = document.getElementById('modal-ok-btn');
+
+    function openModal() {
+      modal.classList.remove('hidden');
+      requestAnimationFrame(function() {
+        modalBox.classList.remove('scale-95', 'opacity-0');
+        modalBox.classList.add('scale-100', 'opacity-100');
+      });
+    }
+    function closeModal() {
+      modalBox.classList.add('scale-95', 'opacity-0');
+      modalBox.classList.remove('scale-100', 'opacity-100');
+      setTimeout(function() { modal.classList.add('hidden'); }, 300);
+    }
+
+    if (downloadBtn) { downloadBtn.addEventListener('click', function() { setTimeout(openModal, 500); }); }
+    if (closeBtn) { closeBtn.addEventListener('click', closeModal); }
+    if (okBtn) { okBtn.addEventListener('click', closeModal); }
+    if (modal) { modal.addEventListener('click', function(e) { if (e.target === modal) closeModal(); }); }
+  });
+})();
+</script>
+</BaseLayout>

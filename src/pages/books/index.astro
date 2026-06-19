@@ -1,0 +1,337 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { books } from '../../data/books';
+
+// Metadata for SEO
+const title = 'Free Coding Books Library for Kids';
+const description = 'Download free kids programming books for HTML, CSS, JavaScript, Python, Scratch, and C Programming. High-quality PDFs, beginner-friendly illustrations, and step-by-step coding lessons.';
+
+function formatDownloads(raw: string): string {
+  const num = parseInt(raw.replace(/,/g, ''), 10);
+  if (num >= 1000) return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'K+';
+  return raw + '+';
+}
+---
+
+<BaseLayout title={title} description={description}>
+  <!-- HERO BANNER -->
+  <section class="relative w-full overflow-hidden bg-[#282A35] text-white py-16 sm:py-20 px-5 border-b-4 border-[#04AA6D]">
+    <!-- Background patterns -->
+    <div class="absolute inset-0 bg-[linear-gradient(rgba(4,170,109,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(4,170,109,0.05)_1px,transparent_1px)] bg-[size:2rem_2rem]"></div>
+    <div class="absolute top-0 right-1/4 w-80 h-80 bg-[#04AA6D]/15 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-0 left-10 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="relative z-10 max-w-5xl mx-auto text-center">
+      <div class="inline-flex items-center gap-2 bg-[#04AA6D]/20 border border-[#04AA6D]/40 rounded-full px-4 py-1.5 mb-6 text-sm text-[#04aa6d] font-semibold">
+        <span>📚</span> Free E-Books Collection
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-extrabold mb-4 tracking-tight leading-tight">
+        CodesCompiler <span class="bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-[#04AA6D]">Kids Library</span>
+      </h1>
+      <p class="text-base sm:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+        Unlock your coding superpowers! Access our completely free, beginner-friendly programming books designed to guide kids and teenagers step-by-step. No sign-ups required.
+      </p>
+    </div>
+  </section>
+
+  <!-- SEARCH & FILTER CONTROLS -->
+  <section class="bg-gray-50 border-b border-gray-100 py-6 px-5 transition-colors duration-200" id="controls-section">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      
+      <!-- Search Input -->
+      <div class="relative w-full md:max-w-md">
+        <input 
+          type="text" 
+          id="books-search" 
+          placeholder="Search books (e.g. Python, HTML)..." 
+          class="w-full px-5 py-2.5 pl-11 rounded-full border border-gray-300 text-sm focus:outline-none focus:border-[#04AA6D] focus:ring-4 focus:ring-green-100 shadow-sm transition-all bg-white text-gray-800"
+        />
+        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
+      </div>
+
+      <!-- Filter Buttons -->
+      <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+        <span class="text-xs font-bold text-gray-500 uppercase tracking-wider mr-2">Filter Level:</span>
+        <button class="filter-btn active text-xs font-semibold px-4 py-2 rounded-full shadow-sm bg-[#04AA6D] text-white transition-all" data-level="all">
+          All
+        </button>
+        <button class="filter-btn text-xs font-semibold px-4 py-2 rounded-full shadow-sm bg-white text-gray-600 border border-gray-200 hover:border-gray-300 transition-all" data-level="beginner">
+          Beginner Friendly
+        </button>
+        <button class="filter-btn text-xs font-semibold px-4 py-2 rounded-full shadow-sm bg-white text-gray-600 border border-gray-200 hover:border-gray-300 transition-all" data-level="intermediate">
+          Intermediate / Advanced
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CATALOG GRID -->
+  <section class="py-12 px-5 max-w-7xl mx-auto flex-1">
+    <div id="books-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {books.map((book) => (
+        <article 
+          class="book-card group flex flex-col bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
+          data-title={book.title.toLowerCase()}
+          data-tagline={book.tagline.toLowerCase()}
+          data-level={book.level.toLowerCase()}
+        >
+          <!-- Book Cover Area: no padding — image fills the full 1:1 square -->
+          <a href={`/books/${book.slug}`} class="block relative pt-[100%] w-full overflow-hidden border-b border-gray-100 select-none bg-gray-100">
+            {book.coverImage ? (
+              // Real Cover Image — fills entire square
+              <div class="absolute inset-0">
+                <img 
+                  src={book.coverImage} 
+                  alt={`${book.title} Cover`}
+                  class="w-full h-full object-cover block transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                />
+              </div>
+            ) : (
+              // CSS styled premium cover placeholder
+              <div class="absolute inset-0">
+                <div class={`w-full h-full bg-gradient-to-br ${book.bgGradient} text-white p-7 flex flex-col justify-between relative transition-transform duration-500 group-hover:scale-105`}>
+                  <div class="book-spine-lines"></div>
+                  
+                  <div>
+                    <span class="text-[10px] font-bold tracking-widest uppercase opacity-75">CodesCompiler</span>
+                    <h2 class="text-xl sm:text-2xl font-extrabold mt-2 leading-tight drop-shadow-sm font-sans">
+                      {book.title}
+                    </h2>
+                  </div>
+
+                  <div class="text-left">
+                    <p class="text-[10px] opacity-90 line-clamp-2 leading-snug">
+                      {book.tagline}
+                    </p>
+                    <div class="mt-4 inline-flex items-center gap-1 bg-white/20 border border-white/30 text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">
+                      <span>🔔</span> Preview Soon
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+            <!-- Badge overlay -->
+            <span class={`absolute top-3 right-3 text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm ${book.badgeBg} ${book.badgeText}`}>
+              {book.level}
+            </span>
+            <!-- Free badge -->
+            <span class="absolute top-3 left-3 bg-[#04AA6D] text-white text-[9px] font-extrabold px-2 py-0.5 rounded-full shadow uppercase tracking-wider">
+              FREE
+            </span>
+          </a>
+
+          <!-- Book Metadata -->
+          <div class="p-6 flex-1 flex flex-col justify-between">
+            <div>
+              <h2 class="text-xl font-bold text-gray-900 group-hover:text-[#04AA6D] transition-colors mb-1">
+                <a href={`/books/${book.slug}`}>
+                  {book.title}
+                </a>
+              </h2>
+              <!-- Star rating row -->
+              <div class="flex items-center gap-1.5 mb-2">
+                <span class="text-amber-400 text-sm">★★★★★</span>
+                <span class="text-xs font-bold text-gray-700">{book.rating}</span>
+                <span class="text-gray-300">·</span>
+                <span class="text-xs text-gray-500">{book.ratingCount}</span>
+              </div>
+              <p class="text-xs text-gray-500 font-semibold mb-4 flex items-center gap-3 flex-wrap">
+                <span class="flex items-center gap-1">📥 {formatDownloads(book.downloads)} Downloads</span>
+                <span>·</span>
+                <span>📄 {book.pages} Pages</span>
+              </p>
+              <p class="text-sm text-gray-600 line-clamp-3 mb-6">
+                {book.description}
+              </p>
+            </div>
+
+            <div>
+              <a 
+                href={`/books/${book.slug}`}
+                class="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border-2 text-sm font-bold text-center transition-all duration-200"
+                style={`border-color: ${book.accentColor}; color: ${book.accentColor};`}
+                onmouseover={`this.style.backgroundColor='${book.accentColor}'; this.style.color='#ffffff'`}
+                onmouseout={`this.style.backgroundColor='transparent'; this.style.color='${book.accentColor}'`}
+              >
+                <span>Read & Download</span>
+                <span>➜</span>
+              </a>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <!-- Empty search result state -->
+    <div id="no-results" class="hidden text-center py-20">
+      <span class="text-5xl">📖</span>
+      <h3 class="text-xl font-bold text-gray-800 mt-4">No books found</h3>
+      <p class="text-gray-500 mt-2">Try searching for something else, like "HTML" or "JavaScript".</p>
+    </div>
+  </section>
+
+  <!-- FAQ SECTION FOR VALUE & SEO -->
+  <section class="bg-gray-100/50 py-16 px-5 border-t border-gray-200/60 transition-colors duration-200" id="faq-section">
+    <div class="max-w-4xl mx-auto">
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-gray-900 text-center mb-10">Frequently Asked Questions</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+          <h4 class="font-bold text-gray-900 mb-2">Are these books really free?</h4>
+          <p class="text-sm text-gray-600">Yes, 100% free! We want to help children, teachers, and beginners worldwide access high-quality programming resources without any barrier.</p>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+          <h4 class="font-bold text-gray-900 mb-2">Do I need to sign up?</h4>
+          <p class="text-sm text-gray-600">No sign-up is required. You can click on any book, read the preview, and download the full PDF format instantly.</p>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+          <h4 class="font-bold text-gray-900 mb-2">Are the files safe to download?</h4>
+          <p class="text-sm text-gray-600">Yes, all our PDFs are generated safely and hosted directly on our secure server. They contain no trackers or malware.</p>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+          <h4 class="font-bold text-gray-900 mb-2">Can I print these books?</h4>
+          <p class="text-sm text-gray-600">Absolutely! You can print copies of these ebooks for your kids, students, or school classes to learn offline.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CUSTOM STYLES FOR 3D BOOK CARDS -->
+  <style is:global>
+    /* 3D Book Layout */
+    .book-container {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      transform-style: preserve-3d;
+      perspective: 1000px;
+    }
+    
+    .book-3d-placeholder {
+      width: 180px;
+      height: 180px;
+      border-radius: 6px;
+      position: relative;
+    }
+
+    /* spine line effect on left side */
+    .book-spine-lines {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 10px;
+      background: linear-gradient(to right, rgba(0,0,0,0.15) 0%, rgba(255,255,255,0.1) 40%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.2) 100%);
+      border-right: 1px solid rgba(0,0,0,0.1);
+    }
+    
+    /* Dark Mode styling overrides for this page specifically */
+    html.dark-theme #controls-section {
+      background-color: #1e293b !important;
+      border-color: #334155 !important;
+    }
+    html.dark-theme #books-search {
+      background-color: #0f172a !important;
+      color: #cbd5e1 !important;
+      border-color: #334155 !important;
+    }
+    html.dark-theme #books-search:focus {
+      border-color: #04AA6D !important;
+    }
+    html.dark-theme .filter-btn:not(.active) {
+      background-color: #0f172a !important;
+      color: #94a3b8 !important;
+      border-color: #334155 !important;
+    }
+    html.dark-theme .book-card {
+      background-color: #1e293b !important;
+      border-color: #334155 !important;
+    }
+    html.dark-theme .book-card .bg-gray-50, 
+    html.dark-theme .book-card .bg-gray-100 {
+      background-color: #0f172a !important;
+      border-color: #334155 !important;
+    }
+    html.dark-theme #faq-section {
+      background-color: #0f172a !important;
+      border-color: #334155 !important;
+    }
+    html.dark-theme #faq-section .bg-white {
+      background-color: #1e293b !important;
+      border-color: #334155 !important;
+    }
+  </style>
+
+  <!-- SEARCH & FILTER SCRIPTS -->
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+      const searchInput = document.getElementById('books-search');
+      const filterBtns = document.querySelectorAll('.filter-btn');
+      const bookCards = document.querySelectorAll('.book-card');
+      const booksGrid = document.getElementById('books-grid');
+      const noResults = document.getElementById('no-results');
+
+      let searchFilter = '';
+      let levelFilter = 'all';
+
+      const updateList = () => {
+        let visibleCount = 0;
+        
+        bookCards.forEach((card) => {
+          const title = card.getAttribute('data-title') || '';
+          const tagline = card.getAttribute('data-tagline') || '';
+          const level = card.getAttribute('data-level') || '';
+          
+          const matchesSearch = title.includes(searchFilter) || tagline.includes(searchFilter);
+          
+          let matchesLevel = false;
+          if (levelFilter === 'all') {
+            matchesLevel = true;
+          } else if (levelFilter === 'beginner') {
+            matchesLevel = level.includes('beginner');
+          } else if (levelFilter === 'intermediate') {
+            matchesLevel = level.includes('intermediate') || level.includes('advanced');
+          }
+
+          if (matchesSearch && matchesLevel) {
+            card.classList.remove('hidden');
+            visibleCount++;
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+
+        if (visibleCount === 0) {
+          noResults.classList.remove('hidden');
+          booksGrid.classList.add('hidden');
+        } else {
+          noResults.classList.add('hidden');
+          booksGrid.classList.remove('hidden');
+        }
+      };
+
+      // Search event
+      searchInput.addEventListener('input', (e) => {
+        searchFilter = e.target.value.toLowerCase().trim();
+        updateList();
+      });
+
+      // Filter events
+      filterBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          filterBtns.forEach(b => {
+            b.classList.remove('active', 'bg-[#04AA6D]', 'text-white');
+            b.classList.add('bg-white', 'text-gray-600', 'border', 'border-gray-200');
+          });
+          
+          btn.classList.add('active', 'bg-[#04AA6D]', 'text-white');
+          btn.classList.remove('bg-white', 'text-gray-600', 'border', 'border-gray-200');
+          
+          levelFilter = btn.getAttribute('data-level') || 'all';
+          updateList();
+        });
+      });
+    });
+  </script>
+</BaseLayout>
