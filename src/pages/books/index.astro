@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { books } from '../../data/books';
+import AdSlot from '../../components/AdSlot.astro';
 
 // Metadata for SEO
 const title = 'Free Coding Books Library for Kids';
@@ -67,108 +68,120 @@ function formatDownloads(raw: string): string {
   </section>
 
   <!-- CATALOG GRID -->
-  <section class="py-12 px-5 max-w-7xl mx-auto flex-1">
-    <div id="books-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {books.map((book) => (
-        <article 
-          class="book-card group flex flex-col bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
-          data-title={book.title.toLowerCase()}
-          data-tagline={book.tagline.toLowerCase()}
-          data-level={book.level.toLowerCase()}
-        >
-          <!-- Book Cover Area: no padding — image fills the full 1:1 square -->
-          <a href={`/books/${book.slug}`} class="block relative pt-[100%] w-full overflow-hidden border-b border-gray-100 select-none bg-gray-100">
-            {book.coverImage ? (
-              // Real Cover Image — fills entire square
-              <div class="absolute inset-0">
-                <img 
-                  src={book.coverImage} 
-                  alt={`${book.title} Cover`}
-                  class="w-full h-full object-cover block transition-transform duration-500 group-hover:scale-105"
-                  loading="lazy"
-                />
-              </div>
-            ) : (
-              // CSS styled premium cover placeholder
-              <div class="absolute inset-0">
-                <div class={`w-full h-full bg-gradient-to-br ${book.bgGradient} text-white p-7 flex flex-col justify-between relative transition-transform duration-500 group-hover:scale-105`}>
-                  <div class="book-spine-lines"></div>
-                  
-                  <div>
-                    <span class="text-[10px] font-bold tracking-widest uppercase opacity-75">CodesCompiler</span>
-                    <h2 class="text-xl sm:text-2xl font-extrabold mt-2 leading-tight drop-shadow-sm font-sans">
-                      {book.title}
-                    </h2>
+  <section class="py-12 px-5 max-w-7xl mx-auto flex-1 w-full">
+    <div class="flex flex-col lg:flex-row gap-8 items-start">
+      
+      <!-- LEFT: Catalog main area -->
+      <div class="flex-1 w-full">
+        <div id="books-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+          {books.map((book) => (
+            <article 
+              class="book-card group flex flex-col bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
+              data-title={book.title.toLowerCase()}
+              data-tagline={book.tagline.toLowerCase()}
+              data-level={book.level.toLowerCase()}
+            >
+              <!-- Book Cover Area: no padding — image fills the full 1:1 square -->
+              <a href={`/books/${book.slug}`} class="block relative pt-[100%] w-full overflow-hidden border-b border-gray-100 select-none bg-gray-100">
+                {book.coverImage ? (
+                  // Real Cover Image — fills entire square
+                  <div class="absolute inset-0">
+                    <img 
+                      src={book.coverImage} 
+                      alt={`${book.title} Cover`}
+                      class="w-full h-full object-cover block transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
+                    />
                   </div>
+                ) : (
+                  // CSS styled premium cover placeholder
+                  <div class="absolute inset-0">
+                    <div class={`w-full h-full bg-gradient-to-br ${book.bgGradient} text-white p-7 flex flex-col justify-between relative transition-transform duration-500 group-hover:scale-105`}>
+                      <div class="book-spine-lines"></div>
+                      
+                      <div>
+                        <span class="text-[10px] font-bold tracking-widest uppercase opacity-75">CodesCompiler</span>
+                        <h2 class="text-xl sm:text-2xl font-extrabold mt-2 leading-tight drop-shadow-sm font-sans">
+                          {book.title}
+                        </h2>
+                      </div>
 
-                  <div class="text-left">
-                    <p class="text-[10px] opacity-90 line-clamp-2 leading-snug">
-                      {book.tagline}
-                    </p>
-                    <div class="mt-4 inline-flex items-center gap-1 bg-white/20 border border-white/30 text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">
-                      <span>🔔</span> Preview Soon
+                      <div class="text-left">
+                        <p class="text-[10px] opacity-90 line-clamp-2 leading-snug">
+                          {book.tagline}
+                        </p>
+                        <div class="mt-4 inline-flex items-center gap-1 bg-white/20 border border-white/30 text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">
+                          <span>🔔</span> Preview Soon
+                        </div>
+                      </div>
                     </div>
                   </div>
+                )}
+                <!-- Badge overlay -->
+                <span class={`absolute top-3 right-3 text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm ${book.badgeBg} ${book.badgeText}`}>
+                  {book.level}
+                </span>
+                <!-- Free badge -->
+                <span class="absolute top-3 left-3 bg-[#04AA6D] text-white text-[9px] font-extrabold px-2 py-0.5 rounded-full shadow uppercase tracking-wider">
+                  FREE
+                </span>
+              </a>
+
+              <!-- Book Metadata -->
+              <div class="p-6 flex-1 flex flex-col justify-between">
+                <div>
+                  <h2 class="text-xl font-bold text-gray-900 group-hover:text-[#04AA6D] transition-colors mb-1">
+                    <a href={`/books/${book.slug}`}>
+                      {book.title}
+                    </a>
+                  </h2>
+                  <!-- Star rating row -->
+                  <div class="flex items-center gap-1.5 mb-2">
+                    <span class="text-amber-400 text-sm">★★★★★</span>
+                    <span class="text-xs font-bold text-gray-700">{book.rating}</span>
+                    <span class="text-gray-300">·</span>
+                    <span class="text-xs text-gray-500">{book.ratingCount}</span>
+                  </div>
+                  <p class="text-xs text-gray-500 font-semibold mb-4 flex items-center gap-3 flex-wrap">
+                    <span class="flex items-center gap-1">📥 {formatDownloads(book.downloads)} Downloads</span>
+                    <span>·</span>
+                    <span>📄 {book.pages} Pages</span>
+                  </p>
+                  <p class="text-sm text-gray-600 line-clamp-3 mb-6">
+                    {book.description}
+                  </p>
+                </div>
+
+                <div>
+                  <a 
+                    href={`/books/${book.slug}`}
+                    class="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border-2 text-sm font-bold text-center transition-all duration-200"
+                    style={`border-color: ${book.accentColor}; color: ${book.accentColor};`}
+                    onmouseover={`this.style.backgroundColor='${book.accentColor}'; this.style.color='#ffffff'`}
+                    onmouseout={`this.style.backgroundColor='transparent'; this.style.color='${book.accentColor}'`}
+                  >
+                    <span>Read & Download</span>
+                    <span>➜</span>
+                  </a>
                 </div>
               </div>
-            )}
-            <!-- Badge overlay -->
-            <span class={`absolute top-3 right-3 text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm ${book.badgeBg} ${book.badgeText}`}>
-              {book.level}
-            </span>
-            <!-- Free badge -->
-            <span class="absolute top-3 left-3 bg-[#04AA6D] text-white text-[9px] font-extrabold px-2 py-0.5 rounded-full shadow uppercase tracking-wider">
-              FREE
-            </span>
-          </a>
+            </article>
+          ))}
+        </div>
 
-          <!-- Book Metadata -->
-          <div class="p-6 flex-1 flex flex-col justify-between">
-            <div>
-              <h2 class="text-xl font-bold text-gray-900 group-hover:text-[#04AA6D] transition-colors mb-1">
-                <a href={`/books/${book.slug}`}>
-                  {book.title}
-                </a>
-              </h2>
-              <!-- Star rating row -->
-              <div class="flex items-center gap-1.5 mb-2">
-                <span class="text-amber-400 text-sm">★★★★★</span>
-                <span class="text-xs font-bold text-gray-700">{book.rating}</span>
-                <span class="text-gray-300">·</span>
-                <span class="text-xs text-gray-500">{book.ratingCount}</span>
-              </div>
-              <p class="text-xs text-gray-500 font-semibold mb-4 flex items-center gap-3 flex-wrap">
-                <span class="flex items-center gap-1">📥 {formatDownloads(book.downloads)} Downloads</span>
-                <span>·</span>
-                <span>📄 {book.pages} Pages</span>
-              </p>
-              <p class="text-sm text-gray-600 line-clamp-3 mb-6">
-                {book.description}
-              </p>
-            </div>
+        <!-- Empty search result state -->
+        <div id="no-results" class="hidden text-center py-20">
+          <span class="text-5xl">📖</span>
+          <h3 class="text-xl font-bold text-gray-800 mt-4">No books found</h3>
+          <p class="text-gray-500 mt-2">Try searching for something else, like "HTML" or "JavaScript".</p>
+        </div>
+      </div>
 
-            <div>
-              <a 
-                href={`/books/${book.slug}`}
-                class="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border-2 text-sm font-bold text-center transition-all duration-200"
-                style={`border-color: ${book.accentColor}; color: ${book.accentColor};`}
-                onmouseover={`this.style.backgroundColor='${book.accentColor}'; this.style.color='#ffffff'`}
-                onmouseout={`this.style.backgroundColor='transparent'; this.style.color='${book.accentColor}'`}
-              >
-                <span>Read & Download</span>
-                <span>➜</span>
-              </a>
-            </div>
-          </div>
-        </article>
-      ))}
-    </div>
+      <!-- RIGHT: Ad Sidebar (sticky on desktop) -->
+      <aside class="w-full lg:w-[300px] flex-shrink-0 lg:sticky lg:top-20 flex justify-center">
+        <AdSlot format="vertical" className="w-full" />
+      </aside>
 
-    <!-- Empty search result state -->
-    <div id="no-results" class="hidden text-center py-20">
-      <span class="text-5xl">📖</span>
-      <h3 class="text-xl font-bold text-gray-800 mt-4">No books found</h3>
-      <p class="text-gray-500 mt-2">Try searching for something else, like "HTML" or "JavaScript".</p>
     </div>
   </section>
 
