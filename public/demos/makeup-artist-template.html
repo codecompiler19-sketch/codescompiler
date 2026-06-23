@@ -73,705 +73,1557 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
+
+    :root {
+      --rose:    #e8c4bc;
+      --roseDark:#bfa19c;
+      --blush:   #f5ebe8;
+      --cream:   #fdf9f7;
+      --gold:    #c9a96e;
+      --goldLight:#e8d5b0;
+      --dark:    #2c1d1c;
+      --mid:     #726260;
+      --border:  #edddd9;
+    }
+
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      background: #fbf8f7;
-      color: #3e3332;
+      background: var(--cream);
+      color: var(--dark);
       min-height: 100vh;
       overflow-x: hidden;
     }
     a { text-decoration: none; color: inherit; }
 
-    /* HEADER */
+    /* ── ORNAMENT ── */
+    .ornament {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 18px auto;
+      color: var(--gold);
+      font-size: 18px;
+      letter-spacing: 4px;
+    }
+    .ornament::before,
+    .ornament::after {
+      content: '';
+      flex: 1;
+      max-width: 80px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold));
+    }
+    .ornament::after { background: linear-gradient(to left, transparent, var(--gold)); }
+
+    /* ── HEADER ── */
     header {
-      padding: 24px 48px;
+      padding: 0 48px;
+      height: 70px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #fff;
-      border-bottom: 1px solid #f2e7e4;
+      background: rgba(253,249,247,0.92);
+      border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
-      z-index: 100;
+      z-index: 200;
+      backdrop-filter: blur(16px);
     }
     .logo {
       font-family: 'Cinzel', serif;
-      font-size: 20px;
+      font-size: 19px;
       font-weight: 700;
-      letter-spacing: 0.12em;
-      color: #2c1d1c;
+      letter-spacing: 0.16em;
+      color: var(--dark);
     }
-    nav { display: flex; gap: 32px; }
+    .logo span { color: var(--gold); }
+    nav { display: flex; gap: 34px; align-items: center; }
     nav a {
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: #726260;
+      letter-spacing: 0.12em;
+      color: var(--mid);
       transition: color 0.25s;
     }
-    nav a:hover, nav a.active { color: #bfa19c; }
-    
-    .btn-gold {
-      background: #2c1d1c;
+    nav a:hover, nav a.active { color: var(--gold); }
+
+    .btn-book {
+      background: var(--dark);
       color: #fff;
-      padding: 16px 40px;
-      border: 1px solid #2c1d1c;
-      font-size: 11px;
+      padding: 11px 26px;
+      border: 1px solid var(--dark);
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
       font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      cursor: pointer;
+      transition: all 0.3s;
+      border-radius: 2px;
+    }
+    .btn-book:hover {
+      background: transparent;
+      color: var(--dark);
+      border-color: var(--gold);
+      box-shadow: 0 6px 22px rgba(201,169,110,0.22);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #f9ece8 0%, #fdf5f0 50%, #f6e8df 100%);
+    }
+
+    /* floating rose petals bg */
+    .petal-bg {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+    .petal {
+      position: absolute;
+      width: 220px;
+      opacity: 0.18;
+      animation: floatPetal 18s ease-in-out infinite;
+    }
+    .petal:nth-child(1) { top: -30px; left: -40px; animation-delay: 0s; }
+    .petal:nth-child(2) { top: 60%; right: -50px; animation-delay: -6s; transform: scaleX(-1); }
+    .petal:nth-child(3) { bottom: -40px; left: 38%; animation-delay: -12s; width: 150px; opacity: 0.12; }
+    @keyframes floatPetal {
+      0%,100% { transform: translateY(0) rotate(0deg); }
+      50%      { transform: translateY(-20px) rotate(5deg); }
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      min-height: 90vh;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 80px 48px;
+      gap: 60px;
+    }
+
+    /* hero left text */
+    .hero-text { }
+    .hero-eyebrow {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 15px;
+      color: var(--gold);
+      letter-spacing: 0.06em;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .hero-eyebrow::after {
+      content: '';
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+      display: inline-block;
+    }
+    .hero-h1 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(38px, 5vw, 62px);
+      font-weight: 500;
+      color: var(--dark);
+      letter-spacing: 0.04em;
+      line-height: 1.18;
+      margin-bottom: 12px;
+    }
+    .hero-h1 em {
+      font-style: normal;
+      color: var(--gold);
+      display: block;
+    }
+    .hero-sub {
+      font-size: 14px;
+      color: var(--mid);
+      line-height: 1.85;
+      margin: 20px 0 36px;
+      max-width: 420px;
+    }
+    .hero-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+    }
+    .hero-tag {
+      font-family: 'Cinzel', serif;
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--roseDark);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 2px;
+      background: rgba(255,255,255,0.7);
+    }
+    .hero-ctas { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold) 0%, #b8893a 100%);
+      color: #fff;
+      padding: 15px 36px;
+      border: none;
+      font-family: 'Cinzel', serif;
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      cursor: pointer;
+      transition: all 0.35s;
+      box-shadow: 0 8px 28px rgba(201,169,110,0.38);
+      border-radius: 2px;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 38px rgba(201,169,110,0.48);
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--dark);
+      padding: 14px 28px;
+      border: 1px solid var(--border);
+      font-family: 'Cinzel', serif;
+      font-size: 10.5px;
+      font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.12em;
       cursor: pointer;
       transition: all 0.3s;
+      border-radius: 2px;
     }
-    .btn-gold:hover {
-      background: transparent;
-      color: #2c1d1c;
-      box-shadow: 0 8px 24px rgba(191, 161, 156, 0.35);
+    .btn-outline:hover {
+      border-color: var(--gold);
+      color: var(--gold);
     }
 
-    /* HERO SLIDESHOW */
-    .hero {
+    /* hero right — portrait card stack */
+    .hero-cards {
       position: relative;
-      min-height: 80vh;
+      height: 520px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .portrait-card {
+      position: absolute;
+      border-radius: 12px;
       overflow: hidden;
-      display: block;
-      padding: 0;
-      border-bottom: 1px solid #f2e7e4;
-    }
-    .hero-slides-track {
-      display: flex;
-      width: 100%;
-      min-height: 80vh;
-      transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-    .hero-slide {
-      width: 100%;
-      flex-shrink: 0;
-      min-height: 80vh;
-      padding: 140px 48px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      position: relative;
-      background-size: cover;
-      background-position: center;
-    }
-    .hero-slide::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(rgba(251,248,247,0.82), rgba(251,248,247,0.95));
-    }
-    .hero-slide-content { position: relative; z-index: 2; max-width: 720px; }
-    .makeup-arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(255,255,255,0.8);
-      border: 1px solid #f2e7e4;
-      color: #2c1d1c;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
+      box-shadow: 0 24px 60px rgba(44,29,28,0.22);
+      transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      z-index: 10;
-      opacity: 0;
-      transition: all 0.25s;
-      backdrop-filter: blur(8px);
-      box-shadow: 0 4px 12px rgba(191,161,156,0.15);
     }
-    .hero:hover .makeup-arrow { opacity: 1; }
-    .makeup-arrow:hover { background: #bfa19c; color: #fff; border-color: #bfa19c; }
-    .makeup-arrow.prev-arrow { left: 24px; }
-    .makeup-arrow.next-arrow { right: 24px; }
-    .makeup-dots {
+    .portrait-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    /* label bar at bottom of card */
+    .portrait-card .card-label {
       position: absolute;
-      bottom: 24px;
+      bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, rgba(44,29,28,0.88) 0%, transparent 100%);
+      padding: 28px 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .card-label-cat {
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: rgba(201,169,110,0.18);
+      padding: 3px 10px;
+      border-radius: 2px;
+      display: inline-block;
+      align-self: flex-start;
+      border: 1px solid rgba(201,169,110,0.4);
+    }
+    .card-label-tag {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 11px;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: 0.05em;
+    }
+
+    /* card positions */
+    .portrait-card.c-back {
+      width: 200px; height: 310px;
+      right: 0; top: 30px;
+      transform: rotate(6deg) translateX(20px);
+      z-index: 1;
+      border: 3px solid rgba(201,169,110,0.4);
+    }
+    .portrait-card.c-mid {
+      width: 215px; height: 330px;
+      left: 10px; bottom: 40px;
+      transform: rotate(-4deg) translateX(-10px);
+      z-index: 2;
+      border: 3px solid rgba(232,196,188,0.5);
+    }
+    .portrait-card.c-front {
+      width: 250px; height: 380px;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 3;
+      border: 3px solid rgba(201,169,110,0.65);
+    }
+    .portrait-card:hover { transform: rotate(0deg) scale(1.04) !important; z-index: 10 !important; }
+
+    /* hero scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 28px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
-      gap: 8px;
-      z-index: 10;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      z-index: 5;
     }
-    .makeup-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: rgba(191,161,156,0.4);
-      cursor: pointer;
-      transition: all 0.3s;
-      display: inline-block;
+    .scroll-hint span {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--mid);
     }
-    .makeup-dot.active {
-      background: #bfa19c;
-      width: 20px;
-      border-radius: 4px;
+    .scroll-mouse {
+      width: 22px; height: 34px;
+      border: 1.5px solid var(--roseDark);
+      border-radius: 11px;
+      display: flex;
+      justify-content: center;
+      padding-top: 6px;
     }
-    .hero-content { max-width: 720px; }
-
-    .service-img {
-      height: 220px;
-      width: 100%;
-      background-size: cover;
-      background-position: center;
-      margin-bottom: 24px;
+    .scroll-dot {
+      width: 3px; height: 6px;
       border-radius: 2px;
-      border: 1px solid #efe3e1;
-      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      background: var(--roseDark);
+      animation: scrollDown 1.6s ease-in-out infinite;
     }
-    .service-card:hover .service-img {
-      transform: scale(1.05);
-    }
-    
-    /* Cascading load transitions */
-    .hero-content h2, .hero-content h1, .hero-content p, .hero-content button {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1), transform 1s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    body.loaded .hero-content h2 { opacity: 1; transform: translateY(0); transition-delay: 0.1s; }
-    body.loaded .hero-content h1 { opacity: 1; transform: translateY(0); transition-delay: 0.3s; }
-    body.loaded .hero-content p { opacity: 1; transform: translateY(0); transition-delay: 0.5s; }
-    body.loaded .hero-content button { opacity: 1; transform: translateY(0); transition-delay: 0.7s; }
-
-    .hero h2 {
-      font-family: 'Playfair Display', serif;
-      font-style: italic;
-      font-weight: 400;
-      font-size: 20px;
-      color: #bfa19c;
-      margin-bottom: 18px;
-      letter-spacing: 0.05em;
-    }
-    .hero h1 {
-      font-family: 'Cinzel', serif;
-      font-size: clamp(34px, 5.5vw, 56px);
-      font-weight: 500;
-      color: #2c1d1c;
-      letter-spacing: 0.06em;
-      line-height: 1.25;
-      margin-bottom: 24px;
-    }
-    .hero p {
-      font-size: 15px;
-      color: #726260;
-      line-height: 1.8;
-      max-width: 580px;
-      margin: 0 auto 40px;
+    @keyframes scrollDown {
+      0%   { opacity: 1; transform: translateY(0); }
+      100% { opacity: 0; transform: translateY(10px); }
     }
 
-    /* SERVICES */
-    .services {
-      padding: 100px 48px;
-      max-width: 1140px;
+    /* ── SECTION COMMON ── */
+    .section-wrap {
+      max-width: 1160px;
       margin: 0 auto;
-      border-bottom: 1px solid #f2e7e4;
+      padding: 100px 48px;
     }
-    .sec-title { text-align: center; margin-bottom: 70px; }
-    .sec-title h2 {
-      font-family: 'Cinzel', serif;
-      font-size: 32px;
-      letter-spacing: 0.08em;
-      color: #2c1d1c;
-      margin-bottom: 10px;
-    }
-    .sec-title p {
+    .sec-label {
       font-family: 'Playfair Display', serif;
       font-style: italic;
-      color: #bfa19c;
-      font-size: 16px;
+      font-size: 13px;
+      color: var(--gold);
+      letter-spacing: 0.08em;
+      text-align: center;
+      margin-bottom: 6px;
     }
-    
-    .service-grid {
+    .sec-title-h2 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(24px, 3vw, 34px);
+      letter-spacing: 0.08em;
+      color: var(--dark);
+      text-align: center;
+      margin-bottom: 4px;
+    }
+    .sec-divider {
+      width: 48px;
+      height: 2px;
+      background: linear-gradient(to right, var(--rose), var(--gold));
+      border-radius: 2px;
+      margin: 16px auto 0;
+    }
+
+    /* ── SERVICES ── */
+    .services-section {
+      background: linear-gradient(180deg, var(--cream) 0%, var(--blush) 100%);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .services-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 30px;
+      gap: 28px;
+      margin-top: 60px;
     }
     .service-card {
       background: #fff;
-      border: 1px solid #efe3e1;
-      padding: 50px 36px;
-      text-align: center;
-      transition: all 0.3s ease;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.34, 1.2, 0.64, 1);
+      position: relative;
     }
-    .service-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 16px 36px rgba(191, 161, 156, 0.15);
-      border-color: #dfd0ce;
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(to right, var(--rose), var(--gold), var(--rose));
+      opacity: 0;
+      transition: opacity 0.3s;
     }
-    .card-divider {
-      width: 40px;
-      height: 1px;
-      background: #bfa19c;
-      margin: 20px auto;
+    .service-card:hover { transform: translateY(-8px); box-shadow: 0 24px 48px rgba(44,29,28,0.12); border-color: transparent; }
+    .service-card:hover::before { opacity: 1; }
+    .service-img-wrap {
+      height: 240px;
+      overflow: hidden;
+      position: relative;
     }
-    .card-title {
+    .service-img-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.7s cubic-bezier(0.4,0,0.2,1);
+    }
+    .service-card:hover .service-img-wrap img { transform: scale(1.08); }
+    .service-img-badge {
+      position: absolute;
+      top: 16px; left: 16px;
+      background: rgba(44,29,28,0.78);
+      color: var(--gold);
       font-family: 'Cinzel', serif;
-      font-size: 17px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 2px;
+      border: 1px solid rgba(201,169,110,0.4);
+      backdrop-filter: blur(4px);
+    }
+    .service-body { padding: 28px 28px 32px; }
+    .service-name {
+      font-family: 'Cinzel', serif;
+      font-size: 16px;
       font-weight: 600;
-      letter-spacing: 0.08em;
-      color: #2c1d1c;
+      letter-spacing: 0.07em;
+      color: var(--dark);
+      margin-bottom: 10px;
     }
-    .card-desc { font-size: 14px; line-height: 1.7; color: #726260; margin-top: 10px; }
-    .card-price { font-size: 20px; color: #bfa19c; font-weight: 700; margin-top: 24px; font-family: 'Cinzel', serif; }
+    .service-line {
+      width: 36px; height: 1px;
+      background: var(--gold);
+      margin-bottom: 14px;
+    }
+    .service-desc { font-size: 13.5px; color: var(--mid); line-height: 1.75; }
+    .service-price {
+      font-family: 'Cinzel', serif;
+      font-size: 22px;
+      color: var(--gold);
+      font-weight: 700;
+      margin-top: 22px;
+    }
 
-    /* NEW FEATURE: CLIENT TESTIMONIALS */
-    .testimonials {
-      padding: 100px 48px;
-      max-width: 900px;
-      margin: 0 auto;
-      text-align: center;
-      border-bottom: 1px solid #f2e7e4;
+    /* ── PACKAGE CALCULATOR ── */
+    .calc-box {
+      margin-top: 64px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 44px 48px;
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 12px 40px rgba(44,29,28,0.06);
+      position: relative;
+      overflow: hidden;
     }
-    .testimonial-quote {
+    .calc-box::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(to right, var(--rose), var(--gold), var(--rose));
+    }
+    .calc-title {
+      font-family: 'Cinzel', serif;
+      font-size: 20px;
+      color: var(--dark);
+      letter-spacing: 0.06em;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .calc-sub {
+      font-size: 13px;
+      color: var(--mid);
+      text-align: center;
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+    .calc-label {
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--mid);
+      margin-bottom: 8px;
+      display: block;
+    }
+    .calc-select {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1px solid var(--border);
+      background: var(--cream);
+      font-family: inherit;
+      font-size: 13.5px;
+      outline: none;
+      border-radius: 4px;
+      color: var(--dark);
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23bfa19c' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      margin-bottom: 24px;
+      transition: border-color 0.2s;
+    }
+    .calc-select:focus { border-color: var(--gold); }
+    .calc-addon-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13.5px;
+      color: var(--dark);
+      cursor: pointer;
+      padding: 10px 14px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+    .calc-addon-row:hover { background: var(--blush); }
+    .calc-addon-row input[type="checkbox"] { accent-color: var(--gold); width: 16px; height: 16px; }
+    .calc-total-row {
+      border-top: 1px solid var(--border);
+      padding-top: 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 24px;
+    }
+    .calc-total-label {
+      font-family: 'Cinzel', serif;
+      font-size: 15px;
+      color: var(--dark);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+    }
+    .calc-total-val {
+      font-family: 'Cinzel', serif;
+      font-size: 30px;
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    /* ── ABOUT / ARTISTRY PROCESS ── */
+    .about-section {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 70px;
+      align-items: center;
+    }
+    .about-img-wrap {
+      position: relative;
+      border-radius: 8px;
+      overflow: visible;
+    }
+    .about-img-main {
+      width: 100%;
+      height: 480px;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 28px 60px rgba(44,29,28,0.18);
+      display: block;
+    }
+    .about-img-badge {
+      position: absolute;
+      bottom: -24px; right: -24px;
+      background: linear-gradient(135deg, var(--gold) 0%, #b8893a 100%);
+      color: #fff;
+      border-radius: 8px;
+      padding: 22px 26px;
+      text-align: center;
+      box-shadow: 0 12px 30px rgba(201,169,110,0.4);
+    }
+    .about-badge-num {
+      font-family: 'Cinzel', serif;
+      font-size: 32px;
+      font-weight: 700;
+      display: block;
+    }
+    .about-badge-text {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      opacity: 0.85;
+    }
+    .about-text h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 30px;
+      color: var(--dark);
+      letter-spacing: 0.05em;
+      margin-bottom: 20px;
+      line-height: 1.35;
+    }
+    .about-text p {
+      font-size: 14.5px;
+      color: var(--mid);
+      line-height: 1.85;
+      margin-bottom: 18px;
+    }
+    .about-features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 28px;
+    }
+    .about-feat {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .about-feat-icon {
+      width: 36px; height: 36px;
+      background: var(--blush);
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--gold);
+      font-size: 14px;
+    }
+    .about-feat-text h4 {
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--dark);
+      margin-bottom: 3px;
+    }
+    .about-feat-text p {
+      font-size: 12px;
+      color: var(--mid);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* ── GALLERY ── */
+    .gallery-section {
+      background: linear-gradient(180deg, var(--blush) 0%, var(--cream) 100%);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .gallery-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 44px 0 36px;
+      flex-wrap: wrap;
+    }
+    .gtab {
+      padding: 9px 24px;
+      border-radius: 30px;
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      transition: all 0.25s;
+    }
+    .gtab.active, .gtab:hover { background: var(--gold); color: #fff; border-color: var(--gold); }
+    .gtab:not(.active) { background: transparent; color: var(--mid); }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: auto auto;
+      gap: 14px;
+    }
+    .gallery-item {
+      border-radius: 6px;
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+      transition: opacity 0.4s ease;
+    }
+    .gallery-item:nth-child(1) { grid-column: span 2; grid-row: span 2; height: 400px; }
+    .gallery-item:not(:nth-child(1)) { height: 190px; }
+    .gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.4,0,0.2,1);
+      display: block;
+    }
+    .gallery-item:hover img { transform: scale(1.07); }
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(44,29,28,0.7) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.35s;
+      display: flex;
+      align-items: flex-end;
+      padding: 18px;
+    }
+    .gallery-item:hover .gallery-overlay { opacity: 1; }
+    .gallery-overlay-label {
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials-section {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: var(--cream);
+    }
+    .testi-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 100px 48px;
+    }
+    .testi-carousel {
+      position: relative;
+      overflow: hidden;
+    }
+    .testi-track {
+      display: flex;
+      transition: transform 0.6s cubic-bezier(0.25,1,0.5,1);
+    }
+    .testi-slide {
+      min-width: 100%;
+      text-align: center;
+      padding: 0 24px;
+    }
+    .testi-stars {
+      display: flex;
+      justify-content: center;
+      gap: 4px;
+      margin-bottom: 28px;
+      color: var(--gold);
+      font-size: 18px;
+    }
+    .testi-quote {
       font-family: 'Playfair Display', serif;
       font-style: italic;
-      font-size: clamp(18px, 3vw, 24px);
-      line-height: 1.6;
-      color: #2c1d1c;
-      margin-bottom: 24px;
+      font-size: clamp(18px, 2.8vw, 24px);
+      line-height: 1.7;
+      color: var(--dark);
+      margin-bottom: 36px;
+      position: relative;
     }
-    .testimonial-author {
+    .testi-quote::before {
+      content: '\201C';
+      font-size: 80px;
+      color: var(--rose);
+      line-height: 0;
+      position: absolute;
+      top: 20px; left: -30px;
+      font-family: 'Playfair Display', serif;
+    }
+    .testi-author-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+    .testi-avatar {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--gold);
+    }
+    .testi-name {
       font-family: 'Cinzel', serif;
       font-size: 12px;
       font-weight: 700;
       letter-spacing: 0.1em;
-      color: #bfa19c;
+      color: var(--gold);
+    }
+    .testi-role { font-size: 11px; color: var(--mid); letter-spacing: 0.06em; text-transform: uppercase; margin-top: 3px; }
+    .testi-nav {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 36px;
+    }
+    .testi-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--rose);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .testi-dot.active {
+      background: var(--gold);
+      width: 22px;
+      border-radius: 4px;
     }
 
-    /* NEW FEATURE: FAQ ACCORDION */
+    /* ── FAQ ── */
     .faq-section {
-      padding: 100px 48px;
-      max-width: 800px;
-      margin: 0 auto;
+      border-top: 1px solid var(--border);
+      background: linear-gradient(180deg, var(--blush) 0%, var(--cream) 100%);
     }
+    .faq-list { margin-top: 56px; }
     .faq-item {
       background: #fff;
-      border: 1px solid #efe3e1;
-      margin-bottom: 16px;
-      border-radius: 4px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 12px;
       overflow: hidden;
+      transition: box-shadow 0.3s;
     }
+    .faq-item:hover { box-shadow: 0 8px 24px rgba(44,29,28,0.06); }
     .faq-question {
-      padding: 24px;
+      padding: 22px 26px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-family: 'Cinzel', serif;
-      font-size: 14px;
+      font-size: 13.5px;
       font-weight: 600;
       letter-spacing: 0.05em;
-      color: #2c1d1c;
+      color: var(--dark);
       cursor: pointer;
       user-select: none;
-      transition: background 0.2s;
+      transition: color 0.2s;
     }
-    .faq-question:hover {
-      background: #fbf8f7;
+    .faq-item.active .faq-question { color: var(--gold); }
+    .faq-icon {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.3s;
+    }
+    .faq-item.active .faq-icon {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: #fff;
+      transform: rotate(45deg);
     }
     .faq-answer {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.3s ease-out;
-      background: #fff;
+      transition: max-height 0.35s ease-out;
     }
     .faq-answer-inner {
-      padding: 0 24px 24px;
+      padding: 0 26px 24px;
       font-size: 14px;
-      color: #726260;
-      line-height: 1.65;
+      color: var(--mid);
+      line-height: 1.75;
+      border-top: 1px solid var(--border);
+      padding-top: 18px;
     }
-    .faq-icon-svg {
-      transition: transform 0.3s;
-    }
-    .faq-item.active .faq-answer {
-      max-height: 200px; /* Bounded height for transition */
-    }
-    .faq-item.active .faq-icon-svg {
-      transform: rotate(45deg);
-    }
+    .faq-item.active .faq-answer { max-height: 200px; }
 
-    /* FOOTER */
-    footer {
+    /* ── BOOKING MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(44,29,28,0.65);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(6px);
+    }
+    .modal-box {
       background: #fff;
-      border-top: 1px solid #f2e7e4;
       padding: 48px;
-      text-align: center;
-      color: #726260;
-      font-size: 12px;
+      border-radius: 10px;
+      max-width: 460px;
+      width: 92%;
+      border: 1px solid var(--border);
+      position: relative;
+      box-shadow: 0 32px 70px rgba(44,29,28,0.22);
+      animation: modalIn 0.4s cubic-bezier(0.34,1.4,0.64,1);
+    }
+    @keyframes modalIn {
+      from { transform: translateY(30px) scale(0.95); opacity: 0; }
+      to   { transform: translateY(0) scale(1);      opacity: 1; }
+    }
+    .modal-close {
+      position: absolute; top: 16px; right: 18px;
+      background: transparent; border: none;
+      font-size: 22px; cursor: pointer; color: var(--mid);
+      line-height: 1;
+      transition: color 0.2s;
+    }
+    .modal-close:hover { color: var(--dark); }
+    .modal-title {
       font-family: 'Cinzel', serif;
-      letter-spacing: 0.08em;
+      font-size: 22px; color: var(--dark);
+      letter-spacing: 0.05em; margin-bottom: 6px;
+      text-align: center;
+    }
+    .modal-sub {
+      font-size: 13px; color: var(--mid);
+      text-align: center; line-height: 1.55;
+      margin-bottom: 28px;
+    }
+    .modal-field { margin-bottom: 16px; }
+    .modal-field label {
+      display: block; font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--mid); margin-bottom: 7px;
+    }
+    .modal-field input,
+    .modal-field select {
+      width: 100%; padding: 12px 14px;
+      border: 1px solid var(--border);
+      background: var(--cream);
+      font-family: inherit; font-size: 13px;
+      outline: none; border-radius: 4px;
+      color: var(--dark);
+      transition: border-color 0.2s;
+    }
+    .modal-field input:focus,
+    .modal-field select:focus { border-color: var(--gold); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark);
+      padding: 52px 48px 36px;
+      text-align: center;
+    }
+    .footer-logo {
+      font-family: 'Cinzel', serif;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .footer-logo span { color: var(--gold); }
+    .footer-tagline {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 13px;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 32px;
+    }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+    .footer-links a {
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.45);
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-copy {
+      font-size: 11px;
+      color: rgba(255,255,255,0.28);
+      letter-spacing: 0.06em;
+      font-family: 'Cinzel', serif;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 24px;
     }
 
-    @media (max-width: 768px) {
-      header { padding: 20px 24px; }
+    /* ── ANIMATIONS ON LOAD ── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.85s cubic-bezier(0.4,0,0.2,1), transform 0.85s cubic-bezier(0.4,0,0.2,1);
+    }
+    body.loaded .fade-up { opacity: 1; transform: translateY(0); }
+    .fade-up:nth-child(1) { transition-delay: 0.1s; }
+    .fade-up:nth-child(2) { transition-delay: 0.25s; }
+    .fade-up:nth-child(3) { transition-delay: 0.4s; }
+    .fade-up:nth-child(4) { transition-delay: 0.55s; }
+    .fade-up:nth-child(5) { transition-delay: 0.7s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      header { padding: 0 24px; }
       nav { display: none; }
-      .hero { padding: 100px 24px; }
-      .services { padding: 60px 24px; }
-      .faq-section, .testimonials { padding: 60px 24px; }
+      .hero-inner {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding: 60px 24px 50px;
+        gap: 40px;
+        min-height: auto;
+      }
+      .hero-eyebrow { justify-content: center; }
+      .hero-tags { justify-content: center; }
+      .hero-ctas { justify-content: center; }
+      .hero-sub { margin-left: auto; margin-right: auto; }
+      .hero-cards { height: 340px; }
+      .portrait-card.c-front { width: 180px; height: 270px; }
+      .portrait-card.c-mid  { width: 155px; height: 240px; }
+      .portrait-card.c-back { width: 155px; height: 230px; }
+      .section-wrap { padding: 60px 24px; }
+      .about-grid { grid-template-columns: 1fr; gap: 40px; }
+      .about-img-badge { right: 0; bottom: -16px; }
+      .gallery-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+      }
+      .gallery-item:nth-child(1) { grid-column: span 2; grid-row: span 1; height: 280px; }
+      .gallery-item:not(:nth-child(1)) { height: 180px; }
+      .testi-inner { padding: 60px 24px; }
+      .testi-quote::before { display: none; }
+      .faq-section .section-wrap { padding: 60px 24px; }
+      footer { padding: 40px 24px 28px; }
+      .calc-box { padding: 32px 24px; }
     }
   </style>
 </head>
 <body onload="document.body.classList.add('loaded')">
 
+  <!-- ═══ HEADER ═══ -->
   <header>
-    <div class="logo">AURORA BEAU</div>
+    <div class="logo">AURORA <span>BEAU</span></div>
     <nav>
       <a href="#" class="active">Home</a>
       <a href="#artistry">Artistry</a>
       <a href="#packages">Packages</a>
       <a href="#gallery">Gallery</a>
     </nav>
-    <button class="btn-gold" style="padding:10px 20px;font-size:10px;" onclick="openBookingModal()">Book consult</button>
+    <button class="btn-book" onclick="openBookingModal()">Book Consult</button>
   </header>
 
-  <section class="hero" id="artistry" onmouseenter="pauseMakeupSlide()" onmouseleave="startMakeupSlide()">
-    <div class="hero-slides-track" id="makeup-slides-track">
+  <!-- ═══ HERO ═══ -->
+  <section class="hero" id="artistry">
+    <!-- Decorative rose SVG petals -->
+    <div class="petal-bg" aria-hidden="true">
+      <svg class="petal" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#e8a898" d="M100,10 C80,30 20,60 10,100 C20,140 80,170 100,190 C120,170 180,140 190,100 C180,60 120,30 100,10Z"/>
+        <ellipse cx="100" cy="80" rx="30" ry="50" fill="#d4837a" opacity="0.4" transform="rotate(-30 100 100)"/>
+      </svg>
+      <svg class="petal" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#e8a898" d="M100,10 C80,30 20,60 10,100 C20,140 80,170 100,190 C120,170 180,140 190,100 C180,60 120,30 100,10Z"/>
+      </svg>
+      <svg class="petal" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#f0b8a8" d="M100,10 C80,30 20,60 10,100 C20,140 80,170 100,190 C120,170 180,140 190,100 C180,60 120,30 100,10Z"/>
+      </svg>
+    </div>
 
-      <!-- Slide 1: Bridal -->
-      <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=1600&q=80');">
-        <div class="hero-slide-content hero-content">
-          <h2>Timeless Bridal Artistry</h2>
-          <h1>Timeless Aesthetics for Editorial &amp; Bridal</h1>
-          <p>Providing high-definition makeup services and styling for editorial layouts, fashion runs, and luxury bridal clients. Paris based and working worldwide.</p>
-          <button class="btn-gold" onclick="openBookingModal()">Reserve Bridal Session</button>
+    <div class="hero-inner">
+      <!-- Text -->
+      <div class="hero-text">
+        <div class="hero-eyebrow fade-up">Beauty is Art</div>
+        <h1 class="hero-h1 fade-up">
+          Makeup that
+          <em>Enhances You</em>
+        </h1>
+        <div class="hero-tags fade-up">
+          <span class="hero-tag">Bridal</span>
+          <span class="hero-tag">Editorial</span>
+          <span class="hero-tag">Glam</span>
+        </div>
+        <p class="hero-sub fade-up">Providing high-definition makeup services and styling for editorial layouts, fashion runs, and luxury bridal clients. Paris based and working worldwide.</p>
+        <div class="hero-ctas fade-up">
+          <button class="btn-primary" onclick="openBookingModal()">Reserve Your Session</button>
+          <button class="btn-outline" onclick="document.getElementById('gallery').scrollIntoView({behavior:'smooth'})">View Portfolio</button>
         </div>
       </div>
 
-      <!-- Slide 2: Editorial -->
-      <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=1600&q=80');">
-        <div class="hero-slide-content hero-content">
-          <h2>Editorial &amp; Runway</h2>
-          <h1>High Fashion. Studio Precision.</h1>
-          <p>High-fashion applications tailored to studio illumination, photographic settings, and runway portfolios designed for international fashion weeks.</p>
-          <button class="btn-gold" onclick="openBookingModal()">Reserve Editorial Session</button>
+      <!-- Portrait Card Stack -->
+      <div class="hero-cards">
+        <!-- Back card: Editorial -->
+        <div class="portrait-card c-back" onclick="openBookingModal()">
+          <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=600&q=80" alt="Editorial Look">
+          <div class="card-label">
+            <span class="card-label-cat">Editorial Look</span>
+            <span class="card-label-tag">Bold. Confident. You.</span>
+          </div>
+        </div>
+
+        <!-- Mid card: Bridal Indian -->
+        <div class="portrait-card c-mid" onclick="openBookingModal()">
+          <img src="https://images.unsplash.com/photo-1526045612212-70caf35c14df?auto=format&fit=crop&w=600&q=80" alt="Bridal Beauty">
+          <div class="card-label">
+            <span class="card-label-cat">Bridal Beauty</span>
+            <span class="card-label-tag">Timeless. Elegant. Radiant.</span>
+          </div>
+        </div>
+
+        <!-- Front card: Main Hero -->
+        <div class="portrait-card c-front" onclick="openBookingModal()">
+          <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=600&q=80" alt="Beauty is Art">
+          <div class="card-label">
+            <span class="card-label-cat">Signature Look</span>
+            <span class="card-label-tag">View Portfolio</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll hint -->
+    <div class="scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-mouse"><div class="scroll-dot"></div></div>
+    </div>
+  </section>
+
+  <!-- ═══ SERVICES ═══ -->
+  <section class="services-section" id="packages">
+    <div class="section-wrap">
+      <div class="sec-label">Our Offerings</div>
+      <h2 class="sec-title-h2">Cosmetic Packages</h2>
+      <div class="ornament">✦</div>
+      <p style="text-align:center;font-family:'Playfair Display',serif;font-style:italic;color:var(--mid);font-size:15px;max-width:500px;margin:0 auto;">Artisanal cosmetic styling tailored for your signature moments</p>
+
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-img-wrap">
+            <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=600&q=80" alt="Timeless Bridal">
+            <div class="service-img-badge">Bridal</div>
+          </div>
+          <div class="service-body">
+            <div class="service-name">Timeless Bridal</div>
+            <div class="service-line"></div>
+            <p class="service-desc">Comprehensive consultation session, trial makeup layout, and signature on-site application for the bride.</p>
+            <div class="service-price">$450</div>
+          </div>
+        </div>
+
+        <div class="service-card">
+          <div class="service-img-wrap">
+            <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=600&q=80" alt="Editorial Runway">
+            <div class="service-img-badge">Editorial</div>
+          </div>
+          <div class="service-body">
+            <div class="service-name">Editorial &amp; Runway</div>
+            <div class="service-line"></div>
+            <p class="service-desc">High-fashion applications tailored to studio illumination, photographic settings, and runway portfolios.</p>
+            <div class="service-price">$650 / Day</div>
+          </div>
+        </div>
+
+        <div class="service-card">
+          <div class="service-img-wrap">
+            <img src="https://images.unsplash.com/photo-1526045612212-70caf35c14df?auto=format&fit=crop&w=600&q=80" alt="Artistry Masterclass">
+            <div class="service-img-badge">Masterclass</div>
+          </div>
+          <div class="service-body">
+            <div class="service-name">Artistry Masterclass</div>
+            <div class="service-line"></div>
+            <p class="service-desc">Private instruction session detailing custom color selection, blending guides, and brush techniques.</p>
+            <div class="service-price">$180</div>
+          </div>
         </div>
       </div>
 
-      <!-- Slide 3: Masterclass -->
-      <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1526045612212-70caf35c14df?auto=format&fit=crop&w=1600&q=80');">
-        <div class="hero-slide-content hero-content">
-          <h2>Artistry Masterclass</h2>
-          <h1>Learn. Refine. Perfect Your Craft.</h1>
-          <p>Private instruction sessions detailing custom colour selection, blending guides, and professional brush techniques for aspiring makeup artists.</p>
-          <button class="btn-gold" onclick="openBookingModal()">Book Masterclass</button>
+      <!-- Package Calculator -->
+      <div class="calc-box">
+        <h3 class="calc-title">Estimate Your Artistry Package</h3>
+        <p class="calc-sub">Choose a base service and add custom enhancements to calculate your pricing estimate.</p>
+
+        <div>
+          <label class="calc-label">1. Select Base Service</label>
+          <select class="calc-select" id="calc-base" onchange="calculateTotalEstimate()">
+            <option value="450">Timeless Bridal ($450)</option>
+            <option value="650">Editorial &amp; Runway ($650/Day)</option>
+            <option value="180">Artistry Masterclass ($180)</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom:8px;">
+          <label class="calc-label">2. Add Luxury Enhancements</label>
+          <div style="display:flex;flex-direction:column;gap:4px;margin-top:8px;">
+            <label class="calc-addon-row">
+              <input type="checkbox" value="100" class="calc-addon" onchange="calculateTotalEstimate()"> Extra Hair Styling <span style="margin-left:auto;color:var(--gold);font-family:'Cinzel',serif;font-size:13px;font-weight:700;">+$100</span>
+            </label>
+            <label class="calc-addon-row">
+              <input type="checkbox" value="80" class="calc-addon" onchange="calculateTotalEstimate()"> Airbrush Makeup Finish Upgrade <span style="margin-left:auto;color:var(--gold);font-family:'Cinzel',serif;font-size:13px;font-weight:700;">+$80</span>
+            </label>
+            <label class="calc-addon-row">
+              <input type="checkbox" value="150" class="calc-addon" onchange="calculateTotalEstimate()"> On-Location Travel / Concierge <span style="margin-left:auto;color:var(--gold);font-family:'Cinzel',serif;font-size:13px;font-weight:700;">+$150</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="calc-total-row">
+          <span class="calc-total-label">Estimated Total:</span>
+          <span class="calc-total-val" id="calc-total">$450</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ ABOUT / ARTISTRY PROCESS ═══ -->
+  <section class="about-section">
+    <div class="section-wrap">
+      <div class="about-grid">
+        <div class="about-img-wrap">
+          <img class="about-img-main" src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80" alt="Cosmetic Artistry">
+          <div class="about-img-badge">
+            <span class="about-badge-num">8+</span>
+            <span class="about-badge-text">Years of Artistry</span>
+          </div>
+        </div>
+        <div class="about-text">
+          <div class="sec-label" style="text-align:left;">Our Philosophy</div>
+          <h2>Editorial<br>Craftsmanship</h2>
+          <div class="sec-divider" style="margin:16px 0;"></div>
+          <p>We believe in enhancing natural features with premium cosmetics and curated techniques. Each look is micro-styled for photography flash durability and absolute physical presence.</p>
+          <p>Our master kit is selected from hypoallergenic formulas that ensure seamless blending, crisp HD details, and long-lasting glow under editorial studio lights.</p>
+          <div class="about-features">
+            <div class="about-feat">
+              <div class="about-feat-icon">✦</div>
+              <div class="about-feat-text">
+                <h4>HD Precision</h4>
+                <p>Camera-ready finishes for every lens and setting.</p>
+              </div>
+            </div>
+            <div class="about-feat">
+              <div class="about-feat-icon">❋</div>
+              <div class="about-feat-text">
+                <h4>Hypoallergenic</h4>
+                <p>Only skin-safe, luxury-grade formulas used.</p>
+              </div>
+            </div>
+            <div class="about-feat">
+              <div class="about-feat-icon">♛</div>
+              <div class="about-feat-text">
+                <h4>Worldwide Travel</h4>
+                <p>Paris based, serving clients globally.</p>
+              </div>
+            </div>
+            <div class="about-feat">
+              <div class="about-feat-icon">✿</div>
+              <div class="about-feat-text">
+                <h4>24-Hour Glow</h4>
+                <p>Long-lasting looks that endure through the day.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ GALLERY ═══ -->
+  <section class="gallery-section" id="gallery">
+    <div class="section-wrap">
+      <div class="sec-label">Visual Showcase</div>
+      <h2 class="sec-title-h2">Artistry Gallery</h2>
+      <div class="ornament">✦</div>
+      <p style="text-align:center;font-family:'Playfair Display',serif;font-style:italic;color:var(--mid);font-size:15px;max-width:500px;margin:0 auto;">A visual showcase of recent luxury bridal and runway designs</p>
+
+      <div class="gallery-tabs" id="gallery-tabs">
+        <button class="gtab active" onclick="filterGallery('all', this)">All</button>
+        <button class="gtab" onclick="filterGallery('bridal', this)">Bridal</button>
+        <button class="gtab" onclick="filterGallery('editorial', this)">Editorial</button>
+        <button class="gtab" onclick="filterGallery('masterclass', this)">Masterclass</button>
+      </div>
+
+      <div class="gallery-grid">
+        <div class="gallery-item" data-category="bridal">
+          <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=900&q=80" alt="Bridal Look 1">
+          <div class="gallery-overlay"><span class="gallery-overlay-label">Bridal Elegance</span></div>
+        </div>
+        <div class="gallery-item" data-category="editorial">
+          <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=600&q=80" alt="Editorial Look">
+          <div class="gallery-overlay"><span class="gallery-overlay-label">Editorial</span></div>
+        </div>
+        <div class="gallery-item" data-category="masterclass">
+          <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=600&q=80" alt="Masterclass">
+          <div class="gallery-overlay"><span class="gallery-overlay-label">Masterclass</span></div>
+        </div>
+        <div class="gallery-item" data-category="bridal">
+          <img src="https://images.unsplash.com/photo-1526045612212-70caf35c14df?auto=format&fit=crop&w=600&q=80" alt="Bridal Look 2">
+          <div class="gallery-overlay"><span class="gallery-overlay-label">Bridal Glam</span></div>
+        </div>
+        <div class="gallery-item" data-category="editorial">
+          <img src="https://images.unsplash.com/photo-1583241800698-e8ab01830a36?auto=format&fit=crop&w=600&q=80" alt="Editorial Fashion">
+          <div class="gallery-overlay"><span class="gallery-overlay-label">Runway Ready</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ TESTIMONIALS ═══ -->
+  <section class="testimonials-section">
+    <div class="testi-inner">
+      <div class="sec-label" style="text-align:center;">Client Love</div>
+      <h2 class="sec-title-h2" style="text-align:center;">What Clients Say</h2>
+      <div class="ornament">✦</div>
+
+      <div class="testi-carousel" style="margin-top:48px;">
+        <div class="testi-track" id="testi-track">
+
+          <!-- Slide 1 -->
+          <div class="testi-slide">
+            <div class="testi-stars">★★★★★</div>
+            <div class="testi-quote">"Aurora created the absolute makeup design of my dreams for my ceremony. The look remained pristine through the entire night. Her precision is truly unmatched."</div>
+            <div class="testi-author-wrap">
+              <img class="testi-avatar" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80" alt="Charlotte Renault">
+              <div>
+                <div class="testi-name">Charlotte Renault</div>
+                <div class="testi-role">Bridal Client</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 2 -->
+          <div class="testi-slide">
+            <div class="testi-stars">★★★★★</div>
+            <div class="testi-quote">"The editorial shoot looked incredible — every camera shot was flawless. Aurora understood my vision and elevated it beyond what I imagined."</div>
+            <div class="testi-author-wrap">
+              <img class="testi-avatar" src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=150&q=80" alt="Isabelle Morin">
+              <div>
+                <div class="testi-name">Isabelle Morin</div>
+                <div class="testi-role">Fashion Editor</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 3 -->
+          <div class="testi-slide">
+            <div class="testi-stars">★★★★★</div>
+            <div class="testi-quote">"The masterclass transformed my entire approach to makeup. Aurora's techniques are professional grade and she teaches with incredible patience and clarity."</div>
+            <div class="testi-author-wrap">
+              <img class="testi-avatar" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&q=80" alt="Sophie Laurent">
+              <div>
+                <div class="testi-name">Sophie Laurent</div>
+                <div class="testi-role">Masterclass Student</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-    </div>
-    <button class="makeup-arrow prev-arrow" onclick="moveMakeupSlide(-1, event)">&#10094;</button>
-    <button class="makeup-arrow next-arrow" onclick="moveMakeupSlide(1, event)">&#10095;</button>
-    <div class="makeup-dots">
-      <span class="makeup-dot active" onclick="gotoMakeupSlide(0, event)"></span>
-      <span class="makeup-dot" onclick="gotoMakeupSlide(1, event)"></span>
-      <span class="makeup-dot" onclick="gotoMakeupSlide(2, event)"></span>
-    </div>
-  </section>
-
-  <section class="services" id="packages">
-    <div class="sec-title">
-      <h2>Cosmetic Packages</h2>
-      <p>Artisanal cosmetic styling tailored for your signature moments</p>
-    </div>
-    
-    <div class="service-grid">
-      <div class="service-card">
-        <div class="service-img" style="background-image: url('https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=600&q=80');"></div>
-        <div class="card-title">Timeless Bridal</div>
-        <div class="card-divider"></div>
-        <p class="card-desc">Comprehensive consultation session, trial makeup layout, and signature on-site application for the bride.</p>
-        <div class="card-price">$450</div>
-      </div>
-
-      <div class="service-card">
-        <div class="service-img" style="background-image: url('https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=600&q=80');"></div>
-        <div class="card-title">Editorial &amp; Runway</div>
-        <div class="card-divider"></div>
-        <p class="card-desc">High-fashion applications tailored to studio illumination, photographic settings, and runway portfolios.</p>
-        <div class="card-price">$650 / Day</div>
-      </div>
-
-      <div class="service-card">
-        <div class="service-img" style="background-image: url('https://images.unsplash.com/photo-1526045612212-70caf35c14df?auto=format&fit=crop&w=600&q=80');"></div>
-        <div class="card-title">Artistry Masterclass</div>
-        <div class="card-divider"></div>
-        <p class="card-desc">Private instruction session detailing custom color selection, blending guides, and brush techniques.</p>
-        <div class="card-price">$180</div>
-      </div>
-    </div>
-
-    <!-- Interactive Package Calculator -->
-    <div style="margin-top: 50px; background: #fbf8f7; border: 1px solid #efe3e1; border-radius: 4px; padding: 40px; max-width: 600px; margin-left: auto; margin-right: auto; box-shadow: 0 10px 30px rgba(44, 29, 28, 0.04);">
-      <h3 style="font-family: 'Cinzel', serif; font-size: 20px; color: #2c1d1c; margin-bottom: 12px; text-align: center; letter-spacing: 0.05em;">Estimate Your Artistry Package</h3>
-      <p style="font-size: 13px; color: #726260; margin-bottom: 24px; text-align: center; line-height: 1.5;">Choose a base service and add custom enhancements to calculate your pricing estimate.</p>
-      
-      <div style="margin-bottom: 20px;">
-        <label style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #726260; margin-bottom: 8px;">1. Select Base Service</label>
-        <select id="calc-base" onchange="calculateTotalEstimate()" style="width: 100%; padding: 12px; border: 1px solid #efe3e1; background: #fff; font-family: inherit; font-size: 13.5px; outline: none; border-radius: 2px; color: #2c1d1c; cursor: pointer;">
-          <option value="450">Timeless Bridal ($450)</option>
-          <option value="650">Editorial &amp; Runway ($650/Day)</option>
-          <option value="180">Artistry Masterclass ($180)</option>
-        </select>
-      </div>
-
-      <div style="margin-bottom: 24px;">
-        <label style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #726260; margin-bottom: 12px;">2. Add Luxury Enhancements</label>
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-          <label style="display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: #3e3332; cursor: pointer;">
-            <input type="checkbox" value="100" class="calc-addon" onchange="calculateTotalEstimate()" style="accent-color: #bfa19c;" /> Extra Hair Styling (+$100)
-          </label>
-          <label style="display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: #3e3332; cursor: pointer;">
-            <input type="checkbox" value="80" class="calc-addon" onchange="calculateTotalEstimate()" style="accent-color: #bfa19c;" /> Airbrush Makeup Finish Upgrade (+$80)
-          </label>
-          <label style="display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: #3e3332; cursor: pointer;">
-            <input type="checkbox" value="150" class="calc-addon" onchange="calculateTotalEstimate()" style="accent-color: #bfa19c;" /> On-Location Travel / Concierge (+$150)
-          </label>
-        </div>
-      </div>
-
-      <div style="border-top: 1px solid #efe3e1; padding-top: 20px; display: flex; justify-content: space-between; align-items: center;">
-        <span style="font-family: 'Cinzel', serif; font-size: 16px; color: #2c1d1c; font-weight: 600; letter-spacing: 0.05em;">Estimated Total:</span>
-        <span id="calc-total" style="font-family: 'Cinzel', serif; font-size: 26px; color: #bfa19c; font-weight: 700; letter-spacing: 0.02em;">$450</span>
+      <div class="testi-nav" id="testi-nav">
+        <span class="testi-dot active" onclick="gotoTesti(0)"></span>
+        <span class="testi-dot" onclick="gotoTesti(1)"></span>
+        <span class="testi-dot" onclick="gotoTesti(2)"></span>
       </div>
     </div>
   </section>
 
-  <!-- NEW FEATURE: ARTISTRY PROCESS / ABOUT -->
-  <section class="about-artistry" id="artistry" style="padding: 100px 48px; max-width: 1140px; margin: 0 auto; border-bottom: 1px solid #f2e7e4; display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center;">
-    <div style="border-radius: 4px; overflow: hidden; box-shadow: 0 20px 40px rgba(191, 161, 156, 0.12); height: 400px;">
-      <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80" alt="Cosmetic Artistry" style="width: 100%; height: 100%; object-fit: cover;" />
-    </div>
-    <div>
-      <h2 style="font-family: 'Cinzel', serif; font-size: 32px; color: #2c1d1c; margin-bottom: 20px; letter-spacing: 0.05em;">Editorial Craftsmanship</h2>
-      <p style="font-size: 15px; color: #726260; line-height: 1.8; margin-bottom: 20px;">We believe in enhancing natural features with premium cosmetics and curated techniques. Each look is micro-styled for photography flash durability and absolute physical presence.</p>
-      <p style="font-size: 15px; color: #726260; line-height: 1.8;">Our master kit is selected from hypoallergenic formulas that ensure seamless blending, crisp HD details, and long-lasting glow under editorial studio lights.</p>
-    </div>
-  </section>
-
-  <!-- NEW FEATURE: ARTISTRY GALLERY -->
-  <section class="gallery-sec" id="gallery" style="padding: 100px 48px; max-width: 1140px; margin: 0 auto; border-bottom: 1px solid #f2e7e4;">
-    <div class="sec-title">
-      <h2>Artistry Gallery</h2>
-      <p>A visual showcase of recent luxury bridal and runway designs</p>
-    </div>
-
-    <!-- Gallery Filter Tabs -->
-    <div style="display: flex; justify-content: center; gap: 10px; margin-bottom: 40px; flex-wrap: wrap;" id="gallery-tabs">
-      <button style="padding: 8px 22px; border-radius: 30px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; background: #bfa19c; color: #fff; cursor: pointer; border: 1px solid #efe3e1; transition: all 0.2s;" onclick="filterGallery('all', this)">All</button>
-      <button style="padding: 8px 22px; border-radius: 30px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; background: transparent; color: #726260; cursor: pointer; border: 1px solid #efe3e1; transition: all 0.2s;" onclick="filterGallery('bridal', this)">Bridal</button>
-      <button style="padding: 8px 22px; border-radius: 30px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; background: transparent; color: #726260; cursor: pointer; border: 1px solid #efe3e1; transition: all 0.2s;" onclick="filterGallery('editorial', this)">Editorial</button>
-      <button style="padding: 8px 22px; border-radius: 30px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; background: transparent; color: #726260; cursor: pointer; border: 1px solid #efe3e1; transition: all 0.2s;" onclick="filterGallery('masterclass', this)">Masterclass</button>
-    </div>
-
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;">
-      <div style="border-radius: 2px; overflow: hidden; height: 300px; cursor: pointer; position: relative; transition: opacity 0.4s ease;" class="gallery-item" data-category="bridal">
-        <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=600&q=80" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" />
-      </div>
-      <div style="border-radius: 2px; overflow: hidden; height: 300px; cursor: pointer; position: relative; transition: opacity 0.4s ease;" class="gallery-item" data-category="editorial">
-        <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=600&q=80" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" />
-      </div>
-      <div style="border-radius: 2px; overflow: hidden; height: 300px; cursor: pointer; position: relative; transition: opacity 0.4s ease;" class="gallery-item" data-category="masterclass">
-        <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=600&q=80" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" />
-      </div>
-      <div style="border-radius: 2px; overflow: hidden; height: 300px; cursor: pointer; position: relative; transition: opacity 0.4s ease;" class="gallery-item" data-category="bridal">
-        <img src="https://images.unsplash.com/photo-1526045612212-70caf35c14df?auto=format&fit=crop&w=600&q=80" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" />
-      </div>
-    </div>
-  </section>
-
-  <!-- NEW FEATURE: CLIENT TESTIMONIALS -->
-  <section class="testimonials">
-    <div class="testimonial-quote">
-      "Aurora created the absolute makeup design of my dreams for my ceremony. The look remained pristine through the entire night. Her precision is truly unmatched."
-    </div>
-    <div style="display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 24px;">
-      <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80" alt="Charlotte Renault" style="width: 54px; height: 54px; border-radius: 50%; object-fit: cover; border: 2px solid #bfa19c;" />
-      <div style="text-align: left;">
-        <div class="testimonial-author" style="margin-bottom: 2px;">Charlotte Renault</div>
-        <div style="font-size: 11px; color: #726260; text-transform: uppercase; letter-spacing: 0.05em;">Bridal Client</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- NEW FEATURE: FAQ ACCORDION -->
+  <!-- ═══ FAQ ═══ -->
   <section class="faq-section">
-    <div class="sec-title">
-      <h2>Artistry FAQ</h2>
-      <p>Answers to common scheduling and styling inquiries</p>
-    </div>
+    <div class="section-wrap">
+      <div class="sec-label">Have Questions?</div>
+      <h2 class="sec-title-h2">Artistry FAQ</h2>
+      <div class="ornament">✦</div>
+      <p style="text-align:center;font-family:'Playfair Display',serif;font-style:italic;color:var(--mid);font-size:15px;max-width:500px;margin:0 auto;">Answers to common scheduling and styling inquiries</p>
 
-    <div class="faq-item">
-      <div class="faq-question" onclick="toggleFaq(this)">
-        <span>How far in advance should I reserve a bridal styling?</span>
-        <svg class="faq-icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-      </div>
-      <div class="faq-answer">
-        <div class="faq-answer-inner">
-          We highly recommend booking bridal packages 6 to 12 months in advance to secure availability, particularly during high summer wedding seasons.
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>How far in advance should I reserve a bridal styling?</span>
+            <div class="faq-icon">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            </div>
+          </div>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">We highly recommend booking bridal packages 6 to 12 months in advance to secure availability, particularly during high summer wedding seasons.</div>
+          </div>
         </div>
-      </div>
-    </div>
 
-    <div class="faq-item">
-      <div class="faq-question" onclick="toggleFaq(this)">
-        <span>Do you provide on-site travel for destination weddings?</span>
-        <svg class="faq-icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-      </div>
-      <div class="faq-answer">
-        <div class="faq-answer-inner">
-          Yes. Our studio offers travel services internationally. Travel compensation rates, flights, and lodging requirements are calculated individually based on the location.
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Do you provide on-site travel for destination weddings?</span>
+            <div class="faq-icon">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            </div>
+          </div>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">Yes. Our studio offers travel services internationally. Travel compensation rates, flights, and lodging requirements are calculated individually based on the location.</div>
+          </div>
         </div>
-      </div>
-    </div>
 
-    <div class="faq-item">
-      <div class="faq-question" onclick="toggleFaq(this)">
-        <span>What brand cosmetics do you use in your styling kit?</span>
-        <svg class="faq-icon-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-      </div>
-      <div class="faq-answer">
-        <div class="faq-answer-inner">
-          We use strictly premium, hypoallergenic, professional brands (such as Chanel, Dior, Armani Beauty, and Tom Ford) designed for high durability and digital photography filters.
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>What brand cosmetics do you use in your styling kit?</span>
+            <div class="faq-icon">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            </div>
+          </div>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">We use strictly premium, hypoallergenic, professional brands (such as Chanel, Dior, Armani Beauty, and Tom Ford) designed for high durability and digital photography filters.</div>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Is a trial session included with bridal packages?</span>
+            <div class="faq-icon">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            </div>
+          </div>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">Yes. All bridal packages include a complimentary trial session 4–6 weeks before the wedding date so you can experience the look and request any refinements.</div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Booking Modal Overlay -->
-  <div id="booking-modal" style="display: none; position: fixed; inset: 0; background: rgba(44, 29, 28, 0.6); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
-    <div style="background: #fff; padding: 40px; border-radius: 4px; max-width: 450px; width: 90%; border: 1px solid #efe3e1; position: relative; box-shadow: 0 20px 50px rgba(44, 29, 28, 0.15);">
-      <button onclick="closeBookingModal()" style="position: absolute; top: 16px; right: 16px; background: transparent; border: none; font-size: 24px; cursor: pointer; color: #726260; line-height: 1;">&times;</button>
-      <h3 style="font-family: 'Cinzel', serif; font-size: 22px; color: #2c1d1c; margin-bottom: 8px; text-align: center; letter-spacing: 0.05em;">Book Artistry</h3>
-      <p style="font-size: 13px; color: #726260; margin-bottom: 24px; text-align: center; line-height: 1.5;">Submit details to schedule your editorial or bridal beauty consultation.</p>
+  <!-- ═══ BOOKING MODAL ═══ -->
+  <div class="modal-overlay" id="booking-modal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeBookingModal()">&times;</button>
+      <div class="ornament" style="margin-bottom:12px;font-size:14px;">✦</div>
+      <h3 class="modal-title">Book Artistry</h3>
+      <p class="modal-sub">Submit details to schedule your editorial or bridal beauty consultation.</p>
       <form onsubmit="submitBooking(event)" id="modal-form">
-        <div style="margin-bottom: 16px;">
-          <label style="display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #726260; margin-bottom: 6px;">Your Name</label>
-          <input type="text" required style="width: 100%; padding: 12px; border: 1px solid #efe3e1; background: #fbf8f7; font-family: inherit; font-size: 13px; outline: none; border-radius: 2px;" placeholder="Charlotte Renault">
+        <div class="modal-field">
+          <label>Your Name</label>
+          <input type="text" required placeholder="Charlotte Renault">
         </div>
-        <div style="margin-bottom: 16px;">
-          <label style="display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #726260; margin-bottom: 6px;">Email Address</label>
-          <input type="email" required style="width: 100%; padding: 12px; border: 1px solid #efe3e1; background: #fbf8f7; font-family: inherit; font-size: 13px; outline: none; border-radius: 2px;" placeholder="charlotte@example.com">
+        <div class="modal-field">
+          <label>Email Address</label>
+          <input type="email" required placeholder="charlotte@example.com">
         </div>
-        <div style="margin-bottom: 24px;">
-          <label style="display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #726260; margin-bottom: 6px;">Select Service</label>
-          <select style="width: 100%; padding: 12px; border: 1px solid #efe3e1; background: #fbf8f7; font-family: inherit; font-size: 13px; outline: none; border-radius: 2px; color: #3e3332;">
+        <div class="modal-field">
+          <label>Select Service</label>
+          <select>
             <option>Timeless Bridal ($450)</option>
             <option>Editorial &amp; Runway ($650/Day)</option>
             <option>Artistry Masterclass ($180)</option>
           </select>
         </div>
-        <button type="submit" class="btn-gold" style="width: 100%;">Submit Booking Request</button>
+        <button type="submit" class="btn-primary" style="width:100%;padding:16px;font-size:11px;letter-spacing:0.16em;">Submit Booking Request</button>
       </form>
-      <div id="booking-success" style="display: none; text-align: center; padding: 20px 0;">
-        <div style="font-family: 'Cinzel', serif; font-size: 18px; color: #bfa19c; margin-bottom: 8px; letter-spacing: 0.05em;">Request Sent!</div>
-        <p style="font-size: 13px; color: #726260; line-height: 1.5;">Thank you. Our consultation concierge will follow up via email within 24 hours.</p>
+      <div id="booking-success" style="display:none;text-align:center;padding:20px 0;">
+        <div style="font-size:40px;margin-bottom:14px;">✦</div>
+        <div style="font-family:'Cinzel',serif;font-size:18px;color:var(--gold);margin-bottom:8px;letter-spacing:0.06em;">Request Sent!</div>
+        <p style="font-size:13px;color:var(--mid);line-height:1.6;">Thank you. Our consultation concierge will follow up via email within 24 hours.</p>
       </div>
     </div>
   </div>
 
+  <!-- ═══ FOOTER ═══ -->
   <footer>
-    &copy; 2026 Aurora Beau Studio. Designed by CodesCompiler.com
+    <div class="footer-logo">AURORA <span>BEAU</span></div>
+    <div class="footer-tagline">Beauty is Art · Paris &amp; Worldwide</div>
+    <div class="footer-links">
+      <a href="#">Home</a>
+      <a href="#artistry">Artistry</a>
+      <a href="#packages">Packages</a>
+      <a href="#gallery">Gallery</a>
+    </div>
+    <div class="footer-copy">&copy; 2026 Aurora Beau Studio. Designed by CodesCompiler.com</div>
   </footer>
 
   <script>
+    /* ── FAQ ── */
     function toggleFaq(questionEl) {
       const faqItem = questionEl.parentElement;
       const isActive = faqItem.classList.contains('active');
-      
-      // Close all FAQs first
-      const allItems = document.querySelectorAll('.faq-item');
-      allItems.forEach(item => item.classList.remove('active'));
-
-      // If clicked item was not active, open it
-      if(!isActive) {
-        faqItem.classList.add('active');
-      }
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+      if (!isActive) faqItem.classList.add('active');
     }
 
+    /* ── Gallery Filter ── */
     function filterGallery(category, buttonEl) {
-      const buttons = document.querySelectorAll('#gallery-tabs button');
-      buttons.forEach(btn => {
-        btn.style.background = 'transparent';
-        btn.style.color = '#726260';
-      });
-      buttonEl.style.background = '#bfa19c';
-      buttonEl.style.color = '#fff';
-
-      const items = document.querySelectorAll('.gallery-item');
-      items.forEach(item => {
+      document.querySelectorAll('.gtab').forEach(b => b.classList.remove('active'));
+      buttonEl.classList.add('active');
+      document.querySelectorAll('.gallery-item').forEach(item => {
         const cat = item.getAttribute('data-category');
         if (category === 'all' || cat === category) {
           item.style.display = 'block';
           item.style.opacity = '0';
-          setTimeout(() => {
-            item.style.opacity = '1';
-          }, 30);
+          setTimeout(() => { item.style.opacity = '1'; }, 30);
         } else {
           item.style.display = 'none';
         }
       });
     }
 
+    /* ── Package Calculator ── */
     function calculateTotalEstimate() {
-      const base = parseInt(document.getElementById('calc-base').value, 10);
-      let total = base;
-      const checkboxes = document.querySelectorAll('.calc-addon');
-      checkboxes.forEach(cb => {
-        if (cb.checked) {
-          total += parseInt(cb.value, 10);
-        }
+      let total = parseInt(document.getElementById('calc-base').value, 10);
+      document.querySelectorAll('.calc-addon').forEach(cb => {
+        if (cb.checked) total += parseInt(cb.value, 10);
       });
       document.getElementById('calc-total').textContent = '$' + total;
     }
 
+    /* ── Booking Modal ── */
     function openBookingModal() {
       document.getElementById('booking-modal').style.display = 'flex';
       document.getElementById('booking-success').style.display = 'none';
       document.getElementById('modal-form').style.display = 'block';
     }
-
     function closeBookingModal() {
       document.getElementById('booking-modal').style.display = 'none';
     }
-
     function submitBooking(e) {
       e.preventDefault();
       document.getElementById('modal-form').style.display = 'none';
       document.getElementById('booking-success').style.display = 'block';
     }
+    // Close modal on overlay click
+    document.getElementById('booking-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeBookingModal();
+    });
 
-    // Makeup Slideshow
-    let makeupCurrentSlide = 0;
-    let makeupSlideTimer = null;
-    function gotoMakeupSlide(index, event) {
-      if (event) event.stopPropagation();
-      makeupCurrentSlide = ((index % 3) + 3) % 3;
-      const track = document.getElementById('makeup-slides-track');
-      if (track) track.style.transform = `translateX(-${makeupCurrentSlide * 100}%)`;
-      document.querySelectorAll('.makeup-dot').forEach((d, i) => {
-        if (i === makeupCurrentSlide) d.classList.add('active');
-        else d.classList.remove('active');
+    /* ── Testimonials Carousel ── */
+    let testiCurrent = 0;
+    const TESTI_COUNT = 3;
+    function gotoTesti(index) {
+      testiCurrent = ((index % TESTI_COUNT) + TESTI_COUNT) % TESTI_COUNT;
+      document.getElementById('testi-track').style.transform = `translateX(-${testiCurrent * 100}%)`;
+      document.querySelectorAll('.testi-dot').forEach((d, i) => {
+        d.classList.toggle('active', i === testiCurrent);
       });
     }
-    function moveMakeupSlide(dir, event) {
-      if (event) event.stopPropagation();
-      gotoMakeupSlide(makeupCurrentSlide + dir);
-    }
-    function startMakeupSlide() {
-      if (makeupSlideTimer) clearInterval(makeupSlideTimer);
-      makeupSlideTimer = setInterval(() => gotoMakeupSlide(makeupCurrentSlide + 1), 5000);
-    }
-    function pauseMakeupSlide() {
-      if (makeupSlideTimer) { clearInterval(makeupSlideTimer); makeupSlideTimer = null; }
-    }
+    // Auto-advance testimonials
+    setInterval(() => gotoTesti(testiCurrent + 1), 5000);
 
-    document.addEventListener('DOMContentLoaded', () => { startMakeupSlide(); });
+    /* ── Scroll-reveal ── */
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.service-card, .about-feat, .faq-item').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(24px)';
+      el.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
+      observer.observe(el);
+    });
   </script>
 
 </body>

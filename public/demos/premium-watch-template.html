@@ -44,233 +44,540 @@
     "name": "Free Luxury Watch Website Template",
     "description": "An ultra-premium dark-gold responsive HTML CSS luxury watch template featuring hero image slideshow, watch collection gallery, boutique locator, engraving personalisation, and skeleton dial animations.",
     "url": "https://codescompiler.com/blog/premium-watch-template/",
-    "author": {
-      "@type": "Organization",
-      "name": "CodesCompiler",
-      "url": "https://codescompiler.com"
-    },
+    "author": { "@type": "Organization", "name": "CodesCompiler", "url": "https://codescompiler.com" },
     "publisher": {
-      "@type": "Organization",
-      "name": "CodesCompiler",
-      "url": "https://codescompiler.com",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://codescompiler.com/logo.png"
-      }
+      "@type": "Organization", "name": "CodesCompiler", "url": "https://codescompiler.com",
+      "logo": { "@type": "ImageObject", "url": "https://codescompiler.com/logo.png" }
     },
     "keywords": "luxury watch website, premium watch template, watch brand HTML, horology website, dark luxury website template",
     "inLanguage": "en-US",
-    "isPartOf": {
-      "@type": "WebSite",
-      "name": "CodesCompiler",
-      "url": "https://codescompiler.com"
-    }
+    "isPartOf": { "@type": "WebSite", "name": "CodesCompiler", "url": "https://codescompiler.com" }
   }
   </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
+
+    :root {
+      --gold:       #dfb15b;
+      --goldLight:  #f0d08a;
+      --goldDim:    rgba(223,177,91,0.12);
+      --goldBorder: rgba(223,177,91,0.18);
+      --ink:        #040406;
+      --inkMid:     #09090e;
+      --inkLight:   #0d0d14;
+      --slate:      #94a3b8;
+      --muted:      #64748b;
+      --white:      #ffffff;
+    }
+
     body {
       font-family: 'Inter', sans-serif;
-      background: #040406;
-      color: #cbd5e1;
+      background: var(--ink);
+      color: var(--slate);
       min-height: 100vh;
       overflow-x: hidden;
     }
     a { text-decoration: none; color: inherit; }
 
-    /* HEADER */
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--ink); }
+    ::-webkit-scrollbar-thumb { background: var(--goldBorder); border-radius: 2px; }
+
+    /* ── HEADER ── */
     header {
-      padding: 24px 60px;
+      height: 72px;
+      padding: 0 60px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(4, 4, 6, 0.95);
-      border-bottom: 1px solid rgba(223, 177, 91, 0.08);
+      background: rgba(4,4,6,0.94);
+      border-bottom: 1px solid var(--goldBorder);
       position: sticky;
       top: 0;
-      z-index: 100;
-      backdrop-filter: blur(16px);
+      z-index: 200;
+      backdrop-filter: blur(20px);
     }
-    .logo {
+    .header-brand {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .brand-name {
       font-family: 'Cinzel', serif;
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 700;
-      color: #dfb15b;
-      letter-spacing: 0.12em;
+      color: var(--gold);
+      letter-spacing: 0.18em;
+      line-height: 1;
     }
-    nav { display: flex; gap: 36px; }
+    .brand-est {
+      font-size: 8.5px;
+      color: var(--muted);
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+    nav { display: flex; gap: 36px; align-items: center; }
     nav a {
-      font-size: 11px;
+      font-size: 10.5px;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.15em;
-      color: #94a3b8;
+      letter-spacing: 0.16em;
+      color: var(--muted);
       transition: color 0.3s;
     }
-    nav a:hover, nav a.active { color: #dfb15b; }
-
-    /* HERO SLIDESHOW */
-    .hero {
-      position: relative;
-      min-height: 85vh;
-      overflow: hidden;
-      display: block;
-      padding: 0;
-    }
-    .hero-slides-track {
-      display: flex;
-      width: 100%;
-      min-height: 85vh;
-      transition: transform 0.7s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-    .hero-slide {
-      width: 100%;
-      flex-shrink: 0;
-      padding: 140px 60px;
-      display: flex;
-      align-items: center;
-      min-height: 85vh;
-      position: relative;
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-    }
-    .hero-slide::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 30% 50%, rgba(4,4,6,0.92) 0%, rgba(4,4,6,0.6) 60%, rgba(4,4,6,0.95) 100%);
-    }
-    .hero-slide-inner { position: relative; z-index: 2; max-width: 680px; }
-    .watch-arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(4,4,6,0.55);
-      border: 1px solid rgba(223,177,91,0.2);
-      color: #dfb15b;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      z-index: 10;
-      opacity: 0;
-      transition: all 0.25s;
-      backdrop-filter: blur(8px);
-    }
-    .hero:hover .watch-arrow { opacity: 1; }
-    .watch-arrow:hover { background: rgba(223,177,91,0.15); border-color: #dfb15b; box-shadow: 0 4px 15px rgba(223,177,91,0.2); }
-    .watch-arrow.prev-arrow { left: 24px; }
-    .watch-arrow.next-arrow { right: 24px; }
-    .watch-dots {
-      position: absolute;
-      bottom: 28px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 8px;
-      z-index: 10;
-      background: rgba(4,4,6,0.5);
-      padding: 6px 12px;
-      border-radius: 20px;
-      backdrop-filter: blur(4px);
-      border: 1px solid rgba(223,177,91,0.08);
-    }
-    .watch-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: rgba(223,177,91,0.3);
-      cursor: pointer;
-      transition: all 0.3s;
-      display: inline-block;
-    }
-    .watch-dot.active { background: #dfb15b; width: 20px; border-radius: 4px; }
-    .hero-content { max-width: 680px; }
-    .hero-subtitle {
-      font-family: 'Cinzel', serif;
-      font-size: 12px;
-      color: #dfb15b;
-      letter-spacing: 0.25em;
-      margin-bottom: 20px;
-      display: block;
-      text-transform: uppercase;
-    }
-    h1 {
-      font-family: 'Cinzel', serif;
-      font-size: clamp(38px, 6vw, 68px);
-      font-weight: 400;
-      color: #fff;
-      line-height: 1.1;
-      margin-bottom: 24px;
-      letter-spacing: 0.02em;
-    }
-    .hero p {
-      font-size: 15px;
-      line-height: 1.8;
-      color: #94a3b8;
-      margin-bottom: 44px;
-    }
-    .btn-gold-outline {
-      border: 1px solid #dfb15b;
-      color: #dfb15b;
+    nav a:hover, nav a.active { color: var(--gold); }
+    .btn-catalog {
+      border: 1px solid var(--goldBorder);
+      color: var(--gold);
       background: transparent;
-      padding: 16px 40px;
-      font-size: 11px;
+      padding: 10px 22px;
+      font-family: 'Cinzel', serif;
+      font-size: 9.5px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.15em;
+      letter-spacing: 0.16em;
       cursor: pointer;
       transition: all 0.3s;
       border-radius: 2px;
     }
-    .btn-gold-outline:hover {
-      background: #dfb15b;
-      color: #040406;
-      box-shadow: 0 10px 30px rgba(223, 177, 91, 0.25);
+    .btn-catalog:hover {
+      background: var(--gold);
+      color: var(--ink);
+      box-shadow: 0 8px 28px rgba(223,177,91,0.3);
     }
 
-    /* NEW FEATURE: INTERACTIVE WATCH CONFIGURATOR */
-    .configurator-sec {
-      padding: 100px 60px;
-      max-width: 1100px;
-      margin: 0 auto;
-      border-bottom: 1px solid rgba(223, 177, 91, 0.05);
-    }
-    .configurator-layout {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 50px;
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 92vh;
+      overflow: hidden;
+      background: var(--ink);
+      display: flex;
       align-items: center;
     }
-    .config-preview-panel {
-      background: linear-gradient(135deg, #09090d 0%, #050507 100%);
-      border: 1px solid rgba(223,177,91,0.08);
-      border-radius: 4px;
-      padding: 80px 40px;
-      text-align: center;
+
+    /* Gold grain texture overlay */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(ellipse 80% 60% at 60% 50%, rgba(223,177,91,0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 30% 80% at 5% 50%, rgba(223,177,91,0.04) 0%, transparent 60%);
+      z-index: 1;
+      pointer-events: none;
+    }
+    /* Diagonal gold slash accent */
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: -20%;
+      right: 38%;
+      width: 1px;
+      height: 140%;
+      background: linear-gradient(to bottom, transparent, rgba(223,177,91,0.12), transparent);
+      z-index: 1;
+      transform: rotate(-8deg);
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      width: 100%;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 80px 60px;
+      gap: 60px;
+      min-height: 92vh;
+    }
+
+    /* hero left */
+    .hero-left {}
+    .hero-crest {
       display: flex;
-      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+    .hero-crest-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--goldBorder));
+      max-width: 60px;
+    }
+    .hero-crest-icon {
+      color: var(--gold);
+      font-size: 22px;
+    }
+    .hero-eyebrow {
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .hero-dots-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      color: var(--gold);
+      font-size: 10px;
+      letter-spacing: 0.3em;
+    }
+    .hero-dots-line::after {
+      content: '';
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(to right, var(--goldBorder), transparent);
+      display: inline-block;
+    }
+
+    .hero-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(44px, 6vw, 76px);
+      font-weight: 400;
+      color: var(--white);
+      line-height: 1.06;
+      letter-spacing: 0.04em;
+      margin-bottom: 14px;
+    }
+    .hero-title .gold-word { color: var(--gold); display: block; }
+    .hero-subtitle-italic {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 18px;
+      color: var(--gold);
+      letter-spacing: 0.06em;
+      margin-bottom: 20px;
+    }
+    .hero-divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .hero-divider span { width: 48px; height: 1px; background: var(--goldBorder); display: block; }
+    .hero-divider em { color: var(--gold); font-size: 12px; }
+    .hero-desc {
+      font-size: 14px;
+      line-height: 1.85;
+      color: var(--slate);
+      margin-bottom: 40px;
+      max-width: 440px;
+    }
+    .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+    .btn-primary-gold {
+      background: linear-gradient(135deg, var(--gold) 0%, #c49430 100%);
+      color: var(--ink);
+      padding: 16px 38px;
+      border: none;
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      cursor: pointer;
+      transition: all 0.35s;
+      box-shadow: 0 10px 36px rgba(223,177,91,0.35);
+      border-radius: 2px;
+    }
+    .btn-primary-gold:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 44px rgba(223,177,91,0.48);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--slate);
+      padding: 15px 28px;
+      border: 1px solid rgba(255,255,255,0.1);
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      cursor: pointer;
+      transition: all 0.3s;
+      border-radius: 2px;
+    }
+    .btn-ghost:hover { border-color: var(--goldBorder); color: var(--gold); }
+
+    /* hero right — watch card stack */
+    .hero-cards {
+      position: relative;
+      height: 560px;
+      display: flex;
       align-items: center;
       justify-content: center;
     }
+    .watch-card {
+      position: absolute;
+      background: var(--inkLight);
+      border-radius: 18px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      transition: transform 0.5s cubic-bezier(0.34,1.4,0.64,1), box-shadow 0.4s;
+    }
+    .watch-card img {
+      width: 100%;
+      flex: 1;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s ease;
+    }
+    .watch-card:hover img { transform: scale(1.05); }
+    .watch-card-bottom {
+      padding: 14px 16px;
+      background: var(--inkLight);
+      border-top: 1px solid var(--goldBorder);
+    }
+
+    /* back-left card */
+    .watch-card.wc-left {
+      width: 188px;
+      height: 295px;
+      left: 0; top: 40px;
+      transform: rotate(-6deg) translateX(-14px);
+      z-index: 1;
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: -12px 24px 60px rgba(0,0,0,0.6);
+    }
+    /* back-right card */
+    .watch-card.wc-right {
+      width: 188px;
+      height: 295px;
+      right: 0; top: 50px;
+      transform: rotate(5deg) translateX(14px);
+      z-index: 1;
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: 12px 24px 60px rgba(0,0,0,0.6);
+    }
+    /* front center card */
+    .watch-card.wc-center {
+      width: 228px;
+      height: 400px;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 3;
+      border: 1px solid rgba(223,177,91,0.3);
+      box-shadow: 0 32px 80px rgba(0,0,0,0.8), 0 0 60px rgba(223,177,91,0.08);
+    }
+    .watch-card:hover { z-index: 10; }
+    .watch-card.wc-left:hover  { transform: rotate(0deg) scale(1.04) !important; }
+    .watch-card.wc-right:hover { transform: rotate(0deg) scale(1.04) !important; }
+    .watch-card.wc-center:hover{ transform: translate(-50%,-50%) scale(1.03) !important; }
+
+    /* center card header badge */
+    .wc-header-badge {
+      padding: 12px 14px;
+      background: linear-gradient(180deg, rgba(223,177,91,0.07) 0%, transparent 100%);
+      border-bottom: 1px solid var(--goldBorder);
+      text-align: center;
+    }
+    .wc-brand-dots {
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      color: var(--gold);
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+    }
+    .wc-model-name {
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: 0.1em;
+      margin-top: 3px;
+    }
+    .wc-edition {
+      font-size: 8.5px;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+    /* side card corner badge */
+    .wc-corner-badge {
+      position: absolute;
+      top: 12px; left: 12px;
+      font-family: 'Cinzel', serif;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: rgba(4,4,6,0.8);
+      border: 1px solid var(--goldBorder);
+      padding: 5px 10px;
+      border-radius: 2px;
+      backdrop-filter: blur(4px);
+    }
+    /* feature tag at bottom of side card */
+    .wc-feature-tag {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 9px;
+      color: var(--slate);
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .wc-feature-icon {
+      width: 18px; height: 18px;
+      border: 1px solid var(--goldBorder);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+    /* price + cta row on center card */
+    .wc-price-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .wc-price {
+      font-family: 'Cinzel', serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--gold);
+    }
+    .wc-cta-btn {
+      background: var(--gold);
+      color: var(--ink);
+      border: none;
+      padding: 8px 14px;
+      font-family: 'Cinzel', serif;
+      font-size: 8.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      cursor: pointer;
+      border-radius: 2px;
+      white-space: nowrap;
+      transition: all 0.25s;
+    }
+    .wc-cta-btn:hover { background: var(--goldLight); }
+
+    /* nav dots under cards */
+    .hero-slide-dots {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+    }
+    .hsd { width: 7px; height: 7px; border-radius: 50%; background: rgba(223,177,91,0.25); cursor: pointer; transition: all 0.3s; }
+    .hsd.active { background: var(--gold); width: 20px; border-radius: 4px; }
+
+    /* ── SECTION UTILS ── */
+    .sec-wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 110px 60px;
+    }
+    .sec-eyebrow {
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .sec-h2 {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(26px, 3vw, 36px);
+      font-weight: 500;
+      color: var(--white);
+      letter-spacing: 0.1em;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+    .gold-rule {
+      width: 52px;
+      height: 2px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+      margin: 18px auto 0;
+      border-radius: 1px;
+    }
+
+    /* ── CONFIGURATOR ── */
+    .configurator-section {
+      background: var(--inkMid);
+      border-top: 1px solid var(--goldBorder);
+      border-bottom: 1px solid var(--goldBorder);
+    }
+    .config-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      margin-top: 64px;
+    }
+    /* watch preview panel */
+    .config-panel {
+      background: linear-gradient(135deg, #08080d 0%, #060609 100%);
+      border: 1px solid var(--goldBorder);
+      border-radius: 12px;
+      padding: 60px 40px 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .config-panel::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+    }
+    .config-panel-glow {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      width: 260px; height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(223,177,91,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .watch-face-wrap {
+      position: relative;
+      z-index: 2;
+      margin-bottom: 28px;
+    }
     .watch-face-silhouette {
-      width: 180px;
-      height: 180px;
-      border: 4px solid #dfb15b;
+      width: 190px;
+      height: 190px;
+      border: 3px solid var(--gold);
       border-radius: 50%;
       position: relative;
       background: url('https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&w=400&q=80') no-repeat center center / cover;
-      box-shadow: 0 0 35px rgba(223, 177, 91, 0.25);
-      margin-bottom: 30px;
-      transition: border-color 0.4s, box-shadow 0.4s, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 0 40px rgba(223,177,91,0.25), inset 0 0 30px rgba(0,0,0,0.5);
+      transition: border-color 0.4s, box-shadow 0.4s, transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
     }
     .watch-hand {
       position: absolute;
@@ -280,499 +587,938 @@
       border-radius: 4px;
       z-index: 5;
     }
-    .hour-hand {
-      width: 4px;
-      height: 40px;
-      background: #dfb15b;
-      margin-left: -2px;
-      animation: rotateHour 43200s linear infinite;
-    }
-    .minute-hand {
-      width: 3px;
-      height: 58px;
-      background: #e2e8f0;
-      margin-left: -1.5px;
-      animation: rotateMinute 3600s linear infinite;
-    }
-    .second-hand {
-      width: 1.5px;
-      height: 68px;
-      background: #ef4444;
-      margin-left: -0.75px;
-      animation: rotateSecond 60s linear infinite;
-    }
+    .hour-hand { width: 4px; height: 42px; background: var(--gold); margin-left: -2px; animation: rotateHour 43200s linear infinite; }
+    .minute-hand { width: 3px; height: 60px; background: #e2e8f0; margin-left: -1.5px; animation: rotateMinute 3600s linear infinite; }
+    .second-hand { width: 1.5px; height: 70px; background: #ef4444; margin-left: -0.75px; animation: rotateSecond 60s linear infinite; }
     .watch-center-pin {
-      position: absolute;
-      top: 50%; left: 50%;
+      position: absolute; top: 50%; left: 50%;
       width: 10px; height: 10px;
-      background: #dfb15b;
-      border: 2px solid #040406;
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 10;
+      background: var(--gold); border: 2px solid var(--ink); border-radius: 50%;
+      transform: translate(-50%,-50%); z-index: 10;
     }
-    @keyframes rotateHour {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-    @keyframes rotateMinute {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-    @keyframes rotateSecond {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-    
-    .config-controls {
-      display: flex;
-      flex-direction: column;
-      gap: 30px;
-    }
-    .config-controls h2 {
-      font-family: 'Cinzel', serif;
-      font-size: 28px;
-      color: #fff;
-    }
-    .config-group-title {
-      font-size: 11px;
-      font-weight: 700;
-      color: #dfb15b;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      margin-bottom: 12px;
-    }
-    .config-options {
-      display: flex;
-      gap: 12px;
-    }
-    .config-opt-btn {
-      background: rgba(255,255,255,0.02);
-      border: 1px solid rgba(223, 177, 91, 0.12);
-      color: #cbd5e1;
-      padding: 10px 18px;
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      cursor: pointer;
-      border-radius: 2px;
-      transition: all 0.25s;
-    }
-    .config-opt-btn.active, .config-opt-btn:hover {
-      background: #dfb15b;
-      color: #040406;
-      border-color: #dfb15b;
-    }
-    .config-status-label {
-      font-size: 14px;
-      color: #94a3b8;
+    @keyframes rotateHour   { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes rotateMinute { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes rotateSecond { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    .config-status {
+      font-family: 'Cormorant Garamond', serif;
       font-style: italic;
-      margin-top: 10px;
+      font-size: 14px;
+      color: var(--muted);
+      text-align: center;
+      position: relative;
+      z-index: 2;
     }
-    
-    /* HERITAGE STORY */
-    .heritage-sec {
-      padding: 100px 60px;
-      max-width: 1100px;
-      margin: 0 auto;
-      border-bottom: 1px solid rgba(223, 177, 91, 0.05);
-    }
-    .heritage-layout {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 50px;
-      align-items: center;
-    }
-    .heritage-layout h2 {
+    #engraving-overlay {
+      position: absolute;
+      bottom: 44px; left: 0; right: 0;
+      text-align: center;
       font-family: 'Cinzel', serif;
-      font-size: 32px;
-      color: #fff;
-      margin-bottom: 24px;
-    }
-    .heritage-layout p {
-      font-size: 15px;
-      line-height: 1.8;
-      color: #94a3b8;
-      margin-bottom: 20px;
+      font-size: 8px;
+      color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      pointer-events: none;
+      z-index: 6;
     }
 
-    /* SPECS */
-    .specs-sec {
-      padding: 100px 60px;
-      max-width: 1140px;
-      margin: 0 auto;
-    }
-    .sec-title { text-align: center; margin-bottom: 60px; }
-    .sec-title h2 {
+    /* config controls */
+    .config-controls { display: flex; flex-direction: column; gap: 32px; }
+    .config-heading {
       font-family: 'Cinzel', serif;
-      font-size: 32px;
-      color: #fff;
-      letter-spacing: 0.1em;
-      font-weight: 500;
+      font-size: 26px;
+      color: var(--white);
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
     }
-    .sec-title div {
-      width: 40px; height: 1px; background: #dfb15b; margin: 18px auto 0;
+    .config-heading-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 14px;
+      color: var(--muted);
     }
-    
+    .config-group-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      margin-bottom: 12px;
+    }
+    .config-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+    .config-btn {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--goldBorder);
+      color: var(--slate);
+      padding: 10px 20px;
+      font-family: 'Cinzel', serif;
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: all 0.25s;
+    }
+    .config-btn.active, .config-btn:hover {
+      background: var(--gold);
+      color: var(--ink);
+      border-color: var(--gold);
+      box-shadow: 0 4px 16px rgba(223,177,91,0.28);
+    }
+    .config-input {
+      width: 100%;
+      padding: 13px 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--goldBorder);
+      border-radius: 4px;
+      color: var(--white);
+      font-family: 'Cinzel', serif;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .config-input:focus { border-color: var(--gold); }
+    .config-input::placeholder { color: var(--muted); letter-spacing: 0.1em; }
+
+    /* ── HERITAGE ── */
+    .heritage-section {
+      border-top: 1px solid var(--goldBorder);
+      border-bottom: 1px solid var(--goldBorder);
+    }
+    .heritage-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 70px;
+      align-items: center;
+      margin-top: 0;
+    }
+    .heritage-img-wrap {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .heritage-img-wrap::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 1px solid var(--goldBorder);
+      border-radius: 10px;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .heritage-img-wrap img {
+      width: 100%;
+      height: 440px;
+      object-fit: cover;
+      display: block;
+      opacity: 0.88;
+      filter: contrast(1.08) brightness(0.92);
+      transition: transform 0.6s ease;
+    }
+    .heritage-img-wrap:hover img { transform: scale(1.04); }
+    /* gold badge overlay on image */
+    .heritage-badge {
+      position: absolute;
+      bottom: 24px; right: 24px;
+      background: linear-gradient(135deg, rgba(223,177,91,0.12), rgba(223,177,91,0.05));
+      border: 1px solid var(--goldBorder);
+      border-radius: 8px;
+      padding: 18px 22px;
+      text-align: center;
+      backdrop-filter: blur(12px);
+      z-index: 3;
+    }
+    .hb-num {
+      font-family: 'Cinzel', serif;
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--gold);
+      display: block;
+    }
+    .hb-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.18em; color: var(--muted); }
+    .heritage-text {}
+    .heritage-text h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 30px;
+      color: var(--white);
+      letter-spacing: 0.05em;
+      margin-bottom: 20px;
+      line-height: 1.3;
+    }
+    .heritage-text p {
+      font-size: 14.5px;
+      line-height: 1.85;
+      color: var(--slate);
+      margin-bottom: 18px;
+    }
+    .heritage-feats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 28px;
+    }
+    .hfeat {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 16px;
+      background: rgba(255,255,255,0.015);
+      border: 1px solid var(--goldBorder);
+      border-radius: 6px;
+      transition: border-color 0.3s;
+    }
+    .hfeat:hover { border-color: rgba(223,177,91,0.35); }
+    .hfeat-icon {
+      width: 32px; height: 32px;
+      border: 1px solid var(--goldBorder);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+    .hfeat h4 {
+      font-family: 'Cinzel', serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+    .hfeat p { font-size: 11.5px; color: var(--muted); line-height: 1.5; margin: 0; }
+
+    /* ── SPECS ── */
+    .specs-section {
+      background: var(--inkMid);
+      border-top: 1px solid var(--goldBorder);
+      border-bottom: 1px solid var(--goldBorder);
+    }
     .specs-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 30px;
+      gap: 24px;
+      margin-top: 64px;
     }
     .spec-card {
-      background: rgba(255,255,255,0.01);
-      border: 1px solid rgba(223, 177, 91, 0.04);
-      padding: 48px 36px;
+      background: rgba(255,255,255,0.015);
+      border: 1px solid var(--goldBorder);
+      border-radius: 8px;
+      padding: 44px 32px;
       text-align: center;
-      border-radius: 2px;
-      transition: border-color 0.3s;
-    }
-    .spec-card:hover { border-color: rgba(223, 177, 91, 0.2); }
-    
-    /* Elegant vector mechanical wheel instead of emojis */
-    .mechanical-icon {
-      width: 44px;
-      height: 44px;
-      border: 2px solid #dfb15b;
-      border-radius: 50%;
-      margin: 0 auto 24px;
+      transition: all 0.35s;
       position: relative;
+      overflow: hidden;
     }
-    .mechanical-icon::before {
+    .spec-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(223,177,91,0.05) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.35s;
+    }
+    .spec-card:hover { border-color: rgba(223,177,91,0.35); transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.4); }
+    .spec-card:hover::before { opacity: 1; }
+    .spec-icon-ring {
+      width: 56px; height: 56px;
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 28px;
+      position: relative;
+      z-index: 1;
+    }
+    .spec-icon-ring::after {
       content: '';
       position: absolute;
       top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%,-50%);
       width: 10px; height: 10px;
-      background: #dfb15b;
+      background: var(--gold);
       border-radius: 50%;
     }
-
-    .spec-title {
+    .spec-icon-ring .spec-inner-line {
+      position: absolute;
+      width: 2px;
+      height: 10px;
+      background: var(--gold);
+      border-radius: 1px;
+    }
+    .spec-icon-ring .sl-n { top: 6px; left: 50%; transform: translateX(-50%); }
+    .spec-icon-ring .sl-e { right: 6px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+    .spec-icon-ring .sl-s { bottom: 6px; left: 50%; transform: translateX(-50%); }
+    .spec-icon-ring .sl-w { left: 6px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+    .spec-name {
       font-family: 'Cinzel', serif;
       font-size: 16px;
-      color: #fff;
-      margin-bottom: 12px;
+      color: var(--white);
       letter-spacing: 0.08em;
       font-weight: 600;
+      margin-bottom: 14px;
+      position: relative;
+      z-index: 1;
     }
-    .spec-desc { font-size: 13px; color: #94a3b8; line-height: 1.65; }
-
-    /* FOOTER */
-    footer {
-      border-top: 1px solid rgba(223, 177, 91, 0.08);
-      padding: 48px;
-      text-align: center;
-      color: #64748b;
-      font-size: 11px;
+    .spec-value {
       font-family: 'Cinzel', serif;
+      font-size: 22px;
+      color: var(--gold);
+      font-weight: 700;
+      display: block;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+    .spec-desc { font-size: 12.5px; color: var(--muted); line-height: 1.65; position: relative; z-index: 1; }
+
+    /* ── GLOBAL ATELIERS ── */
+    .ateliers-section {
+      border-top: 1px solid var(--goldBorder);
+      border-bottom: 1px solid var(--goldBorder);
+    }
+    .atelier-search-wrap {
+      max-width: 420px;
+      margin: 48px auto 52px;
+      position: relative;
+    }
+    .atelier-search {
+      width: 100%;
+      padding: 13px 18px 13px 44px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--goldBorder);
+      border-radius: 30px;
+      color: var(--white);
+      font-family: 'Cinzel', serif;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      outline: none;
+      transition: border-color 0.25s;
+    }
+    .atelier-search:focus { border-color: var(--gold); }
+    .atelier-search-icon {
+      position: absolute;
+      left: 16px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--goldBorder);
+      font-size: 14px;
+    }
+    .ateliers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+    .atelier-card {
+      background: rgba(255,255,255,0.015);
+      border: 1px solid var(--goldBorder);
+      border-radius: 8px;
+      padding: 36px;
+      transition: all 0.35s;
+      position: relative;
+      overflow: hidden;
+    }
+    .atelier-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .atelier-card:hover { border-color: rgba(223,177,91,0.3); transform: translateY(-4px); }
+    .atelier-card:hover::before { opacity: 1; }
+    .atelier-city {
+      font-family: 'Cinzel', serif;
+      font-size: 18px;
+      color: var(--gold);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      margin-bottom: 14px;
+    }
+    .atelier-info { font-size: 13px; color: var(--slate); line-height: 1.75; }
+    .atelier-mail { color: var(--gold); font-size: 12px; margin-top: 10px; display: block; opacity: 0.7; }
+
+    /* ── ALLOCATION MODAL ── */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(4,4,6,0.88);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(10px);
+    }
+    .modal-box {
+      background: var(--inkLight);
+      padding: 48px;
+      border-radius: 10px;
+      max-width: 460px;
+      width: 92%;
+      border: 1px solid var(--goldBorder);
+      position: relative;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.7), 0 0 60px rgba(223,177,91,0.06);
+      animation: modalIn 0.45s cubic-bezier(0.34,1.4,0.64,1);
+    }
+    .modal-top-accent {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+      border-radius: 10px 10px 0 0;
+    }
+    @keyframes modalIn {
+      from { transform: translateY(32px) scale(0.94); opacity: 0; }
+      to   { transform: translateY(0) scale(1);       opacity: 1; }
+    }
+    .modal-close {
+      position: absolute; top: 16px; right: 18px;
+      background: transparent; border: none;
+      font-size: 22px; cursor: pointer; color: var(--muted);
+      transition: color 0.2s;
+    }
+    .modal-close:hover { color: var(--white); }
+    .modal-crown { text-align: center; font-size: 22px; color: var(--gold); margin-bottom: 16px; }
+    .modal-title {
+      font-family: 'Cinzel', serif;
+      font-size: 22px; color: var(--gold);
+      letter-spacing: 0.06em;
+      text-align: center; margin-bottom: 6px;
+    }
+    .modal-sub {
+      font-size: 13px; color: var(--muted);
+      text-align: center; line-height: 1.6;
+      margin-bottom: 28px;
+    }
+    .modal-field { margin-bottom: 16px; }
+    .modal-field label {
+      display: block;
+      font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.14em;
+      color: var(--gold); margin-bottom: 7px;
+    }
+    .modal-field input,
+    .modal-field select {
+      width: 100%; padding: 12px 14px;
+      border: 1px solid var(--goldBorder);
+      background: rgba(255,255,255,0.03);
+      font-family: 'Cinzel', serif; font-size: 12px;
+      letter-spacing: 0.06em;
+      outline: none; border-radius: 4px;
+      color: var(--white);
+      transition: border-color 0.2s;
+    }
+    .modal-field input:focus,
+    .modal-field select:focus { border-color: var(--gold); }
+    .modal-field select option { background: var(--inkLight); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--inkMid);
+      border-top: 1px solid var(--goldBorder);
+      padding: 56px 60px 36px;
+    }
+    .footer-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .footer-crown { font-size: 24px; color: var(--gold); margin-bottom: 6px; }
+    .footer-brand {
+      font-family: 'Cinzel', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: 0.22em;
+    }
+    .footer-brand span { color: var(--gold); }
+    .footer-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      margin-bottom: 28px;
+    }
+    .footer-links {
+      display: flex;
+      gap: 28px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+    .footer-links a {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-divider { width: 100%; max-width: 400px; height: 1px; background: var(--goldBorder); margin: 4px 0 18px; }
+    .footer-copy {
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      color: var(--muted);
       letter-spacing: 0.12em;
+      opacity: 0.6;
     }
 
-    @media (max-width: 768px) {
-      header { padding: 18px 24px; }
+    /* ── RESPONSIVE ── */
+    @media (max-width: 960px) {
+      header { padding: 0 24px; }
       nav { display: none; }
-      .hero { padding: 100px 24px; text-align: center; justify-content: center; }
-      .specs-sec, .configurator-sec, .heritage-sec { padding: 60px 24px; }
-      .configurator-layout, .heritage-layout { grid-template-columns: 1fr; }
+      .hero-inner {
+        grid-template-columns: 1fr;
+        padding: 60px 24px 50px;
+        text-align: center;
+        gap: 48px;
+        min-height: auto;
+      }
+      .hero-crest { justify-content: center; }
+      .hero-ctas  { justify-content: center; }
+      .hero-desc  { margin-left: auto; margin-right: auto; }
+      .hero-dots-line { justify-content: center; }
+      .hero-cards { height: 360px; }
+      .watch-card.wc-center { width: 175px; height: 310px; }
+      .watch-card.wc-left, .watch-card.wc-right { width: 145px; height: 240px; }
+      .sec-wrap { padding: 70px 24px; }
+      .config-layout { grid-template-columns: 1fr; gap: 40px; }
+      .heritage-grid { grid-template-columns: 1fr; gap: 40px; }
+      .heritage-img-wrap img { height: 300px; }
+      .heritage-feats { grid-template-columns: 1fr; }
+      footer { padding: 40px 24px 28px; }
     }
   </style>
 </head>
 <body>
 
+  <!-- ═══ HEADER ═══ -->
   <header>
-    <div class="logo">KRONOS</div>
+    <div class="header-brand">
+      <div class="brand-name">KRONOS</div>
+      <div class="brand-est">Est. 1985 · Geneva</div>
+    </div>
     <nav>
       <a href="#configurator" class="active">Collection</a>
       <a href="#heritage">Chronicles</a>
       <a href="#specs">Savoir-Faire</a>
-      <a href="#retail-ateliers">Ateliers</a>
+      <a href="#ateliers">Ateliers</a>
     </nav>
-    <button class="btn-gold-outline" style="padding:10px 20px;font-size:10px;" onclick="openAllocationModal()">Request Catalog</button>
+    <button class="btn-catalog" onclick="openAllocationModal()">Request Catalog</button>
   </header>
 
-  <section class="hero" onmouseenter="pauseWatchSlide()" onmouseleave="startWatchSlide()">
-    <div class="hero-slides-track" id="watch-slides-track">
+  <!-- ═══ HERO ═══ -->
+  <section class="hero">
+    <div class="hero-inner">
 
-      <!-- Slide 1: Chrono X-1 Rose Gold -->
-      <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1600&q=80');">
-        <div class="hero-slide-inner hero-content">
-          <span class="hero-subtitle">The Chrono X-1 Edition</span>
-          <h1>Heritage. Precision. Masterpiece.</h1>
-          <p>Crafted in hand-finished 18k Rose Gold, featuring our signature caliber 900 automatic movement. An expression of timeless mechanical horology.</p>
-          <button class="btn-gold-outline" onclick="openAllocationModal()">Secure Allocation</button>
+      <!-- Left: Text -->
+      <div class="hero-left">
+        <div class="hero-crest">
+          <div class="hero-crest-line"></div>
+          <div class="hero-crest-icon">♛</div>
+          <div class="hero-eyebrow">Timeless Elegance</div>
+          <div class="hero-crest-line" style="background:linear-gradient(to left,transparent,var(--goldBorder));"></div>
+        </div>
+
+        <div class="hero-dots-line">Est. 1985</div>
+
+        <h1 class="hero-title">
+          Premium
+          <span class="gold-word">Luxury</span>
+          Watch
+        </h1>
+        <div class="hero-subtitle-italic">Crafted to Perfection</div>
+
+        <div class="hero-divider">
+          <span></span>
+          <em>◆</em>
+          <span></span>
+        </div>
+
+        <p class="hero-desc">Crafted in hand-finished 18k Rose Gold, featuring our signature caliber 900 automatic movement. An expression of timeless mechanical horology.</p>
+
+        <div class="hero-ctas">
+          <button class="btn-primary-gold" onclick="openAllocationModal()">Secure Allocation</button>
+          <button class="btn-ghost" onclick="document.getElementById('configurator').scrollIntoView({behavior:'smooth'})">Configure Watch</button>
         </div>
       </div>
 
-      <!-- Slide 2: Royale Black -->
-      <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&w=1600&q=80');">
-        <div class="hero-slide-inner hero-content">
-          <span class="hero-subtitle">The Royale Noir Edition</span>
-          <h1>Dark. Refined. Absolute.</h1>
-          <p>The Royale Noir marries DLC-coated steel with a fumé black dial and skeleton caseback. Exclusively presented for the connoisseur of horological darkness.</p>
-          <button class="btn-gold-outline" onclick="openAllocationModal()">Request Allocation</button>
-        </div>
-      </div>
+      <!-- Right: Watch Card Stack -->
+      <div class="hero-cards">
 
-      <!-- Slide 3: Golden Meridian Skeleton -->
-      <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1508057198894-247b23fe5ade?auto=format&fit=crop&w=1600&q=80');">
-        <div class="hero-slide-inner hero-content">
-          <span class="hero-subtitle">The Golden Meridian</span>
-          <h1>Skeleton Architecture. Luminous Soul.</h1>
-          <p>Revealing every beating heart of the caliber through an open-worked skeleton dial. Yellow gold bridges, blued screws, and hand-chamfered plates define this icon.</p>
-          <button class="btn-gold-outline" onclick="openAllocationModal()">Enquire Now</button>
-        </div>
-      </div>
-
-    </div>
-    <button class="watch-arrow prev-arrow" onclick="moveWatchSlide(-1, event)">&#10094;</button>
-    <button class="watch-arrow next-arrow" onclick="moveWatchSlide(1, event)">&#10095;</button>
-    <div class="watch-dots">
-      <span class="watch-dot active" onclick="gotoWatchSlide(0, event)"></span>
-      <span class="watch-dot" onclick="gotoWatchSlide(1, event)"></span>
-      <span class="watch-dot" onclick="gotoWatchSlide(2, event)"></span>
-    </div>
-  </section>
-
-  <!-- NEW FEATURE: WATCH CONFIGURATOR -->
-  <section class="configurator-sec" id="configurator">
-    <div class="configurator-layout">
-      <div class="config-preview-panel">
-        <div class="watch-face-silhouette" id="watch-face">
-          <div class="watch-hand hour-hand"></div>
-          <div class="watch-hand minute-hand"></div>
-          <div class="watch-hand second-hand"></div>
-          <div class="watch-center-pin"></div>
-          <!-- Engraving overlay -->
-          <div id="engraving-overlay" style="position: absolute; bottom: 50px; left: 0; right: 0; text-align: center; font-family: 'Cinzel', serif; font-size: 9px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.15em; font-style: italic; pointer-events: none;"></div>
-        </div>
-        <div class="config-status-label" id="config-status">
-          Configuration: Champagne Gold dial with Alligator Strap.
-        </div>
-      </div>
-
-      <div class="config-controls">
-        <h2>Atelier Customizer</h2>
-        
-        <div>
-          <div class="config-group-title">Dial Color</div>
-          <div class="config-options">
-            <button class="config-opt-btn active" onclick="configureWatch('dial', 'Champagne Gold', '#dfb15b', this)">Gold</button>
-            <button class="config-opt-btn" onclick="configureWatch('dial', 'Obsidian Black', '#1c1c24', this)">Obsidian</button>
-            <button class="config-opt-btn" onclick="configureWatch('dial', 'Platinum Silver', '#e2e8f0', this)">Platinum</button>
+        <!-- Left/back card: mechanism view -->
+        <div class="watch-card wc-left" onclick="openAllocationModal()">
+          <span class="wc-corner-badge">Crafted To Perfection</span>
+          <img src="https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&w=400&q=80" alt="Watch Mechanism" style="height:220px;">
+          <div class="watch-card-bottom">
+            <div class="wc-feature-tag">
+              <div class="wc-feature-icon">✦</div>
+              Swiss Made Precision
+            </div>
           </div>
         </div>
 
-        <div>
-          <div class="config-group-title">Strap Style</div>
-          <div class="config-options">
-            <button class="config-opt-btn active" onclick="configureWatch('strap', 'Alligator Strap', '', this)">Alligator</button>
-            <button class="config-opt-btn" onclick="configureWatch('strap', 'Oyster Metal Link', '', this)">Oyster Metal</button>
+        <!-- Center: hero watch -->
+        <div class="watch-card wc-center" onclick="openAllocationModal()">
+          <div class="wc-header-badge">
+            <div class="wc-brand-dots">Chrono · Heritage</div>
+            <div class="wc-model-name">HERITAGE CHRONOGRAPH</div>
+            <div class="wc-edition">Limited Edition</div>
+          </div>
+          <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80" alt="Chrono Heritage Watch" style="height:230px;">
+          <div class="watch-card-bottom">
+            <div class="wc-price-row">
+              <span class="wc-price">$2,750.00</span>
+              <button class="wc-cta-btn">Explore Watch →</button>
+            </div>
           </div>
         </div>
 
-        <div>
-          <div class="config-group-title">Custom Engraving</div>
-          <p style="font-size: 11px; color: #8e8e9c; margin-bottom: 10px; line-height: 1.4;">Add a luxury cursive custom engraving on the case back face.</p>
-          <input type="text" id="engraving-input" oninput="updateEngravingText()" maxlength="12" placeholder="e.g. A.K. 2026" style="width: 100%; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(223, 177, 91, 0.2); border-radius: 4px; color: #fff; font-family: inherit; font-size: 13px; outline: none; transition: border-color 0.2s;" />
+        <!-- Right/back card: leather strap close-up -->
+        <div class="watch-card wc-right" onclick="openAllocationModal()">
+          <span class="wc-corner-badge">Elegance In Every Detail</span>
+          <img src="https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&w=400&q=80" alt="Watch Detail" style="height:220px;">
+          <div class="watch-card-bottom">
+            <div class="wc-feature-tag">
+              <div class="wc-feature-icon">✓</div>
+              Premium Materials
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation dots -->
+        <div class="hero-slide-dots">
+          <span class="hsd active"></span>
+          <span class="hsd"></span>
+          <span class="hsd"></span>
+          <span class="hsd"></span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══ WATCH CONFIGURATOR ═══ -->
+  <section class="configurator-section" id="configurator">
+    <div class="sec-wrap">
+      <div class="sec-eyebrow">Personalise Your Timepiece</div>
+      <h2 class="sec-h2">Atelier Customizer</h2>
+      <div class="gold-rule"></div>
+
+      <div class="config-layout">
+        <!-- Preview Panel -->
+        <div class="config-panel">
+          <div class="config-panel-glow"></div>
+          <div class="watch-face-wrap">
+            <div class="watch-face-silhouette" id="watch-face">
+              <div class="watch-hand hour-hand"></div>
+              <div class="watch-hand minute-hand"></div>
+              <div class="watch-hand second-hand"></div>
+              <div class="watch-center-pin"></div>
+              <div id="engraving-overlay"></div>
+            </div>
+          </div>
+          <div class="config-status" id="config-status">
+            Configuration: Champagne Gold dial with Alligator Strap.
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="config-controls">
+          <div>
+            <div class="config-heading">Bespoke Configuration</div>
+            <div class="config-heading-sub">Tailor your timepiece at the atelier.</div>
+          </div>
+
+          <div>
+            <div class="config-group-label">Dial Color</div>
+            <div class="config-btns">
+              <button class="config-btn active" onclick="configureWatch('dial','Champagne Gold','#dfb15b',this)">Gold</button>
+              <button class="config-btn" onclick="configureWatch('dial','Obsidian Black','#1c1c24',this)">Obsidian</button>
+              <button class="config-btn" onclick="configureWatch('dial','Platinum Silver','#e2e8f0',this)">Platinum</button>
+            </div>
+          </div>
+
+          <div>
+            <div class="config-group-label">Strap Style</div>
+            <div class="config-btns">
+              <button class="config-btn active" onclick="configureWatch('strap','Alligator Strap','',this)">Alligator</button>
+              <button class="config-btn" onclick="configureWatch('strap','Oyster Metal Link','',this)">Oyster Metal</button>
+            </div>
+          </div>
+
+          <div>
+            <div class="config-group-label">Custom Engraving</div>
+            <p style="font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:12px;">Add a luxury cursive custom engraving on the caseback face.</p>
+            <input class="config-input" type="text" id="engraving-input" oninput="updateEngravingText()" maxlength="12" placeholder="e.g. A.K. 2026">
+          </div>
         </div>
       </div>
     </div>
-  </section>  <!-- NEW FEATURE: CRAFTSMANSHIP STORY -->
-  <section class="heritage-sec" id="heritage">
-    <div class="heritage-layout">
-      <div>
-        <h2>Savoir-Faire</h2>
-        <p>Every Kronos timepiece is hand-assembled over a period of three months at our Geneva atelier. Our master watchmakers micro-align each of the 320 separate moving parts by hand.</p>
-        <p>Combining traditional engine-turning engraving methods with modern shock-absorbing silicon gears, we preserve heritage while setting futuristic standards.</p>
-      </div>
-      <div style="height: 300px; border-radius: 4px; overflow: hidden; border: 1px solid rgba(223,177,91,0.12); box-shadow: 0 10px 30px rgba(0,0,0,0.35);">
-        <img src="https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&w=800&q=80" alt="Geneva Atelier Watchmaking" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.85; filter: contrast(1.1) brightness(0.9); transition: transform 0.5s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" />
-      </div>
-    </div>
-  </section>
- 
-  <section class="specs-sec" id="specs">
-    <div class="sec-title">
-      <h2>Technical Specifications</h2>
-      <div></div>
-    </div>
-    
-    <div class="specs-grid">
-      <div class="spec-card">
-        <div class="mechanical-icon"></div>
-        <div class="spec-title">Caliber 900</div>
-        <div class="spec-desc">In-house automatic movement with a 72-hour power reserve, precision certified to -2/+2 seconds per day.</div>
-      </div>
-
-      <div class="spec-card">
-        <div class="mechanical-icon" style="transform:rotate(45deg);"></div>
-        <div class="spec-title">Sapphire Case</div>
-        <div class="spec-desc">Anti-reflective scratch-proof sapphire crystal dome front and back, revealing the intricate movement mechanics.</div>
-      </div>
-
-      <div class="spec-card">
-        <div class="mechanical-icon" style="transform:rotate(90deg);"></div>
-        <div class="spec-title">Water Seal</div>
-        <div class="spec-desc">Twin-lock sealing screw-down crown protecting your timepiece at depths of up to 100 meters.</div>
-      </div>
-    </div>
   </section>
 
-  <!-- Retail Ateliers Locator -->
-  <section class="retail-sec" id="retail-ateliers" style="padding: 100px 60px; max-width: 1100px; margin: 0 auto; border-bottom: 1px solid rgba(223, 177, 91, 0.08);">
-    <div class="sec-title" style="text-align: center; margin-bottom: 40px;">
-      <h2 style="font-family: 'Cinzel', serif; font-size: 32px; color: #fff; letter-spacing: 0.10em; font-weight: 500;">Global Ateliers</h2>
-      <div style="width: 40px; height: 1px; background: #dfb15b; margin: 18px auto 0;"></div>
-    </div>
-
-    <!-- Atelier Search Bar -->
-    <div style="max-width: 400px; margin: 0 auto 50px; position: relative;">
-      <input type="text" id="atelier-search" oninput="filterAteliers()" placeholder="Search ateliers by city..." style="width: 100%; padding: 12px 18px 12px 40px; background: rgba(255,255,255,0.03); border: 1px solid rgba(223, 177, 91, 0.2); border-radius: 30px; color: #fff; font-family: inherit; font-size: 13px; outline: none; transition: border-color 0.2s;" />
-      <span style="position: absolute; left: 16px; top: 12px; color: rgba(223,177,91,0.5); font-size: 14px;">🔍</span>
-    </div>
-
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px;">
-      <div class="atelier-card" data-city="geneva switzerland" style="background: rgba(255,255,255,0.01); border: 1px solid rgba(223, 177, 91, 0.04); padding: 36px; border-radius: 2px; transition: border-color 0.3s;" onmouseover="this.style.borderColor='rgba(223,177,91,0.2)'" onmouseout="this.style.borderColor='rgba(223,177,91,0.04)'">
-        <h4 style="font-family: 'Cinzel', serif; font-size: 18px; color: #dfb15b; margin-bottom: 12px; font-weight: 600;">Geneva Atelier</h4>
-        <p style="font-size: 13px; color: #94a3b8; line-height: 1.65;">Rue du Rhône 42, 1204 Geneva, Switzerland<br>concierge.geneva@kronos.com</p>
-      </div>
-      <div class="atelier-card" data-city="london uk united kingdom" style="background: rgba(255,255,255,0.01); border: 1px solid rgba(223, 177, 91, 0.04); padding: 36px; border-radius: 2px; transition: border-color 0.3s;" onmouseover="this.style.borderColor='rgba(223,177,91,0.2)'" onmouseout="this.style.borderColor='rgba(223,177,91,0.04)'">
-        <h4 style="font-family: 'Cinzel', serif; font-size: 18px; color: #dfb15b; margin-bottom: 12px; font-weight: 600;">London Atelier</h4>
-        <p style="font-size: 13px; color: #94a3b8; line-height: 1.65;">Bond Street 17, London W1S, United Kingdom<br>concierge.london@kronos.com</p>
-      </div>
-      <div class="atelier-card" data-city="new york usa united states" style="background: rgba(255,255,255,0.01); border: 1px solid rgba(223, 177, 91, 0.04); padding: 36px; border-radius: 2px; transition: border-color 0.3s;" onmouseover="this.style.borderColor='rgba(223,177,91,0.2)'" onmouseout="this.style.borderColor='rgba(223,177,91,0.04)'">
-        <h4 style="font-family: 'Cinzel', serif; font-size: 18px; color: #dfb15b; margin-bottom: 12px; font-weight: 600;">New York Atelier</h4>
-        <p style="font-size: 13px; color: #94a3b8; line-height: 1.65;">Fifth Avenue 712, New York, NY 10019, USA<br>concierge.ny@kronos.com</p>
+  <!-- ═══ HERITAGE ═══ -->
+  <section class="heritage-section" id="heritage">
+    <div class="sec-wrap">
+      <div class="heritage-grid">
+        <div class="heritage-img-wrap">
+          <img src="https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&w=800&q=80" alt="Geneva Atelier Watchmaking">
+          <div class="heritage-badge">
+            <span class="hb-num">320</span>
+            <span class="hb-label">Components Hand-Aligned</span>
+          </div>
+        </div>
+        <div class="heritage-text">
+          <div class="sec-eyebrow" style="text-align:left;">Our Philosophy</div>
+          <h2>Savoir-Faire</h2>
+          <div class="gold-rule" style="margin:16px 0;"></div>
+          <p>Every Kronos timepiece is hand-assembled over a period of three months at our Geneva atelier. Our master watchmakers micro-align each of the 320 separate moving parts by hand.</p>
+          <p>Combining traditional engine-turning engraving methods with modern shock-absorbing silicon gears, we preserve heritage while setting futuristic standards.</p>
+          <div class="heritage-feats">
+            <div class="hfeat">
+              <div class="hfeat-icon">⚙</div>
+              <div>
+                <h4>Hand-Assembled</h4>
+                <p>3-month assembly at our Geneva atelier.</p>
+              </div>
+            </div>
+            <div class="hfeat">
+              <div class="hfeat-icon">◈</div>
+              <div>
+                <h4>Certified Precision</h4>
+                <p>-2/+2 seconds per day movement accuracy.</p>
+              </div>
+            </div>
+            <div class="hfeat">
+              <div class="hfeat-icon">✦</div>
+              <div>
+                <h4>Swiss Heritage</h4>
+                <p>Tradition of fine horology since 1985.</p>
+              </div>
+            </div>
+            <div class="hfeat">
+              <div class="hfeat-icon">♛</div>
+              <div>
+                <h4>Limited Edition</h4>
+                <p>Exclusive allocation for discerning clients.</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Allocation Modal Overlay -->
-  <div id="allocation-modal" style="display: none; position: fixed; inset: 0; background: rgba(4, 4, 6, 0.85); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(8px);">
-    <div style="background: #09090d; padding: 40px; border-radius: 4px; max-width: 450px; width: 90%; border: 1px solid rgba(223, 177, 91, 0.2); position: relative; box-shadow: 0 25px 60px rgba(0,0,0,0.6);">
-      <button onclick="closeAllocationModal()" style="position: absolute; top: 16px; right: 16px; background: transparent; border: none; font-size: 24px; cursor: pointer; color: #94a3b8; line-height: 1;">&times;</button>
-      <h3 style="font-family: 'Cinzel', serif; font-size: 22px; color: #dfb15b; margin-bottom: 8px; text-align: center; letter-spacing: 0.05em;">Secure Allocation</h3>
-      <p style="font-size: 13px; color: #94a3b8; margin-bottom: 24px; text-align: center; line-height: 1.5;">Request priority access to the Chrono X-1 Edition private registry.</p>
+  <!-- ═══ SPECS ═══ -->
+  <section class="specs-section" id="specs">
+    <div class="sec-wrap">
+      <div class="sec-eyebrow">Engineering Excellence</div>
+      <h2 class="sec-h2">Technical Specifications</h2>
+      <div class="gold-rule"></div>
+
+      <div class="specs-grid">
+        <div class="spec-card">
+          <div class="spec-icon-ring">
+            <span class="spec-inner-line sl-n"></span>
+            <span class="spec-inner-line sl-e"></span>
+            <span class="spec-inner-line sl-s"></span>
+            <span class="spec-inner-line sl-w"></span>
+          </div>
+          <div class="spec-name">Caliber 900</div>
+          <span class="spec-value">72h</span>
+          <div class="spec-desc">In-house automatic movement with 72-hour power reserve, precision certified to -2/+2 seconds per day.</div>
+        </div>
+
+        <div class="spec-card">
+          <div class="spec-icon-ring" style="transform:rotate(45deg);">
+            <span class="spec-inner-line sl-n"></span>
+            <span class="spec-inner-line sl-e"></span>
+            <span class="spec-inner-line sl-s"></span>
+            <span class="spec-inner-line sl-w"></span>
+          </div>
+          <div class="spec-name">Sapphire Crystal</div>
+          <span class="spec-value">AR Coat</span>
+          <div class="spec-desc">Anti-reflective scratch-proof sapphire dome front and back, revealing the intricate movement mechanics.</div>
+        </div>
+
+        <div class="spec-card">
+          <div class="spec-icon-ring" style="transform:rotate(22.5deg);">
+            <span class="spec-inner-line sl-n"></span>
+            <span class="spec-inner-line sl-e"></span>
+            <span class="spec-inner-line sl-s"></span>
+            <span class="spec-inner-line sl-w"></span>
+          </div>
+          <div class="spec-name">Water Seal</div>
+          <span class="spec-value">100m</span>
+          <div class="spec-desc">Twin-lock sealing screw-down crown protecting your timepiece at depths of up to 100 meters.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ GLOBAL ATELIERS ═══ -->
+  <section class="ateliers-section" id="ateliers">
+    <div class="sec-wrap">
+      <div class="sec-eyebrow">Worldwide Presence</div>
+      <h2 class="sec-h2">Global Ateliers</h2>
+      <div class="gold-rule"></div>
+
+      <div class="atelier-search-wrap">
+        <span class="atelier-search-icon">🔍</span>
+        <input class="atelier-search" type="text" id="atelier-search" oninput="filterAteliers()" placeholder="Search by city...">
+      </div>
+
+      <div class="ateliers-grid">
+        <div class="atelier-card" data-city="geneva switzerland">
+          <div class="atelier-city">Geneva Atelier</div>
+          <div class="atelier-info">Rue du Rhône 42, 1204 Geneva, Switzerland<br>Mon–Sat · 10:00 – 18:00</div>
+          <span class="atelier-mail">concierge.geneva@kronos.com</span>
+        </div>
+        <div class="atelier-card" data-city="london uk united kingdom">
+          <div class="atelier-city">London Atelier</div>
+          <div class="atelier-info">Bond Street 17, London W1S, United Kingdom<br>Mon–Sat · 10:00 – 19:00</div>
+          <span class="atelier-mail">concierge.london@kronos.com</span>
+        </div>
+        <div class="atelier-card" data-city="new york usa united states">
+          <div class="atelier-city">New York Atelier</div>
+          <div class="atelier-info">Fifth Avenue 712, New York, NY 10019, USA<br>Mon–Sat · 10:00 – 18:00</div>
+          <span class="atelier-mail">concierge.ny@kronos.com</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ ALLOCATION MODAL ═══ -->
+  <div class="modal-backdrop" id="allocation-modal">
+    <div class="modal-box">
+      <div class="modal-top-accent"></div>
+      <button class="modal-close" onclick="closeAllocationModal()">&times;</button>
+      <div class="modal-crown">♛</div>
+      <div class="modal-title">Secure Allocation</div>
+      <p class="modal-sub">Request priority access to the Chrono Heritage Edition private registry.</p>
       <form onsubmit="submitAllocation(event)" id="allocation-form">
-        <div style="margin-bottom: 16px;">
-          <label style="display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #dfb15b; margin-bottom: 6px;">Your Name</label>
-          <input type="text" required style="width: 100%; padding: 12px; border: 1px solid rgba(223, 177, 91, 0.15); background: #040406; color: #fff; font-family: inherit; font-size: 13px; outline: none; border-radius: 2px;" placeholder="Alex Mercer">
+        <div class="modal-field">
+          <label>Your Name</label>
+          <input type="text" required placeholder="Alex Mercer">
         </div>
-        <div style="margin-bottom: 16px;">
-          <label style="display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #dfb15b; margin-bottom: 6px;">Email Address</label>
-          <input type="email" required style="width: 100%; padding: 12px; border: 1px solid rgba(223, 177, 91, 0.15); background: #040406; color: #fff; font-family: inherit; font-size: 13px; outline: none; border-radius: 2px;" placeholder="alex@mercer.com">
+        <div class="modal-field">
+          <label>Email Address</label>
+          <input type="email" required placeholder="alex@mercer.com">
         </div>
-        <div style="margin-bottom: 24px;">
-          <label style="display: block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #dfb15b; margin-bottom: 6px;">Atelier Preference</label>
-          <select style="width: 100%; padding: 12px; border: 1px solid rgba(223, 177, 91, 0.15); background: #040406; color: #fff; font-family: inherit; font-size: 13px; outline: none; border-radius: 2px;">
+        <div class="modal-field">
+          <label>Atelier Preference</label>
+          <select>
             <option>Geneva, Switzerland</option>
             <option>London, UK</option>
             <option>New York, USA</option>
           </select>
         </div>
-        <button type="submit" class="btn-gold-outline" style="width: 100%;">Submit Allocation Request</button>
+        <button type="submit" class="btn-primary-gold" style="width:100%;padding:16px;font-size:10.5px;letter-spacing:0.2em;">Submit Allocation Request</button>
       </form>
-      <div id="allocation-success" style="display: none; text-align: center; padding: 20px 0;">
-        <div style="font-family: 'Cinzel', serif; font-size: 18px; color: #dfb15b; margin-bottom: 8px; letter-spacing: 0.05em;">Allocation Reserved</div>
-        <p style="font-size: 13px; color: #94a3b8; line-height: 1.5;">Thank you. A specialist will verify your details and contact you within 12 hours.</p>
+      <div id="allocation-success" style="display:none;text-align:center;padding:20px 0;">
+        <div style="font-size:32px;color:var(--gold);margin-bottom:14px;">♛</div>
+        <div style="font-family:'Cinzel',serif;font-size:18px;color:var(--gold);margin-bottom:8px;letter-spacing:0.06em;">Allocation Reserved</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.6;">Thank you. A specialist will verify your details and contact you within 12 hours.</p>
       </div>
     </div>
   </div>
 
+  <!-- ═══ FOOTER ═══ -->
   <footer>
-    &copy; 2026 Kronos Horological Atelier. Designed by CodesCompiler.com
+    <div class="footer-inner">
+      <div class="footer-crown">♛</div>
+      <div class="footer-brand">KRO<span>NOS</span></div>
+      <div class="footer-tagline">Timeless Elegance · Est. 1985 · Geneva</div>
+      <div class="footer-links">
+        <a href="#">Collection</a>
+        <a href="#configurator">Configurator</a>
+        <a href="#heritage">Chronicles</a>
+        <a href="#specs">Savoir-Faire</a>
+        <a href="#ateliers">Ateliers</a>
+      </div>
+      <div class="footer-divider"></div>
+      <div class="footer-copy">&copy; 2026 Kronos Horological Atelier · Designed by CodesCompiler.com</div>
+    </div>
   </footer>
 
   <script>
+    /* ── Watch Configurator ── */
     let activeDial = 'Champagne Gold';
     let activeStrap = 'Alligator Strap';
 
-    function configureWatch(type, value, hex, buttonEl) {
-      // Toggle button selection in group
-      const parent = buttonEl.parentElement;
-      const buttons = parent.querySelectorAll('.config-opt-btn');
-      buttons.forEach(btn => btn.classList.remove('active'));
-      buttonEl.classList.add('active');
+    function configureWatch(type, value, hex, btn) {
+      btn.parentElement.querySelectorAll('.config-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
 
-      // Scale effect on preview
-      const watchFace = document.getElementById('watch-face');
-      watchFace.style.transform = 'scale(0.94)';
-      setTimeout(() => { watchFace.style.transform = 'scale(1)'; }, 150);
+      const face = document.getElementById('watch-face');
+      face.style.transform = 'scale(0.92)';
+      setTimeout(() => { face.style.transform = 'scale(1)'; }, 160);
 
       if (type === 'dial') {
         activeDial = value;
-        // Update watch face color preview
-        document.getElementById('watch-face').style.borderColor = hex;
-        document.getElementById('watch-face').style.boxShadow = `0 0 35px ${hex}40`;
-      } else if (type === 'strap') {
+        face.style.borderColor = hex;
+        face.style.boxShadow = `0 0 40px ${hex}44, inset 0 0 30px rgba(0,0,0,0.5)`;
+      } else {
         activeStrap = value;
       }
-
       document.getElementById('config-status').textContent = `Configuration: ${activeDial} dial with ${activeStrap}.`;
     }
 
     function updateEngravingText() {
-      const text = document.getElementById('engraving-input').value;
-      document.getElementById('engraving-overlay').textContent = text;
+      document.getElementById('engraving-overlay').textContent = document.getElementById('engraving-input').value;
     }
 
+    /* ── Atelier Search ── */
     function filterAteliers() {
-      const query = document.getElementById('atelier-search').value.toLowerCase().trim();
-      const cards = document.querySelectorAll('.atelier-card');
-      
-      cards.forEach(card => {
-        const city = card.getAttribute('data-city');
-        if (city.includes(query)) {
-          card.style.display = 'block';
-        } else {
-          card.style.display = 'none';
-        }
+      const q = document.getElementById('atelier-search').value.toLowerCase().trim();
+      document.querySelectorAll('.atelier-card').forEach(c => {
+        c.style.display = c.getAttribute('data-city').includes(q) ? 'block' : 'none';
       });
     }
 
+    /* ── Modal ── */
     function openAllocationModal() {
       document.getElementById('allocation-modal').style.display = 'flex';
       document.getElementById('allocation-success').style.display = 'none';
       document.getElementById('allocation-form').style.display = 'block';
     }
-
     function closeAllocationModal() {
       document.getElementById('allocation-modal').style.display = 'none';
     }
-
     function submitAllocation(e) {
       e.preventDefault();
       document.getElementById('allocation-form').style.display = 'none';
       document.getElementById('allocation-success').style.display = 'block';
     }
+    document.getElementById('allocation-modal').addEventListener('click', function(e) {
+      if (e.target === this) closeAllocationModal();
+    });
 
-    // Premium Watch Slideshow
-    let watchCurrentSlide = 0;
-    let watchSlideTimer = null;
-    function gotoWatchSlide(index, event) {
-      if (event) event.stopPropagation();
-      watchCurrentSlide = ((index % 3) + 3) % 3;
-      const track = document.getElementById('watch-slides-track');
-      if (track) track.style.transform = `translateX(-${watchCurrentSlide * 100}%)`;
-      document.querySelectorAll('.watch-dot').forEach((d, i) => {
-        if (i === watchCurrentSlide) d.classList.add('active');
-        else d.classList.remove('active');
+    /* ── Scroll-reveal ── */
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = e.target.dataset.tx || 'translateY(0)';
+        }
       });
-    }
-    function moveWatchSlide(dir, event) {
-      if (event) event.stopPropagation();
-      gotoWatchSlide(watchCurrentSlide + dir);
-    }
-    function startWatchSlide() {
-      if (watchSlideTimer) clearInterval(watchSlideTimer);
-      watchSlideTimer = setInterval(() => gotoWatchSlide(watchCurrentSlide + 1), 5000);
-    }
-    function pauseWatchSlide() {
-      if (watchSlideTimer) { clearInterval(watchSlideTimer); watchSlideTimer = null; }
-    }
-    document.addEventListener('DOMContentLoaded', () => { startWatchSlide(); });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.spec-card, .atelier-card, .hfeat').forEach((el, i) => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(28px)';
+      el.style.transition = `opacity 0.7s ${i * 0.08}s ease, transform 0.7s ${i * 0.08}s ease`;
+      el.dataset.tx = 'translateY(0)';
+      obs.observe(el);
+    });
   </script>
 
 </body>
