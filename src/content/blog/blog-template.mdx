@@ -1,0 +1,98 @@
+---
+title: "Blog Template"
+seoTitle: "Minimalist Typography Blog HTML/CSS Template"
+description: "Download a clean, minimalist typography-focused blog template built with HTML and vanilla CSS. Includes live client-side search filtering and newsletter card."
+date: "2026-06-23"
+category: "Templates html"
+tags: ["html", "css", "template", "blog", "typography", "responsive"]
+image: "/images/posts/blog-template.png"
+featured: false
+hasDemo: true
+author: "CodesCompiler"
+---
+
+A clean, high-readability minimalist blog template designed for writers, coders, and designers. It features clear typography, client-side category tags, a featured editors pick post, an instant search bar filter, and detailed newsletter subscription boxes.
+
+## HTML Structure
+
+```html
+<!-- Live Instant Search Bar -->
+<section class="search-section">
+  <div class="search-input-wrap">
+    <input type="text" class="search-input" id="search-box" oninput="searchPosts()" placeholder="Type to search articles instantly..." />
+  </div>
+</section>
+
+<!-- Featured Post Highlight -->
+<div class="featured-post-card">
+  <div class="featured-img-panel">
+    EDITOR'S HIGHLIGHT
+  </div>
+  <div class="featured-body">
+    <span class="featured-badge">Featured</span>
+    <h2 class="featured-title">Building a Custom Design System with CSS Tokens</h2>
+    <p class="featured-desc">Explore how to map HSL color values and spacing scales into reusable CSS custom properties.</p>
+  </div>
+</div>
+```
+
+## CSS Styling
+
+Here are the key styling definitions for PixelNotes search and featured layout:
+
+```css
+.search-input {
+  width: 100%;
+  padding: 12px 18px;
+  border: 1px solid #e2e8f0;
+  border-radius: 30px;
+  outline: none;
+  background: #fff;
+  transition: all 0.2s;
+}
+.search-input:focus {
+  border-color: #059669;
+}
+.featured-post-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  overflow: hidden;
+}
+```
+
+## Live Search Filter Logic
+
+```javascript
+let currentCategory = 'all';
+
+function filterCategory(category, buttonEl) {
+  currentCategory = category;
+  document.querySelectorAll('.tag-btn').forEach(btn => btn.classList.remove('active'));
+  buttonEl.classList.add('active');
+  searchPosts(); 
+}
+
+function searchPosts() {
+  const query = document.getElementById('search-box').value.toLowerCase().trim();
+  const cards = document.querySelectorAll('.card');
+
+  cards.forEach(card => {
+    const title = card.querySelector('.card-title').textContent.toLowerCase();
+    const desc = card.querySelector('.card-desc').textContent.toLowerCase();
+    const cardCat = card.getAttribute('data-category');
+
+    const matchesQuery = title.includes(query) || desc.includes(query);
+    const matchesCategory = (currentCategory === 'all' || cardCat === currentCategory);
+
+    if (matchesQuery && matchesCategory) {
+      card.style.display = 'flex';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+```
+---
