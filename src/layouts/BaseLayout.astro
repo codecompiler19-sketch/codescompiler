@@ -964,7 +964,6 @@ const tutorialLinks = [
         if (!sidebar) return;
 
         const storedState = sessionStorage.getItem('social-sidebar-state');
-        const isMobile = window.innerWidth < 768;
 
         if (storedState) {
           if (storedState === 'collapsed') {
@@ -973,20 +972,33 @@ const tutorialLinks = [
             sidebar.classList.remove('collapsed');
           }
         } else {
-          // Collapse by default on mobile, expand on desktop
-          if (isMobile) {
-            sidebar.classList.add('collapsed');
-          } else {
-            sidebar.classList.remove('collapsed');
-          }
+          // Collapse by default on all devices so the auto-open effect works
+          sidebar.classList.add('collapsed');
         }
       }
 
       // Initial execution
       initSocialSidebar();
 
+      // Auto-open after 5 seconds, then close after 3 seconds (on initial page load)
+      document.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          const sidebar = document.getElementById('social-sidebar');
+          if (sidebar && sidebar.classList.contains('collapsed')) {
+            sidebar.classList.remove('collapsed');
+            
+            // Close it again after 3 seconds
+            setTimeout(() => {
+              if (sidebar && !sidebar.classList.contains('collapsed')) {
+                sidebar.classList.add('collapsed');
+                sessionStorage.setItem('social-sidebar-state', 'collapsed');
+              }
+            }, 3000);
+          }
+        }, 5000);
+      });
+
       // Listeners for standard load, back/forward cache, and astro route changes
-      document.addEventListener('DOMContentLoaded', initSocialSidebar);
       document.addEventListener('astro:after-swap', initSocialSidebar);
 
       // Delegate click listener to avoid duplicate bindings during route transitions
