@@ -1,16 +1,163 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="robots" content="noindex, nofollow" />
-    <title>CodesCompiler Admin Panel</title>
-    <style>
-      body { margin: 0; font-family: sans-serif; }
-    </style>
-  </head>
-  <body>
-    <!-- Required for local_backend to connect to decap-server on port 8081 -->
-    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CodesCompiler CMS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Custom WP-style overrides */
+    body { background-color: #f1f1f1; color: #3c434a; font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif; overflow: hidden; }
+    
+    /* Sidebar */
+    #admin-sidebar { background: #1e1e1e; color: #fff; width: 160px; transition: all 0.3s ease; }
+    @media (min-width: 768px) { #admin-sidebar { width: 180px; } }
+    .nav-header { font-size: 11px; text-transform: uppercase; color: #9ca3af; font-weight: 600; padding: 12px 12px 4px; letter-spacing: 0.5px; }
+    .nav-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; color: #d1d5db; text-decoration: none; font-size: 13px; transition: all 0.2s; cursor: pointer; }
+    .nav-item:hover { color: #72aee6; background: #2a2a2a; }
+    .nav-item.active { background: #2271b1; color: #fff; font-weight: 600; }
+    .nav-item.active:hover { color: #fff; background: #2271b1; }
+    .nav-icon { width: 20px; text-align: center; font-size: 14px; opacity: 0.8; }
+    .nav-badge { background: #d63638; color: white; border-radius: 10px; padding: 2px 6px; font-size: 10px; font-weight: bold; margin-left: auto; }
+    
+    /* Topbar */
+    #admin-topbar { background: #1e1e1e; color: #fff; height: 32px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; font-size: 13px; z-index: 50; }
+    .topbar-item { display: flex; align-items: center; gap: 6px; padding: 0 10px; height: 100%; cursor: pointer; color: #d1d5db; transition: all 0.2s; position: relative; }
+    .topbar-item:hover { color: #72aee6; background: #2a2a2a; }
+    
+    /* Dropdown */
+    .dropdown-menu { display: none; position: absolute; top: 100%; left: 0; background: #fff; border: 1px solid #c3c4c7; box-shadow: 0 3px 5px rgba(0,0,0,0.2); min-width: 160px; z-index: 100; color: #3c434a; }
+    .topbar-item:hover .dropdown-menu { display: block; }
+    .dropdown-item { padding: 8px 12px; display: block; text-decoration: none; color: #3c434a; transition: background 0.1s; }
+    .dropdown-item:hover { background: #f0f0f1; color: #2271b1; }
+    
+    /* Main Content Area */
+    #admin-content-wrap { height: calc(100vh - 32px); overflow-y: auto; display: flex; flex-direction: column; }
+    .page-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+    .page-title { font-size: 23px; font-weight: 400; color: #1d2327; }
+    .add-new-btn { border: 1px solid #2271b1; color: #2271b1; border-radius: 3px; padding: 4px 8px; font-size: 13px; text-decoration: none; transition: all 0.1s; display: inline-block; cursor: pointer;}
+    .add-new-btn:hover { background: #f0f0f1; }
+    
+    /* WP-style Cards */
+    .wp-card { background: #fff; border: 1px solid #c3c4c7; box-shadow: 0 1px 1px rgba(0,0,0,0.04); border-radius: 4px; overflow: hidden; margin-bottom: 20px; }
+    .wp-card-header { border-bottom: 1px solid #c3c4c7; padding: 12px 16px; font-weight: 600; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
+    .wp-card-body { padding: 16px; }
+    
+    /* Form & Buttons */
+    .input-text { width: 100%; border: 1px solid #8c8f94; border-radius: 3px; padding: 4px 8px; font-size: 14px; line-height: 1.5; box-shadow: 0 0 0 transparent; transition: box-shadow .1s linear; }
+    .input-text:focus { border-color: #2271b1; box-shadow: 0 0 0 1px #2271b1; outline: 2px solid transparent; }
+    .btn-primary { background: #2271b1; border: 1px solid #2271b1; color: #fff; border-radius: 3px; padding: 4px 12px; font-size: 13px; cursor: pointer; text-decoration: none; display: inline-block; }
+    .btn-primary:hover { background: #135e96; border-color: #135e96; }
+    .btn-secondary { background: #f6f7f7; border: 1px solid #2271b1; color: #2271b1; border-radius: 3px; padding: 4px 12px; font-size: 13px; cursor: pointer; display: inline-block; }
+    .btn-secondary:hover { background: #f0f0f1; border-color: #0a4b78; color: #0a4b78; }
+    
+    /* Dashboard Stats */
+    .stat-row { display: flex; gap: 8px; align-items: center; font-size: 13px; margin-bottom: 10px; border-bottom: 1px solid #f0f0f1; padding-bottom: 8px; }
+    .stat-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .stat-row a { color: #2271b1; text-decoration: none; }
+    .stat-row a:hover { text-decoration: underline; color: #0a4b78; }
+
+    /* Legacy Editor Modal/Toast styles (adapted) */
+    .confirm-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;display:none;align-items:center;justify-content:center}
+    .confirm-bg.open{display:flex}
+    .cbox{background:#fff;border-radius:4px;padding:24px;max-width:380px;width:92%;text-align:center;box-shadow:0 5px 15px rgba(0,0,0,.2)}
+    .toast-box{position:fixed;bottom:24px;right:24px;z-index:999;display:flex;flex-direction:column;gap:10px}
+    .toast{background:#fff;border-left:4px solid #10b981;padding:12px 16px;font-size:14px;box-shadow:0 3px 10px rgba(0,0,0,.15);animation:slideUp .2s ease}
+    @keyframes slideUp{from{transform:translateY(12px);opacity:0}to{transform:translateY(0);opacity:1}}
+    
+    /* Temporary table styling until Phase 2 */
+    table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #c3c4c7; }
+    th { padding: 8px 10px; font-size: 13px; font-weight: 600; text-align: left; border-bottom: 1px solid #c3c4c7; background: #f6f7f7; }
+    td { padding: 8px 10px; font-size: 13px; border-bottom: 1px solid #f0f0f1; vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+
+    /* Legacy classes to support unmigrated Phase 2/3 sections */
+    .btn { padding: 4px 12px; border-radius: 3px; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; border: 1px solid transparent; }
+    .bp { background: #2271b1; color: #fff; border-color: #2271b1; } .bp:hover { background: #135e96; }
+    .bg { background: #f6f7f7; color: #2271b1; border-color: #2271b1; } .bg:hover { background: #f0f0f1; }
+    .bd { background: transparent; color: #d63638; border-color: #d63638; } .bd:hover { background: #d63638; color: #fff; }
+    .bk { background: #10b981; color: #fff; border-color: #10b981; } .bk:hover { background: #059669; }
+    .bs { padding: 2px 8px; font-size: 11px; }
+    .card { background: #fff; border: 1px solid #c3c4c7; border-radius: 4px; margin-bottom: 20px; }
+    .ch { padding: 12px 16px; border-bottom: 1px solid #c3c4c7; font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+    .badge { display: inline-block; padding: 2px 6px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+    .bpub { background: #d1fae5; color: #065f46; }
+    .bdf { background: #f3f4f6; color: #374151; }
+    .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .field label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; color: #3c434a; }
+    .field input, .field select, .field textarea { width: 100%; border: 1px solid #8c8f94; border-radius: 3px; padding: 4px 8px; font-size: 13px; }
+    .editor { font-family: monospace; }
+  </style>
+</head>
+<body class="flex flex-col h-screen">
+
+  <!-- TOP NAVIGATION BAR -->
+  <header id="admin-topbar">
+    <div class="flex items-center h-full">
+      <div class="topbar-item px-2" style="font-weight: 600;">
+        <a href="/" target="_blank" style="color: inherit; text-decoration: none; display: flex; align-items: center; height: 100%;">
+          <span class="mr-1">🏠</span> CodesCompiler
+        </a>
+        <div class="dropdown-menu">
+          <a href="/" target="_blank" class="dropdown-item">Visit Site</a>
+        </div>
+      </div>
+      <div class="topbar-item" onclick="goTo('comments')">
+        <span class="mr-1">💬</span> <span id="top-comments-count">0</span>
+      </div>
+      <div class="topbar-item group">
+        <span class="mr-1">➕</span> New
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item" onclick="newBlog(); return false;">Post</a>
+          <a href="#" class="dropdown-item" onclick="newTut(); return false;">Tutorial</a>
+          <a href="#" class="dropdown-item" onclick="newPage(); return false;">Page</a>
+          <a href="#" class="dropdown-item" onclick="alert('Phase 2: Add New Book coming soon!'); return false;">Book</a>
+          <a href="#" class="dropdown-item" onclick="alert('Phase 3: Media upload coming soon!'); return false;">Media</a>
+        </div>
+      </div>
+    </div>
+    <div class="flex items-center h-full">
+      <div class="topbar-item">
+        Howdy, <strong>Admin</strong> <img src="https://ui-avatars.com/api/?name=Admin&background=random&size=18" class="rounded-full ml-2" alt="">
+      </div>
+    </div>
+  </header>
+
+  <div class="flex flex-1 overflow-hidden">
+    <!-- SIDEBAR -->
+    <nav id="admin-sidebar" class="flex flex-col overflow-y-auto overflow-x-hidden pt-2">
+      <!-- Injected by JS -->
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main id="admin-content-wrap" class="flex-1 p-4 md:p-6">
+      <div id="page-header-container" class="page-header">
+        <h1 id="ptitle" class="page-title">Dashboard</h1>
+        <div id="tact"></div>
+      </div>
+      
+      <!-- dynamic content container -->
+      <div id="content" class="w-full"></div>
+    </main>
+  </div>
+
+  <!-- Confirm -->
+  <div class="confirm-bg" id="cfm">
+    <div class="cbox">
+      <h4 class="text-lg font-bold mb-2 text-gray-800">Are you sure?</h4>
+      <p id="cmsg" class="text-gray-600 mb-6 text-sm">This action cannot be undone.</p>
+      <div class="flex gap-2 justify-center">
+        <button class="btn-secondary" onclick="closeConfirm()">Cancel</button>
+        <button class="btn-primary" style="background:#d63638;border-color:#d63638;" id="cok" onclick="doConfirm()">Delete Permanently</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toasts -->
+  <div class="toast-box" id="toasts"></div>
+
+  <!-- App Script -->
+  <script src="admin-app.js?v=20260910"></script>
+</body>
 </html>

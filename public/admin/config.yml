@@ -238,6 +238,35 @@ collections:
         widget: "string"
         hint: "Short, clear title for this tutorial chapter."
 
+      - label: "Author"
+        name: "author"
+        widget: "string"
+        default: "CodesCompiler"
+        required: false
+        hint: "Author name shown on the post."
+
+      - label: "Publish Date"
+        name: "date"
+        widget: "datetime"
+        date_format: "YYYY-MM-DD"
+        time_format: false
+        format: "YYYY-MM-DD"
+        required: false
+
+      - label: "Tags"
+        name: "tags"
+        widget: "list"
+        allow_add: true
+        collapsed: false
+        required: false
+        hint: "Add relevant tags. e.g. html, web, tutorial"
+
+      - label: "Featured Image"
+        name: "image"
+        widget: "image"
+        required: false
+        hint: "Main thumbnail shown in the listing and at the top."
+
       - label: "Custom Permalink (URL)"
         name: "permalink"
         widget: "string"
@@ -440,3 +469,57 @@ collections:
                 fields:
                   - { label: "Link Text", name: "label", widget: "string" }
                   - { label: "URL", name: "href", widget: "string" }
+
+  # ───────────────────────────────────────────────────────────────────────────
+  # 5. BOOKS
+  # ───────────────────────────────────────────────────────────────────────────
+  - name: "books"
+    label: "📚 Books"
+    label_singular: "Book"
+    folder: "src/data/books"
+    create: true
+    delete: true
+    extension: "json"
+    format: "json"
+    slug: "{{slug}}"
+    identifier_field: "title"
+    fields:
+      - {label: "Slug (URL)", name: "slug", widget: "string", hint: "e.g. toddlers-first-guide-to-emotions"}
+      - {label: "Title", name: "title", widget: "string"}
+      - {label: "Author", name: "author", widget: "string", default: "CodesCompiler", required: false}
+      - {label: "Category", name: "category", widget: "string", required: false}
+      - {label: "Tags", name: "tags", widget: "list", allow_add: true, collapsed: false, required: false}
+      - {label: "Publish Date", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false, format: "YYYY-MM-DD", required: false}
+      - {label: "Tagline", name: "tagline", widget: "string"}
+      - {label: "Description", name: "description", widget: "markdown", modes: ["raw", "rich_text"]}
+      - {label: "Cover Image", name: "image", widget: "image", required: false}
+      - {label: "Pages", name: "pages", widget: "number", value_type: "int"}
+      - {label: "Downloads", name: "downloads", widget: "string", required: false}
+      - {label: "Publication Date (Legacy)", name: "updated", widget: "string", required: false}
+      - {label: "Level", name: "level", widget: "string"}
+      - {label: "Rating", name: "rating", widget: "number", value_type: "float", required: false}
+      - {label: "Rating Count", name: "ratingCount", widget: "string", required: false}
+      - {label: "SEO Title", name: "seoTitle", widget: "string", required: false, hint: "Custom browser-tab/Google title. Overrides default title."}
+      - {label: "SEO Description", name: "seoDescription", widget: "text", required: false, hint: "Overrides the default generated description."}
+      - {label: "Keywords", name: "keywords", widget: "string", required: false, hint: "Comma separated keywords. e.g. kids coding, python, free book"}
+      - {label: "Accent Color", name: "accentColor", widget: "string", default: "#04AA6D"}
+      - {label: "Badge BG Class", name: "badgeBg", widget: "string", default: "bg-green-100"}
+      - {label: "Badge Text Class", name: "badgeText", widget: "string", default: "text-green-700"}
+      - {label: "Background Gradient Class", name: "bgGradient", widget: "string", default: "from-green-500 to-green-700"}
+      - {label: "WhatsApp URL", name: "whatsappUrl", widget: "string", default: "https://whatsapp.com/channel/0029VbDJ9Lc0VycCT9PJuu0W"}
+      - {label: "YouTube URL", name: "youtubeUrl", widget: "string", default: "https://www.youtube.com/@CodeCompiler19"}
+      - {label: "PDF URL", name: "pdfUrl", widget: "string", required: false}
+      - {label: "Is Premium?", name: "isPremium", widget: "boolean", default: false}
+      - {label: "Price", name: "price", widget: "string", required: false}
+      - {label: "Amazon URL", name: "amazonUrl", widget: "string", required: false}
+      - {label: "Checkout URL", name: "checkoutUrl", widget: "string", required: false}
+      - label: "What You Will Learn"
+        name: "learnList"
+        widget: "list"
+      - label: "Info Tabs"
+        name: "infoTabs"
+        widget: "list"
+        fields:
+          - {label: "Tab ID", name: "id", widget: "string", hint: "e.g. overview"}
+          - {label: "Tab Label", name: "label", widget: "string", hint: "e.g. 📖 Overview"}
+          - {label: "Tab HTML Content", name: "content", widget: "markdown", modes: ["raw"]}

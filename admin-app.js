@@ -31,21 +31,70 @@ function doConfirm(){const cb=confirmCb; closeConfirm(); if(cb)cb()}
 
 // Sidebar
 function renderSidebar(){
-  const items=[
-    {id:'dashboard',ico:'📊',label:'Dashboard'},
-    {id:'tutorials',ico:'📖',label:'Tutorials',ct:tutorials.length},
-    {id:'blogs',ico:'✍️',label:'Posts',ct:blogs.length},
-    {id:'pages',ico:'📄',label:'Pages',ct:pages.length},
-    {id:'nav',ico:'🔗',label:'Menus'},
-    {id:'ads',ico:'💰',label:'Ad Manager'},
-    {id:'permalinks',ico:'🔗',label:'Permalinks'},
-    {id:'settings',ico:'⚙️',label:'Settings'},
-    {id:'trash',ico:'🗑️',label:'Trash',ct:trashBin.length},
+  const sections = [
+    {
+      title: 'DASHBOARD',
+      items: [
+        { id: 'dashboard', ico: '🏠', label: 'Dashboard' }
+      ]
+    },
+    {
+      title: 'CONTENT',
+      items: [
+        { id: 'blogs', ico: '📝', label: 'Posts', ct: blogs.length },
+        { id: 'pages', ico: '📄', label: 'Pages', ct: pages.length },
+        { id: 'tutorials', ico: '📖', label: 'Tutorials', ct: tutorials.length },
+        { id: 'books', ico: '📚', label: 'Books', ct: stats?.totalBooks || 0 },
+        { id: 'categories', ico: '🏷️', label: 'Categories' },
+      ]
+    },
+    {
+      title: 'MEDIA',
+      items: [
+        { id: 'media', ico: '🖼️', label: 'Library', ct: stats?.totalMedia || 0 }
+      ]
+    },
+    {
+      title: 'COMMENTS',
+      items: [
+        { id: 'comments', ico: '💬', label: 'Comments', ct: 0 }
+      ]
+    },
+    {
+      title: 'APPEARANCE',
+      items: [
+        { id: 'nav', ico: '🔗', label: 'Menus' },
+        { id: 'ads', ico: '💰', label: 'Ad Manager' }
+      ]
+    },
+    {
+      title: 'USERS',
+      items: [
+        { id: 'users', ico: '👥', label: 'All Users' }
+      ]
+    },
+    {
+      title: 'SETTINGS',
+      items: [
+        { id: 'settings', ico: '⚙️', label: 'General' },
+        { id: 'permalinks', ico: '🔗', label: 'Permalinks' },
+        { id: 'trash', ico: '🗑️', label: 'Trash', ct: trashBin.length }
+      ]
+    }
   ];
-  let h='<div class="slab">Content</div>';
-  items.forEach(i=>{h+=`<div class="si ${page===i.id?'on':''}" onclick="goTo('${i.id}')"><span class="ico">${i.ico}</span>${i.label}${i.ct!=null?`<span class="ct">${i.ct}</span>`:''}</div>`});
-  $('snav').innerHTML=h;
-  $('sfoot').innerHTML=`<strong>${tutorials.length+blogs.length}</strong> total items · <strong>${Object.keys(stats.tutorialsByCategory||{}).length+Object.keys(stats.blogsByCategory||{}).length}</strong> categories`;
+
+  let h = '';
+  sections.forEach(sec => {
+    h += `<div class="nav-header">${sec.title}</div>`;
+    sec.items.forEach(i => {
+      const isAct = page === i.id ? 'active' : '';
+      const badge = i.ct ? `<span class="nav-badge">${i.ct}</span>` : '';
+      h += `<a class="nav-item ${isAct}" onclick="goTo('${i.id}')"><span class="nav-icon">${i.ico}</span> ${i.label} ${badge}</a>`;
+    });
+  });
+  
+  const sb = $('admin-sidebar');
+  if(sb) sb.innerHTML = h;
 }
 
 // Load all
@@ -59,24 +108,93 @@ function goTo(p){page=p;location.hash=p;renderSidebar();({dashboard:renderDash,t
 
 // ══ DASHBOARD ══
 function renderDash(){
-  $('ptitle').textContent='Dashboard';
-  $('tact').innerHTML=`<button class="btn bg" onclick="loadAll().then(()=>goTo('dashboard'))">🔄 Refresh</button>`;
-  const tc=stats.tutorialsByCategory||{},bc=stats.blogsByCategory||{};
-  let h=`<div class="sgrid">
-    <div class="sc s1"><h3>${stats.totalTutorials||0}</h3><p>Tutorials</p></div>
-    <div class="sc s2"><h3>${stats.totalBlogs||0}</h3><p>Posts</p></div>
-    <div class="sc s3"><h3>${navItems.length||0}</h3><p>Menu Links</p></div>
-    <div class="sc s4"><h3>${TCAT.length}</h3><p>Languages</p></div>
+  $('ptitle').textContent = 'Dashboard';
+  $('tact').innerHTML = '';
+  
+  let h = `<div class="mb-4 text-gray-600 text-lg">Welcome back to your CodesCompiler CMS!</div>`;
+  
+  // Stats row
+  h += `<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+    <div class="wp-card !mb-0 text-center py-6 px-4">
+      <div class="text-3xl text-[#2271b1] mb-1">${stats?.totalBlogs || 0}</div>
+      <div class="text-gray-600 text-sm">Posts</div>
+    </div>
+    <div class="wp-card !mb-0 text-center py-6 px-4">
+      <div class="text-3xl text-[#2271b1] mb-1">${stats?.totalPages || 0}</div>
+      <div class="text-gray-600 text-sm">Pages</div>
+    </div>
+    <div class="wp-card !mb-0 text-center py-6 px-4">
+      <div class="text-3xl text-[#2271b1] mb-1">${stats?.totalBooks || 0}</div>
+      <div class="text-gray-600 text-sm">Books</div>
+    </div>
+    <div class="wp-card !mb-0 text-center py-6 px-4">
+      <div class="text-3xl text-[#2271b1] mb-1">${stats?.totalMedia || 0}</div>
+      <div class="text-gray-600 text-sm">Media Files</div>
+    </div>
   </div>`;
-  // Tutorials table
-  h+=`<div class="card"><div class="ch"><h3>📖 Tutorials by Language</h3></div><table><thead><tr><th>Language</th><th>Lessons</th><th></th></tr></thead><tbody>`;
-  TCAT.forEach(c=>{h+=`<tr><td><span class="badge ${CB[c]||'bdf'}">${CATNAME[c]||c}</span></td><td><strong>${tc[c]||0}</strong> lessons</td><td><button class="btn bg bs" onclick="tutFilter='${c}';goTo('tutorials')">View All →</button></td></tr>`});
-  h+=`</tbody></table></div>`;
-  // Blog table
-  h+=`<div class="card"><div class="ch"><h3>✍️ Posts by Category</h3></div><table><thead><tr><th>Category</th><th>Posts</th></tr></thead><tbody>`;
-  Object.entries(bc).sort((a,b)=>b[1]-a[1]).forEach(([c,n])=>{h+=`<tr><td>${esc(c)}</td><td><strong>${n}</strong></td></tr>`});
-  h+=`</tbody></table></div>`;
-  $('content').innerHTML=h;
+
+  // Grid for Activity and Draft
+  h += `<div class="grid md:grid-cols-2 gap-6">
+    <!-- Recent Activity -->
+    <div class="wp-card">
+      <div class="wp-card-header">Recent Activity</div>
+      <div class="wp-card-body">`;
+      
+  const acts = stats?.recentActivity || [];
+  if(!acts.length) {
+    h += `<div class="text-gray-500 text-sm py-4 text-center">No recent activity.</div>`;
+  } else {
+    acts.forEach(a => {
+      const time = new Date(a.mtime).toLocaleString();
+      h += `<div class="stat-row">
+        <span class="text-gray-400 mr-2 text-xs w-28 whitespace-nowrap overflow-hidden truncate" title="${time}">${time}</span>
+        <span class="bg-blue-100 text-blue-700 rounded px-1 py-0.5 text-[10px] uppercase font-bold mr-2 w-16 text-center inline-block">${a.type}</span>
+        <a href="#" class="font-medium truncate">${esc(a.file)}</a>
+      </div>`;
+    });
+  }
+      
+  h += `</div>
+    </div>
+
+    <!-- Quick Draft -->
+    <div class="wp-card">
+      <div class="wp-card-header">Quick Draft</div>
+      <div class="wp-card-body">
+        <div class="mb-3">
+          <input type="text" id="qd_title" class="input-text" placeholder="Title">
+        </div>
+        <div class="mb-3">
+          <textarea id="qd_content" class="input-text h-32" placeholder="What's on your mind?"></textarea>
+        </div>
+        <div>
+          <button class="btn-secondary" onclick="saveQuickDraft()">Save Draft</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+  $('content').innerHTML = h;
+}
+
+window.saveQuickDraft = async function() {
+  const t = $('qd_title').value.trim();
+  const c = $('qd_content').value.trim();
+  if(!t) return toast('Please enter a title', false);
+  const slug = t.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+  const d = new Date().toISOString().split('T')[0];
+  const content = \`---
+title: "\${t}"
+date: "\${d}"
+draft: true
+---
+
+\${c}\`;
+  await post('/api/blogs/save', { filename: slug+'.mdx', content });
+  $('qd_title').value = '';
+  $('qd_content').value = '';
+  toast('Draft saved! 📝');
+  await loadAll();
 }
 
 // ══ TUTORIALS ══
@@ -104,6 +222,10 @@ function tutForm(t={}){
   <div class="g3"><div class="field"><label>Lesson Order</label><input id="tf_o" type="number" value="${t.order||1}" min="1"></div>
   <div class="field"><label>URL Slug</label><input id="tf_f" value="${esc(t.file||'')}" ${t.file?'readonly':''} placeholder="my-tutorial-slug.mdx"></div>
   <div class="field"><label>SEO Description</label><input id="tf_d" value="${esc(t.description||'')}" placeholder="Brief description for search engines..."></div></div>
+  <div class="g3"><div class="field"><label>Publish Date</label><input id="tf_dt" type="date" value="${t.date||new Date().toISOString().split('T')[0]}"></div>
+  <div class="field"><label>Featured Image Path</label><input id="tf_img" value="${esc(t.image||'')}" placeholder="/images/posts/image.png"></div>
+  <div class="field"><label>Author</label><input id="tf_au" value="${esc(t.author||'CodesCompiler')}"></div></div>
+  <div class="field"><label>Tags (comma separated)</label><input id="tf_tg" value="${esc(t.tags||'')}" placeholder="css, animation, design" style="margin-bottom: 16px;"></div>
   <div class="tab-row"><div class="tab-item on" onclick="showEditorTab(this,'tf_editor')">✏️ Write</div><div class="tab-item" onclick="showPreviewTab(this,'tf_editor','tf_preview')">👁️ Preview</div></div>
   <div id="tf_editor">${editorToolbar('tf_b')}<textarea class="editor" id="tf_b" placeholder="Start writing your tutorial content here..."></textarea></div>
   <div id="tf_preview" style="display:none"></div>`;
@@ -139,7 +261,12 @@ async function editTut(file){
 
 function delTut(f){openConfirm(`Delete tutorial "${f}"? This cannot be undone.`,async()=>{await post('/api/tutorials/delete',{filename:f});toast('Tutorial deleted');await loadAll();renderTuts()})}
 
-function buildTutContent(){return`---\ntitle: "${$('tf_t').value}"\ndescription: "${$('tf_d').value}"\ncategory: "${$('tf_c').value}"\norder: ${$('tf_o').value}\n---\n\n${$('tf_b').value}`}
+function buildTutContent(){
+  const tags=$('tf_tg').value.split(',').map(s=>s.trim()).filter(Boolean);
+  const tStr=tags.length?`\ntags: [${tags.map(t=>`"${t}"`).join(', ')}]`:'';
+  const img=$('tf_img').value.trim();const iStr=img?`\nimage: "${img}"`:'';
+  return`---\ntitle: "${$('tf_t').value}"\ndescription: "${$('tf_d').value}"\ncategory: "${$('tf_c').value}"\norder: ${$('tf_o').value}\ndate: "${$('tf_dt').value}"\nauthor: "${$('tf_au').value}"${tStr}${iStr}\n---\n\n${$('tf_b').value}`
+}
 
 // ══ BLOGS ══
 let blogFilters = { q: '', cat: '', status: '', author: '' };

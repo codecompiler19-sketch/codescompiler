@@ -11,6 +11,7 @@ export interface Props {
   seoTitle?: string;      // Custom browser-tab/Google title (overrides title)
   ogImage?: string;       // Custom OG image (overrides image)
   noindex?: boolean;      // Add noindex meta tag
+  keywords?: string;      // SEO Keywords
   schemaData?: object[];  // Array of Schema.org JSON-LD objects
 }
 
@@ -22,6 +23,7 @@ const {
   seoTitle,
   ogImage,
   noindex = false,
+  keywords,
   schemaData = [],
 } = Astro.props;
 
@@ -63,6 +65,7 @@ const tutorialLinks = [
     <title>{displayTitle}</title>
     <meta name="title" content={displayTitle} />
     <meta name="description" content={description} />
+    {keywords && <meta name="keywords" content={keywords} />}
     <link rel="canonical" href={String(canonicalURL)} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <meta property="og:type" content={ogType} />

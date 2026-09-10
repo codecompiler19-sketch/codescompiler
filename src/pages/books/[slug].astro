@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { books, formatDownloads, starsArray } from '../../data/books';
 import AdSlot from '../../components/AdSlot.astro';
+import { marked } from 'marked';
 
 export async function getStaticPaths() {
   return books.map((book) => ({
@@ -15,14 +16,17 @@ const { book } = Astro.props;
 const otherBooks = books.filter((b) => b.slug !== book.slug);
 
 const stars = starsArray(book.rating);
-const seoTitle = `${book.title} — Free PDF Download for Kids`;
-const description = `Download the free PDF book "${book.title}". ${book.tagline}. ${book.downloads}+ downloads. ${book.pages} pages. Beginner-friendly kids coding ebook.`;
+const defaultSeoTitle = `${book.title} — Free PDF Download for Kids`;
+const defaultDescription = `Download the free PDF book "${book.title}". ${book.tagline}. ${book.downloads || 0}+ downloads. ${book.pages || 0} pages. Beginner-friendly kids coding ebook.`;
 
-const shareWhatsappUrl = "https://api.whatsapp.com/send?text=" + encodeURIComponent("Free kids coding book: " + book.title + " — Download free: https://codescompiler.com/books/" + book.slug);
-const shareTwitterUrl = "https://twitter.com/intent/tweet?text=" + encodeURIComponent("Free kids coding book: " + book.title + " — https://codescompiler.com/books/" + book.slug);
+const seoTitle = book.seoTitle || defaultSeoTitle;
+const description = book.seoDescription || defaultDescription;
+const keywords = book.keywords || '';
+
+
 ---
 
-<BaseLayout title={book.title} description={description} seoTitle={seoTitle}>
+<BaseLayout title={book.title} description={description} seoTitle={seoTitle} keywords={keywords}>
 <div class="bg-gray-50 min-h-screen" id="book-detail-root">
 
   <!-- BREADCRUMB -->
@@ -44,15 +48,15 @@ const shareTwitterUrl = "https://twitter.com/intent/tweet?text=" + encodeURIComp
 
       <!-- LEFT: COVER (4 cols) -->
       <div class="lg:col-span-4 flex flex-col gap-4">
-        <div class="w-full aspect-square rounded-2xl overflow-hidden shadow-lg border border-gray-200 bg-white relative select-none">
-          {book.coverImage ? (
+        <div class="w-full rounded-2xl overflow-hidden shadow-lg border border-gray-200 bg-white relative select-none">
+          {book.image ? (
             <img
-              src={book.coverImage}
+              src={book.image}
               alt={`${book.title} Book Cover`}
-              class="w-full h-full object-cover block transition-transform duration-500 hover:scale-105"
+              class="w-full h-auto block transition-transform duration-500 hover:scale-105"
             />
           ) : (
-            <div class={`w-full h-full bg-gradient-to-br ${book.bgGradient} text-white flex flex-col justify-between p-8 relative`}>
+            <div class={`w-full aspect-[4/5] bg-gradient-to-br ${book.bgGradient} text-white flex flex-col justify-between p-8 relative`}>
               <div>
                 <span class="text-xs font-bold tracking-widest uppercase opacity-70 block mb-2">CodesCompiler</span>
                 <h2 class="text-3xl font-extrabold leading-tight drop-shadow-md">{book.title}</h2>
@@ -60,9 +64,15 @@ const shareTwitterUrl = "https://twitter.com/intent/tweet?text=" + encodeURIComp
               <p class="text-xs opacity-80 leading-snug">{book.tagline}</p>
             </div>
           )}
-          <div class="absolute top-3 left-3 bg-[#04AA6D] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow-md uppercase tracking-widest">
-            FREE
-          </div>
+          {book.isPremium ? (
+            <div class="absolute top-3 left-3 bg-amber-500 text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow-md uppercase tracking-widest">
+              PREMIUM
+            </div>
+          ) : (
+            <div class="absolute top-3 left-3 bg-[#04AA6D] text-white text-[10px] font-extrabold px-2.5 py-1 rounded-full shadow-md uppercase tracking-widest">
+              FREE
+            </div>
+          )}
         </div>
 
         <!-- Trust badges -->
@@ -70,9 +80,16 @@ const shareTwitterUrl = "https://twitter.com/intent/tweet?text=" + encodeURIComp
           <span class="flex items-center gap-1 text-[11px] font-semibold text-gray-500 bg-white border border-gray-100 rounded-full px-3 py-1.5 shadow-sm">
             <span class="text-green-500">✓</span> High Quality PDF
           </span>
-          <span class="flex items-center gap-1 text-[11px] font-semibold text-gray-500 bg-white border border-gray-100 rounded-full px-3 py-1.5 shadow-sm">
-            <span class="text-green-500">✓</span> No Sign-up
-          </span>
+          {!book.isPremium && (
+            <span class="flex items-center gap-1 text-[11px] font-semibold text-gray-500 bg-white border border-gray-100 rounded-full px-3 py-1.5 shadow-sm">
+              <span class="text-green-500">✓</span> No Sign-up
+            </span>
+          )}
+          {book.isPremium && (
+            <span class="flex items-center gap-1 text-[11px] font-semibold text-gray-500 bg-white border border-gray-100 rounded-full px-3 py-1.5 shadow-sm">
+              <span class="text-green-500">✓</span> Secure Checkout
+            </span>
+          )}
           <span class="flex items-center gap-1 text-[11px] font-semibold text-gray-500 bg-white border border-gray-100 rounded-full px-3 py-1.5 shadow-sm">
             <span class="text-green-500">✓</span> Safe Download
           </span>
@@ -86,185 +103,231 @@ const shareTwitterUrl = "https://twitter.com/intent/tweet?text=" + encodeURIComp
           <span class={`inline-block text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-3 ${book.badgeBg} ${book.badgeText}`}>
             {book.level}
           </span>
-          <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 leading-tight mb-2">
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-gray-900 leading-tight mb-1">
             {book.title}
           </h1>
+          <p class="text-sm text-gray-600 mb-3">
+            by <a href="/jay-vadhvani" class="text-blue-600 hover:text-orange-500 hover:underline">Mr Jay Vadhvani</a> (Author)
+          </p>
           <p class="text-base text-gray-500 font-medium">{book.tagline}</p>
         </div>
 
-        <!-- STAR RATING -->
-        <div class="flex items-center gap-3 flex-wrap">
-          <div class="flex items-center gap-0.5">
-            {stars.map((type) => (
-              <span class={`text-xl leading-none ${type === 'full' ? 'text-amber-400' : type === 'half' ? 'text-amber-300' : 'text-gray-300'}`}>
-                {type === 'empty' ? '☆' : '★'}
-              </span>
-            ))}
+        <!-- NEW PRICE & BUY BUTTONS -->
+        <div class="flex flex-col gap-3 max-w-md">
+          
+          <!-- STAR RATING -->
+          <div class="flex items-center gap-3 flex-wrap">
+            <div class="flex items-center gap-0.5">
+              {stars.map((type) => (
+                <span class={`text-xl leading-none ${type === 'full' ? 'text-amber-400' : type === 'half' ? 'text-amber-300' : 'text-gray-300'}`}>
+                  {type === 'empty' ? '☆' : '★'}
+                </span>
+              ))}
+            </div>
+            <span class="text-amber-600 font-extrabold text-base">{book.rating}</span>
+            <span class="text-gray-400 text-sm">({book.ratingCount})</span>
           </div>
-          <span class="text-amber-600 font-extrabold text-base">{book.rating}</span>
-          <span class="text-gray-400 text-sm">({book.ratingCount})</span>
-          <span class="mx-1 text-gray-200">|</span>
-          <span class="text-green-600 font-bold text-sm">{formatDownloads(book.downloads)} Downloads</span>
+
+          {book.isPremium && (
+            <div class="flex flex-col gap-0 max-w-md">
+            <!-- Dashed Price Block -->
+            <div class="border border-dashed border-[#ed6947] rounded-xl p-4 text-left bg-[#fff8f5] mb-4">
+              <div class="text-3xl font-black text-[#9a4b33] mb-1">{book.price || '₹49'}</div>
+              <div class="text-[11px] font-semibold text-slate-600">{book.pages} printable pages • Instant digital access</div>
+            </div>
+            
+            <!-- Buttons -->
+            <div class="mb-4">
+              {book.amazonUrl ? (
+                <a href={book.amazonUrl} target="_blank" rel="noopener noreferrer" class="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-[#0F1111] text-sm bg-[#FFD814] hover:bg-[#F7CA00] border border-[#FCD200] shadow-sm transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M11.354 1.846a.5.5 0 0 1 .146.354v11.6a.5.5 0 0 1-.854.354L6.207 9.808l-4.853-4.854a.5.5 0 0 1 .707-.708l4.5 4.5 4.146-4.146a.5.5 0 0 1 .708 0z"/>
+                    <path fill-rule="evenodd" d="M15.854 8.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L14.793 8.5H8.5a.5.5 0 0 1 0-1h6.293l-2.647-2.646a.5.5 0 0 1 .708-.708l3 3z"/>
+                  </svg>
+                  Buy on Amazon
+                </a>
+              ) : (
+                <button class="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-[#0F1111] text-sm bg-[#FFD814] hover:bg-[#F7CA00] border border-[#FCD200] shadow-sm transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M11.354 1.846a.5.5 0 0 1 .146.354v11.6a.5.5 0 0 1-.854.354L6.207 9.808l-4.853-4.854a.5.5 0 0 1 .707-.708l4.5 4.5 4.146-4.146a.5.5 0 0 1 .708 0z"/>
+                    <path fill-rule="evenodd" d="M15.854 8.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L14.793 8.5H8.5a.5.5 0 0 1 0-1h6.293l-2.647-2.646a.5.5 0 0 1 .708-.708l3 3z"/>
+                  </svg>
+                  Buy on Amazon
+                </button>
+              )}
+            </div>
+
+
+
+            <!-- Features Checkmarks -->
+            <div class="flex flex-col gap-2 mb-4">
+              <div class="flex items-start gap-2 text-xs text-gray-600">
+                <span class="text-green-500 mt-0.5 flex-shrink-0">✓</span>
+                <span><strong class="text-gray-800">Instant Access</strong> — Download link emailed instantly</span>
+              </div>
+              <div class="flex items-start gap-2 text-xs text-gray-600">
+                <span class="text-green-500 mt-0.5 flex-shrink-0">✓</span>
+                <span><strong class="text-gray-800">Print-friendly</strong> — Great as a classroom book</span>
+              </div>
+              <div class="flex items-start gap-2 text-xs text-gray-600">
+                <span class="text-green-500 mt-0.5 flex-shrink-0">✓</span>
+                <span><strong class="text-gray-800">Updated {book.updated}</strong> — Latest edition</span>
+              </div>
+            </div>
+          </div>
+        )}
         </div>
 
-        <p class="text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-4">
-          {book.description}
-        </p>
-
-        <!-- STATS -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div class="flex flex-col items-center justify-center bg-white border border-gray-100 rounded-xl p-3 shadow-sm text-center">
-            <span class="text-xl mb-1">📥</span>
-            <span class="text-base font-extrabold text-gray-900">{formatDownloads(book.downloads)}</span>
-            <span class="text-[10px] text-gray-400 font-semibold uppercase tracking-wide mt-0.5">Downloads</span>
-          </div>
-          <div class="flex flex-col items-center justify-center bg-white border border-gray-100 rounded-xl p-3 shadow-sm text-center">
-            <span class="text-xl mb-1">📄</span>
-            <span class="text-base font-extrabold text-gray-900">{book.pages}</span>
-            <span class="text-[10px] text-gray-400 font-semibold uppercase tracking-wide mt-0.5">Pages</span>
-          </div>
-          <div class="flex flex-col items-center justify-center bg-white border border-gray-100 rounded-xl p-3 shadow-sm text-center">
-            <span class="text-xl mb-1">🗓️</span>
-            <span class="text-xs font-extrabold text-gray-900 leading-tight">{book.updated}</span>
-            <span class="text-[10px] text-gray-400 font-semibold uppercase tracking-wide mt-0.5">Updated</span>
-          </div>
-          <div class="flex flex-col items-center justify-center bg-white border border-gray-100 rounded-xl p-3 shadow-sm text-center">
-            <span class="text-xl mb-1">⭐</span>
-            <span class="text-base font-extrabold text-gray-900">{book.rating}</span>
-            <span class="text-[10px] text-gray-400 font-semibold uppercase tracking-wide mt-0.5">Rating</span>
-          </div>
+        <div class="text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-4 tab-prose">
+          <Fragment set:html={marked.parse(book.description || '')} />
         </div>
 
-        <!-- WHAT YOU LEARN -->
-        <div class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
-          <h3 class="text-sm font-extrabold text-gray-900 uppercase tracking-wider mb-3 flex items-center gap-2">
-            <span class="text-green-500">✏️</span> What You Will Learn
-          </h3>
-          <ul class="grid grid-cols-1 gap-2">
-            {book.learnList.map((item) => (
-              <li class="flex items-start gap-2 text-sm text-gray-600">
-                <span class="text-green-500 font-extrabold text-base leading-none mt-0.5 flex-shrink-0">✓</span>
-                <span>{item}</span>
-              </li>
-            ))}
+        <!-- STATS / OVERVIEW CAROUSEL -->
+        <div class="relative mt-4">
+          <div class="flex overflow-x-auto gap-4 scrollbar-hide py-2 px-1 snap-x" id="book-stats-slider">
+            
+            <!-- Reading Age -->
+            <div class="flex flex-col items-center justify-start text-center min-w-[100px] snap-start">
+              <span class="text-xs text-gray-500 mb-1">Reading age</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-gray-700 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 11c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4z" />
+              </svg>
+              <span class="text-sm font-bold text-gray-900 leading-tight">{book.level || '3 - 7 years'}</span>
+            </div>
+
+            <!-- Print length -->
+            <div class="flex flex-col items-center justify-start text-center min-w-[100px] snap-start">
+              <span class="text-xs text-gray-500 mb-1">Print length</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-gray-700 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+              <span class="text-sm font-bold text-gray-900 leading-tight">{book.pages} pages</span>
+            </div>
+
+            <!-- Language -->
+            <div class="flex flex-col items-center justify-start text-center min-w-[100px] snap-start">
+              <span class="text-xs text-gray-500 mb-1">Language</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-gray-700 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span class="text-sm font-bold text-gray-900 leading-tight">{book.language || 'English'}</span>
+            </div>
+
+            <!-- Dimensions -->
+            <div class="flex flex-col items-center justify-start text-center min-w-[100px] snap-start">
+              <span class="text-xs text-gray-500 mb-1">Dimensions</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-gray-700 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+              </svg>
+              <span class="text-sm font-bold text-gray-900 leading-tight">{book.dimensions || '-'}</span>
+            </div>
+
+            <!-- Publication date -->
+            <div class="flex flex-col items-center justify-start text-center min-w-[100px] snap-start">
+              <span class="text-xs text-gray-500 mb-1">Publication date</span>
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-gray-700 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span class="text-sm font-bold text-gray-900 leading-tight">{book.publicationDate || book.updated}</span>
+            </div>
+            
+          </div>
+          <!-- Next Button -->
+          <button onclick="document.getElementById('book-stats-slider').scrollBy({left: 150, behavior: 'smooth'})" class="absolute right-0 top-1/2 -translate-y-1/2 bg-white border border-gray-200 shadow-sm rounded-full p-1.5 hover:bg-gray-50 z-10 hidden sm:block">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="mt-4 border-t border-gray-100 pt-4 pb-4">
+          <button onclick="document.getElementById('product-details').classList.toggle('hidden')" class="text-blue-600 hover:text-blue-800 text-sm font-medium focus:outline-none">
+            See all details
+          </button>
+        </div>
+        
+        <div id="product-details" class="hidden mt-4 bg-white border border-gray-100 rounded-xl p-5 shadow-sm">
+          <h3 class="text-base font-bold text-gray-900 mb-3">Product details</h3>
+          <ul class="text-sm text-gray-700 space-y-2">
+            {book.asin && <li><span class="font-bold text-gray-900 inline-block w-32">ASIN</span> : {book.asin}</li>}
+            {book.publisher && <li><span class="font-bold text-gray-900 inline-block w-32">Publisher</span> : {book.publisher}</li>}
+            {(book.publicationDate || book.updated) && <li><span class="font-bold text-gray-900 inline-block w-32">Publication date</span> : {book.publicationDate || book.updated}</li>}
+            <li><span class="font-bold text-gray-900 inline-block w-32">Language</span> : {book.language || 'English'}</li>
+            {book.pages && <li><span class="font-bold text-gray-900 inline-block w-32">Print length</span> : {book.pages} pages</li>}
+            {book.isbn13 && <li><span class="font-bold text-gray-900 inline-block w-32">ISBN-13</span> : {book.isbn13}</li>}
+            {book.itemWeight && <li><span class="font-bold text-gray-900 inline-block w-32">Item Weight</span> : {book.itemWeight}</li>}
+            {book.level && <li><span class="font-bold text-gray-900 inline-block w-32">Reading age</span> : {book.level}</li>}
+            {book.dimensions && <li><span class="font-bold text-gray-900 inline-block w-32">Dimensions</span> : {book.dimensions}</li>}
           </ul>
         </div>
 
+        <!-- WHAT YOU LEARN -->
+        {book.learnList && book.learnList.length > 0 && (
+          <div class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+            <h3 class="text-sm font-extrabold text-gray-900 uppercase tracking-wider mb-3 flex items-center gap-2">
+              <span class="text-green-500">✏️</span> What You Will Learn
+            </h3>
+            <ul class="grid grid-cols-1 gap-2">
+              {book.learnList.map((item) => (
+                <li class="flex items-start gap-2 text-sm text-gray-600">
+                  <span class="text-green-500 font-extrabold text-base leading-none mt-0.5 flex-shrink-0">✓</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
         <!-- INFO TABS -->
-        <div class="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm" id="info-tabs-card">
-          <div class="flex overflow-x-auto border-b border-gray-100 bg-gray-50" id="info-tab-headers">
-            {book.infoTabs.map((tab, idx) => (
-              <button
-                class={`flex-shrink-0 px-4 py-3 text-xs font-bold transition-all whitespace-nowrap border-b-2 info-tab-btn ${idx === 0 ? 'border-gray-800 text-gray-900 bg-white' : 'border-transparent text-gray-500 hover:text-gray-800'}`}
-                data-tab-id={tab.id}
-              >
-                {tab.label}
-              </button>
-            ))}
+        {book.infoTabs && book.infoTabs.length > 0 && (
+          <div class="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm" id="info-tabs-card">
+            <div class="flex overflow-x-auto border-b border-gray-100 bg-gray-50" id="info-tab-headers">
+              {book.infoTabs.map((tab, idx) => (
+                <button
+                  class={`flex-shrink-0 px-4 py-3 text-xs font-bold transition-all whitespace-nowrap border-b-2 info-tab-btn ${idx === 0 ? 'border-gray-800 text-gray-900 bg-white' : 'border-transparent text-gray-500 hover:text-gray-800'}`}
+                  data-tab-id={tab.id}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+            <div class="p-5 sm:p-6">
+              {book.infoTabs.map((tab, idx) => (
+                <div
+                  class={`tab-prose info-tab-content ${idx !== 0 ? 'hidden' : ''}`}
+                  data-content-id={tab.id}
+                >
+                  <Fragment set:html={tab.content} />
+                </div>
+              ))}
+            </div>
           </div>
-          <div class="p-5 sm:p-6">
-            {book.infoTabs.map((tab, idx) => (
-              <div
-                class={`tab-prose info-tab-content ${idx !== 0 ? 'hidden' : ''}`}
-                data-content-id={tab.id}
-              >
-                <Fragment set:html={tab.content} />
-              </div>
-            ))}
-          </div>
-        </div>
+        )}
 
       </div>
 
       <!-- RIGHT: BUY BOX (3 cols) -->
       <div class="lg:col-span-3 flex flex-col gap-4 lg:sticky lg:top-20">
 
-        <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-md flex flex-col gap-4">
-
-          <div class="text-center border-b border-gray-100 pb-4">
-            <span class="text-xs text-gray-400 font-semibold uppercase tracking-wider block mb-1">Regular Price</span>
-            <div class="flex items-baseline justify-center gap-3">
-              <span class="text-gray-300 line-through text-sm font-semibold">₹499</span>
-              <span class="text-2xl font-extrabold text-green-600">FREE</span>
-            </div>
-            <span class="inline-block mt-1.5 bg-green-100 text-green-700 text-[10px] font-extrabold uppercase tracking-widest px-3 py-1 rounded-full">
-              100% OFF 🎉
-            </span>
-          </div>
-
-          <div class="flex flex-col gap-2.5">
-            <p class="text-xs text-gray-500 font-semibold text-center">📚 Love our free books? Stay connected!</p>
-            <a
-              href={book.whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl font-bold text-sm bg-[#25d366] hover:bg-[#1eb858] text-white transition-all shadow-sm"
-            >
-              🔔 Join WhatsApp Channel
-            </a>
-            <a
-              href={book.youtubeUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl font-bold text-sm bg-red-600 hover:bg-red-700 text-white transition-all shadow-sm"
-            >
-              ▶ Subscribe on YouTube
-            </a>
-          </div>
-
-          <!-- BLACK DOWNLOAD BUTTON -->
-          <div class="border-t border-gray-100 pt-4">
-            <a
-              href={book.pdfUrl}
-              download
-              id="download-btn-trigger"
-              class="w-full flex items-center justify-center gap-3 py-4 rounded-2xl font-extrabold text-white text-sm shadow-lg hover:shadow-xl bg-[#1b1b2f] hover:bg-black transition-all transform hover:-translate-y-px"
-            >
-              ⬇ Download Free PDF
-            </a>
-            <p class="text-center text-[10px] text-gray-400 mt-2 font-semibold uppercase tracking-wider">
-              🔒 Secure · No sign-up · Instant download
-            </p>
-          </div>
-
-          <div class="border-t border-gray-100 pt-4 flex flex-col gap-2">
-            <div class="flex items-start gap-2 text-xs text-gray-600">
-              <span class="text-green-500 mt-0.5 flex-shrink-0">✓</span>
-              <span><strong class="text-gray-800">Instant Access</strong> — No waiting, no email</span>
-            </div>
-            <div class="flex items-start gap-2 text-xs text-gray-600">
-              <span class="text-green-500 mt-0.5 flex-shrink-0">✓</span>
-              <span><strong class="text-gray-800">Print-friendly</strong> — Great as a classroom book</span>
-            </div>
-            <div class="flex items-start gap-2 text-xs text-gray-600">
-              <span class="text-green-500 mt-0.5 flex-shrink-0">✓</span>
-              <span><strong class="text-gray-800">Updated {book.updated}</strong> — Latest edition</span>
+        { !book.isPremium && (
+          <div class="bg-white border border-gray-200 rounded-2xl p-5 shadow-md flex flex-col gap-4">
+            <div>
+              <a
+                href={book.pdfUrl}
+                download
+                id="download-btn-trigger"
+                class="w-full flex items-center justify-center gap-3 py-4 rounded-2xl font-extrabold text-white text-sm shadow-lg hover:shadow-xl bg-[#1b1b2f] hover:bg-black transition-all transform hover:-translate-y-px"
+              >
+                ⬇ Download Free PDF
+              </a>
+              <p class="text-center text-[10px] text-gray-400 mt-2 font-semibold uppercase tracking-wider">
+                🔒 Secure · No sign-up · Instant download
+              </p>
             </div>
           </div>
-        </div>
+        )}
 
-        <!-- Share block -->
-        <div class="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm text-center">
-          <p class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Share this free book</p>
-          <div class="flex items-center justify-center gap-2">
-            <a
-              href={shareWhatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="w-9 h-9 rounded-full bg-[#25d366] hover:bg-[#1eb858] text-white flex items-center justify-center transition-colors shadow-sm text-sm"
-            >
-              💬
-            </a>
-            <a
-              href={shareTwitterUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="w-9 h-9 rounded-full bg-black hover:bg-gray-800 text-white flex items-center justify-center transition-colors shadow-sm text-sm"
-            >
-              𝕏
-            </a>
-          </div>
-        </div>
+
 
         <!-- Ad Slot -->
         <div class="flex justify-center w-full">
@@ -288,12 +351,12 @@ const shareTwitterUrl = "https://twitter.com/intent/tweet?text=" + encodeURIComp
             href={`/books/${b.slug}`}
             class="other-book-card group flex-shrink-0 w-44 flex flex-col cursor-pointer"
           >
-            <div class="w-full aspect-square rounded-xl overflow-hidden border border-gray-100 shadow-sm mb-3 relative">
-              {b.coverImage ? (
+            <div class="w-full aspect-[4/5] rounded-xl overflow-hidden border border-gray-100 shadow-sm mb-3 relative bg-gray-50 flex items-center justify-center">
+              {b.image ? (
                 <img
-                  src={b.coverImage}
+                  src={b.image}
                   alt={b.title}
-                  class="w-full h-full object-cover block group-hover:scale-105 transition-transform duration-300"
+                  class="w-full h-full object-contain block group-hover:scale-105 transition-transform duration-300"
                   loading="lazy"
                 />
               ) : (
