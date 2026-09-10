@@ -340,16 +340,18 @@ const keywords = book.keywords || '';
 
   <!-- OTHER BOOKS SECTION -->
   <div class="max-w-7xl mx-auto px-4 sm:px-5 pb-16">
-    <div class="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
+    <div class="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden relative group/slider">
       <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
         <h2 class="text-lg font-extrabold text-gray-900">More Free Books from CodesCompiler</h2>
         <a href="/books" class="text-sm font-bold text-[#04AA6D] hover:underline">View All →</a>
       </div>
-      <div class="flex gap-4 overflow-x-auto px-6 py-5 scrollbar-none">
+      <button onclick="document.getElementById('other-books-slider').scrollBy({left: -400, behavior: 'smooth'})" class="absolute left-2 top-[55%] -translate-y-1/2 bg-white border border-gray-200 shadow-md rounded-full p-2 hover:bg-gray-50 z-10 hidden sm:flex opacity-0 group-hover/slider:opacity-100 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg></button>
+      <button onclick="document.getElementById('other-books-slider').scrollBy({left: 400, behavior: 'smooth'})" class="absolute right-2 top-[55%] -translate-y-1/2 bg-white border border-gray-200 shadow-md rounded-full p-2 hover:bg-gray-50 z-10 hidden sm:flex opacity-0 group-hover/slider:opacity-100 transition-opacity"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg></button>
+      <div id="other-books-slider" class="flex gap-4 overflow-x-auto px-6 py-5 scrollbar-none snap-x" style="scrollbar-width: none; -ms-overflow-style: none;">
         {otherBooks.map((b) => (
           <a
             href={`/books/${b.slug}`}
-            class="other-book-card group flex-shrink-0 w-44 flex flex-col cursor-pointer"
+            class="other-book-card group flex-shrink-0 w-44 flex flex-col cursor-pointer snap-start"
           >
             <div class="w-full aspect-[4/5] rounded-xl overflow-hidden border border-gray-100 shadow-sm mb-3 relative bg-gray-50 flex items-center justify-center">
               {b.image ? (
