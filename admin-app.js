@@ -814,7 +814,7 @@ async function startSequentialUpload(type) {
 
   const btnSubmit = $('btn-submit-upload-' + type);
   const btnCancel = $('btn-cancel-upload-' + type);
-  if (btnSubmit) { btnSubmit.disabled = true; btnSubmit.innerHTML = '⏳ Submitting...'; }
+  if (btnSubmit) { btnSubmit.disabled = true; btnSubmit.innerHTML = '⏳ Submitting &amp; Updating Pages...'; }
   if (btnCancel) { btnCancel.style.display = 'none'; }
 
   const progressBar = $('progress-bar-container-' + type);
@@ -829,6 +829,7 @@ async function startSequentialUpload(type) {
   let okCount = 0;
   let failCount = 0;
   const total = files.length;
+  const confirmationList = [];
 
   for (let i = 0; i < total; i++) {
     const file = files[i];
@@ -837,14 +838,12 @@ async function startSequentialUpload(type) {
     const itemBadge = $('staged-status-badge-' + type + '-' + i);
     const itemRow = $('staged-item-' + type + '-' + i);
 
-    // Update Progress Bar
     const currentNum = i + 1;
     const pct = Math.round((currentNum / total) * 100);
-    if (progressText) progressText.textContent = `Submitting tutorial ${currentNum} of ${total}: ${file.name}`;
+    if (progressText) progressText.textContent = `Submitting page ${currentNum} of ${total}: ${file.name}`;
     if (progressPercent) progressPercent.textContent = `${pct}%`;
     if (progressFill) progressFill.style.width = `${pct}%`;
 
-    // Highlight current row being submitted
     if (itemRow) {
       itemRow.style.background = '#f0f9ff';
       itemRow.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
@@ -859,11 +858,16 @@ async function startSequentialUpload(type) {
       if (itemText) { itemText.textContent = `Wrong file type. Expected: ${allowedExt[type].join(' or ')}`; itemText.style.color = '#b91c1c'; }
       if (itemBadge) itemBadge.innerHTML = '<span class="badge" style="background:#fee2e2;color:#991b1b;">Failed</span>';
       if (itemRow) itemRow.style.background = '#fff5f5';
+      confirmationList.push({ file: file.name, title: file.name, ok: false, error: 'Invalid file format' });
       continue;
     }
 
     try {
       const content = await file.text();
+      let extractedTitle = file.name;
+      const tm = content.match(/^title:\s*["']?([^"\n\r]+)["']?/m);
+      if (tm && tm[1]) extractedTitle = tm[1].trim();
+
       const errs = validateContentFile(type, content, file.name);
 
       if (errs.length) {
@@ -872,25 +876,27 @@ async function startSequentialUpload(type) {
         if (itemText) { itemText.textContent = 'Validation error: ' + errs.join(' · '); itemText.style.color = '#b91c1c'; }
         if (itemBadge) itemBadge.innerHTML = '<span class="badge" style="background:#fee2e2;color:#991b1b;">Validation Error</span>';
         if (itemRow) itemRow.style.background = '#fff5f5';
+        confirmationList.push({ file: file.name, title: extractedTitle, ok: false, error: errs.join(' · ') });
         continue;
       }
 
-      // Submit file one by one to API endpoint
       const payload = { filename: file.name, content };
       const r = await post(apiMap[type], payload);
 
       if (r.ok !== false) {
         okCount++;
         if (itemIcon) itemIcon.textContent = '✅';
-        if (itemText) { itemText.textContent = 'Submitted & published successfully ✅'; itemText.style.color = '#15803d'; }
-        if (itemBadge) itemBadge.innerHTML = '<span class="badge bpub">Published</span>';
+        if (itemText) { itemText.textContent = 'Updation Confirmed & Published ✅ (' + extractedTitle + ')'; itemText.style.color = '#15803d'; }
+        if (itemBadge) itemBadge.innerHTML = '<span class="badge bpub">Confirmed ✅</span>';
         if (itemRow) itemRow.style.background = '#f0fdf4';
+        confirmationList.push({ file: file.name, title: extractedTitle, ok: true });
       } else {
         failCount++;
         if (itemIcon) itemIcon.textContent = '❌';
         if (itemText) { itemText.textContent = r.error || 'Server save failed'; itemText.style.color = '#b91c1c'; }
         if (itemBadge) itemBadge.innerHTML = '<span class="badge" style="background:#fee2e2;color:#991b1b;">Server Error</span>';
         if (itemRow) itemRow.style.background = '#fff5f5';
+        confirmationList.push({ file: file.name, title: extractedTitle, ok: false, error: r.error || 'Server error' });
       }
     } catch (err) {
       failCount++;
@@ -898,55 +904,91 @@ async function startSequentialUpload(type) {
       if (itemText) { itemText.textContent = 'Read error: ' + err.message; itemText.style.color = '#b91c1c'; }
       if (itemBadge) itemBadge.innerHTML = '<span class="badge" style="background:#fee2e2;color:#991b1b;">Read Error</span>';
       if (itemRow) itemRow.style.background = '#fff5f5';
+      confirmationList.push({ file: file.name, title: file.name, ok: false, error: err.message });
     }
 
-    // Small delay between submissions to allow visible UI updates for each file
     await new Promise(res => setTimeout(res, 50));
   }
 
-  // Finished submitting all files
-  if (progressText) progressText.textContent = `Completed! Processed ${total} file${total > 1 ? 's' : ''}.`;
+  if (progressText) progressText.textContent = 'Completed! Updation confirmed for ' + okCount + ' of ' + total + ' pages.';
   if (progressPercent) progressPercent.textContent = '100%';
   if (progressFill) progressFill.style.width = '100%';
 
   if (btnSubmit) {
     btnSubmit.disabled = false;
-    btnSubmit.innerHTML = `✅ Complete (${okCount} Published, ${failCount} Failed)`;
+    btnSubmit.innerHTML = '✅ Updation Complete (' + okCount + ' Published, ' + failCount + ' Failed)';
     btnSubmit.style.background = okCount > 0 ? '#15803d' : '#b91c1c';
   }
 
   if (okCount > 0) {
     await loadAll();
-    // Re-render table in background to update total count and list
-    if (type === 'blog') renderBlogs();
-    else if (type === 'tutorial') renderTuts();
-    else if (type === 'page') renderPages();
-    else if (type === 'book') renderBooks();
-
-    // Re-render staged UI so completion status remains visible
-    renderStagedUploadsUI(type);
-    const newBtnSubmit = $('btn-submit-upload-' + type);
-    if (newBtnSubmit) {
-      newBtnSubmit.disabled = false;
-      newBtnSubmit.innerHTML = `✅ Complete (${okCount} Published, ${failCount} Failed)`;
-      newBtnSubmit.style.background = '#15803d';
-    }
-    const newProgressBar = $('progress-bar-container-' + type);
-    if (newProgressBar) newProgressBar.style.display = 'block';
-    const newProgressText = $('progress-text-' + type);
-    if (newProgressText) newProgressText.textContent = `Completed! Processed ${total} file${total > 1 ? 's' : ''}.`;
-    const newProgressPercent = $('progress-percent-' + type);
-    if (newProgressPercent) newProgressPercent.textContent = '100%';
-    const newProgressFill = $('progress-fill-' + type);
-    if (newProgressFill) newProgressFill.style.width = '100%';
+    if (type === 'blog') applyBlogFilters();
+    else if (type === 'tutorial') applyTutFilters();
   }
 
+  renderUploadConfirmationReport(type, confirmationList, okCount, failCount);
+
   if (okCount > 0 && failCount === 0) {
-    toast(`Successfully submitted and published all ${okCount} files! 🎉`);
+    toast('🎉 Updation Confirmed! All ' + okCount + ' pages published successfully.');
   } else if (okCount > 0 && failCount > 0) {
-    toast(`Submitted ${okCount} files, but ${failCount} failed. Check list below.`, false);
+    toast('Updation Confirmed for ' + okCount + ' pages (' + failCount + ' failed).', false);
   } else {
-    toast(`Submission failed for all ${failCount} files. Check format errors below.`, false);
+    toast('Submission failed for all ' + failCount + ' files.', false);
+  }
+}
+
+function renderUploadConfirmationReport(type, confirmationList, okCount, failCount) {
+  const existing = $('upload-confirmation-summary-' + type);
+  if (existing) existing.remove();
+
+  const container = document.createElement('div');
+  container.id = 'upload-confirmation-summary-' + type;
+  container.style.marginTop = '16px';
+  container.style.marginBottom = '16px';
+  container.style.padding = '16px';
+  container.style.background = okCount > 0 ? '#f0fdf4' : '#fff5f5';
+  container.style.border = okCount > 0 ? '1px solid #86efac' : '1px solid #fca5a5';
+  container.style.borderRadius = '6px';
+
+  let listItems = '';
+  confirmationList.forEach((item, idx) => {
+    listItems += `
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-bottom:${idx === confirmationList.length - 1 ? 'none' : '1px solid #e2e8f0'};">
+        <div style="overflow:hidden;margin-right:12px;">
+          <span style="font-weight:600;font-size:13px;color:#1e293b;">${idx + 1}. ${esc(item.title)}</span>
+          <span style="font-size:11px;color:#64748b;margin-left:6px;">(${esc(item.file)})</span>
+          ${item.error ? `<div style="font-size:11px;color:#b91c1c;margin-top:2px;">Error: ${esc(item.error)}</div>` : ''}
+        </div>
+        <div style="flex-shrink:0;">
+          ${item.ok 
+            ? '<span class="badge bpub" style="font-size:11px;padding:3px 8px;">✅ Updation Confirmed</span>' 
+            : '<span class="badge" style="background:#fee2e2;color:#991b1b;font-size:11px;padding:3px 8px;">❌ Failed</span>'}
+        </div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:10px;">
+      <div>
+        <h4 style="font-size:15px;font-weight:700;color:${okCount > 0 ? '#166534' : '#991b1b'};margin:0 0 4px;display:flex;align-items:center;gap:8px;">
+          <span>🎉 Updation Confirmation Report</span>
+        </h4>
+        <div style="font-size:12px;color:#15803d;">
+          Processed ${confirmationList.length} page(s): <strong>${okCount} Confirmed &amp; Published</strong> ${failCount > 0 ? `<span style="color:#b91c1c">(${failCount} Failed)</span>` : ''}
+        </div>
+      </div>
+      <button class="btn bg bs" onclick="clearStagedUploads('${type}')" style="font-size:12px;">✕ Done / Clear Report</button>
+    </div>
+    <div style="background:#fff;border:1px solid ${okCount > 0 ? '#bbf7d0' : '#fecaca'};border-radius:4px;max-height:260px;overflow-y:auto;">
+      ${listItems}
+    </div>
+  `;
+
+  const resultsEl = $('upload-results-' + type);
+  if (resultsEl) {
+    resultsEl.prepend(container);
+    container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 }
 
@@ -1090,20 +1132,34 @@ window.saveQuickDraft = async function() {
 
 // ══ TUTORIALS ══
 let tutFilters = { q: '', cat: '' };
+let tutPagination = { page: 1, pageSize: 10 };
+let selectedTuts = new Set();
+let currentTutFiles = [];
+
 function renderTuts(){
   $('ptitle').textContent='Tutorials';
   $('tact').innerHTML=`<button class="btn bp" onclick="newTut()">+ Add New Tutorial</button><button class="btn bg" style="margin-left:8px;" onclick="toggleUploadPanel('tutorial'); document.getElementById('upload-panel-tutorial').scrollIntoView({behavior:'smooth'})">📥 Import &amp; Upload</button>`;
   
   let h = `
-    <div style="display:flex;gap:10px;margin-bottom:18px;background:#fff;padding:14px;border-radius:4px;border:1px solid #c3c4c7;align-items:center;flex-wrap:wrap">
-      <div style="font-size:13px;font-weight:600;color:#3c434a;margin-right:4px">🔍 Filter Tutorials:</div>
-      <input class="input-text" placeholder="Search by title..." oninput="tutFilterChange('q', this.value)" style="width:250px" value="${esc(tutFilters.q)}">
-      <select class="input-text" onchange="tutFilterChange('cat', this.value)" style="width:180px">
+    <div style="display:flex;gap:12px;margin-bottom:14px;background:#fff;padding:14px;border-radius:4px;border:1px solid #c3c4c7;align-items:center;flex-wrap:wrap">
+      <div style="font-size:13px;font-weight:600;color:#3c434a;margin-right:2px">🔍 Filter Tutorials:</div>
+      <input class="input-text" placeholder="Search by title..." oninput="tutFilterChange('q', this.value)" style="width:220px" value="${esc(tutFilters.q)}">
+      <select class="input-text" onchange="tutFilterChange('cat', this.value)" style="width:160px">
         <option value="">All Categories</option>
         ${TCAT.map(c => `<option value="${c}" ${tutFilters.cat===c?'selected':''}>${CATNAME[c]||c}</option>`).join('')}
       </select>
-      ${(tutFilters.q||tutFilters.cat) ? `<button class="btn bg bs" onclick="tutFilters={q:'',cat:''};renderTuts()">Clear Filters</button>` : ''}
+      <div style="display:flex;align-items:center;gap:6px;margin-left:auto;">
+        <span style="font-size:12px;font-weight:600;color:#646970;">Show per page:</span>
+        <select class="input-text" onchange="tutPageSizeChange(this.value)" style="width:85px">
+          <option value="10" ${tutPagination.pageSize===10?'selected':''}>10</option>
+          <option value="30" ${tutPagination.pageSize===30?'selected':''}>30</option>
+          <option value="50" ${tutPagination.pageSize===50?'selected':''}>50</option>
+          <option value="all" ${tutPagination.pageSize==='all'?'selected':''}>All</option>
+        </select>
+      </div>
+      ${(tutFilters.q||tutFilters.cat) ? `<button class="btn bg bs" onclick="tutFilters={q:'',cat:''};tutPagination.page=1;renderTuts()">Clear Filters</button>` : ''}
     </div>
+    <div id="tut_bulk_bar" style="margin-bottom:14px;"></div>
     <div id="tut_table_container"></div>
     ${renderUploadPanel('tutorial')}
   `;
@@ -1111,8 +1167,70 @@ function renderTuts(){
   applyTutFilters();
 }
 
+function tutPageSizeChange(val) {
+  tutPagination.pageSize = val === 'all' ? 'all' : (parseInt(val, 10) || 10);
+  tutPagination.page = 1;
+  applyTutFilters();
+}
+
+function tutGoToPage(p) {
+  tutPagination.page = p;
+  applyTutFilters();
+}
+
+function updateTutBulkBar() {
+  const bar = $('tut_bulk_bar');
+  if(!bar) return;
+  if(selectedTuts.size === 0) {
+    bar.style.display = 'none';
+    bar.innerHTML = '';
+    return;
+  }
+  bar.style.display = 'block';
+  bar.innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px;background:#e7f3ff;border:1px solid #2271b1;padding:10px 14px;border-radius:4px;">
+      <span style="font-weight:600;color:#1d2327;font-size:13px;">📌 ${selectedTuts.size} tutorial(s) selected</span>
+      <div style="display:flex;gap:8px;margin-left:auto;">
+        <button class="btn" style="background:#2271b1;color:#fff;" onclick="bulkEditTutsModal()">🏷️ Bulk Edit Category / Author</button>
+        <button class="btn" style="background:#d63638;color:#fff;" onclick="bulkDeleteTuts()">🗑️ Bulk Move to Trash</button>
+        <button class="btn bg" onclick="clearTutSelection()">Clear Selection</button>
+      </div>
+    </div>
+  `;
+}
+
+function toggleSelectAllTuts(checked) {
+  if(checked) {
+    currentTutFiles.forEach(f => selectedTuts.add(f));
+  } else {
+    currentTutFiles.forEach(f => selectedTuts.delete(f));
+  }
+  updateTutBulkBar();
+  document.querySelectorAll('.tut-cb').forEach(cb => cb.checked = checked);
+}
+
+function toggleTutSelect(file, checked) {
+  if(checked) selectedTuts.add(file);
+  else selectedTuts.delete(file);
+  
+  const selectAllCb = $('tut_select_all');
+  if(selectAllCb) {
+    selectAllCb.checked = currentTutFiles.length > 0 && currentTutFiles.every(f => selectedTuts.has(f));
+  }
+  updateTutBulkBar();
+}
+
+function clearTutSelection() {
+  selectedTuts.clear();
+  const selectAllCb = $('tut_select_all');
+  if(selectAllCb) selectAllCb.checked = false;
+  document.querySelectorAll('.tut-cb').forEach(cb => cb.checked = false);
+  updateTutBulkBar();
+}
+
 function tutFilterChange(key, val) {
   tutFilters[key] = val;
+  tutPagination.page = 1;
   applyTutFilters();
   if(key === 'q') applyTutFilters(); else renderTuts();
 }
@@ -1128,13 +1246,67 @@ function applyTutFilters() {
 }
 
 function showTuts(f){
+  const totalItems = f.length;
+  const pageSize = tutPagination.pageSize === 'all' ? (totalItems || 1) : (tutPagination.pageSize || 10);
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+  
+  if (tutPagination.page > totalPages) tutPagination.page = totalPages;
+  if (tutPagination.page < 1) tutPagination.page = 1;
+  const currentPage = tutPagination.page;
+
+  const startIdx = (currentPage - 1) * pageSize;
+  const endIdx = Math.min(startIdx + pageSize, totalItems);
+  const pagedItems = f.slice(startIdx, endIdx);
+
+  currentTutFiles = pagedItems.map(t => t.file);
+  const allSelected = currentTutFiles.length > 0 && currentTutFiles.every(file => selectedTuts.has(file));
+  
   let h='';
-  h+=`<div class="card"><table><thead><tr><th style="width:40px">#</th><th>Title</th><th>Language</th><th>Lesson #</th><th>File</th></tr></thead><tbody>`;
-  if(!f.length)h+=`<tr><td colspan="5" class="empty">No tutorials found</td></tr>`;
-  f.forEach((t,i)=>{
+
+  const renderPaginationControls = () => {
+    if (totalItems === 0) return '';
+    
+    let btns = '';
+    btns += `<button class="btn bg bs" ${currentPage === 1 ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''} onclick="tutGoToPage(${currentPage - 1})">‹ Prev</button>`;
+    
+    let startP = Math.max(1, currentPage - 2);
+    let endP = Math.min(totalPages, startP + 4);
+    if (endP - startP < 4) startP = Math.max(1, endP - 4);
+
+    for (let p = startP; p <= endP; p++) {
+      btns += `<button class="btn ${p === currentPage ? 'bp' : 'bg bs'}" style="min-width:32px;padding:4px 8px;" onclick="tutGoToPage(${p})">${p}</button>`;
+    }
+    
+    btns += `<button class="btn bg bs" ${currentPage === totalPages ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''} onclick="tutGoToPage(${currentPage + 1})">Next ›</button>`;
+
+    return `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#f8fafc;border-top:1px solid #c3c4c7;border-bottom-left-radius:4px;border-bottom-right-radius:4px;flex-wrap:wrap;gap:10px;">
+        <div style="font-size:12px;color:#646970;">
+          Showing <strong>${totalItems > 0 ? startIdx + 1 : 0}</strong> to <strong>${endIdx}</strong> of <strong>${totalItems}</strong> tutorials (Page ${currentPage} of ${totalPages})
+        </div>
+        <div style="display:flex;gap:4px;align-items:center;">
+          ${btns}
+        </div>
+      </div>
+    `;
+  };
+
+  h+=`<div class="card" style="margin-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0;"><table><thead><tr>
+    <th style="width:36px;text-align:center;"><input type="checkbox" id="tut_select_all" ${allSelected?'checked':''} onchange="toggleSelectAllTuts(this.checked)"></th>
+    <th style="width:40px">#</th>
+    <th>Title</th>
+    <th>Language</th>
+    <th>Lesson #</th>
+    <th>File</th>
+  </tr></thead><tbody>`;
+  if(!pagedItems.length) h+=`<tr><td colspan="6" class="empty">No tutorials found</td></tr>`;
+  pagedItems.forEach((t,i)=>{
+    const itemNum = startIdx + i + 1;
     const slug = t.file.replace(/\.mdx?$/, '');
-    h+=`<tr>
-      <td>${i+1}</td>
+    const isSelected = selectedTuts.has(t.file);
+    h+=`<tr style="${isSelected?'background:#f0f6fc;':''}">
+      <td style="text-align:center;"><input type="checkbox" class="tut-cb" value="${esc(t.file)}" ${isSelected?'checked':''} onchange="toggleTutSelect('${esc(t.file)}', this.checked)"></td>
+      <td>${itemNum}</td>
       <td>
         <strong>${esc(t.title)}</strong>
         <div class="row-actions" style="font-size:12px; margin-top:4px;">
@@ -1149,8 +1321,77 @@ function showTuts(f){
     </tr>`;
   });
   h+=`</tbody></table></div>`;
+  h+=renderPaginationControls();
   const cont = $('tut_table_container');
   if(cont) cont.innerHTML=h;
+  updateTutBulkBar();
+}
+
+async function bulkDeleteTuts() {
+  if(selectedTuts.size === 0) return;
+  const count = selectedTuts.size;
+  openConfirm(`Are you sure you want to move ${count} selected tutorial(s) to Trash?`, async () => {
+    try {
+      const res = await post('/api/tutorials/bulk-delete', { filenames: Array.from(selectedTuts) });
+      if(res.ok) {
+        toast(`Successfully moved ${res.count || count} tutorial(s) to Trash! 🗑️`);
+        selectedTuts.clear();
+        await loadAll();
+        renderTuts();
+      } else {
+        toast(res.error || 'Failed to delete selected tutorials', false);
+      }
+    } catch(err) {
+      toast('Error performing bulk delete: ' + err.message, false);
+    }
+  });
+}
+
+function bulkEditTutsModal() {
+  if(selectedTuts.size === 0) return;
+  const count = selectedTuts.size;
+  const bodyHtml = `
+    <div style="padding:10px 0;">
+      <p style="margin-bottom:14px;color:#3c434a;font-size:14px;">Updating <strong>${count} selected tutorial(s)</strong>. Leave any field blank to keep existing value.</p>
+      <div style="margin-bottom:14px;">
+        <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;color:#3c434a;">Change Language / Category</label>
+        <select id="bulk_tut_cat" class="input-text" style="width:100%;">
+          <option value="">-- No Change --</option>
+          ${TCAT.map(c => `<option value="${c}">${CATNAME[c] || c}</option>`).join('')}
+        </select>
+      </div>
+      <div style="margin-bottom:14px;">
+        <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;color:#3c434a;">Change Author</label>
+        <input id="bulk_tut_author" class="input-text" style="width:100%;" placeholder="e.g. CodesCompiler or leave blank">
+      </div>
+    </div>
+  `;
+  openEditor('Bulk Edit (' + count + ' Tutorials)', bodyHtml, async () => {
+    const cat = $('bulk_tut_cat').value;
+    const author = $('bulk_tut_author').value.trim();
+    if(!cat && !author) {
+      toast('No changes selected', false);
+      return;
+    }
+    try {
+      const res = await post('/api/tutorials/bulk-edit', {
+        filenames: Array.from(selectedTuts),
+        category: cat || undefined,
+        author: author || undefined
+      });
+      if(res.ok) {
+        toast('Successfully updated ' + (res.count || count) + ' tutorial(s)! 🎉');
+        selectedTuts.clear();
+        closeModal();
+        await loadAll();
+        renderTuts();
+      } else {
+        toast(res.error || 'Failed to edit tutorials', false);
+      }
+    } catch(err) {
+      toast('Error performing bulk edit: ' + err.message, false);
+    }
+  });
 }
 
 function tutForm(t={}){
@@ -1252,6 +1493,7 @@ function buildTutContent(){
 
 // ══ BLOGS ══
 let blogFilters = { q: '', cat: '', status: '', author: '' };
+let blogPagination = { page: 1, pageSize: 10 };
 
 function renderBlogs(){
   $('ptitle').textContent='Posts';
@@ -1276,7 +1518,16 @@ function renderBlogs(){
         <option value="">All Authors</option>
         ${authors.map(a => `<option value="${a}" ${blogFilters.author===a?'selected':''}>${a}</option>`).join('')}
       </select>
-      ${(blogFilters.q||blogFilters.cat||blogFilters.status||blogFilters.author) ? `<button class="btn bg bs" onclick="blogFilters={q:'',cat:'',status:'',author:''};renderBlogs()">Clear Filters</button>` : ''}
+      <div style="display:flex;align-items:center;gap:6px;margin-left:auto;">
+        <span style="font-size:12px;font-weight:600;color:#646970;">Show per page:</span>
+        <select class="input-text" onchange="blogPageSizeChange(this.value)" style="width:85px">
+          <option value="10" ${blogPagination.pageSize===10?'selected':''}>10</option>
+          <option value="30" ${blogPagination.pageSize===30?'selected':''}>30</option>
+          <option value="50" ${blogPagination.pageSize===50?'selected':''}>50</option>
+          <option value="all" ${blogPagination.pageSize==='all'?'selected':''}>All</option>
+        </select>
+      </div>
+      ${(blogFilters.q||blogFilters.cat||blogFilters.status||blogFilters.author) ? `<button class="btn bg bs" onclick="blogFilters={q:'',cat:'',status:'',author:''};blogPagination.page=1;renderBlogs()">Clear Filters</button>` : ''}
     </div>
     <div id="blog_table_container"></div>
     ${renderUploadPanel('blog')}
@@ -1285,11 +1536,21 @@ function renderBlogs(){
   applyBlogFilters();
 }
 
+function blogPageSizeChange(val) {
+  blogPagination.pageSize = val === 'all' ? 'all' : (parseInt(val, 10) || 10);
+  blogPagination.page = 1;
+  applyBlogFilters();
+}
+
+function blogGoToPage(p) {
+  blogPagination.page = p;
+  applyBlogFilters();
+}
+
 function blogFilter(key, val) {
   blogFilters[key] = val;
+  blogPagination.page = 1;
   applyBlogFilters();
-  // If clear button state needs to update, we just re-render the whole header or update dynamically. 
-  // For simplicity, re-rendering the whole page works since it's local state.
   if(key === 'q') applyBlogFilters(); else renderBlogs(); 
 }
 
@@ -1310,14 +1571,51 @@ function applyBlogFilters() {
 }
 
 function showBlogs(list){
-  let h=`<div class="card"><table><thead><tr><th style="width:40px">#</th><th>Title</th><th>Category</th><th>Author</th><th>Date</th><th>Status</th></tr></thead><tbody>`;
-  if(!list.length)h+=`<tr><td colspan="6" class="empty">No posts match your filters.</td></tr>`;
-  list.forEach((b,i)=>{
+  const totalItems = list.length;
+  const pageSize = blogPagination.pageSize === 'all' ? (totalItems || 1) : (blogPagination.pageSize || 10);
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+
+  if (blogPagination.page > totalPages) blogPagination.page = totalPages;
+  if (blogPagination.page < 1) blogPagination.page = 1;
+  const currentPage = blogPagination.page;
+
+  const startIdx = (currentPage - 1) * pageSize;
+  const endIdx = Math.min(startIdx + pageSize, totalItems);
+  const pagedList = list.slice(startIdx, endIdx);
+
+  const renderPaginationControls = () => {
+    if (totalItems === 0) return '';
+    let btns = '';
+    btns += `<button class="btn bg bs" ${currentPage === 1 ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''} onclick="blogGoToPage(${currentPage - 1})">‹ Prev</button>`;
+    let startP = Math.max(1, currentPage - 2);
+    let endP = Math.min(totalPages, startP + 4);
+    if (endP - startP < 4) startP = Math.max(1, endP - 4);
+    for (let p = startP; p <= endP; p++) {
+      btns += `<button class="btn ${p === currentPage ? 'bp' : 'bg bs'}" style="min-width:32px;padding:4px 8px;" onclick="blogGoToPage(${p})">${p}</button>`;
+    }
+    btns += `<button class="btn bg bs" ${currentPage === totalPages ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''} onclick="blogGoToPage(${currentPage + 1})">Next ›</button>`;
+
+    return `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#f8fafc;border-top:1px solid #c3c4c7;border-bottom-left-radius:4px;border-bottom-right-radius:4px;flex-wrap:wrap;gap:10px;">
+        <div style="font-size:12px;color:#646970;">
+          Showing <strong>${totalItems > 0 ? startIdx + 1 : 0}</strong> to <strong>${endIdx}</strong> of <strong>${totalItems}</strong> posts (Page ${currentPage} of ${totalPages})
+        </div>
+        <div style="display:flex;gap:4px;align-items:center;">
+          ${btns}
+        </div>
+      </div>
+    `;
+  };
+
+  let h=`<div class="card" style="margin-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0;"><table><thead><tr><th style="width:40px">#</th><th>Title</th><th>Category</th><th>Author</th><th>Date</th><th>Status</th></tr></thead><tbody>`;
+  if(!pagedList.length)h+=`<tr><td colspan="6" class="empty">No posts match your filters.</td></tr>`;
+  pagedList.forEach((b,i)=>{
+    const itemNum = startIdx + i + 1;
     const feat=b.featured==='true'||b.featured===true;
     const isDraft=b.draft==='true'||b.draft===true;
     const slug = b.file.replace(/\.mdx?$/, '');
     h+=`<tr>
-      <td>${i+1}</td>
+      <td>${itemNum}</td>
       <td>
         <strong>${esc(b.title)}</strong>${feat?' ⭐':''}
         <div class="row-actions" style="font-size:12px; margin-top:4px;">
@@ -1333,6 +1631,7 @@ function showBlogs(list){
     </tr>`;
   });
   h+=`</tbody></table></div>`;
+  h+=renderPaginationControls();
   const cont = $('blog_table_container');
   if(cont) cont.innerHTML=h;
 }
@@ -1701,15 +2000,106 @@ function renameFile(type,oldFile,title){
   },50);
 }
 // ══ PAGES ══
+let pageFilters = { q: '' };
+let pagePagination = { page: 1, pageSize: 10 };
+
 function renderPages(){
   $('ptitle').textContent='Pages';
   $('tact').innerHTML=`<button class="btn bp" onclick="newPage()">+ New Page</button>`;
-  let h=`<div class="card"><div class="ch"><h3>📄 Static Pages</h3><span style="color:var(--dim);font-size:12px">${pages.length} pages</span></div>
-  <table><thead><tr><th>Title</th><th>URL</th><th>File</th></tr></thead><tbody>`;
-  if(!pages.length) h+=`<tr><td colspan="3" class="empty">No pages</td></tr>`;
-  pages.forEach(p=>{
+  let h = `
+    <div style="display:flex;gap:12px;margin-bottom:14px;background:#fff;padding:14px;border-radius:4px;border:1px solid #c3c4c7;align-items:center;flex-wrap:wrap">
+      <div style="font-size:13px;font-weight:600;color:#3c434a;margin-right:2px">🔍 Filter Pages:</div>
+      <input class="input-text" placeholder="Search pages..." oninput="pageFilterChange(this.value)" style="width:250px" value="${esc(pageFilters.q)}">
+      <div style="display:flex;align-items:center;gap:6px;margin-left:auto;">
+        <span style="font-size:12px;font-weight:600;color:#646970;">Show per page:</span>
+        <select class="input-text" onchange="pagePageSizeChange(this.value)" style="width:85px">
+          <option value="10" ${pagePagination.pageSize===10?'selected':''}>10</option>
+          <option value="30" ${pagePagination.pageSize===30?'selected':''}>30</option>
+          <option value="50" ${pagePagination.pageSize===50?'selected':''}>50</option>
+          <option value="all" ${pagePagination.pageSize==='all'?'selected':''}>All</option>
+        </select>
+      </div>
+      ${pageFilters.q ? `<button class="btn bg bs" onclick="pageFilters.q='';pagePagination.page=1;renderPages()">Clear Filter</button>` : ''}
+    </div>
+    <div id="page_table_container"></div>
+    <div style="background:rgba(99,102,241,.08);padding:14px 18px;border-radius:10px;font-size:13px;color:var(--muted);margin-top:16px;">💡 Pages are Astro template files (.astro). You can edit the HTML content directly. For new pages, a basic template will be created for you.</div>
+    ${renderUploadPanel('page')}
+  `;
+  $('content').innerHTML=h;
+  applyPageFilters();
+}
+
+function pagePageSizeChange(val) {
+  pagePagination.pageSize = val === 'all' ? 'all' : (parseInt(val, 10) || 10);
+  pagePagination.page = 1;
+  applyPageFilters();
+}
+
+function pageGoToPage(p) {
+  pagePagination.page = p;
+  applyPageFilters();
+}
+
+function pageFilterChange(q) {
+  pageFilters.q = q;
+  pagePagination.page = 1;
+  applyPageFilters();
+}
+
+function applyPageFilters() {
+  const q = pageFilters.q.toLowerCase();
+  const list = pages.filter(p => {
+    if (q && !(p.title||p.file||'').toLowerCase().includes(q)) return false;
+    return true;
+  });
+  showPages(list);
+}
+
+function showPages(list) {
+  const totalItems = list.length;
+  const pageSize = pagePagination.pageSize === 'all' ? (totalItems || 1) : (pagePagination.pageSize || 10);
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+
+  if (pagePagination.page > totalPages) pagePagination.page = totalPages;
+  if (pagePagination.page < 1) pagePagination.page = 1;
+  const currentPage = pagePagination.page;
+
+  const startIdx = (currentPage - 1) * pageSize;
+  const endIdx = Math.min(startIdx + pageSize, totalItems);
+  const pagedList = list.slice(startIdx, endIdx);
+
+  const renderPaginationControls = () => {
+    if (totalItems === 0) return '';
+    let btns = '';
+    btns += `<button class="btn bg bs" ${currentPage === 1 ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''} onclick="pageGoToPage(${currentPage - 1})">‹ Prev</button>`;
+    let startP = Math.max(1, currentPage - 2);
+    let endP = Math.min(totalPages, startP + 4);
+    if (endP - startP < 4) startP = Math.max(1, endP - 4);
+    for (let p = startP; p <= endP; p++) {
+      btns += `<button class="btn ${p === currentPage ? 'bp' : 'bg bs'}" style="min-width:32px;padding:4px 8px;" onclick="pageGoToPage(${p})">${p}</button>`;
+    }
+    btns += `<button class="btn bg bs" ${currentPage === totalPages ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''} onclick="pageGoToPage(${currentPage + 1})">Next ›</button>`;
+
+    return `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#f8fafc;border-top:1px solid #c3c4c7;border-bottom-left-radius:4px;border-bottom-right-radius:4px;flex-wrap:wrap;gap:10px;">
+        <div style="font-size:12px;color:#646970;">
+          Showing <strong>${totalItems > 0 ? startIdx + 1 : 0}</strong> to <strong>${endIdx}</strong> of <strong>${totalItems}</strong> pages (Page ${currentPage} of ${totalPages})
+        </div>
+        <div style="display:flex;gap:4px;align-items:center;">
+          ${btns}
+        </div>
+      </div>
+    `;
+  };
+
+  let h=`<div class="card" style="margin-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0;"><div class="ch"><h3>📄 Static Pages</h3><span style="color:var(--dim);font-size:12px">${pages.length} pages</span></div>
+  <table><thead><tr><th style="width:40px">#</th><th>Title</th><th>URL</th><th>File</th></tr></thead><tbody>`;
+  if(!pagedList.length) h+=`<tr><td colspan="4" class="empty">No pages</td></tr>`;
+  pagedList.forEach((p,i)=>{
+    const itemNum = startIdx + i + 1;
     const slug = p.file === 'index.astro' ? '' : p.file.replace(/\.astro$/, '/');
     h+=`<tr>
+      <td>${itemNum}</td>
       <td>
         <strong>${esc(p.title)}</strong>
         <div class="row-actions" style="font-size:12px; margin-top:4px;">
@@ -1723,14 +2113,15 @@ function renderPages(){
     </tr>`;
   });
   h+=`</tbody></table></div>`;
-  h+=`<div style="background:rgba(99,102,241,.08);padding:14px 18px;border-radius:10px;font-size:13px;color:var(--muted)">\ud83d\udca1 Pages are Astro template files (.astro). You can edit the HTML content directly. For new pages, a basic template will be created for you.</div>`;
-  h += renderUploadPanel('page');
-  $('content').innerHTML=h;
+  h+=renderPaginationControls();
+  const cont = $('page_table_container');
+  if(cont) cont.innerHTML=h;
 }
 
 // ══ BOOKS ══
 let books = [];
 let bookFilters = { q: '', cat: '' };
+let bookPagination = { page: 1, pageSize: 10 };
 
 async function renderBooks() {
   $('ptitle').textContent='Books';
@@ -1742,12 +2133,21 @@ async function renderBooks() {
   let h = `
     <div style="display:flex;gap:10px;margin-bottom:18px;background:#fff;padding:14px;border-radius:4px;border:1px solid #c3c4c7;align-items:center;flex-wrap:wrap">
       <div style="font-size:13px;font-weight:600;color:#3c434a;margin-right:4px">🔍 Filter Books:</div>
-      <input class="input-text" placeholder="Search by title..." oninput="bookFilterChange('q', this.value)" style="width:250px" value="${esc(bookFilters.q)}">
-      <select class="input-text" onchange="bookFilterChange('cat', this.value)" style="width:180px">
+      <input class="input-text" placeholder="Search by title..." oninput="bookFilterChange('q', this.value)" style="width:220px" value="${esc(bookFilters.q)}">
+      <select class="input-text" onchange="bookFilterChange('cat', this.value)" style="width:160px">
         <option value="">All Categories</option>
         ${bCats.map(c => `<option value="${c}" ${bookFilters.cat===c?'selected':''}>${c}</option>`).join('')}
       </select>
-      ${(bookFilters.q||bookFilters.cat) ? `<button class="btn bg bs" onclick="bookFilters={q:'',cat:''};renderBooks()">Clear Filters</button>` : ''}
+      <div style="display:flex;align-items:center;gap:6px;margin-left:auto;">
+        <span style="font-size:12px;font-weight:600;color:#646970;">Show per page:</span>
+        <select class="input-text" onchange="bookPageSizeChange(this.value)" style="width:85px">
+          <option value="10" ${bookPagination.pageSize===10?'selected':''}>10</option>
+          <option value="30" ${bookPagination.pageSize===30?'selected':''}>30</option>
+          <option value="50" ${bookPagination.pageSize===50?'selected':''}>50</option>
+          <option value="all" ${bookPagination.pageSize==='all'?'selected':''}>All</option>
+        </select>
+      </div>
+      ${(bookFilters.q||bookFilters.cat) ? `<button class="btn bg bs" onclick="bookFilters={q:'',cat:''};bookPagination.page=1;renderBooks()">Clear Filters</button>` : ''}
     </div>
     <div id="book_table_container"></div>
     ${renderUploadPanel('book')}
@@ -1756,8 +2156,20 @@ async function renderBooks() {
   applyBookFilters();
 }
 
+function bookPageSizeChange(val) {
+  bookPagination.pageSize = val === 'all' ? 'all' : (parseInt(val, 10) || 10);
+  bookPagination.page = 1;
+  applyBookFilters();
+}
+
+function bookGoToPage(p) {
+  bookPagination.page = p;
+  applyBookFilters();
+}
+
 function bookFilterChange(key, val) {
   bookFilters[key] = val;
+  bookPagination.page = 1;
   applyBookFilters();
   if(key === 'q') applyBookFilters(); else renderBooks();
 }
@@ -1773,13 +2185,50 @@ function applyBookFilters() {
 }
 
 function showBooks(list) {
-  let h=`<div class="card"><div class="ch"><h3>📚 Books</h3><span style="color:var(--dim);font-size:12px">${books.length} total books</span></div>
+  const totalItems = list.length;
+  const pageSize = bookPagination.pageSize === 'all' ? (totalItems || 1) : (bookPagination.pageSize || 10);
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+
+  if (bookPagination.page > totalPages) bookPagination.page = totalPages;
+  if (bookPagination.page < 1) bookPagination.page = 1;
+  const currentPage = bookPagination.page;
+
+  const startIdx = (currentPage - 1) * pageSize;
+  const endIdx = Math.min(startIdx + pageSize, totalItems);
+  const pagedList = list.slice(startIdx, endIdx);
+
+  const renderPaginationControls = () => {
+    if (totalItems === 0) return '';
+    let btns = '';
+    btns += `<button class="btn bg bs" ${currentPage === 1 ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''} onclick="bookGoToPage(${currentPage - 1})">‹ Prev</button>`;
+    let startP = Math.max(1, currentPage - 2);
+    let endP = Math.min(totalPages, startP + 4);
+    if (endP - startP < 4) startP = Math.max(1, endP - 4);
+    for (let p = startP; p <= endP; p++) {
+      btns += `<button class="btn ${p === currentPage ? 'bp' : 'bg bs'}" style="min-width:32px;padding:4px 8px;" onclick="bookGoToPage(${p})">${p}</button>`;
+    }
+    btns += `<button class="btn bg bs" ${currentPage === totalPages ? 'disabled style="opacity:0.5;cursor:not-allowed;"' : ''} onclick="bookGoToPage(${currentPage + 1})">Next ›</button>`;
+
+    return `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#f8fafc;border-top:1px solid #c3c4c7;border-bottom-left-radius:4px;border-bottom-right-radius:4px;flex-wrap:wrap;gap:10px;">
+        <div style="font-size:12px;color:#646970;">
+          Showing <strong>${totalItems > 0 ? startIdx + 1 : 0}</strong> to <strong>${endIdx}</strong> of <strong>${totalItems}</strong> books (Page ${currentPage} of ${totalPages})
+        </div>
+        <div style="display:flex;gap:4px;align-items:center;">
+          ${btns}
+        </div>
+      </div>
+    `;
+  };
+
+  let h=`<div class="card" style="margin-bottom:0;border-bottom-left-radius:0;border-bottom-right-radius:0;"><div class="ch"><h3>📚 Books</h3><span style="color:var(--dim);font-size:12px">${books.length} total books</span></div>
   <table><thead><tr><th>#</th><th>Title</th><th>Category</th><th>Date</th><th>File</th></tr></thead><tbody>`;
-  if(!list.length) h+=`<tr><td colspan="5" class="empty">No books match your filters.</td></tr>`;
-  list.forEach((b,i)=>{
+  if(!pagedList.length) h+=`<tr><td colspan="5" class="empty">No books match your filters.</td></tr>`;
+  pagedList.forEach((b,i)=>{
+    const itemNum = startIdx + i + 1;
     const slug = b.slug || b.file.replace(/\.(json|mdx?)$/, '');
     h+=`<tr>
-      <td>${i+1}</td>
+      <td>${itemNum}</td>
       <td>
         <strong>${esc(b.title||b.file)}</strong>
         <div class="row-actions" style="font-size:12px; margin-top:4px;">
@@ -1794,6 +2243,7 @@ function showBooks(list) {
     </tr>`;
   });
   h+=`</tbody></table></div>`;
+  h+=renderPaginationControls();
   const cont = $('book_table_container');
   if(cont) cont.innerHTML=h;
 }

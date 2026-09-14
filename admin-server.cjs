@@ -450,6 +450,51 @@ const server = http.createServer(async (req, res) => {
       generateSitemap();
       jsonRes(res, { ok: true }); return;
     }
+    if (pathname === '/api/tutorials/bulk-delete' && req.method === 'POST') {
+      const b = await collectBody(req);
+      const files = b.filenames || [];
+      let count = 0;
+      files.forEach(filename => {
+        const p = path.join(TUTORIALS_DIR, filename);
+        if (fs.existsSync(p)) {
+          fs.renameSync(p, path.join(TRASH_TUTS, filename));
+          count++;
+        }
+      });
+      generateSitemap();
+      jsonRes(res, { ok: true, count }); return;
+    }
+    if (pathname === '/api/tutorials/bulk-edit' && req.method === 'POST') {
+      const b = await collectBody(req);
+      const files = b.filenames || [];
+      const newCategory = b.category;
+      const newAuthor = b.author;
+      let count = 0;
+      files.forEach(filename => {
+        const p = path.join(TUTORIALS_DIR, filename);
+        if (fs.existsSync(p)) {
+          let raw = fs.readFileSync(p, 'utf-8');
+          if (newCategory) {
+            if (/^category:\s*.*/m.test(raw)) {
+              raw = raw.replace(/^category:\s*.*/m, `category: "${newCategory}"`);
+            } else {
+              raw = raw.replace(/^---\n/, `---\ncategory: "${newCategory}"\n`);
+            }
+          }
+          if (newAuthor) {
+            if (/^author:\s*.*/m.test(raw)) {
+              raw = raw.replace(/^author:\s*.*/m, `author: "${newAuthor}"`);
+            } else {
+              raw = raw.replace(/^---\n/, `---\nauthor: "${newAuthor}"\n`);
+            }
+          }
+          fs.writeFileSync(p, raw, 'utf-8');
+          count++;
+        }
+      });
+      generateSitemap();
+      jsonRes(res, { ok: true, count }); return;
+    }
 
     // Blogs
     if (pathname === '/api/blogs/list') { jsonRes(res, listBlogs()); return; }
