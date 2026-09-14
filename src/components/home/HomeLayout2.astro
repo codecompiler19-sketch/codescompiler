@@ -1,0 +1,151 @@
+---
+import { getCollection } from 'astro:content';
+import themeRaw from '../../theme-settings.json';
+
+const theme = themeRaw || {};
+const allPosts = await getCollection('blog');
+const latestPosts = allPosts
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .slice(0, 3);
+
+const CATEGORY_COLORS: Record<string, { color: string; bg: string }> = {
+  'HTML & CSS':           { color: '#E34F26', bg: '#fff4f0' },
+  'JavaScript':           { color: '#ca8a04', bg: '#fefce8' },
+  'HTML CSS JavaScript':  { color: '#04AA6D', bg: '#f0fff8' },
+};
+---
+
+<section class="w-full bg-white py-24 sm:py-32 border-b border-gray-100">
+  <div class="max-w-4xl mx-auto px-5 text-center">
+    <div class="inline-flex items-center gap-2 bg-blue-50 text-blue-600 border border-blue-100 rounded-full px-4 py-1.5 mb-8 text-sm font-semibold">
+      🚀 Learn, Code, Build
+    </div>
+    {theme.heroTitle ? (
+      <h1 class="text-5xl sm:text-6xl md:text-7xl font-black text-gray-900 leading-tight mb-6" set:html={theme.heroTitle} />
+    ) : (
+      <h1 class="text-5xl sm:text-6xl md:text-7xl font-black text-gray-900 leading-tight mb-6">
+        Master Web Development <span class="text-[#04AA6D]">Today</span>
+      </h1>
+    )}
+    {theme.heroSubtitle ? (
+      <p class="text-gray-500 text-xl max-w-2xl mx-auto leading-relaxed mb-10" set:html={theme.heroSubtitle} />
+    ) : (
+      <p class="text-gray-500 text-xl max-w-2xl mx-auto leading-relaxed mb-10">
+        Everything you need to learn HTML, CSS, and JavaScript. No setup required, just start coding right in your browser.
+      </p>
+    )}
+    <div class="relative max-w-2xl mx-auto mb-12 shadow-xl shadow-gray-200/50 rounded-full">
+      <input type="text" placeholder="What do you want to learn today? (e.g. Flexbox...)" class="w-full pl-6 pr-32 py-5 text-lg border-2 border-gray-100 rounded-full focus:outline-none focus:border-[#04AA6D] transition-colors shadow-sm" />
+      <button class="absolute right-3 top-1/2 -translate-y-1/2 bg-[#04AA6D] hover:bg-[#038a58] text-white px-6 py-3 rounded-full font-bold transition-colors">Search</button>
+    </div>
+    <div class="flex flex-wrap items-center justify-center gap-4 text-sm font-medium text-gray-500">
+      <span class="text-gray-400">Popular topics:</span>
+      <a href="/tutorial/html-introduction" class="bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-md transition-colors text-gray-700">HTML Basics</a>
+      <a href="/tutorial/css-introduction" class="bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-md transition-colors text-gray-700">CSS Grid</a>
+      <a href="/tutorial/js-introduction" class="bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded-md transition-colors text-gray-700">JavaScript DOM</a>
+    </div>
+  </div>
+</section>
+
+{theme.showTutorialCategories !== false && (
+<section class="w-full bg-white py-24 px-5 border-b border-gray-100">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl font-black text-gray-900" set:html={theme.coursesTitle || 'Popular Learning Paths'} />
+      <p class="text-gray-500 mt-2" set:html={theme.coursesSubtitle || 'Choose a path to start coding immediately.'} />
+    </div>
+    <div class="space-y-6">
+      <a href="/tutorial/html-introduction" class="group flex flex-col sm:flex-row items-center justify-between p-6 rounded-2xl bg-gray-50 hover:bg-orange-50 border border-gray-100 hover:border-orange-200 transition-colors">
+        <div class="flex items-center gap-6">
+          <div class="w-16 h-16 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-2xl font-black">&lt;/&gt;</div>
+          <div>
+            <h3 class="text-xl font-bold text-gray-900 group-hover:text-orange-700 transition-colors">HTML Foundation</h3>
+            <p class="text-gray-500 text-sm mt-1 max-w-lg">Learn to structure content, create forms, and build solid foundations.</p>
+          </div>
+        </div>
+        <div class="mt-4 sm:mt-0 px-6 py-3 rounded-full bg-white text-orange-600 font-bold border border-orange-100 group-hover:border-orange-300 shadow-sm transition-all">Start Course →</div>
+      </a>
+      <a href="/tutorial/css-introduction" class="group flex flex-col sm:flex-row items-center justify-between p-6 rounded-2xl bg-gray-50 hover:bg-blue-50 border border-gray-100 hover:border-blue-200 transition-colors">
+        <div class="flex items-center gap-6">
+          <div class="w-16 h-16 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-2xl font-black">{ }</div>
+          <div>
+            <h3 class="text-xl font-bold text-gray-900 group-hover:text-blue-700 transition-colors">CSS Styling</h3>
+            <p class="text-gray-500 text-sm mt-1 max-w-lg">Make your HTML beautiful. Master colors, layouts, and animations.</p>
+          </div>
+        </div>
+        <div class="mt-4 sm:mt-0 px-6 py-3 rounded-full bg-white text-blue-600 font-bold border border-blue-100 group-hover:border-blue-300 shadow-sm transition-all">Start Course →</div>
+      </a>
+      <a href="/tutorial/js-introduction" class="group flex flex-col sm:flex-row items-center justify-between p-6 rounded-2xl bg-gray-50 hover:bg-yellow-50 border border-gray-100 hover:border-yellow-200 transition-colors">
+        <div class="flex items-center gap-6">
+          <div class="w-16 h-16 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center text-2xl font-black">JS</div>
+          <div>
+            <h3 class="text-xl font-bold text-gray-900 group-hover:text-yellow-700 transition-colors">JavaScript Logic</h3>
+            <p class="text-gray-500 text-sm mt-1 max-w-lg">Bring pages to life. Build dynamic interfaces and write real programs.</p>
+          </div>
+        </div>
+        <div class="mt-4 sm:mt-0 px-6 py-3 rounded-full bg-white text-yellow-600 font-bold border border-yellow-100 group-hover:border-yellow-300 shadow-sm transition-all">Start Course →</div>
+      </a>
+    </div>
+  </div>
+</section>
+)}
+
+{theme.showFeaturedSection !== false && (
+<section class="w-full bg-slate-50 py-24 px-5 border-b border-gray-100">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl font-black text-gray-900" set:html={theme.featuresTitle || 'Why Learn With Us?'} />
+      <p class="text-gray-500 mt-2" set:html={theme.featuresSubtitle || 'Everything you need to master web development.'} />
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+      {[
+        { emoji: '⚡', title: 'Write & See', desc: 'Every chapter includes a live code editor. Write code and see the output immediately.' },
+        { emoji: '📱', title: 'Any Device', desc: 'Study on your phone, tablet, or computer. Everything is completely responsive.' },
+        { emoji: '🆓', title: 'Always Free', desc: 'No sign-up required. Every tutorial and every example is completely free forever.' },
+      ].map(f => (
+        <div class="text-center">
+          <div class="w-16 h-16 rounded-full bg-white border border-gray-200 text-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">{f.emoji}</div>
+          <h3 class="font-bold text-gray-900 text-lg mb-2">{f.title}</h3>
+          <p class="text-gray-500 leading-relaxed">{f.desc}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+)}
+
+{(theme.showRecentPosts !== false && latestPosts.length > 0) && (
+<section class="w-full bg-white py-24 px-5">
+  <div class="max-w-6xl mx-auto">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
+      <div>
+        <h2 class="text-3xl font-black text-gray-900" set:html={theme.postsTitle || 'Latest from the Blog'} />
+        <p class="text-gray-500 mt-2" set:html={theme.postsSubtitle || 'Read our newest tips, tricks, and tutorials.'} />
+      </div>
+      <a href="/blog" class="text-[#04AA6D] font-bold hover:underline">View all articles →</a>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {latestPosts.map(post => {
+        const catColor = CATEGORY_COLORS[post.data.category] ?? { color: '#6b7280', bg: '#f3f4f6' };
+        return (
+          <a href={`/blog/${post.slug}`} class="group flex flex-col block no-underline">
+            {post.data.image ? (
+              <div class="w-full aspect-[4/3] rounded-2xl overflow-hidden mb-5">
+                <img src={post.data.image} alt={post.data.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              </div>
+            ) : (
+              <div class="w-full aspect-[4/3] rounded-2xl bg-gray-100 flex items-center justify-center text-4xl mb-5">💻</div>
+            )}
+            <div class="flex items-center gap-3 mb-3">
+              <span class="text-[10px] font-bold uppercase px-2.5 py-1 rounded-full" style={`color:${catColor.color};background:${catColor.bg}`}>{post.data.category}</span>
+              <span class="text-xs text-gray-400">{new Date(post.data.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 leading-snug mb-2 group-hover:text-[#04AA6D] transition-colors">{post.data.title}</h3>
+            <p class="text-gray-500 leading-relaxed line-clamp-2">{post.data.description}</p>
+          </a>
+        );
+      })}
+    </div>
+  </div>
+</section>
+)}

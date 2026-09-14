@@ -1,6 +1,6 @@
 // CodesCompiler Content Manager — WordPress-style CMS
-const API='';
-let page='dashboard',stats={},tutorials=[],blogs=[],navItems=[],siteSettings={},pages=[],adsConfig={},trashBin=[];
+const API='http://localhost:3001';
+let page='dashboard',stats={},tutorials=[],blogs=[],navItems=[],siteSettings={},pages=[],adsConfig={},trashBin=[],themeSettings={};
 let modalCb=null,confirmCb=null;
 
 const TCAT=['html','css','javascript','seo','python','sql','php'];
@@ -63,6 +63,7 @@ function renderSidebar(){
     {
       title: 'APPEARANCE',
       items: [
+        { id: 'theme', ico: '🎨', label: 'Themes' },
         { id: 'nav', ico: '🔗', label: 'Menus' },
         { id: 'ads', ico: '💰', label: 'Ad Manager' }
       ]
@@ -99,12 +100,659 @@ function renderSidebar(){
 
 // Load all
 async function loadAll(){
-  try{[stats,tutorials,blogs,navItems,siteSettings,pages,adsConfig,trashBin]=await Promise.all([api('/api/stats'),api('/api/tutorials/list'),api('/api/blogs/list'),api('/api/nav/get'),api('/api/settings/get'),api('/api/pages/list'),api('/api/ads/get'),api('/api/trash/list')])}
+  try{[stats,tutorials,blogs,navItems,siteSettings,pages,adsConfig,trashBin,themeSettings]=await Promise.all([api('/api/stats'),api('/api/tutorials/list'),api('/api/blogs/list'),api('/api/nav/get'),api('/api/settings/get'),api('/api/pages/list'),api('/api/ads/get'),api('/api/trash/list'),api('/api/theme/get')])}
   catch(e){toast('Failed to connect to server',false)}
   renderSidebar();
 }
 
-function goTo(p){page=p;location.hash=p;renderSidebar();({dashboard:renderDash,tutorials:renderTuts,blogs:renderBlogs,nav:renderNav,settings:renderSettings,permalinks:renderPermalinks,pages:renderPages,ads:renderAds,trash:renderTrash})[p]?.()}
+function goTo(p){page=p;location.hash=p;renderSidebar();({dashboard:renderDash,tutorials:renderTuts,blogs:renderBlogs,books:renderBooks,categories:renderCategories,media:renderMedia,nav:renderNav,settings:renderSettings,permalinks:renderPermalinks,pages:renderPages,ads:renderAds,trash:renderTrash,theme:renderTheme})[p]?.()}
+
+// ══ CATEGORIES ══
+function renderCategories() {
+  $('ptitle').textContent = 'Categories';
+  $('tact').innerHTML = `<button class="btn bp" onclick="alert('Category editing will be available in Phase 4. They are currently synced from config.')">+ Add New Category</button>`;
+  
+  let h = `<div style="background:rgba(99,102,241,.08);padding:16px 20px;border-radius:10px;margin-bottom:20px;font-size:13px;color:var(--muted)">
+    <strong>ℹ️ Category Overview:</strong> Here you can view all active categories used for Posts and Tutorials.
+  </div>`;
+  
+  h += `<div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">`;
+  
+  // Post Categories
+  h += `<div class="card" style="margin-bottom:0;"><div class="ch"><h3>📝 Post Categories</h3><span style="color:var(--dim);font-size:12px">${BCAT.length} categories</span></div>
+  <table><thead><tr><th>Name</th><th>Slug</th></tr></thead><tbody>`;
+  BCAT.forEach(c => {
+    const slug = c.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    h += `<tr><td><strong>${esc(c)}</strong></td><td style="font-family:monospace;color:var(--dim);font-size:12px;">${slug}</td></tr>`;
+  });
+  h += `</tbody></table></div>`;
+  
+  // Tutorial Categories
+  h += `<div class="card" style="margin-bottom:0;"><div class="ch"><h3>📖 Tutorial Languages</h3><span style="color:var(--dim);font-size:12px">${TCAT.length} languages</span></div>
+  <table><thead><tr><th>Language Code</th><th>Display Name</th></tr></thead><tbody>`;
+  TCAT.forEach(c => {
+    h += `<tr><td style="font-family:monospace;color:var(--dim);font-size:12px;">${esc(c)}</td><td><strong>${esc(CATNAME[c]||c)}</strong></td></tr>`;
+  });
+  h += `</tbody></table></div>`;
+  
+  h += `</div>`;
+  
+  $('content').innerHTML = h;
+}
+
+// ══ MEDIA LIBRARY ══
+let mediaFiles = [];
+async function renderMedia() {
+  $('ptitle').textContent = 'Media Library';
+  $('tact').innerHTML = `<button class="btn bp" onclick="uploadMediaUI()">+ Upload New Media</button>`;
+  
+  mediaFiles = await api('/api/media/list').catch(() => []);
+  
+  let h = `<div class="card"><div class="ch"><h3>🖼️ Media Files</h3><span style="color:var(--dim);font-size:12px">${mediaFiles.length} files</span></div>`;
+  
+  if(!mediaFiles.length) {
+    h += `<div style="padding:24px;text-align:center;color:var(--dim)">No media files found. Upload some images!</div></div>`;
+  } else {
+    h += `<div style="padding:16px; display:grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px;">`;
+    mediaFiles.forEach(m => {
+      h += `
+      <div style="border:1px solid #c3c4c7; border-radius:4px; overflow:hidden; background:#fff; position:relative;" class="media-card">
+        <div style="height:120px; background:#f0f0f1; display:flex; align-items:center; justify-content:center;">
+          <img src="${m.url}" style="max-height:100%; max-width:100%; object-fit:contain;" />
+        </div>
+        <div style="padding:8px; font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${esc(m.file)}">
+          <strong>${esc(m.file)}</strong><br>
+          <span style="color:var(--dim)">${(m.size/1024).toFixed(1)} KB</span><br>
+          <span style="color:#2271b1; cursor:pointer;" onclick="navigator.clipboard.writeText('${m.url}');toast('URL copied!')">Copy URL</span>
+        </div>
+        <div style="position:absolute; top:4px; right:4px;">
+          <button class="btn bd bs" style="padding:4px; background:#fff; border-radius:50%; box-shadow:0 1px 2px rgba(0,0,0,0.2)" onclick="delMedia('${esc(m.file)}')">🗑️</button>
+        </div>
+      </div>`;
+    });
+    h += `</div></div>`;
+  }
+  
+  h += `<div id="media-upload-area" style="display:none; margin-top:20px; padding:24px; border:2px dashed #8c8f94; border-radius:8px; text-align:center; background:#fff;">
+    <h3>Upload New Image</h3>
+    <p style="font-size:12px; color:var(--dim); margin-bottom:10px;">Select an image to upload to the media library</p>
+    <input type="file" id="media_file_inp" accept="image/*" style="display:none" onchange="handleMediaUpload(this)">
+    <button class="btn bp" onclick="$('media_file_inp').click()">Select File</button>
+  </div>`;
+  
+  $('content').innerHTML = h;
+}
+
+function uploadMediaUI() {
+  $('media-upload-area').style.display = 'block';
+}
+
+function delMedia(filename) {
+  openConfirm(`Delete media "${filename}"?`, async () => {
+    await post('/api/media/delete', { filename });
+    toast('Media deleted');
+    await loadAll();
+    renderMedia();
+  });
+}
+
+async function handleMediaUpload(input) {
+  if(!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  const reader = new FileReader();
+  reader.onload = async function(e) {
+    const base64 = e.target.result.split(',')[1];
+    toast('Uploading media...', true);
+    try {
+      await post('/api/media/upload', { name: file.name, data: base64 });
+      toast('Media uploaded successfully! ✅');
+      await loadAll();
+      renderMedia();
+    } catch (e) {
+      toast('Failed to upload media.', false);
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+// ══ UPLOAD PANEL ══
+// Sample file templates for each content type
+const SAMPLES = {
+  blog: {
+    filename: 'sample-blog-post.mdx',
+    content: `---
+# ╔══════════════════════════════════════════════════════════╗
+# ║         CODESCOMPILER — BLOG POST FORMAT GUIDE           ║
+# ╚══════════════════════════════════════════════════════════╝
+#
+# FILE LOCATION: src/content/blog/your-post-slug.mdx
+# FILE FORMAT  : MDX (Markdown + optional JSX components)
+# URL will be  : /blog/your-post-slug/
+#
+# ┌──────────────────────────────────────────────────────────┐
+# │ REQUIRED FIELDS (must not be empty)                      │
+# └──────────────────────────────────────────────────────────┘
+
+title: "How to Build a Glassmorphism Login Form with CSS"
+# ↑ REQUIRED. The main heading shown on the page and in Google results.
+
+description: "Learn how to create a stunning glassmorphism login form using CSS backdrop-filter, rgba colors, and box-shadow for a modern frosted glass effect."
+# ↑ REQUIRED. 1-2 sentences. Used for SEO meta description (keep under 160 chars).
+
+date: "2026-09-14"
+# ↑ REQUIRED. Format: YYYY-MM-DD. Controls sort order on the blog page.
+
+category: "Login Form"
+# ↑ REQUIRED. MUST be EXACTLY one of these values (copy-paste):
+#   "HTML & CSS"         "JavaScript"           "JavaScript Projects"
+#   "Login Form"         "Card Design"          "Navigation Bar"
+#   "Blog"               "Website Designs"      "Templates html"
+#   "Image Slider"       "API Projects"         "Sidebar Menu"
+#   "CSS Buttons"        "JavaScript Games"     "Preloader or Loader"
+#   "Form Validation"    "Accordion"            "Bootstrap"
+#   "Tabs"               "Calendar"
+# ↑ Any other value will cause a BUILD ERROR.
+
+# ┌──────────────────────────────────────────────────────────┐
+# │ OPTIONAL FIELDS                                          │
+# └──────────────────────────────────────────────────────────┘
+
+tags: ["css", "glassmorphism", "login-form", "backdrop-filter"]
+# ↑ Array of lowercase tags. Helps with search & filtering.
+
+image: "/images/posts/glassmorphism-login.png"
+# ↑ Path to the thumbnail image shown on the blog listing card.
+#   Must be placed in: public/images/posts/
+
+imageAlt: "Glassmorphism login form with frosted glass effect"
+# ↑ Alt text for the image (for accessibility & SEO).
+
+status: "published"
+# ↑ Options: "published" | "draft" | "scheduled"
+#   "draft" hides the post from all listings and sitemaps.
+
+featured: false
+# ↑ Set to true to show this post in the Featured section on the homepage.
+
+hasDemo: true
+# ↑ Set to true if the post contains a live code demo.
+
+author: "CodesCompiler"
+# ↑ Author name displayed on the post.
+
+seoTitle: "Glassmorphism Login Form Tutorial — HTML & CSS"
+# ↑ Optional. Override the page <title> for Google (keep under 60 chars).
+
+noindex: false
+# ↑ Set to true to tell search engines NOT to index this page.
+---
+
+## Introduction
+
+Welcome to this tutorial! Here we'll build a glassmorphism login form step by step.
+
+## HTML Structure
+
+\`\`\`html
+<div class="glass-card">
+  <form class="login-form">
+    <h2>Sign In</h2>
+    <input type="email" placeholder="Email address">
+    <input type="password" placeholder="Password">
+    <button type="submit">Login</button>
+  </form>
+</div>
+\`\`\`
+
+## CSS Styling
+
+\`\`\`css
+.glass-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 40px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+\`\`\`
+
+## Conclusion
+
+You've built a beautiful glassmorphism login form!
+`
+  },
+  tutorial: {
+    filename: 'sample-tutorial.mdx',
+    content: `---
+# ╔══════════════════════════════════════════════════════════╗
+# ║        CODESCOMPILER — TUTORIAL FORMAT GUIDE             ║
+# ╚══════════════════════════════════════════════════════════╝
+#
+# FILE LOCATION: src/content/tutorials/your-tutorial-slug.mdx
+# FILE FORMAT  : MDX (Markdown + optional <Editor /> component)
+# URL will be  : /tutorial/your-tutorial-slug/
+#
+# ┌──────────────────────────────────────────────────────────┐
+# │ REQUIRED FIELDS (must not be empty)                      │
+# └──────────────────────────────────────────────────────────┘
+
+title: "CSS Flexbox Layout"
+# ↑ REQUIRED. Short, clear lesson title.
+
+description: "Learn how CSS Flexbox works to create flexible, responsive one-dimensional layouts for rows and columns."
+# ↑ REQUIRED. One sentence describing what the student will learn.
+
+category: "css"
+# ↑ REQUIRED. MUST be EXACTLY one of these values (lowercase):
+#   "html"  "css"  "javascript"  "seo"  "python"  "sql"  "php"
+# ↑ Any other value will cause a BUILD ERROR.
+
+order: 12
+# ↑ REQUIRED. Integer. Controls the order in the tutorial sidebar.
+#   Lower numbers appear first. Use gaps (10, 20, 30) to allow easy insertion.
+
+# ┌──────────────────────────────────────────────────────────┐
+# │ OPTIONAL FIELDS                                          │
+# └──────────────────────────────────────────────────────────┘
+
+group: "Box Model & Layout"
+# ↑ Groups lessons under a section header in the sidebar.
+
+seoTitle: "CSS Flexbox Tutorial — Complete Guide with Examples"
+# ↑ Override the page <title> for Google (keep under 60 chars).
+
+permalink: "css-flexbox-layout"
+# ↑ Custom URL slug. If omitted, the filename is used.
+---
+
+## What is Flexbox?
+
+CSS Flexbox (Flexible Box Layout) is a layout method for arranging items in rows or columns.
+
+### Setting Up Flex Container
+
+To use flexbox, add \`display: flex\` to the parent element.
+
+<Editor
+  initialHtml={\`<div class="container">
+  <div class="box">1</div>
+  <div class="box">2</div>
+  <div class="box">3</div>
+</div>\`}
+  initialCss={\`.container {
+  display: flex;
+  gap: 10px;
+  background: #f0f0f0;
+  padding: 10px;
+}
+.box {
+  background: #04AA6D;
+  color: white;
+  padding: 20px;
+  font-size: 18px;
+}\`}
+/>
+
+### Flex Direction
+
+Use \`flex-direction\` to switch between row (default) and column layouts.
+
+\`\`\`css
+.container {
+  display: flex;
+  flex-direction: column; /* row | column | row-reverse | column-reverse */
+}
+\`\`\`
+
+## Summary
+
+| Property | Values | Description |
+| :--- | :--- | :--- |
+| flex-direction | row, column | Main axis direction |
+| justify-content | flex-start, center, space-between | Main axis alignment |
+| align-items | flex-start, center, stretch | Cross axis alignment |
+`
+  },
+  page: {
+    filename: 'sample-page.astro',
+    content: `---
+// ╔══════════════════════════════════════════════════════════╗
+// ║          CODESCOMPILER — PAGE FORMAT GUIDE               ║
+// ╚══════════════════════════════════════════════════════════╝
+//
+// FILE LOCATION : src/pages/your-page-name.astro
+// FILE FORMAT   : Astro Component (.astro)
+// URL will be   : /your-page-name/
+//
+// RULES:
+//   - Always import BaseLayout from '../layouts/BaseLayout.astro'
+//   - The <BaseLayout> title and description are REQUIRED for SEO
+//   - The file name becomes the URL slug (use lowercase, hyphens only)
+//   - Do NOT use spaces or underscores in filenames
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// You can fetch data or do server-side logic here
+const pageTitle = "About Us";
+const pageDescription = "Learn about CodesCompiler and our mission to make web development accessible to everyone.";
+---
+
+<!--
+  ↑ Everything between --- and --- is the "frontmatter" (server-side JS)
+  ↓ Everything below is your HTML template
+-->
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <!--
+    IMPORTANT: Always wrap your content in a max-width container.
+    Use Tailwind classes for styling.
+  -->
+  <div class="max-w-screen-xl mx-auto px-5 py-12">
+
+    <!-- Page Header -->
+    <h1 class="text-4xl font-bold text-gray-900 mb-6">{pageTitle}</h1>
+
+    <!-- Main Content -->
+    <div class="prose max-w-none">
+      <p class="text-lg text-gray-600 mb-4">
+        Welcome to CodesCompiler! We are dedicated to helping developers
+        learn web technologies through hands-on tutorials and examples.
+      </p>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">Our Mission</h2>
+      <p>
+        To make web development education free, accessible, and practical
+        for developers at every skill level.
+      </p>
+
+      <!-- Example of a styled card section -->
+      <div class="grid md:grid-cols-3 gap-6 mt-8">
+        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+          <h3 class="font-bold text-lg mb-2">📖 Tutorials</h3>
+          <p class="text-gray-600">Step-by-step lessons for HTML, CSS, JavaScript, Python, SQL, and PHP.</p>
+        </div>
+        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+          <h3 class="font-bold text-lg mb-2">💻 Live Editor</h3>
+          <p class="text-gray-600">Practice code directly in the browser with our built-in live editor.</p>
+        </div>
+        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+          <h3 class="font-bold text-lg mb-2">🆓 Free Forever</h3>
+          <p class="text-gray-600">All content is completely free. No sign-up required to start learning.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</BaseLayout>
+`
+  },
+  book: {
+    filename: 'sample-book.json',
+    content: `{
+  "$$comment": "╔══════════════════════════════════════════════════════════╗",
+  "$$comment2": "║         CODESCOMPILER — BOOK FORMAT GUIDE                ║",
+  "$$comment3": "╚══════════════════════════════════════════════════════════╝",
+  "$$comment4": "FILE LOCATION: src/data/books/your-book-slug.json",
+  "$$comment5": "FILE FORMAT  : JSON (remove all lines starting with $$comment before uploading)",
+
+  "title": "JavaScript: The Complete Guide",
+  "description": "A comprehensive guide covering everything from basic syntax to advanced concepts like closures, async/await, and the event loop.",
+  "author": "CodesCompiler",
+  "date": "2026-09-14",
+  "category": "JavaScript",
+  "tags": ["javascript", "beginner", "advanced", "es6"],
+  "coverImage": "/images/books/javascript-complete-guide.png",
+  "slug": "javascript-complete-guide",
+  "status": "published",
+  "featured": false,
+  "chapters": [
+    {
+      "order": 1,
+      "title": "Getting Started",
+      "description": "Introduction to JavaScript and setting up your environment",
+      "url": "/tutorial/javascript-introduction/"
+    },
+    {
+      "order": 2,
+      "title": "Variables & Data Types",
+      "description": "Learn about var, let, const and JavaScript data types",
+      "url": "/tutorial/js-variables/"
+    },
+    {
+      "order": 3,
+      "title": "Functions",
+      "description": "Declaring and calling functions, arrow functions, callbacks",
+      "url": "/tutorial/js-functions/"
+    }
+  ],
+  "meta": {
+    "totalChapters": 3,
+    "difficulty": "Beginner to Advanced",
+    "estimatedTime": "8 hours"
+  }
+}`
+  }
+};
+
+// Renders the collapsible upload panel for a given content type
+function renderUploadPanel(type) {
+  const labels = {
+    blog:     { icon: '📝', name: 'Blog Post',  ext: '.mdx',   accept: '.mdx,.md' },
+    tutorial: { icon: '📖', name: 'Tutorial',   ext: '.mdx',   accept: '.mdx,.md' },
+    page:     { icon: '📄', name: 'Page',       ext: '.astro', accept: '.astro' },
+    book:     { icon: '📚', name: 'Book',       ext: '.json',  accept: '.json' }
+  };
+  const l = labels[type];
+  const sample = SAMPLES[type] ? SAMPLES[type].content : '';
+
+  return `
+  <div class="card" style="margin-top:24px;border:1px solid #c3c4c7;border-radius:4px;" id="upload-panel-${type}">
+    <div class="ch" style="cursor:pointer;user-select:none;background:#f6f7f7;padding:12px 16px;" onclick="toggleUploadPanel('${type}')">
+      <h3 style="font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px;">
+        📥 Import &amp; Upload ${l.name} Files
+      </h3>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button class="btn bp bs" onclick="event.stopPropagation();downloadSample('${type}')">
+          ⬇️ Download Sample ${l.ext} Template
+        </button>
+        <span id="upload-toggle-${type}" style="color:var(--dim);font-size:13px;">▲ Collapse</span>
+      </div>
+    </div>
+
+    <div id="upload-body-${type}" style="display:block;padding:20px;background:#fff;">
+      
+      <!-- Template Format Instructions -->
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:16px;margin-bottom:20px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:10px;">
+          <h4 style="font-size:13px;font-weight:700;color:#1e293b;margin:0;">📋 Required File Format Guide (${l.ext})</h4>
+          <button class="btn bg bs" onclick="downloadSample('${type}')">⬇️ Download Sample ${l.ext} Template File</button>
+        </div>
+        <p style="font-size:12px;color:#646970;margin-bottom:10px;">
+          Files must follow the format shown below. Download the sample template to inspect required frontmatter metadata headers before uploading.
+        </p>
+        <pre style="background:#1e293b;color:#f8fafc;padding:12px;border-radius:4px;font-size:12px;max-height:240px;overflow-y:auto;font-family:monospace;margin:0;white-space:pre-wrap;"><code>${esc(sample.slice(0, 950))}${sample.length > 950 ? '\n...\n[Download template file to view full sample code]' : ''}</code></pre>
+      </div>
+
+      <!-- Drag & Drop Upload Zone -->
+      <div id="dropzone-${type}"
+        style="border:2px dashed #2271b1;border-radius:8px;padding:36px 20px;text-align:center;cursor:pointer;background:rgba(34,113,177,.03);transition:all 0.2s;"
+        ondragover="event.preventDefault();this.style.borderColor='#135e96';this.style.background='rgba(34,113,177,.08)';"
+        ondragleave="this.style.borderColor='#2271b1';this.style.background='rgba(34,113,177,.03)';"
+        ondrop="handleFileDrop(event,'${type}')"
+        onclick="document.getElementById('fileInput-${type}').click()">
+        <div style="font-size:38px;margin-bottom:6px;">📁</div>
+        <div style="font-weight:700;font-size:15px;color:#1d2327;margin-bottom:4px;">Drag &amp; drop your ${l.ext} files here to import</div>
+        <div style="font-size:12px;color:#646970;">Or click to browse from your computer · Accepted: ${l.accept}</div>
+      </div>
+      <input type="file" id="fileInput-${type}" accept="${l.accept}" multiple style="display:none;" 
+        onchange="handleFileInputChange(this,'${type}')">
+      
+      <!-- Upload results -->
+      <div id="upload-results-${type}" style="margin-top:14px;"></div>
+    </div>
+  </div>`;
+}
+
+window.toggleUploadPanel = function(type) {
+  const body = $('upload-body-' + type);
+  const toggle = $('upload-toggle-' + type);
+  if (!body) return;
+  const isHidden = body.style.display === 'none';
+  body.style.display = isHidden ? 'block' : 'none';
+  if (toggle) toggle.textContent = isHidden ? '▲ Collapse' : '▼ Expand';
+};
+
+window.downloadSample = function(type) {
+  const s = SAMPLES[type];
+  if (!s) return;
+  const blob = new Blob([s.content], { type: 'text/plain;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = s.filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+  toast('Sample file downloaded! 📄 Open it, fill in your content, then upload it back here.');
+};
+
+window.handleFileDrop = function(e, type) {
+  e.preventDefault();
+  const dz = $('dropzone-' + type);
+  if (dz) { dz.style.borderColor = '#c3c4c7'; dz.style.background = '#fafafa'; }
+  const files = Array.from(e.dataTransfer.files);
+  processUploadFiles(files, type);
+};
+
+window.handleFileInputChange = function(input, type) {
+  const files = Array.from(input.files);
+  processUploadFiles(files, type);
+  input.value = '';
+};
+
+async function processUploadFiles(files, type) {
+  const resultsEl = $('upload-results-' + type);
+  if (!files.length) return;
+
+  const allowedExt = { blog: ['.mdx','.md'], tutorial: ['.mdx','.md'], page: ['.astro'], book: ['.json'] };
+  const apiMap    = { blog: '/api/blogs/save', tutorial: '/api/tutorials/save', page: '/api/pages/save', book: '/api/books/save' };
+  
+  let html = '<div style="border:1px solid #c3c4c7;border-radius:6px;overflow:hidden;margin-top:4px;">';
+  const results = [];
+
+  for (const file of files) {
+    const ext = '.' + file.name.split('.').pop().toLowerCase();
+    if (!allowedExt[type].includes(ext)) {
+      results.push({ file: file.name, ok: false, msg: `Wrong file type. Expected: ${allowedExt[type].join(' or ')}` });
+      continue;
+    }
+    
+    try {
+      const content = await file.text();
+      
+      // Validate
+      const errs = validateContentFile(type, content, file.name);
+      if (errs.length) {
+        results.push({ file: file.name, ok: false, msg: 'Validation failed: ' + errs.join(' · ') });
+        continue;
+      }
+      
+      // Save
+      const payload = { filename: file.name, content };
+      const r = await post(apiMap[type], payload);
+      if (r.ok !== false) {
+        results.push({ file: file.name, ok: true, msg: 'Uploaded successfully ✅' });
+      } else {
+        results.push({ file: file.name, ok: false, msg: r.error || 'Server save failed' });
+      }
+    } catch (err) {
+      results.push({ file: file.name, ok: false, msg: 'Read error: ' + err.message });
+    }
+  }
+
+  results.forEach(r => {
+    const bg  = r.ok ? 'rgba(16,185,129,.07)' : 'rgba(239,68,68,.07)';
+    const clr = r.ok ? '#065f46' : '#b91c1c';
+    const ico = r.ok ? '✅' : '❌';
+    html += `<div style="padding:10px 14px;border-bottom:1px solid #f0f0f1;background:${bg};">
+      <div style="font-weight:600;font-size:13px;color:${clr};">${ico} ${esc(r.file)}</div>
+      <div style="font-size:12px;color:#6b7280;margin-top:2px;">${esc(r.msg)}</div>
+    </div>`;
+  });
+
+  html += '</div>';
+  
+  const anyOk = results.some(r => r.ok);
+  if (anyOk) {
+    await loadAll();
+    // Re-render the current section to refresh the table
+    if (type === 'blog') renderBlogs();
+    else if (type === 'tutorial') renderTuts();
+    else if (type === 'page') renderPages();
+    else if (type === 'book') renderBooks();
+  }
+
+  if (resultsEl) {
+    resultsEl.innerHTML = html;
+    // Re-open panel so user sees results
+    const body = $('upload-body-' + type);
+    if (body) body.style.display = 'block';
+  }
+}
+
+function validateContentFile(type, content, filename) {
+  const errs = [];
+
+  if (type === 'book') {
+    // JSON validation
+    try {
+      const data = JSON.parse(content);
+      if (!data.title)       errs.push('"title" is required');
+      if (!data.description) errs.push('"description" is required');
+    } catch(e) {
+      errs.push('Invalid JSON: ' + e.message);
+    }
+    return errs;
+  }
+
+  if (type === 'page') {
+    // .astro — just check it's not empty and has BaseLayout
+    if (!content.trim()) errs.push('File is empty');
+    if (!content.includes('BaseLayout')) errs.push('Page must import and use BaseLayout');
+    return errs;
+  }
+
+  // MDX (blog / tutorial) — validate frontmatter
+  const norm  = content.replace(/\r\n/g, '\n');
+  const match = norm.match(/^---\n([\s\S]*?)\n---/);
+  if (!match) { errs.push('Missing frontmatter (the --- block at the top)'); return errs; }
+
+  const fm = parseFM(content);
+
+  if (!fm.title)       errs.push('"title" is required');
+  if (!fm.description) errs.push('"description" is required');
+
+  if (type === 'blog') {
+    if (!fm.date) errs.push('"date" is required (format: YYYY-MM-DD)');
+    if (!fm.category) {
+      errs.push('"category" is required');
+    } else if (!BCAT.includes(fm.category)) {
+      errs.push(`Invalid category "${fm.category}". Must be one of: ${BCAT.join(', ')}`);
+    }
+  }
+
+  if (type === 'tutorial') {
+    if (!fm.category) {
+      errs.push('"category" is required');
+    } else if (!TCAT.includes(fm.category)) {
+      errs.push(`Invalid category "${fm.category}". Must be one of: ${TCAT.join(', ')}`);
+    }
+    if (!fm.order && fm.order !== 0) errs.push('"order" is required (a number)');
+  }
+
+  return errs;
+}
 
 // ══ DASHBOARD ══
 function renderDash(){
@@ -183,13 +831,7 @@ window.saveQuickDraft = async function() {
   if(!t) return toast('Please enter a title', false);
   const slug = t.toLowerCase().replace(/[^a-z0-9]+/g, '-');
   const d = new Date().toISOString().split('T')[0];
-  const content = \`---
-title: "\${t}"
-date: "\${d}"
-draft: true
----
-
-\${c}\`;
+  const content = '---\ntitle: "' + t + '"\ndate: "' + d + '"\ndraft: true\n---\n\n' + c;
   await post('/api/blogs/save', { filename: slug+'.mdx', content });
   $('qd_title').value = '';
   $('qd_content').value = '';
@@ -198,37 +840,128 @@ draft: true
 }
 
 // ══ TUTORIALS ══
-let tutFilter='';
+let tutFilters = { q: '', cat: '' };
 function renderTuts(){
   $('ptitle').textContent='Tutorials';
-  $('tact').innerHTML=`<input class="srch" placeholder="Search tutorials..." oninput="tutSrch(this.value)"><button class="btn bp" style="margin-left:10px" onclick="newTut()">+ Add New</button>`;
-  showTuts(tutorials);
-}
-function tutSrch(q){q=q.toLowerCase();showTuts(tutorials.filter(t=>(t.title||'').toLowerCase().includes(q)||(t.category||'').includes(q)))}
-function showTuts(list){
-  const f=tutFilter?list.filter(t=>t.category===tutFilter):list;
-  let h='';
-  if(tutFilter)h+=`<div style="margin-bottom:14px"><button class="btn bg bs" onclick="tutFilter='';renderTuts()">✕ Showing: ${CATNAME[tutFilter]||tutFilter} only</button></div>`;
-  h+=`<div class="card"><table><thead><tr><th style="width:40px">#</th><th>Title</th><th>Language</th><th>Lesson #</th><th>File</th><th style="width:100px">Actions</th></tr></thead><tbody>`;
-  if(!f.length)h+=`<tr><td colspan="6" class="empty">No tutorials found</td></tr>`;
-  f.forEach((t,i)=>{h+=`<tr><td>${i+1}</td><td><strong>${esc(t.title)}</strong></td><td><span class="badge ${CB[t.category]||'bdf'}">${CATNAME[t.category]||esc(t.category||'?')}</span></td><td>${t.order||'-'}</td><td style="color:var(--dim);font-size:12px">${esc(t.file)}</td><td><button class="btn bg bs" onclick="editTut('${esc(t.file)}')">✏️ Edit</button> <button class="btn bd bs" onclick="delTut('${esc(t.file)}')">🗑️</button></td></tr>`});
-  h+=`</tbody></table></div>`;
+  $('tact').innerHTML=`<button class="btn bp" onclick="newTut()">+ Add New Tutorial</button><button class="btn bg" style="margin-left:8px;" onclick="toggleUploadPanel('tutorial'); document.getElementById('upload-panel-tutorial').scrollIntoView({behavior:'smooth'})">📥 Import &amp; Upload</button>`;
+  
+  let h = `
+    <div style="display:flex;gap:10px;margin-bottom:18px;background:#fff;padding:14px;border-radius:4px;border:1px solid #c3c4c7;align-items:center;flex-wrap:wrap">
+      <div style="font-size:13px;font-weight:600;color:#3c434a;margin-right:4px">🔍 Filter Tutorials:</div>
+      <input class="input-text" placeholder="Search by title..." oninput="tutFilterChange('q', this.value)" style="width:250px" value="${esc(tutFilters.q)}">
+      <select class="input-text" onchange="tutFilterChange('cat', this.value)" style="width:180px">
+        <option value="">All Categories</option>
+        ${TCAT.map(c => `<option value="${c}" ${tutFilters.cat===c?'selected':''}>${CATNAME[c]||c}</option>`).join('')}
+      </select>
+      ${(tutFilters.q||tutFilters.cat) ? `<button class="btn bg bs" onclick="tutFilters={q:'',cat:''};renderTuts()">Clear Filters</button>` : ''}
+    </div>
+    <div id="tut_table_container"></div>
+    ${renderUploadPanel('tutorial')}
+  `;
   $('content').innerHTML=h;
+  applyTutFilters();
+}
+
+function tutFilterChange(key, val) {
+  tutFilters[key] = val;
+  applyTutFilters();
+  if(key === 'q') applyTutFilters(); else renderTuts();
+}
+
+function applyTutFilters() {
+  const q = tutFilters.q.toLowerCase();
+  const f = tutorials.filter(t => {
+    if (q && !(t.title||'').toLowerCase().includes(q)) return false;
+    if (tutFilters.cat && t.category !== tutFilters.cat) return false;
+    return true;
+  });
+  showTuts(f);
+}
+
+function showTuts(f){
+  let h='';
+  h+=`<div class="card"><table><thead><tr><th style="width:40px">#</th><th>Title</th><th>Language</th><th>Lesson #</th><th>File</th></tr></thead><tbody>`;
+  if(!f.length)h+=`<tr><td colspan="5" class="empty">No tutorials found</td></tr>`;
+  f.forEach((t,i)=>{
+    const slug = t.file.replace(/\.mdx?$/, '');
+    h+=`<tr>
+      <td>${i+1}</td>
+      <td>
+        <strong>${esc(t.title)}</strong>
+        <div class="row-actions" style="font-size:12px; margin-top:4px;">
+          <a href="#" style="color:#2271b1; text-decoration:none;" onclick="event.preventDefault(); editTut('${esc(t.file)}')">Edit</a> <span style="color:#ddd">|</span> 
+          <a href="#" style="color:#d63638; text-decoration:none;" onclick="event.preventDefault(); delTut('${esc(t.file)}')">Trash</a> <span style="color:#ddd">|</span> 
+          <a href="/tutorial/${slug}/" target="_blank" style="color:#2271b1; text-decoration:none;">View</a>
+        </div>
+      </td>
+      <td><span class="badge ${CB[t.category]||'bdf'}">${CATNAME[t.category]||esc(t.category||'?')}</span></td>
+      <td>${t.order||'-'}</td>
+      <td style="color:var(--dim);font-size:12px">${esc(t.file)}</td>
+    </tr>`;
+  });
+  h+=`</tbody></table></div>`;
+  const cont = $('tut_table_container');
+  if(cont) cont.innerHTML=h;
 }
 
 function tutForm(t={}){
-  return `<div class="g2"><div class="field"><label>Title</label><input id="tf_t" value="${esc(t.title||'')}" placeholder="Enter tutorial title..."></div>
-  <div class="field"><label>Language</label><select id="tf_c">${TCAT.map(c=>`<option value="${c}" ${t.category===c?'selected':''}>${CATNAME[c]}</option>`).join('')}</select></div></div>
-  <div class="g3"><div class="field"><label>Lesson Order</label><input id="tf_o" type="number" value="${t.order||1}" min="1"></div>
-  <div class="field"><label>URL Slug</label><input id="tf_f" value="${esc(t.file||'')}" ${t.file?'readonly':''} placeholder="my-tutorial-slug.mdx"></div>
-  <div class="field"><label>SEO Description</label><input id="tf_d" value="${esc(t.description||'')}" placeholder="Brief description for search engines..."></div></div>
-  <div class="g3"><div class="field"><label>Publish Date</label><input id="tf_dt" type="date" value="${t.date||new Date().toISOString().split('T')[0]}"></div>
-  <div class="field"><label>Featured Image Path</label><input id="tf_img" value="${esc(t.image||'')}" placeholder="/images/posts/image.png"></div>
-  <div class="field"><label>Author</label><input id="tf_au" value="${esc(t.author||'CodesCompiler')}"></div></div>
-  <div class="field"><label>Tags (comma separated)</label><input id="tf_tg" value="${esc(t.tags||'')}" placeholder="css, animation, design" style="margin-bottom: 16px;"></div>
-  <div class="tab-row"><div class="tab-item on" onclick="showEditorTab(this,'tf_editor')">✏️ Write</div><div class="tab-item" onclick="showPreviewTab(this,'tf_editor','tf_preview')">👁️ Preview</div></div>
-  <div id="tf_editor">${editorToolbar('tf_b')}<textarea class="editor" id="tf_b" placeholder="Start writing your tutorial content here..."></textarea></div>
-  <div id="tf_preview" style="display:none"></div>`;
+  return `<div style="display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start;">
+    <div>
+      <div style="margin-bottom:16px;">
+        <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;color:#3c434a;">Title</label>
+        <input id="tf_t" value="${esc(t.title||'')}" placeholder="Add tutorial title..." style="width:100%;font-size:20px;font-weight:bold;padding:10px 12px;border:1px solid #8c8f94;border-radius:3px;">
+      </div>
+      <div class="tab-row"><div class="tab-item on" onclick="showEditorTab(this,'tf_editor')">✏️ Write</div><div class="tab-item" onclick="showPreviewTab(this,'tf_editor','tf_preview')">👁️ Preview</div></div>
+      <div id="tf_editor">${editorToolbar('tf_b')}<textarea class="editor" id="tf_b" style="min-height:550px;" placeholder="Start writing your tutorial content here..."></textarea></div>
+      <div id="tf_preview" style="display:none"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">📌 Publish &amp; Status</div>
+        <div style="padding:14px;display:flex;flex-direction:column;gap:12px;">
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Status</label>
+            <select id="tf_status" class="input-text" style="width:100%;"><option value="publish">✅ Published</option><option value="draft">📝 Draft</option><option value="schedule">⏰ Schedule</option></select>
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Publish Date</label>
+            <input id="tf_dt" type="date" class="input-text" style="width:100%;" value="${t.date||new Date().toISOString().split('T')[0]}">
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Author</label>
+            <input id="tf_au" class="input-text" style="width:100%;" value="${esc(t.author||'CodesCompiler')}">
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Lesson Order</label>
+            <input id="tf_o" type="number" class="input-text" style="width:100%;" value="${t.order||1}" min="1">
+          </div>
+        </div>
+      </div>
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">🖼️ Featured Image</div>
+        <div style="padding:14px;">
+          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Image Path / URL</label>
+          <input id="tf_img" class="input-text" style="width:100%;" value="${esc(t.image||'')}" placeholder="/images/posts/sample.png" oninput="if($('tf_img_preview'))$('tf_img_preview').src=this.value">
+          <div style="margin-top:10px;border:1px dashed #c3c4c7;border-radius:4px;padding:8px;text-align:center;background:#fafafa;">
+            <img id="tf_img_preview" src="${esc(t.image||'https://placehold.co/300x160/e2e8f0/94a3b8?text=No+Featured+Image')}" style="max-width:100%;height:auto;border-radius:3px;" onerror="this.src='https://placehold.co/300x160/e2e8f0/94a3b8?text=Invalid+Image+URL'">
+          </div>
+        </div>
+      </div>
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">🏷️ Category &amp; Tags</div>
+        <div style="padding:14px;display:flex;flex-direction:column;gap:12px;">
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Language</label>
+            <select id="tf_c" class="input-text" style="width:100%;">${TCAT.map(c=>`<option value="${c}" ${t.category===c?'selected':''}>${CATNAME[c]}</option>`).join('')}</select>
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">URL Slug</label>
+            <input id="tf_f" class="input-text" style="width:100%;" value="${esc(t.file||'')}" ${t.file?'readonly':''} placeholder="my-tutorial-slug.mdx">
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Tags</label>
+            <input id="tf_tg" class="input-text" style="width:100%;" value="${esc(t.tags||'')}" placeholder="css, html, js">
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">SEO Description</label>
+            <textarea id="tf_d" class="input-text" style="width:100%;height:60px;" placeholder="Search description...">${esc(t.description||'')}</textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
 }
 
 function newTut(){
@@ -273,30 +1006,31 @@ let blogFilters = { q: '', cat: '', status: '', author: '' };
 
 function renderBlogs(){
   $('ptitle').textContent='Posts';
-  $('tact').innerHTML=`<button class="btn bp" onclick="newBlog()">+ Add New Post</button>`;
+  $('tact').innerHTML=`<button class="btn bp" onclick="newBlog()">+ Add New Post</button><button class="btn bg" style="margin-left:8px;" onclick="toggleUploadPanel('blog'); document.getElementById('upload-panel-blog').scrollIntoView({behavior:'smooth'})">📥 Import &amp; Upload</button>`;
   
   const authors = [...new Set(blogs.map(b => b.author || 'CodesCompiler'))].filter(Boolean);
   
   let h = `
-    <div style="display:flex;gap:10px;margin-bottom:18px;background:var(--card);padding:14px;border-radius:10px;border:1px solid var(--brd);align-items:center;flex-wrap:wrap">
-      <div style="font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;margin-right:4px">\ud83d\udd0d Filters:</div>
-      <input class="srch" placeholder="Search title..." oninput="blogFilter('q', this.value)" style="width:200px" value="${esc(blogFilters.q)}">
-      <select onchange="blogFilter('cat', this.value)" style="width:160px">
+    <div style="display:flex;gap:10px;margin-bottom:18px;background:#fff;padding:14px;border-radius:4px;border:1px solid #c3c4c7;align-items:center;flex-wrap:wrap">
+      <div style="font-size:13px;font-weight:600;color:#3c434a;margin-right:4px">🔍 Filter Posts:</div>
+      <input class="input-text" placeholder="Search title..." oninput="blogFilter('q', this.value)" style="width:200px" value="${esc(blogFilters.q)}">
+      <select class="input-text" onchange="blogFilter('cat', this.value)" style="width:160px">
         <option value="">All Categories</option>
         ${BCAT.map(c => `<option value="${c}" ${blogFilters.cat===c?'selected':''}>${c}</option>`).join('')}
       </select>
-      <select onchange="blogFilter('status', this.value)" style="width:140px">
+      <select class="input-text" onchange="blogFilter('status', this.value)" style="width:140px">
         <option value="">All Statuses</option>
         <option value="publish" ${blogFilters.status==='publish'?'selected':''}>✅ Published</option>
         <option value="draft" ${blogFilters.status==='draft'?'selected':''}>📝 Drafts</option>
       </select>
-      <select onchange="blogFilter('author', this.value)" style="width:160px">
+      <select class="input-text" onchange="blogFilter('author', this.value)" style="width:160px">
         <option value="">All Authors</option>
         ${authors.map(a => `<option value="${a}" ${blogFilters.author===a?'selected':''}>${a}</option>`).join('')}
       </select>
       ${(blogFilters.q||blogFilters.cat||blogFilters.status||blogFilters.author) ? `<button class="btn bg bs" onclick="blogFilters={q:'',cat:'',status:'',author:''};renderBlogs()">Clear Filters</button>` : ''}
     </div>
     <div id="blog_table_container"></div>
+    ${renderUploadPanel('blog')}
   `;
   $('content').innerHTML = h;
   applyBlogFilters();
@@ -327,12 +1061,28 @@ function applyBlogFilters() {
 }
 
 function showBlogs(list){
-  let h=`<div class="card"><table><thead><tr><th style="width:40px">#</th><th>Title</th><th>Category</th><th>Author</th><th>Date</th><th>Status</th><th style="width:100px">Actions</th></tr></thead><tbody>`;
-  if(!list.length)h+=`<tr><td colspan="7" class="empty">No posts match your filters.</td></tr>`;
+  let h=`<div class="card"><table><thead><tr><th style="width:40px">#</th><th>Title</th><th>Category</th><th>Author</th><th>Date</th><th>Status</th></tr></thead><tbody>`;
+  if(!list.length)h+=`<tr><td colspan="6" class="empty">No posts match your filters.</td></tr>`;
   list.forEach((b,i)=>{
     const feat=b.featured==='true'||b.featured===true;
     const isDraft=b.draft==='true'||b.draft===true;
-    h+=`<tr><td>${i+1}</td><td><strong>${esc(b.title)}</strong>${feat?' ⭐':''}</td><td style="font-size:12px">${esc(b.category||'')}</td><td style="font-size:12px;color:var(--dim)">${esc(b.author||'CodesCompiler')}</td><td style="color:var(--dim);font-size:12px">${esc(b.date||'')}</td><td>${isDraft?'<span class="badge" style="background:rgba(245,158,11,.12);color:#fbbf24">Draft</span>':'<span class="badge bpub">Published</span>'}</td><td><button class="btn bg bs" onclick="editBlog('${esc(b.file)}')">✏️ Edit</button> <button class="btn bd bs" onclick="delBlog('${esc(b.file)}')">🗑️</button></td></tr>`});
+    const slug = b.file.replace(/\.mdx?$/, '');
+    h+=`<tr>
+      <td>${i+1}</td>
+      <td>
+        <strong>${esc(b.title)}</strong>${feat?' ⭐':''}
+        <div class="row-actions" style="font-size:12px; margin-top:4px;">
+          <a href="#" style="color:#2271b1; text-decoration:none;" onclick="event.preventDefault(); editBlog('${esc(b.file)}')">Edit</a> <span style="color:#ddd">|</span> 
+          <a href="#" style="color:#d63638; text-decoration:none;" onclick="event.preventDefault(); delBlog('${esc(b.file)}')">Trash</a> <span style="color:#ddd">|</span> 
+          <a href="/blog/${slug}/" target="_blank" style="color:#2271b1; text-decoration:none;">View</a>
+        </div>
+      </td>
+      <td style="font-size:12px">${esc(b.category||'')}</td>
+      <td style="font-size:12px;color:var(--dim)">${esc(b.author||'CodesCompiler')}</td>
+      <td style="color:var(--dim);font-size:12px">${esc(b.date||'')}</td>
+      <td>${isDraft?'<span class="badge" style="background:rgba(245,158,11,.12);color:#fbbf24">Draft</span>':'<span class="badge bpub">Published</span>'}</td>
+    </tr>`;
+  });
   h+=`</tbody></table></div>`;
   const cont = $('blog_table_container');
   if(cont) cont.innerHTML=h;
@@ -340,22 +1090,73 @@ function showBlogs(list){
 
 function blogForm(b={}){
   const isDraft=b.status==='draft'||b.draft==='true'||b.draft===true;
-  return `<div class="g3"><div class="field"><label>Title</label><input id="bf_t" value="${esc(b.title||'')}" placeholder="Enter post title..."></div>
-  <div class="field"><label>Category</label><select id="bf_c">${BCAT.map(c=>`<option value="${c}" ${b.category===c?'selected':''}>${c}</option>`).join('')}</select></div>
-  <div class="field"><label>Status</label><select id="bf_status"><option value="publish" ${!isDraft?'selected':''}>✅ Published</option><option value="draft" ${isDraft?'selected':''}>📝 Draft</option></select></div></div>
-  <div class="g3"><div class="field"><label>Publish Date</label><input id="bf_dt" type="date" value="${b.date||new Date().toISOString().split('T')[0]}"></div>
-  <div class="field"><label>URL Slug</label><input id="bf_f" value="${esc(b.file||'')}" ${b.file?'readonly':''} placeholder="my-post-slug.mdx"></div>
-  <div class="field"><label>Featured Image Path</label><input id="bf_img" value="${esc(b.image||'')}" placeholder="/images/posts/image.png"></div></div>
-  <div class="g2"><div class="field"><label>SEO Meta Title (optional override)</label><input id="bf_seo" value="${esc(b.seoTitle||'')}" placeholder="Custom title for Google results..."></div>
-  <div class="field"><label>SEO Description</label><input id="bf_d" value="${esc(b.description||'')}" placeholder="Brief description for search engines..."></div></div>
-  <div class="g2"><div class="field"><label>Tags (comma separated)</label><input id="bf_tg" value="${esc(b.tags||'')}" placeholder="css, animation, design"></div>
-  <div class="field"><label>Author</label><input id="bf_au" value="${esc(b.author||'CodesCompiler')}"></div></div>
-  <div class="g3"><div class="field"><label class="chk"><input type="checkbox" id="bf_ft" ${b.featured==='true'||b.featured===true?'checked':''}><span>⭐ Featured Post</span></label></div>
-  <div class="field"><label class="chk"><input type="checkbox" id="bf_dm" ${b.hasDemo==='true'||b.hasDemo===true?'checked':''}><span>🖥️ Has Live Demo</span></label></div>
-  <div class="field"><label class="chk"><input type="checkbox" id="bf_noads" ${b.disableAds==='true'||b.disableAds===true?'checked':''}><span>🚫 Disable Ads on this post</span></label></div></div>
-  <div class="tab-row"><div class="tab-item on" onclick="showEditorTab(this,'bf_editor')">✏️ Write</div><div class="tab-item" onclick="showPreviewTab(this,'bf_editor','bf_preview')">👁️ Preview</div></div>
-  <div id="bf_editor">${editorToolbar('bf_b')}<textarea class="editor" id="bf_b" placeholder="Start writing your post content here..."></textarea></div>
-  <div id="bf_preview" style="display:none"></div>`;
+  return `<div style="display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start;">
+    <div>
+      <div style="margin-bottom:16px;">
+        <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;color:#3c434a;">Title</label>
+        <input id="bf_t" value="${esc(b.title||'')}" placeholder="Add post title..." style="width:100%;font-size:20px;font-weight:bold;padding:10px 12px;border:1px solid #8c8f94;border-radius:3px;">
+      </div>
+      <div class="tab-row"><div class="tab-item on" onclick="showEditorTab(this,'bf_editor')">✏️ Write</div><div class="tab-item" onclick="showPreviewTab(this,'bf_editor','bf_preview')">👁️ Preview</div></div>
+      <div id="bf_editor">${editorToolbar('bf_b')}<textarea class="editor" id="bf_b" style="min-height:550px;" placeholder="Start writing your post content here..."></textarea></div>
+      <div id="bf_preview" style="display:none"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">📌 Publish &amp; Status</div>
+        <div style="padding:14px;display:flex;flex-direction:column;gap:12px;">
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Status</label>
+            <select id="bf_status" class="input-text" style="width:100%;"><option value="publish" ${!isDraft?'selected':''}>✅ Published</option><option value="draft" ${isDraft?'selected':''}>📝 Draft</option><option value="schedule">⏰ Schedule</option></select>
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Publish Date</label>
+            <input id="bf_dt" type="date" class="input-text" style="width:100%;" value="${b.date||new Date().toISOString().split('T')[0]}">
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Author</label>
+            <input id="bf_au" class="input-text" style="width:100%;" value="${esc(b.author||'CodesCompiler')}">
+          </div>
+          <div style="border-top:1px solid #f0f0f1;padding-top:8px;">
+            <label class="chk" style="display:block;margin-bottom:6px;"><input type="checkbox" id="bf_ft" ${b.featured==='true'||b.featured===true?'checked':''}><span>⭐ Featured Post</span></label>
+            <label class="chk" style="display:block;margin-bottom:6px;"><input type="checkbox" id="bf_dm" ${b.hasDemo==='true'||b.hasDemo===true?'checked':''}><span>🖥️ Has Live Demo</span></label>
+            <label class="chk" style="display:block;"><input type="checkbox" id="bf_noads" ${b.disableAds==='true'||b.disableAds===true?'checked':''}><span>🚫 Disable Ads</span></label>
+          </div>
+        </div>
+      </div>
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">🖼️ Featured Image</div>
+        <div style="padding:14px;">
+          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Image Path / URL</label>
+          <input id="bf_img" class="input-text" style="width:100%;" value="${esc(b.image||'')}" placeholder="/images/posts/sample.png" oninput="if($('bf_img_preview'))$('bf_img_preview').src=this.value">
+          <div style="margin-top:10px;border:1px dashed #c3c4c7;border-radius:4px;padding:8px;text-align:center;background:#fafafa;">
+            <img id="bf_img_preview" src="${esc(b.image||'https://placehold.co/300x160/e2e8f0/94a3b8?text=No+Featured+Image')}" style="max-width:100%;height:auto;border-radius:3px;" onerror="this.src='https://placehold.co/300x160/e2e8f0/94a3b8?text=Invalid+Image+URL'">
+          </div>
+        </div>
+      </div>
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">🏷️ Category &amp; Tags</div>
+        <div style="padding:14px;display:flex;flex-direction:column;gap:12px;">
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Category</label>
+            <select id="bf_c" class="input-text" style="width:100%;">${BCAT.map(c=>`<option value="${c}" ${b.category===c?'selected':''}>${c}</option>`).join('')}</select>
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Tags (comma separated)</label>
+            <input id="bf_tg" class="input-text" style="width:100%;" value="${esc(b.tags||'')}" placeholder="css, animation, design">
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">URL Slug</label>
+            <input id="bf_f" class="input-text" style="width:100%;" value="${esc(b.file||'')}" ${b.file?'readonly':''} placeholder="my-post-slug.mdx">
+          </div>
+        </div>
+      </div>
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">🔍 SEO Settings</div>
+        <div style="padding:14px;display:flex;flex-direction:column;gap:10px;">
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">SEO Title</label>
+            <input id="bf_seo" class="input-text" style="width:100%;" value="${esc(b.seoTitle||'')}" placeholder="Custom search title...">
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Meta Description</label>
+            <textarea id="bf_d" class="input-text" style="width:100%;height:60px;" placeholder="Search engine snippet...">${esc(b.description||'')}</textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
 }
 
 function newBlog(){
@@ -655,43 +1456,442 @@ function renderPages(){
   $('ptitle').textContent='Pages';
   $('tact').innerHTML=`<button class="btn bp" onclick="newPage()">+ New Page</button>`;
   let h=`<div class="card"><div class="ch"><h3>📄 Static Pages</h3><span style="color:var(--dim);font-size:12px">${pages.length} pages</span></div>
-  <table><thead><tr><th>Title</th><th>URL</th><th>File</th><th style="width:100px">Actions</th></tr></thead><tbody>`;
-  if(!pages.length) h+=`<tr><td colspan="4" class="empty">No pages</td></tr>`;
+  <table><thead><tr><th>Title</th><th>URL</th><th>File</th></tr></thead><tbody>`;
+  if(!pages.length) h+=`<tr><td colspan="3" class="empty">No pages</td></tr>`;
   pages.forEach(p=>{
-    h+=`<tr><td><strong>${esc(p.title)}</strong></td><td style="font-size:12px;color:var(--muted);font-family:monospace">${esc(p.url)}</td><td style="font-size:12px;color:var(--dim)">${esc(p.file)}</td>
-    <td><button class="btn bg bs" onclick="editPage('${esc(p.file)}')">\u270f\ufe0f Edit</button> <button class="btn bd bs" onclick="delPage('${esc(p.file)}')">\ud83d\uddd1\ufe0f</button></td></tr>`;
+    const slug = p.file === 'index.astro' ? '' : p.file.replace(/\.astro$/, '/');
+    h+=`<tr>
+      <td>
+        <strong>${esc(p.title)}</strong>
+        <div class="row-actions" style="font-size:12px; margin-top:4px;">
+          <a href="#" style="color:#2271b1; text-decoration:none;" onclick="event.preventDefault(); editPage('${esc(p.file)}')">Edit</a> <span style="color:#ddd">|</span> 
+          <a href="#" style="color:#d63638; text-decoration:none;" onclick="event.preventDefault(); delPage('${esc(p.file)}')">Trash</a> <span style="color:#ddd">|</span> 
+          <a href="/${slug}" target="_blank" style="color:#2271b1; text-decoration:none;">View</a>
+        </div>
+      </td>
+      <td style="font-size:12px;color:var(--muted);font-family:monospace">${esc(p.url)}</td>
+      <td style="font-size:12px;color:var(--dim)">${esc(p.file)}</td>
+    </tr>`;
   });
   h+=`</tbody></table></div>`;
   h+=`<div style="background:rgba(99,102,241,.08);padding:14px 18px;border-radius:10px;font-size:13px;color:var(--muted)">\ud83d\udca1 Pages are Astro template files (.astro). You can edit the HTML content directly. For new pages, a basic template will be created for you.</div>`;
+  h += renderUploadPanel('page');
   $('content').innerHTML=h;
 }
 
-function newPage(){
-  const slug=prompt('Enter page URL slug (e.g. "faq"):');
-  if(!slug) return;
-  const fn=slug.replace(/[^a-z0-9-]/gi,'-').toLowerCase()+'.astro';
-  const template=`---\nimport BaseLayout from '../layouts/BaseLayout.astro';\n---\n<BaseLayout title="${slug.charAt(0).toUpperCase()+slug.slice(1)}" description="${slug} page">\n  <div class="max-w-screen-xl mx-auto px-5 py-12">\n    <h1 class="text-3xl font-bold mb-6">${slug.charAt(0).toUpperCase()+slug.slice(1)}</h1>\n    <p>Your content here...</p>\n  </div>\n</BaseLayout>`;
-  openEditor('New Page: '+fn,
-    `<div class="card"><div class="ch"><h3>Page Content</h3><span style="color:var(--dim);font-size:12px">${fn}</span></div><div style="padding:16px"><textarea class="editor" id="pg_body" style="min-height:500px">${esc(template)}</textarea></div></div>`,
-    async()=>{
-      await post('/api/pages/save',{filename:fn,content:$('pg_body').value});
-      toast('Page created! 🎉');await loadAll();renderPages();
+// ══ BOOKS ══
+let books = [];
+let bookFilters = { q: '', cat: '' };
+
+async function renderBooks() {
+  $('ptitle').textContent='Books';
+  $('tact').innerHTML=`<button class="btn bp" onclick="newBook()">+ Add New Book</button>`;
+  if(!books.length) books = await api('/api/books/list').catch(()=>[]);
+  
+  const bCats = [...new Set(books.map(b=>b.category).filter(Boolean))];
+  
+  let h = `
+    <div style="display:flex;gap:10px;margin-bottom:18px;background:#fff;padding:14px;border-radius:4px;border:1px solid #c3c4c7;align-items:center;flex-wrap:wrap">
+      <div style="font-size:13px;font-weight:600;color:#3c434a;margin-right:4px">🔍 Filter Books:</div>
+      <input class="input-text" placeholder="Search by title..." oninput="bookFilterChange('q', this.value)" style="width:250px" value="${esc(bookFilters.q)}">
+      <select class="input-text" onchange="bookFilterChange('cat', this.value)" style="width:180px">
+        <option value="">All Categories</option>
+        ${bCats.map(c => `<option value="${c}" ${bookFilters.cat===c?'selected':''}>${c}</option>`).join('')}
+      </select>
+      ${(bookFilters.q||bookFilters.cat) ? `<button class="btn bg bs" onclick="bookFilters={q:'',cat:''};renderBooks()">Clear Filters</button>` : ''}
+    </div>
+    <div id="book_table_container"></div>
+    ${renderUploadPanel('book')}
+  `;
+  $('content').innerHTML=h;
+  applyBookFilters();
+}
+
+function bookFilterChange(key, val) {
+  bookFilters[key] = val;
+  applyBookFilters();
+  if(key === 'q') applyBookFilters(); else renderBooks();
+}
+
+function applyBookFilters() {
+  const q = bookFilters.q.toLowerCase();
+  const f = books.filter(b => {
+    if (q && !(b.title||b.file||'').toLowerCase().includes(q)) return false;
+    if (bookFilters.cat && b.category !== bookFilters.cat) return false;
+    return true;
+  });
+  showBooks(f);
+}
+
+function showBooks(list) {
+  let h=`<div class="card"><div class="ch"><h3>📚 Books</h3><span style="color:var(--dim);font-size:12px">${books.length} total books</span></div>
+  <table><thead><tr><th>#</th><th>Title</th><th>Category</th><th>Date</th><th>File</th></tr></thead><tbody>`;
+  if(!list.length) h+=`<tr><td colspan="5" class="empty">No books match your filters.</td></tr>`;
+  list.forEach((b,i)=>{
+    const slug = b.slug || b.file.replace(/\.(json|mdx?)$/, '');
+    h+=`<tr>
+      <td>${i+1}</td>
+      <td>
+        <strong>${esc(b.title||b.file)}</strong>
+        <div class="row-actions" style="font-size:12px; margin-top:4px;">
+          <a href="#" style="color:#2271b1; text-decoration:none;" onclick="event.preventDefault(); editBook('${esc(b.file)}')">Edit</a> <span style="color:#ddd">|</span> 
+          <a href="#" style="color:#d63638; text-decoration:none;" onclick="event.preventDefault(); delBook('${esc(b.file)}')">Trash</a> <span style="color:#ddd">|</span> 
+          <a href="/books/${slug}" target="_blank" style="color:#2271b1; text-decoration:none;">View</a>
+        </div>
+      </td>
+      <td style="font-size:12px">${esc(b.category||'')}</td>
+      <td style="font-size:12px;color:var(--dim)">${esc(b.date||'')}</td>
+      <td style="font-size:12px;color:var(--dim)">${esc(b.file)}</td>
+    </tr>`;
+  });
+  h+=`</tbody></table></div>`;
+  const cont = $('book_table_container');
+  if(cont) cont.innerHTML=h;
+}
+
+function bookForm(b = {}) {
+  let parsed = {};
+  if (typeof b.content === 'string') {
+    try { parsed = JSON.parse(b.content); } catch(e){}
+  } else if (typeof b === 'object') {
+    parsed = b;
+  }
+  const title = parsed.title || b.title || '';
+  const tagline = parsed.tagline || b.tagline || '';
+  const author = parsed.author || b.author || 'CodesCompiler';
+  const category = parsed.category || b.category || '';
+  const date = parsed.date || b.date || new Date().toISOString().split('T')[0];
+  const image = parsed.image || b.image || parsed.coverImage || '';
+  const isDraft = parsed.draft === true || b.draft === true;
+
+  const level = parsed.level || '';
+  const amazonUrl = parsed.amazonUrl || '';
+  const pagesCount = parsed.pages !== undefined ? parsed.pages : '';
+  const language = parsed.language || 'English';
+  const publisher = parsed.publisher || 'Independently published';
+  const isbn13 = parsed.isbn13 || '';
+  const asin = parsed.asin || '';
+  const itemWeight = parsed.itemWeight || '';
+  const dimensions = parsed.dimensions || '';
+  const description = parsed.description || '';
+  const chapters = parsed.chapters || [];
+
+  const defaultTemplate = {
+    title: title || '',
+    tagline: tagline || '',
+    description: description,
+    draft: isDraft,
+    image: image,
+    date: date,
+    level: level,
+    amazonUrl: amazonUrl,
+    pages: pagesCount,
+    language: language,
+    publisher: publisher,
+    isbn13: isbn13,
+    asin: asin,
+    itemWeight: itemWeight,
+    dimensions: dimensions,
+    category: category,
+    chapters: chapters
+  };
+
+  const jsonStr = typeof b.content === 'string' ? b.content : JSON.stringify(defaultTemplate, null, 2);
+
+  return `<div style="display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start;">
+    <div>
+      <div style="margin-bottom:12px;">
+        <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;color:#3c434a;">Book Title</label>
+        <input id="bk_title_input" value="${esc(title)}" placeholder="Add book title..." style="width:100%;font-size:20px;font-weight:bold;padding:10px 12px;border:1px solid #8c8f94;border-radius:3px;">
+      </div>
+      <div style="margin-bottom:16px;">
+        <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;color:#3c434a;">Tagline / Subtitle</label>
+        <input id="bk_tagline_input" value="${esc(tagline)}" placeholder="e.g. 30 Heartwarming Lessons About Kindness..." style="width:100%;font-size:14px;padding:8px 10px;border:1px solid #8c8f94;border-radius:3px;">
+      </div>
+
+      <!-- Description Section -->
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;margin-bottom:16px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">
+          📖 Book Description / Synopsis
+        </div>
+        <div style="padding:16px;">
+          <textarea id="bk_desc_input" class="editor" style="width:100%;min-height:220px;font-family:sans-serif;font-size:14px;line-height:1.6;padding:10px;border:1px solid #8c8f94;border-radius:3px;" placeholder="Write a heartwarming storybook description or synopsis here...">${esc(description)}</textarea>
+        </div>
+      </div>
+
+      <!-- Chapters Section -->
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;margin-bottom:16px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;display:flex;justify-content:space-between;align-items:center;">
+          <span>📑 Chapters &amp; Lessons</span>
+          <span style="font-size:11px;color:#646970;">Chapter Data</span>
+        </div>
+        <div style="padding:16px;">
+          <textarea id="bk_chapters_input" class="editor" style="width:100%;min-height:180px;font-family:monospace;font-size:13px;padding:10px;border:1px solid #8c8f94;border-radius:3px;" placeholder='[\n  { "title": "Lesson 1: Sharing is Caring", "content": "..." }\n]'>${esc(JSON.stringify(chapters, null, 2))}</textarea>
+        </div>
+      </div>
+
+      <!-- Advanced Raw JSON Collapsible -->
+      <div style="margin-top:8px;">
+        <details>
+          <summary style="font-size:12px;color:#646970;cursor:pointer;">🛠️ Advanced: View / Edit Raw JSON Source</summary>
+          <textarea id="bk_body" style="width:100%;min-height:180px;font-family:monospace;font-size:12px;margin-top:8px;padding:8px;border:1px solid #c3c4c7;border-radius:3px;">${esc(jsonStr)}</textarea>
+        </details>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <!-- Publish Box -->
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">📌 Publish &amp; Status</div>
+        <div style="padding:14px;display:flex;flex-direction:column;gap:12px;">
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Status</label>
+            <select id="bk_status" class="input-text" style="width:100%;"><option value="publish" ${!isDraft?'selected':''}>✅ Published</option><option value="draft" ${isDraft?'selected':''}>📝 Draft</option><option value="schedule">⏰ Schedule</option></select>
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Publish Date</label>
+            <input id="bk_date_input" type="date" class="input-text" style="width:100%;" value="${date}">
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Author</label>
+            <input id="bk_author_input" class="input-text" style="width:100%;" value="${esc(author)}">
+          </div>
+        </div>
+      </div>
+      <!-- Cover Image -->
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">🖼️ Cover / Featured Image</div>
+        <div style="padding:14px;">
+          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Image Path / URL</label>
+          <input id="bk_img_input" class="input-text" style="width:100%;" value="${esc(image)}" placeholder="/images/books/cover.png" oninput="if($('bk_img_preview'))$('bk_img_preview').src=this.value">
+          <div style="margin-top:10px;border:1px dashed #c3c4c7;border-radius:4px;padding:8px;text-align:center;background:#fafafa;">
+            <img id="bk_img_preview" src="${esc(image || 'https://placehold.co/300x160/e2e8f0/94a3b8?text=No+Cover+Image')}" style="max-width:100%;height:auto;border-radius:3px;" onerror="this.src='https://placehold.co/300x160/e2e8f0/94a3b8?text=Invalid+Image+URL'">
+          </div>
+        </div>
+      </div>
+      <!-- Amazon & Specifications -->
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">🛒 Amazon &amp; Specifications</div>
+        <div style="padding:14px;display:flex;flex-direction:column;gap:10px;">
+          <div><label style="display:block;font-size:11px;font-weight:600;margin-bottom:2px;">Amazon Product URL</label>
+            <input id="bk_amazon_input" class="input-text" style="width:100%;" value="${esc(amazonUrl)}" placeholder="https://www.amazon.com/dp/...">
+          </div>
+          <div><label style="display:block;font-size:11px;font-weight:600;margin-bottom:2px;">Age Level / Target Audience</label>
+            <input id="bk_level_input" class="input-text" style="width:100%;" value="${esc(level)}" placeholder="e.g. 3-10 years">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div><label style="display:block;font-size:11px;font-weight:600;margin-bottom:2px;">ASIN</label>
+              <input id="bk_asin_input" class="input-text" style="width:100%;" value="${esc(asin)}" placeholder="B0HJCW73Y2">
+            </div>
+            <div><label style="display:block;font-size:11px;font-weight:600;margin-bottom:2px;">ISBN-13</label>
+              <input id="bk_isbn_input" class="input-text" style="width:100%;" value="${esc(isbn13)}" placeholder="979-8172897573">
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div><label style="display:block;font-size:11px;font-weight:600;margin-bottom:2px;">Page Count</label>
+              <input id="bk_pages_input" type="number" class="input-text" style="width:100%;" value="${esc(pagesCount)}" placeholder="30">
+            </div>
+            <div><label style="display:block;font-size:11px;font-weight:600;margin-bottom:2px;">Language</label>
+              <input id="bk_lang_input" class="input-text" style="width:100%;" value="${esc(language)}" placeholder="English">
+            </div>
+          </div>
+          <div><label style="display:block;font-size:11px;font-weight:600;margin-bottom:2px;">Publisher</label>
+            <input id="bk_pub_input" class="input-text" style="width:100%;" value="${esc(publisher)}" placeholder="Independently published">
+          </div>
+          <div><label style="display:block;font-size:11px;font-weight:600;margin-bottom:2px;">Product Dimensions</label>
+            <input id="bk_dim_input" class="input-text" style="width:100%;" value="${esc(dimensions)}" placeholder="21.59 x 0.20 x 27.94 cm">
+          </div>
+          <div><label style="display:block;font-size:11px;font-weight:600;margin-bottom:2px;">Item Weight</label>
+            <input id="bk_weight_input" class="input-text" style="width:100%;" value="${esc(itemWeight)}" placeholder="127 g">
+          </div>
+          <div><label style="display:block;font-size:11px;font-weight:600;margin-bottom:2px;">Category</label>
+            <input id="bk_cat_input" class="input-text" style="width:100%;" value="${esc(category)}" placeholder="Children's Books, Kindness">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function syncBookDataFromInputs(parsed = {}) {
+  if ($('bk_body')) {
+    try {
+      const raw = JSON.parse($('bk_body').value);
+      parsed = { ...raw, ...parsed };
+    } catch(e){}
+  }
+
+  if ($('bk_title_input') && $('bk_title_input').value.trim()) parsed.title = $('bk_title_input').value.trim();
+  if ($('bk_tagline_input')) parsed.tagline = $('bk_tagline_input').value.trim();
+  if ($('bk_desc_input')) parsed.description = $('bk_desc_input').value.trim();
+  if ($('bk_author_input')) parsed.author = $('bk_author_input').value.trim();
+  if ($('bk_status')) parsed.draft = $('bk_status').value === 'draft';
+  if ($('bk_img_input')) {
+    parsed.image = $('bk_img_input').value.trim();
+    parsed.coverImage = $('bk_img_input').value.trim();
+  }
+  if ($('bk_date_input')) parsed.date = $('bk_date_input').value.trim();
+  if ($('bk_amazon_input')) parsed.amazonUrl = $('bk_amazon_input').value.trim();
+  if ($('bk_level_input')) parsed.level = $('bk_level_input').value.trim();
+  if ($('bk_asin_input')) parsed.asin = $('bk_asin_input').value.trim();
+  if ($('bk_isbn_input')) parsed.isbn13 = $('bk_isbn_input').value.trim();
+  if ($('bk_pages_input')) {
+    const val = $('bk_pages_input').value;
+    parsed.pages = val ? Number(val) : '';
+  }
+  if ($('bk_lang_input')) parsed.language = $('bk_lang_input').value.trim();
+  if ($('bk_pub_input')) parsed.publisher = $('bk_pub_input').value.trim();
+  if ($('bk_dim_input')) parsed.dimensions = $('bk_dim_input').value.trim();
+  if ($('bk_weight_input')) parsed.itemWeight = $('bk_weight_input').value.trim();
+  if ($('bk_cat_input')) parsed.category = $('bk_cat_input').value.trim();
+
+  if ($('bk_chapters_input')) {
+    try {
+      parsed.chapters = JSON.parse($('bk_chapters_input').value);
+    } catch(e){}
+  }
+
+  return parsed;
+}
+
+function newBook(){
+  openEditor('Add New Book', bookForm(),
+    async () => {
+      const content = $('bk_body').value;
+      let parsed = {};
+      try { parsed = JSON.parse(content); } catch(e) { return toast('Invalid JSON syntax: ' + e.message, false); }
+      parsed = syncBookDataFromInputs(parsed);
+      
+      if (!parsed.title) return toast('Please provide a Book Title', false);
+      const slug = parsed.slug || parsed.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      parsed.slug = slug;
+      const fn = slug + '.json';
+
+      await post('/api/books/save', { filename: fn, content: JSON.stringify(parsed, null, 2) });
+      toast('Book created! 🎉'); books = []; await loadAll(); renderBooks();
     },
-    ()=>renderPages(),
+    () => renderBooks(),
     '<span class="badge bpub" style="margin-right:8px">New</span>'
   );
 }
 
+async function editBook(file){
+  const d = await api('/api/books/get?file=' + encodeURIComponent(file));
+  if (d.error) return toast('File not found', false);
+  openEditor('Edit Book: ' + file, bookForm({ file, content: d.content }),
+    async () => {
+      const content = $('bk_body').value;
+      let parsed = {};
+      try { parsed = JSON.parse(content); } catch(e) { return toast('Invalid JSON: ' + e.message, false); }
+      parsed = syncBookDataFromInputs(parsed);
+
+      await post('/api/books/save', { filename: file, content: JSON.stringify(parsed, null, 2) });
+      toast('Book saved! ✅'); books = []; renderBooks();
+    },
+    () => renderBooks(),
+    '<span class="badge bpub" style="margin-right:8px">Published</span>'
+  );
+}
+
+function delBook(f){openConfirm(`Delete book "${f}"?`,async()=>{await post('/api/books/delete',{filename:f});toast('Book deleted');books=[];await loadAll();renderBooks()});}
+
+function pageForm(p = {}) {
+  const isNew = !p.file;
+  const slugName = p.file ? p.file.replace(/\.astro$/, '') : '';
+  const defaultBody = p.content || `---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="${esc(p.title || 'New Page')}" description="Page description">
+  <div class="max-w-screen-xl mx-auto px-5 py-12">
+    <h1 class="text-3xl font-bold mb-6">${esc(p.title || 'New Page')}</h1>
+    <p>Your content here...</p>
+  </div>
+</BaseLayout>`;
+
+  return `<div style="display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start;">
+    <div>
+      <div style="margin-bottom:16px;">
+        <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;color:#3c434a;">Page Title</label>
+        <input id="pg_title_input" value="${esc(p.title || '')}" placeholder="Add page title (e.g. About Us)..." style="width:100%;font-size:20px;font-weight:bold;padding:10px 12px;border:1px solid #8c8f94;border-radius:3px;">
+      </div>
+      <div class="card">
+        <div class="ch"><h3>Page Template Code (.astro)</h3><span style="color:var(--dim);font-size:12px">${p.file || 'New Template'}</span></div>
+        <div style="padding:16px"><textarea class="editor" id="pg_body" style="min-height:550px;width:100%;font-family:monospace;">${esc(defaultBody)}</textarea></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">📌 Publish &amp; Status</div>
+        <div style="padding:14px;display:flex;flex-direction:column;gap:12px;">
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Status</label>
+            <select id="pg_status" class="input-text" style="width:100%;"><option value="publish">✅ Published</option><option value="draft">📝 Draft</option><option value="schedule">⏰ Schedule</option></select>
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Publish Date</label>
+            <input id="pg_date" type="date" class="input-text" style="width:100%;" value="${p.date || new Date().toISOString().split('T')[0]}">
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Page Layout</label>
+            <select id="pg_layout" class="input-text" style="width:100%;"><option value="base">BaseLayout (Default)</option></select>
+          </div>
+        </div>
+      </div>
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">🖼️ Featured Image</div>
+        <div style="padding:14px;">
+          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Image Path / URL</label>
+          <input id="pg_img" class="input-text" style="width:100%;" value="${esc(p.image || '')}" placeholder="/images/pages/banner.png" oninput="if($('pg_img_preview'))$('pg_img_preview').src=this.value">
+          <div style="margin-top:10px;border:1px dashed #c3c4c7;border-radius:4px;padding:8px;text-align:center;background:#fafafa;">
+            <img id="pg_img_preview" src="${esc(p.image || 'https://placehold.co/300x160/e2e8f0/94a3b8?text=No+Featured+Image')}" style="max-width:100%;height:auto;border-radius:3px;" onerror="this.src='https://placehold.co/300x160/e2e8f0/94a3b8?text=Invalid+Image+URL'">
+          </div>
+        </div>
+      </div>
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">⚙️ Page Attributes &amp; Slug</div>
+        <div style="padding:14px;display:flex;flex-direction:column;gap:12px;">
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">URL Slug / Filename</label>
+            <input id="pg_slug_input" class="input-text" style="width:100%;" value="${esc(slugName)}" ${!isNew ? 'readonly' : ''} placeholder="e.g. about-us, contact">
+            <span style="font-size:11px;color:#646970;display:block;margin-top:4px;">URL path: /<span id="pg_slug_preview">${slugName || 'slug'}</span>/</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function newPage(){
+  openEditor('Add New Page', pageForm(),
+    async () => {
+      const rawSlug = $('pg_slug_input') ? $('pg_slug_input').value.trim() : '';
+      if (!rawSlug) { return toast('Please enter a Page Slug / Filename', false); }
+      const cleanSlug = rawSlug.replace(/[^a-z0-9-]/gi, '-').toLowerCase();
+      const fn = cleanSlug.endsWith('.astro') ? cleanSlug : cleanSlug + '.astro';
+      const content = $('pg_body').value;
+      await post('/api/pages/save', { filename: fn, content });
+      toast(`Page created! 🎉 (${fn})`); await loadAll(); renderPages();
+    },
+    () => renderPages(),
+    '<span class="badge bpub" style="margin-right:8px">Draft</span>'
+  );
+
+  setTimeout(() => {
+    const input = $('pg_slug_input'); const preview = $('pg_slug_preview');
+    if (input && preview) {
+      input.addEventListener('input', () => {
+        const v = input.value.trim().replace(/[^a-z0-9-]/gi, '-').toLowerCase();
+        preview.textContent = v || 'slug';
+      });
+    }
+  }, 50);
+}
+
 async function editPage(file){
-  const d=await api('/api/pages/get?file='+encodeURIComponent(file));
-  if(d.error)return toast('File not found',false);
-  openEditor('Edit Page: '+file,
-    `<div class="card"><div class="ch"><h3>Page Content (.astro template)</h3><span style="color:var(--dim);font-size:12px">${file}</span></div><div style="padding:16px"><textarea class="editor" id="pg_body" style="min-height:500px">${esc(d.content)}</textarea></div></div>`,
-    async()=>{
-      await post('/api/pages/save',{filename:file,content:$('pg_body').value});
+  const d = await api('/api/pages/get?file=' + encodeURIComponent(file));
+  if (d.error) return toast('File not found', false);
+  const titleMatch = d.content ? d.content.match(/title=["']([^"']+)["']/) : null;
+  const title = titleMatch ? titleMatch[1] : file.replace(/\.astro$/, '');
+
+  openEditor('Edit Page: ' + file, pageForm({ file, content: d.content, title }),
+    async () => {
+      await post('/api/pages/save', { filename: file, content: $('pg_body').value });
       toast('Page saved! ✅');
     },
-    ()=>renderPages(),
+    () => renderPages(),
     '<span class="badge bpub" style="margin-right:8px">Published</span>'
   );
 }
@@ -793,10 +1993,333 @@ function deleteTrash(type, file){
   });
 }
 
+// ══ THEME / APPEARANCE ══
+let themeTab = 'homepage';
+function renderTheme() {
+  $('ptitle').textContent = 'Themes';
+  $('tact').innerHTML = `<button class="btn bp" onclick="saveTheme()">💾 Save Theme</button> <a href="http://localhost:4321/" target="_blank" style="display:inline-block; margin-left:12px; font-weight:bold; color:#04AA6D; text-decoration:none;">👁️ Preview Site ↗</a>`;
+  const t = themeSettings;
+
+  const tabs = [
+    { id: 'homepage',   ico: '🏠', label: 'Homepage' },
+    { id: 'colors',     ico: '🎨', label: 'Colors' },
+    { id: 'typography', ico: '🔤', label: 'Typography' },
+    { id: 'layout',     ico: '📏', label: 'Layout' },
+    { id: 'template',   ico: '🖼️', label: 'Templates' },
+    { id: 'customcss',  ico: '💅', label: 'Custom CSS' },
+    { id: 'advanced',   ico: '⚙️', label: 'Advanced' },
+  ];
+
+  const GFONTS = ['Inter','Roboto','Open Sans','Lato','Montserrat','Poppins','Raleway','Nunito','Source Sans Pro','Merriweather','Playfair Display','PT Serif','system','monospace'];
+
+  let h = `<div style="display:flex;gap:4px;margin-bottom:20px;background:#fff;border:1px solid #c3c4c7;border-radius:4px;padding:6px;flex-wrap:wrap">`;
+  tabs.forEach(tab => {
+    const active = themeTab === tab.id ? 'background:#2271b1;color:#fff;' : 'background:transparent;color:#3c434a;';
+    h += `<button onclick="switchThemeTab('${tab.id}')" style="${active}border:none;border-radius:3px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;">${tab.ico} ${tab.label}</button>`;
+  });
+  h += `</div>`;
+
+  // ── HOMEPAGE TAB ──
+  h += `<div id="ttab-homepage" style="display:${themeTab==='homepage'?'block':'none'}">`;
+  h += `<div class="card"><div class="ch"><h3>🏠 Homepage Settings</h3><span style="color:var(--dim);font-size:12px">Hero section & content toggles</span></div><div style="padding:20px">`;
+  h += `<div class="g2"><div class="field"><label>Hero Title</label><input id="th_heroTitle" value="${esc(t.heroTitle||'Learn Web Development')}" placeholder="Main headline..."></div>
+    <div class="field"><label>Hero Subtitle</label><input id="th_heroSubtitle" value="${esc(t.heroSubtitle||'')}" placeholder="Supporting text below the title..."></div></div>`;
+  h += `<div class="g2"><div class="field"><label>Primary Button Text</label><input id="th_heroBtnText" value="${esc(t.heroBtnText||'Start Learning')}"></div>
+    <div class="field"><label>Primary Button URL</label><input id="th_heroBtnUrl" value="${esc(t.heroBtnUrl||'/tutorials/')}"></div></div>`;
+  h += `<div class="g2"><div class="field"><label>Secondary Button Text</label><input id="th_heroSecBtnText" value="${esc(t.heroSecondaryBtnText||'Browse Posts')}"></div>
+    <div class="field"><label>Secondary Button URL</label><input id="th_heroSecBtnUrl" value="${esc(t.heroSecondaryBtnUrl||'/blog/')}"></div></div>`;
+  h += `<div style="border-top:1px solid #f0f0f1;margin-top:16px;padding-top:16px">
+    <div style="font-size:12px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:12px">Section Visibility</div>
+    <div class="g3">
+      <div class="field"><label class="chk"><input type="checkbox" id="th_showFeat" ${t.showFeaturedSection!==false?'checked':''}><span>⭐ Featured Section</span></label></div>
+      <div class="field"><label class="chk"><input type="checkbox" id="th_showRecent" ${t.showRecentPosts!==false?'checked':''}><span>📝 Recent Posts</span></label></div>
+      <div class="field"><label class="chk"><input type="checkbox" id="th_showTutCats" ${t.showTutorialCategories!==false?'checked':''}><span>📖 Tutorial Categories</span></label></div>
+    </div></div>`;
+  h += `</div></div></div>`;
+
+  // ── COLORS TAB ──
+  h += `<div id="ttab-colors" style="display:${themeTab==='colors'?'block':'none'}">`;
+  h += `<div class="card"><div class="ch"><h3>🎨 Color Settings</h3><span style="color:var(--dim);font-size:12px">All changes generate a custom.css file applied to your site</span></div><div style="padding:20px">`;
+  const colorFields = [
+    ['th_colorPrimary','colorPrimary','#2271b1','Primary Color','Buttons, links, highlights'],
+    ['th_colorAccent','colorAccent','#135e96','Accent / Hover Color','Hover states on primary elements'],
+    ['th_colorBackground','colorBackground','#ffffff','Page Background','Main body background'],
+    ['th_colorSurface','colorSurface','#f6f7f7','Surface / Card Background','Cards, sidebar, panels'],
+    ['th_colorText','colorText','#1d2327','Body Text','Main paragraph text'],
+    ['th_colorMuted','colorMuted','#6b7280','Muted Text','Dates, meta, subtitles'],
+    ['th_colorLink','colorLink','#2271b1','Link Color','Inline text links'],
+    ['th_colorLinkHover','colorLinkHover','#135e96','Link Hover Color','Link hover state'],
+    ['th_colorBorder','colorBorder','#c3c4c7','Border Color','Card edges, dividers'],
+    ['th_colorButtonText','colorButtonText','#ffffff','Button Text Color','Text on colored buttons'],
+    ['th_colorHeaderBg','colorHeaderBg','#1e1e1e','Header Background','Top navigation bar'],
+    ['th_colorFooterBg','colorFooterBg','#1e1e1e','Footer Background','Bottom footer area'],
+  ];
+  h += `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">`;
+  colorFields.forEach(([id,key,def,label,hint]) => {
+    h += `<div style="display:flex;align-items:center;gap:12px;padding:10px;background:#f9f9f9;border:1px solid #e5e7eb;border-radius:6px">
+      <input type="color" id="${id}" value="${esc(t[key]||def)}" style="width:42px;height:42px;border:none;background:transparent;cursor:pointer;border-radius:4px;padding:0">
+      <div>
+        <div style="font-size:13px;font-weight:600;color:#1d2327">${label}</div>
+        <div style="font-size:11px;color:#9ca3af">${hint}</div>
+        <input type="text" id="${id}_hex" value="${esc(t[key]||def)}" style="font-size:11px;font-family:monospace;border:1px solid #ddd;border-radius:3px;padding:2px 6px;width:80px;margin-top:2px" oninput="syncColor('${id}',this.value)">
+      </div>
+    </div>`;
+  });
+  h += `</div>`;
+  h += `<div style="background:rgba(34,113,177,.07);padding:12px 16px;border-radius:8px;margin-top:16px;font-size:12px;color:#6b7280">💡 <strong>How it works:</strong> Click Save Theme — your colors are written to <code style="color:#2271b1">public/custom.css</code> as CSS variables and instantly applied to <strong>http://localhost:4321</strong>.</div>`;
+  h += `</div></div></div>`;
+
+  // ── TYPOGRAPHY TAB ──
+  h += `<div id="ttab-typography" style="display:${themeTab==='typography'?'block':'none'}">`;
+  h += `<div class="card"><div class="ch"><h3>🖋️ Typography Settings</h3></div><div style="padding:20px">`;
+  h += `<div class="g2">
+    <div class="field"><label>Body Font (Google Fonts)</label>
+      <select id="th_fontFamily">${GFONTS.map(f=>`<option value="${f}" ${(t.fontFamily||'Inter')===f?'selected':''}>${f==='system'?'System Default':f==='monospace'?'Monospace':f}</option>`).join('')}</select></div>
+    <div class="field"><label>Heading Font (Google Fonts)</label>
+      <select id="th_fontFamilyHeading">${GFONTS.map(f=>`<option value="${f}" ${(t.fontFamilyHeading||'Inter')===f?'selected':''}>${f==='system'?'Same as Body':f==='monospace'?'Monospace':f}</option>`).join('')}</select></div>
+  </div>`;
+  h += `<div class="g3">
+    <div class="field"><label>Base Font Size (px)</label><input type="number" id="th_fontSizeBase" value="${t.fontSizeBase||'16'}" min="12" max="24"></div>
+    <div class="field"><label>Small Font Size (px)</label><input type="number" id="th_fontSizeSmall" value="${t.fontSizeSmall||'14'}" min="10" max="20"></div>
+    <div class="field"><label>Large Font Size (px)</label><input type="number" id="th_fontSizeLarge" value="${t.fontSizeLarge||'18'}" min="14" max="28"></div>
+  </div>`;
+  h += `<div class="g3">
+    <div class="field"><label>Line Height</label><input type="number" id="th_lineHeight" value="${t.lineHeight||'1.7'}" min="1" max="3" step="0.1"></div>
+    <div class="field"><label>Heading Font Weight</label>
+      <select id="th_fontWeightHeading">
+        ${['400','500','600','700','800','900'].map(w=>`<option value="${w}" ${(t.fontWeightHeading||'700')===w?'selected':''}>${w}</option>`).join('')}
+      </select></div>
+    <div class="field" style="grid-column:span 1"></div>
+  </div>`;
+  h += `<div style="border-top:1px solid #f0f0f1;margin-top:12px;padding-top:16px"><div style="font-size:12px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:12px">Heading Sizes (rem)</div>
+  <div class="g3">
+    <div class="field"><label>H1 Size (rem)</label><input type="number" id="th_h1" value="${t.headingSizeh1||'2.5'}" min="1" max="6" step="0.1"></div>
+    <div class="field"><label>H2 Size (rem)</label><input type="number" id="th_h2" value="${t.headingSizeh2||'2'}" min="0.8" max="5" step="0.1"></div>
+    <div class="field"><label>H3 Size (rem)</label><input type="number" id="th_h3" value="${t.headingSizeh3||'1.5'}" min="0.8" max="4" step="0.1"></div>
+  </div></div>`;
+  h += `<div style="background:#f9f9f9;border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin-top:16px">
+    <div style="font-size:12px;color:#9ca3af;margin-bottom:8px;font-weight:600">LIVE PREVIEW</div>
+    <div id="th_fontPreview" style="font-family:${t.fontFamily&&t.fontFamily!=='system'?`'${t.fontFamily}',`:''}sans-serif">
+      <h1 style="font-size:${t.headingSizeh1||2.5}rem;font-weight:${t.fontWeightHeading||700};margin:0 0 6px">The quick brown fox</h1>
+      <p style="font-size:${t.fontSizeBase||16}px;line-height:${t.lineHeight||1.7};color:#6b7280;margin:0">The quick brown fox jumps over the lazy dog. This is what your body text looks like.</p>
+    </div>
+  </div>`;
+  h += `</div></div></div>`;
+
+  // ── LAYOUT TAB ──
+  h += `<div id="ttab-layout" style="display:${themeTab==='layout'?'block':'none'}">`;
+  h += `<div class="card"><div class="ch"><h3>📐 Layout Settings</h3></div><div style="padding:20px">`;
+  h += `<div class="g2">
+    <div class="field"><label>Content Max Width (px)</label><input type="number" id="th_maxWidth" value="${t.contentMaxWidth||'1280'}" min="800" max="1920" step="20">
+      <div style="font-size:11px;color:#9ca3af;margin-top:4px">Sets the max container width across all pages</div></div>
+    <div class="field"><label>Sidebar Position</label>
+      <select id="th_sidebarPos">
+        <option value="right" ${(t.sidebarPosition||'right')==='right'?'selected':''}>Right Sidebar</option>
+        <option value="left" ${t.sidebarPosition==='left'?'selected':''}>Left Sidebar</option>
+        <option value="none" ${t.sidebarPosition==='none'?'selected':''}>No Sidebar (Full Width)</option>
+      </select></div>
+  </div>`;
+  h += `<div class="g2">
+    <div class="field"><label>Header Style</label>
+      <select id="th_headerStyle">
+        <option value="default" ${(t.headerStyle||'default')==='default'?'selected':''}>Default (Dark)</option>
+        <option value="light" ${t.headerStyle==='light'?'selected':''}>Light Header</option>
+        <option value="transparent" ${t.headerStyle==='transparent'?'selected':''}>Transparent / Overlay</option>
+        <option value="sticky" ${t.headerStyle==='sticky'?'selected':''}>Sticky (Scrolls with page)</option>
+      </select></div>
+    <div class="field"><label>Footer Style</label>
+      <select id="th_footerStyle">
+        <option value="default" ${(t.footerStyle||'default')==='default'?'selected':''}>Default (Dark)</option>
+        <option value="light" ${t.footerStyle==='light'?'selected':''}>Light Footer</option>
+        <option value="minimal" ${t.footerStyle==='minimal'?'selected':''}>Minimal (1 row)</option>
+      </select></div>
+  </div>`;
+  h += `<div class="g2">
+    <div class="field"><label>Card Border Radius (px)</label><input type="number" id="th_radius" value="${t.borderRadius||'6'}" min="0" max="32">
+      <div style="font-size:11px;color:#9ca3af;margin-top:4px">Applies to cards, buttons, images</div></div>
+    <div class="field"><label>Card Shadow (CSS value)</label><input id="th_shadow" value="${esc(t.cardShadow||'0 1px 3px rgba(0,0,0,0.08)')}" placeholder="0 2px 8px rgba(0,0,0,0.1)"></div>
+  </div>`;
+  // Visual layout selector
+  h += `<div style="border-top:1px solid #f0f0f1;margin-top:16px;padding-top:16px">
+    <div style="font-size:12px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:12px">Layout Preview</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+      <div onclick="document.getElementById('th_sidebarPos').value='none'" style="border:2px solid #c3c4c7;border-radius:6px;padding:12px;cursor:pointer;text-align:center">
+        <div style="height:40px;background:#e5e7eb;border-radius:3px;margin-bottom:6px"></div>
+        <div style="font-size:12px;font-weight:600">Full Width</div><div style="font-size:11px;color:#9ca3af">No sidebar</div>
+      </div>
+      <div onclick="document.getElementById('th_sidebarPos').value='right'" style="border:2px solid #2271b1;border-radius:6px;padding:12px;cursor:pointer;text-align:center">
+        <div style="height:40px;display:flex;gap:4px;margin-bottom:6px">
+          <div style="flex:1;background:#e5e7eb;border-radius:3px"></div>
+          <div style="width:30%;background:#c3c4c7;border-radius:3px"></div>
+        </div>
+        <div style="font-size:12px;font-weight:600">Content + Right Sidebar</div><div style="font-size:11px;color:#2271b1">Currently active</div>
+      </div>
+      <div onclick="document.getElementById('th_sidebarPos').value='left'" style="border:2px solid #c3c4c7;border-radius:6px;padding:12px;cursor:pointer;text-align:center">
+        <div style="height:40px;display:flex;gap:4px;margin-bottom:6px">
+          <div style="width:30%;background:#c3c4c7;border-radius:3px"></div>
+          <div style="flex:1;background:#e5e7eb;border-radius:3px"></div>
+        </div>
+        <div style="font-size:12px;font-weight:600">Left Sidebar + Content</div><div style="font-size:11px;color:#9ca3af">Select to enable</div>
+      </div>
+    </div>
+  </div>`;
+  h += `</div></div></div>`;
+
+  // ══ TEMPLATE TAB ══
+  h += `<div id="ttab-template" style="display:${themeTab==='template'?'block':'none'}">`;
+  h += `<div class="card"><div class="ch"><h3>🖼️ Theme Templates</h3><span style="color:var(--dim);font-size:12px">Choose your overall site design layout</span></div><div style="padding:20px">`;
+  const layouts = [
+    { id: 'layout1', name: '1. Developer Hub', img: 'https://placehold.co/400x250/2271b1/ffffff?text=Developer+Hub' },
+    { id: 'layout2', name: '2. Clean & Minimal', img: 'https://placehold.co/400x250/135e96/ffffff?text=Clean+Minimal' },
+    { id: 'layout3', name: '3. Split Screen', img: 'https://placehold.co/400x250/1d2327/ffffff?text=Split+Screen' },
+    { id: 'layout4', name: '4. Bento Grid', img: 'https://placehold.co/400x250/04AA6D/ffffff?text=Bento+Grid' },
+    { id: 'layout5', name: '5. SaaS Dark Mode', img: 'https://placehold.co/400x250/000000/ffffff?text=SaaS+Dark+Mode' },
+    { id: 'layout6', name: '6. Creative Brutalism', img: 'https://placehold.co/400x250/FFE500/000000?text=Brutalism' },
+    { id: 'layout7', name: '7. Elegant Editorial', img: 'https://placehold.co/400x250/FAF9F6/2C3E50?text=Elegant' },
+    { id: 'layout8', name: '8. Enterprise Professional', img: 'https://placehold.co/400x250/0F172A/ffffff?text=Enterprise' }
+  ];
+  h += `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:20px;">`;
+  layouts.forEach(l => {
+    const isSel = (t.homepageLayout || 'layout1') === l.id;
+    h += `
+    <div style="border:2px solid ${isSel ? '#2271b1' : '#c3c4c7'}; border-radius:8px; overflow:hidden; cursor:pointer; background:#fff; position:relative; box-shadow:${isSel?'0 0 0 2px rgba(34,113,177,0.3)':'none'}" onclick="document.getElementById('th_homepageLayout').value='${l.id}'; document.querySelectorAll('.tmpl-check').forEach(c=>c.style.display='none'); document.getElementById('chk_${l.id}').style.display='inline';">
+      <div style="height:140px; background:url(${l.img}) center/cover;"></div>
+      <div style="padding:12px; text-align:center; font-weight:600; color:${isSel ? '#2271b1' : '#3c434a'};">
+        <span id="chk_${l.id}" class="tmpl-check" style="display:${isSel?'inline':'none'}">✅ </span> ${l.name}
+      </div>
+    </div>`;
+  });
+  h += `</div>`;
+  h += `<input type="hidden" id="th_homepageLayout" value="${esc(t.homepageLayout||'layout1')}">`;
+  h += `</div></div></div>`;
+
+  // ── CUSTOM CSS TAB ──
+  h += `<div id="ttab-customcss" style="display:${themeTab==='customcss'?'block':'none'}">`;
+  h += `<div class="card"><div class="ch"><h3>💅 Custom CSS</h3><span style="color:var(--dim);font-size:12px">Written directly into public/custom.css</span></div><div style="padding:20px">`;
+  h += `<div style="background:rgba(99,102,241,.07);padding:12px 16px;border-radius:8px;margin-bottom:14px;font-size:12px;color:#6b7280">
+    💡 CSS written here is appended to the bottom of <code style="color:#818cf8">public/custom.css</code> after all generated theme styles. This means you can override any generated style. Use browser DevTools to inspect class names.
+  </div>`;
+  h += `<div class="field"><label>Custom CSS</label>
+    <textarea class="editor" id="th_customCSS" style="min-height:380px;font-family:monospace;font-size:13px;tab-size:2" placeholder="/* Write your custom CSS here */\n\n/* Example: change hero background */\n.hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }\n\n/* Example: custom font on headings */\nh1, h2 { letter-spacing: -0.02em; }">${esc(t.customCSS||'')}</textarea></div>`;
+  h += `</div></div></div>`;
+
+  // ── ADVANCED TAB ──
+  h += `<div id="ttab-advanced" style="display:${themeTab==='advanced'?'block':'none'}">`;
+  h += `<div class="card"><div class="ch"><h3>⚙️ Advanced Settings</h3></div><div style="padding:20px">`;
+  h += `<div class="g3">
+    <div class="field"><label>Theme Mode</label>
+      <select id="th_themeMode">
+        <option value="light" ${(t.themeMode||'light')==='light'?'selected':''}>☀️ Light Mode</option>
+        <option value="dark" ${t.themeMode==='dark'?'selected':''}>🌙 Dark Mode</option>
+        <option value="auto" ${t.themeMode==='auto'?'selected':''}>🌓 Auto (follows OS)</option>
+      </select>
+      <div style="font-size:11px;color:#9ca3af;margin-top:4px">Dark mode adds a dark CSS override block into custom.css</div></div>
+    <div class="field"><label>Extra Body CSS Class</label>
+      <input id="th_bodyClass" value="${esc(t.bodyClass||'')}" placeholder="my-theme dark-nav ...">
+      <div style="font-size:11px;color:#9ca3af;margin-top:4px">Space-separated classes added to &lt;body&gt; tag</div></div>
+    <div class="field" style="grid-column:span 1"></div>
+  </div>`;
+  h += `<div class="field" style="margin-top:16px"><label>Custom &lt;head&gt; Code</label>
+    <textarea class="editor" id="th_customHead" style="min-height:120px;font-family:monospace;font-size:13px" placeholder="<!-- Extra meta tags, scripts, or fonts -->\n<link rel='preconnect' href='https://fonts.googleapis.com'>">${esc(t.customHeadCode||'')}</textarea>
+    <div style="font-size:11px;color:#9ca3af;margin-top:4px">Injected into &lt;head&gt; of BaseLayout.astro (appended after the auto-generated block)</div></div>`;
+  h += `<div style="background:rgba(239,68,68,.07);padding:14px 18px;border-radius:8px;margin-top:16px;font-size:12px;color:#6b7280">
+    ⚠️ <strong>Note on body class:</strong> The body class feature requires a small change in your <code>BaseLayout.astro</code> to read from a settings file or prop. For now it's stored in theme-settings.json for your reference.
+  </div>`;
+  h += `</div></div></div>`;
+
+  $('content').innerHTML = h;
+
+  // Sync color pickers ↔ hex inputs
+  const colorIds = ['th_colorPrimary','th_colorAccent','th_colorBackground','th_colorSurface','th_colorText','th_colorMuted','th_colorLink','th_colorLinkHover','th_colorBorder','th_colorButtonText','th_colorHeaderBg','th_colorFooterBg'];
+  setTimeout(() => {
+    colorIds.forEach(id => {
+      const picker = $(id), hex = $(id+'_hex');
+      if (picker && hex) {
+        picker.addEventListener('input', () => { hex.value = picker.value; });
+        hex.addEventListener('input', () => { if (/^#[0-9a-f]{6}$/i.test(hex.value)) picker.value = hex.value; });
+      }
+    });
+  }, 50);
+}
+
+window.switchThemeTab = function(tab) {
+  themeTab = tab;
+  renderTheme();
+};
+
+window.syncColor = function(pickerId, val) {
+  const picker = $(pickerId);
+  if (picker && /^#[0-9a-f]{6}$/i.test(val)) picker.value = val;
+};
+
+window.saveTheme = async function() {
+  const get = id => $(id) ? $(id).value : '';
+  const chk = id => $(id) ? $(id).checked : true;
+  const data = {
+    homepageLayout: get('th_homepageLayout'),
+    // Homepage
+    heroTitle: get('th_heroTitle'),
+    heroSubtitle: get('th_heroSubtitle'),
+    heroBtnText: get('th_heroBtnText'),
+    heroBtnUrl: get('th_heroBtnUrl'),
+    heroSecondaryBtnText: get('th_heroSecBtnText'),
+    heroSecondaryBtnUrl: get('th_heroSecBtnUrl'),
+    showFeaturedSection: chk('th_showFeat'),
+    showRecentPosts: chk('th_showRecent'),
+    showTutorialCategories: chk('th_showTutCats'),
+    // Colors
+    colorPrimary: get('th_colorPrimary'),
+    colorAccent: get('th_colorAccent'),
+    colorBackground: get('th_colorBackground'),
+    colorSurface: get('th_colorSurface'),
+    colorText: get('th_colorText'),
+    colorMuted: get('th_colorMuted'),
+    colorLink: get('th_colorLink'),
+    colorLinkHover: get('th_colorLinkHover'),
+    colorBorder: get('th_colorBorder'),
+    colorButtonText: get('th_colorButtonText'),
+    colorHeaderBg: get('th_colorHeaderBg'),
+    colorFooterBg: get('th_colorFooterBg'),
+    // Typography
+    fontFamily: get('th_fontFamily'),
+    fontFamilyHeading: get('th_fontFamilyHeading'),
+    fontSizeBase: get('th_fontSizeBase'),
+    fontSizeSmall: get('th_fontSizeSmall'),
+    fontSizeLarge: get('th_fontSizeLarge'),
+    lineHeight: get('th_lineHeight'),
+    fontWeightHeading: get('th_fontWeightHeading'),
+    headingSizeh1: get('th_h1'),
+    headingSizeh2: get('th_h2'),
+    headingSizeh3: get('th_h3'),
+    // Layout
+    contentMaxWidth: get('th_maxWidth'),
+    sidebarPosition: get('th_sidebarPos'),
+    headerStyle: get('th_headerStyle'),
+    footerStyle: get('th_footerStyle'),
+    borderRadius: get('th_radius'),
+    cardShadow: get('th_shadow'),
+    // Custom CSS
+    customCSS: get('th_customCSS'),
+    // Advanced
+    themeMode: get('th_themeMode'),
+    bodyClass: get('th_bodyClass'),
+    customHeadCode: get('th_customHead'),
+  };
+  // fill in from current tab only; merge with existing for non-rendered tabs
+  const merged = { ...themeSettings, ...data };
+  const r = await post('/api/theme/save', merged);
+  if (r.ok) {
+    themeSettings = merged;
+    toast('Theme saved! 🎨 public/custom.css updated');
+  } else {
+    toast('Save failed', false);
+  }
+};
+
 // ══ INIT ══
 (async()=>{
   await loadAll();
-  const validPages=['dashboard','tutorials','blogs','nav','settings','permalinks','pages','ads','trash'];
+  const validPages=['dashboard','tutorials','blogs','books','nav','settings','permalinks','pages','ads','trash','theme'];
   const hash=(location.hash||'').replace('#','');
   goTo(validPages.includes(hash)?hash:'dashboard');
   window.addEventListener('hashchange',()=>{

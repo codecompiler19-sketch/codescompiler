@@ -2,6 +2,9 @@
 import { ViewTransitions } from 'astro:transitions';
 import AdSlot from '../components/AdSlot.astro';
 import navData from '../data/navigation.json';
+import themeRaw from '../theme-settings.json';
+
+const theme = themeRaw || {};
 const { navItems } = navData;
 
 export interface Props {
@@ -103,8 +106,11 @@ const tutorialLinks = [
         document.documentElement.classList.remove('dark-theme');
       }
     </script>
-  </head>
-  <body class="min-h-screen flex flex-col bg-white text-gray-900 antialiased" style="font-family: 'Source Sans 3', sans-serif;">
+    
+    {theme.customHeadCode && <Fragment set:html={theme.customHeadCode} />}
+    <link rel="stylesheet" href="/custom.css" />
+</head>
+  <body class={`min-h-screen flex flex-col bg-white text-gray-900 antialiased ${theme.bodyClass || ''}`} style="font-family: 'Source Sans 3', sans-serif;">
 
     <!-- ============================================================ -->
     <!-- NEW HEADER & NAVBAR                                          -->

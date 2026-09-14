@@ -1,0 +1,63 @@
+---
+import { getCollection } from 'astro:content';
+import themeRaw from '../../theme-settings.json';
+
+const theme = themeRaw || {};
+const allPosts = await getCollection('blog');
+const latestPosts = allPosts
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .slice(0, 3);
+
+const CATEGORY_COLORS: Record<string, { color: string; bg: string }> = {
+  'HTML & CSS':           { color: '#E34F26', bg: '#fff4f0' },
+  'JavaScript':           { color: '#ca8a04', bg: '#fefce8' },
+  'HTML CSS JavaScript':  { color: '#04AA6D', bg: '#f0fff8' },
+};
+---
+<section class="w-full bg-[#FAF9F6] py-32 px-5">
+  <div class="max-w-4xl mx-auto text-center">
+    <div class="text-gray-400 uppercase tracking-[0.2em] text-sm mb-6 font-semibold">Elegant & Refined</div>
+    {theme.heroTitle ? <h1 class="text-5xl sm:text-7xl font-serif text-[#2C3E50] leading-tight mb-8" set:html={theme.heroTitle} /> : <h1 class="text-5xl sm:text-7xl font-serif text-[#2C3E50] leading-tight mb-8">The Art of <br/><span class="italic text-[#04AA6D]">Web Development</span></h1>}
+    {theme.heroSubtitle ? <p class="text-[#7F8C8D] text-xl max-w-2xl mx-auto mb-14 font-light leading-relaxed" set:html={theme.heroSubtitle} /> : <p class="text-[#7F8C8D] text-xl max-w-2xl mx-auto mb-14 font-light leading-relaxed">A sophisticated approach to learning code. Minimalist, breathable, and designed for deep focus.</p>}
+    <a href={theme.heroBtnUrl || "/tutorial/html-introduction"} class="bg-[#2C3E50] text-white px-10 py-4 rounded-full font-medium hover:bg-[#1A252F] transition-colors">{theme.heroBtnText || "Begin Journey"}</a>
+    
+    <div class="mt-20 rounded-t-3xl border border-gray-200 bg-white shadow-2xl overflow-hidden h-64 border-b-0">
+      <div class="bg-gray-50 border-b border-gray-100 px-6 py-3 flex gap-2">
+        <div class="w-3 h-3 rounded-full bg-gray-300"></div><div class="w-3 h-3 rounded-full bg-gray-300"></div><div class="w-3 h-3 rounded-full bg-gray-300"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{theme.showTutorialCategories !== false && (
+<section class="w-full bg-[#FAF9F6] py-24 px-5">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-20">
+      <h2 class="text-4xl font-serif text-[#2C3E50]" set:html={theme.coursesTitle || 'Curated Paths'} />
+      <div class="w-12 h-0.5 bg-[#04AA6D] mx-auto mt-6 mb-6"></div>
+      <p class="text-[#7F8C8D] italic text-lg" set:html={theme.coursesSubtitle || 'Select a discipline to master.'} />
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+      
+      <a href="/tutorial/html-introduction" class="group block bg-white p-10 border border-gray-100 hover:border-gray-200 shadow-sm hover:shadow-xl transition-all duration-500">
+        <div class="text-3xl font-light text-gray-300 mb-6 group-hover:text-[#04AA6D] transition-colors">&lt;/&gt;</div>
+        <h3 class="text-xl font-serif text-[#2C3E50] mb-4">HTML Foundations</h3>
+        <p class="text-[#7F8C8D] text-sm leading-relaxed">Structure content and build the web.</p>
+        <div class="mt-8 text-xs tracking-widest uppercase text-gray-400 group-hover:text-[#2C3E50] transition-colors">Begin →</div>
+      </a>
+      <a href="/tutorial/css-introduction" class="group block bg-white p-10 border border-gray-100 hover:border-gray-200 shadow-sm hover:shadow-xl transition-all duration-500">
+        <div class="text-3xl font-light text-gray-300 mb-6 group-hover:text-[#04AA6D] transition-colors">{ }</div>
+        <h3 class="text-xl font-serif text-[#2C3E50] mb-4">CSS Styling</h3>
+        <p class="text-[#7F8C8D] text-sm leading-relaxed">Master layouts, colors, and animations.</p>
+        <div class="mt-8 text-xs tracking-widest uppercase text-gray-400 group-hover:text-[#2C3E50] transition-colors">Begin →</div>
+      </a>
+      <a href="/tutorial/javascript-introduction" class="group block bg-white p-10 border border-gray-100 hover:border-gray-200 shadow-sm hover:shadow-xl transition-all duration-500">
+        <div class="text-3xl font-light text-gray-300 mb-6 group-hover:text-[#04AA6D] transition-colors">JS</div>
+        <h3 class="text-xl font-serif text-[#2C3E50] mb-4">JavaScript</h3>
+        <p class="text-[#7F8C8D] text-sm leading-relaxed">Bring pages to life with real logic.</p>
+        <div class="mt-8 text-xs tracking-widest uppercase text-gray-400 group-hover:text-[#2C3E50] transition-colors">Begin →</div>
+      </a>
+    </div>
+  </div>
+</section>
+)}

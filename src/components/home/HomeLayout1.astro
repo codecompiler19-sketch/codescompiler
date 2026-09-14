@@ -1,0 +1,256 @@
+---
+import { getCollection } from 'astro:content';
+import themeRaw from '../../theme-settings.json';
+
+const theme = themeRaw || {};
+const allPosts = await getCollection('blog');
+const latestPosts = allPosts
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .slice(0, 3);
+
+const CATEGORY_COLORS: Record<string, { color: string; bg: string }> = {
+  'HTML & CSS':           { color: '#E34F26', bg: '#fff4f0' },
+  'JavaScript':           { color: '#ca8a04', bg: '#fefce8' },
+  'HTML CSS JavaScript':  { color: '#04AA6D', bg: '#f0fff8' },
+};
+---
+
+<section class="relative w-full overflow-hidden bg-[#282A35]">
+  <div class="absolute inset-0 bg-[linear-gradient(rgba(4,170,109,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(4,170,109,0.05)_1px,transparent_1px)] bg-[size:3rem_3rem]"></div>
+  <div class="absolute top-0 left-1/4 w-96 h-96 bg-[#04AA6D]/10 rounded-full blur-3xl pointer-events-none"></div>
+  <div class="absolute bottom-0 right-1/4 w-80 h-80 bg-purple-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+  <div class="hidden lg:block absolute top-12 left-6 font-mono text-xs text-[#04AA6D]/40 leading-relaxed select-none float-1">
+    &lt;<span class="text-orange-400/50">html</span>&gt;<br/>
+    &nbsp;&lt;<span class="text-orange-400/50">head</span>&gt;&lt;/<span class="text-orange-400/50">head</span>&gt;<br/>
+    &nbsp;&lt;<span class="text-orange-400/50">body</span>&gt;<br/>
+    &nbsp;&nbsp;&lt;<span class="text-orange-400/50">h1</span>&gt;Hello!&lt;/<span class="text-orange-400/50">h1</span>&gt;<br/>
+    &nbsp;&lt;/<span class="text-orange-400/50">body</span>&gt;<br/>
+    &lt;/<span class="text-orange-400/50">html</span>&gt;
+  </div>
+  <div class="hidden lg:block absolute top-16 right-6 font-mono text-xs text-blue-400/40 leading-relaxed select-none text-right float-2">
+    <span class="text-purple-400/50">.hero</span> &#123;<br/>
+    &nbsp;&nbsp;<span class="text-blue-300/50">display</span>: flex;<br/>
+    &nbsp;&nbsp;<span class="text-blue-300/50">color</span>: <span class="text-green-400/50">#04AA6D</span>;<br/>
+    &nbsp;&nbsp;<span class="text-blue-300/50">gap</span>: 1rem;<br/>
+    &#125;
+  </div>
+  <div class="hidden xl:block absolute bottom-20 left-12 font-mono text-xs text-yellow-400/30 leading-relaxed select-none float-3">
+    <span class="text-yellow-300/40">const</span> <span class="text-white/30">learn</span> = () =&gt; &#123;<br/>
+    &nbsp;&nbsp;<span class="text-yellow-300/40">return</span> <span class="text-green-400/40">'success'</span>;<br/>
+    &#125;;
+  </div>
+
+  <div class="relative z-10 max-w-5xl mx-auto px-5 py-24 sm:py-32 text-center">
+    <div class="inline-flex items-center gap-2 bg-[#04AA6D]/10 border border-[#04AA6D]/30 rounded-full px-4 py-2 mb-8">
+      <span class="w-2 h-2 rounded-full bg-[#04AA6D] animate-pulse"></span>
+      <span class="text-[#04AA6D] text-sm font-semibold">Free · No Sign-up · Start Instantly</span>
+    </div>
+
+    {theme.heroTitle ? (
+      <h1 class="text-5xl sm:text-6xl md:text-7xl font-black text-white leading-none tracking-tight mb-6" set:html={theme.heroTitle} />
+    ) : (
+      <h1 class="text-5xl sm:text-6xl md:text-7xl font-black text-white leading-none tracking-tight mb-6">
+        Learn HTML, CSS &<br/>
+        <span class="relative inline-block mt-2">
+          <span class="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-[#04AA6D] to-emerald-300">JavaScript Online</span>
+          <span class="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-[#04AA6D] to-emerald-300 rounded-full opacity-50"></span>
+        </span>
+        <span class="block text-2xl sm:text-3xl text-gray-300 font-medium mt-4">Free &amp; Interactive</span>
+      </h1>
+    )}
+
+    {theme.heroSubtitle ? (
+      <p class="text-gray-400 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed mb-10" set:html={theme.heroSubtitle} />
+    ) : (
+      <p class="text-gray-400 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed mb-10">
+        Interactive, hands-on tutorials for <strong class="text-orange-400">HTML</strong>, <strong class="text-blue-400">CSS</strong>, and <strong class="text-yellow-400">JavaScript</strong>. 
+        Write real code in the browser and see results instantly — no setup, no downloads.
+      </p>
+    )}
+
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+      <a href={theme.heroBtnUrl || "/tutorial/html-introduction"}
+         class="group w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-bold text-white bg-[#04AA6D] hover:bg-[#038a58] rounded-lg shadow-lg shadow-[#04AA6D]/20 hover:shadow-[#04AA6D]/40 hover:-translate-y-0.5 transition-all duration-200">
+        {theme.heroBtnText || "Start Learning Free"}
+        <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+      </a>
+      <a href={theme.heroSecondaryBtnUrl || "#courses"}
+         class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 text-base font-semibold text-gray-300 border border-gray-600 hover:border-gray-400 hover:text-white rounded-lg transition-all duration-200">
+        {theme.heroSecondaryBtnText || "Browse All Courses"}
+      </a>
+    </div>
+
+    <div class="max-w-2xl mx-auto bg-[#1a1b26] rounded-2xl border border-white/10 shadow-2xl overflow-hidden text-left">
+      <div class="flex items-center gap-2 px-4 py-3 bg-[#13131e] border-b border-white/10">
+        <span class="w-2.5 h-2.5 rounded-full bg-red-500/70"></span>
+        <span class="w-2.5 h-2.5 rounded-full bg-yellow-400/70"></span>
+        <span class="w-2.5 h-2.5 rounded-full bg-green-500/70"></span>
+        <div class="flex-1 flex justify-center">
+          <span class="text-gray-500 text-xs font-mono">index.html — CodesCompiler Try It Yourself</span>
+        </div>
+      </div>
+      <div class="p-5 font-mono text-sm leading-relaxed">
+        <div><span class="text-gray-500">1 </span><span class="text-orange-400">&lt;h1</span> <span class="text-yellow-300">style</span><span class="text-white">=</span><span class="text-green-400">"color:#04AA6D"</span><span class="text-orange-400">&gt;</span><span class="text-white">Hello, World!</span><span class="text-orange-400">&lt;/h1&gt;</span></div>
+        <div><span class="text-gray-500">2 </span><span class="text-orange-400">&lt;p&gt;</span><span class="text-white">I am learning <span class="text-blue-300">HTML</span> at CodesCompiler.</span><span class="text-orange-400">&lt;/p&gt;</span></div>
+        <div><span class="text-gray-500">3 </span><span class="text-orange-400">&lt;button</span> <span class="text-yellow-300">onclick</span><span class="text-white">=</span><span class="text-green-400">"alert('It works! 🎉')"</span><span class="text-orange-400">&gt;</span><span class="text-white">Click Me</span><span class="text-orange-400">&lt;/button&gt;</span></div>
+        <div class="mt-2 pt-2 border-t border-white/5 text-gray-500 text-xs">▶ Output: <span class="text-white font-sans">Hello, World!</span> &nbsp; <span class="text-[#04AA6D]">I am learning HTML at CodesCompiler.</span> &nbsp; <span class="bg-gray-700 text-white px-2 py-0.5 rounded text-xs">Click Me</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="w-full bg-[#04AA6D]">
+  <div class="max-w-5xl mx-auto px-5 py-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center text-white">
+    {[
+      { v: '50+',  l: 'Tutorial Chapters', icon: '📖' },
+      { v: '200+', l: 'Code Examples',     icon: '💻' },
+      { v: '3',    l: 'Learning Paths',    icon: '🛤️'  },
+      { v: '$0',   l: 'Always Free',       icon: '🎁'  },
+    ].map(s => (
+      <div class="flex flex-col items-center gap-1">
+        <span class="text-2xl">{s.icon}</span>
+        <div class="text-3xl font-black">{s.v}</div>
+        <div class="text-green-100 text-sm">{s.l}</div>
+      </div>
+    ))}
+  </div>
+</section>
+
+{theme.showTutorialCategories !== false && (
+<section id="courses" class="w-full bg-gray-50 py-20 px-5 border-t border-gray-100">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-14">
+      <h2 class="text-3xl sm:text-4xl font-black text-gray-900 mt-2" set:html={theme.coursesTitle || 'Popular Learning Paths'} />
+      <p class="text-gray-500 mt-3 max-w-lg mx-auto" set:html={theme.coursesSubtitle || 'Choose a path to start coding immediately.'} />
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <a href="/tutorial/html-introduction" class="group relative bg-white border-2 border-transparent hover:border-orange-300 rounded-2xl p-7 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden block">
+        <div class="absolute top-0 right-0 w-24 h-24 bg-orange-50 rounded-full -translate-x-4 -translate-y-10 group-hover:scale-150 transition-transform duration-500"></div>
+        <div class="relative">
+          <div class="flex items-center justify-between mb-5">
+            <div class="w-14 h-14 rounded-xl bg-orange-100 flex items-center justify-center"><span class="text-orange-600 font-black text-xl font-mono">&lt;/&gt;</span></div>
+            <span class="text-xs font-bold bg-orange-100 text-orange-600 px-3 py-1 rounded-full">Beginner</span>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-2">HTML</h3>
+          <p class="text-gray-500 text-sm leading-relaxed mb-4">The skeleton of every webpage. Learn to structure content, create forms, add images, and build solid foundations.</p>
+          <div class="flex items-center gap-3 text-xs text-gray-400 mb-5"><span class="flex items-center gap-1">📚 12 chapters</span><span class="flex items-center gap-1">⏱ ~3 hours</span></div>
+          <div class="flex items-center text-sm font-bold text-orange-600 group-hover:gap-2 gap-1 transition-all">Start HTML <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg></div>
+        </div>
+      </a>
+      <a href="/tutorial/css-introduction" class="group relative bg-white border-2 border-transparent hover:border-blue-300 rounded-2xl p-7 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden block">
+        <div class="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-full -translate-x-4 -translate-y-10 group-hover:scale-150 transition-transform duration-500"></div>
+        <div class="relative">
+          <div class="flex items-center justify-between mb-5">
+            <div class="w-14 h-14 rounded-xl bg-blue-100 flex items-center justify-center"><span class="text-blue-600 font-black text-xl font-mono">{ }</span></div>
+            <span class="text-xs font-bold bg-blue-100 text-blue-600 px-3 py-1 rounded-full">Step 2</span>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-2">CSS</h3>
+          <p class="text-gray-500 text-sm leading-relaxed mb-4">Make your HTML beautiful. Master colors, layouts, Flexbox, Grid, animations, and fully responsive designs.</p>
+          <div class="flex items-center gap-3 text-xs text-gray-400 mb-5"><span class="flex items-center gap-1">📚 15 chapters</span><span class="flex items-center gap-1">⏱ ~4 hours</span></div>
+          <div class="flex items-center text-sm font-bold text-blue-600 group-hover:gap-2 gap-1 transition-all">Start CSS <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg></div>
+        </div>
+      </a>
+      <a href="/tutorial/javascript-introduction" class="group relative bg-white border-2 border-transparent hover:border-yellow-300 rounded-2xl p-7 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden block">
+        <div class="absolute top-0 right-0 w-24 h-24 bg-yellow-50 rounded-full -translate-x-4 -translate-y-10 group-hover:scale-150 transition-transform duration-500"></div>
+        <div class="relative">
+          <div class="flex items-center justify-between mb-5">
+            <div class="w-14 h-14 rounded-xl bg-yellow-100 flex items-center justify-center"><span class="text-yellow-600 font-black text-xl font-mono">JS</span></div>
+            <span class="text-xs font-bold bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full">Step 3</span>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-2">JavaScript</h3>
+          <p class="text-gray-500 text-sm leading-relaxed mb-4">Bring pages to life. Handle clicks, fetch APIs, build dynamic interfaces, and write real programs.</p>
+          <div class="flex items-center gap-3 text-xs text-gray-400 mb-5"><span class="flex items-center gap-1">📚 18 chapters</span><span class="flex items-center gap-1">⏱ ~6 hours</span></div>
+          <div class="flex items-center text-sm font-bold text-yellow-600 group-hover:gap-2 gap-1 transition-all">Start JavaScript <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg></div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+)}
+
+{theme.showFeaturedSection !== false && (
+<section class="w-full bg-white py-20 px-5 border-t border-gray-100">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-14">
+      <h2 class="text-3xl sm:text-4xl font-black text-gray-900 mt-2" set:html={theme.featuresTitle || 'Why Learn With Us?'} />
+      <p class="text-gray-500 mt-3 max-w-lg mx-auto" set:html={theme.featuresSubtitle || 'Everything you need to master web development.'} />
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {[
+        { emoji: '🖊️', title: 'Write Real Code', desc: 'Every chapter includes a live "Try It Yourself" editor — not just reading, but actually writing code.' },
+        { emoji: '⚡', title: 'Instant Results', desc: 'See your code output immediately in a live preview pane. No compiling, no waiting, no setup.' },
+        { emoji: '📱', title: 'Works on Any Device', desc: 'Study on your phone, tablet, or computer. Everything is fully responsive and mobile-friendly.' },
+        { emoji: '🗺️', title: 'Clear Learning Path', desc: 'Chapters are ordered logically. Every concept builds on the last — zero confusion.' },
+        { emoji: '🔍', title: 'Quick Reference', desc: 'Use the sidebar to jump to any topic anytime. Perfect for when you need a fast answer.' },
+        { emoji: '🆓', title: 'Completely Free', desc: 'No sign-up. No credit card. No premium tier. Every tutorial, every example — always free.' },
+      ].map(f => (
+        <div class="flex gap-4 p-5 rounded-xl hover:bg-gray-50 transition-colors group">
+          <div class="text-3xl flex-shrink-0 pt-0.5 group-hover:scale-110 transition-transform">{f.emoji}</div>
+          <div>
+            <h3 class="font-bold text-gray-900 mb-1">{f.title}</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">{f.desc}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+)}
+
+{(theme.showRecentPosts !== false && latestPosts.length > 0) && (
+<section class="w-full bg-gray-50 py-20 px-5 border-t border-gray-100">
+  <div class="max-w-5xl mx-auto">
+    <div class="text-center mb-14">
+      <h2 class="text-3xl sm:text-4xl font-black text-gray-900 mt-2" set:html={theme.postsTitle || 'Latest from the Blog'} />
+      <p class="text-gray-500 mt-3 max-w-lg mx-auto" set:html={theme.postsSubtitle || 'Read our newest tips, tricks, and tutorials.'} />
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {latestPosts.map(post => {
+        const catColor = CATEGORY_COLORS[post.data.category] ?? { color: '#6b7280', bg: '#f3f4f6' };
+        return (
+          <a href={`/blog/${post.slug}`}
+             class="group bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col block no-underline">
+            {post.data.image ? (
+              <div class="overflow-hidden h-44">
+                <img src={post.data.image} alt={post.data.title}
+                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              </div>
+            ) : (
+              <div class="h-36 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-4xl">💻</div>
+            )}
+            <div class="p-5 flex flex-col gap-2 flex-1">
+              <div class="flex items-center justify-between gap-2">
+                <span class="text-[10px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-full"
+                      style={`color:${catColor.color};background:${catColor.bg}`}>
+                  {post.data.category}
+                </span>
+                <span class="text-xs text-gray-400">
+                  {new Date(post.data.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                </span>
+              </div>
+              <h3 class="text-base font-bold text-gray-900 leading-snug line-clamp-2">{post.data.title}</h3>
+              <p class="text-sm text-gray-500 leading-relaxed line-clamp-2 flex-1">{post.data.description}</p>
+              <div class="text-sm font-bold text-[#04AA6D] flex items-center gap-1 mt-1">
+                Read Post
+                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
+              </div>
+            </div>
+          </a>
+        );
+      })}
+    </div>
+  </div>
+</section>
+)}
+
+<style>
+  @keyframes float1 { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-14px) rotate(-2deg); } }
+  @keyframes float2 { 0%, 100% { transform: translateY(0) rotate(2deg); } 50% { transform: translateY(10px) rotate(2deg); } }
+  @keyframes float3 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  .float-1 { animation: float1 8s ease-in-out infinite; }
+  .float-2 { animation: float2 10s ease-in-out infinite; }
+  .float-3 { animation: float3 7s ease-in-out infinite; }
+</style>
+

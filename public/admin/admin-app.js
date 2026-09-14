@@ -1,10 +1,10 @@
 // CodesCompiler Content Manager — WordPress-style CMS
 const API='http://localhost:3001';
-let page='dashboard',stats={},tutorials=[],blogs=[],books=[],navItems=[],siteSettings=[],pages=[],adsConfig=[],trashBin=[],categories=[];
+let page='dashboard',stats={},tutorials=[],blogs=[],navItems=[],siteSettings={},pages=[],adsConfig={},trashBin=[],themeSettings={};
 let modalCb=null,confirmCb=null;
 
 const TCAT=['html','css','javascript','seo','python','sql','php'];
-let BCAT=['HTML & CSS','JavaScript','JavaScript Projects','Blog','Website Designs','CSS Buttons'];
+const BCAT=['HTML & CSS','JavaScript','JavaScript Projects','Login Form','Card Design','Navigation Bar','Blog','Website Designs','Image Slider','API Projects','Sidebar Menu','CSS Buttons','JavaScript Games','Preloader or Loader','Form Validation','Accordion','Bootstrap','Tabs','Calendar'];
 const CB={html:'bh',css:'bc',javascript:'bj',seo:'bse',python:'bpy',sql:'bsq',php:'bp2'};
 const CATNAME={html:'HTML',css:'CSS',javascript:'JavaScript',seo:'SEO',python:'Python',sql:'SQL',php:'PHP'};
 
@@ -14,138 +14,6 @@ const esc=s=>String(s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 function toast(m,ok=true){const d=document.createElement('div');d.className='toast '+(ok?'ok':'err');d.innerHTML=(ok?'✅':'❌')+' '+m;$('toasts').appendChild(d);setTimeout(()=>d.remove(),3500)}
 async function api(p,o){return(await fetch(API+p,o)).json()}
 async function post(p,b){return api(p,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)})}
-
-// ── WP-style Helper Functions ─────────────────────────────────────────────────
-function toggleMeta(id) {
-  const el = $(id);
-  if (!el) return;
-  el.style.display = el.style.display === 'none' ? '' : 'none';
-}
-
-function updatePermalink(title, displayId='b_permalink_display', prefix='/blog/') {
-  const slug = title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-  const el = $(displayId);
-  if (el) { el.textContent = prefix + slug + '/'; el.href = prefix + slug + '/'; }
-}
-
-function updateWordCount(text) {
-  const el = $('wc-count');
-  if (el) el.textContent = text.trim().split(/\s+/).filter(Boolean).length;
-}
-
-function wrapText(id, before, after) {
-  const el = $(id); if(!el) return;
-  const s=el.selectionStart, e=el.selectionEnd, v=el.value;
-  const sel = v.substring(s,e) || 'text';
-  el.value = v.substring(0,s) + before + sel + after + v.substring(e);
-  el.focus(); el.selectionStart = s+before.length; el.selectionEnd = s+before.length+sel.length;
-}
-
-function prependLine(id, prefix) {
-  const el=$(id); if(!el) return;
-  const s=el.selectionStart, v=el.value;
-  const lineStart = v.lastIndexOf('\n',s-1)+1;
-  el.value = v.substring(0,lineStart) + prefix + v.substring(lineStart);
-  el.focus(); el.selectionStart = el.selectionEnd = s+prefix.length;
-}
-
-function insertLink(id) {
-  const url = prompt('Enter URL:','https://'); if(!url) return;
-  wrapText(id,'[',`](${url})`);
-}
-
-function insertMediaTo(input, textareaId) {
-  if (!input.files||!input.files[0]) return;
-  const file = input.files[0];
-  const reader = new FileReader();
-  reader.onload = async (e) => {
-    try {
-      const res = await post('/api/media/upload', { filename: file.name, data: e.target.result });
-      if (res.ok && res.url) {
-        const el = $(textareaId); if(!el) return;
-        const s = el.selectionStart, v = el.value;
-        const md = `\n![${file.name}](${res.url})\n`;
-        el.value = v.substring(0,s) + md + v.substring(s);
-        toast('Media inserted!');
-      }
-    } catch(e) { toast('Upload failed', false); }
-  };
-  reader.readAsDataURL(file);
-}
-
-function insertMediaToBlog(input) { insertMediaTo(input, 'b_desc'); }
-
-function addTagPill() {
-  const inp = $('tag_input'); if(!inp) return;
-  const tags = inp.value.split(',').map(t=>t.trim()).filter(Boolean);
-  if(!tags.length) return;
-  const container = $('tags-pills'); if(!container) return;
-  tags.forEach(t => {
-    const span = document.createElement('span');
-    span.className = 'tag-pill';
-    span.style.cssText = 'display:inline-flex;align-items:center;gap:4px;background:#e5e7eb;border-radius:3px;padding:2px 7px;font-size:12px;margin:2px;';
-    span.innerHTML = `${esc(t)}<a href="#" style="color:#999;text-decoration:none;margin-left:2px;" onclick="removeTagPill(this);return false;">×</a>`;
-    container.appendChild(span);
-  });
-  inp.value = '';
-}
-
-function removeTagPill(el) { el.parentElement.remove(); }
-
-function toggleAddCat() {
-  const p = $('add-cat-panel'); if(!p) return;
-  p.style.display = p.style.display === 'none' ? '' : 'none';
-}
-
-async function addNewCategory() {
-  const inp = $('new_cat_input'); if(!inp) return;
-  const name = inp.value.trim(); if(!name) return;
-  const slug = name.toLowerCase().replace(/[^a-z0-9]+/g,'-');
-  const res = await post('/api/categories/save', { name, slug, description: '' });
-  if (res.ok) {
-    BCAT.push(name);
-    categories.push({ name, slug, description: '', count: 0 });
-    // Add checkbox to the list
-    const container = document.querySelector('#cat-body > div');
-    if (container) {
-      const label = document.createElement('label');
-      label.style.cssText = 'display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;margin-bottom:4px;';
-      label.innerHTML = `<input type="checkbox" class="b_cat_cb" value="${esc(name)}" checked> ${esc(name)}`;
-      container.appendChild(label);
-    }
-    inp.value = '';
-    toast(`Category "${name}" added!`);
-    toggleAddCat();
-  } else { toast('Failed to add category', false); }
-}
-
-async function saveBlogDraft(origFile) {
-  const draftEl = $('b_draft');
-  if (draftEl) draftEl.value = 'true';
-  await window.saveBlog(origFile);
-}
-
-function editPermalink() {
-  const el = $('b_permalink_display'); if(!el) return;
-  const current = el.textContent.replace(/^\/blog\//,'').replace(/\/$/,'');
-  const newSlug = prompt('Edit URL slug:', current);
-  if (newSlug) {
-    el.textContent = '/blog/' + newSlug + '/';
-    el.href = '/blog/' + newSlug + '/';
-  }
-}
-
-// Get tags from pills in DOM
-function getTagsFromPills() {
-  const pills = document.querySelectorAll('#tags-pills .tag-pill');
-  return Array.from(pills).map(p => p.childNodes[0]?.textContent?.trim()).filter(Boolean);
-}
-
-// Get selected category from checkboxes
-function getSelectedCategory() {
-  const checked = document.querySelector('.b_cat_cb:checked');
-  return checked ? checked.value : '';
-}
 
 // Inline Editor (replaces modal popup - opens full-page inside content area)
 let editorSaveCb=null, editorBackFn=null;
@@ -195,6 +63,7 @@ function renderSidebar(){
     {
       title: 'APPEARANCE',
       items: [
+        { id: 'theme', ico: '🎨', label: 'Themes' },
         { id: 'nav', ico: '🔗', label: 'Menus' },
         { id: 'ads', ico: '💰', label: 'Ad Manager' }
       ]
@@ -203,12 +72,6 @@ function renderSidebar(){
       title: 'USERS',
       items: [
         { id: 'users', ico: '👥', label: 'All Users' }
-      ]
-    },
-    {
-      title: 'CODECOMPILER SEO',
-      items: [
-        { id: 'seo', ico: '🔍', label: 'SEO Manager' }
       ]
     },
     {
@@ -237,22 +100,659 @@ function renderSidebar(){
 
 // Load all
 async function loadAll(){
-  try {
-    [stats, tutorials, blogs, navItems, siteSettings, pages, adsConfig, trashBin, books, categories] = await Promise.all([
-      api('/api/stats'), api('/api/tutorials/list'), api('/api/blogs/list'), api('/api/nav/get'), api('/api/settings/get'), api('/api/pages/list'), api('/api/ads/get'), api('/api/trash/list'), api('/api/books/list'), api('/api/categories/list')
-    ]);
-    // Rebuild BCAT from server categories
-    if (Array.isArray(categories) && categories.length) {
-      BCAT.length = 0;
-      categories.forEach(c => BCAT.push(c.name));
-    }
-  } catch(e) {
-    toast('Failed to connect to server', false);
-  }
+  try{[stats,tutorials,blogs,navItems,siteSettings,pages,adsConfig,trashBin,themeSettings]=await Promise.all([api('/api/stats'),api('/api/tutorials/list'),api('/api/blogs/list'),api('/api/nav/get'),api('/api/settings/get'),api('/api/pages/list'),api('/api/ads/get'),api('/api/trash/list'),api('/api/theme/get')])}
+  catch(e){toast('Failed to connect to server',false)}
   renderSidebar();
 }
 
-function goTo(p){page=p;location.hash=p;renderSidebar();({dashboard:renderDash,tutorials:renderTuts,blogs:renderBlogs,nav:renderNav,settings:renderSettings,permalinks:renderPermalinks,pages:renderPages,ads:renderAds,trash:renderTrash,books:renderBooks,media:renderMedia,categories:renderCategories,seo:window.renderSeo})[p]?.()}
+function goTo(p){page=p;location.hash=p;renderSidebar();({dashboard:renderDash,tutorials:renderTuts,blogs:renderBlogs,books:renderBooks,categories:renderCategories,media:renderMedia,nav:renderNav,settings:renderSettings,permalinks:renderPermalinks,pages:renderPages,ads:renderAds,trash:renderTrash,theme:renderTheme})[p]?.()}
+
+// ══ CATEGORIES ══
+function renderCategories() {
+  $('ptitle').textContent = 'Categories';
+  $('tact').innerHTML = `<button class="btn bp" onclick="alert('Category editing will be available in Phase 4. They are currently synced from config.')">+ Add New Category</button>`;
+  
+  let h = `<div style="background:rgba(99,102,241,.08);padding:16px 20px;border-radius:10px;margin-bottom:20px;font-size:13px;color:var(--muted)">
+    <strong>ℹ️ Category Overview:</strong> Here you can view all active categories used for Posts and Tutorials.
+  </div>`;
+  
+  h += `<div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">`;
+  
+  // Post Categories
+  h += `<div class="card" style="margin-bottom:0;"><div class="ch"><h3>📝 Post Categories</h3><span style="color:var(--dim);font-size:12px">${BCAT.length} categories</span></div>
+  <table><thead><tr><th>Name</th><th>Slug</th></tr></thead><tbody>`;
+  BCAT.forEach(c => {
+    const slug = c.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    h += `<tr><td><strong>${esc(c)}</strong></td><td style="font-family:monospace;color:var(--dim);font-size:12px;">${slug}</td></tr>`;
+  });
+  h += `</tbody></table></div>`;
+  
+  // Tutorial Categories
+  h += `<div class="card" style="margin-bottom:0;"><div class="ch"><h3>📖 Tutorial Languages</h3><span style="color:var(--dim);font-size:12px">${TCAT.length} languages</span></div>
+  <table><thead><tr><th>Language Code</th><th>Display Name</th></tr></thead><tbody>`;
+  TCAT.forEach(c => {
+    h += `<tr><td style="font-family:monospace;color:var(--dim);font-size:12px;">${esc(c)}</td><td><strong>${esc(CATNAME[c]||c)}</strong></td></tr>`;
+  });
+  h += `</tbody></table></div>`;
+  
+  h += `</div>`;
+  
+  $('content').innerHTML = h;
+}
+
+// ══ MEDIA LIBRARY ══
+let mediaFiles = [];
+async function renderMedia() {
+  $('ptitle').textContent = 'Media Library';
+  $('tact').innerHTML = `<button class="btn bp" onclick="uploadMediaUI()">+ Upload New Media</button>`;
+  
+  mediaFiles = await api('/api/media/list').catch(() => []);
+  
+  let h = `<div class="card"><div class="ch"><h3>🖼️ Media Files</h3><span style="color:var(--dim);font-size:12px">${mediaFiles.length} files</span></div>`;
+  
+  if(!mediaFiles.length) {
+    h += `<div style="padding:24px;text-align:center;color:var(--dim)">No media files found. Upload some images!</div></div>`;
+  } else {
+    h += `<div style="padding:16px; display:grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px;">`;
+    mediaFiles.forEach(m => {
+      h += `
+      <div style="border:1px solid #c3c4c7; border-radius:4px; overflow:hidden; background:#fff; position:relative;" class="media-card">
+        <div style="height:120px; background:#f0f0f1; display:flex; align-items:center; justify-content:center;">
+          <img src="${m.url}" style="max-height:100%; max-width:100%; object-fit:contain;" />
+        </div>
+        <div style="padding:8px; font-size:11px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${esc(m.file)}">
+          <strong>${esc(m.file)}</strong><br>
+          <span style="color:var(--dim)">${(m.size/1024).toFixed(1)} KB</span><br>
+          <span style="color:#2271b1; cursor:pointer;" onclick="navigator.clipboard.writeText('${m.url}');toast('URL copied!')">Copy URL</span>
+        </div>
+        <div style="position:absolute; top:4px; right:4px;">
+          <button class="btn bd bs" style="padding:4px; background:#fff; border-radius:50%; box-shadow:0 1px 2px rgba(0,0,0,0.2)" onclick="delMedia('${esc(m.file)}')">🗑️</button>
+        </div>
+      </div>`;
+    });
+    h += `</div></div>`;
+  }
+  
+  h += `<div id="media-upload-area" style="display:none; margin-top:20px; padding:24px; border:2px dashed #8c8f94; border-radius:8px; text-align:center; background:#fff;">
+    <h3>Upload New Image</h3>
+    <p style="font-size:12px; color:var(--dim); margin-bottom:10px;">Select an image to upload to the media library</p>
+    <input type="file" id="media_file_inp" accept="image/*" style="display:none" onchange="handleMediaUpload(this)">
+    <button class="btn bp" onclick="$('media_file_inp').click()">Select File</button>
+  </div>`;
+  
+  $('content').innerHTML = h;
+}
+
+function uploadMediaUI() {
+  $('media-upload-area').style.display = 'block';
+}
+
+function delMedia(filename) {
+  openConfirm(`Delete media "${filename}"?`, async () => {
+    await post('/api/media/delete', { filename });
+    toast('Media deleted');
+    await loadAll();
+    renderMedia();
+  });
+}
+
+async function handleMediaUpload(input) {
+  if(!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  const reader = new FileReader();
+  reader.onload = async function(e) {
+    const base64 = e.target.result.split(',')[1];
+    toast('Uploading media...', true);
+    try {
+      await post('/api/media/upload', { name: file.name, data: base64 });
+      toast('Media uploaded successfully! ✅');
+      await loadAll();
+      renderMedia();
+    } catch (e) {
+      toast('Failed to upload media.', false);
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+// ══ UPLOAD PANEL ══
+// Sample file templates for each content type
+const SAMPLES = {
+  blog: {
+    filename: 'sample-blog-post.mdx',
+    content: `---
+# ╔══════════════════════════════════════════════════════════╗
+# ║         CODESCOMPILER — BLOG POST FORMAT GUIDE           ║
+# ╚══════════════════════════════════════════════════════════╝
+#
+# FILE LOCATION: src/content/blog/your-post-slug.mdx
+# FILE FORMAT  : MDX (Markdown + optional JSX components)
+# URL will be  : /blog/your-post-slug/
+#
+# ┌──────────────────────────────────────────────────────────┐
+# │ REQUIRED FIELDS (must not be empty)                      │
+# └──────────────────────────────────────────────────────────┘
+
+title: "How to Build a Glassmorphism Login Form with CSS"
+# ↑ REQUIRED. The main heading shown on the page and in Google results.
+
+description: "Learn how to create a stunning glassmorphism login form using CSS backdrop-filter, rgba colors, and box-shadow for a modern frosted glass effect."
+# ↑ REQUIRED. 1-2 sentences. Used for SEO meta description (keep under 160 chars).
+
+date: "2026-09-14"
+# ↑ REQUIRED. Format: YYYY-MM-DD. Controls sort order on the blog page.
+
+category: "Login Form"
+# ↑ REQUIRED. MUST be EXACTLY one of these values (copy-paste):
+#   "HTML & CSS"         "JavaScript"           "JavaScript Projects"
+#   "Login Form"         "Card Design"          "Navigation Bar"
+#   "Blog"               "Website Designs"      "Templates html"
+#   "Image Slider"       "API Projects"         "Sidebar Menu"
+#   "CSS Buttons"        "JavaScript Games"     "Preloader or Loader"
+#   "Form Validation"    "Accordion"            "Bootstrap"
+#   "Tabs"               "Calendar"
+# ↑ Any other value will cause a BUILD ERROR.
+
+# ┌──────────────────────────────────────────────────────────┐
+# │ OPTIONAL FIELDS                                          │
+# └──────────────────────────────────────────────────────────┘
+
+tags: ["css", "glassmorphism", "login-form", "backdrop-filter"]
+# ↑ Array of lowercase tags. Helps with search & filtering.
+
+image: "/images/posts/glassmorphism-login.png"
+# ↑ Path to the thumbnail image shown on the blog listing card.
+#   Must be placed in: public/images/posts/
+
+imageAlt: "Glassmorphism login form with frosted glass effect"
+# ↑ Alt text for the image (for accessibility & SEO).
+
+status: "published"
+# ↑ Options: "published" | "draft" | "scheduled"
+#   "draft" hides the post from all listings and sitemaps.
+
+featured: false
+# ↑ Set to true to show this post in the Featured section on the homepage.
+
+hasDemo: true
+# ↑ Set to true if the post contains a live code demo.
+
+author: "CodesCompiler"
+# ↑ Author name displayed on the post.
+
+seoTitle: "Glassmorphism Login Form Tutorial — HTML & CSS"
+# ↑ Optional. Override the page <title> for Google (keep under 60 chars).
+
+noindex: false
+# ↑ Set to true to tell search engines NOT to index this page.
+---
+
+## Introduction
+
+Welcome to this tutorial! Here we'll build a glassmorphism login form step by step.
+
+## HTML Structure
+
+\`\`\`html
+<div class="glass-card">
+  <form class="login-form">
+    <h2>Sign In</h2>
+    <input type="email" placeholder="Email address">
+    <input type="password" placeholder="Password">
+    <button type="submit">Login</button>
+  </form>
+</div>
+\`\`\`
+
+## CSS Styling
+
+\`\`\`css
+.glass-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 40px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+\`\`\`
+
+## Conclusion
+
+You've built a beautiful glassmorphism login form!
+`
+  },
+  tutorial: {
+    filename: 'sample-tutorial.mdx',
+    content: `---
+# ╔══════════════════════════════════════════════════════════╗
+# ║        CODESCOMPILER — TUTORIAL FORMAT GUIDE             ║
+# ╚══════════════════════════════════════════════════════════╝
+#
+# FILE LOCATION: src/content/tutorials/your-tutorial-slug.mdx
+# FILE FORMAT  : MDX (Markdown + optional <Editor /> component)
+# URL will be  : /tutorial/your-tutorial-slug/
+#
+# ┌──────────────────────────────────────────────────────────┐
+# │ REQUIRED FIELDS (must not be empty)                      │
+# └──────────────────────────────────────────────────────────┘
+
+title: "CSS Flexbox Layout"
+# ↑ REQUIRED. Short, clear lesson title.
+
+description: "Learn how CSS Flexbox works to create flexible, responsive one-dimensional layouts for rows and columns."
+# ↑ REQUIRED. One sentence describing what the student will learn.
+
+category: "css"
+# ↑ REQUIRED. MUST be EXACTLY one of these values (lowercase):
+#   "html"  "css"  "javascript"  "seo"  "python"  "sql"  "php"
+# ↑ Any other value will cause a BUILD ERROR.
+
+order: 12
+# ↑ REQUIRED. Integer. Controls the order in the tutorial sidebar.
+#   Lower numbers appear first. Use gaps (10, 20, 30) to allow easy insertion.
+
+# ┌──────────────────────────────────────────────────────────┐
+# │ OPTIONAL FIELDS                                          │
+# └──────────────────────────────────────────────────────────┘
+
+group: "Box Model & Layout"
+# ↑ Groups lessons under a section header in the sidebar.
+
+seoTitle: "CSS Flexbox Tutorial — Complete Guide with Examples"
+# ↑ Override the page <title> for Google (keep under 60 chars).
+
+permalink: "css-flexbox-layout"
+# ↑ Custom URL slug. If omitted, the filename is used.
+---
+
+## What is Flexbox?
+
+CSS Flexbox (Flexible Box Layout) is a layout method for arranging items in rows or columns.
+
+### Setting Up Flex Container
+
+To use flexbox, add \`display: flex\` to the parent element.
+
+<Editor
+  initialHtml={\`<div class="container">
+  <div class="box">1</div>
+  <div class="box">2</div>
+  <div class="box">3</div>
+</div>\`}
+  initialCss={\`.container {
+  display: flex;
+  gap: 10px;
+  background: #f0f0f0;
+  padding: 10px;
+}
+.box {
+  background: #04AA6D;
+  color: white;
+  padding: 20px;
+  font-size: 18px;
+}\`}
+/>
+
+### Flex Direction
+
+Use \`flex-direction\` to switch between row (default) and column layouts.
+
+\`\`\`css
+.container {
+  display: flex;
+  flex-direction: column; /* row | column | row-reverse | column-reverse */
+}
+\`\`\`
+
+## Summary
+
+| Property | Values | Description |
+| :--- | :--- | :--- |
+| flex-direction | row, column | Main axis direction |
+| justify-content | flex-start, center, space-between | Main axis alignment |
+| align-items | flex-start, center, stretch | Cross axis alignment |
+`
+  },
+  page: {
+    filename: 'sample-page.astro',
+    content: `---
+// ╔══════════════════════════════════════════════════════════╗
+// ║          CODESCOMPILER — PAGE FORMAT GUIDE               ║
+// ╚══════════════════════════════════════════════════════════╝
+//
+// FILE LOCATION : src/pages/your-page-name.astro
+// FILE FORMAT   : Astro Component (.astro)
+// URL will be   : /your-page-name/
+//
+// RULES:
+//   - Always import BaseLayout from '../layouts/BaseLayout.astro'
+//   - The <BaseLayout> title and description are REQUIRED for SEO
+//   - The file name becomes the URL slug (use lowercase, hyphens only)
+//   - Do NOT use spaces or underscores in filenames
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// You can fetch data or do server-side logic here
+const pageTitle = "About Us";
+const pageDescription = "Learn about CodesCompiler and our mission to make web development accessible to everyone.";
+---
+
+<!--
+  ↑ Everything between --- and --- is the "frontmatter" (server-side JS)
+  ↓ Everything below is your HTML template
+-->
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <!--
+    IMPORTANT: Always wrap your content in a max-width container.
+    Use Tailwind classes for styling.
+  -->
+  <div class="max-w-screen-xl mx-auto px-5 py-12">
+
+    <!-- Page Header -->
+    <h1 class="text-4xl font-bold text-gray-900 mb-6">{pageTitle}</h1>
+
+    <!-- Main Content -->
+    <div class="prose max-w-none">
+      <p class="text-lg text-gray-600 mb-4">
+        Welcome to CodesCompiler! We are dedicated to helping developers
+        learn web technologies through hands-on tutorials and examples.
+      </p>
+
+      <h2 class="text-2xl font-bold mt-8 mb-4">Our Mission</h2>
+      <p>
+        To make web development education free, accessible, and practical
+        for developers at every skill level.
+      </p>
+
+      <!-- Example of a styled card section -->
+      <div class="grid md:grid-cols-3 gap-6 mt-8">
+        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+          <h3 class="font-bold text-lg mb-2">📖 Tutorials</h3>
+          <p class="text-gray-600">Step-by-step lessons for HTML, CSS, JavaScript, Python, SQL, and PHP.</p>
+        </div>
+        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+          <h3 class="font-bold text-lg mb-2">💻 Live Editor</h3>
+          <p class="text-gray-600">Practice code directly in the browser with our built-in live editor.</p>
+        </div>
+        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+          <h3 class="font-bold text-lg mb-2">🆓 Free Forever</h3>
+          <p class="text-gray-600">All content is completely free. No sign-up required to start learning.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</BaseLayout>
+`
+  },
+  book: {
+    filename: 'sample-book.json',
+    content: `{
+  "$$comment": "╔══════════════════════════════════════════════════════════╗",
+  "$$comment2": "║         CODESCOMPILER — BOOK FORMAT GUIDE                ║",
+  "$$comment3": "╚══════════════════════════════════════════════════════════╝",
+  "$$comment4": "FILE LOCATION: src/data/books/your-book-slug.json",
+  "$$comment5": "FILE FORMAT  : JSON (remove all lines starting with $$comment before uploading)",
+
+  "title": "JavaScript: The Complete Guide",
+  "description": "A comprehensive guide covering everything from basic syntax to advanced concepts like closures, async/await, and the event loop.",
+  "author": "CodesCompiler",
+  "date": "2026-09-14",
+  "category": "JavaScript",
+  "tags": ["javascript", "beginner", "advanced", "es6"],
+  "coverImage": "/images/books/javascript-complete-guide.png",
+  "slug": "javascript-complete-guide",
+  "status": "published",
+  "featured": false,
+  "chapters": [
+    {
+      "order": 1,
+      "title": "Getting Started",
+      "description": "Introduction to JavaScript and setting up your environment",
+      "url": "/tutorial/javascript-introduction/"
+    },
+    {
+      "order": 2,
+      "title": "Variables & Data Types",
+      "description": "Learn about var, let, const and JavaScript data types",
+      "url": "/tutorial/js-variables/"
+    },
+    {
+      "order": 3,
+      "title": "Functions",
+      "description": "Declaring and calling functions, arrow functions, callbacks",
+      "url": "/tutorial/js-functions/"
+    }
+  ],
+  "meta": {
+    "totalChapters": 3,
+    "difficulty": "Beginner to Advanced",
+    "estimatedTime": "8 hours"
+  }
+}`
+  }
+};
+
+// Renders the collapsible upload panel for a given content type
+function renderUploadPanel(type) {
+  const labels = {
+    blog:     { icon: '📝', name: 'Blog Post',  ext: '.mdx',   accept: '.mdx,.md' },
+    tutorial: { icon: '📖', name: 'Tutorial',   ext: '.mdx',   accept: '.mdx,.md' },
+    page:     { icon: '📄', name: 'Page',       ext: '.astro', accept: '.astro' },
+    book:     { icon: '📚', name: 'Book',       ext: '.json',  accept: '.json' }
+  };
+  const l = labels[type];
+  const sample = SAMPLES[type] ? SAMPLES[type].content : '';
+
+  return `
+  <div class="card" style="margin-top:24px;border:1px solid #c3c4c7;border-radius:4px;" id="upload-panel-${type}">
+    <div class="ch" style="cursor:pointer;user-select:none;background:#f6f7f7;padding:12px 16px;" onclick="toggleUploadPanel('${type}')">
+      <h3 style="font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px;">
+        📥 Import &amp; Upload ${l.name} Files
+      </h3>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button class="btn bp bs" onclick="event.stopPropagation();downloadSample('${type}')">
+          ⬇️ Download Sample ${l.ext} Template
+        </button>
+        <span id="upload-toggle-${type}" style="color:var(--dim);font-size:13px;">▲ Collapse</span>
+      </div>
+    </div>
+
+    <div id="upload-body-${type}" style="display:block;padding:20px;background:#fff;">
+      
+      <!-- Template Format Instructions -->
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:16px;margin-bottom:20px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:10px;">
+          <h4 style="font-size:13px;font-weight:700;color:#1e293b;margin:0;">📋 Required File Format Guide (${l.ext})</h4>
+          <button class="btn bg bs" onclick="downloadSample('${type}')">⬇️ Download Sample ${l.ext} Template File</button>
+        </div>
+        <p style="font-size:12px;color:#646970;margin-bottom:10px;">
+          Files must follow the format shown below. Download the sample template to inspect required frontmatter metadata headers before uploading.
+        </p>
+        <pre style="background:#1e293b;color:#f8fafc;padding:12px;border-radius:4px;font-size:12px;max-height:240px;overflow-y:auto;font-family:monospace;margin:0;white-space:pre-wrap;"><code>${esc(sample.slice(0, 950))}${sample.length > 950 ? '\n...\n[Download template file to view full sample code]' : ''}</code></pre>
+      </div>
+
+      <!-- Drag & Drop Upload Zone -->
+      <div id="dropzone-${type}"
+        style="border:2px dashed #2271b1;border-radius:8px;padding:36px 20px;text-align:center;cursor:pointer;background:rgba(34,113,177,.03);transition:all 0.2s;"
+        ondragover="event.preventDefault();this.style.borderColor='#135e96';this.style.background='rgba(34,113,177,.08)';"
+        ondragleave="this.style.borderColor='#2271b1';this.style.background='rgba(34,113,177,.03)';"
+        ondrop="handleFileDrop(event,'${type}')"
+        onclick="document.getElementById('fileInput-${type}').click()">
+        <div style="font-size:38px;margin-bottom:6px;">📁</div>
+        <div style="font-weight:700;font-size:15px;color:#1d2327;margin-bottom:4px;">Drag &amp; drop your ${l.ext} files here to import</div>
+        <div style="font-size:12px;color:#646970;">Or click to browse from your computer · Accepted: ${l.accept}</div>
+      </div>
+      <input type="file" id="fileInput-${type}" accept="${l.accept}" multiple style="display:none;" 
+        onchange="handleFileInputChange(this,'${type}')">
+      
+      <!-- Upload results -->
+      <div id="upload-results-${type}" style="margin-top:14px;"></div>
+    </div>
+  </div>`;
+}
+
+window.toggleUploadPanel = function(type) {
+  const body = $('upload-body-' + type);
+  const toggle = $('upload-toggle-' + type);
+  if (!body) return;
+  const isHidden = body.style.display === 'none';
+  body.style.display = isHidden ? 'block' : 'none';
+  if (toggle) toggle.textContent = isHidden ? '▲ Collapse' : '▼ Expand';
+};
+
+window.downloadSample = function(type) {
+  const s = SAMPLES[type];
+  if (!s) return;
+  const blob = new Blob([s.content], { type: 'text/plain;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = s.filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+  toast('Sample file downloaded! 📄 Open it, fill in your content, then upload it back here.');
+};
+
+window.handleFileDrop = function(e, type) {
+  e.preventDefault();
+  const dz = $('dropzone-' + type);
+  if (dz) { dz.style.borderColor = '#c3c4c7'; dz.style.background = '#fafafa'; }
+  const files = Array.from(e.dataTransfer.files);
+  processUploadFiles(files, type);
+};
+
+window.handleFileInputChange = function(input, type) {
+  const files = Array.from(input.files);
+  processUploadFiles(files, type);
+  input.value = '';
+};
+
+async function processUploadFiles(files, type) {
+  const resultsEl = $('upload-results-' + type);
+  if (!files.length) return;
+
+  const allowedExt = { blog: ['.mdx','.md'], tutorial: ['.mdx','.md'], page: ['.astro'], book: ['.json'] };
+  const apiMap    = { blog: '/api/blogs/save', tutorial: '/api/tutorials/save', page: '/api/pages/save', book: '/api/books/save' };
+  
+  let html = '<div style="border:1px solid #c3c4c7;border-radius:6px;overflow:hidden;margin-top:4px;">';
+  const results = [];
+
+  for (const file of files) {
+    const ext = '.' + file.name.split('.').pop().toLowerCase();
+    if (!allowedExt[type].includes(ext)) {
+      results.push({ file: file.name, ok: false, msg: `Wrong file type. Expected: ${allowedExt[type].join(' or ')}` });
+      continue;
+    }
+    
+    try {
+      const content = await file.text();
+      
+      // Validate
+      const errs = validateContentFile(type, content, file.name);
+      if (errs.length) {
+        results.push({ file: file.name, ok: false, msg: 'Validation failed: ' + errs.join(' · ') });
+        continue;
+      }
+      
+      // Save
+      const payload = { filename: file.name, content };
+      const r = await post(apiMap[type], payload);
+      if (r.ok !== false) {
+        results.push({ file: file.name, ok: true, msg: 'Uploaded successfully ✅' });
+      } else {
+        results.push({ file: file.name, ok: false, msg: r.error || 'Server save failed' });
+      }
+    } catch (err) {
+      results.push({ file: file.name, ok: false, msg: 'Read error: ' + err.message });
+    }
+  }
+
+  results.forEach(r => {
+    const bg  = r.ok ? 'rgba(16,185,129,.07)' : 'rgba(239,68,68,.07)';
+    const clr = r.ok ? '#065f46' : '#b91c1c';
+    const ico = r.ok ? '✅' : '❌';
+    html += `<div style="padding:10px 14px;border-bottom:1px solid #f0f0f1;background:${bg};">
+      <div style="font-weight:600;font-size:13px;color:${clr};">${ico} ${esc(r.file)}</div>
+      <div style="font-size:12px;color:#6b7280;margin-top:2px;">${esc(r.msg)}</div>
+    </div>`;
+  });
+
+  html += '</div>';
+  
+  const anyOk = results.some(r => r.ok);
+  if (anyOk) {
+    await loadAll();
+    // Re-render the current section to refresh the table
+    if (type === 'blog') renderBlogs();
+    else if (type === 'tutorial') renderTuts();
+    else if (type === 'page') renderPages();
+    else if (type === 'book') renderBooks();
+  }
+
+  if (resultsEl) {
+    resultsEl.innerHTML = html;
+    // Re-open panel so user sees results
+    const body = $('upload-body-' + type);
+    if (body) body.style.display = 'block';
+  }
+}
+
+function validateContentFile(type, content, filename) {
+  const errs = [];
+
+  if (type === 'book') {
+    // JSON validation
+    try {
+      const data = JSON.parse(content);
+      if (!data.title)       errs.push('"title" is required');
+      if (!data.description) errs.push('"description" is required');
+    } catch(e) {
+      errs.push('Invalid JSON: ' + e.message);
+    }
+    return errs;
+  }
+
+  if (type === 'page') {
+    // .astro — just check it's not empty and has BaseLayout
+    if (!content.trim()) errs.push('File is empty');
+    if (!content.includes('BaseLayout')) errs.push('Page must import and use BaseLayout');
+    return errs;
+  }
+
+  // MDX (blog / tutorial) — validate frontmatter
+  const norm  = content.replace(/\r\n/g, '\n');
+  const match = norm.match(/^---\n([\s\S]*?)\n---/);
+  if (!match) { errs.push('Missing frontmatter (the --- block at the top)'); return errs; }
+
+  const fm = parseFM(content);
+
+  if (!fm.title)       errs.push('"title" is required');
+  if (!fm.description) errs.push('"description" is required');
+
+  if (type === 'blog') {
+    if (!fm.date) errs.push('"date" is required (format: YYYY-MM-DD)');
+    if (!fm.category) {
+      errs.push('"category" is required');
+    } else if (!BCAT.includes(fm.category)) {
+      errs.push(`Invalid category "${fm.category}". Must be one of: ${BCAT.join(', ')}`);
+    }
+  }
+
+  if (type === 'tutorial') {
+    if (!fm.category) {
+      errs.push('"category" is required');
+    } else if (!TCAT.includes(fm.category)) {
+      errs.push(`Invalid category "${fm.category}". Must be one of: ${TCAT.join(', ')}`);
+    }
+    if (!fm.order && fm.order !== 0) errs.push('"order" is required (a number)');
+  }
+
+  return errs;
+}
 
 // ══ DASHBOARD ══
 function renderDash(){
@@ -331,13 +831,7 @@ window.saveQuickDraft = async function() {
   if(!t) return toast('Please enter a title', false);
   const slug = t.toLowerCase().replace(/[^a-z0-9]+/g, '-');
   const d = new Date().toISOString().split('T')[0];
-  const content = `---
-title: "${t}"
-date: "${d}"
-draft: true
----
-
-${c}`;
+  const content = '---\ntitle: "' + t + '"\ndate: "' + d + '"\ndraft: true\n---\n\n' + c;
   await post('/api/blogs/save', { filename: slug+'.mdx', content });
   $('qd_title').value = '';
   $('qd_content').value = '';
@@ -345,817 +839,364 @@ ${c}`;
   await loadAll();
 }
 
-function getSeoBoxHtml(data) {
-  data = data || {};
-  return `
-  <div class="meta-box" style="margin-top:16px;">
-    <div class="meta-box-header" onclick="toggleMeta('seo-body')">
-      <h3>🔍 SEO Settings (Yoast / RankMath Style)</h3><span>▲</span>
+// ══ TUTORIALS ══
+let tutFilters = { q: '', cat: '' };
+function renderTuts(){
+  $('ptitle').textContent='Tutorials';
+  $('tact').innerHTML=`<button class="btn bp" onclick="newTut()">+ Add New Tutorial</button><button class="btn bg" style="margin-left:8px;" onclick="toggleUploadPanel('tutorial'); document.getElementById('upload-panel-tutorial').scrollIntoView({behavior:'smooth'})">📥 Import &amp; Upload</button>`;
+  
+  let h = `
+    <div style="display:flex;gap:10px;margin-bottom:18px;background:#fff;padding:14px;border-radius:4px;border:1px solid #c3c4c7;align-items:center;flex-wrap:wrap">
+      <div style="font-size:13px;font-weight:600;color:#3c434a;margin-right:4px">🔍 Filter Tutorials:</div>
+      <input class="input-text" placeholder="Search by title..." oninput="tutFilterChange('q', this.value)" style="width:250px" value="${esc(tutFilters.q)}">
+      <select class="input-text" onchange="tutFilterChange('cat', this.value)" style="width:180px">
+        <option value="">All Categories</option>
+        ${TCAT.map(c => `<option value="${c}" ${tutFilters.cat===c?'selected':''}>${CATNAME[c]||c}</option>`).join('')}
+      </select>
+      ${(tutFilters.q||tutFilters.cat) ? `<button class="btn bg bs" onclick="tutFilters={q:'',cat:''};renderTuts()">Clear Filters</button>` : ''}
     </div>
-    <div class="meta-box-body" id="seo-body">
-      <div style="margin-bottom:12px;">
-        <label style="display:block;font-size:12px;color:#555;font-weight:600;margin-bottom:4px;">Focus Keyword(s)</label>
-        <input type="text" id="seo_keywords" placeholder="e.g. learn python, python loops" value="${esc(data.seoKeywords||'')}" style="width:100%;border:1px solid #8c8f94;border-radius:3px;padding:6px 8px;font-size:13px;">
-        <div style="font-size:11px;color:#888;margin-top:2px;">Separate multiple keywords with commas.</div>
-      </div>
-      <div style="margin-bottom:12px;">
-        <label style="display:block;font-size:12px;color:#555;font-weight:600;margin-bottom:4px;">SEO Title</label>
-        <input type="text" id="seo_title" placeholder="Custom SEO title..." value="${esc(data.seoTitle||'')}" style="width:100%;border:1px solid #8c8f94;border-radius:3px;padding:6px 8px;font-size:13px;">
-        <div style="font-size:11px;color:#888;margin-top:2px;">Leave blank to use the main title.</div>
-      </div>
-      <div style="margin-bottom:12px;">
-        <label style="display:block;font-size:12px;color:#555;font-weight:600;margin-bottom:4px;">Meta Description</label>
-        <textarea id="seo_desc" placeholder="Write a compelling meta description..." style="width:100%;height:60px;border:1px solid #8c8f94;border-radius:3px;padding:6px 8px;font-size:13px;">${esc(data.seoDesc||'')}</textarea>
-      </div>
-
-      <!-- Social Preview Features -->
-      <div style="border-top:1px solid #f0f0f1;padding-top:12px;margin-top:16px;">
-        <h4 style="font-size:12px;font-weight:bold;margin-bottom:8px;color:#3c434a;">📱 Social Media Preview</h4>
-        <div style="margin-bottom:12px;">
-          <label style="display:block;font-size:11px;color:#555;margin-bottom:2px;">Social Title</label>
-          <input type="text" id="seo_social_title" placeholder="Title for Facebook/X..." value="${esc(data.seoSocialTitle||'')}" style="width:100%;border:1px solid #8c8f94;border-radius:3px;padding:4px 6px;font-size:12px;">
-        </div>
-        <div style="margin-bottom:12px;">
-          <label style="display:block;font-size:11px;color:#555;margin-bottom:2px;">Social Description</label>
-          <textarea id="seo_social_desc" placeholder="Description for social shares..." style="width:100%;height:40px;border:1px solid #8c8f94;border-radius:3px;padding:4px 6px;font-size:12px;">${esc(data.seoSocialDesc||'')}</textarea>
-        </div>
-        <div style="margin-bottom:12px;">
-          <label style="display:block;font-size:11px;color:#555;margin-bottom:2px;">Social Image URL</label>
-          <input type="text" id="seo_social_img" placeholder="https://..." value="${esc(data.seoSocialImg||'')}" style="width:100%;border:1px solid #8c8f94;border-radius:3px;padding:4px 6px;font-size:12px;">
-        </div>
-      </div>
-
-      <div style="margin-top:12px;">
-        <label class="chk" style="font-size:13px;"><input type="checkbox" id="seo_noindex" ${data.seoNoIndex?'checked':''}> Prevent search engines from indexing this page (noindex)</label>
-      </div>
-    </div>
-  </div>`;
+    <div id="tut_table_container"></div>
+    ${renderUploadPanel('tutorial')}
+  `;
+  $('content').innerHTML=h;
+  applyTutFilters();
 }
 
-function getSeoData() {
-  return {
-    seoKeywords: $('seo_keywords')?.value.trim() || '',
-    seoTitle: $('seo_title')?.value.trim() || '',
-    seoDesc: $('seo_desc')?.value.trim() || '',
-    seoSocialTitle: $('seo_social_title')?.value.trim() || '',
-    seoSocialDesc: $('seo_social_desc')?.value.trim() || '',
-    seoSocialImg: $('seo_social_img')?.value.trim() || '',
-    seoNoIndex: $('seo_noindex')?.checked || false
-  };
+function tutFilterChange(key, val) {
+  tutFilters[key] = val;
+  applyTutFilters();
+  if(key === 'q') applyTutFilters(); else renderTuts();
 }
 
-let _tutFilter = 'all';
-let _tutCatFilter = '';
-let _tutSearch = '';
-let _tutSelectedFiles = new Set();
-
-window.setTutFilter = function(f) { _tutFilter = f; renderTuts(); }
-window.setTutCat = function(c) { _tutCatFilter = c; renderTuts(); }
-window.setTutSearch = function(s) { _tutSearch = s; renderTuts(); }
-
-window.toggleTutFile = function(f, checked) {
-  if(checked) _tutSelectedFiles.add(f);
-  else _tutSelectedFiles.delete(f);
-}
-
-window.toggleAllTuts = function(checked) {
-  document.querySelectorAll('.tut-cb').forEach(cb => {
-    cb.checked = checked;
-    if (checked) _tutSelectedFiles.add(cb.value);
-    else _tutSelectedFiles.delete(cb.value);
-  });
-}
-
-window.applyTutBulk = async function() {
-  const act = $('bulk_action_tuts')?.value;
-  if(act === 'trash' && _tutSelectedFiles.size > 0) {
-    if(confirm(`Move ${_tutSelectedFiles.size} tutorials to trash?`)) {
-      for (let f of _tutSelectedFiles) {
-        await post('/api/tutorials/delete', { filename: f });
-      }
-      toast('Tutorials moved to trash');
-      _tutSelectedFiles.clear();
-      await loadAll();
-    }
-  }
-}
-
-function renderTuts() {
-  $('ptitle').textContent = 'Tutorials';
-  $('tact').innerHTML = '<button class="add-new-btn" onclick="editTut()">Add New</button>';
-
-  const cats = [...new Set(tutorials.map(t => t.category))].filter(Boolean).sort();
-
-  let filtered = tutorials.filter(t => {
-    const isDraft = t.draft === true || t.draft === 'true';
-    const isPublished = !isDraft;
-    if (_tutFilter === 'published' && !isPublished) return false;
-    if (_tutFilter === 'draft' && !isDraft) return false;
-    
-    if (_tutCatFilter && t.category !== _tutCatFilter) return false;
-    
-    if (_tutSearch) {
-      const q = _tutSearch.toLowerCase();
-      if (!(t.title||'').toLowerCase().includes(q) && !(t.category||'').toLowerCase().includes(q)) return false;
-    }
+function applyTutFilters() {
+  const q = tutFilters.q.toLowerCase();
+  const f = tutorials.filter(t => {
+    if (q && !(t.title||'').toLowerCase().includes(q)) return false;
+    if (tutFilters.cat && t.category !== tutFilters.cat) return false;
     return true;
   });
-
-  filtered.sort((a,b) => (parseInt(a.order)||0) - (parseInt(b.order)||0));
-
-  const total = tutorials.length;
-  const drafts = tutorials.filter(t => t.draft === true || t.draft === 'true').length;
-  const published = total - drafts;
-
-  const tabClass = t => `text-sm mr-4 cursor-pointer pb-1 ${_tutFilter===t ? 'text-blue-600 border-b-2 border-blue-600 font-semibold' : 'text-gray-600 hover:text-blue-500'}`;
-
-  let h = `
-  <div style="margin-bottom:12px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
-    <span class="${tabClass('all')}" onclick="setTutFilter('all')">All (${total})</span>
-    <span class="${tabClass('published')}" onclick="setTutFilter('published')">Published (${published})</span>
-    <span class="${tabClass('draft')}" onclick="setTutFilter('draft')">Drafts (${drafts})</span>
-  </div>
-
-  <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;">
-    <select class="input-text" style="width:auto;padding:4px 8px;font-size:13px;" onchange="setTutCat(this.value)">
-      <option value="">All Categories</option>
-      ${cats.map(c=>`<option value="${esc(c)}" ${_tutCatFilter===c?'selected':''}>${CATNAME[c]||esc(c)}</option>`).join('')}
-    </select>
-    <input type="text" class="input-text" style="width:220px;font-size:13px;padding:4px 8px;" placeholder="Search Tutorials..." value="${esc(_tutSearch)}" oninput="setTutSearch(this.value)">
-    <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
-      <select id="bulk_action_tuts" class="input-text" style="width:auto;padding:4px 8px;font-size:13px;">
-        <option value="">Bulk Actions</option>
-        <option value="trash">Move to Trash</option>
-      </select>
-      <button class="btn-secondary" style="padding:4px 10px;font-size:13px;" onclick="applyTutBulk()">Apply</button>
-      <span class="text-gray-500 text-sm">${filtered.length} item${filtered.length!==1?'s':''}</span>
-    </div>
-  </div>
-
-  <div class="wp-card">
-  <table style="width:100%;border-collapse:collapse;font-size:13px;">
-    <thead>
-      <tr style="background:#f6f7f7;border-bottom:1px solid #e0e0e0;">
-        <th style="padding:8px 10px;width:32px;"><input type="checkbox" id="tut_check_all" onchange="toggleAllTuts(this.checked)"></th>
-        <th style="padding:8px 10px;text-align:left;font-weight:600;width:60px;">Order #</th>
-        <th style="padding:8px 10px;text-align:left;font-weight:600;">Title</th>
-        <th style="padding:8px 10px;text-align:left;font-weight:600;">Author</th>
-        <th style="padding:8px 10px;text-align:left;font-weight:600;">Category</th>
-        <th style="padding:8px 10px;text-align:left;font-weight:600;">Tags</th>
-        <th style="padding:8px 10px;text-align:left;font-weight:600;">Date</th>
-        <th style="padding:8px 10px;text-align:left;font-weight:600;">Feat. Image</th>
-      </tr>
-    </thead>
-    <tbody>`;
-
-  if(!filtered.length) {
-    h += `<tr><td colspan="8" style="padding:24px;text-align:center;color:#888;">No tutorials found.</td></tr>`;
-  } else {
-    filtered.forEach(t => {
-      const checked = _tutSelectedFiles.has(t.file) ? 'checked' : '';
-      const cat = t.category || '—';
-      const catName = CATNAME[cat] || cat;
-      const dateLabel = `<span style="color:#888;font-size:11px;">${t.draft ? 'Last Modified' : 'Published'}</span>`;
-      const dateStr = t.date || '—';
-      const authorStr = t.author || 'Admin';
-      const isDraft = t.draft === true || t.draft === 'true';
-      const titleExtra = isDraft ? ' — <span style="font-weight:bold;color:#444;">Draft</span>' : '';
-      const rawTagsList = t.tags || [];
-      const tags = (Array.isArray(rawTagsList) ? rawTagsList : String(rawTagsList).replace(/[\[\]"]/g, '').split(',')).map(t=>String(t).trim()).filter(Boolean);
-      const tagsHtml = tags.length ? tags.map(t=>`<span style="background:#f0f0f0;border-radius:3px;padding:1px 5px;margin-right:3px;font-size:11px;">${esc(t)}</span>`).join('') : '—';
-      const hasImage = t.image || t.coverImage;
-      const imgHtml = hasImage ? `<img src="${esc(hasImage)}" style="width:40px;height:40px;object-fit:cover;border-radius:3px;border:1px solid #ddd;" onerror="this.replaceWith(document.createTextNode('—'))">` : `<span style="color:#aaa;font-size:11px;">No Image</span>`;
-
-      h += `
-      <tr style="border-bottom:1px solid #f0f0f0;" class="blog-row" onmouseenter="this.querySelector('.row-actions').style.display='flex'" onmouseleave="this.querySelector('.row-actions').style.display='none'">
-        <td style="padding:8px 10px;"><input type="checkbox" class="tut-cb" value="${esc(t.file)}" ${checked} onchange="toggleTutFile('${esc(t.file)}',this.checked)"></td>
-        <td style="padding:8px 10px;font-weight:bold;">${esc(t.order||'-')}</td>
-        <td style="padding:8px 10px;">
-          <strong><a href="#" style="color:#2271b1;text-decoration:none;" onclick="editTut('${esc(t.file)}');return false;">${esc(t.title || t.file)}</a></strong>${titleExtra}
-          <div class="row-actions" style="display:none;gap:8px;margin-top:4px;">
-            <a href="#" style="color:#2271b1;font-size:12px;text-decoration:none;" onclick="editTut('${esc(t.file)}');return false;">Edit</a>
-            <span style="color:#ccc;">|</span><a href="#" style="color:#d63638;font-size:12px;text-decoration:none;" onclick="openConfirm('Move to Trash?',()=>delTut('${esc(t.file)}'));return false;">Trash</a>
-            <span style="color:#ccc;">|</span>
-            <a href="/tutorial/${esc(t.file.replace(/\.mdx?$/,''))}/" target="_blank" style="color:#888;font-size:12px;text-decoration:none;">View</a>
-          </div>
-        </td>
-        <td style="padding:8px 10px;color:#555;">${esc(authorStr)}</td>
-        <td style="padding:8px 10px;"><a href="#" style="color:#2271b1;text-decoration:none;font-size:12px;" onclick="setTutCat('${esc(cat)}');return false;">${esc(catName)}</a></td>
-        <td style="padding:8px 10px;">${tagsHtml}</td>
-        <td style="padding:8px 10px;color:#555;">${esc(dateStr)}<br>${dateLabel}</td>
-        <td style="padding:8px 10px;">${imgHtml}</td>
-      </tr>`;
-    });
-  }
-  h += `</tbody></table></div>`;
-  $('content').innerHTML = h;
+  showTuts(f);
 }
 
-async function editTut(file='') {
-  let t = { title: '', description: '', category: '', order: '1' };
-  let originalFile = '';
-  if (file) {
-    originalFile = file;
-    const res = await api('/api/tutorials/get?file='+encodeURIComponent(file));
-    if(res.content) {
-      const fm = parseFM(res.content);
-      Object.assign(t, fm);
-      t._content = extractBody(res.content);
-    }
-  }
+function showTuts(f){
+  let h='';
+  h+=`<div class="card"><table><thead><tr><th style="width:40px">#</th><th>Title</th><th>Language</th><th>Lesson #</th><th>File</th></tr></thead><tbody>`;
+  if(!f.length)h+=`<tr><td colspan="5" class="empty">No tutorials found</td></tr>`;
+  f.forEach((t,i)=>{
+    const slug = t.file.replace(/\.mdx?$/, '');
+    h+=`<tr>
+      <td>${i+1}</td>
+      <td>
+        <strong>${esc(t.title)}</strong>
+        <div class="row-actions" style="font-size:12px; margin-top:4px;">
+          <a href="#" style="color:#2271b1; text-decoration:none;" onclick="event.preventDefault(); editTut('${esc(t.file)}')">Edit</a> <span style="color:#ddd">|</span> 
+          <a href="#" style="color:#d63638; text-decoration:none;" onclick="event.preventDefault(); delTut('${esc(t.file)}')">Trash</a> <span style="color:#ddd">|</span> 
+          <a href="/tutorial/${slug}/" target="_blank" style="color:#2271b1; text-decoration:none;">View</a>
+        </div>
+      </td>
+      <td><span class="badge ${CB[t.category]||'bdf'}">${CATNAME[t.category]||esc(t.category||'?')}</span></td>
+      <td>${t.order||'-'}</td>
+      <td style="color:var(--dim);font-size:12px">${esc(t.file)}</td>
+    </tr>`;
+  });
+  h+=`</tbody></table></div>`;
+  const cont = $('tut_table_container');
+  if(cont) cont.innerHTML=h;
+}
 
-  window._currentEditTut = t;
-  const slugPreview = (originalFile || (t.title||'new-tutorial').toLowerCase().replace(/[^a-z0-9]+/g,'-')).replace(/\.mdx?$/,'');
-
-  $('ptitle').textContent = originalFile ? 'Edit Tutorial' : 'Add New Tutorial';
-  $('tact').innerHTML = `<a href="#" style="color:#2271b1;font-size:13px;text-decoration:none;" onclick="goTo('tutorials');return false;">← All Tutorials</a>`;
-
-  $('content').innerHTML = `
-  <div style="display:flex;gap:20px;align-items:flex-start;max-width:100%;">
-
-    <!-- LEFT: Main -->
-    <div style="flex:1;min-width:0;">
-      <input type="text" id="t_title" placeholder="Tutorial title"
-        style="width:100%;font-size:23px;font-weight:400;border:1px solid #dcdcde;padding:8px 10px;box-sizing:border-box;margin-bottom:6px;line-height:1.4;border-radius:3px;"
-        value="${esc(t.title)}" oninput="updatePermalink(this.value,'t_permalink_display','/tutorial/')">
-      <div class="permalink-row" style="font-size:13px;color:#444;margin:6px 0 10px;display:flex;align-items:center;gap:6px;border-bottom:1px solid #f0f0f0;padding-bottom:6px;">
-        <span style="color:#888;">Permalink:</span>
-        <a href="/tutorial/${slugPreview}/" target="_blank" id="t_permalink_display" style="color:#2271b1;">/tutorial/${slugPreview}/</a>
+function tutForm(t={}){
+  return `<div style="display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start;">
+    <div>
+      <div style="margin-bottom:16px;">
+        <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;color:#3c434a;">Title</label>
+        <input id="tf_t" value="${esc(t.title||'')}" placeholder="Add tutorial title..." style="width:100%;font-size:20px;font-weight:bold;padding:10px 12px;border:1px solid #8c8f94;border-radius:3px;">
       </div>
-      <div class="wp-editor-wrap" style="border:1px solid #c3c4c7;background:#fff;">
-        <div class="wp-editor-tools" style="background:#f6f7f7;border-bottom:1px solid #dcdcde;padding:4px 8px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-          <button class="wp-media-btn" style="background:#2271b1;color:#fff;border:none;border-radius:3px;padding:4px 10px;font-size:12px;cursor:pointer;" onclick="document.getElementById('t_media_upload').click()">🖼 Add Media</button>
-          <input type="file" id="t_media_upload" class="hidden" accept="image/*" onchange="insertMediaTo(this,'t_desc')">
-          <span style="height:20px;border-left:1px solid #ddd;margin:0 4px;"></span>
-          <button class="tb" style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:2px;padding:2px 6px;font-size:12px;cursor:pointer;" onclick="wrapText('t_desc','**','**')"><b>B</b></button>
-          <button class="tb" style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:2px;padding:2px 6px;font-size:12px;cursor:pointer;" onclick="wrapText('t_desc','*','*')"><em>I</em></button>
-          <button class="tb" style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:2px;padding:2px 6px;font-size:12px;cursor:pointer;" onclick="prependLine('t_desc','# ')">H1</button>
-          <button class="tb" style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:2px;padding:2px 6px;font-size:12px;cursor:pointer;" onclick="prependLine('t_desc','## ')">H2</button>
-          <button class="tb" style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:2px;padding:2px 6px;font-size:12px;cursor:pointer;" onclick="prependLine('t_desc','### ')">H3</button>
-          <button class="tb" style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:2px;padding:2px 6px;font-size:12px;cursor:pointer;" onclick="prependLine('t_desc','- ')">•</button>
-          <button class="tb" style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:2px;padding:2px 6px;font-size:12px;cursor:pointer;" onclick="wrapText('t_desc','\`','\`')">‹›</button>
-          <button class="tb" style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:2px;padding:2px 6px;font-size:12px;cursor:pointer;" onclick="wrapText('t_desc','\`\`\`\\n','\\n\`\`\`')">{ }</button>
-          <button class="tb" style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:2px;padding:2px 6px;font-size:12px;cursor:pointer;" onclick="insertLink('t_desc')">🔗</button>
-        </div>
-        <textarea id="t_desc" oninput="updateWordCount(this.value)"
-          style="width:100%;min-height:420px;border:none;padding:12px;font-size:14px;line-height:1.7;font-family:inherit;box-sizing:border-box;resize:vertical;outline:none;"
-          >${esc(t._content || '')}</textarea>
-        <div style="background:#f6f7f7;border-top:1px solid #dcdcde;padding:4px 10px;font-size:12px;color:#888;display:flex;justify-content:space-between;">
-          <span>Word count: <span id="wc-count">${(t._content||'').trim().split(/\s+/).filter(Boolean).length}</span></span>
-        </div>
-      </div>
-      <!-- Excerpt -->
-      <div style="background:#fff;border:1px solid #c3c4c7;margin-top:16px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid #c3c4c7;cursor:pointer;" onclick="toggleMeta('tut-excerpt')">
-          <h3 style="font-size:13px;font-weight:600;margin:0;">SEO Description</h3><span>▲</span>
-        </div>
-        <div id="tut-excerpt" style="padding:12px;">
-          <p style="font-size:12px;color:#888;margin:0 0 6px;">Shown in Google search results.</p>
-          <textarea id="t_excerpt" style="width:100%;height:80px;border:1px solid #8c8f94;border-radius:3px;padding:6px;font-size:13px;box-sizing:border-box;">${esc(t.description||'')}</textarea>
-        </div>
-      </div>
+      <div class="tab-row"><div class="tab-item on" onclick="showEditorTab(this,'tf_editor')">✏️ Write</div><div class="tab-item" onclick="showPreviewTab(this,'tf_editor','tf_preview')">👁️ Preview</div></div>
+      <div id="tf_editor">${editorToolbar('tf_b')}<textarea class="editor" id="tf_b" style="min-height:550px;" placeholder="Start writing your tutorial content here..."></textarea></div>
+      <div id="tf_preview" style="display:none"></div>
     </div>
-
-    <!-- RIGHT: Meta Boxes -->
-    <div style="width:280px;flex-shrink:0;">
-
-      <!-- Publish Box -->
-      <div class="meta-box">
-        <div class="meta-box-header" onclick="toggleMeta('tut-pub')">
-          <h3>Publish</h3><span>▲</span>
-        </div>
-        <div class="meta-box-body" id="tut-pub">
-          <div style="display:flex;gap:8px;margin-bottom:12px;">
-            <button class="btn-secondary" style="flex:1;font-size:13px;" onclick="$('t_draft').value='true';saveTut('${originalFile}')">Save Draft</button>
-            <button class="btn-secondary" style="flex:1;font-size:13px;" onclick="window.open('/tutorial/${slugPreview}/','_blank')">Preview</button>
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">📌 Publish &amp; Status</div>
+        <div style="padding:14px;display:flex;flex-direction:column;gap:12px;">
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Status</label>
+            <select id="tf_status" class="input-text" style="width:100%;"><option value="publish">✅ Published</option><option value="draft">📝 Draft</option><option value="schedule">⏰ Schedule</option></select>
           </div>
-          <div style="border-top:1px solid #f0f0f0;padding-top:10px;">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;font-size:13px;">
-              <span style="color:#555;">🏷 Status:</span>
-              <select id="t_draft" style="border:1px solid #8c8f94;border-radius:3px;padding:2px 6px;font-size:12px;">
-                <option value="false" ${t.draft==='false'||t.draft===false?'selected':''}>Published</option>
-                <option value="true" ${t.draft==='true'||t.draft===true?'selected':''}>Draft</option>
-              </select>
-            </div>
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;font-size:13px;">
-              <span style="color:#555;">👁 Visibility:</span>
-              <span style="font-size:12px;font-weight:600;">Public</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;font-size:13px;">
-              <span style="color:#555;">📅 Date:</span>
-              <input type="date" id="t_date" value="${esc(t.date||'')}" style="border:1px solid #8c8f94;border-radius:3px;padding:2px 6px;font-size:12px;">
-            </div>
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;font-size:13px;">
-              <span style="color:#555;">✍ Author:</span>
-              <input type="text" id="t_author" value="${esc(t.author||'CodesCompiler')}" style="border:1px solid #8c8f94;border-radius:3px;padding:2px 6px;font-size:12px;width:120px;">
-            </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Publish Date</label>
+            <input id="tf_dt" type="date" class="input-text" style="width:100%;" value="${t.date||new Date().toISOString().split('T')[0]}">
           </div>
-          <div style="border-top:1px solid #f0f0f0;padding-top:10px;display:flex;justify-content:flex-end;">
-            <button class="btn-primary" style="font-size:13px;" onclick="$('t_draft').value='false';saveTut('${originalFile}')">${originalFile ? 'Update' : 'Publish'}</button>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Author</label>
+            <input id="tf_au" class="input-text" style="width:100%;" value="${esc(t.author||'CodesCompiler')}">
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Lesson Order</label>
+            <input id="tf_o" type="number" class="input-text" style="width:100%;" value="${t.order||1}" min="1">
           </div>
         </div>
       </div>
-
-      <!-- Properties -->
-      <div class="meta-box">
-        <div class="meta-box-header" onclick="toggleMeta('tut-props')">
-          <h3>Properties</h3><span>▲</span>
-        </div>
-        <div class="meta-box-body" id="tut-props">
-          <div style="margin-bottom:10px;">
-            <label style="display:block;font-size:12px;color:#555;margin-bottom:4px;">Language / Category</label>
-            <select id="t_cat" style="width:100%;border:1px solid #8c8f94;border-radius:3px;padding:4px 8px;font-size:13px;">
-              <option value="">Select...</option>
-              ${TCAT.map(c=>`<option value="${c}" ${t.category===c?'selected':''}>${CATNAME[c]||c}</option>`).join('')}
-            </select>
-          </div>
-          <div>
-            <label style="display:block;font-size:12px;color:#555;margin-bottom:4px;">Lesson Order #</label>
-            <input type="number" id="t_order" value="${esc(t.order||'1')}" min="1"
-              style="width:100%;border:1px solid #8c8f94;border-radius:3px;padding:4px 8px;font-size:13px;">
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">🖼️ Featured Image</div>
+        <div style="padding:14px;">
+          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Image Path / URL</label>
+          <input id="tf_img" class="input-text" style="width:100%;" value="${esc(t.image||'')}" placeholder="/images/posts/sample.png" oninput="if($('tf_img_preview'))$('tf_img_preview').src=this.value">
+          <div style="margin-top:10px;border:1px dashed #c3c4c7;border-radius:4px;padding:8px;text-align:center;background:#fafafa;">
+            <img id="tf_img_preview" src="${esc(t.image||'https://placehold.co/300x160/e2e8f0/94a3b8?text=No+Featured+Image')}" style="max-width:100%;height:auto;border-radius:3px;" onerror="this.src='https://placehold.co/300x160/e2e8f0/94a3b8?text=Invalid+Image+URL'">
           </div>
         </div>
       </div>
-
-      <!-- SEO Settings -->
-      ${getSeoBoxHtml(t)}
-
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">🏷️ Category &amp; Tags</div>
+        <div style="padding:14px;display:flex;flex-direction:column;gap:12px;">
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Language</label>
+            <select id="tf_c" class="input-text" style="width:100%;">${TCAT.map(c=>`<option value="${c}" ${t.category===c?'selected':''}>${CATNAME[c]}</option>`).join('')}</select>
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">URL Slug</label>
+            <input id="tf_f" class="input-text" style="width:100%;" value="${esc(t.file||'')}" ${t.file?'readonly':''} placeholder="my-tutorial-slug.mdx">
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Tags</label>
+            <input id="tf_tg" class="input-text" style="width:100%;" value="${esc(t.tags||'')}" placeholder="css, html, js">
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">SEO Description</label>
+            <textarea id="tf_d" class="input-text" style="width:100%;height:60px;" placeholder="Search description...">${esc(t.description||'')}</textarea>
+          </div>
+        </div>
+      </div>
     </div>
   </div>`;
 }
 
-
-window.saveTut = async function(origFile) {
-  const title = ($('t_title')?.value||'').trim();
-  if(!title) return toast('Title required', false);
-  const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-  const filename = origFile || (slug + '.mdx');
-
-  let t = window._currentEditTut || {};
-  
-  const seoData = getSeoData();
-  
-  let fm = `---
-title: "${title}"
-description: "${($('t_excerpt')?.value||'').trim()}"
-category: "${$('t_cat')?.value||''}"
-order: ${$('t_order')?.value||1}
-date: "${$('t_date')?.value||''}"
-author: "${$('t_author')?.value||'CodesCompiler'}"
-draft: ${$('t_draft')?.value||'false'}
-seoKeywords: "${seoData.seoKeywords}"
-seoTitle: "${seoData.seoTitle}"
-seoDesc: "${seoData.seoDesc}"
-seoNoIndex: ${seoData.seoNoIndex}
-`;
-
-  const excludeKeys = ['title','description','category','order','date','author','draft','seoKeywords','seoTitle','seoDesc','seoNoIndex','_content','file'];
-  Object.keys(t).forEach(k => {
-    if (!excludeKeys.includes(k) && t[k] !== undefined && t[k] !== '') {
-      fm += `${k}: ${t[k]}\n`;
-    }
-  });
-
-  fm += `---\n\n${$('t_desc')?.value||''}`;
-
-  await post('/api/tutorials/save', { filename, content: fm });
-  toast('Tutorial saved!');
-  await loadAll();
-  goTo('tutorials');
+function newTut(){
+  openEditor('Add New Tutorial', tutForm(),
+    async()=>{
+      let fn=$('tf_f').value.trim();if(!fn)return toast('URL slug is required',false);
+      if(!fn.endsWith('.mdx'))fn+='.mdx';
+      await post('/api/tutorials/save',{filename:fn,content:buildTutContent()});
+      toast('Tutorial published! 🎉');await loadAll();renderTuts();
+    },
+    ()=>renderTuts(),
+    '<span class="badge bpub" style="margin-right:8px">New</span>'
+  );
 }
 
-window.delTut = async function(f) {
-  await post('/api/tutorials/delete', { filename: f });
-  toast('Tutorial deleted');
-  await loadAll();
-  goTo('tutorials');
+async function editTut(file){
+  const d=await api('/api/tutorials/get?file='+encodeURIComponent(file));
+  if(d.error)return toast('File not found',false);
+  const fm=parseFM(d.content),body=extractBody(d.content);
+  openEditor('Edit Tutorial: '+file, tutForm({...fm,file}),
+    async()=>{
+      await post('/api/tutorials/save',{filename:file,content:buildTutContent()});
+      toast('Changes published! ✅');
+    },
+    ()=>renderTuts(),
+    '<span class="badge bpub" style="margin-right:8px">Published</span>'
+  );
+  setTimeout(()=>{if($('tf_b'))$('tf_b').value=body},60);
+}
+
+function delTut(f){openConfirm(`Delete tutorial "${f}"? This cannot be undone.`,async()=>{await post('/api/tutorials/delete',{filename:f});toast('Tutorial deleted');await loadAll();renderTuts()})}
+
+function buildTutContent(){
+  const tags=$('tf_tg').value.split(',').map(s=>s.trim()).filter(Boolean);
+  const tStr=tags.length?`\ntags: [${tags.map(t=>`"${t}"`).join(', ')}]`:'';
+  const img=$('tf_img').value.trim();const iStr=img?`\nimage: "${img}"`:'';
+  return`---\ntitle: "${$('tf_t').value}"\ndescription: "${$('tf_d').value}"\ncategory: "${$('tf_c').value}"\norder: ${$('tf_o').value}\ndate: "${$('tf_dt').value}"\nauthor: "${$('tf_au').value}"${tStr}${iStr}\n---\n\n${$('tf_b').value}`
 }
 
 // ══ BLOGS ══
-let _blogFilter = 'all';
-let _blogCatFilter = '';
-let _blogSearch = '';
-let _blogSelectedFiles = new Set();
+let blogFilters = { q: '', cat: '', status: '', author: '' };
 
-function renderBlogs() {
-  $('ptitle').textContent = 'Posts';
-  $('tact').innerHTML = '<button class="btn-primary" onclick="editBlog()">+ Add New</button>';
+function renderBlogs(){
+  $('ptitle').textContent='Posts';
+  $('tact').innerHTML=`<button class="btn bp" onclick="newBlog()">+ Add New Post</button><button class="btn bg" style="margin-left:8px;" onclick="toggleUploadPanel('blog'); document.getElementById('upload-panel-blog').scrollIntoView({behavior:'smooth'})">📥 Import &amp; Upload</button>`;
+  
+  const authors = [...new Set(blogs.map(b => b.author || 'CodesCompiler'))].filter(Boolean);
+  
+  let h = `
+    <div style="display:flex;gap:10px;margin-bottom:18px;background:#fff;padding:14px;border-radius:4px;border:1px solid #c3c4c7;align-items:center;flex-wrap:wrap">
+      <div style="font-size:13px;font-weight:600;color:#3c434a;margin-right:4px">🔍 Filter Posts:</div>
+      <input class="input-text" placeholder="Search title..." oninput="blogFilter('q', this.value)" style="width:200px" value="${esc(blogFilters.q)}">
+      <select class="input-text" onchange="blogFilter('cat', this.value)" style="width:160px">
+        <option value="">All Categories</option>
+        ${BCAT.map(c => `<option value="${c}" ${blogFilters.cat===c?'selected':''}>${c}</option>`).join('')}
+      </select>
+      <select class="input-text" onchange="blogFilter('status', this.value)" style="width:140px">
+        <option value="">All Statuses</option>
+        <option value="publish" ${blogFilters.status==='publish'?'selected':''}>✅ Published</option>
+        <option value="draft" ${blogFilters.status==='draft'?'selected':''}>📝 Drafts</option>
+      </select>
+      <select class="input-text" onchange="blogFilter('author', this.value)" style="width:160px">
+        <option value="">All Authors</option>
+        ${authors.map(a => `<option value="${a}" ${blogFilters.author===a?'selected':''}>${a}</option>`).join('')}
+      </select>
+      ${(blogFilters.q||blogFilters.cat||blogFilters.status||blogFilters.author) ? `<button class="btn bg bs" onclick="blogFilters={q:'',cat:'',status:'',author:''};renderBlogs()">Clear Filters</button>` : ''}
+    </div>
+    <div id="blog_table_container"></div>
+    ${renderUploadPanel('blog')}
+  `;
+  $('content').innerHTML = h;
+  applyBlogFilters();
+}
 
-  const cats = [...new Set(blogs.map(b => b.category).filter(Boolean))].sort();
+function blogFilter(key, val) {
+  blogFilters[key] = val;
+  applyBlogFilters();
+  // If clear button state needs to update, we just re-render the whole header or update dynamically. 
+  // For simplicity, re-rendering the whole page works since it's local state.
+  if(key === 'q') applyBlogFilters(); else renderBlogs(); 
+}
 
-  let filtered = blogs.filter(b => {
-    const isDraft   = b.draft === 'true' || b.draft === true;
-    const isPublished = !isDraft;
-    if (_blogFilter === 'published' && !isPublished) return false;
-    if (_blogFilter === 'draft'     && !isDraft)     return false;
-    if (_blogCatFilter && b.category !== _blogCatFilter) return false;
-    if (_blogSearch) {
-      const q = _blogSearch.toLowerCase();
-      if (!(b.title||'').toLowerCase().includes(q) && !(b.category||'').toLowerCase().includes(q)) return false;
-    }
+function applyBlogFilters() {
+  const q = blogFilters.q.toLowerCase();
+  const list = blogs.filter(b => {
+    const isDraft = b.draft==='true'||b.draft===true;
+    const stat = isDraft ? 'draft' : 'publish';
+    const auth = b.author || 'CodesCompiler';
+    
+    if (q && !(b.title||'').toLowerCase().includes(q) && !(b.category||'').toLowerCase().includes(q)) return false;
+    if (blogFilters.cat && b.category !== blogFilters.cat) return false;
+    if (blogFilters.status && stat !== blogFilters.status) return false;
+    if (blogFilters.author && auth !== blogFilters.author) return false;
     return true;
   });
-
-  const total     = blogs.length;
-  const published = blogs.filter(b => b.draft !== 'true' && b.draft !== true).length;
-  const drafts    = blogs.filter(b => b.draft === 'true' || b.draft === true).length;
-
-  const tabClass = t => `text-sm mr-4 cursor-pointer pb-1 ${_blogFilter===t ? 'text-blue-600 border-b-2 border-blue-600 font-semibold' : 'text-gray-600 hover:text-blue-500'}`;
-
-  let h = `
-  <div style="margin-bottom:12px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
-    <span class="${tabClass('all')}" onclick="setBlogFilter('all')">All (${total})</span>
-    <span class="${tabClass('published')}" onclick="setBlogFilter('published')">Published (${published})</span>
-    <span class="${tabClass('draft')}" onclick="setBlogFilter('draft')">Drafts (${drafts})</span>
-  </div>
-
-  <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;">
-    <select class="input-text" style="width:auto;padding:4px 8px;font-size:13px;" onchange="setBlogCat(this.value)">
-      <option value="">All Categories</option>
-      ${cats.map(c=>`<option value="${esc(c)}" ${_blogCatFilter===c?'selected':''}>${esc(c)}</option>`).join('')}
-    </select>
-    <input type="text" class="input-text" style="width:220px;font-size:13px;padding:4px 8px;" placeholder="Search Posts..." value="${esc(_blogSearch)}" oninput="setBlogSearch(this.value)">
-    <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
-      <select id="bulk_action_blogs" class="input-text" style="width:auto;padding:4px 8px;font-size:13px;">
-        <option value="">Bulk Actions</option>
-        <option value="trash">Move to Trash</option>
-        <option value="publish">Mark Published</option>
-        <option value="draft">Mark Draft</option>
-      </select>
-      <button class="btn-secondary" style="padding:4px 10px;font-size:13px;" onclick="applyBlogBulk()">Apply</button>
-      <span class="text-gray-500 text-sm">${filtered.length} item${filtered.length!==1?'s':''}</span>
-    </div>
-  </div>
-
-  <div class="wp-card">
-  <table style="width:100%;border-collapse:collapse;font-size:13px;">
-    <thead>
-      <tr style="background:#f6f7f7;border-bottom:1px solid #e0e0e0;">
-        <th style="padding:8px 10px;width:32px;"><input type="checkbox" id="blog_check_all" onchange="toggleAllBlogs(this.checked)"></th>
-        <th style="padding:8px 10px;text-align:left;font-weight:600;">Title</th>
-        <th style="padding:8px 10px;text-align:left;font-weight:600;">Author</th>
-        <th style="padding:8px 10px;text-align:left;font-weight:600;">Category</th>
-        <th style="padding:8px 10px;text-align:left;font-weight:600;">Tags</th>
-        <th style="padding:8px 10px;text-align:left;font-weight:600;">Date</th>
-        <th style="padding:8px 10px;text-align:left;font-weight:600;">Feat. Image</th>
-      </tr>
-    </thead>
-    <tbody>`;
-
-  if (!filtered.length) {
-    h += `<tr><td colspan="7" style="padding:24px;text-align:center;color:#888;">No posts found.</td></tr>`;
-  } else {
-    filtered.forEach(b => {
-      const isDraft = b.draft === 'true' || b.draft === true;
-      const checked = _blogSelectedFiles.has(b.file) ? 'checked' : '';
-      const rawTagsList = b.tags || [];
-      const tags = (Array.isArray(rawTagsList) ? rawTagsList : String(rawTagsList).replace(/[\[\]"]/g, '').split(',')).map(t=>String(t).trim()).filter(Boolean);
-      const tagsHtml = tags.length ? tags.map(t=>`<span style="background:#f0f0f0;border-radius:3px;padding:1px 5px;margin-right:3px;font-size:11px;">${esc(t)}</span>`).join('') : '—';
-      const hasImage = b.image && b.image.trim();
-      const imgHtml  = hasImage
-        ? `<img src="${esc(b.image)}" style="width:40px;height:40px;object-fit:cover;border-radius:3px;border:1px solid #ddd;" onerror="this.replaceWith(document.createTextNode('—'))">`
-        : `<span style="color:#aaa;font-size:11px;">No Image</span>`;
-      const dateLabel = isDraft ? `<span style="color:#888;font-size:11px;">Draft</span>` : `<span style="color:#888;font-size:11px;">Published</span>`;
-      const dateStr   = b.date ? new Date(b.date).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}) : '—';
-
-      h += `
-      <tr style="border-bottom:1px solid #f0f0f0;" class="blog-row" onmouseenter="this.querySelector('.row-actions').style.display='flex'" onmouseleave="this.querySelector('.row-actions').style.display='none'">
-        <td style="padding:8px 10px;"><input type="checkbox" class="blog-cb" value="${esc(b.file)}" ${checked} onchange="toggleBlogFile('${esc(b.file)}',this.checked)"></td>
-        <td style="padding:8px 10px;">
-          <strong><a href="#" style="color:#2271b1;text-decoration:none;" onclick="editBlog('${esc(b.file)}');return false;">${esc(b.title || b.file)}</a></strong>
-          ${isDraft ? '<span style="color:#888;font-size:11px;margin-left:6px;">— Draft</span>' : ''}
-          <div class="row-actions" style="display:none;gap:8px;margin-top:4px;">
-            <a href="#" style="color:#2271b1;font-size:12px;text-decoration:none;" onclick="editBlog('${esc(b.file)}');return false;">Edit</a>
-            <span style="color:#ccc;">|</span>
-            <a href="#" style="color:#d63638;font-size:12px;text-decoration:none;" onclick="openConfirm('Move to Trash?',()=>delBlog('${esc(b.file)}'));return false;">Trash</a>
-            <span style="color:#ccc;">|</span>
-            <a href="/blog/${esc(b.file.replace(/\.mdx?$/,''))}" target="_blank" style="color:#888;font-size:12px;text-decoration:none;">View</a>
-          </div>
-        </td>
-        <td style="padding:8px 10px;color:#555;">${esc(b.author || 'CodesCompiler')}</td>
-        <td style="padding:8px 10px;"><a href="#" style="color:#2271b1;text-decoration:none;font-size:12px;" onclick="setBlogCat('${esc(b.category)}');return false;">${esc(b.category || '—')}</a></td>
-        <td style="padding:8px 10px;">${tagsHtml}</td>
-        <td style="padding:8px 10px;color:#555;">${dateStr}<br>${dateLabel}</td>
-        <td style="padding:8px 10px;">${imgHtml}</td>
-      </tr>`;
-    });
-  }
-
-  h += `</tbody></table></div>`;
-  $('content').innerHTML = h;
+  showBlogs(list);
 }
 
-function setBlogFilter(f)   { _blogFilter = f;   renderBlogs(); }
-function setBlogCat(c)      { _blogCatFilter = c; renderBlogs(); }
-function setBlogSearch(q)   { _blogSearch = q;    renderBlogs(); }
-function toggleBlogFile(f, on) { on ? _blogSelectedFiles.add(f) : _blogSelectedFiles.delete(f); }
-function toggleAllBlogs(on) {
-  document.querySelectorAll('.blog-cb').forEach(cb => {
-    cb.checked = on;
-    toggleBlogFile(cb.value, on);
+function showBlogs(list){
+  let h=`<div class="card"><table><thead><tr><th style="width:40px">#</th><th>Title</th><th>Category</th><th>Author</th><th>Date</th><th>Status</th></tr></thead><tbody>`;
+  if(!list.length)h+=`<tr><td colspan="6" class="empty">No posts match your filters.</td></tr>`;
+  list.forEach((b,i)=>{
+    const feat=b.featured==='true'||b.featured===true;
+    const isDraft=b.draft==='true'||b.draft===true;
+    const slug = b.file.replace(/\.mdx?$/, '');
+    h+=`<tr>
+      <td>${i+1}</td>
+      <td>
+        <strong>${esc(b.title)}</strong>${feat?' ⭐':''}
+        <div class="row-actions" style="font-size:12px; margin-top:4px;">
+          <a href="#" style="color:#2271b1; text-decoration:none;" onclick="event.preventDefault(); editBlog('${esc(b.file)}')">Edit</a> <span style="color:#ddd">|</span> 
+          <a href="#" style="color:#d63638; text-decoration:none;" onclick="event.preventDefault(); delBlog('${esc(b.file)}')">Trash</a> <span style="color:#ddd">|</span> 
+          <a href="/blog/${slug}/" target="_blank" style="color:#2271b1; text-decoration:none;">View</a>
+        </div>
+      </td>
+      <td style="font-size:12px">${esc(b.category||'')}</td>
+      <td style="font-size:12px;color:var(--dim)">${esc(b.author||'CodesCompiler')}</td>
+      <td style="color:var(--dim);font-size:12px">${esc(b.date||'')}</td>
+      <td>${isDraft?'<span class="badge" style="background:rgba(245,158,11,.12);color:#fbbf24">Draft</span>':'<span class="badge bpub">Published</span>'}</td>
+    </tr>`;
   });
+  h+=`</tbody></table></div>`;
+  const cont = $('blog_table_container');
+  if(cont) cont.innerHTML=h;
 }
 
-async function applyBlogBulk() {
-  const action = $('bulk_action_blogs').value;
-  if (!action || !_blogSelectedFiles.size) { toast('Select posts and an action first', false); return; }
-  if (action === 'trash') {
-    openConfirm(`Move ${_blogSelectedFiles.size} post(s) to Trash?`, async () => {
-      for (const f of _blogSelectedFiles) await post('/api/blogs/delete', { filename: f });
-      _blogSelectedFiles.clear();
-      toast(`${_blogSelectedFiles.size || 'Selected'} posts moved to Trash`);
-      await loadAll(); renderBlogs();
-    });
-  } else {
-    // publish/draft bulk
-    for (const f of _blogSelectedFiles) {
-      const res = await api('/api/blogs/get?file=' + encodeURIComponent(f));
-      if (!res.content) continue;
-      const updated = res.content.replace(/^draft:\s*.+$/m, `draft: ${action === 'draft'}`);
-      await post('/api/blogs/save', { filename: f, content: updated });
-    }
-    _blogSelectedFiles.clear();
-    toast('Posts updated!');
-    await loadAll(); renderBlogs();
-  }
-}
-
-
-async function editBlog(file='') {
-  let b = { title: '', description: '', draft: true, image: '', date: new Date().toISOString().split('T')[0], category: '', author: 'CodesCompiler', tags: '' };
-  let originalFile = '';
-  if (file) {
-    originalFile = file;
-    const res = await api('/api/blogs/get?file='+encodeURIComponent(file));
-    if(res.content) {
-      const fm = parseFM(res.content);
-      Object.assign(b, fm);
-      b._content = extractBody(res.content);
-      
-      if (b.tags && b.tags.startsWith('[')) {
-          try { b.tags = JSON.parse(b.tags).join(', '); } catch(e){}
-      }
-    }
-  }
-
-  window._currentEditBlog = b;
-
-  // Build slug for permalink
-  const slugPreview = (originalFile || (b.title||'new-post').toLowerCase().replace(/[^a-z0-9]+/g,'-')).replace(/\.mdx?$/,'');
-
-  // Build categories checkboxes
-  const catCheckboxes = BCAT.map(c => `
-    <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;margin-bottom:4px;">
-      <input type="checkbox" class="b_cat_cb" value="${esc(c)}" ${b.category===c?'checked':''}> ${esc(c)}
-    </label>`).join('');
-
-  // Build initial tags pills
-  const rawTags = b.tags || [];
-  const initTags = (Array.isArray(rawTags) ? rawTags : String(rawTags).replace(/[\[\]"]/g,'').split(',')).map(t=>String(t).trim()).filter(Boolean);
-  const tagPillsHtml = initTags.map(t => `
-    <span class="tag-pill" style="display:inline-flex;align-items:center;gap:4px;background:#e5e7eb;border-radius:3px;padding:2px 7px;font-size:12px;margin:2px;">
-      ${esc(t)}<a href="#" style="color:#999;text-decoration:none;margin-left:2px;" onclick="removeTagPill(this);return false;">×</a>
-    </span>`).join('');
-
-  $('ptitle').textContent = originalFile ? 'Edit Post' : 'Add New Post';
-  $('tact').innerHTML = `<a href="#" style="color:#2271b1;font-size:13px;text-decoration:none;margin-right:12px;" onclick="goTo('blogs');return false;">← All Posts</a>`;
-
-  $('content').innerHTML = `
-  <style>
-    .meta-box { background:#fff; border:1px solid #c3c4c7; box-shadow:0 1px 1px rgba(0,0,0,.04); margin-bottom:16px; }
-    .meta-box-header { display:flex; justify-content:space-between; align-items:center; padding:8px 12px; cursor:pointer; border-bottom:1px solid #c3c4c7; user-select:none; }
-    .meta-box-header h3 { font-size:13px; font-weight:600; margin:0; }
-    .meta-box-body { padding:12px; }
-    .meta-box-body.collapsed { display:none; }
-    .wp-editor-wrap { border:1px solid #c3c4c7; background:#fff; }
-    .wp-editor-tools { background:#f6f7f7; border-bottom:1px solid #dcdcde; padding:4px 8px; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
-    .wp-media-btn { background:#2271b1; color:#fff; border:none; border-radius:3px; padding:4px 10px; font-size:12px; cursor:pointer; }
-    .wp-media-btn:hover { background:#135e96; }
-    .tb { background:#f6f7f7; border:1px solid #c3c4c7; border-radius:2px; padding:2px 6px; font-size:12px; cursor:pointer; }
-    .tb:hover { background:#e0e0e0; }
-    .permalink-row { font-size:13px; color:#444; margin:6px 0 10px; padding:4px 0; border-bottom:1px solid #f0f0f0; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
-    .permalink-row span { color:#888; }
-    .permalink-row a { color:#2271b1; }
-    .tag-add-area { display:flex; gap:6px; margin-top:8px; }
-    .tag-add-area input { flex:1; border:1px solid #8c8f94; border-radius:3px; padding:4px 8px; font-size:13px; }
-    .tag-add-area button { background:#2271b1; color:#fff; border:none; border-radius:3px; padding:4px 10px; font-size:12px; cursor:pointer; }
-    .wc-label { font-size:12px; color:#888; }
-    #wc-count { font-weight:600; }
-  </style>
-
-  <div style="display:flex;gap:20px;align-items:flex-start;max-width:100%;">
-
-    <!-- ═══ LEFT: Main Content ═══ -->
-    <div style="flex:1;min-width:0;">
-
-      <!-- Title -->
-      <input type="text" id="b_title" placeholder="Add title"
-        style="width:100%;font-size:23px;font-weight:400;border:1px solid #dcdcde;padding:8px 10px;box-sizing:border-box;margin-bottom:6px;line-height:1.4;border-radius:3px;"
-        value="${esc(b.title)}" oninput="updatePermalink(this.value)">
-
-      <!-- Permalink row -->
-      <div class="permalink-row">
-        <span>Permalink:</span>
-        <a href="/blog/${slugPreview}/" target="_blank" id="b_permalink_display">/blog/${slugPreview}/</a>
-        <a href="#" style="color:#2271b1;font-size:12px;" onclick="editPermalink();return false;">Edit</a>
+function blogForm(b={}){
+  const isDraft=b.status==='draft'||b.draft==='true'||b.draft===true;
+  return `<div style="display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start;">
+    <div>
+      <div style="margin-bottom:16px;">
+        <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;color:#3c434a;">Title</label>
+        <input id="bf_t" value="${esc(b.title||'')}" placeholder="Add post title..." style="width:100%;font-size:20px;font-weight:bold;padding:10px 12px;border:1px solid #8c8f94;border-radius:3px;">
       </div>
-
-      <!-- Editor wrap -->
-      <div class="wp-editor-wrap">
-        <div class="wp-editor-tools">
-          <button class="wp-media-btn" onclick="document.getElementById('b_media_upload').click()">🖼 Add Media</button>
-          <input type="file" id="b_media_upload" class="hidden" accept="image/*" onchange="insertMediaToBlog(this)">
-          <span style="margin-left:6px;height:20px;border-left:1px solid #ddd;"></span>
-          <button class="tb" onclick="wrapText('b_desc','**','**')" title="Bold"><b>B</b></button>
-          <button class="tb" onclick="wrapText('b_desc','*','*')" title="Italic"><em>I</em></button>
-          <button class="tb" onclick="wrapText('b_desc','~~','~~')" title="Strikethrough"><s>S</s></button>
-          <button class="tb" onclick="prependLine('b_desc','# ')" title="H1">H1</button>
-          <button class="tb" onclick="prependLine('b_desc','## ')" title="H2">H2</button>
-          <button class="tb" onclick="prependLine('b_desc','### ')" title="H3">H3</button>
-          <button class="tb" onclick="prependLine('b_desc','- ')" title="List">•</button>
-          <button class="tb" onclick="wrapText('b_desc','\`','\`')" title="Code">‹›</button>
-          <button class="tb" onclick="insertLink('b_desc')" title="Link">🔗</button>
-        </div>
-        <textarea id="b_desc" oninput="updateWordCount(this.value)"
-          style="width:100%;min-height:420px;border:none;padding:12px;font-size:14px;line-height:1.7;font-family:inherit;box-sizing:border-box;resize:vertical;outline:none;"
-          >${esc(b._content || '')}</textarea>
-        <div style="background:#f6f7f7;border-top:1px solid #dcdcde;padding:4px 10px;font-size:12px;color:#888;display:flex;justify-content:space-between;">
-          <span>Word count: <span id="wc-count">${(b._content||'').trim().split(/\s+/).filter(Boolean).length}</span></span>
-          <span id="b_last_saved"></span>
-        </div>
-      </div>
-
-      <!-- Excerpt (below editor, like WP) -->
-      <div class="meta-box" style="margin-top:16px;">
-        <div class="meta-box-header" onclick="toggleMeta('excerpt-body')">
-          <h3>Excerpt</h3><span>▲</span>
-        </div>
-        <div class="meta-box-body" id="excerpt-body">
-          <p style="font-size:12px;color:#888;margin:0 0 6px;">Short description for SEO and post listings.</p>
-          <textarea id="b_excerpt" style="width:100%;height:80px;border:1px solid #8c8f94;border-radius:3px;padding:6px;font-size:13px;box-sizing:border-box;">${esc(b.description||'')}</textarea>
-        </div>
-      </div>
-
+      <div class="tab-row"><div class="tab-item on" onclick="showEditorTab(this,'bf_editor')">✏️ Write</div><div class="tab-item" onclick="showPreviewTab(this,'bf_editor','bf_preview')">👁️ Preview</div></div>
+      <div id="bf_editor">${editorToolbar('bf_b')}<textarea class="editor" id="bf_b" style="min-height:550px;" placeholder="Start writing your post content here..."></textarea></div>
+      <div id="bf_preview" style="display:none"></div>
     </div>
-
-    <!-- ═══ RIGHT: Meta Boxes ═══ -->
-    <div style="width:280px;flex-shrink:0;">
-
-      <!-- PUBLISH META BOX -->
-      <div class="meta-box">
-        <div class="meta-box-header" onclick="toggleMeta('pub-body')">
-          <h3>Publish</h3><span>▲</span>
-        </div>
-        <div class="meta-box-body" id="pub-body">
-          <div style="display:flex;gap:8px;margin-bottom:12px;">
-            <button class="btn-secondary" style="flex:1;font-size:13px;" onclick="saveBlogDraft('${originalFile}')">Save Draft</button>
-            <button class="btn-secondary" style="flex:1;font-size:13px;" onclick="window.open('/blog/${slugPreview}/','_blank')">Preview</button>
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">📌 Publish &amp; Status</div>
+        <div style="padding:14px;display:flex;flex-direction:column;gap:12px;">
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Status</label>
+            <select id="bf_status" class="input-text" style="width:100%;"><option value="publish" ${!isDraft?'selected':''}>✅ Published</option><option value="draft" ${isDraft?'selected':''}>📝 Draft</option><option value="schedule">⏰ Schedule</option></select>
           </div>
-          <div style="border-top:1px solid #f0f0f0;padding-top:10px;">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;font-size:13px;">
-              <span style="color:#555;">🏷 Status:</span>
-              <select id="b_draft" style="border:1px solid #8c8f94;border-radius:3px;padding:2px 6px;font-size:12px;">
-                <option value="false" ${b.draft==='false'||b.draft===false?'selected':''}>Published</option>
-                <option value="true"  ${b.draft==='true' ||b.draft===true ?'selected':''}>Draft</option>
-              </select>
-            </div>
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;font-size:13px;">
-              <span style="color:#555;">👁 Visibility:</span>
-              <span style="font-size:12px;font-weight:600;">Public</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;font-size:13px;">
-              <span style="color:#555;">📅 Date:</span>
-              <input type="date" id="b_date" value="${esc(b.date)}" style="border:1px solid #8c8f94;border-radius:3px;padding:2px 6px;font-size:12px;">
-            </div>
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;font-size:13px;">
-              <span style="color:#555;">✍ Author:</span>
-              <input type="text" id="b_author" value="${esc(b.author||'CodesCompiler')}" style="border:1px solid #8c8f94;border-radius:3px;padding:2px 6px;font-size:12px;width:120px;">
-            </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Publish Date</label>
+            <input id="bf_dt" type="date" class="input-text" style="width:100%;" value="${b.date||new Date().toISOString().split('T')[0]}">
           </div>
-          <div style="border-top:1px solid #f0f0f0;padding-top:10px;display:flex;justify-content:space-between;align-items:center;">
-            <a href="#" style="color:#d63638;font-size:12px;text-decoration:none;" onclick="openConfirm('Move to Trash?',()=>delBlog('${originalFile}'));return false;">Move to Trash</a>
-            <button class="btn-primary" style="font-size:13px;" onclick="saveBlog('${originalFile}')">Publish</button>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Author</label>
+            <input id="bf_au" class="input-text" style="width:100%;" value="${esc(b.author||'CodesCompiler')}">
+          </div>
+          <div style="border-top:1px solid #f0f0f1;padding-top:8px;">
+            <label class="chk" style="display:block;margin-bottom:6px;"><input type="checkbox" id="bf_ft" ${b.featured==='true'||b.featured===true?'checked':''}><span>⭐ Featured Post</span></label>
+            <label class="chk" style="display:block;margin-bottom:6px;"><input type="checkbox" id="bf_dm" ${b.hasDemo==='true'||b.hasDemo===true?'checked':''}><span>🖥️ Has Live Demo</span></label>
+            <label class="chk" style="display:block;"><input type="checkbox" id="bf_noads" ${b.disableAds==='true'||b.disableAds===true?'checked':''}><span>🚫 Disable Ads</span></label>
           </div>
         </div>
       </div>
-
-      <!-- CATEGORIES META BOX -->
-      <div class="meta-box">
-        <div class="meta-box-header" onclick="toggleMeta('cat-body')">
-          <h3>Categories</h3><span>▲</span>
-        </div>
-        <div class="meta-box-body" id="cat-body">
-          <div style="max-height:180px;overflow-y:auto;border:1px solid #f0f0f0;padding:6px;border-radius:3px;">
-            ${catCheckboxes}
-          </div>
-          <a href="#" style="font-size:12px;color:#2271b1;text-decoration:none;display:block;margin-top:8px;" onclick="toggleAddCat();return false;">+ Add New Category</a>
-          <div id="add-cat-panel" style="display:none;margin-top:8px;">
-            <input type="text" id="new_cat_input" placeholder="New category name" style="width:100%;border:1px solid #8c8f94;border-radius:3px;padding:4px 8px;font-size:13px;box-sizing:border-box;margin-bottom:6px;">
-            <button class="btn-primary" style="font-size:12px;padding:3px 10px;" onclick="addNewCategory()">Add</button>
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">🖼️ Featured Image</div>
+        <div style="padding:14px;">
+          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Image Path / URL</label>
+          <input id="bf_img" class="input-text" style="width:100%;" value="${esc(b.image||'')}" placeholder="/images/posts/sample.png" oninput="if($('bf_img_preview'))$('bf_img_preview').src=this.value">
+          <div style="margin-top:10px;border:1px dashed #c3c4c7;border-radius:4px;padding:8px;text-align:center;background:#fafafa;">
+            <img id="bf_img_preview" src="${esc(b.image||'https://placehold.co/300x160/e2e8f0/94a3b8?text=No+Featured+Image')}" style="max-width:100%;height:auto;border-radius:3px;" onerror="this.src='https://placehold.co/300x160/e2e8f0/94a3b8?text=Invalid+Image+URL'">
           </div>
         </div>
       </div>
-
-      <!-- TAGS META BOX -->
-      <div class="meta-box">
-        <div class="meta-box-header" onclick="toggleMeta('tags-body')">
-          <h3>Tags</h3><span>▲</span>
-        </div>
-        <div class="meta-box-body" id="tags-body">
-          <div id="tags-pills" style="min-height:28px;margin-bottom:8px;">${tagPillsHtml}</div>
-          <div class="tag-add-area">
-            <input type="text" id="tag_input" placeholder="Add tag..." onkeydown="if(event.key==='Enter'){addTagPill();event.preventDefault();}">
-            <button onclick="addTagPill()">Add</button>
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">🏷️ Category &amp; Tags</div>
+        <div style="padding:14px;display:flex;flex-direction:column;gap:12px;">
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Category</label>
+            <select id="bf_c" class="input-text" style="width:100%;">${BCAT.map(c=>`<option value="${c}" ${b.category===c?'selected':''}>${c}</option>`).join('')}</select>
           </div>
-          <p style="font-size:11px;color:#888;margin:6px 0 0;">Separate with commas or Enter</p>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Tags (comma separated)</label>
+            <input id="bf_tg" class="input-text" style="width:100%;" value="${esc(b.tags||'')}" placeholder="css, animation, design">
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">URL Slug</label>
+            <input id="bf_f" class="input-text" style="width:100%;" value="${esc(b.file||'')}" ${b.file?'readonly':''} placeholder="my-post-slug.mdx">
+          </div>
         </div>
       </div>
-
-      <!-- FEATURED IMAGE META BOX -->
-      <div class="meta-box">
-        <div class="meta-box-header" onclick="toggleMeta('feat-img-body')">
-          <h3>Featured Image</h3><span>▲</span>
-        </div>
-        <div class="meta-box-body" id="feat-img-body">
-          <div id="b_image_container" style="cursor:pointer;border:2px dashed #c3c4c7;border-radius:3px;padding:16px;text-align:center;${(b.image?'display:none':'')}" onclick="document.getElementById('b_image_file').click()">
-            <div style="font-size:28px;margin-bottom:6px;">📷</div>
-            <a href="#" style="color:#2271b1;font-size:13px;" onclick="return false;">Set featured image</a>
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">🔍 SEO Settings</div>
+        <div style="padding:14px;display:flex;flex-direction:column;gap:10px;">
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">SEO Title</label>
+            <input id="bf_seo" class="input-text" style="width:100%;" value="${esc(b.seoTitle||'')}" placeholder="Custom search title...">
           </div>
-          <div id="b_image_preview_container" style="${b.image?'':'display:none'}">
-            <img src="${esc(b.image||'')}" id="b_image_preview" style="width:100%;border-radius:3px;cursor:pointer;border:1px solid #ddd;" onclick="document.getElementById('b_image_file').click()">
-            <a href="#" style="color:#d63638;font-size:12px;text-decoration:none;display:block;margin-top:6px;" onclick="removeCoverImage('b');return false;">Remove featured image</a>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Meta Description</label>
+            <textarea id="bf_d" class="input-text" style="width:100%;height:60px;" placeholder="Search engine snippet...">${esc(b.description||'')}</textarea>
           </div>
-          <input type="hidden" id="b_cover" value="${esc(b.image||'')}">
-          <input type="file" id="b_image_file" class="hidden" accept="image/*" onchange="uploadCoverImage(this,'b_cover','b_image_preview','b_image_container','b_image_preview_container')">
         </div>
       </div>
-
-      <!-- SEO Settings -->
-      ${getSeoBoxHtml(b)}
-
     </div>
   </div>`;
 }
 
-
-window.saveBlog = async function(origFile) {
-  const t = $('b_title').value.trim();
-  if(!t) return toast('Title required', false);
-  const slug = t.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-  const filename = origFile || (slug + '.mdx');
-
-  // Read category from checkboxes (new UI) or fallback to old select
-  const catCb = document.querySelector('.b_cat_cb:checked');
-  const catSel = $('b_cat');
-  const category = catCb ? catCb.value : (catSel ? catSel.value : '');
-
-  // Read tags from pills (new UI) or fallback to old text input
-  const pillTags = getTagsFromPills();
-  const oldTagsEl = $('b_tags');
-  const tagsArr = pillTags.length ? pillTags : (oldTagsEl ? oldTagsEl.value.split(',').map(s=>s.trim()).filter(Boolean) : []);
-  const tagsFormatted = tagsArr.length ? `\ntags: [${tagsArr.map(tag=>`"${tag}"`).join(', ')}]` : '';
-
-  // Cover image from hidden field or old cover field
-  const imgEl = $('b_cover') || $('b_image');
-  const imgVal = imgEl ? imgEl.value : '';
-
-  const seoData = getSeoData();
-
-  let b = window._currentEditBlog || {};
-  let fm = `---
-title: "${t}"
-description: "${$('b_excerpt')?.value?.trim()||''}"
-date: "${$('b_date')?.value||''}"
-category: "${category}"${tagsFormatted}
-image: "${imgVal}"
-author: "${$('b_author')?.value||'CodesCompiler'}"
-draft: ${$('b_draft')?.value||'false'}
-seoKeywords: "${seoData.seoKeywords}"
-seoTitle: "${seoData.seoTitle}"
-seoDesc: "${seoData.seoDesc}"
-seoNoIndex: ${seoData.seoNoIndex}
-`;
-
-  const excludeKeys = ['title','description','date','category','tags','image','author','draft','seoKeywords','seoTitle','seoDesc','seoNoIndex','_content','file'];
-  Object.keys(b).forEach(k => {
-    if (!excludeKeys.includes(k) && b[k] !== undefined && b[k] !== '') {
-      fm += `${k}: ${b[k]}\n`;
-    }
-  });
-
-  fm += `---\n\n${$('b_desc')?.value||''}`;
-
-  await post('/api/blogs/save', { filename, content: fm });
-  toast('Post saved!');
-  await loadAll();
-  goTo('blogs');
+function newBlog(){
+  openEditor('Add New Post', blogForm(),
+    async()=>{
+      let fn=$('bf_f').value.trim();if(!fn)return toast('URL slug is required',false);
+      if(!fn.endsWith('.mdx'))fn+='.mdx';
+      await post('/api/blogs/save',{filename:fn,content:buildBlogContent()});
+      toast('Post published! 🎉');await loadAll();renderBlogs();
+    },
+    ()=>renderBlogs(),
+    '<span class="badge bpub" style="margin-right:8px">New</span>'
+  );
 }
 
-window.delBlog = async function(f) {
-  await post('/api/blogs/delete', { filename: f });
-  toast('Post moved to trash');
-  await loadAll();
-  goTo('blogs');
+async function editBlog(file){
+  const d=await api('/api/blogs/get?file='+encodeURIComponent(file));
+  if(d.error)return toast('File not found',false);
+  const fm=parseFM(d.content),body=extractBody(d.content);
+  openEditor('Edit Post: '+file, blogForm({...fm,file}),
+    async()=>{
+      await post('/api/blogs/save',{filename:file,content:buildBlogContent()});
+      toast('Changes published! ✅');
+    },
+    ()=>renderBlogs(),
+    '<span class="badge bpub" style="margin-right:8px">Published</span>'
+  );
+  setTimeout(()=>{if($('bf_b'))$('bf_b').value=body},60);
+}
+
+function delBlog(f){openConfirm(`Delete post "${f}"? This cannot be undone.`,async()=>{await post('/api/blogs/delete',{filename:f});toast('Post deleted');await loadAll();renderBlogs()})}
+
+function buildBlogContent(){
+  const tags=$('bf_tg').value.split(',').map(s=>s.trim()).filter(Boolean);
+  const tStr=tags.length?`\ntags: [${tags.map(t=>`"${t}"`).join(', ')}]`:'';
+  const img=$('bf_img').value.trim();const iStr=img?`\nimage: "${img}"`:'';
+  const seo=$('bf_seo').value.trim();const seoStr=seo?`\nseoTitle: "${seo}"`:'';
+  const isDraft=$('bf_status').value==='draft';
+  const noads=$('bf_noads').checked;
+  return`---\ntitle: "${$('bf_t').value}"\ndescription: "${$('bf_d').value}"\ndate: "${$('bf_dt').value}"\ncategory: "${$('bf_c').value}"${tStr}${iStr}${seoStr}\nfeatured: ${$('bf_ft').checked}\nhasDemo: ${$('bf_dm').checked}\nauthor: "${$('bf_au').value}"\ndraft: ${isDraft}${noads?'\ndisableAds: true':''}\n---\n\n${$('bf_b').value}`;
 }
 
 // ══ NAVIGATION ══
@@ -1363,10 +1404,6 @@ function plSearch(q){
 }
 
 function showPermalinks(data){
-  if(data.error) {
-    $('content').innerHTML = `<div class="error">Failed to load permalinks: ${esc(data.error)}</div>`;
-    return;
-  }
   let h=`<div style="background:rgba(99,102,241,.08);padding:14px 18px;border-radius:10px;margin-bottom:20px;font-size:13px;color:var(--muted)">💡 The URL slug is the last part of the URL. Click <strong>✏️ Rename</strong> to change any URL. This will rename the file and update the permalink.</div>`;
 
   // Tutorials
@@ -1414,399 +1451,454 @@ function renameFile(type,oldFile,title){
     if(inp) inp.addEventListener('input',()=>{const p=$('rn_preview');if(p)p.textContent=inp.value});
   },50);
 }
-
 // ══ PAGES ══
-let _pageFilter = 'all';
-let _pageCatFilter = '';
-let _pageSearch = '';
-let _pageSelectedFiles = new Set();
-
-function setPageFilter(f) { _pageFilter = f; renderPages(); }
-function setPageCat(c) { _pageCatFilter = c; renderPages(); }
-function setPageSearch(q) { _pageSearch = q; renderPages(); }
-function togglePageFile(f, checked) { if(checked) _pageSelectedFiles.add(f); else _pageSelectedFiles.delete(f); }
-function toggleAllPages(checked) {
-  document.querySelectorAll('.page-cb').forEach(cb => { cb.checked = checked; togglePageFile(cb.value, checked); });
+function renderPages(){
+  $('ptitle').textContent='Pages';
+  $('tact').innerHTML=`<button class="btn bp" onclick="newPage()">+ New Page</button>`;
+  let h=`<div class="card"><div class="ch"><h3>📄 Static Pages</h3><span style="color:var(--dim);font-size:12px">${pages.length} pages</span></div>
+  <table><thead><tr><th>Title</th><th>URL</th><th>File</th></tr></thead><tbody>`;
+  if(!pages.length) h+=`<tr><td colspan="3" class="empty">No pages</td></tr>`;
+  pages.forEach(p=>{
+    const slug = p.file === 'index.astro' ? '' : p.file.replace(/\.astro$/, '/');
+    h+=`<tr>
+      <td>
+        <strong>${esc(p.title)}</strong>
+        <div class="row-actions" style="font-size:12px; margin-top:4px;">
+          <a href="#" style="color:#2271b1; text-decoration:none;" onclick="event.preventDefault(); editPage('${esc(p.file)}')">Edit</a> <span style="color:#ddd">|</span> 
+          <a href="#" style="color:#d63638; text-decoration:none;" onclick="event.preventDefault(); delPage('${esc(p.file)}')">Trash</a> <span style="color:#ddd">|</span> 
+          <a href="/${slug}" target="_blank" style="color:#2271b1; text-decoration:none;">View</a>
+        </div>
+      </td>
+      <td style="font-size:12px;color:var(--muted);font-family:monospace">${esc(p.url)}</td>
+      <td style="font-size:12px;color:var(--dim)">${esc(p.file)}</td>
+    </tr>`;
+  });
+  h+=`</tbody></table></div>`;
+  h+=`<div style="background:rgba(99,102,241,.08);padding:14px 18px;border-radius:10px;font-size:13px;color:var(--muted)">\ud83d\udca1 Pages are Astro template files (.astro). You can edit the HTML content directly. For new pages, a basic template will be created for you.</div>`;
+  h += renderUploadPanel('page');
+  $('content').innerHTML=h;
 }
-async function applyPageBulk() {
-  const action = $('bulk_action_pages').value;
-  if(!action || !_pageSelectedFiles.size) return;
-  if(action === 'trash') {
-    openConfirm(`Move ${_pageSelectedFiles.size} pages to trash?`, async () => {
-      for(let f of _pageSelectedFiles) await post('/api/pages/delete', { filename: f });
-      _pageSelectedFiles.clear();
-      toast('Pages trashed');
-      await loadAll();
-      goTo('pages');
-    });
-  }
-}
 
-function renderPages() {
-  $('ptitle').textContent = 'Pages';
-  $('tact').innerHTML = '<button class="btn-primary" onclick="newPage()">+ Add New</button>';
+// ══ BOOKS ══
+let books = [];
+let bookFilters = { q: '', cat: '' };
+
+async function renderBooks() {
+  $('ptitle').textContent='Books';
+  $('tact').innerHTML=`<button class="btn bp" onclick="newBook()">+ Add New Book</button>`;
+  if(!books.length) books = await api('/api/books/list').catch(()=>[]);
   
-  // Auto-generate categories based on folder names
-  const cats = [...new Set(pages.map(p => p.file.includes('/') ? p.file.split('/')[0] : 'Root'))].sort();
+  const bCats = [...new Set(books.map(b=>b.category).filter(Boolean))];
+  
+  let h = `
+    <div style="display:flex;gap:10px;margin-bottom:18px;background:#fff;padding:14px;border-radius:4px;border:1px solid #c3c4c7;align-items:center;flex-wrap:wrap">
+      <div style="font-size:13px;font-weight:600;color:#3c434a;margin-right:4px">🔍 Filter Books:</div>
+      <input class="input-text" placeholder="Search by title..." oninput="bookFilterChange('q', this.value)" style="width:250px" value="${esc(bookFilters.q)}">
+      <select class="input-text" onchange="bookFilterChange('cat', this.value)" style="width:180px">
+        <option value="">All Categories</option>
+        ${bCats.map(c => `<option value="${c}" ${bookFilters.cat===c?'selected':''}>${c}</option>`).join('')}
+      </select>
+      ${(bookFilters.q||bookFilters.cat) ? `<button class="btn bg bs" onclick="bookFilters={q:'',cat:''};renderBooks()">Clear Filters</button>` : ''}
+    </div>
+    <div id="book_table_container"></div>
+    ${renderUploadPanel('book')}
+  `;
+  $('content').innerHTML=h;
+  applyBookFilters();
+}
 
-  let filtered = pages.filter(p => {
-    const isDraft = p.draft === true;
-    const isPublished = !isDraft;
-    if (_pageFilter === 'published' && !isPublished) return false;
-    if (_pageFilter === 'draft' && !isDraft) return false;
-    
-    const cat = p.category || (p.file.includes('/') ? p.file.split('/')[0] : 'Root');
-    if (_pageCatFilter && cat !== _pageCatFilter) return false;
-    
-    if (_pageSearch) {
-      const q = _pageSearch.toLowerCase();
-      if (!(p.title||'').toLowerCase().includes(q) && !(cat||'').toLowerCase().includes(q)) return false;
-    }
+function bookFilterChange(key, val) {
+  bookFilters[key] = val;
+  applyBookFilters();
+  if(key === 'q') applyBookFilters(); else renderBooks();
+}
+
+function applyBookFilters() {
+  const q = bookFilters.q.toLowerCase();
+  const f = books.filter(b => {
+    if (q && !(b.title||b.file||'').toLowerCase().includes(q)) return false;
+    if (bookFilters.cat && b.category !== bookFilters.cat) return false;
     return true;
   });
+  showBooks(f);
+}
 
-  const total = pages.length;
-  const drafts = pages.filter(p => p.draft === true).length;
-  const published = total - drafts;
+function showBooks(list) {
+  let h=`<div class="card"><div class="ch"><h3>📚 Books</h3><span style="color:var(--dim);font-size:12px">${books.length} total books</span></div>
+  <table><thead><tr><th>#</th><th>Title</th><th>Category</th><th>Date</th><th>File</th></tr></thead><tbody>`;
+  if(!list.length) h+=`<tr><td colspan="5" class="empty">No books match your filters.</td></tr>`;
+  list.forEach((b,i)=>{
+    const slug = b.slug || b.file.replace(/\.(json|mdx?)$/, '');
+    h+=`<tr>
+      <td>${i+1}</td>
+      <td>
+        <strong>${esc(b.title||b.file)}</strong>
+        <div class="row-actions" style="font-size:12px; margin-top:4px;">
+          <a href="#" style="color:#2271b1; text-decoration:none;" onclick="event.preventDefault(); editBook('${esc(b.file)}')">Edit</a> <span style="color:#ddd">|</span> 
+          <a href="#" style="color:#d63638; text-decoration:none;" onclick="event.preventDefault(); delBook('${esc(b.file)}')">Trash</a> <span style="color:#ddd">|</span> 
+          <a href="/books/${slug}" target="_blank" style="color:#2271b1; text-decoration:none;">View</a>
+        </div>
+      </td>
+      <td style="font-size:12px">${esc(b.category||'')}</td>
+      <td style="font-size:12px;color:var(--dim)">${esc(b.date||'')}</td>
+      <td style="font-size:12px;color:var(--dim)">${esc(b.file)}</td>
+    </tr>`;
+  });
+  h+=`</tbody></table></div>`;
+  const cont = $('book_table_container');
+  if(cont) cont.innerHTML=h;
+}
 
-  const tabClass = t => `text-sm mr-4 cursor-pointer pb-1 ${_pageFilter===t ? 'text-blue-600 border-b-2 border-blue-600 font-semibold' : 'text-gray-600 hover:text-blue-500'}`;
-
-  let h = `
-  <div style="margin-bottom:12px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
-    <span class="${tabClass('all')}" onclick="setPageFilter('all')">All (${total})</span>
-    <span class="${tabClass('published')}" onclick="setPageFilter('published')">Published (${published})</span>
-    <span class="${tabClass('draft')}" onclick="setPageFilter('draft')">Drafts (${drafts})</span>
-  </div>
-
-  <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;">
-    <select class="input-text" style="width:auto;padding:4px 8px;font-size:13px;" onchange="setPageCat(this.value)">
-      <option value="">All Folders</option>
-      ${cats.map(c=>`<option value="${esc(c)}" ${_pageCatFilter===c?'selected':''}>${esc(c)}</option>`).join('')}
-    </select>
-    <input type="text" class="input-text" style="width:220px;font-size:13px;padding:4px 8px;" placeholder="Search Pages..." value="${esc(_pageSearch)}" oninput="setPageSearch(this.value)">
-    <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
-      <select id="bulk_action_pages" class="input-text" style="width:auto;padding:4px 8px;font-size:13px;">
-        <option value="">Bulk Actions</option>
-        <option value="trash">Move to Trash</option>
-      </select>
-      <button class="btn-secondary" style="padding:4px 10px;font-size:13px;" onclick="applyPageBulk()">Apply</button>
-      <span class="text-gray-500 text-sm">${filtered.length} item${filtered.length!==1?'s':''}</span>
-    </div>
-  </div>
-
-  <div class="wp-card">
-  <table style="width:100%;border-collapse:collapse;font-size:13px;">
-    <thead>
-      <tr style="background:#f6f7f7;border-bottom:1px solid #e0e0e0;">
-        <th style="padding:8px 10px;width:32px;"><input type="checkbox" id="page_check_all" onchange="toggleAllPages(this.checked)"></th>
-        <th style="padding:8px 10px;text-align:left;font-weight:600;">Title</th>
-        <th style="padding:8px 10px;text-align:left;font-weight:600;">Author</th>
-        <th style="padding:8px 10px;text-align:left;font-weight:600;">Category</th>
-        <th style="padding:8px 10px;text-align:left;font-weight:600;">Tags</th>
-        <th style="padding:8px 10px;text-align:left;font-weight:600;">Date</th>
-        <th style="padding:8px 10px;text-align:left;font-weight:600;">Feat. Image</th>
-      </tr>
-    </thead>
-    <tbody>`;
-
-  if (!filtered.length) {
-    h += `<tr><td colspan="7" style="padding:24px;text-align:center;color:#888;">No pages found.</td></tr>`;
-  } else {
-    filtered.forEach(p => {
-      const checked = _pageSelectedFiles.has(p.file) ? 'checked' : '';
-      const cat = p.category || (p.file.includes('/') ? p.file.split('/')[0] : 'Root');
-      const imgHtml = p.image ? `<img src="${esc(p.image)}" style="width:40px;height:40px;object-fit:cover;border-radius:3px;">` : `<span style="color:#aaa;font-size:11px;">No Image</span>`;
-      const dateLabel = `<span style="color:#888;font-size:11px;">${p.draft ? 'Last Modified' : 'Published'}</span>`;
-      const dateStr = p.date || '—';
-      const authorStr = p.author || 'Admin';
-      const titleExtra = p.draft ? ' — <span style="font-weight:bold;color:#444;">Draft</span>' : '';
-      const tagsStr = (p.tags||[]).length ? (p.tags||[]).map(t=>esc(t)).join(', ') : '—';
-
-      h += `
-      <tr style="border-bottom:1px solid #f0f0f0;" class="blog-row" onmouseenter="this.querySelector('.row-actions').style.display='flex'" onmouseleave="this.querySelector('.row-actions').style.display='none'">
-        <td style="padding:8px 10px;"><input type="checkbox" class="page-cb" value="${esc(p.file)}" ${checked} onchange="togglePageFile('${esc(p.file)}',this.checked)"></td>
-        <td style="padding:8px 10px;">
-          <strong><a href="#" style="color:#2271b1;text-decoration:none;" onclick="editPage('${esc(p.file)}');return false;">${esc(p.title || p.file)}</a></strong>${titleExtra}
-          <div class="row-actions" style="display:none;gap:8px;margin-top:4px;">
-            <a href="#" style="color:#2271b1;font-size:12px;text-decoration:none;" onclick="editPage('${esc(p.file)}');return false;">Edit</a>
-            ${p.file !== 'index.astro' ? `<span style="color:#ccc;">|</span><a href="#" style="color:#d63638;font-size:12px;text-decoration:none;" onclick="openConfirm('Move to Trash?',()=>delPage('${esc(p.file)}'));return false;">Trash</a>` : ''}
-            <span style="color:#ccc;">|</span>
-            <a href="${esc(p.url)}" target="_blank" style="color:#888;font-size:12px;text-decoration:none;">View</a>
-          </div>
-        </td>
-        <td style="padding:8px 10px;color:#555;">${esc(authorStr)}</td>
-        <td style="padding:8px 10px;"><a href="#" style="color:#2271b1;text-decoration:none;font-size:12px;" onclick="setPageCat('${esc(cat)}');return false;">${esc(cat)}</a></td>
-        <td style="padding:8px 10px;color:#555;font-size:12px;">${tagsStr}</td>
-        <td style="padding:8px 10px;color:#555;">${esc(dateStr)}<br>${dateLabel}</td>
-        <td style="padding:8px 10px;">${imgHtml}</td>
-      </tr>`;
-    });
+function bookForm(b = {}) {
+  let parsed = {};
+  if (typeof b.content === 'string') {
+    try { parsed = JSON.parse(b.content); } catch(e){}
+  } else if (typeof b === 'object') {
+    parsed = b;
   }
+  const title = parsed.title || b.title || '';
+  const tagline = parsed.tagline || b.tagline || '';
+  const author = parsed.author || b.author || 'CodesCompiler';
+  const category = parsed.category || b.category || '';
+  const date = parsed.date || b.date || new Date().toISOString().split('T')[0];
+  const image = parsed.image || b.image || parsed.coverImage || '';
+  const isDraft = parsed.draft === true || b.draft === true;
 
-  h += `</tbody></table></div>`;
-  $('content').innerHTML = h;
-}
+  const level = parsed.level || '';
+  const amazonUrl = parsed.amazonUrl || '';
+  const pagesCount = parsed.pages !== undefined ? parsed.pages : '';
+  const language = parsed.language || 'English';
+  const publisher = parsed.publisher || 'Independently published';
+  const isbn13 = parsed.isbn13 || '';
+  const asin = parsed.asin || '';
+  const itemWeight = parsed.itemWeight || '';
+  const dimensions = parsed.dimensions || '';
+  const description = parsed.description || '';
+  const chapters = parsed.chapters || [];
 
-function newPage() {
-  const template = `---\nimport BaseLayout from '../layouts/BaseLayout.astro';\n---\n<BaseLayout title="New Page" description="Description">\n  <div class="max-w-screen-xl mx-auto px-5 py-12">\n    <h1 class="text-3xl font-bold mb-6">New Page</h1>\n    <p>Your content here...</p>\n  </div>\n</BaseLayout>`;
-  window._currentEditPageFn = '';
-  renderPageEditor('', template);
-}
+  const defaultTemplate = {
+    title: title || '',
+    tagline: tagline || '',
+    description: description,
+    draft: isDraft,
+    image: image,
+    date: date,
+    level: level,
+    amazonUrl: amazonUrl,
+    pages: pagesCount,
+    language: language,
+    publisher: publisher,
+    isbn13: isbn13,
+    asin: asin,
+    itemWeight: itemWeight,
+    dimensions: dimensions,
+    category: category,
+    chapters: chapters
+  };
 
-async function editPage(file) {
-  const d = await api('/api/pages/get?file='+encodeURIComponent(file));
-  if(d.error) return toast('File not found', false);
-  window._currentEditPageFn = file;
-  renderPageEditor(file, d.content);
-}
+  const jsonStr = typeof b.content === 'string' ? b.content : JSON.stringify(defaultTemplate, null, 2);
 
-function renderPageEditor(file, content) {
-  const isNew = !file;
-  $('ptitle').textContent = isNew ? 'Add New Page' : 'Edit Page';
-  $('tact').innerHTML = `<a href="#" style="color:#2271b1;font-size:13px;text-decoration:none;" onclick="goTo('pages');return false;">← All Pages</a>`;
-
-  // Auto-generate categories based on folder names
-  const cats = [...new Set(pages.map(p => p.file.includes('/') ? p.file.split('/')[0] : 'Root'))].sort();
-  
-  // Extract meta from the loaded page object if it exists
-  const pData = pages.find(p => p.file === file) || {};
-  
-  let currentCat = pData.category || 'Root';
-  let currentSlug = file ? file.replace(/\.astro$/, '') : '';
-  if (currentSlug.includes('/')) {
-    const parts = currentSlug.split('/');
-    currentCat = parts[0];
-    currentSlug = parts.slice(1).join('/');
-  }
-
-  // Tags
-  const rawTagsList = pData.tags || [];
-  const tags = (Array.isArray(rawTagsList) ? rawTagsList : String(rawTagsList).replace(/[\[\]"]/g, '').split(',')).map(t=>String(t).trim()).filter(Boolean);
-  const tagsHtml = tags.map(t => `<span class="tag-pill" style="display:inline-flex;align-items:center;gap:4px;background:#e5e7eb;border-radius:3px;padding:2px 7px;font-size:12px;margin:2px;">${esc(t)}<a href="#" style="color:#999;text-decoration:none;margin-left:2px;" onclick="removeTagPill(this);return false;">×</a></span>`).join('');
-
-  // Feature Image
-  const hasImage = pData.image && pData.image.trim();
-
-  $('content').innerHTML = `
-  <style>
-    .meta-box { background:#fff; border:1px solid #c3c4c7; box-shadow:0 1px 1px rgba(0,0,0,.04); margin-bottom:16px; }
-    .meta-box-header { display:flex; justify-content:space-between; align-items:center; padding:8px 12px; cursor:pointer; border-bottom:1px solid #c3c4c7; user-select:none; }
-    .meta-box-header h3 { font-size:13px; font-weight:600; margin:0; }
-    .meta-box-body { padding:12px; }
-    .tag-add-area { display:flex; gap:6px; margin-top:8px; }
-    .tag-add-area input { flex:1; border:1px solid #8c8f94; border-radius:3px; padding:4px 8px; font-size:13px; }
-    .tag-add-area button { background:#2271b1; color:#fff; border:none; border-radius:3px; padding:4px 10px; font-size:12px; cursor:pointer; }
-  </style>
-  <div style="display:flex;gap:20px;align-items:flex-start;max-width:100%;">
-    <!-- LEFT -->
-    <div style="flex:1;min-width:0;">
+  return `<div style="display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start;">
+    <div>
+      <div style="margin-bottom:12px;">
+        <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;color:#3c434a;">Book Title</label>
+        <input id="bk_title_input" value="${esc(title)}" placeholder="Add book title..." style="width:100%;font-size:20px;font-weight:bold;padding:10px 12px;border:1px solid #8c8f94;border-radius:3px;">
+      </div>
       <div style="margin-bottom:16px;">
-        <input type="text" id="pg_filename" style="width:100%;padding:10px 14px;font-size:20px;border:1px solid #8c8f94;border-radius:3px;outline:none;box-shadow:inset 0 1px 2px rgba(0,0,0,.07);" placeholder="e.g. new-page-slug (without .astro)" value="${esc(currentSlug)}">
-        <div style="font-size:13px;color:#666;margin-top:6px;">This will be the URL slug for the page (e.g. typing <strong>about</strong> creates <code>/about</code>).</div>
+        <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;color:#3c434a;">Tagline / Subtitle</label>
+        <input id="bk_tagline_input" value="${esc(tagline)}" placeholder="e.g. 30 Heartwarming Lessons About Kindness..." style="width:100%;font-size:14px;padding:8px 10px;border:1px solid #8c8f94;border-radius:3px;">
       </div>
-      
-      <div style="background:#fff;border:1px solid #c3c4c7;">
-        <div style="background:#f6f7f7;border-bottom:1px solid #dcdcde;padding:4px 8px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-          <button style="background:#2271b1;color:#fff;border:none;border-radius:3px;padding:4px 10px;font-size:12px;cursor:pointer;" onclick="document.getElementById('pg_media_upload').click()">🖼 Add Media</button>
-          <input type="file" id="pg_media_upload" class="hidden" accept="image/*" onchange="insertMediaTo(this,'pg_body')">
-          <span style="height:20px;border-left:1px solid #ddd;margin:0 4px;"></span>
-          <button style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:2px;padding:2px 6px;font-size:12px;cursor:pointer;" onclick="wrapText('pg_body','<strong>','</strong>')"><b>B</b></button>
-          <button style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:2px;padding:2px 6px;font-size:12px;cursor:pointer;" onclick="wrapText('pg_body','<em>','</em>')"><em>I</em></button>
-          <button style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:2px;padding:2px 6px;font-size:12px;cursor:pointer;" onclick="prependLine('pg_body','<h1>')">H1</button>
-          <button style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:2px;padding:2px 6px;font-size:12px;cursor:pointer;" onclick="prependLine('pg_body','<h2>')">H2</button>
+
+      <!-- Description Section -->
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;margin-bottom:16px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">
+          📖 Book Description / Synopsis
         </div>
-        <textarea id="pg_body" style="width:100%;min-height:500px;border:none;padding:12px;font-size:13px;font-family:monospace;line-height:1.6;box-sizing:border-box;resize:vertical;outline:none;" spellcheck="false">${esc(content.replace(/<!-- WP_META:.*?-->/g, '').trim())}</textarea>
+        <div style="padding:16px;">
+          <textarea id="bk_desc_input" class="editor" style="width:100%;min-height:220px;font-family:sans-serif;font-size:14px;line-height:1.6;padding:10px;border:1px solid #8c8f94;border-radius:3px;" placeholder="Write a heartwarming storybook description or synopsis here...">${esc(description)}</textarea>
+        </div>
+      </div>
+
+      <!-- Chapters Section -->
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;margin-bottom:16px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;display:flex;justify-content:space-between;align-items:center;">
+          <span>📑 Chapters &amp; Lessons</span>
+          <span style="font-size:11px;color:#646970;">Chapter Data</span>
+        </div>
+        <div style="padding:16px;">
+          <textarea id="bk_chapters_input" class="editor" style="width:100%;min-height:180px;font-family:monospace;font-size:13px;padding:10px;border:1px solid #8c8f94;border-radius:3px;" placeholder='[\n  { "title": "Lesson 1: Sharing is Caring", "content": "..." }\n]'>${esc(JSON.stringify(chapters, null, 2))}</textarea>
+        </div>
+      </div>
+
+      <!-- Advanced Raw JSON Collapsible -->
+      <div style="margin-top:8px;">
+        <details>
+          <summary style="font-size:12px;color:#646970;cursor:pointer;">🛠️ Advanced: View / Edit Raw JSON Source</summary>
+          <textarea id="bk_body" style="width:100%;min-height:180px;font-family:monospace;font-size:12px;margin-top:8px;padding:8px;border:1px solid #c3c4c7;border-radius:3px;">${esc(jsonStr)}</textarea>
+        </details>
       </div>
     </div>
-    
-    <!-- RIGHT -->
-    <div style="width:280px;flex-shrink:0;">
+    <div style="display:flex;flex-direction:column;gap:16px;">
       <!-- Publish Box -->
-      <div class="meta-box">
-        <div class="meta-box-header" onclick="toggleMeta('pg-pub')">
-          <h3>Publish</h3><span>▲</span>
-        </div>
-        <div class="meta-box-body" id="pg-pub">
-          <div style="display:flex;gap:8px;margin-bottom:12px;">
-            <button class="btn-secondary" style="flex:1;font-size:13px;" onclick="$('pg_draft').value='true';savePage();">Save Draft</button>
-            <button class="btn-secondary" style="flex:1;font-size:13px;" onclick="window.open('/${esc(file ? file.replace(/\.astro$/,'') : '')}/','_blank')">Preview</button>
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">📌 Publish &amp; Status</div>
+        <div style="padding:14px;display:flex;flex-direction:column;gap:12px;">
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Status</label>
+            <select id="bk_status" class="input-text" style="width:100%;"><option value="publish" ${!isDraft?'selected':''}>✅ Published</option><option value="draft" ${isDraft?'selected':''}>📝 Draft</option><option value="schedule">⏰ Schedule</option></select>
           </div>
-          <div style="border-top:1px solid #f0f0f0;padding-top:10px;">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;font-size:13px;">
-              <span style="color:#555;">🏷 Status:</span>
-              <select id="pg_draft" style="border:1px solid #8c8f94;border-radius:3px;padding:2px 6px;font-size:12px;">
-                <option value="false" ${!pData.draft ? 'selected' : ''}>Published</option>
-                <option value="true" ${pData.draft ? 'selected' : ''}>Draft</option>
-              </select>
-            </div>
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;font-size:13px;">
-              <span style="color:#555;">👁 Visibility:</span>
-              <span style="font-size:12px;font-weight:600;">Public</span>
-            </div>
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;font-size:13px;">
-              <span style="color:#555;">📅 Date:</span>
-              <input type="date" id="pg_date" value="${esc(pData.date||'')}" style="border:1px solid #8c8f94;border-radius:3px;padding:2px 6px;font-size:12px;">
-            </div>
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;font-size:13px;">
-              <span style="color:#555;">✍ Author:</span>
-              <input type="text" id="pg_author" value="${esc(pData.author||'Admin')}" style="border:1px solid #8c8f94;border-radius:3px;padding:2px 6px;font-size:12px;width:120px;">
-            </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Publish Date</label>
+            <input id="bk_date_input" type="date" class="input-text" style="width:100%;" value="${date}">
           </div>
-          <div style="border-top:1px solid #f0f0f0;padding-top:10px;display:flex;justify-content:space-between;align-items:center;">
-            ${!isNew && file !== 'index.astro' ? `<a href="#" style="color:#d63638;font-size:12px;text-decoration:none;" onclick="openConfirm('Move to Trash?',()=>delPage('${esc(file)}'));return false;">Move to Trash</a>` : '<span></span>'}
-            <button class="btn-primary" style="font-size:13px;" onclick="$('pg_draft').value='false';savePage();">${isNew ? 'Publish' : 'Update'}</button>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Author</label>
+            <input id="bk_author_input" class="input-text" style="width:100%;" value="${esc(author)}">
           </div>
         </div>
       </div>
-
-      <!-- Categories Meta Box -->
-      <div class="meta-box">
-        <div class="meta-box-header" onclick="toggleMeta('pg-cat')">
-          <h3>Categories (Folders)</h3><span>▲</span>
-        </div>
-        <div class="meta-box-body" id="pg-cat">
-          <div style="max-height:180px;overflow-y:auto;border:1px solid #f0f0f0;padding:6px;border-radius:3px;margin-bottom:8px;">
-            <label style="display:block;font-size:13px;margin-bottom:4px;"><input type="radio" name="pg_category_radio" value="Root" ${currentCat==='Root'?'checked':''}> Root</label>
-            ${cats.filter(c=>c!=='Root').map(c => `<label style="display:block;font-size:13px;margin-bottom:4px;"><input type="radio" name="pg_category_radio" value="${esc(c)}" ${c===currentCat?'checked':''}> ${esc(c)}</label>`).join('')}
+      <!-- Cover Image -->
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">🖼️ Cover / Featured Image</div>
+        <div style="padding:14px;">
+          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Image Path / URL</label>
+          <input id="bk_img_input" class="input-text" style="width:100%;" value="${esc(image)}" placeholder="/images/books/cover.png" oninput="if($('bk_img_preview'))$('bk_img_preview').src=this.value">
+          <div style="margin-top:10px;border:1px dashed #c3c4c7;border-radius:4px;padding:8px;text-align:center;background:#fafafa;">
+            <img id="bk_img_preview" src="${esc(image || 'https://placehold.co/300x160/e2e8f0/94a3b8?text=No+Cover+Image')}" style="max-width:100%;height:auto;border-radius:3px;" onerror="this.src='https://placehold.co/300x160/e2e8f0/94a3b8?text=Invalid+Image+URL'">
           </div>
-          <input type="text" id="pg_new_category" placeholder="+ Or type new category..." style="width:100%;padding:6px;font-size:13px;border:1px solid #ccc;border-radius:3px;">
         </div>
       </div>
-
-      <!-- Tags Meta Box -->
-      <div class="meta-box">
-        <div class="meta-box-header" onclick="toggleMeta('pg-tags')">
-          <h3>Tags</h3><span>▲</span>
-        </div>
-        <div class="meta-box-body" id="pg-tags">
-          <div id="pg_tag_pills" style="display:flex;flex-wrap:wrap;gap:4px;">${tagsHtml}</div>
-          <div class="tag-add-area">
-            <input type="text" id="pg_tag_input" placeholder="Add tag..." onkeydown="if(event.key==='Enter'){event.preventDefault();addPageTagPill();}">
-            <button onclick="addPageTagPill()">Add</button>
+      <!-- Amazon & Specifications -->
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">🛒 Amazon &amp; Specifications</div>
+        <div style="padding:14px;display:flex;flex-direction:column;gap:10px;">
+          <div><label style="display:block;font-size:11px;font-weight:600;margin-bottom:2px;">Amazon Product URL</label>
+            <input id="bk_amazon_input" class="input-text" style="width:100%;" value="${esc(amazonUrl)}" placeholder="https://www.amazon.com/dp/...">
           </div>
-          <p style="font-size:11px;color:#888;margin-top:6px;">Separate with commas or Enter</p>
+          <div><label style="display:block;font-size:11px;font-weight:600;margin-bottom:2px;">Age Level / Target Audience</label>
+            <input id="bk_level_input" class="input-text" style="width:100%;" value="${esc(level)}" placeholder="e.g. 3-10 years">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div><label style="display:block;font-size:11px;font-weight:600;margin-bottom:2px;">ASIN</label>
+              <input id="bk_asin_input" class="input-text" style="width:100%;" value="${esc(asin)}" placeholder="B0HJCW73Y2">
+            </div>
+            <div><label style="display:block;font-size:11px;font-weight:600;margin-bottom:2px;">ISBN-13</label>
+              <input id="bk_isbn_input" class="input-text" style="width:100%;" value="${esc(isbn13)}" placeholder="979-8172897573">
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div><label style="display:block;font-size:11px;font-weight:600;margin-bottom:2px;">Page Count</label>
+              <input id="bk_pages_input" type="number" class="input-text" style="width:100%;" value="${esc(pagesCount)}" placeholder="30">
+            </div>
+            <div><label style="display:block;font-size:11px;font-weight:600;margin-bottom:2px;">Language</label>
+              <input id="bk_lang_input" class="input-text" style="width:100%;" value="${esc(language)}" placeholder="English">
+            </div>
+          </div>
+          <div><label style="display:block;font-size:11px;font-weight:600;margin-bottom:2px;">Publisher</label>
+            <input id="bk_pub_input" class="input-text" style="width:100%;" value="${esc(publisher)}" placeholder="Independently published">
+          </div>
+          <div><label style="display:block;font-size:11px;font-weight:600;margin-bottom:2px;">Product Dimensions</label>
+            <input id="bk_dim_input" class="input-text" style="width:100%;" value="${esc(dimensions)}" placeholder="21.59 x 0.20 x 27.94 cm">
+          </div>
+          <div><label style="display:block;font-size:11px;font-weight:600;margin-bottom:2px;">Item Weight</label>
+            <input id="bk_weight_input" class="input-text" style="width:100%;" value="${esc(itemWeight)}" placeholder="127 g">
+          </div>
+          <div><label style="display:block;font-size:11px;font-weight:600;margin-bottom:2px;">Category</label>
+            <input id="bk_cat_input" class="input-text" style="width:100%;" value="${esc(category)}" placeholder="Children's Books, Kindness">
+          </div>
         </div>
       </div>
-
-      <!-- Featured Image -->
-      <div class="meta-box">
-        <div class="meta-box-header" onclick="toggleMeta('pg-image')">
-          <h3>Featured Image</h3><span>▲</span>
-        </div>
-        <div class="meta-box-body" id="pg-image" style="text-align:center;">
-          <input type="hidden" id="pg_image_url" value="${esc(pData.image||'')}">
-          <div id="pg_image_preview" style="margin-bottom:10px; ${!hasImage ? 'display:none;' : ''}">
-            <img src="${esc(pData.image||'')}" style="max-width:100%;height:auto;border-radius:3px;">
-          </div>
-          <a href="#" id="pg_set_image_link" style="color:#2271b1;font-size:13px;text-decoration:none; ${hasImage ? 'display:none;' : ''}" onclick="$('pg_cover_upload').click();return false;">Set featured image</a>
-          <a href="#" id="pg_remove_image_link" style="color:#d63638;font-size:13px;text-decoration:none; ${!hasImage ? 'display:none;' : ''}" onclick="removePageImage();return false;">Remove featured image</a>
-          <input type="file" id="pg_cover_upload" class="hidden" accept="image/*" onchange="uploadPageImage(this)">
-        </div>
-      </div>
-
-      <!-- SEO Settings -->
-      ${getSeoBoxHtml(pData)}
-
     </div>
   </div>`;
 }
 
-function addPageTagPill() {
-  const inp = $('pg_tag_input');
-  if(!inp) return;
-  const vals = inp.value.split(',').map(v=>v.trim()).filter(Boolean);
-  if(!vals.length) return;
-  const cont = $('pg_tag_pills');
-  vals.forEach(v => {
-    cont.insertAdjacentHTML('beforeend', `<span class="tag-pill" style="display:inline-flex;align-items:center;gap:4px;background:#e5e7eb;border-radius:3px;padding:2px 7px;font-size:12px;margin:2px;">${esc(v)}<a href="#" style="color:#999;text-decoration:none;margin-left:2px;" onclick="removeTagPill(this);return false;">×</a></span>`);
-  });
-  inp.value = '';
-}
-
-async function uploadPageImage(input) {
-  if(!input.files||!input.files[0]) return;
-  const fd = new FormData();
-  fd.append('file', input.files[0]);
-  try {
-    toast('Uploading image...');
-    const r = await fetch(API+'/api/media/upload', {method:'POST', body:fd}).then(r=>r.json());
-    if(r.url) {
-      $('pg_image_url').value = r.url;
-      $('pg_image_preview').innerHTML = `<img src="${r.url}" style="max-width:100%;height:auto;border-radius:3px;">`;
-      $('pg_image_preview').style.display = 'block';
-      $('pg_set_image_link').style.display = 'none';
-      $('pg_remove_image_link').style.display = 'inline';
-      toast('Image uploaded!');
-    }
-  } catch(e) { toast('Upload failed', false); }
-}
-
-function removePageImage() {
-  $('pg_image_url').value = '';
-  $('pg_image_preview').innerHTML = '';
-  $('pg_image_preview').style.display = 'none';
-  $('pg_remove_image_link').style.display = 'none';
-  $('pg_set_image_link').style.display = 'inline';
-}
-
-window.savePage = async function() {
-  let rawSlug = $('pg_filename').value.trim();
-  if(!rawSlug) return toast('Please enter a URL slug!', false);
-  
-  let cat = $('pg_new_category').value.trim();
-  if(!cat) {
-    const sel = document.querySelector('input[name="pg_category_radio"]:checked');
-    if (sel) cat = sel.value;
-  }
-  cat = cat.replace(/[^a-z0-9-]/gi,'-').toLowerCase(); 
-
-  let slug = rawSlug.replace(/[^a-z0-9-/]/gi,'-').toLowerCase();
-  let file = (cat === 'root' || cat === '') ? slug : cat + '/' + slug;
-  if(!file.endsWith('.astro')) file += '.astro';
-
-  // Gather WP_META
-  const tags = [];
-  document.querySelectorAll('#pg_tag_pills .tag-pill').forEach(el => tags.push(el.textContent.replace('×','').trim()));
-  
-  const seoData = getSeoData();
-
-  const meta = {
-    draft: $('pg_draft').value === 'true',
-    date: $('pg_date').value,
-    author: $('pg_author').value,
-    category: cat,
-    tags: tags,
-    image: $('pg_image_url').value,
-    seoKeywords: seoData.seoKeywords,
-    seoTitle: seoData.seoTitle,
-    seoDesc: seoData.seoDesc,
-    seoNoIndex: seoData.seoNoIndex
-  };
-
-  let content = $('pg_body').value.trim();
-  // Append WP_META so it persists across reloads without changing Astro
-  content += `\n\n<!-- WP_META: ${JSON.stringify(meta)} -->`;
-
-  await post('/api/pages/save', { filename: file, content });
-  
-  // If we renamed or moved the file, delete the old one
-  if(window._currentEditPageFn && window._currentEditPageFn !== file) {
-    if(window._currentEditPageFn !== 'index.astro') {
-      await post('/api/pages/delete', { filename: window._currentEditPageFn });
-    }
+function syncBookDataFromInputs(parsed = {}) {
+  if ($('bk_body')) {
+    try {
+      const raw = JSON.parse($('bk_body').value);
+      parsed = { ...raw, ...parsed };
+    } catch(e){}
   }
 
-  toast('Page saved!');
-  await loadAll();
-  goTo('pages');
+  if ($('bk_title_input') && $('bk_title_input').value.trim()) parsed.title = $('bk_title_input').value.trim();
+  if ($('bk_tagline_input')) parsed.tagline = $('bk_tagline_input').value.trim();
+  if ($('bk_desc_input')) parsed.description = $('bk_desc_input').value.trim();
+  if ($('bk_author_input')) parsed.author = $('bk_author_input').value.trim();
+  if ($('bk_status')) parsed.draft = $('bk_status').value === 'draft';
+  if ($('bk_img_input')) {
+    parsed.image = $('bk_img_input').value.trim();
+    parsed.coverImage = $('bk_img_input').value.trim();
+  }
+  if ($('bk_date_input')) parsed.date = $('bk_date_input').value.trim();
+  if ($('bk_amazon_input')) parsed.amazonUrl = $('bk_amazon_input').value.trim();
+  if ($('bk_level_input')) parsed.level = $('bk_level_input').value.trim();
+  if ($('bk_asin_input')) parsed.asin = $('bk_asin_input').value.trim();
+  if ($('bk_isbn_input')) parsed.isbn13 = $('bk_isbn_input').value.trim();
+  if ($('bk_pages_input')) {
+    const val = $('bk_pages_input').value;
+    parsed.pages = val ? Number(val) : '';
+  }
+  if ($('bk_lang_input')) parsed.language = $('bk_lang_input').value.trim();
+  if ($('bk_pub_input')) parsed.publisher = $('bk_pub_input').value.trim();
+  if ($('bk_dim_input')) parsed.dimensions = $('bk_dim_input').value.trim();
+  if ($('bk_weight_input')) parsed.itemWeight = $('bk_weight_input').value.trim();
+  if ($('bk_cat_input')) parsed.category = $('bk_cat_input').value.trim();
+
+  if ($('bk_chapters_input')) {
+    try {
+      parsed.chapters = JSON.parse($('bk_chapters_input').value);
+    } catch(e){}
+  }
+
+  return parsed;
 }
 
-window.delPage = async function(f) {
-  if(f==='index.astro') return toast('Cannot delete homepage', false);
-  await post('/api/pages/delete', { filename: f });
-  toast('Page deleted');
-  await loadAll();
-  goTo('pages');
+function newBook(){
+  openEditor('Add New Book', bookForm(),
+    async () => {
+      const content = $('bk_body').value;
+      let parsed = {};
+      try { parsed = JSON.parse(content); } catch(e) { return toast('Invalid JSON syntax: ' + e.message, false); }
+      parsed = syncBookDataFromInputs(parsed);
+      
+      if (!parsed.title) return toast('Please provide a Book Title', false);
+      const slug = parsed.slug || parsed.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      parsed.slug = slug;
+      const fn = slug + '.json';
+
+      await post('/api/books/save', { filename: fn, content: JSON.stringify(parsed, null, 2) });
+      toast('Book created! 🎉'); books = []; await loadAll(); renderBooks();
+    },
+    () => renderBooks(),
+    '<span class="badge bpub" style="margin-right:8px">New</span>'
+  );
+}
+
+async function editBook(file){
+  const d = await api('/api/books/get?file=' + encodeURIComponent(file));
+  if (d.error) return toast('File not found', false);
+  openEditor('Edit Book: ' + file, bookForm({ file, content: d.content }),
+    async () => {
+      const content = $('bk_body').value;
+      let parsed = {};
+      try { parsed = JSON.parse(content); } catch(e) { return toast('Invalid JSON: ' + e.message, false); }
+      parsed = syncBookDataFromInputs(parsed);
+
+      await post('/api/books/save', { filename: file, content: JSON.stringify(parsed, null, 2) });
+      toast('Book saved! ✅'); books = []; renderBooks();
+    },
+    () => renderBooks(),
+    '<span class="badge bpub" style="margin-right:8px">Published</span>'
+  );
+}
+
+function delBook(f){openConfirm(`Delete book "${f}"?`,async()=>{await post('/api/books/delete',{filename:f});toast('Book deleted');books=[];await loadAll();renderBooks()});}
+
+function pageForm(p = {}) {
+  const isNew = !p.file;
+  const slugName = p.file ? p.file.replace(/\.astro$/, '') : '';
+  const defaultBody = p.content || `---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="${esc(p.title || 'New Page')}" description="Page description">
+  <div class="max-w-screen-xl mx-auto px-5 py-12">
+    <h1 class="text-3xl font-bold mb-6">${esc(p.title || 'New Page')}</h1>
+    <p>Your content here...</p>
+  </div>
+</BaseLayout>`;
+
+  return `<div style="display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start;">
+    <div>
+      <div style="margin-bottom:16px;">
+        <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;color:#3c434a;">Page Title</label>
+        <input id="pg_title_input" value="${esc(p.title || '')}" placeholder="Add page title (e.g. About Us)..." style="width:100%;font-size:20px;font-weight:bold;padding:10px 12px;border:1px solid #8c8f94;border-radius:3px;">
+      </div>
+      <div class="card">
+        <div class="ch"><h3>Page Template Code (.astro)</h3><span style="color:var(--dim);font-size:12px">${p.file || 'New Template'}</span></div>
+        <div style="padding:16px"><textarea class="editor" id="pg_body" style="min-height:550px;width:100%;font-family:monospace;">${esc(defaultBody)}</textarea></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">📌 Publish &amp; Status</div>
+        <div style="padding:14px;display:flex;flex-direction:column;gap:12px;">
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Status</label>
+            <select id="pg_status" class="input-text" style="width:100%;"><option value="publish">✅ Published</option><option value="draft">📝 Draft</option><option value="schedule">⏰ Schedule</option></select>
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Publish Date</label>
+            <input id="pg_date" type="date" class="input-text" style="width:100%;" value="${p.date || new Date().toISOString().split('T')[0]}">
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Page Layout</label>
+            <select id="pg_layout" class="input-text" style="width:100%;"><option value="base">BaseLayout (Default)</option></select>
+          </div>
+        </div>
+      </div>
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">🖼️ Featured Image</div>
+        <div style="padding:14px;">
+          <label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Image Path / URL</label>
+          <input id="pg_img" class="input-text" style="width:100%;" value="${esc(p.image || '')}" placeholder="/images/pages/banner.png" oninput="if($('pg_img_preview'))$('pg_img_preview').src=this.value">
+          <div style="margin-top:10px;border:1px dashed #c3c4c7;border-radius:4px;padding:8px;text-align:center;background:#fafafa;">
+            <img id="pg_img_preview" src="${esc(p.image || 'https://placehold.co/300x160/e2e8f0/94a3b8?text=No+Featured+Image')}" style="max-width:100%;height:auto;border-radius:3px;" onerror="this.src='https://placehold.co/300x160/e2e8f0/94a3b8?text=Invalid+Image+URL'">
+          </div>
+        </div>
+      </div>
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">⚙️ Page Attributes &amp; Slug</div>
+        <div style="padding:14px;display:flex;flex-direction:column;gap:12px;">
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">URL Slug / Filename</label>
+            <input id="pg_slug_input" class="input-text" style="width:100%;" value="${esc(slugName)}" ${!isNew ? 'readonly' : ''} placeholder="e.g. about-us, contact">
+            <span style="font-size:11px;color:#646970;display:block;margin-top:4px;">URL path: /<span id="pg_slug_preview">${slugName || 'slug'}</span>/</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function newPage(){
+  openEditor('Add New Page', pageForm(),
+    async () => {
+      const rawSlug = $('pg_slug_input') ? $('pg_slug_input').value.trim() : '';
+      if (!rawSlug) { return toast('Please enter a Page Slug / Filename', false); }
+      const cleanSlug = rawSlug.replace(/[^a-z0-9-]/gi, '-').toLowerCase();
+      const fn = cleanSlug.endsWith('.astro') ? cleanSlug : cleanSlug + '.astro';
+      const content = $('pg_body').value;
+      await post('/api/pages/save', { filename: fn, content });
+      toast(`Page created! 🎉 (${fn})`); await loadAll(); renderPages();
+    },
+    () => renderPages(),
+    '<span class="badge bpub" style="margin-right:8px">Draft</span>'
+  );
+
+  setTimeout(() => {
+    const input = $('pg_slug_input'); const preview = $('pg_slug_preview');
+    if (input && preview) {
+      input.addEventListener('input', () => {
+        const v = input.value.trim().replace(/[^a-z0-9-]/gi, '-').toLowerCase();
+        preview.textContent = v || 'slug';
+      });
+    }
+  }, 50);
+}
+
+async function editPage(file){
+  const d = await api('/api/pages/get?file=' + encodeURIComponent(file));
+  if (d.error) return toast('File not found', false);
+  const titleMatch = d.content ? d.content.match(/title=["']([^"']+)["']/) : null;
+  const title = titleMatch ? titleMatch[1] : file.replace(/\.astro$/, '');
+
+  openEditor('Edit Page: ' + file, pageForm({ file, content: d.content, title }),
+    async () => {
+      await post('/api/pages/save', { filename: file, content: $('pg_body').value });
+      toast('Page saved! ✅');
+    },
+    () => renderPages(),
+    '<span class="badge bpub" style="margin-right:8px">Published</span>'
+  );
+}
+
+function delPage(f){
+  if(f==='index.astro')return toast('Cannot delete homepage',false);
+  openConfirm(`Delete page "${f}"?`,async()=>{await post('/api/pages/delete',{filename:f});toast('Page deleted');await loadAll();renderPages()});
 }
 
 // ══ AD MANAGER ══
@@ -1901,10 +1993,333 @@ function deleteTrash(type, file){
   });
 }
 
+// ══ THEME / APPEARANCE ══
+let themeTab = 'homepage';
+function renderTheme() {
+  $('ptitle').textContent = 'Themes';
+  $('tact').innerHTML = `<button class="btn bp" onclick="saveTheme()">💾 Save Theme</button> <a href="http://localhost:4321/" target="_blank" style="display:inline-block; margin-left:12px; font-weight:bold; color:#04AA6D; text-decoration:none;">👁️ Preview Site ↗</a>`;
+  const t = themeSettings;
+
+  const tabs = [
+    { id: 'homepage',   ico: '🏠', label: 'Homepage' },
+    { id: 'colors',     ico: '🎨', label: 'Colors' },
+    { id: 'typography', ico: '🔤', label: 'Typography' },
+    { id: 'layout',     ico: '📏', label: 'Layout' },
+    { id: 'template',   ico: '🖼️', label: 'Templates' },
+    { id: 'customcss',  ico: '💅', label: 'Custom CSS' },
+    { id: 'advanced',   ico: '⚙️', label: 'Advanced' },
+  ];
+
+  const GFONTS = ['Inter','Roboto','Open Sans','Lato','Montserrat','Poppins','Raleway','Nunito','Source Sans Pro','Merriweather','Playfair Display','PT Serif','system','monospace'];
+
+  let h = `<div style="display:flex;gap:4px;margin-bottom:20px;background:#fff;border:1px solid #c3c4c7;border-radius:4px;padding:6px;flex-wrap:wrap">`;
+  tabs.forEach(tab => {
+    const active = themeTab === tab.id ? 'background:#2271b1;color:#fff;' : 'background:transparent;color:#3c434a;';
+    h += `<button onclick="switchThemeTab('${tab.id}')" style="${active}border:none;border-radius:3px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;">${tab.ico} ${tab.label}</button>`;
+  });
+  h += `</div>`;
+
+  // ── HOMEPAGE TAB ──
+  h += `<div id="ttab-homepage" style="display:${themeTab==='homepage'?'block':'none'}">`;
+  h += `<div class="card"><div class="ch"><h3>🏠 Homepage Settings</h3><span style="color:var(--dim);font-size:12px">Hero section & content toggles</span></div><div style="padding:20px">`;
+  h += `<div class="g2"><div class="field"><label>Hero Title</label><input id="th_heroTitle" value="${esc(t.heroTitle||'Learn Web Development')}" placeholder="Main headline..."></div>
+    <div class="field"><label>Hero Subtitle</label><input id="th_heroSubtitle" value="${esc(t.heroSubtitle||'')}" placeholder="Supporting text below the title..."></div></div>`;
+  h += `<div class="g2"><div class="field"><label>Primary Button Text</label><input id="th_heroBtnText" value="${esc(t.heroBtnText||'Start Learning')}"></div>
+    <div class="field"><label>Primary Button URL</label><input id="th_heroBtnUrl" value="${esc(t.heroBtnUrl||'/tutorials/')}"></div></div>`;
+  h += `<div class="g2"><div class="field"><label>Secondary Button Text</label><input id="th_heroSecBtnText" value="${esc(t.heroSecondaryBtnText||'Browse Posts')}"></div>
+    <div class="field"><label>Secondary Button URL</label><input id="th_heroSecBtnUrl" value="${esc(t.heroSecondaryBtnUrl||'/blog/')}"></div></div>`;
+  h += `<div style="border-top:1px solid #f0f0f1;margin-top:16px;padding-top:16px">
+    <div style="font-size:12px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:12px">Section Visibility</div>
+    <div class="g3">
+      <div class="field"><label class="chk"><input type="checkbox" id="th_showFeat" ${t.showFeaturedSection!==false?'checked':''}><span>⭐ Featured Section</span></label></div>
+      <div class="field"><label class="chk"><input type="checkbox" id="th_showRecent" ${t.showRecentPosts!==false?'checked':''}><span>📝 Recent Posts</span></label></div>
+      <div class="field"><label class="chk"><input type="checkbox" id="th_showTutCats" ${t.showTutorialCategories!==false?'checked':''}><span>📖 Tutorial Categories</span></label></div>
+    </div></div>`;
+  h += `</div></div></div>`;
+
+  // ── COLORS TAB ──
+  h += `<div id="ttab-colors" style="display:${themeTab==='colors'?'block':'none'}">`;
+  h += `<div class="card"><div class="ch"><h3>🎨 Color Settings</h3><span style="color:var(--dim);font-size:12px">All changes generate a custom.css file applied to your site</span></div><div style="padding:20px">`;
+  const colorFields = [
+    ['th_colorPrimary','colorPrimary','#2271b1','Primary Color','Buttons, links, highlights'],
+    ['th_colorAccent','colorAccent','#135e96','Accent / Hover Color','Hover states on primary elements'],
+    ['th_colorBackground','colorBackground','#ffffff','Page Background','Main body background'],
+    ['th_colorSurface','colorSurface','#f6f7f7','Surface / Card Background','Cards, sidebar, panels'],
+    ['th_colorText','colorText','#1d2327','Body Text','Main paragraph text'],
+    ['th_colorMuted','colorMuted','#6b7280','Muted Text','Dates, meta, subtitles'],
+    ['th_colorLink','colorLink','#2271b1','Link Color','Inline text links'],
+    ['th_colorLinkHover','colorLinkHover','#135e96','Link Hover Color','Link hover state'],
+    ['th_colorBorder','colorBorder','#c3c4c7','Border Color','Card edges, dividers'],
+    ['th_colorButtonText','colorButtonText','#ffffff','Button Text Color','Text on colored buttons'],
+    ['th_colorHeaderBg','colorHeaderBg','#1e1e1e','Header Background','Top navigation bar'],
+    ['th_colorFooterBg','colorFooterBg','#1e1e1e','Footer Background','Bottom footer area'],
+  ];
+  h += `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px">`;
+  colorFields.forEach(([id,key,def,label,hint]) => {
+    h += `<div style="display:flex;align-items:center;gap:12px;padding:10px;background:#f9f9f9;border:1px solid #e5e7eb;border-radius:6px">
+      <input type="color" id="${id}" value="${esc(t[key]||def)}" style="width:42px;height:42px;border:none;background:transparent;cursor:pointer;border-radius:4px;padding:0">
+      <div>
+        <div style="font-size:13px;font-weight:600;color:#1d2327">${label}</div>
+        <div style="font-size:11px;color:#9ca3af">${hint}</div>
+        <input type="text" id="${id}_hex" value="${esc(t[key]||def)}" style="font-size:11px;font-family:monospace;border:1px solid #ddd;border-radius:3px;padding:2px 6px;width:80px;margin-top:2px" oninput="syncColor('${id}',this.value)">
+      </div>
+    </div>`;
+  });
+  h += `</div>`;
+  h += `<div style="background:rgba(34,113,177,.07);padding:12px 16px;border-radius:8px;margin-top:16px;font-size:12px;color:#6b7280">💡 <strong>How it works:</strong> Click Save Theme — your colors are written to <code style="color:#2271b1">public/custom.css</code> as CSS variables and instantly applied to <strong>http://localhost:4321</strong>.</div>`;
+  h += `</div></div></div>`;
+
+  // ── TYPOGRAPHY TAB ──
+  h += `<div id="ttab-typography" style="display:${themeTab==='typography'?'block':'none'}">`;
+  h += `<div class="card"><div class="ch"><h3>🖋️ Typography Settings</h3></div><div style="padding:20px">`;
+  h += `<div class="g2">
+    <div class="field"><label>Body Font (Google Fonts)</label>
+      <select id="th_fontFamily">${GFONTS.map(f=>`<option value="${f}" ${(t.fontFamily||'Inter')===f?'selected':''}>${f==='system'?'System Default':f==='monospace'?'Monospace':f}</option>`).join('')}</select></div>
+    <div class="field"><label>Heading Font (Google Fonts)</label>
+      <select id="th_fontFamilyHeading">${GFONTS.map(f=>`<option value="${f}" ${(t.fontFamilyHeading||'Inter')===f?'selected':''}>${f==='system'?'Same as Body':f==='monospace'?'Monospace':f}</option>`).join('')}</select></div>
+  </div>`;
+  h += `<div class="g3">
+    <div class="field"><label>Base Font Size (px)</label><input type="number" id="th_fontSizeBase" value="${t.fontSizeBase||'16'}" min="12" max="24"></div>
+    <div class="field"><label>Small Font Size (px)</label><input type="number" id="th_fontSizeSmall" value="${t.fontSizeSmall||'14'}" min="10" max="20"></div>
+    <div class="field"><label>Large Font Size (px)</label><input type="number" id="th_fontSizeLarge" value="${t.fontSizeLarge||'18'}" min="14" max="28"></div>
+  </div>`;
+  h += `<div class="g3">
+    <div class="field"><label>Line Height</label><input type="number" id="th_lineHeight" value="${t.lineHeight||'1.7'}" min="1" max="3" step="0.1"></div>
+    <div class="field"><label>Heading Font Weight</label>
+      <select id="th_fontWeightHeading">
+        ${['400','500','600','700','800','900'].map(w=>`<option value="${w}" ${(t.fontWeightHeading||'700')===w?'selected':''}>${w}</option>`).join('')}
+      </select></div>
+    <div class="field" style="grid-column:span 1"></div>
+  </div>`;
+  h += `<div style="border-top:1px solid #f0f0f1;margin-top:12px;padding-top:16px"><div style="font-size:12px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:12px">Heading Sizes (rem)</div>
+  <div class="g3">
+    <div class="field"><label>H1 Size (rem)</label><input type="number" id="th_h1" value="${t.headingSizeh1||'2.5'}" min="1" max="6" step="0.1"></div>
+    <div class="field"><label>H2 Size (rem)</label><input type="number" id="th_h2" value="${t.headingSizeh2||'2'}" min="0.8" max="5" step="0.1"></div>
+    <div class="field"><label>H3 Size (rem)</label><input type="number" id="th_h3" value="${t.headingSizeh3||'1.5'}" min="0.8" max="4" step="0.1"></div>
+  </div></div>`;
+  h += `<div style="background:#f9f9f9;border:1px solid #e5e7eb;border-radius:8px;padding:16px;margin-top:16px">
+    <div style="font-size:12px;color:#9ca3af;margin-bottom:8px;font-weight:600">LIVE PREVIEW</div>
+    <div id="th_fontPreview" style="font-family:${t.fontFamily&&t.fontFamily!=='system'?`'${t.fontFamily}',`:''}sans-serif">
+      <h1 style="font-size:${t.headingSizeh1||2.5}rem;font-weight:${t.fontWeightHeading||700};margin:0 0 6px">The quick brown fox</h1>
+      <p style="font-size:${t.fontSizeBase||16}px;line-height:${t.lineHeight||1.7};color:#6b7280;margin:0">The quick brown fox jumps over the lazy dog. This is what your body text looks like.</p>
+    </div>
+  </div>`;
+  h += `</div></div></div>`;
+
+  // ── LAYOUT TAB ──
+  h += `<div id="ttab-layout" style="display:${themeTab==='layout'?'block':'none'}">`;
+  h += `<div class="card"><div class="ch"><h3>📐 Layout Settings</h3></div><div style="padding:20px">`;
+  h += `<div class="g2">
+    <div class="field"><label>Content Max Width (px)</label><input type="number" id="th_maxWidth" value="${t.contentMaxWidth||'1280'}" min="800" max="1920" step="20">
+      <div style="font-size:11px;color:#9ca3af;margin-top:4px">Sets the max container width across all pages</div></div>
+    <div class="field"><label>Sidebar Position</label>
+      <select id="th_sidebarPos">
+        <option value="right" ${(t.sidebarPosition||'right')==='right'?'selected':''}>Right Sidebar</option>
+        <option value="left" ${t.sidebarPosition==='left'?'selected':''}>Left Sidebar</option>
+        <option value="none" ${t.sidebarPosition==='none'?'selected':''}>No Sidebar (Full Width)</option>
+      </select></div>
+  </div>`;
+  h += `<div class="g2">
+    <div class="field"><label>Header Style</label>
+      <select id="th_headerStyle">
+        <option value="default" ${(t.headerStyle||'default')==='default'?'selected':''}>Default (Dark)</option>
+        <option value="light" ${t.headerStyle==='light'?'selected':''}>Light Header</option>
+        <option value="transparent" ${t.headerStyle==='transparent'?'selected':''}>Transparent / Overlay</option>
+        <option value="sticky" ${t.headerStyle==='sticky'?'selected':''}>Sticky (Scrolls with page)</option>
+      </select></div>
+    <div class="field"><label>Footer Style</label>
+      <select id="th_footerStyle">
+        <option value="default" ${(t.footerStyle||'default')==='default'?'selected':''}>Default (Dark)</option>
+        <option value="light" ${t.footerStyle==='light'?'selected':''}>Light Footer</option>
+        <option value="minimal" ${t.footerStyle==='minimal'?'selected':''}>Minimal (1 row)</option>
+      </select></div>
+  </div>`;
+  h += `<div class="g2">
+    <div class="field"><label>Card Border Radius (px)</label><input type="number" id="th_radius" value="${t.borderRadius||'6'}" min="0" max="32">
+      <div style="font-size:11px;color:#9ca3af;margin-top:4px">Applies to cards, buttons, images</div></div>
+    <div class="field"><label>Card Shadow (CSS value)</label><input id="th_shadow" value="${esc(t.cardShadow||'0 1px 3px rgba(0,0,0,0.08)')}" placeholder="0 2px 8px rgba(0,0,0,0.1)"></div>
+  </div>`;
+  // Visual layout selector
+  h += `<div style="border-top:1px solid #f0f0f1;margin-top:16px;padding-top:16px">
+    <div style="font-size:12px;font-weight:700;text-transform:uppercase;color:#9ca3af;margin-bottom:12px">Layout Preview</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+      <div onclick="document.getElementById('th_sidebarPos').value='none'" style="border:2px solid #c3c4c7;border-radius:6px;padding:12px;cursor:pointer;text-align:center">
+        <div style="height:40px;background:#e5e7eb;border-radius:3px;margin-bottom:6px"></div>
+        <div style="font-size:12px;font-weight:600">Full Width</div><div style="font-size:11px;color:#9ca3af">No sidebar</div>
+      </div>
+      <div onclick="document.getElementById('th_sidebarPos').value='right'" style="border:2px solid #2271b1;border-radius:6px;padding:12px;cursor:pointer;text-align:center">
+        <div style="height:40px;display:flex;gap:4px;margin-bottom:6px">
+          <div style="flex:1;background:#e5e7eb;border-radius:3px"></div>
+          <div style="width:30%;background:#c3c4c7;border-radius:3px"></div>
+        </div>
+        <div style="font-size:12px;font-weight:600">Content + Right Sidebar</div><div style="font-size:11px;color:#2271b1">Currently active</div>
+      </div>
+      <div onclick="document.getElementById('th_sidebarPos').value='left'" style="border:2px solid #c3c4c7;border-radius:6px;padding:12px;cursor:pointer;text-align:center">
+        <div style="height:40px;display:flex;gap:4px;margin-bottom:6px">
+          <div style="width:30%;background:#c3c4c7;border-radius:3px"></div>
+          <div style="flex:1;background:#e5e7eb;border-radius:3px"></div>
+        </div>
+        <div style="font-size:12px;font-weight:600">Left Sidebar + Content</div><div style="font-size:11px;color:#9ca3af">Select to enable</div>
+      </div>
+    </div>
+  </div>`;
+  h += `</div></div></div>`;
+
+  // ══ TEMPLATE TAB ══
+  h += `<div id="ttab-template" style="display:${themeTab==='template'?'block':'none'}">`;
+  h += `<div class="card"><div class="ch"><h3>🖼️ Theme Templates</h3><span style="color:var(--dim);font-size:12px">Choose your overall site design layout</span></div><div style="padding:20px">`;
+  const layouts = [
+    { id: 'layout1', name: '1. Developer Hub', img: 'https://placehold.co/400x250/2271b1/ffffff?text=Developer+Hub' },
+    { id: 'layout2', name: '2. Clean & Minimal', img: 'https://placehold.co/400x250/135e96/ffffff?text=Clean+Minimal' },
+    { id: 'layout3', name: '3. Split Screen', img: 'https://placehold.co/400x250/1d2327/ffffff?text=Split+Screen' },
+    { id: 'layout4', name: '4. Bento Grid', img: 'https://placehold.co/400x250/04AA6D/ffffff?text=Bento+Grid' },
+    { id: 'layout5', name: '5. SaaS Dark Mode', img: 'https://placehold.co/400x250/000000/ffffff?text=SaaS+Dark+Mode' },
+    { id: 'layout6', name: '6. Creative Brutalism', img: 'https://placehold.co/400x250/FFE500/000000?text=Brutalism' },
+    { id: 'layout7', name: '7. Elegant Editorial', img: 'https://placehold.co/400x250/FAF9F6/2C3E50?text=Elegant' },
+    { id: 'layout8', name: '8. Enterprise Professional', img: 'https://placehold.co/400x250/0F172A/ffffff?text=Enterprise' }
+  ];
+  h += `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:20px;">`;
+  layouts.forEach(l => {
+    const isSel = (t.homepageLayout || 'layout1') === l.id;
+    h += `
+    <div style="border:2px solid ${isSel ? '#2271b1' : '#c3c4c7'}; border-radius:8px; overflow:hidden; cursor:pointer; background:#fff; position:relative; box-shadow:${isSel?'0 0 0 2px rgba(34,113,177,0.3)':'none'}" onclick="document.getElementById('th_homepageLayout').value='${l.id}'; document.querySelectorAll('.tmpl-check').forEach(c=>c.style.display='none'); document.getElementById('chk_${l.id}').style.display='inline';">
+      <div style="height:140px; background:url(${l.img}) center/cover;"></div>
+      <div style="padding:12px; text-align:center; font-weight:600; color:${isSel ? '#2271b1' : '#3c434a'};">
+        <span id="chk_${l.id}" class="tmpl-check" style="display:${isSel?'inline':'none'}">✅ </span> ${l.name}
+      </div>
+    </div>`;
+  });
+  h += `</div>`;
+  h += `<input type="hidden" id="th_homepageLayout" value="${esc(t.homepageLayout||'layout1')}">`;
+  h += `</div></div></div>`;
+
+  // ── CUSTOM CSS TAB ──
+  h += `<div id="ttab-customcss" style="display:${themeTab==='customcss'?'block':'none'}">`;
+  h += `<div class="card"><div class="ch"><h3>💅 Custom CSS</h3><span style="color:var(--dim);font-size:12px">Written directly into public/custom.css</span></div><div style="padding:20px">`;
+  h += `<div style="background:rgba(99,102,241,.07);padding:12px 16px;border-radius:8px;margin-bottom:14px;font-size:12px;color:#6b7280">
+    💡 CSS written here is appended to the bottom of <code style="color:#818cf8">public/custom.css</code> after all generated theme styles. This means you can override any generated style. Use browser DevTools to inspect class names.
+  </div>`;
+  h += `<div class="field"><label>Custom CSS</label>
+    <textarea class="editor" id="th_customCSS" style="min-height:380px;font-family:monospace;font-size:13px;tab-size:2" placeholder="/* Write your custom CSS here */\n\n/* Example: change hero background */\n.hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }\n\n/* Example: custom font on headings */\nh1, h2 { letter-spacing: -0.02em; }">${esc(t.customCSS||'')}</textarea></div>`;
+  h += `</div></div></div>`;
+
+  // ── ADVANCED TAB ──
+  h += `<div id="ttab-advanced" style="display:${themeTab==='advanced'?'block':'none'}">`;
+  h += `<div class="card"><div class="ch"><h3>⚙️ Advanced Settings</h3></div><div style="padding:20px">`;
+  h += `<div class="g3">
+    <div class="field"><label>Theme Mode</label>
+      <select id="th_themeMode">
+        <option value="light" ${(t.themeMode||'light')==='light'?'selected':''}>☀️ Light Mode</option>
+        <option value="dark" ${t.themeMode==='dark'?'selected':''}>🌙 Dark Mode</option>
+        <option value="auto" ${t.themeMode==='auto'?'selected':''}>🌓 Auto (follows OS)</option>
+      </select>
+      <div style="font-size:11px;color:#9ca3af;margin-top:4px">Dark mode adds a dark CSS override block into custom.css</div></div>
+    <div class="field"><label>Extra Body CSS Class</label>
+      <input id="th_bodyClass" value="${esc(t.bodyClass||'')}" placeholder="my-theme dark-nav ...">
+      <div style="font-size:11px;color:#9ca3af;margin-top:4px">Space-separated classes added to &lt;body&gt; tag</div></div>
+    <div class="field" style="grid-column:span 1"></div>
+  </div>`;
+  h += `<div class="field" style="margin-top:16px"><label>Custom &lt;head&gt; Code</label>
+    <textarea class="editor" id="th_customHead" style="min-height:120px;font-family:monospace;font-size:13px" placeholder="<!-- Extra meta tags, scripts, or fonts -->\n<link rel='preconnect' href='https://fonts.googleapis.com'>">${esc(t.customHeadCode||'')}</textarea>
+    <div style="font-size:11px;color:#9ca3af;margin-top:4px">Injected into &lt;head&gt; of BaseLayout.astro (appended after the auto-generated block)</div></div>`;
+  h += `<div style="background:rgba(239,68,68,.07);padding:14px 18px;border-radius:8px;margin-top:16px;font-size:12px;color:#6b7280">
+    ⚠️ <strong>Note on body class:</strong> The body class feature requires a small change in your <code>BaseLayout.astro</code> to read from a settings file or prop. For now it's stored in theme-settings.json for your reference.
+  </div>`;
+  h += `</div></div></div>`;
+
+  $('content').innerHTML = h;
+
+  // Sync color pickers ↔ hex inputs
+  const colorIds = ['th_colorPrimary','th_colorAccent','th_colorBackground','th_colorSurface','th_colorText','th_colorMuted','th_colorLink','th_colorLinkHover','th_colorBorder','th_colorButtonText','th_colorHeaderBg','th_colorFooterBg'];
+  setTimeout(() => {
+    colorIds.forEach(id => {
+      const picker = $(id), hex = $(id+'_hex');
+      if (picker && hex) {
+        picker.addEventListener('input', () => { hex.value = picker.value; });
+        hex.addEventListener('input', () => { if (/^#[0-9a-f]{6}$/i.test(hex.value)) picker.value = hex.value; });
+      }
+    });
+  }, 50);
+}
+
+window.switchThemeTab = function(tab) {
+  themeTab = tab;
+  renderTheme();
+};
+
+window.syncColor = function(pickerId, val) {
+  const picker = $(pickerId);
+  if (picker && /^#[0-9a-f]{6}$/i.test(val)) picker.value = val;
+};
+
+window.saveTheme = async function() {
+  const get = id => $(id) ? $(id).value : '';
+  const chk = id => $(id) ? $(id).checked : true;
+  const data = {
+    homepageLayout: get('th_homepageLayout'),
+    // Homepage
+    heroTitle: get('th_heroTitle'),
+    heroSubtitle: get('th_heroSubtitle'),
+    heroBtnText: get('th_heroBtnText'),
+    heroBtnUrl: get('th_heroBtnUrl'),
+    heroSecondaryBtnText: get('th_heroSecBtnText'),
+    heroSecondaryBtnUrl: get('th_heroSecBtnUrl'),
+    showFeaturedSection: chk('th_showFeat'),
+    showRecentPosts: chk('th_showRecent'),
+    showTutorialCategories: chk('th_showTutCats'),
+    // Colors
+    colorPrimary: get('th_colorPrimary'),
+    colorAccent: get('th_colorAccent'),
+    colorBackground: get('th_colorBackground'),
+    colorSurface: get('th_colorSurface'),
+    colorText: get('th_colorText'),
+    colorMuted: get('th_colorMuted'),
+    colorLink: get('th_colorLink'),
+    colorLinkHover: get('th_colorLinkHover'),
+    colorBorder: get('th_colorBorder'),
+    colorButtonText: get('th_colorButtonText'),
+    colorHeaderBg: get('th_colorHeaderBg'),
+    colorFooterBg: get('th_colorFooterBg'),
+    // Typography
+    fontFamily: get('th_fontFamily'),
+    fontFamilyHeading: get('th_fontFamilyHeading'),
+    fontSizeBase: get('th_fontSizeBase'),
+    fontSizeSmall: get('th_fontSizeSmall'),
+    fontSizeLarge: get('th_fontSizeLarge'),
+    lineHeight: get('th_lineHeight'),
+    fontWeightHeading: get('th_fontWeightHeading'),
+    headingSizeh1: get('th_h1'),
+    headingSizeh2: get('th_h2'),
+    headingSizeh3: get('th_h3'),
+    // Layout
+    contentMaxWidth: get('th_maxWidth'),
+    sidebarPosition: get('th_sidebarPos'),
+    headerStyle: get('th_headerStyle'),
+    footerStyle: get('th_footerStyle'),
+    borderRadius: get('th_radius'),
+    cardShadow: get('th_shadow'),
+    // Custom CSS
+    customCSS: get('th_customCSS'),
+    // Advanced
+    themeMode: get('th_themeMode'),
+    bodyClass: get('th_bodyClass'),
+    customHeadCode: get('th_customHead'),
+  };
+  // fill in from current tab only; merge with existing for non-rendered tabs
+  const merged = { ...themeSettings, ...data };
+  const r = await post('/api/theme/save', merged);
+  if (r.ok) {
+    themeSettings = merged;
+    toast('Theme saved! 🎨 public/custom.css updated');
+  } else {
+    toast('Save failed', false);
+  }
+};
+
 // ══ INIT ══
 (async()=>{
   await loadAll();
-  const validPages=['dashboard','tutorials','blogs','nav','settings','permalinks','pages','ads','trash','books','seo'];
+  const validPages=['dashboard','tutorials','blogs','books','nav','settings','permalinks','pages','ads','trash','theme'];
   const hash=(location.hash||'').replace('#','');
   goTo(validPages.includes(hash)?hash:'dashboard');
   window.addEventListener('hashchange',()=>{
@@ -1912,656 +2327,3 @@ function deleteTrash(type, file){
     if(validPages.includes(h)&&h!==page) goTo(h);
   });
 })();
-
-// ══ BOOKS ══
-let _bookFilter = 'all';
-let _bookCatFilter = '';
-let _bookSearch = '';
-let _bookSelectedFiles = new Set();
-
-window.setBookFilter = function(f) { _bookFilter = f; renderBooks(); }
-window.setBookCat = function(c) { _bookCatFilter = c; renderBooks(); }
-window.setBookSearch = function(s) { _bookSearch = s; renderBooks(); }
-window.toggleBookFile = function(f, on) { on ? _bookSelectedFiles.add(f) : _bookSelectedFiles.delete(f); }
-window.toggleAllBooks = function(on) {
-  document.querySelectorAll('.book-cb').forEach(cb => {
-    cb.checked = on;
-    window.toggleBookFile(cb.value, on);
-  });
-}
-
-window.applyBookBulk = async function() {
-  const action = $('bulk_action_books').value;
-  if (!action || !_bookSelectedFiles.size) { toast('Select books and an action first', false); return; }
-  if (action === 'trash') {
-    openConfirm('Move ' + _bookSelectedFiles.size + ' book(s) to Trash?', async () => {
-      for (const f of _bookSelectedFiles) await post('/api/books/delete', { filename: f });
-      _bookSelectedFiles.clear();
-      toast('Books moved to Trash');
-      await loadAll(); renderBooks();
-    });
-  } else {
-    for (const f of _bookSelectedFiles) {
-      const res = await api('/api/books/get?file=' + encodeURIComponent(f));
-      if (!res.content) continue;
-      try {
-        let contentStr = res.content;
-        let isJson = contentStr.startsWith('{');
-        if (isJson) {
-           let j = JSON.parse(contentStr);
-           j.draft = (action === 'draft');
-           await post('/api/books/save', { filename: f, content: JSON.stringify(j, null, 2) });
-        } else {
-           const updated = contentStr.replace(/^draft:\s*.+$/m, 'draft: ' + (action === 'draft'));
-           await post('/api/books/save', { filename: f, content: updated });
-        }
-      } catch(e) {}
-    }
-    _bookSelectedFiles.clear();
-    toast('Books updated!');
-    await loadAll(); renderBooks();
-  }
-}
-
-function renderBooks() {
-  $('ptitle').textContent = 'Books';
-  $('tact').innerHTML = '<button class="add-new-btn" onclick="editBook()">Add New</button>';
-  
-  const cats = [...new Set(books.map(b => b.category))].filter(Boolean).sort();
-  
-  let filtered = books.filter(b => {
-    const isDraft = b.draft === true || b.draft === 'true';
-    const isPublished = !isDraft;
-    if (_bookFilter === 'published' && !isPublished) return false;
-    if (_bookFilter === 'draft' && !isDraft) return false;
-    if (_bookCatFilter && b.category !== _bookCatFilter) return false;
-    
-    if (_bookSearch) {
-      const q = _bookSearch.toLowerCase();
-      if (!(b.title||'').toLowerCase().includes(q) && !(b.category||'').toLowerCase().includes(q)) return false;
-    }
-    return true;
-  });
-
-  const total = books.length;
-  const drafts = books.filter(b => b.draft === true || b.draft === 'true').length;
-  const published = total - drafts;
-
-  const tabClass = t => `text-sm mr-4 cursor-pointer pb-1 ${_bookFilter===t ? 'text-blue-600 border-b-2 border-blue-600 font-semibold' : 'text-gray-600 hover:text-blue-500'}`;
-
-  let h = `
-  <div style="margin-bottom:12px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
-    <span class="${tabClass('all')}" onclick="setBookFilter('all')">All (${total})</span>
-    <span class="${tabClass('published')}" onclick="setBookFilter('published')">Published (${published})</span>
-    <span class="${tabClass('draft')}" onclick="setBookFilter('draft')">Drafts (${drafts})</span>
-  </div>
-
-  <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;">
-    <select class="input-text" style="width:auto;padding:4px 8px;font-size:13px;" onchange="setBookCat(this.value)">
-      <option value="">All Categories</option>
-      ${cats.map(c=>`<option value="${esc(c)}" ${_bookCatFilter===c?'selected':''}>${CATNAME[c]||esc(c)}</option>`).join('')}
-    </select>
-    <input type="text" class="input-text" style="width:220px;font-size:13px;padding:4px 8px;" placeholder="Search Books..." value="${esc(_bookSearch)}" oninput="setBookSearch(this.value)">
-    <div style="margin-left:auto;display:flex;gap:8px;align-items:center;">
-      <select id="bulk_action_books" class="input-text" style="width:auto;padding:4px 8px;font-size:13px;">
-        <option value="">Bulk Actions</option>
-        <option value="trash">Move to Trash</option>
-        <option value="publish">Mark Published</option>
-        <option value="draft">Mark Draft</option>
-      </select>
-      <button class="btn-secondary" style="padding:4px 10px;font-size:13px;" onclick="applyBookBulk()">Apply</button>
-      <span class="text-gray-500 text-sm">${filtered.length} item${filtered.length!==1?'s':''}</span>
-    </div>
-  </div>
-
-  <div class="wp-card">
-  <table style="width:100%;border-collapse:collapse;font-size:13px;">
-    <thead>
-      <tr style="background:#f6f7f7;border-bottom:1px solid #e0e0e0;">
-        <th style="padding:8px 10px;width:32px;"><input type="checkbox" id="book_check_all" onchange="toggleAllBooks(this.checked)"></th>
-        <th style="padding:8px 10px;text-align:left;font-weight:600;">Title</th>
-        <th style="padding:8px 10px;text-align:left;font-weight:600;">Author</th>
-        <th style="padding:8px 10px;text-align:left;font-weight:600;">Category</th>
-        <th style="padding:8px 10px;text-align:left;font-weight:600;">Tags</th>
-        <th style="padding:8px 10px;text-align:left;font-weight:600;">Date</th>
-        <th style="padding:8px 10px;text-align:left;font-weight:600;">Feat. Image</th>
-      </tr>
-    </thead>
-    <tbody>`;
-    
-  if(!filtered.length) {
-    h += `<tr><td colspan="7" style="padding:24px;text-align:center;color:#888;">No books found.</td></tr>`;
-  } else {
-    filtered.forEach(b => {
-      const checked = _bookSelectedFiles.has(b.file) ? 'checked' : '';
-      const isDraft = b.draft === true || b.draft === 'true';
-      const titleExtra = isDraft ? ' — <span style="font-weight:bold;color:#444;">Draft</span>' : '';
-      const dateLabel = `<span style="color:#888;font-size:11px;">${isDraft ? 'Draft' : 'Published'}</span>`;
-      const dateStr = b.date || (b.updated ? b.updated : '—');
-      const authorStr = b.author || 'Admin';
-      const catStr = b.category || '—';
-      const rawTagsList = b.tags || [];
-      const tags = (Array.isArray(rawTagsList) ? rawTagsList : String(rawTagsList).replace(/[\[\]"]/g, '').split(',')).map(t=>String(t).trim()).filter(Boolean);
-      const tagsHtml = tags.length ? tags.map(t=>`<span style="background:#f0f0f0;border-radius:3px;padding:1px 5px;margin-right:3px;font-size:11px;">${esc(t)}</span>`).join('') : '—';
-      const hasImage = b.image || b.coverImage;
-      const imgHtml = hasImage ? `<img src="${esc(hasImage)}" style="width:40px;height:40px;object-fit:cover;border-radius:3px;border:1px solid #ddd;" onerror="this.replaceWith(document.createTextNode('—'))">` : `<span style="color:#aaa;font-size:11px;">No Image</span>`;
-      
-      h += `
-      <tr style="border-bottom:1px solid #f0f0f0;" class="blog-row" onmouseenter="this.querySelector('.row-actions').style.display='flex'" onmouseleave="this.querySelector('.row-actions').style.display='none'">
-        <td style="padding:8px 10px;"><input type="checkbox" class="book-cb" value="${esc(b.file)}" ${checked} onchange="toggleBookFile('${esc(b.file)}',this.checked)"></td>
-        <td style="padding:8px 10px;">
-          <strong><a href="#" style="color:#2271b1;text-decoration:none;" onclick="editBook('${esc(b.file)}');return false;">${esc(b.title || b.file)}</a></strong>${titleExtra}
-          <div class="row-actions" style="display:none;gap:8px;margin-top:4px;">
-            <a href="#" style="color:#2271b1;font-size:12px;text-decoration:none;" onclick="editBook('${esc(b.file)}');return false;">Edit</a>
-            <span style="color:#ccc;">|</span>
-            <a href="#" style="color:#d63638;font-size:12px;text-decoration:none;" onclick="openConfirm('Move to Trash?',()=>delBook('${esc(b.file)}'));return false;">Trash</a>
-            <span style="color:#ccc;">|</span>
-            <a href="/books/${esc((b.slug || b.file).replace(/\.json$/, ''))}/" target="_blank" style="color:#888;font-size:12px;text-decoration:none;">View</a>
-          </div>
-        </td>
-        <td style="padding:8px 10px;color:#555;">${esc(authorStr)}</td>
-        <td style="padding:8px 10px;"><a href="#" style="color:#2271b1;text-decoration:none;font-size:12px;" onclick="setBookCat('${esc(catStr)}');return false;">${CATNAME[catStr]||esc(catStr)}</a></td>
-        <td style="padding:8px 10px;">${tagsHtml}</td>
-        <td style="padding:8px 10px;color:#555;">${dateStr}<br>${dateLabel}</td>
-        <td style="padding:8px 10px;">${imgHtml}</td>
-      </tr>`;
-    });
-  }
-  h += `</tbody></table></div>`;
-  $('content').innerHTML = h;
-}
-
-
-async function editBook(file='') {
-  let b = { title: '', description: '', draft: true, image: '', date: new Date().toISOString().split('T')[0] };
-  let originalFile = '';
-  if (file) {
-    originalFile = file;
-    const res = await api('/api/books/get?file='+file);
-    if(res.content) {
-      try {
-        const fm = res.content.match(/^---\n([\s\S]*?)\n---/);
-        if(fm) {
-           const lines = fm[1].split('\n');
-           lines.forEach(l => {
-             const [k,...v] = l.split(':');
-             if(k && v.length) b[k.trim()] = v.join(':').trim().replace(/^['"]|['"]$/g, '');
-           });
-           b._content = res.content.replace(fm[0], '').trim();
-        } else {
-           b._content = res.content;
-           const j = JSON.parse(res.content);
-           Object.assign(b, j);
-        }
-      } catch(e){}
-    }
-  }
-
-  window._currentEditBook = b;
-  $('ptitle').textContent = file ? 'Edit Book' : 'Add New Book';
-  $('tact').innerHTML = `<a href="#" style="color:#2271b1;font-size:13px;text-decoration:none;" onclick="goTo('books');return false;">← All Books</a>`;
-
-  const imgSrc = b.image || b.coverImage || '';
-
-  $('content').innerHTML = `
-  <div style="display:flex;gap:20px;align-items:flex-start;max-width:100%;">
-    <!-- LEFT -->
-    <div style="flex:1;min-width:0;">
-      <input type="text" id="b_title" placeholder="Book title"
-        style="width:100%;font-size:23px;font-weight:400;border:1px solid #dcdcde;padding:8px 10px;box-sizing:border-box;margin-bottom:12px;line-height:1.4;border-radius:3px;"
-        value="${esc(b.title)}">
-      <div style="background:#fff;border:1px solid #c3c4c7;">
-        <div style="background:#f6f7f7;border-bottom:1px solid #dcdcde;padding:4px 8px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
-          <button style="background:#2271b1;color:#fff;border:none;border-radius:3px;padding:4px 10px;font-size:12px;cursor:pointer;" onclick="document.getElementById('bk_media_upload').click()">🖼 Add Media</button>
-          <input type="file" id="bk_media_upload" class="hidden" accept="image/*" onchange="insertMediaTo(this,'b_desc')">
-          <span style="height:20px;border-left:1px solid #ddd;margin:0 4px;"></span>
-          <button style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:2px;padding:2px 6px;font-size:12px;cursor:pointer;" onclick="wrapText('b_desc','**','**')"><b>B</b></button>
-          <button style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:2px;padding:2px 6px;font-size:12px;cursor:pointer;" onclick="wrapText('b_desc','*','*')"><em>I</em></button>
-          <button style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:2px;padding:2px 6px;font-size:12px;cursor:pointer;" onclick="prependLine('b_desc','# ')">H1</button>
-          <button style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:2px;padding:2px 6px;font-size:12px;cursor:pointer;" onclick="prependLine('b_desc','## ')">H2</button>
-          <button style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:2px;padding:2px 6px;font-size:12px;cursor:pointer;" onclick="prependLine('b_desc','- ')">•</button>
-          <button style="background:#f6f7f7;border:1px solid #c3c4c7;border-radius:2px;padding:2px 6px;font-size:12px;cursor:pointer;" onclick="insertLink('b_desc')">🔗</button>
-        </div>
-        <textarea id="b_desc" oninput="updateWordCount(this.value)"
-          style="width:100%;min-height:380px;border:none;padding:12px;font-size:14px;line-height:1.7;font-family:inherit;box-sizing:border-box;resize:vertical;outline:none;"
-          >${esc(b.description || b._content || '')}</textarea>
-        <div style="background:#f6f7f7;border-top:1px solid #dcdcde;padding:4px 10px;font-size:12px;color:#888;">
-          Word count: <span id="wc-count">${(b.description||b._content||'').trim().split(/\s+/).filter(Boolean).length}</span>
-        </div>
-      </div>
-    </div>
-    <!-- RIGHT -->
-    <div style="width:280px;flex-shrink:0;">
-      <!-- Publish -->
-      <div style="background:#fff;border:1px solid #c3c4c7;margin-bottom:16px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid #c3c4c7;cursor:pointer;" onclick="toggleMeta('bk-pub')">
-          <h3 style="font-size:13px;font-weight:600;margin:0;">Publish</h3><span>▲</span>
-        </div>
-        <div id="bk-pub" style="padding:12px;">
-          <div style="display:flex;gap:8px;margin-bottom:12px;">
-            <button class="btn-secondary" style="flex:1;font-size:13px;" onclick="saveBook('${originalFile}')">Save Draft</button>
-          </div>
-          <div style="border-top:1px solid #f0f0f0;padding-top:10px;">
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;font-size:13px;">
-              <span style="color:#555;">🏷 Status:</span>
-              <select id="b_draft" style="border:1px solid #8c8f94;border-radius:3px;padding:2px 6px;font-size:12px;">
-                <option value="false" ${b.draft==='false'||b.draft===false?'selected':''}>Published</option>
-                <option value="true"  ${b.draft==='true' ||b.draft===true ?'selected':''}>Draft</option>
-              </select>
-            </div>
-            <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;font-size:13px;">
-              <span style="color:#555;">📅 Date:</span>
-              <input type="date" id="b_date" value="${esc(b.date||'')}" style="border:1px solid #8c8f94;border-radius:3px;padding:2px 6px;font-size:12px;">
-            </div>
-          </div>
-          <div style="border-top:1px solid #f0f0f0;padding-top:10px;display:flex;justify-content:space-between;align-items:center;">
-            <a href="#" style="color:#d63638;font-size:12px;text-decoration:none;" onclick="openConfirm('Delete book permanently?',()=>delBook('${originalFile}'));return false;">Move to Trash</a>
-            <button class="btn-primary" style="font-size:13px;" onclick="saveBook('${originalFile}')">Publish</button>
-          </div>
-        </div>
-      </div>
-      <!-- Cover Image -->
-      <div style="background:#fff;border:1px solid #c3c4c7;margin-bottom:16px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid #c3c4c7;cursor:pointer;" onclick="toggleMeta('bk-img')">
-          <h3 style="font-size:13px;font-weight:600;margin:0;">Cover Image</h3><span>▲</span>
-        </div>
-        <div id="bk-img" style="padding:12px;">
-          <div id="b_image_container" style="cursor:pointer;border:2px dashed #c3c4c7;border-radius:3px;padding:16px;text-align:center;${imgSrc?'display:none':''}" onclick="document.getElementById('b_image_file').click()">
-            <div style="font-size:28px;margin-bottom:6px;">📷</div>
-            <a href="#" style="color:#2271b1;font-size:13px;" onclick="return false;">Set cover image</a>
-          </div>
-          <div id="b_image_preview_container" style="${imgSrc?'':'display:none'}">
-            <img src="${esc(imgSrc)}" id="b_image_preview" style="width:100%;border-radius:3px;cursor:pointer;border:1px solid #ddd;" onclick="document.getElementById('b_image_file').click()">
-            <a href="#" style="color:#d63638;font-size:12px;text-decoration:none;display:block;margin-top:6px;" onclick="removeCoverImage('b');return false;">Remove cover image</a>
-          </div>
-          <input type="hidden" id="b_image" value="${esc(imgSrc)}">
-          <input type="file" id="b_image_file" class="hidden" accept="image/*" onchange="uploadCoverImage(this,'b_image','b_image_preview','b_image_container','b_image_preview_container')">
-        </div>
-      </div>
-
-      <!-- SEO Settings -->
-      ${getSeoBoxHtml(b)}
-
-    </div>
-  </div>`;
-  
-  if (window.EasyMDE) {
-    if (window.mde) window.mde.toTextArea();
-    window.mde = new EasyMDE({ 
-      element: document.getElementById('b_desc'),
-      spellChecker: false,
-      status: false
-    });
-  }
-}
-
-window.saveBook = async function(origFile) {
-  const t = ($('b_title')?.value||'').trim();
-  if(!t) return toast('Title required', false);
-  const slug = t.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-  const filename = origFile || (slug + '.json');
-
-  // image field: in book editor the hidden field is b_image
-  const imgEl = $('b_image') || $('b_cover');
-  const imgVal = imgEl ? imgEl.value : '';
-
-  const seoData = getSeoData();
-
-  const content = {
-    ...(window._currentEditBook || {}),
-    title: t,
-    date: $('b_date')?.value || '',
-    draft: ($('b_draft')?.value === 'true'),
-    image: imgVal,
-    description: $('b_desc')?.value || '',
-    seoKeywords: seoData.seoKeywords,
-    seoTitle: seoData.seoTitle,
-    seoDesc: seoData.seoDesc,
-    seoNoIndex: seoData.seoNoIndex
-  };
-  // Remove internal keys
-  delete content._content; delete content.file;
-
-  await post('/api/books/save', { filename, content });
-  toast('Book saved!');
-  await loadAll();
-  goTo('books');
-}
-
-window.delBook = async function(f) {
-  await post('/api/books/delete', { filename: f });
-  toast('Book moved to trash');
-  await loadAll();
-  goTo('books');
-}
-
-// Media upload for Cover Images
-async function uploadCoverImage(input, hiddenId, previewId, containerId, previewContainerId) {
-  if (!input.files || !input.files[0]) return;
-  const file = input.files[0];
-  if (file.size > 5 * 1024 * 1024) { toast('Image is too large (max 5MB)', false); return; }
-
-  const reader = new FileReader();
-  reader.onload = async (e) => {
-    const base64 = e.target.result;
-    toast('Uploading...', true);
-    try {
-      const res = await post('/api/media/upload', { filename: file.name, data: base64 });
-      if (res.ok && res.url) {
-        const hiddenEl = $(hiddenId); if(hiddenEl) hiddenEl.value = res.url;
-        const previewEl = $(previewId); if(previewEl) previewEl.src = res.url;
-        // Show preview, hide placeholder — works for both style.display and classList
-        const previewCon = $(previewContainerId);
-        const placeholder = $(containerId);
-        if (previewCon) { previewCon.style.display = ''; previewCon.classList.remove('hidden'); }
-        if (placeholder) { placeholder.style.display = 'none'; placeholder.classList.add('hidden'); }
-        toast('Image uploaded!', true);
-      } else {
-        toast(res.error || 'Upload failed', false);
-      }
-    } catch (err) {
-      toast('Upload failed: ' + err.message, false);
-    }
-  };
-  reader.readAsDataURL(file);
-}
-
-function removeCoverImage(type) {
-  // Clear whichever hidden input exists
-  ['b_image','b_cover'].forEach(id => { const el=$(id); if(el) el.value=''; });
-  const previewContainer = $('b_image_preview_container');
-  const container = $('b_image_container');
-  if (previewContainer) { previewContainer.style.display='none'; previewContainer.classList.add('hidden'); }
-  if (container) { container.style.display=''; container.classList.remove('hidden'); }
-}
-
-// ══ MEDIA LIBRARY ══
-async function renderMedia() {
-  $('ptitle').textContent = 'Media Library';
-  $('tact').innerHTML = `<button class="btn-primary" onclick="document.getElementById('media_upload').click()">+ Add New</button>
-                         <input type="file" id="media_upload" class="hidden" accept="image/*" onchange="uploadDirectMedia(this)">`;
-  $('content').innerHTML = '<div class="text-gray-500">Loading media...</div>';
-  
-  try {
-    const list = await api('/api/media/list');
-    if (!list.length) {
-      $('content').innerHTML = '<div class="wp-card p-8 text-center text-gray-500">No media files found. Upload some images to get started.</div>';
-      return;
-    }
-    
-    let html = '<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">';
-    list.forEach(m => {
-      const kb = (m.size / 1024).toFixed(1);
-      html += `
-        <div class="wp-card relative overflow-hidden group">
-          <div class="aspect-square bg-gray-100 flex items-center justify-center p-2">
-            <img src="${esc(m.url)}" class="object-contain w-full h-full cursor-pointer" onclick="copyMediaUrl('${esc(m.url)}')">
-          </div>
-          <div class="p-2 text-xs border-t bg-white">
-            <div class="truncate font-semibold mb-1" title="${esc(m.name)}">${esc(m.name)}</div>
-            <div class="text-gray-500 flex justify-between items-center">
-              <span>${kb} KB</span>
-              <span class="text-red-500 cursor-pointer hover:underline" onclick="deleteMedia('${esc(m.name)}')">Delete</span>
-            </div>
-          </div>
-          <div class="absolute inset-0 bg-black bg-opacity-60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition pointer-events-none" style="pointer-events: none;">
-            <span class="text-white font-bold text-xs bg-black px-2 py-1 rounded">Click to Copy URL</span>
-          </div>
-        </div>
-      `;
-    });
-    html += '</div>';
-    $('content').innerHTML = html;
-  } catch (err) {
-    $('content').innerHTML = '<div class="text-red-500">Failed to load media.</div>';
-  }
-}
-
-async function uploadDirectMedia(input) {
-  if (!input.files || !input.files[0]) return;
-  const file = input.files[0];
-  if (file.size > 5 * 1024 * 1024) { toast('Image is too large (max 5MB)', false); return; }
-  
-  const reader = new FileReader();
-  reader.onload = async (e) => {
-    toast('Uploading...', true);
-    try {
-      const res = await post('/api/media/upload', { filename: file.name, data: e.target.result });
-      if (res.ok) {
-        toast('Upload successful!', true);
-        init(); // Refresh stats
-        renderMedia();
-      } else {
-        toast(res.error || 'Upload failed', false);
-      }
-    } catch (err) {
-      toast('Upload failed: ' + err.message, false);
-    }
-  };
-  reader.readAsDataURL(file);
-}
-
-function copyMediaUrl(url) {
-  navigator.clipboard.writeText(url).then(() => toast('URL copied to clipboard!'));
-}
-
-function deleteMedia(name) {
-  openConfirm(`Delete image "${name}" permanently?`, async () => {
-    try {
-      const res = await post('/api/media/delete', { filename: name });
-      if (res.ok) {
-        toast('Image deleted');
-        init();
-        renderMedia();
-      } else toast('Failed to delete', false);
-    } catch (e) { toast('Error', false); }
-  });
-}
-
-// ══ CATEGORIES ══
-async function renderCategories() {
-  $('ptitle').textContent = 'Categories';
-  $('tact').innerHTML = '';
-
-  const cats = await api('/api/categories/list');
-
-  let rows = '';
-  cats.forEach(c => {
-    rows += `
-    <tr style="border-bottom:1px solid #f0f0f0;" onmouseenter="this.querySelector('.row-actions').style.display='flex'" onmouseleave="this.querySelector('.row-actions').style.display='none'">
-      <td style="padding:8px 10px;width:32px;"><input type="checkbox" class="cat-cb" value="${esc(c.name)}"></td>
-      <td style="padding:8px 10px;">
-        <strong><a href="#" style="color:#2271b1;text-decoration:none;" onclick="openEditCat(${JSON.stringify(c)});return false;">${esc(c.name)}</a></strong>
-        <div class="row-actions" style="display:none;gap:8px;margin-top:3px;">
-          <a href="#" style="color:#2271b1;font-size:12px;text-decoration:none;" onclick="openEditCat(${JSON.stringify(c)});return false;">Edit</a>
-          <span style="color:#ccc;">|</span>
-          <a href="#" style="color:#d63638;font-size:12px;text-decoration:none;" onclick="openConfirm('Delete category &quot;${esc(c.name)}&quot;?',()=>doDeleteCat('${esc(c.slug)}','${esc(c.name)}'));return false;">Delete</a>
-        </div>
-      </td>
-      <td style="padding:8px 10px;font-size:13px;color:#555;">${esc(c.description||'—')}</td>
-      <td style="padding:8px 10px;font-family:monospace;font-size:12px;color:#888;">${esc(c.slug)}</td>
-      <td style="padding:8px 10px;text-align:center;"><a href="#" style="color:#2271b1;font-size:13px;" onclick="setBlogCat('${esc(c.name)}');goTo('blogs');return false;">${c.count||0}</a></td>
-    </tr>`;
-  });
-
-  $('content').innerHTML = `
-  <div style="display:flex;gap:24px;align-items:flex-start;">
-
-    <!-- LEFT: Add Category Form (WordPress style) -->
-    <div style="width:280px;flex-shrink:0;">
-      <div id="cat-form-title" style="font-size:15px;font-weight:600;margin-bottom:12px;">Add New Category</div>
-
-      <div style="margin-bottom:12px;">
-        <label style="display:block;font-size:13px;font-weight:600;margin-bottom:4px;">Name</label>
-        <input type="text" id="cat_name" style="width:100%;border:1px solid #8c8f94;border-radius:3px;padding:6px 8px;font-size:13px;box-sizing:border-box;">
-        <p style="font-size:12px;color:#888;margin:4px 0 0;">The name is how it appears on your site.</p>
-      </div>
-
-      <div style="margin-bottom:12px;">
-        <label style="display:block;font-size:13px;font-weight:600;margin-bottom:4px;">Slug</label>
-        <input type="text" id="cat_slug" style="width:100%;border:1px solid #8c8f94;border-radius:3px;padding:6px 8px;font-size:13px;box-sizing:border-box;">
-        <p style="font-size:12px;color:#888;margin:4px 0 0;">The "slug" is the URL-friendly version. Lowercase, hyphens only.</p>
-      </div>
-
-      <div style="margin-bottom:16px;">
-        <label style="display:block;font-size:13px;font-weight:600;margin-bottom:4px;">Description</label>
-        <textarea id="cat_desc" style="width:100%;height:80px;border:1px solid #8c8f94;border-radius:3px;padding:6px 8px;font-size:13px;box-sizing:border-box;resize:vertical;"></textarea>
-        <p style="font-size:12px;color:#888;margin:4px 0 0;">Not displayed by default but some themes may show it.</p>
-      </div>
-
-      <input type="hidden" id="cat_original_slug" value="">
-      <button class="btn-primary" onclick="saveCategoryForm()" style="font-size:13px;" id="cat_submit_btn">Add Category</button>
-      <button id="cat_cancel_btn" class="btn-secondary" style="font-size:13px;margin-left:8px;display:none;" onclick="resetCatForm()">Cancel</button>
-    </div>
-
-    <!-- RIGHT: Categories Table -->
-    <div style="flex:1;min-width:0;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
-        <div style="display:flex;gap:8px;align-items:center;">
-          <select id="cat_bulk_action" style="border:1px solid #8c8f94;border-radius:3px;padding:4px 8px;font-size:13px;">
-            <option value="">Bulk Actions</option>
-            <option value="delete">Delete</option>
-          </select>
-          <button class="btn-secondary" style="font-size:13px;padding:4px 10px;" onclick="applyBulkCat()">Apply</button>
-          <span style="font-size:13px;color:#888;">${cats.length} item${cats.length!==1?'s':''}</span>
-        </div>
-        <input type="text" id="cat_search" placeholder="Search Categories..." oninput="filterCatRows(this.value)"
-          style="border:1px solid #8c8f94;border-radius:3px;padding:4px 10px;font-size:13px;width:200px;">
-      </div>
-
-      <div class="wp-card">
-        <table id="cat-table" style="width:100%;border-collapse:collapse;font-size:13px;">
-          <thead>
-            <tr style="background:#f6f7f7;border-bottom:1px solid #e0e0e0;">
-              <th style="padding:8px 10px;width:32px;"><input type="checkbox" onchange="document.querySelectorAll('.cat-cb').forEach(c=>c.checked=this.checked)"></th>
-              <th style="padding:8px 10px;text-align:left;font-weight:600;">Name</th>
-              <th style="padding:8px 10px;text-align:left;font-weight:600;">Description</th>
-              <th style="padding:8px 10px;text-align:left;font-weight:600;">Slug</th>
-              <th style="padding:8px 10px;text-align:center;font-weight:600;">Count</th>
-            </tr>
-          </thead>
-          <tbody id="cat-tbody">${rows || '<tr><td colspan="5" style="padding:24px;text-align:center;color:#888;">No categories found.</td></tr>'}</tbody>
-        </table>
-      </div>
-    </div>
-  </div>`;
-
-  // Auto-generate slug from name
-  $('cat_name').addEventListener('input', function() {
-    $('cat_slug').value = this.value.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
-  });
-}
-
-function filterCatRows(q) {
-  const rows = document.querySelectorAll('#cat-tbody tr');
-  rows.forEach(r => {
-    r.style.display = r.textContent.toLowerCase().includes(q.toLowerCase()) ? '' : 'none';
-  });
-}
-
-function openEditCat(cat) {
-  $('cat_name').value = cat.name;
-  $('cat_slug').value = cat.slug;
-  $('cat_desc').value = cat.description || '';
-  $('cat_original_slug').value = cat.slug;
-  $('cat_form_title') && ($('cat_form_title').textContent = 'Edit Category');
-  const ft = document.getElementById('cat-form-title');
-  if (ft) ft.textContent = 'Edit Category';
-  $('cat_submit_btn').textContent = 'Update Category';
-  $('cat_cancel_btn').style.display = '';
-  $('cat_name').focus();
-}
-
-function resetCatForm() {
-  $('cat_name').value = '';
-  $('cat_slug').value = '';
-  $('cat_desc').value = '';
-  $('cat_original_slug').value = '';
-  const ft = document.getElementById('cat-form-title');
-  if (ft) ft.textContent = 'Add New Category';
-  $('cat_submit_btn').textContent = 'Add Category';
-  $('cat_cancel_btn').style.display = 'none';
-}
-
-async function saveCategoryForm() {
-  const name = $('cat_name').value.trim();
-  if (!name) { toast('Name required', false); return; }
-  const slug = $('cat_slug').value.trim() || name.toLowerCase().replace(/[^a-z0-9]+/g,'-');
-  const description = $('cat_desc').value.trim();
-  const originalSlug = $('cat_original_slug').value;
-
-  const res = await post('/api/categories/save', { name, slug, description, originalSlug });
-  if (res.ok) {
-    toast(originalSlug ? 'Category updated!' : 'Category added!');
-    await loadAll();
-    renderCategories();
-  } else { toast('Failed to save', false); }
-}
-
-async function doDeleteCat(slug, name) {
-  const res = await post('/api/categories/delete', { slug, name });
-  if (res.ok) { toast('Category deleted'); await loadAll(); renderCategories(); }
-  else toast('Failed to delete', false);
-}
-
-async function applyBulkCat() {
-  const action = $('cat_bulk_action').value;
-  const selected = Array.from(document.querySelectorAll('.cat-cb:checked')).map(c=>c.value);
-  if (!action || !selected.length) { toast('Select categories and an action', false); return; }
-  if (action === 'delete') {
-    openConfirm(`Delete ${selected.length} categories?`, async () => {
-      for (const name of selected) {
-        const cat = categories.find(c=>c.name===name);
-        if (cat) await post('/api/categories/delete', { slug: cat.slug, name });
-      }
-      toast('Deleted!'); await loadAll(); renderCategories();
-    });
-  }
-}
-
-// SEO Manager
-window.renderSeo = function() {
-  $('ptitle').textContent = 'CodeCompilerSEO Manager';
-  $('tact').innerHTML = '';
-  
-  let h = `
-  <div style="display:flex;gap:16px;margin-bottom:20px;border-bottom:1px solid #c3c4c7;padding-bottom:12px;overflow-x:auto;">
-    <button class="btn-secondary" style="border:none;background:transparent;color:#2271b1;font-weight:bold;">Dashboard</button>
-    <button class="btn-secondary" style="border:none;background:transparent;" onclick="alert('Coming soon in Phase 2!')">Content SEO</button>
-    <button class="btn-secondary" style="border:none;background:transparent;" onclick="alert('Coming soon in Phase 2!')">Internal Linking</button>
-    <button class="btn-secondary" style="border:none;background:transparent;" onclick="alert('Coming soon in Phase 2!')">Redirects</button>
-    <button class="btn-secondary" style="border:none;background:transparent;" onclick="alert('Coming soon in Phase 2!')">Schema</button>
-    <button class="btn-secondary" style="border:none;background:transparent;" onclick="alert('Coming soon in Phase 2!')">Sitemap</button>
-    <button class="btn-secondary" style="border:none;background:transparent;" onclick="alert('Coming soon in Phase 2!')">Social</button>
-    <button class="btn-secondary" style="border:none;background:transparent;" onclick="alert('Coming soon in Phase 2!')">AI SEO</button>
-    <button class="btn-secondary" style="border:none;background:transparent;" onclick="alert('Coming soon in Phase 2!')">Settings</button>
-  </div>
-  
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div class="wp-card">
-      <div class="wp-card-header" style="background:#fff;border-bottom:1px solid #f0f0f1;">
-        <span style="display:flex;align-items:center;gap:8px;">🩺 SEO Health</span>
-      </div>
-      <div class="wp-card-body">
-        <div class="stat-row"><span>🔴 Missing Meta Descriptions</span> <a href="#">3 pages</a></div>
-        <div class="stat-row"><span>🟠 Orphaned Articles</span> <a href="#">7 pages</a></div>
-        <div class="stat-row"><span>🟠 Broken Redirects</span> <a href="#">5 links</a></div>
-        <div class="stat-row"><span>🟢 Sitemap Status</span> <span style="color:green">OK</span></div>
-        <div class="stat-row"><span>🟢 Schema Config</span> <span style="color:green">OK</span></div>
-      </div>
-    </div>
-    
-    <div class="wp-card">
-      <div class="wp-card-header" style="background:#fff;border-bottom:1px solid #f0f0f1;">
-        <span style="display:flex;align-items:center;gap:8px;">🤖 AI Content SEO</span>
-      </div>
-      <div class="wp-card-body">
-        <p style="color:#555;font-size:13px;margin-bottom:12px;line-height:1.5;">Premium AI features are active. You can generate titles, meta descriptions, and optimize content directly in the post editor.</p>
-        <button class="btn-primary" onclick="alert('AI Engine is running.')">Check AI Status</button>
-      </div>
-    </div>
-  </div>
-  `;
-  
-  $('content').innerHTML = h;
-}
