@@ -1,6 +1,6 @@
 // CodesCompiler Content Manager — WordPress-style CMS
 const API='http://localhost:3001';
-let page='dashboard',stats={},tutorials=[],blogs=[],navItems=[],siteSettings={},pages=[],adsConfig={},trashBin=[],themeSettings={};
+let page='dashboard',stats={},tutorials=[],blogs=[],navItems=[],siteSettings={},pages=[],adsConfig={},trashBin=[],themeSettings={},stagedUploads={blog:[],tutorial:[],page:[],book:[]};
 let modalCb=null,confirmCb=null;
 
 const TCAT=['html','css','javascript','seo','python','sql','php'];
@@ -12,7 +12,19 @@ const CATNAME={html:'HTML',css:'CSS',javascript:'JavaScript',seo:'SEO',python:'P
 const $=id=>document.getElementById(id);
 const esc=s=>String(s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 function toast(m,ok=true){const d=document.createElement('div');d.className='toast '+(ok?'ok':'err');d.innerHTML=(ok?'✅':'❌')+' '+m;$('toasts').appendChild(d);setTimeout(()=>d.remove(),3500)}
-async function api(p,o){return(await fetch(API+p,o)).json()}
+async function api(p, o) {
+  try {
+    const res = await fetch(API + p, o);
+    const text = await res.text();
+    try {
+      return JSON.parse(text);
+    } catch (e) {
+      return { ok: false, error: text || `HTTP ${res.status} error` };
+    }
+  } catch (err) {
+    return { ok: false, error: err.message };
+  }
+}
 async function post(p,b){return api(p,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)})}
 
 // Inline Editor (replaces modal popup - opens full-page inside content area)
@@ -562,6 +574,22 @@ function renderUploadPanel(type) {
 
     <div id="upload-body-${type}" style="display:block;padding:20px;background:#fff;">
       
+      <!-- Web URL Content Importer -->
+      <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:16px;margin-bottom:20px;">
+        <h4 style="font-size:13px;font-weight:700;color:#0369a1;margin:0 0 6px;display:flex;align-items:center;gap:6px;">
+          <span>🌐 Import Content Directly from Web URL</span>
+        </h4>
+        <p style="font-size:12px;color:#475569;margin-bottom:12px;">
+          Enter any webpage URL (e.g. documentation or article). The system will automatically fetch the article text, convert HTML to MDX, extract headers &amp; code blocks, and load it into the editor ready to save.
+        </p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <input type="url" id="url-input-${type}" class="input-text" placeholder="https://example.com/html-tutorial-page" style="flex:1;min-width:280px;font-size:13px;padding:8px 12px;border:1px solid #94a3b8;border-radius:4px;">
+          <button class="btn bp" onclick="importFromUrl('${type}')" id="btn-import-url-${type}" style="font-size:13px;padding:8px 16px;">
+            ⚡ Fetch &amp; Convert to MDX
+          </button>
+        </div>
+      </div>
+
       <!-- Template Format Instructions -->
       <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:16px;margin-bottom:20px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:10px;">
@@ -594,6 +622,59 @@ function renderUploadPanel(type) {
   </div>`;
 }
 
+window.importFromUrl = async function(type) {
+  const urlInput = $('url-input-' + type);
+  const btn = $('btn-import-url-' + type);
+  if (!urlInput || !urlInput.value.trim()) return toast('Please enter a valid webpage URL', false);
+  
+  const targetUrl = urlInput.value.trim();
+  if (btn) { btn.disabled = true; btn.innerHTML = '⏳ Fetching &amp; Converting...'; }
+
+  try {
+    const res = await post('/api/import-url', { url: targetUrl });
+    if (res.ok && res.content) {
+      toast('URL content fetched and converted to MDX! 🚀');
+      const bodyText = res.body || extractBody(res.content);
+
+      if (type === 'tutorial') {
+        openEditor('Imported Tutorial: ' + res.filename, tutForm({ title: res.title, description: res.description, category: res.category, file: res.filename }),
+          async () => {
+            let fn = $('tf_f').value.trim(); if (!fn.endsWith('.mdx')) fn += '.mdx';
+            await post('/api/tutorials/save', { filename: fn, content: buildTutContent() });
+            toast('Tutorial published! 🎉'); await loadAll(); renderTuts();
+          },
+          () => renderTuts(),
+          '<span class="badge bpub" style="margin-right:8px">Imported</span>'
+        );
+        setTimeout(() => {
+          if ($('tf_b')) $('tf_b').value = bodyText;
+          if ($('tf_d')) $('tf_d').value = res.description || '';
+        }, 100);
+      } else if (type === 'blog') {
+        openEditor('Imported Post: ' + res.filename, blogForm({ title: res.title, description: res.description, category: 'Blog', file: res.filename }),
+          async () => {
+            let fn = $('bf_f').value.trim(); if (!fn.endsWith('.mdx')) fn += '.mdx';
+            await post('/api/blogs/save', { filename: fn, content: buildBlogContent() });
+            toast('Post published! 🎉'); await loadAll(); renderBlogs();
+          },
+          () => renderBlogs(),
+          '<span class="badge bpub" style="margin-right:8px">Imported</span>'
+        );
+        setTimeout(() => {
+          if ($('bf_b')) $('bf_b').value = bodyText;
+          if ($('bf_d')) $('bf_d').value = res.description || '';
+        }, 100);
+      }
+    } else {
+      toast(res.error || 'Failed to fetch URL content', false);
+    }
+  } catch (err) {
+    toast('Error importing URL: ' + err.message, false);
+  } finally {
+    if (btn) { btn.disabled = false; btn.innerHTML = '⚡ Fetch &amp; Convert to MDX'; }
+  }
+};
+
 window.toggleUploadPanel = function(type) {
   const body = $('upload-body-' + type);
   const toggle = $('upload-toggle-' + type);
@@ -620,84 +701,252 @@ window.downloadSample = function(type) {
 window.handleFileDrop = function(e, type) {
   e.preventDefault();
   const dz = $('dropzone-' + type);
-  if (dz) { dz.style.borderColor = '#c3c4c7'; dz.style.background = '#fafafa'; }
+  if (dz) { dz.style.borderColor = '#2271b1'; dz.style.background = 'rgba(34,113,177,.03)'; }
   const files = Array.from(e.dataTransfer.files);
-  processUploadFiles(files, type);
+  stageUploadFiles(files, type);
 };
 
 window.handleFileInputChange = function(input, type) {
   const files = Array.from(input.files);
-  processUploadFiles(files, type);
+  stageUploadFiles(files, type);
   input.value = '';
 };
 
-async function processUploadFiles(files, type) {
-  const resultsEl = $('upload-results-' + type);
+function stageUploadFiles(files, type) {
   if (!files.length) return;
+  stagedUploads[type] = files;
+  renderStagedUploadsUI(type);
+  toast(`Selected ${files.length} file${files.length > 1 ? 's' : ''} ready to upload! 📦 Review below and click Submit.`);
+}
+
+function renderStagedUploadsUI(type) {
+  const files = stagedUploads[type] || [];
+  const resultsEl = $('upload-results-' + type);
+  if (!resultsEl) return;
+  if (!files.length) {
+    resultsEl.innerHTML = '';
+    return;
+  }
+
+  const allowedExt = { blog: ['.mdx','.md'], tutorial: ['.mdx','.md'], page: ['.astro'], book: ['.json'] };
+  const typeLabel = { blog: 'Blog Posts', tutorial: 'Tutorials', page: 'Pages', book: 'Books' }[type] || 'Files';
+
+  let html = `
+    <div style="border:1px solid #2271b1;border-radius:6px;background:#fff;margin-top:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);overflow:hidden;">
+      <div style="background:#f0f6fc;border-bottom:1px solid #bae6fd;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;">
+        <div>
+          <div style="font-weight:700;font-size:15px;color:#0369a1;display:flex;align-items:center;gap:6px;">
+            <span>📦 Selected ${files.length} ${typeLabel} for Upload</span>
+          </div>
+          <div style="font-size:12px;color:#475569;margin-top:3px;">
+            Review your files below. Click <strong>Submit Uploads</strong> to process and save them one by one.
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn bp" id="btn-submit-upload-${type}" onclick="startSequentialUpload('${type}')" style="font-size:14px;padding:8px 16px;">
+            🚀 Submit All (${files.length} Files)
+          </button>
+          <button class="btn bg bs" id="btn-cancel-upload-${type}" onclick="clearStagedUploads('${type}')" style="font-size:13px;">
+            ✕ Clear Selection
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Progress Bar -->
+      <div id="progress-bar-container-${type}" style="display:none;padding:14px 18px;background:#f8fafc;border-bottom:1px solid #e2e8f0;">
+        <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:#1e293b;margin-bottom:8px;">
+          <span id="progress-text-${type}">Preparing upload...</span>
+          <span id="progress-percent-${type}" style="color:#0284c7;">0%</span>
+        </div>
+        <div style="background:#e2e8f0;border-radius:10px;height:12px;overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,0.1);">
+          <div id="progress-fill-${type}" style="width:0%;height:100%;background:linear-gradient(90deg, #0284c7 0%, #04AA6D 100%);transition:width 0.15s ease;"></div>
+        </div>
+      </div>
+
+      <!-- Staged Files Item List -->
+      <div style="max-height:360px;overflow-y:auto;" id="staged-file-list-${type}">
+  `;
+
+  files.forEach((file, idx) => {
+    const ext = '.' + file.name.split('.').pop().toLowerCase();
+    const isAllowed = allowedExt[type].includes(ext);
+    const sizeKb = (file.size / 1024).toFixed(1);
+    
+    html += `
+      <div id="staged-item-${type}-${idx}" style="padding:10px 18px;border-bottom:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center;background:${isAllowed ? '#fff' : '#fff5f5'};">
+        <div style="display:flex;align-items:center;gap:12px;overflow:hidden;margin-right:12px;">
+          <span id="staged-status-icon-${type}-${idx}" style="font-size:18px;">📄</span>
+          <div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+            <div style="font-weight:600;font-size:13px;color:#1e293b;">${esc(file.name)} <span style="font-size:11px;color:#64748b;font-weight:normal;">(${sizeKb} KB)</span></div>
+            <div id="staged-status-text-${type}-${idx}" style="font-size:11px;color:${isAllowed ? '#64748b' : '#e11d48'};">
+              ${isAllowed ? 'Ready to upload' : `Unsupported file format (Expected ${allowedExt[type].join(' or ')})`}
+            </div>
+          </div>
+        </div>
+        <div id="staged-status-badge-${type}-${idx}" style="flex-shrink:0;">
+          ${isAllowed ? '<span class="badge" style="background:#f1f5f9;color:#475569;">Queued</span>' : '<span class="badge" style="background:#ffe4e6;color:#e11d48;">Invalid Format</span>'}
+        </div>
+      </div>
+    `;
+  });
+
+  html += `
+      </div>
+    </div>
+  `;
+
+  resultsEl.innerHTML = html;
+  const body = $('upload-body-' + type);
+  if (body) body.style.display = 'block';
+  resultsEl.scrollIntoView({ behavior: 'smooth' });
+}
+
+window.clearStagedUploads = function(type) {
+  stagedUploads[type] = [];
+  const resultsEl = $('upload-results-' + type);
+  if (resultsEl) resultsEl.innerHTML = '';
+  toast('File selection cleared');
+};
+
+async function startSequentialUpload(type) {
+  const files = stagedUploads[type] || [];
+  if (!files.length) return;
+
+  const btnSubmit = $('btn-submit-upload-' + type);
+  const btnCancel = $('btn-cancel-upload-' + type);
+  if (btnSubmit) { btnSubmit.disabled = true; btnSubmit.innerHTML = '⏳ Submitting...'; }
+  if (btnCancel) { btnCancel.style.display = 'none'; }
+
+  const progressBar = $('progress-bar-container-' + type);
+  const progressText = $('progress-text-' + type);
+  const progressPercent = $('progress-percent-' + type);
+  const progressFill = $('progress-fill-' + type);
+  if (progressBar) progressBar.style.display = 'block';
 
   const allowedExt = { blog: ['.mdx','.md'], tutorial: ['.mdx','.md'], page: ['.astro'], book: ['.json'] };
   const apiMap    = { blog: '/api/blogs/save', tutorial: '/api/tutorials/save', page: '/api/pages/save', book: '/api/books/save' };
-  
-  let html = '<div style="border:1px solid #c3c4c7;border-radius:6px;overflow:hidden;margin-top:4px;">';
-  const results = [];
 
-  for (const file of files) {
+  let okCount = 0;
+  let failCount = 0;
+  const total = files.length;
+
+  for (let i = 0; i < total; i++) {
+    const file = files[i];
+    const itemText = $('staged-status-text-' + type + '-' + i);
+    const itemIcon = $('staged-status-icon-' + type + '-' + i);
+    const itemBadge = $('staged-status-badge-' + type + '-' + i);
+    const itemRow = $('staged-item-' + type + '-' + i);
+
+    // Update Progress Bar
+    const currentNum = i + 1;
+    const pct = Math.round((currentNum / total) * 100);
+    if (progressText) progressText.textContent = `Submitting tutorial ${currentNum} of ${total}: ${file.name}`;
+    if (progressPercent) progressPercent.textContent = `${pct}%`;
+    if (progressFill) progressFill.style.width = `${pct}%`;
+
+    // Highlight current row being submitted
+    if (itemRow) {
+      itemRow.style.background = '#f0f9ff';
+      itemRow.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+    if (itemIcon) itemIcon.textContent = '⏳';
+    if (itemBadge) itemBadge.innerHTML = '<span class="badge" style="background:#e0f2fe;color:#0369a1;">Submitting...</span>';
+
     const ext = '.' + file.name.split('.').pop().toLowerCase();
     if (!allowedExt[type].includes(ext)) {
-      results.push({ file: file.name, ok: false, msg: `Wrong file type. Expected: ${allowedExt[type].join(' or ')}` });
+      failCount++;
+      if (itemIcon) itemIcon.textContent = '❌';
+      if (itemText) { itemText.textContent = `Wrong file type. Expected: ${allowedExt[type].join(' or ')}`; itemText.style.color = '#b91c1c'; }
+      if (itemBadge) itemBadge.innerHTML = '<span class="badge" style="background:#fee2e2;color:#991b1b;">Failed</span>';
+      if (itemRow) itemRow.style.background = '#fff5f5';
       continue;
     }
-    
+
     try {
       const content = await file.text();
-      
-      // Validate
       const errs = validateContentFile(type, content, file.name);
+
       if (errs.length) {
-        results.push({ file: file.name, ok: false, msg: 'Validation failed: ' + errs.join(' · ') });
+        failCount++;
+        if (itemIcon) itemIcon.textContent = '❌';
+        if (itemText) { itemText.textContent = 'Validation error: ' + errs.join(' · '); itemText.style.color = '#b91c1c'; }
+        if (itemBadge) itemBadge.innerHTML = '<span class="badge" style="background:#fee2e2;color:#991b1b;">Validation Error</span>';
+        if (itemRow) itemRow.style.background = '#fff5f5';
         continue;
       }
-      
-      // Save
+
+      // Submit file one by one to API endpoint
       const payload = { filename: file.name, content };
       const r = await post(apiMap[type], payload);
+
       if (r.ok !== false) {
-        results.push({ file: file.name, ok: true, msg: 'Uploaded successfully ✅' });
+        okCount++;
+        if (itemIcon) itemIcon.textContent = '✅';
+        if (itemText) { itemText.textContent = 'Submitted & published successfully ✅'; itemText.style.color = '#15803d'; }
+        if (itemBadge) itemBadge.innerHTML = '<span class="badge bpub">Published</span>';
+        if (itemRow) itemRow.style.background = '#f0fdf4';
       } else {
-        results.push({ file: file.name, ok: false, msg: r.error || 'Server save failed' });
+        failCount++;
+        if (itemIcon) itemIcon.textContent = '❌';
+        if (itemText) { itemText.textContent = r.error || 'Server save failed'; itemText.style.color = '#b91c1c'; }
+        if (itemBadge) itemBadge.innerHTML = '<span class="badge" style="background:#fee2e2;color:#991b1b;">Server Error</span>';
+        if (itemRow) itemRow.style.background = '#fff5f5';
       }
     } catch (err) {
-      results.push({ file: file.name, ok: false, msg: 'Read error: ' + err.message });
+      failCount++;
+      if (itemIcon) itemIcon.textContent = '❌';
+      if (itemText) { itemText.textContent = 'Read error: ' + err.message; itemText.style.color = '#b91c1c'; }
+      if (itemBadge) itemBadge.innerHTML = '<span class="badge" style="background:#fee2e2;color:#991b1b;">Read Error</span>';
+      if (itemRow) itemRow.style.background = '#fff5f5';
     }
+
+    // Small delay between submissions to allow visible UI updates for each file
+    await new Promise(res => setTimeout(res, 50));
   }
 
-  results.forEach(r => {
-    const bg  = r.ok ? 'rgba(16,185,129,.07)' : 'rgba(239,68,68,.07)';
-    const clr = r.ok ? '#065f46' : '#b91c1c';
-    const ico = r.ok ? '✅' : '❌';
-    html += `<div style="padding:10px 14px;border-bottom:1px solid #f0f0f1;background:${bg};">
-      <div style="font-weight:600;font-size:13px;color:${clr};">${ico} ${esc(r.file)}</div>
-      <div style="font-size:12px;color:#6b7280;margin-top:2px;">${esc(r.msg)}</div>
-    </div>`;
-  });
+  // Finished submitting all files
+  if (progressText) progressText.textContent = `Completed! Processed ${total} file${total > 1 ? 's' : ''}.`;
+  if (progressPercent) progressPercent.textContent = '100%';
+  if (progressFill) progressFill.style.width = '100%';
 
-  html += '</div>';
-  
-  const anyOk = results.some(r => r.ok);
-  if (anyOk) {
+  if (btnSubmit) {
+    btnSubmit.disabled = false;
+    btnSubmit.innerHTML = `✅ Complete (${okCount} Published, ${failCount} Failed)`;
+    btnSubmit.style.background = okCount > 0 ? '#15803d' : '#b91c1c';
+  }
+
+  if (okCount > 0) {
     await loadAll();
-    // Re-render the current section to refresh the table
+    // Re-render table in background to update total count and list
     if (type === 'blog') renderBlogs();
     else if (type === 'tutorial') renderTuts();
     else if (type === 'page') renderPages();
     else if (type === 'book') renderBooks();
+
+    // Re-render staged UI so completion status remains visible
+    renderStagedUploadsUI(type);
+    const newBtnSubmit = $('btn-submit-upload-' + type);
+    if (newBtnSubmit) {
+      newBtnSubmit.disabled = false;
+      newBtnSubmit.innerHTML = `✅ Complete (${okCount} Published, ${failCount} Failed)`;
+      newBtnSubmit.style.background = '#15803d';
+    }
+    const newProgressBar = $('progress-bar-container-' + type);
+    if (newProgressBar) newProgressBar.style.display = 'block';
+    const newProgressText = $('progress-text-' + type);
+    if (newProgressText) newProgressText.textContent = `Completed! Processed ${total} file${total > 1 ? 's' : ''}.`;
+    const newProgressPercent = $('progress-percent-' + type);
+    if (newProgressPercent) newProgressPercent.textContent = '100%';
+    const newProgressFill = $('progress-fill-' + type);
+    if (newProgressFill) newProgressFill.style.width = '100%';
   }
 
-  if (resultsEl) {
-    resultsEl.innerHTML = html;
-    // Re-open panel so user sees results
-    const body = $('upload-body-' + type);
-    if (body) body.style.display = 'block';
+  if (okCount > 0 && failCount === 0) {
+    toast(`Successfully submitted and published all ${okCount} files! 🎉`);
+  } else if (okCount > 0 && failCount > 0) {
+    toast(`Submitted ${okCount} files, but ${failCount} failed. Check list below.`, false);
+  } else {
+    toast(`Submission failed for all ${failCount} files. Check format errors below.`, false);
   }
 }
 

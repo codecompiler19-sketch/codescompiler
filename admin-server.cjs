@@ -218,6 +218,168 @@ function generateSitemap() {
 // Generate on startup
 generateSitemap();
 
+function htmlToMdx(htmlStr, pageUrl = '') {
+  let raw = htmlStr;
+
+  // 1. Extract Title
+  let title = '';
+  const titleMatch = raw.match(/<title[^>]*>([\s\S]*?)<\/title>/i) || raw.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
+  if (titleMatch) {
+    title = titleMatch[1].replace(/<[^>]+>/g, '').replace(/\s*\|.*$/, '').replace(/\s*-.*$/, '').trim();
+  }
+  if (!title) title = 'Imported Content';
+
+  // 2. Extract Meta Description
+  let description = '';
+  const metaDesc = raw.match(/<meta[^>]*name=["']description["'][^>]*content=["']([^"']+)["']/i) || raw.match(/<meta[^>]*content=["']([^"']+)["'][^>]*name=["']description["']/i);
+  if (metaDesc) {
+    description = metaDesc[1].trim();
+  }
+
+  // 3. Remove non-content elements
+  raw = raw.replace(/<!--[\s\S]*?-->/g, '');
+  raw = raw.replace(/<script[\s\S]*?<\/script>/gi, '');
+  raw = raw.replace(/<style[\s\S]*?<\/style>/gi, '');
+  raw = raw.replace(/<svg[\s\S]*?<\/svg>/gi, '');
+  raw = raw.replace(/<nav[\s\S]*?<\/nav>/gi, '');
+  raw = raw.replace(/<footer[\s\S]*?<\/footer>/gi, '');
+  raw = raw.replace(/<header[\s\S]*?<\/header>/gi, '');
+  raw = raw.replace(/<noscript[\s\S]*?<\/noscript>/gi, '');
+  raw = raw.replace(/<aside[\s\S]*?<\/aside>/gi, '');
+
+  // 4. Prefer <article> or <main> if present
+  let bodyHtml = raw;
+  const articleMatch = raw.match(/<article[^>]*>([\s\S]*?)<\/article>/i);
+  const mainMatch = raw.match(/<main[^>]*>([\s\S]*?)<\/main>/i);
+  if (articleMatch) {
+    bodyHtml = articleMatch[1];
+  } else if (mainMatch) {
+    bodyHtml = mainMatch[1];
+  } else {
+    const bodyMatch = raw.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+    if (bodyMatch) bodyHtml = bodyMatch[1];
+  }
+
+  bodyHtml = bodyHtml.replace(/<div[^>]*class=["'][^"']*(?:sidebar|comments|related-posts|social-share|ad-slot|cookie-banner)[^"']*["'][^>]*>[\s\S]*?<\/div>/gi, '');
+
+  let md = bodyHtml;
+
+  // 5. Code blocks
+  const codeBlocks = [];
+  md = md.replace(/<pre[^>]*>[\s\S]*?<code[^>]*class=["']?(?:language-)?([a-zA-Z0-9_-]+)?["']?[^>]*>([\s\S]*?)<\/code>[\s\S]*?<\/pre>/gi, (m, lang, code) => {
+    const cleanCode = code.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&quot;/g, '"');
+    const token = `___CODE_BLOCK_${codeBlocks.length}___`;
+    codeBlocks.push(`\`\`\`${lang || 'html'}\n${cleanCode.trim()}\n\`\`\``);
+    return token;
+  });
+  md = md.replace(/<pre[^>]*>([\s\S]*?)<\/pre>/gi, (m, code) => {
+    const cleanCode = code.replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&quot;/g, '"');
+    const token = `___CODE_BLOCK_${codeBlocks.length}___`;
+    codeBlocks.push(`\`\`\`html\n${cleanCode.trim()}\n\`\`\``);
+    return token;
+  });
+
+  // Inline code
+  md = md.replace(/<code[^>]*>([\s\S]*?)<\/code>/gi, (m, c) => {
+    const clean = c.replace(/<[^>]+>/g, '').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+    return `\`${clean.trim()}\``;
+  });
+
+  // Headings
+  md = md.replace(/<h1[^>]*>([\s\S]*?)<\/h1>/gi, (m, c) => `\n\n# ${c.replace(/<[^>]+>/g, '').trim()}\n\n`);
+  md = md.replace(/<h2[^>]*>([\s\S]*?)<\/h2>/gi, (m, c) => `\n\n## ${c.replace(/<[^>]+>/g, '').trim()}\n\n`);
+  md = md.replace(/<h3[^>]*>([\s\S]*?)<\/h3>/gi, (m, c) => `\n\n### ${c.replace(/<[^>]+>/g, '').trim()}\n\n`);
+  md = md.replace(/<h4[^>]*>([\s\S]*?)<\/h4>/gi, (m, c) => `\n\n#### ${c.replace(/<[^>]+>/g, '').trim()}\n\n`);
+
+  // Bold & Italic
+  md = md.replace(/<(?:strong|b)[^>]*>([\s\S]*?)<\/(?:strong|b)>/gi, '**$1**');
+  md = md.replace(/<(?:em|i)[^>]*>([\s\S]*?)<\/(?:em|i)>/gi, '*$1*');
+
+  // Links
+  md = md.replace(/<a[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi, (m, href, text) => {
+    const cleanText = text.replace(/<[^>]+>/g, '').trim();
+    if (!cleanText) return '';
+    let fullHref = href;
+    if (pageUrl && !href.startsWith('http') && !href.startsWith('//')) {
+      try { fullHref = new URL(href, pageUrl).toString(); } catch(e){}
+    }
+    return `[${cleanText}](${fullHref})`;
+  });
+
+  // Images
+  md = md.replace(/<img[^>]*src=["']([^"']+)["'][^>]*alt=["']([^"']*)["'][^>]*>/gi, (m, src, alt) => {
+    let fullSrc = src;
+    if (pageUrl && !src.startsWith('http') && !src.startsWith('//') && !src.startsWith('data:')) {
+      try { fullSrc = new URL(src, pageUrl).toString(); } catch(e){}
+    }
+    return `![${alt || 'Image'}](${fullSrc})`;
+  });
+  md = md.replace(/<img[^>]*src=["']([^"']+)["'][^>]*>/gi, (m, src) => {
+    let fullSrc = src;
+    if (pageUrl && !src.startsWith('http') && !src.startsWith('//') && !src.startsWith('data:')) {
+      try { fullSrc = new URL(src, pageUrl).toString(); } catch(e){}
+    }
+    return `![Image](${fullSrc})`;
+  });
+
+  // Paragraphs & Line Breaks
+  md = md.replace(/<p[^>]*>([\s\S]*?)<\/p>/gi, '\n\n$1\n\n');
+  md = md.replace(/<br\s*\/?>/gi, '\n');
+
+  // Lists
+  md = md.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, '\n- $1');
+  md = md.replace(/<\/?(?:ul|ol)[^>]*>/gi, '\n');
+
+  // Blockquotes
+  md = md.replace(/<blockquote[^>]*>([\s\S]*?)<\/blockquote>/gi, (m, c) => `\n\n> ${c.replace(/<[^>]+>/g, '').trim()}\n\n`);
+
+  // Strip remaining HTML tags
+  md = md.replace(/<[^>]+>/g, '');
+
+  // Restore code blocks
+  codeBlocks.forEach((block, idx) => {
+    md = md.replace(`___CODE_BLOCK_${idx}___`, `\n\n${block}\n\n`);
+  });
+
+  // Clean HTML entities & whitespace
+  md = md.replace(/&nbsp;/gi, ' ')
+        .replace(/&amp;/gi, '&')
+        .replace(/&lt;/gi, '<')
+        .replace(/&gt;/gi, '>')
+        .replace(/&quot;/gi, '"')
+        .replace(/&#39;/gi, "'");
+
+  md = md.replace(/\n{3,}/g, '\n\n').trim();
+
+  let category = 'html';
+  const lTitle = (title + ' ' + pageUrl).toLowerCase();
+  if (lTitle.includes('css')) category = 'css';
+  else if (lTitle.includes('js') || lTitle.includes('javascript')) category = 'javascript';
+  else if (lTitle.includes('python')) category = 'python';
+  else if (lTitle.includes('sql')) category = 'sql';
+  else if (lTitle.includes('php')) category = 'php';
+  else if (lTitle.includes('seo')) category = 'seo';
+
+  const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'imported-tutorial';
+
+  if (!description) {
+    description = md.slice(0, 150).replace(/[#*`\n]/g, ' ').trim() + '...';
+  }
+
+  const mdxContent = `---\ntitle: "${title.replace(/"/g, '\\"')}"\ndescription: "${description.replace(/"/g, '\\"')}"\ncategory: "${category}"\norder: 99\n---\n\n${md}`;
+
+  return {
+    ok: true,
+    title,
+    description,
+    category,
+    slug,
+    filename: `${slug}.mdx`,
+    content: mdxContent,
+    body: md
+  };
+}
+
 // ── Server ────────────────────────────────────────────────────────────────────
 const server = http.createServer(async (req, res) => {
   const parsed   = url.parse(req.url, true);
@@ -241,6 +403,27 @@ const server = http.createServer(async (req, res) => {
       const js = fs.readFileSync(path.join(APP_DIR, 'admin-app.js'), 'utf-8');
       res.writeHead(200, { 'Content-Type': 'application/javascript; charset=utf-8' });
       res.end(js); return;
+    }
+
+    // URL Importer
+    if (pathname === '/api/import-url' && req.method === 'POST') {
+      const b = await collectBody(req);
+      if (!b.url) { jsonRes(res, { ok: false, error: 'URL is required' }, 400); return; }
+      try {
+        const response = await fetch(b.url, {
+          headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36' }
+        });
+        if (!response.ok) {
+          jsonRes(res, { ok: false, error: `HTTP Error ${response.status}: ${response.statusText}` }, 400);
+          return;
+        }
+        const htmlText = await response.text();
+        const result = htmlToMdx(htmlText, b.url);
+        jsonRes(res, result);
+      } catch (err) {
+        jsonRes(res, { ok: false, error: 'Fetch error: ' + err.message }, 500);
+      }
+      return;
     }
 
     // Stats

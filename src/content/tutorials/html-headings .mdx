@@ -1,0 +1,258 @@
+---
+title: "HTML Headings"
+# ↑ REQUIRED. Short, clear lesson title.
+
+description: "Learn how to use HTML heading tags from h1 to h6 the right way — including hierarchy rules, accessibility, SEO best practices, and how to style headings with CSS."
+# ↑ REQUIRED. One sentence describing what the student will learn.
+
+category: "html"
+# ↑ REQUIRED. MUST be EXACTLY one of these values (lowercase):
+#   "html"  "css"  "javascript"  "seo"  "python"  "sql"  "php"
+
+order: 20
+# ↑ REQUIRED. Integer. Controls the order in the tutorial sidebar.
+
+group: "Text Basics"
+# ↑ Groups lessons under a section header in the sidebar.
+
+seoTitle: "HTML Headings (h1 to h6) — Complete Guide with Examples"
+# ↑ Override the page <title> for Google (keep under 60 chars).
+
+permalink: "html-headings"
+# ↑ Custom URL slug.
+---
+
+## What Are HTML Headings?
+
+Every well-built webpage has a shape to it — a main title, a few big sections, and smaller pieces nested inside those sections. HTML gives you a simple way to describe that shape using **heading tags**: `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>`, and `<h6>`.
+
+Think of headings the same way you'd think of the chapters and subheadings in a book. The book title is the biggest, boldest text on the cover. Chapter titles are a little smaller. Section titles inside a chapter are smaller still. Nobody reads a book from a random middle page and expects to understand where they are — the heading structure tells them. HTML headings do exactly the same job for a webpage, both for the human reading it and for the machines (search engines, screen readers, browsers) trying to understand it.
+
+`<h1>` is the most important heading and carries the most visual weight by default. `<h6>` is the least important and the smallest. Everything in between scales down step by step.
+
+<Editor
+  initialHtml={`<h1>Learning Web Development</h1>
+<h2>Frontend Basics</h2>
+<h3>HTML Fundamentals</h3>
+<h4>Text Elements</h4>
+<h5>Headings and Paragraphs</h5>
+<h6>Formatting Tags</h6>`}
+  initialCss={`body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+h1, h2, h3, h4, h5, h6 {
+  color: #04AA6D;
+}`}
+/>
+
+Run that example and look closely at the size difference between each line. That visual shrinking, from `<h1>` down to `<h6>`, is the browser's default styling — no CSS required. You can (and usually will) override those default sizes later, but the *meaning* of each tag stays the same no matter how it's styled.
+
+## Why Headings Are More Than Just "Big Text"
+
+A common beginner mistake is treating headings purely as a way to make text bigger or bolder. That's a side effect, not the purpose. Here's what headings are actually doing behind the scenes:
+
+- **Search engines read your headings first.** Google and other search engines scan your `<h1>` to `<h6>` tags to understand what your page is about and how it's organized. A page with clear, well-structured headings tends to rank better than a wall of unstructured text, even if the content is similar.
+- **Screen readers rely on headings for navigation.** People using assistive technology often jump between headings to skim a page, the same way a sighted user skims by scrolling. If your headings are missing or out of order, you're making the page harder — sometimes impossible — to navigate for those users.
+- **Browsers and browser extensions build outlines from headings.** Some browsers can generate a table of contents or a document outline automatically, purely from your heading structure.
+- **Other developers (including future you) read structure faster than they read prose.** A page with proper headings is easier to scan, debug, and maintain.
+
+In short: headings are a structural and semantic tool first, and a visual styling tool second.
+
+## The Six Heading Levels
+
+HTML gives you exactly six levels to work with. Here's what each one is typically used for:
+
+| Tag | Relative Size | Typical Use |
+| :--- | :--- | :--- |
+| `<h1>` | Largest | The main title of the page — used once per page |
+| `<h2>` | Large | Major sections of the page |
+| `<h3>` | Medium-large | Sub-sections within an `<h2>` section |
+| `<h4>` | Medium | Sub-sections within an `<h3>` section |
+| `<h5>` | Small | Rarely used — deep nested content |
+| `<h6>` | Smallest | Rarely used — the deepest level of nesting |
+
+In practice, most real-world pages use `<h1>`, `<h2>`, and `<h3>` heavily, and only reach for `<h4>` through `<h6>` on content-heavy pages like long documentation, technical guides, or legal pages that genuinely need that many layers of organization.
+
+### The "One `<h1>` Per Page" Rule
+
+This is the rule beginners hear the most, and it's worth understanding *why* it exists rather than just memorizing it.
+
+Your `<h1>` represents the single main topic of the entire page — think of it as the equivalent of the book's title, not a chapter title. If a page has multiple `<h1>` tags, it sends a confusing signal: "this page is about several completely different main things at once." Both search engines and assistive technology tools expect one clear anchor point per page.
+
+<Editor
+  initialHtml={`<h1>Complete Guide to Making Coffee</h1>
+
+<h2>Choosing Your Beans</h2>
+<p>Start with fresh, whole beans for the best flavor.</p>
+
+<h2>Grinding</h2>
+<p>Grind size depends on your brewing method.</p>
+
+<h3>Coarse Grind</h3>
+<p>Best for French press.</p>
+
+<h3>Fine Grind</h3>
+<p>Best for espresso machines.</p>
+
+<h2>Brewing</h2>
+<p>Water temperature and timing both matter a lot.</p>`}
+  initialCss={`body {
+  font-family: 'Segoe UI', sans-serif;
+  max-width: 500px;
+  margin: 20px auto;
+}
+h1 { color: #04AA6D; border-bottom: 3px solid #04AA6D; padding-bottom: 8px; }
+h2 { color: #333; margin-top: 25px; }
+h3 { color: #666; font-size: 18px; }`}
+/>
+
+Notice the shape of that example: one `<h1>` at the very top, two `<h2>` sections branching off it, and two `<h3>` tags nested specifically under the "Grinding" section because they're sub-topics of grinding, not of the whole page. That's a heading hierarchy working exactly as intended.
+
+## Don't Skip Heading Levels
+
+A second rule that trips people up: keep your headings in logical, unbroken order. Don't jump from `<h1>` straight to `<h4>` just because you like how the `<h4>` looks, and don't use `<h3>` before you've used an `<h2>` on the page.
+
+```html
+<!-- ❌ Bad: skips from h1 straight to h4 -->
+<h1>My Travel Blog</h1>
+<h4>Best Beaches in Portugal</h4>
+
+<!-- ✅ Good: follows a logical order -->
+<h1>My Travel Blog</h1>
+<h2>Best Beaches in Portugal</h2>
+```
+
+If you find yourself wanting to skip a level purely to get a smaller font size, that's a sign you should be using CSS to change the size instead — not swapping in a semantically incorrect tag. We'll cover exactly how to do that in the next section.
+
+## Styling Headings with CSS
+
+Every browser applies default styles to each heading level, but you're not stuck with those defaults. This is one of the most important ideas to internalize early: **the HTML tag controls meaning and structure; CSS controls appearance.** You should pick your heading tag based on its role in the document, then use CSS to make it look however you want.
+
+<Editor
+  initialHtml={`<h1>Modern Web Design</h1>
+<h2>Typography Matters</h2>
+<p>Good headings guide the reader's eye through your content.</p>`}
+  initialCss={`body {
+  font-family: 'Georgia', serif;
+  padding: 30px;
+  background: #fafafa;
+}
+h1 {
+  color: #222;
+  font-size: 2.5rem;
+  letter-spacing: -1px;
+  border-left: 6px solid #04AA6D;
+  padding-left: 16px;
+}
+h2 {
+  color: #04AA6D;
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  font-weight: 600;
+}`}
+/>
+
+Notice that `<h1>` is still semantically the top-level heading in that example, even though CSS has completely changed its look — the color, spacing, and even the border on the side. A screen reader or search engine still correctly identifies it as the page's main heading, regardless of how it's painted on screen.
+
+This also means it's completely valid — and common — to have an `<h2>` that's styled to look *smaller* than the surrounding paragraph text, or an `<h3>` that's styled boldly to stand out. The visual size is just a suggestion from the browser's default stylesheet; it's not a rule you're bound to.
+
+## Headings and Accessibility
+
+If you only take one thing away from this lesson, make it this: **headings are one of the most important accessibility tools you have, and they cost you nothing extra to use correctly.**
+
+Screen reader users frequently navigate a page by pulling up a list of all the headings on it, then jumping directly to the section they care about — similar to using a table of contents. If your headings:
+
+- Are missing entirely (e.g., you used bold, oversized `<p>` text instead of real heading tags)
+- Skip levels unpredictably
+- Are used purely for visual styling rather than actual structure
+
+...then that navigation experience breaks. The user either has to listen through the entire page linearly, or gets a heading outline that doesn't actually reflect the content's real structure.
+
+A quick self-check before publishing any page: if you removed every stylesheet, would the heading structure alone still make sense as an outline of your content? If yes, you're using headings correctly.
+
+## Headings and SEO
+
+Search engines use your heading tags — especially `<h1>` and `<h2>` — as strong signals about what your page covers. A few practical guidelines that tend to help real-world SEO:
+
+- Include your primary keyword or topic naturally in the `<h1>`, since it usually carries the most weight.
+- Use `<h2>` tags to break your content into the major sections a reader (and a search engine) would expect to see.
+- Avoid keyword-stuffing headings just to try to rank — write headings a human would actually want to read.
+- Never use heading tags purely to manipulate size or boldness for design reasons; that dilutes the signal headings are supposed to send.
+
+None of this means you need to obsess over "SEO-perfect" headings while learning. Write clear, honest headings that describe your content accurately, and the SEO benefit follows naturally.
+
+## A Complete Example
+
+Here's a slightly larger example that pulls everything from this lesson together — a proper hierarchy, sensible nesting, and light CSS styling layered on top without breaking the semantic structure.
+
+<Editor
+  initialHtml={`<h1>Getting Started with Gardening</h1>
+
+<h2>Planning Your Garden</h2>
+<p>Before you plant anything, think about sunlight, soil, and space.</p>
+
+<h3>Choosing a Location</h3>
+<p>Most vegetables need at least six hours of direct sunlight.</p>
+
+<h3>Testing Your Soil</h3>
+<p>A simple pH test tells you what your soil needs.</p>
+
+<h2>Planting</h2>
+<p>Timing depends heavily on your local climate zone.</p>
+
+<h3>Starting from Seeds</h3>
+<p>Cheaper, but takes longer to see results.</p>
+
+<h3>Starting from Seedlings</h3>
+<p>Faster results, better for beginners.</p>
+
+<h2>Maintenance</h2>
+<p>Watering, weeding, and feeding your plants regularly.</p>`}
+  initialCss={`body {
+  font-family: 'Trebuchet MS', sans-serif;
+  max-width: 600px;
+  margin: 20px auto;
+  line-height: 1.6;
+}
+h1 {
+  color: #2d5a27;
+  border-bottom: 4px solid #04AA6D;
+  padding-bottom: 10px;
+}
+h2 {
+  color: #04AA6D;
+  margin-top: 30px;
+}
+h3 {
+  color: #555;
+  font-size: 17px;
+  margin-top: 15px;
+}
+p {
+  color: #444;
+}`}
+/>
+
+Read through just the heading tags in that example, ignoring the paragraphs entirely: "Getting Started with Gardening" → "Planning Your Garden" → "Choosing a Location" → "Testing Your Soil" → "Planting" → "Starting from Seeds" → "Starting from Seedlings" → "Maintenance". That alone reads as a perfectly sensible outline. That's the test of a well-structured page.
+
+## Common Mistakes to Avoid
+
+- **Using headings for size instead of structure.** If you want big text without it meaning "this is a major heading," style a `<p>` or `<span>` with CSS instead.
+- **Multiple `<h1>` tags on one page.** Stick to one per page representing the page's core topic.
+- **Skipping levels.** Don't go from `<h2>` to `<h5>` just because the size looked right.
+- **Empty headings.** An `<h2></h2>` with no text confuses screen readers and adds nothing.
+- **Headings inside inline elements** like `<span>` or `<a>` in a way that breaks the outline — headings should generally sit as their own block-level elements in the document flow.
+
+## Summary
+
+| Concept | Key Takeaway |
+| :--- | :--- |
+| `<h1>` – `<h6>` | Six levels of heading, from most to least important |
+| One `<h1>` per page | Represents the page's single main topic |
+| No skipped levels | Keep the outline logical (h1 → h2 → h3, not h1 → h4) |
+| Meaning vs. styling | The tag defines structure; CSS defines appearance |
+| Accessibility | Screen readers navigate by heading outline |
+| SEO | Search engines weigh `<h1>` and `<h2>` heavily |
+
+> **Tip:** When in doubt, write your headings as if you were creating a table of contents for the page. If that outline makes sense on its own, your heading structure is correct.
