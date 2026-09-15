@@ -773,6 +773,22 @@ const server = http.createServer(async (req, res) => {
       if (fs.existsSync(srcPath)) fs.unlinkSync(srcPath);
       jsonRes(res, { ok: true }); return;
     }
+    if (pathname === '/api/trash/empty' && req.method === 'POST') {
+      let count = 0;
+      ['tutorials', 'blogs', 'pages'].forEach(type => {
+        const dir = path.join(TRASH_DIR, type);
+        if (fs.existsSync(dir)) {
+          fs.readdirSync(dir).forEach(f => {
+            const p = path.join(dir, f);
+            if (fs.existsSync(p)) {
+              fs.unlinkSync(p);
+              count++;
+            }
+          });
+        }
+      });
+      jsonRes(res, { ok: true, count }); return;
+    }
 
     // ══ ADS MANAGEMENT ══
     const DEFAULT_ADS = {

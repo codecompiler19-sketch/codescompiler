@@ -2657,20 +2657,63 @@ async function saveAds(){
 }
 
 // ══ TRASH BIN ══
+let selectedTrash = new Set();
+
+function toggleAllTrash(checked){
+  if(checked) selectedTrash = new Set(trashBin.map((_, idx) => idx));
+  else selectedTrash.clear();
+  renderTrash();
+}
+
+function toggleTrashItem(idx){
+  if(selectedTrash.has(idx)) selectedTrash.delete(idx);
+  else selectedTrash.add(idx);
+  renderTrash();
+}
+
 function renderTrash(){
   $('ptitle').textContent='Trash';
-  $('tact').innerHTML='';
-  let h=`<div class="card"><div class="ch"><h3>🗑️ Deleted Items</h3><span style="color:var(--dim);font-size:12px">${trashBin.length} items</span></div>
-  <table><thead><tr><th>Type</th><th>File</th><th>Deleted At</th><th style="width:160px">Actions</th></tr></thead><tbody>`;
-  if(!trashBin.length) h+=`<tr><td colspan="4" class="empty">Trash is empty 🎉</td></tr>`;
-  trashBin.forEach(t=>{
+  
+  let topActions = '';
+  if(trashBin.length > 0) {
+    topActions += `<button class="btn" style="background:#d63638;color:#fff;font-weight:600;margin-right:8px;" onclick="emptyTrash()">🗑️ Empty Trash (${trashBin.length})</button>`;
+    if(selectedTrash.size > 0) {
+      topActions += `<button class="btn bk" style="margin-right:6px;" onclick="restoreSelectedTrash()">♻️ Restore Selected (${selectedTrash.size})</button>`;
+      topActions += `<button class="btn" style="background:#d63638;color:#fff;" onclick="deleteSelectedTrash()">🗑️ Delete Selected (${selectedTrash.size})</button>`;
+    }
+  }
+  $('tact').innerHTML = topActions;
+  
+  const allChecked = trashBin.length > 0 && selectedTrash.size === trashBin.length;
+  
+  let h=`<div class="card">
+    <div class="ch" style="display:flex;justify-content:space-between;align-items:center;">
+      <h3>🗑️ Deleted Items</h3>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span style="color:var(--dim);font-size:12px">${trashBin.length} items</span>
+        ${trashBin.length > 0 ? `<button class="btn" style="background:#d63638;color:#fff;font-size:12px;padding:4px 10px;" onclick="emptyTrash()">🗑️ Empty Trash</button>` : ''}
+      </div>
+    </div>
+  <table><thead><tr>
+    <th style="width:30px"><input type="checkbox" ${allChecked?'checked':''} onchange="toggleAllTrash(this.checked)"></th>
+    <th>Type</th><th>File</th><th>Deleted At</th><th style="width:200px">Actions</th>
+  </tr></thead><tbody>`;
+  
+  if(!trashBin.length) h+=`<tr><td colspan="5" class="empty">Trash is empty 🎉</td></tr>`;
+  trashBin.forEach((t, idx)=>{
     const d=new Date(t.deletedAt).toLocaleString();
     const typeLabel=t.type==='tutorials'?'📖 Tutorial':t.type==='blogs'?'✍️ Post':'📄 Page';
-    h+=`<tr><td><strong>${typeLabel}</strong></td><td style="font-size:12px;color:var(--dim);font-family:monospace">${esc(t.file)}</td><td style="font-size:12px;color:var(--muted)">${d}</td>
-    <td><button class="btn bk bs" onclick="restoreTrash('${t.type}','${esc(t.file)}')">♻️ Restore</button> <button class="btn bd bs" onclick="deleteTrash('${t.type}','${esc(t.file)}')">✕</button></td></tr>`;
+    const isChecked = selectedTrash.has(idx);
+    h+=`<tr style="${isChecked?'background:#f0f7ff':''}">
+      <td><input type="checkbox" ${isChecked?'checked':''} onchange="toggleTrashItem(${idx})"></td>
+      <td><strong>${typeLabel}</strong></td>
+      <td style="font-size:12px;color:var(--dim);font-family:monospace">${esc(t.file)}</td>
+      <td style="font-size:12px;color:var(--muted)">${d}</td>
+      <td><button class="btn bk bs" onclick="restoreTrash('${t.type}','${esc(t.file)}')">♻️ Restore</button> <button class="btn" style="background:#d63638;color:#fff;font-size:11px;padding:3px 8px;border:none;border-radius:3px;cursor:pointer;" onclick="deleteTrash('${t.type}','${esc(t.file)}')">🗑️ Delete</button></td>
+    </tr>`;
   });
   h+=`</tbody></table></div>
-  <div style="background:rgba(239,68,68,.08);padding:14px 18px;border-radius:10px;font-size:13px;color:var(--muted)">⚠️ Items in the trash are completely hidden from your live website. Restoring them will instantly publish them back. Clicking the (✕) icon will permanently delete the file from your computer.</div>`;
+  <div style="background:rgba(239,68,68,.08);padding:14px 18px;border-radius:10px;font-size:13px;color:var(--muted)">⚠️ Items in the trash are completely hidden from your live website. Restoring them will instantly publish them back. Clicking "Empty Trash" or "Delete" will permanently delete files from your server.</div>`;
   $('content').innerHTML=h;
 }
 
@@ -2678,6 +2721,7 @@ function restoreTrash(type, file){
   openConfirm(`Restore "${file}"? It will instantly reappear on your site.`, async()=>{
     await post('/api/trash/restore', {type, file});
     toast('Item restored ✅');
+    selectedTrash.clear();
     await loadAll();
     renderTrash();
   });
@@ -2687,6 +2731,54 @@ function deleteTrash(type, file){
   openConfirm(`Permanently delete "${file}"? This CANNOT be undone.`, async()=>{
     await post('/api/trash/delete', {type, file});
     toast('Permanently deleted 🗑️');
+    selectedTrash.clear();
+    await loadAll();
+    renderTrash();
+  });
+}
+
+function emptyTrash(){
+  if(!trashBin.length) return toast('Trash is already empty!');
+  openConfirm('Are you sure you want to PERMANENTLY delete all ' + trashBin.length + ' item(s) in the trash? This CANNOT be undone!', async () => {
+    try {
+      const res = await post('/api/trash/empty', {});
+      if(res.ok) {
+        toast('Trash emptied! ' + (res.count || trashBin.length) + ' item(s) permanently deleted 🗑️');
+        selectedTrash.clear();
+        await loadAll();
+        renderTrash();
+      } else {
+        toast(res.error || 'Failed to empty trash', false);
+      }
+    } catch(err) {
+      toast('Error emptying trash: ' + err.message, false);
+    }
+  });
+}
+
+async function restoreSelectedTrash(){
+  if(!selectedTrash.size) return;
+  const items = Array.from(selectedTrash).map(i => trashBin[i]).filter(Boolean);
+  openConfirm(`Restore ${items.length} selected item(s)?`, async () => {
+    for(const item of items){
+      await post('/api/trash/restore', {type: item.type, file: item.file});
+    }
+    toast(`${items.length} item(s) restored ✅`);
+    selectedTrash.clear();
+    await loadAll();
+    renderTrash();
+  });
+}
+
+async function deleteSelectedTrash(){
+  if(!selectedTrash.size) return;
+  const items = Array.from(selectedTrash).map(i => trashBin[i]).filter(Boolean);
+  openConfirm(`Permanently delete ${items.length} selected item(s)? This CANNOT be undone!`, async () => {
+    for(const item of items){
+      await post('/api/trash/delete', {type: item.type, file: item.file});
+    }
+    toast(`${items.length} item(s) permanently deleted 🗑️`);
+    selectedTrash.clear();
     await loadAll();
     renderTrash();
   });
