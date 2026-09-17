@@ -1,0 +1,217 @@
+---
+title: "JavaScript - Local Storage"
+description: "Learn JavaScript - Local Storage with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1880
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Local Storage — CodesCompiler JavaScript Guide"
+permalink: "javascript-local-storage"
+---
+
+
+# JavaScript - Local Storage
+
+
+
+
+This chapter will show you how to use JavaScript's localStorage to save data for several browser sessions. We will demonstrate how to use this method using theWindow.localStorageproperty, as well as go over the principles of web storage in JavaScript.
+
+
+## What is localStorage in JavaScript?
+
+
+The localStorage feature allows JavaScript apps and websites to save key-value pairs in a web browser with no expiration date. This means that the stored data remains even if the user closes the browser or restarts the computer.
+
+
+LocalStorage is a window object property, so it can interact with and manipulate the browser window. It can also work when combined with other window settings and methods.
+
+
+### Syntax
+
+
+The below Syntax returns a storage object and it can be used to get the current origin's local storage space.
+
+
+```javascript
+myStorage = window.localStorage;
+```
+
+
+## What is Window.localStorage?
+
+
+The localStorage method is accessible via the Window.localStorage property. Window.localStorage is a JavaScript Window interface component that represents a window with a DOM content within.
+
+
+The Window interface has a wide number of functions, constructors, objects and namespaces. Window.localStorage is a read-only property that returns a reference to a local storage object which is intended to store data that can only be accessed by the origin that created it.
+
+
+## When to use localStorage
+
+
+In simple terms, localStorage securely stores and retrieves data. While localStorage can save small amounts of data, it is not suitable for large datasets. Because localStorage is accessible to anybody who uses the device, you should avoid keeping critical information there. You can use it to save user preferences like language or theme. If you use it regularly it can also serve as a data cache. LocalStorage can save form data so that it is not lost when the user closes the browser.
+
+
+If your application requires you to log in, you can use localStorage to store your session data. You can stay logged in even after closing and reopening the browser.
+
+
+## How does localStorage work?
+
+
+You have heard it before: localStorage stores data. And, if you're saving data, you might need to access it later. In this section, we will look at exactly how localStorage works. Here's an overview of how it works −
+
+
+
+- setItem()It adds a key and value to localStorage.
+- getItem()It retrieves/gets things from local storage.
+- removeItem():It removes an item from localStorage.
+- clear():To erase all data from localStorage, use clear().
+- key():To obtain a localStorage's key, it passes a number.
+
+
+
+### Usage of setItem() Method
+
+
+The setItem() method lets you store values in localStorage. It accepts two parameters: a key and a value. The key can be used later to get the value linked to it. Here is how it should look −
+
+
+```javascript
+localStorage.setItem('name', 'Ankit Sharma');
+```
+
+
+In the code above, the key is name, and the value is Ankit Sharma. As we said before, localStorage can only store strings. To store arrays or objects in localStorage you have to first convert them to strings.
+
+
+To do this, we will use the JSON.stringify() method before providing to setItem(), as follows −
+
+
+```javascript
+const userArr = ["Ankit",25]
+localStorage.setItem('user', JSON.stringify(userArr));
+```
+
+
+### Usage of getItem() Method
+
+
+The getItem() method gives you access to the data saved in the browser's localStorage object. This method takes a single parameter, the key, and returns the value as a string −
+
+
+```javascript
+localStorage.getItem('name');
+```
+
+
+This returns a string with the value "Ankit Sharma". If the key given is not found in localStorage, it will return null. For arrays, we use the JSON.parse() function, which converts a JSON string in a JavaScript object −
+
+
+```javascript
+JSON.parse(localStorage.getItem('user'));
+```
+
+
+Using the array we constructed previously, here's how to access it from local storage −
+
+
+```javascript
+const userData = JSON.parse(localStorage.getItem('user'));
+console.log(userData);
+```
+
+
+This method returns the array ["Ankit", 25]. You can look into the webpage and find it in the console, as follows −
+
+
+```javascript
+[Log] Name from localStorage: - "Ankit Sharma" (example.html, line 22)
+[Log] User array from localStorage: - ["Ankit", 25] (2) (example.html, line 26)
+```
+
+
+This output is from Safari so it will look a little different on other browsers. Let us compare it with a different array which is not stored with localStorage −
+
+
+```javascript
+const userArr2 = ["Anjali", 27];
+console.log(userArr2);
+```
+
+
+So now we have two arrays on the console you can see in the below output −
+
+
+```javascript
+[Log] Name from localStorage: - "Ankit Sharma" (example.html, line 22)
+[Log] User array from localStorage: - ["Ankit", 25] (2) (example.html, line 26)
+[Log] ["Anjali", 27] (2) (example.html, line 29)
+```
+
+
+Normally, if you comment them out in the code editor they should disappear from the terminal. But anything saved via localStorage stays. Here is one example.
+
+
+### Usage of removeItem() Method
+
+
+To delete an item from localStorage you can use the removeItem() function. When a key name is given to the removeItem() method so the current key is deleted from storage. If no object is linked with the given key this method will do nothing. Here's the code.
+
+
+```javascript
+.localStorage.removeItem('name');
+```
+
+
+### Usage of clear() Method
+
+
+To delete all things from localStorage you can use the clear() function. When this method is used so it will clear all records in the domain's storage. It does not accept any parameters. Use the following code −
+
+
+```javascript
+localStorage.clear();
+```
+
+
+### Usage of key() Method
+
+
+The key() function is useful for looping over keys while giving a number or index to localStorage to get the key's name. The index option gives the key's zero-based index for which you want to retrieve the name. Below is how it looks −
+
+
+```javascript
+localStorage.key(index);
+```
+
+
+## Advantages of LocalStorage
+
+
+Here are some advantages of using localStorage −
+
+
+
+- The first advantage of localStorage is that saved data never expires.
+- You can still access the data offline since localStorage stores data that is available even without an internet connection.
+- LocalStorage is more secure than cookies and provides greater control over your data.
+- LocalStorage provides more storage capacity than cookies.
+- Cookies can only store four kilobytes of data, whereas local storage can contain up to five megabytes.
+
+
+
+## Disadvantages of LocalStorage
+
+
+Here are some disadvantages of localStorage −
+
+
+
+- LocalStorage is synchronous which refers to each operation occurs one after the other.
+- This has little impact on smaller datasets but as your data grows it can become a significant concern.
+- Local storage is more secure than cookies, but it should not be used to store sensitive information.
+- Anyone with access to the user's device can view the data stored in localStorage.
+- Also localStorage can only save strings; if you want to store other data types, you must first convert them to strings.
+- Finally, storing too much data in localStorage may cause your application to slow down.
+
+

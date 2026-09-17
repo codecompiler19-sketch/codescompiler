@@ -1,0 +1,230 @@
+---
+title: "PYTHON - Class Attributes"
+description: "Learn PYTHON - Class Attributes with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1310
+group: "Object Oriented Programming"
+seoTitle: "PYTHON - Class Attributes — CodesCompiler PYTHON Guide"
+permalink: "python-class-attributes"
+---
+
+
+# Python - Class Attributes
+
+
+
+
+The properties or variables defined inside a class are called asAttributes. An attribute provides information about the type of data a class contains. There are two types of attributes in Python namelyinstance attributeandclass attribute.
+
+
+The instance attribute is defined within the constructor of a Python class and is unique to each instance of the class. And, a class attribute is declared and initialized outside the constructor of the class.
+
+
+## Class Attributes (Variables)
+
+
+Class attributesare those variables that belong to a class and whose value is shared among all the instances of that class. A class attribute remains the same for every instance of the class.
+
+
+Class attributesare defined in the class but outside any method. They cannot be initialized inside__init__()constructor. They can be accessed by the name of the class in addition to the object. In other words, a class attribute is available to the class as well as its object.
+
+
+## Accessing Class Attributes
+
+
+The object name followed by dot notation (.) is used to access class attributes.
+
+
+### Example
+
+
+The below example demonstrates how to access the attributes of a Python class.
+
+
+```python
+class Employee:
+   name = "Bhavesh Aggarwal"
+   age = "30"
+
+# instance of the class
+emp = Employee()
+# accessing class attributes
+print("Name of the Employee:", emp.name)
+print("Age of the Employee:", emp.age)
+```
+
+
+### Output
+
+
+```python
+Name of the Employee: Bhavesh Aggarwal
+Age of the Employee: 30
+```
+
+
+## Modifying Class Attributes
+
+
+To modify the value of a class attribute, we simply need to assign a new value to it using the class name followed by dot notation and attribute name.
+
+
+### Example
+
+
+In the below example, we are initializing a class variable calledempCountin Employee class. For each object declared, the __init__() method is automatically called. This method initializes the instance variables as well as increments the empCount by 1.
+
+
+```python
+class Employee:
+   # class attribute    
+   empCount = 0
+   def __init__(self, name, age):
+      self.__name = name
+      self.__age = age
+      # modifying class attribute
+      Employee.empCount += 1
+      print ("Name:", self.__name, ", Age: ", self.__age)
+      # accessing class attribute
+      print ("Employee Count:", Employee.empCount)
+
+e1 = Employee("Bhavana", 24)
+print()
+e2 = Employee("Rajesh", 26)
+```
+
+
+### Output
+
+
+We have declared two objects. Every time, the empCount increments by 1.
+
+
+```python
+Name: Bhavana , Age:  24
+Employee Count: 1
+
+Name: Rajesh , Age:  26
+Employee Count: 2
+```
+
+
+## Significance of Class Attributes
+
+
+The class attributes are important because of the following reasons −
+
+
+
+- They are used to define those properties of a class that should have the same value for every object of that class.
+- Class attributes can be used to set default values for objects.
+- This is also useful in creating singletons. They are objects that are instantiated only once and used in different parts of the code.
+
+
+
+## Built-In Class Attributes
+
+
+Every Python class keeps the followingbuilt-in attributesand they can be accessed using the dot operator like any other attribute −
+
+
+
+- __dict__− Dictionary containing the class's namespace.
+- __doc__− Class documentation string or none, if undefined.
+- __name__− Class name.
+- __module__− Module name in which the class is defined. This attribute is "__main__" in interactive mode.
+- __bases__− A possibly empty tuple containing the base classes, in the order of their occurrence in the base class list.
+
+
+
+## Access Built-In Class Attributes
+
+
+To access built-in class attributes in Python, we use the class name followed by a dot (.) and then attribute name.
+
+
+### Example
+
+
+For the Employee class, we are trying to access all the built-in class attributes −
+
+
+```python
+class Employee:
+   def __init__(self, name="Bhavana", age=24):
+      self.name = name
+      self.age = age
+   def displayEmployee(self):
+      print ("Name : ", self.name, ", age: ", self.age)
+
+print ("Employee.__doc__:", Employee.__doc__)
+print ("Employee.__name__:", Employee.__name__)
+print ("Employee.__module__:", Employee.__module__)
+print ("Employee.__bases__:", Employee.__bases__)
+print ("Employee.__dict__:", Employee.__dict__ )
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```python
+Employee.__doc__: None
+Employee.__name__: Employee
+Employee.__module__: __main__
+Employee.__bases__: (<class 'object'>,)
+Employee.__dict__: {'__module__': '__main__', '__init__': <function Employee.__init__ at 0x0000022F866B8B80>, 'displayEmployee': <function Employee.displayEmployee at 0x0000022F866B9760>, '__dict__': <attribute '__dict__' of 'Employee' objects>, '__weakref__': <attribute '__weakref__' of 'Employee' objects>, '__doc__': None}
+```
+
+
+## Instance Attributes
+
+
+As stated earlier, aninstance attributein Python is a variable that is specific to an individual object of a class. It is defined inside the__init__()method.
+
+
+The first parameter of this method isselfand using this parameter the instance attributes are defined.
+
+
+### Example
+
+
+In the following code, we are illustrating the working of instance attributes.
+
+
+```python
+class Student:
+   def __init__(self, name, grade):
+      self.__name = name
+      self.__grade = grade
+      print ("Name:", self.__name, ", Grade:", self.__grade)
+
+# Creating instances 
+student1 = Student("Ram", "B")
+student2 = Student("Shyam", "C")
+```
+
+
+### Output
+
+
+On running the above code, it will produce the following output −
+
+
+```python
+Name: Ram , Grade: B
+Name: Shyam , Grade: C
+```
+
+
+## Instance Attributes Vs Class Attributes
+
+
+The below table shows the difference between instance attributes and class attributes −
+
+
+SNo.Instance AttributeClass Attribute1It is defined directly inside the __init__() function.It is defined inside the class but outside the __init__() function.2Instance attribute is accessed using the object name followed by dot notation.Class attributes can be accessed by both class name and object name.3The value of this attribute cannot be shared among other objects.Its value is shared among other objects of the class.4Changes made to the instance attribute affect only the object within which it is defined.Changes made to the class attribute affect all the objects of the given class.
+

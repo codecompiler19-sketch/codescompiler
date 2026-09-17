@@ -1,0 +1,236 @@
+---
+title: "JavaScript - Memoization"
+description: "Learn JavaScript - Memoization with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1890
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Memoization — CodesCompiler JavaScript Guide"
+permalink: "javascript-memoization"
+---
+
+
+# JavaScript - Memoization
+
+
+
+
+As our systems grow and start doing more complex calculations, the need for speed grows and process optimization becomes necessary. Ignoring this issue results in applications that use a lot of system resources and operate slowly.
+
+
+In this chapter, we will discuss memoization, a technique that can significantly reduce processing time when used properly.
+
+
+## What is Memoization?
+
+
+Memorization is a technique for speeding up applications by storing the results of expensive function calls and providing them when the same inputs are used again.
+
+
+Let's try to understand this by dividing the term into smaller parts −
+
+
+
+- Expensive Function Calls:In computer applications, memory and time are the two primary resources. So a function call that uses a lot of these two resources because it is performing a lot of calculations is considered expensive.
+- Cache:A cache is only a short-term data storage system that holds information to allow faster processing of future requests for that information.
+
+
+
+### Benefits of Memoization
+
+
+After receiving input, a function does the necessary computation, caches the result, and then returns the value. If the same input is received again in the future, the process will not need to be repeated. It would just return the response that was saved in memory. As a result, a code's execution time will be greatly reduced.
+
+
+### When to Use Memoization?
+
+
+Here are some of the points mentioned while you should use memoization −
+
+
+
+- When a function calls itself. For example, consider the recursive functions.
+- When the function is pure (returns the same value every time it is invoked). If the value changes with each function call, there is no reason for holding it. As a result, we cannot use memoization in JavaScript when the function is impure.
+- When the function has a high temporal complexity. In this case, keeping the results in a cache improves efficiency by reducing time complexity by avoiding re-computation of functions.
+
+
+
+## Memoization in JavaScript
+
+
+JavaScript memorization is an optimization technique used to minimize the application's runtime, complexity, and proper use of time and memory. The procedure involves reducing the number of expensive function calls (a function that recursively calls itself and has some overlapping issues) by using an additional space (cache).
+
+
+We store the values that were computed in those previous subproblems using memoization. The saved value is then used once again if the identical subproblem comes up, which lowers the time complexity by reducing the need to perform the same calculation repeatedly.
+
+
+## How Does Memoization Work?
+
+
+JavaScript Memoization purely based on two below concepts −
+
+
+
+- Closure
+- High-order function
+
+
+
+### Closures
+
+
+The Closure is made up of a function enclosed by references to the state. A closure provides access to an outside function's scope from an inside function. The closure is formed in JavaScript when a function is created.
+
+
+```javascript
+let greeting = "Welcome";
+function welcomeMessage() { 
+   let user = "Rahul"; 
+   console.log(${greeting} to the program, ${user}!); 
+}
+welcomeMessage();
+```
+
+
+Output
+
+
+This will generate the below result −
+
+
+```javascript
+Welcome to the program, Rahul!
+```
+
+
+In the above JavaScript code −
+
+
+
+- The variable greeting is a global variable. It can be accessible from anywhere, including the welcomeMessage() function.
+- The variable user is a local variable that can only be used within the welcomeMessage() function.
+
+
+
+Lexical scoping allows for nested scopes, with the inner function having access to the variables specified in the outer scope. Hence, in the code below, the inner function welcome() gets access to the variable user.
+
+
+```javascript
+function welcomeMessage() { 
+   let user = "Rahul";
+   function welcome() {
+      console.log(Greetings, ${user}!);
+   }
+   welcome(); 
+}
+welcomeMessage();
+```
+
+
+Output
+
+
+This will procedure the following output −
+
+
+```javascript
+Greetings Rahul!
+```
+
+
+Now we will modify the welcomeMessage() function and rather than invoking the function welcome(), we will return the welcome() function object.
+
+
+```javascript
+function welcomeMessage() {
+   let user = 'Rahul';   
+   function welcome() {
+      console.log(Greetings ${user}!);
+   }
+   return welcome;
+}
+let greet = welcomeMessage();
+greet();
+```
+
+
+Output
+
+
+If we run this code, we will get the same results as before. But it is important to note that a local variable is often only present during the function's execution.
+
+
+This means that after welcomeMessage() is executed, the user variable is no longer available. In this case, when we call gree(), the reference to welcome() remains, as does the user variable. A closure is a function that keeps the outside scope in the inside scope.
+
+
+```javascript
+Greetings Rahul!
+```
+
+
+### Higher-Order Functions
+
+
+Higher-order functions act on other functions by passing them as arguments or returning them. In the code above, welcomeMessage() is an example of a higher-order function.
+
+
+Now, using the well-known Fibonacci sequence, we will look at how memoization uses these concepts.
+
+
+Fibonacci sequence:The Fibonacci sequence is a set of numbers that begin and end with one, with the rule that each number (known as a Fibonacci number) is equal to the sum of the two numbers preceding it.
+
+
+```javascript
+1, 1, 2, 3, 5, 8, 13, 21, 34, 55, ...
+```
+
+
+So a simple recursive function for this problem will be as follows −
+
+
+```javascript
+function fibonacciSeq(n) {
+   if (n < 2)
+      return 1;
+   return fibonacciSeq(n - 1) + fibonacciSeq(n - 2);
+}
+```
+
+
+If we plot the recursion tree for the above function at n`=`4, it will look like this. As you can see, there are too many unnecessary computations. Let's try to fix this via memoization.
+
+
+```javascript
+function memoizedFibSeq(num, memo) {
+   // Initialize memo array if not provided
+   memo = memo || [1, 1];  
+   
+   // if num is less than or equal to 1, return the result directly
+   if (num <= 1) return memo[num];
+   
+   // If result is already computed, return it from memo
+   if (memo[num]) 
+       return memo[num];
+   
+   // Calculate and store the result in memo
+   memo[num] = memoizedFibSeq(num - 1, memo) + memoizedFibSeq(num - 2, memo);
+   return memo[num];
+}
+
+// Calculate the 10th Fibonacci number
+console.log(memoizedFibSeq(10));
+```
+
+
+Output
+
+
+Here is the outcome of the above code −
+
+
+```javascript
+89
+```
+
+
+We modify the function in the code example above to accept an optional input named memo. We use the cache object as a temporary memory to store Fibonacci numbers and their corresponding indices as keys, which can then be retrieved later in the execution.
+

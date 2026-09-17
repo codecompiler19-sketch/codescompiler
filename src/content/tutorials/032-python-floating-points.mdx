@@ -1,0 +1,199 @@
+---
+title: "PYTHON - Floating Points"
+description: "Learn PYTHON - Floating Points with clear explanation, code examples, and practical guide."
+category: "python"
+order: 320
+group: "PYTHON Basics"
+seoTitle: "PYTHON - Floating Points — CodesCompiler PYTHON Guide"
+permalink: "python-floating-points"
+---
+
+
+# Python - Floating Points
+
+
+
+
+When working with the numbers, we will come across thefloating-point numbers. These are the numbers that have a decimal point like 1.12, 12.01 or -321.243. Floating-point are widely used in the daily calculations as they allows us to represent both very large and very small values in the convenient way.
+
+
+However, the floating-point arithmetic can sometimes behaves in a ways that cause surprise while observing the outcome. For example, we expect simple operations like0.1+0.2`=` 0.3, but the python tells it's 0.30000000000000004. This isn't a bug in Python it is a result of how computers represent decimal numbers internally.
+
+
+## Floating-Point Arithmetic
+
+
+Floating-point arithmeticrefers to the calculations involving numbers with fractional parts, typically represented in a format based on theIEEE 754 standard. A floating-point number is stored in memory using a fixed number of binary digits (bits).
+
+
+In Python, the default floating-point type is called float and uses 64 bits. The number is broken into three parts:
+
+
+
+- Sign bit− It indicates whether the number is positive or negative.
+- Exponent− It indicates the sclae of the number up or down.
+- Mantissa− It stores the digits of the number.
+
+
+
+This format allows the python to represent an wide range of values  (from about 10^-308 to 10^308) and handle very small increments between them.
+
+
+## Issues and Limitations
+
+
+Let's discuss some of the main issues of the floating-point arithmetic:
+
+
+### Precision Errors
+
+
+Since the float uses the finite number of bits, they can’t store every decimal number exactly. which leads to the tiny rounding errors.
+
+
+```python
+print(0.1 + 0.2)   # Expected output: 0.3
+```
+
+
+Theoutputof the above program is -
+
+
+```python
+0.30000000000000004
+```
+
+
+In this case, the result is slightly off because 0.1 and 0.2 don’t have exact binary representations.
+
+
+### Comparisons Issues
+
+
+Because of the precision issues, the direct comparisons of the floating-point numbers often fail.
+
+
+```python
+a = 0.1 + 0.2
+
+print(a == 0.3)
+```
+
+
+Theoutputof the above program is -
+
+
+```python
+False
+```
+
+
+### Loss of Significance
+
+
+In this scenario, when er subtract two nearly equal floating-point numbers, small differences can be magnified, leading to loss of significance.
+
+
+```python
+a = 2.000001
+
+b = 2.0000000
+
+print(a - b)
+```
+
+
+Theoutputof the above program is -
+
+
+```python
+1.000000000139778e-06
+```
+
+
+### Overflow and Underflow
+
+
+The floating-point numbers have maximum and minimum representable values. If the calculation exceeds these limits:
+
+
+
+- Overflow− This number is too large, results in infinity.
+- Underflow− The number is too close to the zero results in 0.0
+
+
+
+```python
+large = 1e3211
+
+print(large * 10)  # Overflow
+
+small = 1e-213
+
+print(small / 10)  # Underflow
+```
+
+
+Theoutputof the above program is -
+
+
+```python
+inf
+
+1e-214
+```
+
+
+## Examples of Using Floating-Point Arithmetic
+
+
+Let's explore some of the examples to understand more about the floating-point arithmetic.
+
+
+### Example 1
+
+
+Consider the following example, where we are going to use theround() function.
+
+
+```python
+a = 0.1 + 0.2
+
+print(a)
+
+print(round(a, 2))
+```
+
+
+Theoutputof the above program is -
+
+
+```python
+0.30000000000000004
+
+0.3
+```
+
+
+### Example 2
+
+
+In the following example, we are going to use themath.isclose() methodto check whether the two numbers are close enough or not.
+
+
+```python
+import math
+
+a = 0.1 + 0.2
+
+print(math.isclose(a, 0.3)
+```
+
+
+Following is theoutputof the above program -
+
+
+```python
+True
+```
+

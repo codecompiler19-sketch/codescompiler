@@ -1,0 +1,374 @@
+---
+title: "PYTHON - Templating"
+description: "Learn PYTHON - Templating with clear explanation, code examples, and practical guide."
+category: "python"
+order: 2010
+group: "Python Miscellenous"
+seoTitle: "PYTHON - Templating — CodesCompiler PYTHON Guide"
+permalink: "python-templating"
+---
+
+
+# Python - Templating
+
+
+
+
+## Templating in Python
+
+
+Templating in Python is a technique used in web development to dynamically generate static HTML pages using templates and data.
+
+
+In this tutorial, we will explore the basics of templating in Python, including installation, creating templates, and rendering templates with data, with a focus on the Jinja2 templating engine.
+
+
+## String Templates in Python
+
+
+String templates in Python is a simple way to perform string substitutions. Python's string module includes theTemplateclass, which provides an easy way to replace placeholders in a string with actual values.
+
+
+The Template class in the string module is useful for dynamically forming a string object through a substitution technique described in PEP 292. Its simpler syntax and functionality make it easier to translate for internationalization purposes compared to other built-in string formatting facilities in Python.
+
+
+Template strings use the$symbol for substitution, immediately followed by an identifier that follows the rules of forming a valid Python identifier.
+
+
+### Creating a Template
+
+
+To create a template, you instantiate theTemplateclass with a string that contains placeholders prefixed with$as shown below −
+
+
+```python
+from string import Template
+
+template = Template("Hello, $name!")
+```
+
+
+### Substituting Values
+
+
+You can substitute values into the template using thesubstitute()method, which takes a dictionary of key-value pairs.
+
+
+The substitute() method replaces the placeholders (identifiers) in the template with actual values. You can provide these values using keyword arguments or a dictionary. The method then returns a new string with the placeholders filled in.
+
+
+Example: Using Keyword Arguments
+
+
+Following code substitute identifiers in a template string using keyword arguments −
+
+
+```python
+from string import Template
+
+tempStr = Template('Hello. My name is $name and my age is $age')
+newStr = tempStr.substitute(name = 'Pushpa', age = 26)
+print (newStr)
+```
+
+
+It will produce the following output −
+
+
+```python
+Hello. My name is Pushpa and my age is 26
+```
+
+
+Example: Using a Dictionary
+
+
+In the following example, we use a dictionary object to map the substitution identifiers in the template string −
+
+
+```python
+from string import Template
+
+tempStr = Template('Hello. My name is $name and my age is $age')
+dct = {'name' : 'Pushpalata', 'age' : 25}
+newStr = tempStr.substitute(dct)
+print (newStr)
+```
+
+
+Following is the output of the above code −
+
+
+```python
+Hello. My name is Pushpalata and my age is 25
+```
+
+
+Example: Missing Parameters Raises KeyError
+
+
+If the substitute() method is not provided with sufficient parameters to be matched against the identifiers in the template string, Python raises KeyError −
+
+
+```python
+from string import Template
+
+tempStr = Template('Hello. My name is $name and my age is $age')
+dct = {'name' : 'Pushpalata'}
+newStr = tempStr.substitute(dct)
+print (newStr)
+```
+
+
+Following is the error produced −
+
+
+```python
+Traceback (most recent call last):
+  File "/home/cg/root/667e441d9ebd5/main.py", line 5, in <module>
+newStr = tempStr.substitute(dct)
+  File "/usr/lib/python3.10/string.py", line 121, in substitute
+    return self.pattern.sub(convert, self.template)
+  File "/usr/lib/python3.10/string.py", line 114, in convert
+return str(mapping[named])
+KeyError: 'age'
+```
+
+
+### Substituting Values Using safe_substitute() Method
+
+
+The safe_substitute() method behaves similarly to substitute() method, except for the fact that it doesn't throw error if the keys are not sufficient or are not matching. Instead, the original placeholder will appear in the resulting string intact.
+
+
+Example
+
+
+In the following example, we are using the safe_substitue() method for substituting values −
+
+
+```python
+from string import Template
+tempStr = Template('Hello. My name is $name and my age is $age')
+dct = {'name' : 'Pushpalata'}
+newStr = tempStr.safe_substitute(dct)
+print (newStr)
+```
+
+
+It will produce the following output −
+
+
+```python
+Hello. My name is Pushpalata and my age is $age
+```
+
+
+## Installing Jinja2
+
+
+To useJinja2for templating in Python, you first need to install the library. Jinja2 is a powerful templating engine that is widely used in web development for rendering HTML. It can be installed easily using pip, Python's package installer −
+
+
+```python
+pip install jinja2
+```
+
+
+## Creating and Rendering Jinja2 Templates
+
+
+Jinja2 is a powerful templating engine for Python that allows you to create dynamic content by blending static template files with data. This section explores how to create Jinja2 templates and render them with data.
+
+
+### Creating a Jinja2 Template
+
+
+To create a Jinja2 template, you define a template string or load it from a file. Templates use double curly braces&#123;&#123; ... &#125;&#125;for placeholders and support control structures like "loops" and "conditionals" with&#123;% ... %&#125;.
+
+
+Example
+
+
+Following is an example of a simple Jinja2 template stored in a file "template.html" −
+
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello, {{ name }}!</title>
+</head>
+<body>
+    <h1>Hello, {{ name }}!</h1>
+    pWelcome to our site.
+</body>
+</html>
+```
+
+
+### Rendering a Jinja2 Template
+
+
+To render a Jinja2 template, follow these steps −
+
+
+
+- Loading the Template −Load the template from a file or create it from a string.
+- Creating a Template Object −Use "jinja2.Template" to create a template object.
+- Rendering −Use the render() method on the template object, passing data as arguments or a dictionary.
+
+
+
+Example
+
+
+In here, we are rendering Jinja2 template −
+
+
+```python
+from jinja2 import Template, FileSystemLoader, Environment
+
+# Loading a template from a file (template.html)
+file_loader = FileSystemLoader('.')
+env = Environment(loader=file_loader)
+template = env.get_template('template.html')
+
+# Rendering the template with data
+output = template.render(name='Alice')
+
+# Output the rendered template
+print(output)
+```
+
+
+The output of the rendered Jinja2 template would be an HTML document with the placeholders replaced by the actual data passed during rendering −
+
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello, Alice!</title>
+</head>
+<body>
+    <h1>Hello, Alice!</h1>
+    pWelcome to our site.
+</body>
+</html>
+```
+
+
+## Advanced Jinja2 Features
+
+Jinja2 supports various advanced features such as loops, conditionals, and custom filters, making it a powerful tool for creating complex templates.
+
+### Template Inheritance
+
+
+Jinja2 supports template inheritance, allowing you to create a base template with common elements (like headers, footers, navigation bars) and extend or override specific blocks in child templates. This promotes code reuse and maintainability in large projects.
+
+
+Example
+
+
+This HTML template file named "base.html" defines a basic structure for a web page using Jinja2 templating syntax.
+
+
+It includes blocks "&#123;% block title %&#125;" and "&#123;% block content %&#125;" that can be overridden in derived templates to customize the title and main content of the page, respectively −
+
+
+```html
+<!-- base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Default Title{% endblock %}</title>
+</head>
+<body>
+    {% block content %}{% endblock %}
+</body>
+</html>
+```
+
+
+The following Jinja2 template file "child.html" extends the "base.html" template, overriding the title block to set it to "Child Page" and the content block to include an `<h1>` header with the text "Child Page Content".
+
+
+```python
+<!-- child.html -->
+{% extends "base.html" %}
+
+{% block title %}Child Page{% endblock %}
+
+{% block content %}
+<h1>Child Page Content</h1>
+{% endblock %}
+```
+
+
+### Loops
+
+
+Jinja2 allows you to iterate over lists or other iterable objects using&#123;% for %&#125;loops. Following is an example of how you can use a loop to generate an unordered list (`<ul>`) in HTML −
+
+
+```python
+<ul>
+{% for item in items %}
+    <li>{{ item }}</li>
+{% endfor %}
+</ul>
+```
+
+
+### Conditionals
+
+
+Conditional statements in Jinja2(&#123;% if %&#125;and&#123;% else %&#125;)is used to control the flow of your templates based on conditions. Here is an example where "Jinja2" checks if user exists and displays a personalized greeting if true; otherwise, it prompts to log in −
+
+
+```python
+{% if user %}
+    pWelcome, {{ user }}!
+{% else %}
+    pPlease log in.
+{% endif %}
+```
+
+
+### Custom Filters
+
+
+Custom filters in Jinja2 is used to define your own filters to manipulate data before displaying it in the template.
+
+
+In the following example, a custom filter reverse is defined in Jinja2 to reverse the string "hello", resulting in "olleh" when applied in the template −
+
+
+```python
+# Define a custom filter function
+def reverse_string(s):
+    return s[::-1]
+
+# Register the filter with the Jinja2 environment
+env.filters['reverse'] = reverse_string
+```
+
+
+In your template, you can then apply the "reverse" filter to any string −
+
+
+```python
+{{ "hello" | reverse }}
+```
+
+
+Following is the output obtained −
+
+
+```python
+olleh
+```
+

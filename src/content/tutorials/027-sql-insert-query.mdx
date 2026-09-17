@@ -1,0 +1,446 @@
+---
+title: "SQL - Insert Query"
+description: "Learn SQL - Insert Query with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 270
+group: "SQL Queries"
+seoTitle: "SQL - Insert Query — CodesCompiler SQL Guide"
+permalink: "sql-insert-query"
+---
+
+
+# SQL INSERT INTO Statement
+
+
+
+
+
+
+## SQL INSERT INTO Statment
+
+
+TheINSERT INTOstatement in SQL is used to add new records to a database table. You can insert data into all columns or specify only certain columns, depending on your needs.
+
+
+When using this statement, it is important to make sure that each value matches the data type and constraints (such as NOT NULL, UNIQUE, or PRIMARY KEY) of the corresponding column. Also, the number of values should match the total columns in the table or those specified in the query. Otherwise, the database will throw an error and reject the insert.
+
+
+### Syntax
+
+
+Following is the basic syntax to insert records into all columns in SQL:
+
+
+```sql
+INSERT INTO table_name 
+
+VALUES (value1, value2, value3, ...);
+```
+
+
+### Example
+
+
+To see an example, let us create a table with name CUSTOMERS in the MySQL database using the CREATE TABLE statement as shown below:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+
+   ID INT NOT NULL,
+
+   NAME VARCHAR(20) NOT NULL,
+
+   AGE INT NOT NULL,
+
+   ADDRESS CHAR(25),
+
+   SALARY DECIMAL(18, 2),
+
+   PRIMARY KEY (ID)
+
+);
+```
+
+
+The following SQL INSERT INTO statements will create three records in the empty CUSTOMERS table:
+
+
+```sql
+INSERT INTO CUSTOMERS
+
+VALUES (1, 'Ramesh', 32, 'Ahmedabad', 2000.00 );
+
+
+
+INSERT INTO CUSTOMERS 
+
+VALUES (2, 'Khilan', 25, 'Delhi', 1500.00 );
+
+
+
+INSERT INTO CUSTOMERS 
+
+VALUES (3, 'Kaushik', 23, 'Kota', 2000.00 );
+```
+
+
+We get the following output after each insert:
+
+
+```sql
+Query OK, 1 row affected (0.00 sec)
+```
+
+
+### Verifying the Insert
+
+
+After inserting new rows into the table, you can use theSELECTstatement to check if the data was added successfully. This helps confirm that the record is now part of the table:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+This command will display all the records from theCUSTOMERStable, including the one you just inserted:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.00
+
+
+## Insert Data into Specific Columns
+
+
+Sometimes, you may not have data for every column in the table, or you may only want to insert values into certain columns. In that case, you can insert data into specific columns by mentioning their names.
+
+
+This way, only the columns you list will receive values, and the rest will either use their default values or stay empty (if allowed).
+
+
+### Syntax
+
+
+Following is the basic syntax to insert records into all columns in SQL:
+
+
+```sql
+INSERT INTO table_name (column1, column2, ...)
+
+VALUES (value1, value2, ...);
+```
+
+
+### Example
+
+
+In this example, only the required fields are inserted. TheADDRESSandSALARYcolumns in the CUSTOMERS table will remainNULLunless a default is defined:
+
+
+```sql
+INSERT INTO CUSTOMERS (ID, NAME, AGE)
+
+VALUES (4, 'Chaitali', 25);
+```
+
+
+### Verification
+
+
+To verify that the data has been inserted correctly into the specified columns, you can run the following SQL SELECT query:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+This will display all the records from theCUSTOMERStable, including the one you just inserted:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25NULLNULL
+
+
+## Inserting Multiple Rows at Once
+
+
+You can also insert multiple rows in a single statement instead of adding one row at a time. This is helpful when you need to add a lot of data quickly. Each set of values represents one row, and all the rows are added to the table at once. This helps in saving execution time.
+
+
+### Syntax
+
+
+```sql
+INSERT INTO table_name (column1, column2, ...)
+
+VALUES 
+
+(value1a, value2a, ...),
+
+(value1b, value2b, ...),
+
+(value1c, value2c, ...);
+```
+
+
+### Example
+
+
+In the example below, we insert three more records into theCUSTOMERStable using a single SQL statement:
+
+
+```sql
+INSERT INTO CUSTOMERS (ID, NAME, AGE, ADDRESS, SALARY)
+
+VALUES 
+
+(5, 'Hardik', 27, 'Bhopal', 1800.00),
+
+(6, 'Komal', 22, 'Hyderabad', 1600.00),
+
+(7, 'Muffy', 24, 'Pune', 1900.00);
+```
+
+
+After executing this command, you will see the following output for each row inserted:
+
+
+```sql
+Query OK, 3 rows affected (0.04 sec)
+
+Records: 3  Duplicates: 0  Warnings: 0
+```
+
+
+### Verification
+
+
+You can verify the newly inserted records by selecting all rows from the CUSTOMERS table:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+This will now display all the records including the three new rows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25NULLNULL5Hardik27Bhopal1800.006Komal22Hyderabad1600.007Muffy24Pune1900.00
+
+
+## Inserting Data from One Table into Another Table
+
+
+SQL also allows you to insert data into a table by copying it from another table. This is useful when transferring data between tables, backing up records, or transforming data for analysis. We use theINSERT INTO ... SELECTstatement for this purpose.
+
+
+### Insert All Columns from Another Table
+
+
+If both tables have the same structure (same number of columns and compatible data types), you can copy all rows and columns from one table to another using a simpleINSERT INTO ... SELECT *statement.
+
+
+Syntax
+
+
+Following is the basic syntax to insert all columns from one table to another in MySQL database:
+
+
+```sql
+INSERT INTO target_table
+
+SELECT * FROM source_table;
+```
+
+
+Example
+
+
+Assume you have another table namedNEW_CUSTOMERSwith the same structure as theCUSTOMERStable. You can insert all records from CUSTOMERS into NEW_CUSTOMERS as shown below:
+
+
+```sql
+INSERT INTO NEW_CUSTOMERS
+
+SELECT * FROM CUSTOMERS;
+```
+
+
+We get the output as shown below:
+
+
+```sql
+Query OK, 0 rows affected (0.04 sec)
+```
+
+
+Verification
+
+
+You can use theSELECTquery to verify if the records have been copied:
+
+
+```sql
+SELECT * FROM NEW_CUSTOMERS;
+```
+
+
+You can see in the following table the the records have been inserted into the NEW_CUSTOMERS table:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25NULLNULL5Hardik27Bhopal1800.006Komal22Hyderabad1600.007Muffy24Pune1900.00
+
+
+### Insert Specific Columns from Another Table
+
+
+If you only want to copy certain columns from one table to another, you can specify those columns in both theINSERT INTOandSELECTparts of the statement. This is useful when the tables don't have exactly the same structure.
+
+
+Syntax
+
+
+Following is the basic syntax to insert specific columns from one table to another:
+
+
+```sql
+INSERT INTO target_table (column1, column2, ...)
+
+SELECT column1, column2, ...
+
+FROM source_table;
+```
+
+
+Example
+
+
+Suppose the CUSTOMERS table contains the same column names, but you only want to copy ID, NAME, and AGE into NEW_CUSTOMERS:
+
+
+```sql
+INSERT INTO NEW_CUSTOMERS (ID, NAME, AGE)
+
+SELECT ID, NAME, AGE FROM CUSTOMERS;
+```
+
+
+Following is the output obtained:
+
+
+```sql
+Query OK, 7 rows affected (0.03 sec)
+
+Records: 7  Duplicates: 0  Warnings: 0
+```
+
+
+Verification
+
+
+Again, you can verify the data by running the SELECT command on the NEW_CUSTOMERS table:
+
+
+```sql
+SELECT * FROM NEW_CUSTOMERS;
+```
+
+
+Following is the table produced:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32NULLNULL2Khilan25NULLNULL3Kaushik23NULLNULL4Chaitali25NULLNULL5Hardik27NULLNULL6Komal22NULLNULL7Muffy24NULLNULL
+
+
+### Insert Specific Rows Based on Condition
+
+
+You can also insert only specific rows from one table into another based on a condition. This is done by adding aWHEREclause to the SELECT part of the statement. It is useful for filtering data before inserting it.
+
+
+Syntax
+
+
+Following is the basic syntax to insert specific rows based on a condition from one table to another:
+
+
+```sql
+INSERT INTO target_table (column1, column2, ...)
+
+SELECT column1, column2, ...
+
+FROM source_table
+
+WHERE condition;
+```
+
+
+Example
+
+
+Here, we only insert rows where the AGE is greater than 30 from CUSTOMERS into NEW_CUSTOMERS table:
+
+
+```sql
+INSERT INTO NEW_CUSTOMERS (ID, NAME, AGE)
+
+SELECT ID, NAME, AGE
+
+FROM CUSTOMERS AS C
+
+WHERE AGE > 30
+
+  AND NOT EXISTS (
+
+    SELECT 1 FROM NEW_CUSTOMERS AS N
+
+    WHERE N.ID = C.ID
+
+  );
+```
+
+
+We get the output as shown below:
+
+
+```sql
+Query OK, 0 rows affected (0.02 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+```
+
+
+To avoid inserting duplicate entries that already exist in the target table, we can use aNOT EXISTScondition in the query. This ensures that only rows from theCUSTOMERStable which do not already exist inNEW_CUSTOMERSbased on theIDcolumn are inserted.
+
+
+Verification
+
+
+To confirm that the data has been inserted correctly (and without duplication), you can run the following query:
+
+
+```sql
+SELECT * FROM NEW_CUSTOMERS;
+```
+
+
+The table below shows the final state of theNEW_CUSTOMERStable. You can see that no duplicate rows were inserted, and the data remains consistent:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32NULLNULL2Khilan25NULLNULL3Kaushik23NULLNULL4Chaitali25NULLNULL5Hardik27NULLNULL6Komal22NULLNULL7Muffy24NULLNULL
+
+
+## Important Points About INSERT INTO Statement
+
+
+When you use theINSERT INTOstatement in SQL, it is important to follow certain rules to make sure the data is inserted correctly and without errors:
+
+
+
+- Make sure the number and order of values match the columns specified in the statement.
+- If you skip some columns, those columns will be assigned their default values, orNULLif no default is set.
+- Always provide values that match the correct data types for each column to prevent data type mismatch errors.
+
+

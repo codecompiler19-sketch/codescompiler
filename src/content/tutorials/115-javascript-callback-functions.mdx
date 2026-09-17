@@ -1,0 +1,589 @@
+---
+title: "JavaScript - Callback Functions"
+description: "Learn JavaScript - Callback Functions with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1150
+group: "JavaScript Asynchronous"
+seoTitle: "JavaScript - Callback Functions — CodesCompiler JavaScript Guide"
+permalink: "javascript-callback-functions"
+---
+
+
+# JavaScript - Callback Functions
+
+
+
+
+## What is the Callback Function?
+
+
+The callback function in JavaScript is regularly passed as an argument of another function. Dont consider the callback as a name or keyword here. The callback function name can be any valid identifier.
+
+
+The callback function can be called inside the parent function after completing the particular task in the parent function. It is mainly used to handle the asynchronous operations.
+
+
+### Syntax
+
+
+You can follow the syntax below to use the callback functions.
+
+
+```javascript
+function func_name(callback) {
+
+   // function body
+
+   callback();
+
+}
+
+func_name(callback); // Function invocation
+
+OR
+
+func_name(() => {
+
+   // Callback function body
+
+})
+```
+
+
+In the above syntax, we have passed the callback as an argument of the func_name() function.
+
+
+As shown in the above syntax, you can also pass the arrow or anonymous function as a callback function.
+
+
+### Example
+
+
+In the below code, we have passed the multiply() function as an argument of the sum() function.
+
+
+In the sum() function, we call the callback function at the end.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      let output = document.getElementById('output');
+
+      function multiply(a) {
+
+         let m = a * 4;
+
+         output.innerHTML = "The result is " + m + ".<br>";
+
+      }
+
+      function sum(a, b, callback) {
+
+         let c = a + b;
+
+         callback(c); // Invoking the callback funciton
+
+      }
+
+      sum(4, 8, multiply); // Passing multiply function as a callback
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The result is 48.
+```
+
+
+## Passing the anonymous function as a callback
+
+
+### Example
+
+
+In the code below, we have defined the mathOperations() function, which takes the callback function as an argument.
+
+
+We call the callback function inside the mathOperations() function and get its returned value.
+
+
+While calling the mathOperations() function, we have passed the different anonymous functions as an argument. This way, you can control which function you want to execute inside the particular function using the callback functions.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      let output = document.getElementById('output');
+
+      function mathOperation(a, b, callback) {
+
+         let result = callback(a, b);
+
+         output.innerHTML += "The result is " + result + ".<br>";
+
+      }
+
+      mathOperation(10, 20, function (a, b) {
+
+         return a + b; // Callback function to add numbers
+
+      });
+
+      mathOperation(20, 10, function (a, b) {
+
+         return a - b; // Callback function to subtract numbers
+
+      });
+
+      mathOperation(10, 20, function (a, b) {
+
+         return a * b; // Callback function to multiply numbers
+
+      });
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The result is 30.
+
+The result is 10.
+
+The result is 200.
+```
+
+
+## Need for the Callback Function
+
+
+Now, lets understand the need for callback functions in real-time development.
+
+
+JavaScript is a single-threaded programming language. So, it executes the code line-by-line. When you need to fetch the data from API, load images, or perform any asynchronous operations, it can take time and block the execution of the other code.
+
+
+In such cases, you can use the callback function to execute the code, which must be executed after the asynchronous operation, and you can execute the other code without blocking it.
+
+
+For example, you are making an API request and need the API data for validation purposes. So, you can perform the data validation in the callback function and continue running other tasks.
+
+
+Lets understand it using the setTimeOut() method.
+
+
+### Example
+
+
+In the below code, we use the setTimeOut() method to write the asynchronous code.
+
+
+It executes the printMessage() function after the delay of the 500 milliseconds. We have passed the printMessage() function as a callback of the setTimeOut() method.
+
+
+In the output, you can observe that the script runs without blocking, and it executes the printMessage() function after 500 milliseconds.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      let output = document.getElementById('output');
+
+      output.innerHTML += "Start of the program. <br>";
+
+      setTimeout(printMessage, 500); // Asynchronous code
+
+      function printMessage() {
+
+         output.innerHTML += "In the printMessage() function. <br>";
+
+      }
+
+      output.innerHTML += "End of the program. <br>";
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Start of the program.
+
+End of the program.
+
+In the printMessage() function.
+```
+
+
+## Callback Function with built-in Methods
+
+
+Many built-in JavaScript method takes the callback function as an argument to execute the custom JavaScript code once the execution of the method is finished.
+
+
+Here, we will look at 2 to 3 built-in methods, which take the callback function as an argument with examples.
+
+
+### JavaScript array.sort() method with a callback function
+
+
+The array.sort() method is used to sort the array element. It sorts the array elements in ascending order by default. If you want to sort the array elements in descending order or any custom order, you can pass the callback function as an argument.
+
+
+#### Syntax
+
+
+Follow the syntax below to use the array.sort() method
+
+
+```javascript
+arr.sort(callback);
+```
+
+
+The array.sort() method optionally takes the callback function as an argument. The callback function should return 0, 1, or -1.
+
+
+#### Example
+
+
+In the below code, we have defined the array containing the numeric values. First, we have used the sort() method without a callback function. You can see that it sorts the array in the ascending order.
+
+
+After that, we passed the anonymous function as a callback function of the sort() method. The callback function returns the difference between element b and a to sort the array in descending order.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      let output = document.getElementById('output');
+
+      let arr = [23, 21, 56, 11, 10, 7, 8];
+
+      output.innerHTML += "The sorted array is - " + arr.sort();
+
+      
+
+      // Sorting array in descending order
+
+      let sorted = arr.sort(function (a, b) {
+
+         return b - a;
+
+      });
+
+      output.innerHTML += "<br>The sorted array in descending order is - " + sorted;
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The sorted array is - 10,11,21,23,56,7,8
+
+The sorted array in descending order is - 56,23,21,11,10,8,7
+```
+
+
+### JavaScript array.filter() method with the callback functions
+
+
+The array.filter() method is used to filter the array elements. It takes the callback function as an argument. If the callback function returns true, it filters the element. Otherwise, it skips the array element.
+
+
+#### Syntax
+
+
+Follow the syntax below to use the array.filter() method.
+
+
+```javascript
+Array.filter(callback);
+```
+
+
+The callback function must return the boolean value.
+
+
+### Example
+
+
+In the below code, we have passed the filterCallback() function as a callback of the filter() method. The filterCallback() function returns the boolean value if the number is even.
+
+
+At last, you can see the filtered even number in the output.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      let output = document.getElementById('output');
+
+      let arr = [23, 21, 56, 11, 10, 7, 8];
+
+      let eventNums = arr.filter(filtercallback);
+
+
+
+      function filtercallback(element) {
+
+         return element % 2 == 0;
+
+      }
+
+      output.innerHTML += "The original array is: " + arr + "<br>";
+
+      output.innerHTML += "The even numbers are: " + eventNums;
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The original array is: 23,21,56,11,10,7,8
+
+The even numbers are: 56,10,8
+```
+
+
+## Callback Function with Events
+
+
+You can use the addEventListner() method in JavaScript to listen for the event. The addEventListener() method takes the callback function as a second parameter.
+
+
+It executes the callback function whenever a specified event gets triggered on the web page.
+
+
+### Syntax
+
+
+Follow the syntax below to use the addEventListener() method.
+
+
+```javascript
+Element.addEventListener(event, callback);
+```
+
+
+In the above syntax, an event is a string representing the event's name, and a callback is a function that should be executed when an event triggers.
+
+
+### Example
+
+
+In the below code, we have created the button.
+
+
+In JavaScript, we accessed the button using its id and added the click event.
+
+
+Whenever the user clicks the button, it will print the message.
+
+
+```html
+<html>
+
+<body>
+
+   <button id = "btn"> Click Me </button>
+
+   p id = "output" 
+
+   <script>
+
+      let output = document.getElementById('output');
+
+      let button = document.getElementById('btn');
+
+      button.addEventListener('click', function () {
+
+         output.innerHTML = 'You have clicked the button. <br>';
+
+      });
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+## Nesting Callbacks and Callback Hell
+
+
+You can have nested callback functions like the nested loop or if-else statement in JavaScript. If the first function is dependent on the data of the second function, and the second function is dependent on the data of the third function, you may require the nested callback function.
+
+
+Lets understand it via the example below.
+
+
+### Example
+
+
+The asyncTask() function completes the tasks in the below code and calls the callback function passed as an argument.
+
+
+After that, we called the asyncTask() function and passed the callback function as a third argument. In the callback function, we have called the asyncTask() function again and passed the callback function as a third argument.
+
+
+In this way, we have used the callback functions at 3 nested levels.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      let output = document.getElementById('output');
+
+      function asyncTask(taskName, duration, callback) {
+
+         output.innerHTML += "Task started " + taskName + "<br/>"
+
+         setTimeout(() => {
+
+            output.innerHTML += 'Completed ' + taskName + '<br/>';
+
+            callback();
+
+         }, duration);
+
+      }
+
+      
+
+      // Task 1
+
+      asyncTask('Task 1', 1000, () => {
+
+      
+
+         // Task 2
+
+         asyncTask('Task 2', 1500, () => {
+
+         
+
+            // Task 3
+
+            asyncTask('Task 3', 1000, () => {
+
+               output.innerHTML += "All tasks completed";
+
+            });
+
+         });
+
+      });
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Task started Task 1
+
+Completed Task 1
+
+Task started Task 2
+
+Completed Task 2
+
+Task started Task 3
+
+Completed Task 3
+
+All tasks completed
+```
+
+
+Due to its complex syntax of the nested callback, its also called the callback hell.
+
+
+Whenever you need to use the nested callback functions, you can use the promises or async/await to write the simpler code.
+
+
+In the upcoming chapters, you will learn the promises and async/await to handle the asynchronous operations.
+

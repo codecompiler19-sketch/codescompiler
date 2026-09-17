@@ -1,0 +1,450 @@
+---
+title: "SQL - LIKE Operator"
+description: "Learn SQL - LIKE Operator with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 460
+group: "SQL Operators and Clauses"
+seoTitle: "SQL - LIKE Operator — CodesCompiler SQL Guide"
+permalink: "sql-like-clause"
+---
+
+
+# SQL - Like Operator
+
+
+Table of contentThe SQL LIKE OperatorSQL Wildcards in LIKE OperatorUsing % Wildcard in SQL LIKEUsing _ Wildcard in SQL LIKECombining Wildcards in SQL LIKESQL LIKE with ORSQL NOT LIKEEscape Characters in SQL LIKESQL LIKE Without Using WildcardsCommon Uses of SQL LIKE Operator
+
+
+
+
+## The SQL LIKE Operator
+
+
+TheSQL LIKEoperator is used to search for a specified pattern in a column. It is often used in the WHERE clause of the SELECT, UPDATE, or DELETE statements to filter results based onwildcard patterns.
+
+
+Suppose we need to submit the list of all the students whose name starts with 'K'. We can obtain this with the help of the LIKE operator as follows:
+
+
+```sql
+WHERE student_name LIKE 'K%';
+```
+
+
+Here,
+
+
+
+- %is a wildcard representing zero or more characters.
+- K%specifies that it will display the list of all the students whose namestarts with'k'.
+
+
+
+The LIKE operator can be used with strings, numbers, or date values. However, using the string values is recommended.
+
+
+### Syntax
+
+
+The basic syntax of the SQL LIKE operator is as follows:
+
+
+```sql
+SELECT column1, column2, ...
+FROM table_name
+WHERE columnn LIKE specified_pattern;
+```
+
+
+## SQL Wildcards in LIKE Operator
+
+
+SQL wildcards are special characters used in SQL queries to match patterns in the data.
+
+
+Following are the two most common wildcards used in conjunction with the LIKE operator in MySQL database:
+
+
+S.NoWildCard & Definition1%The percent sign represents zero, one or multiple characters.2_The underscore represents a single number or character.
+
+
+In the LIKE operator, the above wildcard characters can be used individually as well as in combinations with each other.
+
+
+### Examples
+
+
+The table given below has a few examples showing the WHERE clause having different LIKE operators with '%' and '_':
+
+
+S.NoStatement & Description1WHERE SALARY LIKE '200%'Finds any values that start with 200.2WHERE SALARY LIKE '%200%'Finds any values that have 200 in any position.3WHERE SALARY LIKE '_00%'Finds any values that have 00 in the second and third positions.4WHERE SALARY LIKE '2_%_%'Finds any values that start with 2 and are at least 3 characters in length.5WHERE SALARY LIKE '%2'Finds any values that end with 2.6WHERE SALARY LIKE '_2%3'Finds any values that have a 2 in the second position and end with a 3.7WHERE SALARY LIKE '2___3'Finds any values in a five-digit number that start with 2 and end with 3.
+
+
+## Using % Wildcard in SQL LIKE
+
+
+The % sign represents zero or multiple characters. The '%' wildcard matches any length of a string which even includes the zero length.
+
+
+### Example: Find salaries starting with 200
+
+
+To understand it better let us consider the CUSTOMERS table which contains the personal details of customers including their name, age, address and salary etc. as shown below:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),       
+   PRIMARY KEY (ID)
+);
+```
+
+
+Now, insert values into this table using the INSERT statement as follows:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+(2, 'Khilan', 25, 'Delhi', 1500.00 ),
+(3, 'Kaushik', 23, 'Kota', 2000.00 ),
+(4, 'Chaitali', 25, 'Mumbai', 6500.00 ),
+(5, 'Hardik', 27, 'Bhopal', 8500.00 ),
+(6, 'Komal', 22, 'Hyderabad', 4500.00 ),
+(7, 'Muffy', 24, 'Indore', 10000.00 );
+```
+
+
+The table will be created as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+Now, let us display all the records from the CUSTOMERS table, where the SALARY starts with 200:
+
+
+```sql
+SELECT * FROM CUSTOMERS WHERE SALARY LIKE '200%';
+```
+
+
+This would produce the following result:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.003Kaushik23Kota2000.00
+
+
+### Example: Find names ending with "sh"
+
+
+The following query finds rows where the NAME ends withsh:
+
+
+```sql
+SELECT * FROM CUSTOMERS WHERE NAME LIKE '%sh';
+```
+
+
+This produces the following output:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.00
+
+
+### Example: Find names containing "al"
+
+
+Below is the query that displays all the records from the CUSTOMERS table previously created with the NAME that has 'al' in any position. Here, we are using multiple '%' wildcards in the LIKE condition:
+
+
+```sql
+SELECT * FROM CUSTOMERS WHERE NAME LIKE '%al%';
+```
+
+
+The following result is produced:
+
+
+IDNAMEAGEADDRESSSALARY4Chaitali25Mumbai6500.006Komal22Hyderabad4500.00
+
+
+## Using _ Wildcard in SQL LIKE
+
+
+Theunderscore (_)wild card represents a single number or character. A single '_' looks for exactly one character similar to the '%' wildcard.
+
+
+### Example: Names starting with K and at least 4 characters long
+
+
+Following is the query which would display all the records from the CUSTOMERS table previously created, where the Name starts withKand is at least 4 characters in length:
+
+
+```sql
+SELECT * FROM CUSTOMERS WHERE NAME LIKE 'K___%';
+```
+
+
+The result obtained is given below:
+
+
+IDNAMEAGEADDRESSSALARY2Khilan25Delhi1500.003Kaushik23Kota2000.006Komal22Hyderabad4500.00
+
+
+### Example: Names with "m" in the third position
+
+
+Following is the query to display all the records from the CUSTOMERS table, where the NAME has 'm' in the third position:
+
+
+```sql
+SELECT * FROM CUSTOMERS WHERE NAME LIKE '__m%';
+```
+
+
+We get the following result on executing the above query:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.006Komal22Hyderabad4500.00
+
+
+## Combining Wildcards in SQL LIKE
+
+
+You can combine%and_wildcards to create more precise patterns. The underscore_matches exactly one character, while%matches zero or more characters.
+
+
+Below are some patterns with their meanings in brief:
+
+
+PatternDescription'K___%'Name starts with K, followed by at least three characters, then any number of characters.'_2%3'Any first character, second character is 2, ends with 3.'2___3'Five-character value starting with 2 and ending with 3.
+
+
+Combining wildcards is useful when you know the approximate length or specific characters at certain positions but want to allow different characters in other places.
+
+
+## SQL LIKE with OR
+
+
+We can also use the LIKE operator with multiple string patterns for selecting rows by using theANDorORoperators.
+
+
+### Syntax
+
+
+Following is the basic syntax of using LIKE operator with OR operator:
+
+
+```sql
+SELECT column1, column2, ...
+FROM table_name
+WHERE column1 LIKE pattern1 OR column2 LIKE pattern2 OR ...;
+```
+
+
+### Example
+
+
+Here, the SQL query retrieves the records of the customers whose name starts withCand ends withi, or customers whose name ends withk:
+
+
+```sql
+SELECT * FROM CUSTOMERS WHERE NAME LIKE 'C%i' OR NAME LIKE '%k';
+```
+
+
+This will produce the following result:
+
+
+IDNAMEAGEADDRESSSALARY3Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.00
+
+
+## SQL NOT LIKE
+
+
+We use the NOT operator with LIKE to extract the rows which does not contain a particular string provided in the search pattern.
+
+
+### Syntax
+
+
+Following is the basic syntax of NOT LIKE operator in SQL:
+
+
+```sql
+SELECT column1, column2, ...
+FROM table_name
+WHERE column1 NOT LIKE pattern;
+```
+
+
+### Example
+
+
+In the query given below, we are fetching all the customers whose name does not start withK:
+
+
+```sql
+SELECT * FROM CUSTOMERS WHERE NAME NOT LIKE 'K%';
+```
+
+
+This will produce the following result:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.007Muffy24Indore10000.00
+
+
+## Escape Characters in SQL LIKE
+
+
+The escape character in SQL is used to exclude certain wildcard characters from the expression of theLIKEoperator. By doing so, we can use these characters in their general sense.
+
+
+Using the escape character, we can also avoid using the characters that are reserved in SQL syntax to denote specific commands, such as the single quote',%and_.
+
+
+For example, if you need to search for%as a literal in the LIKE condition, then it is done using Escape character.
+
+
+An escape character is only defined as a single character. It is suggested to choose the character which is not present in our data.
+
+
+### Syntax
+
+
+The syntax for using the LIKE operator with escape characters is as follows:
+
+
+```sql
+SELECT column1, column2, ...
+FROM table_name
+WHERE column1 LIKE 'pattern ESCAPE escape_character';
+```
+
+
+Where,
+
+
+
+- patternis the pattern you want to match.
+- ESCAPEis the keyword that indicates the escape character
+- escape_characteris the character that you want to use as the escape character.
+
+
+
+### Example: Find values containing literal %
+
+
+Let us create a new table EMPLOYEE using the query below:
+
+
+```sql
+CREATE TABLE EMPLOYEE (
+   SALARY DECIMAL (18,2) NOT NULL,
+   BONUS_PERCENT VARCHAR (20)
+);
+```
+
+
+Now, we can insert values into this empty tables using the INSERT statement as follows:
+
+
+```sql
+INSERT INTO EMPLOYEE VALUES 
+(67000.00, '45.00'),
+(54000.00, '20.34%'),     
+(75000.00, '51.00'),        
+(84000.00, '56.82%');
+```
+
+
+TheEmployeetable consists of the salary of employees in an organization and the bonus percentage in their salary as shown below:
+
+
+SALARYBONUS_PERCENT67000.0045.0054000.0020.34%75000.0051.0084000.0056.82%
+
+
+Now, we are displaying all the records from the EMPLOYEE table, where the BONUS_PERCENT contains the%literal:
+
+
+```sql
+SELECT * FROM EMPLOYEE 
+WHERE BONUS_PERCENT LIKE'%!%%' ESCAPE '!';
+```
+
+
+This will produce the following result:
+
+
+SALARYBONUS_PERCENT54000.0020.34%84000.0056.82%
+
+
+### Example: Find values starting with 2 and containing %
+
+
+In here, we are retrieving the BONUS_PERCENT that starts with2and contains the%literal:
+
+
+```sql
+SELECT * FROM EMPLOYEE 
+WHERE BONUS_PERCENT LIKE'2%!%%' ESCAPE '!';
+```
+
+
+Following result is obtained:
+
+
+SALARYBONUS_PERCENT54000.0020.34%
+
+
+## SQL LIKE Without Using Wildcards
+
+
+When theLIKEoperator is used without any wildcards, it behaves like the`=`operator and matches the value exactly. This is sometimes done to make the pattern clearer or to allow adding wildcards later.
+
+
+### Syntax
+
+
+Following is the syntax to use the SQL LIKE operator without using wildcards:
+
+
+```sql
+SELECT column1, column2, ...
+FROM table_name
+WHERE column_name LIKE 'exact_value';
+```
+
+
+### Example: Exact match for "Komal"
+
+
+```sql
+SELECT * FROM CUSTOMERS WHERE NAME LIKE 'Komal';
+```
+
+
+This returns only the rows where NAME is exactlyKomal:
+
+
+IDNAMEAGEADDRESSSALARY6Komal22Hyderabad4500.00
+
+
+## Common Uses of SQL LIKE Operator
+
+
+The few uses of LIKE operators are given below:
+
+
+
+- It helps us to extract data that matches with the required pattern.
+- It helps us in performing complex regex-based queries on our data.
+- It simplifies the complex queries.
+
+

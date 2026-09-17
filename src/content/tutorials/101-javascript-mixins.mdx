@@ -1,0 +1,352 @@
+---
+title: "JavaScript - Mixins"
+description: "Learn JavaScript - Mixins with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1010
+group: "Object Oriented JavaScript"
+seoTitle: "JavaScript - Mixins — CodesCompiler JavaScript Guide"
+permalink: "javascript-mixins"
+---
+
+
+# JavaScript - Mixins
+
+
+
+
+## Mixins in JavaScript
+
+
+The mixins in JavaScript allow you to add the properties of the other objects or classes to the target object's or class's prototype and extend the functionality of the target object. After that, you can access the other object's method using the target object.
+
+
+In JavaScript, each object contains a built-in property called prototype. The prototype is itself an object. So prototype object will have its own prototype property making what we call prototype changing. Prototype chain helps to inherit properties and methods from other objects.
+
+
+Also, you can say that mixins allow you to borrow functionality from other objects or classes.
+
+
+In JavaScript, inheritance allows you to extend the functionality of the object or class. Similarly, Mixins also allows you to extend the functionality of the object or classes.
+
+
+## JavaScript Mixins with Objects
+
+
+Using the concept of the JavaScript mixins, you can extend the functionality of the target object by adding properties and methods of the other objects.
+
+
+### Syntax
+
+
+Following is the syntax to use Mixins with objects in JavaScript −
+
+
+```javascript
+Object.assign(target, obj);
+```
+
+
+In the above syntax, we used the Object.assign() method to extend the functionality of the target object.
+
+
+### Parameters
+
+
+
+- target− It is an object whose functionality you need to extend.
+- obj−  It is an object whose functionality will be extended by the target object.
+
+
+
+### Example
+
+
+In the below code, the parent object contains the printMessage(), and the child object contains the showName() method. Both methods print different messages.
+
+
+After that, we used the Object.assign() method to extend the functionality of the child object with the methods of the parent object.
+
+
+Next, we invoke the parent and child object message using the child object only, and you can observe the output.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      const output = document.getElementById("output");
+      const parent = {
+         name: "parent",
+         printMessage() {
+            output.innerHTML = 'This is a parent object.<br>';
+         }
+      }
+      const child = {
+         showName() {
+            output.innerHTML += 'This is a child object.<br>';
+         }
+      }
+      Object.assign(child, parent); // Mixins
+      child.printMessage(); //Executing the method of parent object using child object
+      child.showName();
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+This is a parent object.
+This is a child object.
+```
+
+
+## JavaScript Mixins with Classes
+
+
+You can also extend the functionality of the classes through objects using the mixins.
+
+
+### Syntax
+
+
+We can follow the syntax below to use mixins with classes −
+
+
+```javascript
+Object.assign(class_name.prototype, obj);
+```
+
+
+In the above syntax, we have passed the prototype of the class as the first parameter and the object as a second parameter whose functionalities need to extend with classes.
+
+
+### Example
+
+
+In the below code, the animal object contains the 'eats' property and run() method. The cat class contains only the constructor.
+
+
+We add the methods and properties of the animal object to the cat class's prototype. After that, we execute the run() method using the instance of the cat class.
+
+
+```html
+<html>
+   <body>
+   p id = "output" 
+   <script>
+      const output = document.getElementById("output");
+      const animal = {
+         eats: true,
+         run() {
+            output.innerHTML += "Animals run. <br>";
+         }
+      }
+
+      class cat {
+         constructor() {
+            this.name = "Cat";
+         }
+      }
+      Object.assign(cat.prototype, animal); // Mixins
+      const catObj = new cat();
+      output.innerHTML += "Cat eats: " + catObj.eats + "<br>";
+      catObj.run();
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Cat eats: true
+Animals run.
+```
+
+
+## Achieving Multiple Inheritance Using the Mixins
+
+
+JavaScript doesn't support multiple inheritance, which means extending one class's functionality with multiple classes or objects. So, you can achieve multiple inheritance using mixins.
+
+
+### Syntax
+
+
+Users can follow the syntax below to use the mixins to achieve multiple inheritance.
+
+
+```javascript
+Object.assign(target, ob1, obj);
+```
+
+
+The above syntax will add the obj1 and obj2 object's functionality to the target object.
+
+
+### Example: Inheriting multiple objects
+
+
+In the below code, eat object contains the eatFood() method, and the drink object contains the drinkWater() method.
+
+
+We add properties and methods of the eat and drink object to the person object. After that, we access the eatFood() and drinkWater() methods using the person object.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+      const output = document.getElementById("demo");
+      const eat = {
+         eatFood() {
+            output.innerHTML += "Person is eating the food! <br>";
+         }
+      }
+      const drink = {
+         drinkWater() {
+            output.innerHTML += "Person is drinking water! <br>";
+         }
+      }
+      const person = {
+         name: "John",
+      }
+      Object.assign(person, eat, drink); // Mutiple Mixins
+      person.eatFood();
+      person.drinkWater();
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Person is eating the food!
+Person is drinking water!
+```
+
+
+### Example: Multiple Inheritance with Classes
+
+
+The below example demonstrates extending one class with multiple classes.
+
+
+The Entity class is the parent class, and it contains the state() method. The Human class extends the Entity class and contains the walk() method.
+
+
+The Driver() function creates a new class, extends a class passed as a parameter, and adds the Drive() method to the class. Similarly, the Swimmer() function creates a new class, extends the class with a class passed as a parameter, and adds the swim() method.
+
+
+After that, we defined multiple other classes. The person class extends the class returned by the Driver() class. The Driver() function returns a new class extended with the Human class. Same way, we have created the Mechanic and SwimmerPerson classes.
+
+
+After that, we have created the objects of various classes and executed the methods inherited by them.
+
+
+```html
+<html>
+<body>
+   p id = "demo" 
+   <script>
+      let output = document.getElementById("demo");
+      // Parent class
+      class Entity {
+         state() {
+            return 'It is in the idle state!';
+         }
+      }
+      // Child class
+      class Human extends Entity {
+         walk() {
+            return 'walking on the field.';
+         }
+      }
+      // Custom functionalities
+      function Driver(parentClass) {
+         return class extends parentClass {
+            drive() {
+               return 'driving on the road';
+            }
+         };
+      }
+      function Swimmer(parentClass) {
+         return class extends parentClass {
+            swim() {
+               return 'swimming in water';
+            }
+         };
+      }
+      // Some other classes
+      class Person extends Driver(Human) { }
+      class Mechanic extends Driver(Entity) { }
+      class SwimmerPerson extends Swimmer(Person) { }
+      // Objects of classes
+      const person = new Person();
+      const personDrive = person.drive();
+      const mechanic = new Mechanic();
+      const mechanicDrive = mechanic.drive();
+
+      const swimmerPerson = new SwimmerPerson();
+      const swimmerDrive = swimmerPerson.drive();
+      const swimmerSwim = swimmerPerson.swim();
+
+      // Printing outputs
+      output.innerHTML += 'State of the PERSON: ' + personDrive + '<br>';
+      output.innerHTML += 'State of the MECHANIC: ' + mechanicDrive + '<br>';
+      output.innerHTML += 'State of the SWIMMER PERSON: ' + swimmerDrive + ", " + swimmerSwim + '<br>';
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+State of the PERSON: driving on the road
+State of the MECHANIC: driving on the road
+State of the SWIMMER PERSON: driving on the road, swimming in water
+```
+
+
+This way, you can use the mixins to achieve multiple inheritance.
+
+
+## Benefits of using Mixins
+
+
+Here, we have listed some benefits of using mixins.
+
+
+
+- Code reusability− You can reuse the code by borrowing methods and properties from other objects of other classes.
+- Multiple inheritance− JavaScript doesn't support multiple inheritance by default, but you can achieve similar functionalities using mixins.
+- Extensibility− You can add additional functionalities to the classes or objects without changing the structure of the objects or classes using mixins.
+
+
+
+## Limitations of Mixins
+
+
+Here, we have listed some limitations of mixins and reasons why some developers avoid using mixins.
+
+
+
+- Complexity− If you overuse the mixins, it increases the complexity of the code, which you can see in the last example of this tutorial.
+- Pseudo inheritance− The mixin can fulfill the requirements of the inheritance, but using the mixins, you can't achieve true inheritance.
+- Naming collision− If you combine multiple objects, there is a high chance of naming collision.
+
+

@@ -1,0 +1,122 @@
+---
+title: "PYTHON - Anonymous Class and Objects"
+description: "Learn PYTHON - Anonymous Class and Objects with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1490
+group: "Object Oriented Programming"
+seoTitle: "PYTHON - Anonymous Class and Objects — CodesCompiler PYTHON Guide"
+permalink: "python-anonymous-class-and-objects"
+---
+
+
+# Python - Anonymous Class and Objects
+
+
+
+
+Python's built-intype()function returns the class that an object belongs to. InPython, a class, both a built-in class or a user-defined class are objects of type class.
+
+
+### Example
+
+
+```python
+class myclass:
+   def __init__(self):
+      self.myvar=10
+      return
+      
+obj = myclass()
+
+print ('class of int', type(int))
+print ('class of list', type(list))
+print ('class of dict', type(dict))
+print ('class of myclass', type(myclass))
+print ('class of obj', type(obj))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+class of int <class 'type'>
+class of list <class 'type'>
+class of dict <class 'type'>
+class of myclass <class 'type'>
+```
+
+
+The type() has a three argument version as follows −
+
+
+### Syntax
+
+
+```python
+newclass=type(name, bases, dict)
+```
+
+
+Using above syntax, a class can be dynamically created. Three arguments of type function are −
+
+
+
+- name− name of the class which becomes __name__ attribute of new class
+- bases− tuple consisting of parent classes. Can be blank if not a derived class
+- dict− dictionary forming namespace of the new class containing attributes and methods and their values.
+
+
+
+## Create an Anonymous Class
+
+
+We can create an anonymous class with the above version oftype()function. The name argument is a nullstring, second argument is atupleof one class the object class (note that each class in Python is inherited from object class). We add certain instance variables as the third argumentdictionary. We keep it empty for now.
+
+
+```python
+anon=type('', (object, ), {})
+```
+
+
+## Create an Anonymous Object
+
+
+To create an object of this anonymous class −
+
+
+```python
+obj = anon()
+print ("type of obj:", type(obj))
+```
+
+
+The result shows that the object is of anonymous class
+
+
+```python
+type of obj: <class '__main__.'>
+```
+
+
+## Anonymous Class and Object Example
+
+
+We can also add instance variables and instance methods dynamically. Take a look at this example −
+
+
+```python
+def getA(self):
+   return self.a
+obj = type('',(object,),{'a':5,'b':6,'c':7,'getA':getA,'getB':lambda self : self.b})()
+print (obj.getA(), obj.getB())
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+5 6
+```
+

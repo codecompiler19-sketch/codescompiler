@@ -1,0 +1,107 @@
+---
+title: "JavaScript - Require Function"
+description: "Learn JavaScript - Require Function with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1960
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Require Function — CodesCompiler JavaScript Guide"
+permalink: "javascript-require-function"
+---
+
+
+# JavaScript - Require() Function
+
+
+
+
+Files with JavaScript code that performs a specific task are called modules. It is easy to add, remove, and update functionalities without affecting your entire code because modules are self-contained and separated from other parts of code.
+
+
+If these modules are in separate JavaScript files you should use them inside the original JavaScript code.
+
+
+In this chapter we will cover what therequire()function does, how it can be used and some differences between the require and import functions.
+
+
+## How to Run ES and CommonJS Modules
+
+
+JavaScript module execution in the browser is dependent on import and export statements. The ES modules are loaded and exported by these statements, respectively. Most of online browsers support it by default and it is the accepted and official method for reusing modules in JavaScript.
+
+
+By default, Node.js supports the CommonJS module format which uses module.exports to export modules and require() to import them.
+
+
+## JavaScript require() Function
+
+
+Therequire()method, a built-in CommonJS module function that Node.js supports, is how you add modules to your project. The reason for this is that by default, Node.js treats JavaScript code as CommonJS modules.
+
+
+The require() function accepts a string parameter that specifies the module's path. This could be −
+
+
+
+- Core module:Node.js has various built-in modules. When the require() function receives a string parameter that does not begin with "./", "../", or "/", it assumes it is a core module or a module installed in the node_modules folder.
+- Local Module:If the argument begins with "./" or "../", Node.js treats it as a relative or absolute path and is trying to load the module from a file in that location.
+- Installed module:Node.js modules can also be installed via npm (Node Package Manager). In this case, Node.js searches for the module in the node_modules folder.
+
+
+
+### Usage of require() Function
+
+
+Therequire()method is easy to use and understand because all you have to do is assign it to a variable. This function will accept the location name as an input. The following is the general syntax −
+
+
+```javascript
+const locName = require(locationName);
+```
+
+
+Let us suppose you have a CommonJS module that exports the function *get_full_name*, as seen below −
+
+
+```javascript
+//utils.js
+const get_full_name = (first_name, last_name) => {
+   return My full name is ${first_name} ${last_name};
+};
+module.exports = get_full_name;
+```
+
+
+This module can then be used or included in your JavaScript file using the require() function −
+
+
+```javascript
+//index.js
+const get_full_name = require('./utils.js');
+console.log(get_full_name('Amit', 'Sharma'));
+```
+
+
+The module is placed within a local file in the above code, so the local address is referred by the file name. But if you want to add an external module from the web you can use the web-based location −
+
+
+```javascript
+const myVar = require('http://web-module.location');
+```
+
+
+## Difference Between require() & import() Functions
+
+
+The require() and import() commands both provide code from external files into your JavaScript program, but they work differently. Here are the two main differences −
+
+
+
+- You can use the require() method throughout your code. You can even use it conditionally which means it will only run under certain conditions.
+- The import statement is always executed at the start of the file and cannot be used conditionally.
+- If you want to use require(), the file you are importing must have the .js extension.
+- If you are using an import, the file's extension should be .mjs.
+
+
+
+The require() function is more flexible and can be used throughout your code, but import is more limiting, always starting at the beginning and frequently needing different file extensions.
+

@@ -1,0 +1,168 @@
+---
+title: "JavaScript - Code Testing with Jest"
+description: "Learn JavaScript - Code Testing with Jest with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1770
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Code Testing with Jest — CodesCompiler JavaScript Guide"
+permalink: "javascript-code-testing-with-jest"
+---
+
+
+# JavaScript - Code Testing with Jest
+
+
+
+
+You can increase your application's reliability and maintainability by testing your code to find errors earlier using Jest. Jest is a popular choice for JavaScript testing, particularly for applications made using Node.js, React, Angular, and Vue.js. Let us look at Jest's features and how to use them.
+
+
+## What is Jest?
+
+
+The Jest testing framework, created by Facebook, focuses efficiency and adaptability. Jest easily integrates with JavaScript and TypeScript applications and supports popular libraries and frameworks like React. Among its main features are integrated mocking support, zero configuration and snapshot testing.
+
+
+## Features of Jest
+
+
+Here are some features you need to know before working with Jest −
+
+
+
+- Zero Config:To start creating and delivering tests, virtually no configuration is needed. But the test suite can also be provided using a configuration file.
+- Snapshots:Snapshot testing can also be enabled using Jest. In simple terms, the saved snapshot and the snapshots are compared to see whether there is any matching functionality.
+- Isolated testing:To reduce execution time, Jest tests are executed in parallel.
+- Mocking Support:Jest makes it easy to create fictitious functions so you can test how your code interacts with other components.
+
+
+
+## Setting Up Jest
+
+
+For using Jest you have to first install it in your project. Use the below steps −
+
+
+1. Initialize a Project:So you have to open a terminal and navigate to your project folder then run the below command −
+
+
+```javascript
+npm init -y
+```
+
+
+2. Install Jest:Then you have to run the below command −
+
+
+```javascript
+npm install --save-dev jest
+```
+
+
+3. Add Jest to Your Scripts:Locate the package.json file and in this file you have to add the following line −
+
+
+```javascript
+"scripts": {
+   "test": "jest"
+}
+```
+
+
+Now you can write your first test for your JavaScript code.
+
+
+### Example 1
+
+
+Here is the simple and basic test that checks if the function sum returns the proper result.
+
+
+```javascript
+// sum.js
+function sum(a, b) {
+   return a + b;
+}
+module.exports = sum;
+```
+
+
+Test File
+
+
+Here is the test file code −
+
+
+```javascript
+// sum.test.js
+const sum = require('./sum');
+
+test('adds 1 + 2 to equal 3', () => {
+   expect(sum(1, 2)).toBe(3);
+});
+```
+
+
+Run the above test code by the following command −
+
+
+```javascript
+npm test
+```
+
+
+In this test - expect(sum(1, 2)).toBe(3); checks that sum(1, 2) returns 3.
+
+
+### Example 2
+
+
+Jest handles asynchronous testing easily. Let's create an asynchronous function and test it.
+
+
+```javascript
+// fetchData.js
+async function fetchData() {
+   return 'freeCodeCamp';
+}
+module.exports = fetchData;
+```
+
+
+Test File
+
+
+Here is the test file code −
+
+
+```javascript
+// fetchData.test.js
+const fetchData = require('./fetchData');
+
+test('the data is freeCodeCamp', async () => {
+   const data = await fetchData();
+   expect(data).toBe('freeCodeCamp');
+});
+```
+
+
+Here Jest executes expect after fetchData() is complete.
+
+
+### Example 3
+
+
+Mock functions let you test and model code interactions without needing the actual function. This is how to create a simple mock function.
+
+
+```javascript
+const myMockFunction = jest.fn(x => x + 42);
+
+test('mock function test', () => {
+   expect(myMockFunction(0)).toBe(42);
+});
+```
+
+
+In this test, jest.fn() is used to generate a mock function that adds 42 to any input value. This test confirms that when myMockFunction(0) is invoked, 42 is returned.
+

@@ -179,7 +179,13 @@ function injectHeadScripts(settings) {
   fs.writeFileSync(path.join(publicDir, 'robots.txt'), settings.robotsTxt || 'User-agent: *\nAllow: /', 'utf-8');
 }
 
+function touchContentConfig() {
+  // No-op: Do NOT touch src/content/config.ts during file saves, as touching config.ts
+  // triggers an Astro dev server restart and forces browser page reloads during bulk uploads.
+}
+
 function generateSitemap() {
+  touchContentConfig();
   const publicDir = path.join(APP_DIR, 'public');
   if (!fs.existsSync(publicDir)) fs.mkdirSync(publicDir, { recursive: true });
   

@@ -1,0 +1,391 @@
+---
+title: "PYTHON - Built-in Exceptions"
+description: "Learn PYTHON - Built-in Exceptions with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1660
+group: "Python Errors & Exceptions"
+seoTitle: "PYTHON - Built-in Exceptions — CodesCompiler PYTHON Guide"
+permalink: "python-builtin-exceptions"
+---
+
+
+# Python - Built-in Exceptions
+
+
+
+
+Built-in exceptions are pre-defined error classes in Python that handle errors and exceptional conditions in programs. They are derived from the base class "BaseException" and are part of the standard library.
+
+
+## Standard Built-in Exceptions in Python
+
+
+Here is a list of Standard Exceptions available in Python −
+
+
+
+| Sr.No. | Exception Name & Description |
+| --- | --- |
+| 1 | ExceptionBase class for all exceptions |
+| 2 | StopIterationRaised when the next() method of an iterator does not point to any object. |
+| 3 | SystemExitRaised by the sys.exit() function. |
+| 4 | StandardErrorBase class for all built-in exceptions except StopIteration and SystemExit. |
+| 5 | ArithmeticErrorBase class for all errors that occur for numeric calculation. |
+| 6 | OverflowErrorRaised when a calculation exceeds maximum limit for a numeric type. |
+| 7 | FloatingPointErrorRaised when a floating point calculation fails. |
+| 8 | ZeroDivisonErrorRaised when division or modulo by zero takes place for all numeric types. |
+| 9 | AssertionErrorRaised in case of failure of the Assert statement. |
+| 10 | AttributeErrorRaised in case of failure of attribute reference or assignment. |
+| 11 | EOFErrorRaised when there is no input from either the raw_input() or input() function and the end of file is reached. |
+| 12 | ImportErrorRaised when an import statement fails. |
+| 13 | KeyboardInterruptRaised when the user interrupts program execution, usually by pressing Ctrl+C. |
+| 14 | LookupErrorBase class for all lookup errors. |
+| 15 | IndexErrorRaised when an index is not found in a sequence. |
+| 16 | KeyErrorRaised when the specified key is not found in the dictionary. |
+| 17 | NameErrorRaised when an identifier is not found in the local or global namespace. |
+| 18 | UnboundLocalErrorRaised when trying to access a local variable in a function or method but no value has been assigned to it. |
+| 19 | EnvironmentErrorBase class for all exceptions that occur outside the Python environment. |
+| 20 | IOErrorRaised when an input/ output operation fails, such as the print statement or the open() function when trying to open a file that does not exist. |
+| 21 | OSErrorRaised for operating system-related errors. |
+| 22 | SyntaxErrorRaised when there is an error in Python syntax. |
+| 23 | IndentationErrorRaised when indentation is not specified properly. |
+| 24 | SystemErrorRaised when the interpreter finds an internal problem, but when this error is encountered the Python interpreter does not exit. |
+| 25 | SystemExitRaised when Python interpreter is quit by using the sys.exit() function. If not handled in the code, causes the interpreter to exit. |
+| 26 | TypeErrorRaised when an operation or function is attempted that is invalid for the specified data type. |
+| 27 | ValueErrorRaised when the built-in function for a data type has the valid type of arguments, but the arguments have invalid values specified. |
+| 28 | RuntimeErrorRaised when a generated error does not fall into any category. |
+| 29 | NotImplementedErrorRaised when an abstract method that needs to be implemented in an inherited class is not actually implemented. |
+
+
+
+Here are some examples of standard exceptions −
+
+
+### IndexError
+
+
+It is shown when trying to access item at invalid index.
+
+
+```python
+numbers=[10,20,30,40]
+for n in range(5):
+   print (numbers[n])
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+10
+20
+30
+40
+Traceback (most recent call last):
+
+   print (numbers[n])
+IndexError: list index out of range
+```
+
+
+### ModuleNotFoundError
+
+
+This is displayed when module could not be found.
+
+
+```python
+import notamodule
+Traceback (most recent call last):
+
+   import notamodule
+ModuleNotFoundError: No module named 'notamodule'
+```
+
+
+### KeyError
+
+
+It occurs as dictionary key is not found.
+
+
+```python
+D1={'1':"aa", '2':"bb", '3':"cc"}
+print ( D1['4'])
+Traceback (most recent call last):
+
+   D1['4']
+KeyError: '4'
+```
+
+
+### ImportError
+
+
+It is shown when specified function is not available for import.
+
+
+```python
+from math import cube
+Traceback (most recent call last):
+
+   from math import cube
+ImportError: cannot import name 'cube'
+```
+
+
+### StopIteration
+
+
+This error appears when next() function is called after iterator stream exhausts.
+
+
+```python
+.it=iter([1,2,3])
+next(it)
+next(it)
+next(it)
+next(it)
+Traceback (most recent call last):
+
+   next(it)
+StopIteration
+```
+
+
+### TypeError
+
+
+This is shown when operator or function is applied to an object of inappropriate type.
+
+
+```python
+print ('2'+2)
+Traceback (most recent call last):
+
+   '2'+2
+TypeError: must be str, not int
+```
+
+
+### ValueError
+
+
+It is displayed when function's argument is of inappropriate type.
+
+
+```python
+print (int('xyz'))
+Traceback (most recent call last):
+
+   int('xyz')
+ValueError: invalid literal for int() with base 10: 'xyz'
+```
+
+
+### NameError
+
+
+This is encountered when object could not be found.
+
+
+```python
+print (age)
+Traceback (most recent call last):
+
+   age
+NameError: name 'age' is not defined
+```
+
+
+### ZeroDivisionError
+
+
+It is shown when second operator in division is zero.
+
+
+```python
+x=100/0
+Traceback (most recent call last):
+
+   x=100/0
+ZeroDivisionError: division by zero
+```
+
+
+### KeyboardInterrupt
+
+
+When user hits the interrupt key normally Control-C during execution of program.
+
+
+```python
+name=input('enter your name')
+enter your name^c
+Traceback (most recent call last):
+
+   name=input('enter your name')
+KeyboardInterrupt
+```
+
+
+## Hierarchy of Built-in Exceptions
+
+
+The exceptions in Python are organized in a hierarchical structure, with "BaseException" at the top. Here is a simplified hierarchy −
+
+
+
+- BaseExceptionSystemExitKeyboardInterrupt
+- ExceptionArithmeticErrorFloatingPointErrorOverflowErrorZeroDivisionErrorAttributeErrorEOFErrorImportErrorLookupErrorIndexErrorKeyErrorMemoryErrorNameErrorUnboundLocalErrorOSErrorFileNotFoundErrorTypeErrorValueError---(Many others)---
+
+
+
+## How to Use Built-in Exceptions
+
+
+As we already know that built-in exceptions in Python are pre-defined classes that handle specific error conditions. Now, here is a detailed guide on how to use them effectively in your Python programs −
+
+
+### Handling Exceptions with try-except Blocks
+
+
+The primary way to handle exceptions in Python is using "try-except" blocks. This allows you to catch and respond to exceptions that may occur during the execution of your code.
+
+
+Example
+
+
+In the following example, the code that may raise an exception is placed inside the "try" block. The "except" block catches the specified exception "ZeroDivisionError" and handles it
+
+
+```python
+try:
+   result = 1 / 0
+except ZeroDivisionError as e:
+   print(f"Caught an exception: {e}")
+```
+
+
+Following is the output obtained −
+
+
+```python
+Caught an exception: division by zero
+```
+
+
+### Handling Multiple Exceptions
+
+
+You can handle multiple exceptions by specifying them in a tuple within the "except" block as shown in the example below −
+
+
+```python
+try:
+   result = int('abc')
+except (ValueError, TypeError) as e:
+   print(f"Caught a ValueError or TypeError: {e}")
+```
+
+
+Output of the above code is as shown below −
+
+
+```python
+Caught a ValueError or TypeError: invalid literal for int() with base 10: 'abc'
+```
+
+
+### Using "else" and "finally" Blocks
+
+
+The "else" block is executed if the code block in the "try" clause does not raise an exception −
+
+
+```python
+try:
+   number = int(input("Enter a number: "))
+except ValueError as e:
+   print(f"Invalid input: {e}")
+else:
+   print(f"You entered: {number}")
+```
+
+
+Output of the above code varies as per the input given −
+
+
+```python
+Enter a number: bn
+Invalid input: invalid literal for int() with base 10: 'bn'
+```
+
+
+The "finally" block is always executed, regardless of whether an exception occurred or not. It's typically used for clean-up actions, such as closing files or releasing resources −
+
+
+```python
+try:
+   file = open('example.txt', 'r')
+   content = file.read()
+except FileNotFoundError as e:
+   print(f"File not found: {e}")
+finally:
+   file.close()
+   print("File closed.")
+```
+
+
+Following is the output of the above code −
+
+
+```python
+File closed.
+```
+
+
+## Explicitly Raising Built-in Exceptions
+
+
+In Python, you can raise built-in exceptions to indicate errors or exceptional conditions in your code. This allows you to handle specific error scenarios and provide informative error messages to users or developers debugging your application.
+
+
+### Syntax
+
+
+Following is the basic syntax for raising built-in exception −
+
+
+```python
+raise ExceptionClassName("Error message")
+```
+
+
+### Example
+
+
+In this example, the "divide" function attempts to divide two numbers "a" and "b". If "b" is zero, it raises a "ZeroDivisionError" with a custom message −
+
+
+```python
+def divide(a, b):
+   if b == 0:
+      raise ZeroDivisionError("Cannot divide by zero")
+   return a / b
+
+try:
+   result = divide(10, 0)
+except ZeroDivisionError as e:
+   print(f"Error: {e}")
+```
+
+
+The output obtained is as shown below −
+
+
+```python
+Error: Cannot divide by zero
+```
+

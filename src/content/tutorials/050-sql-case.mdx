@@ -1,0 +1,544 @@
+---
+title: "SQL - CASE"
+description: "Learn SQL - CASE with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 500
+group: "SQL Operators and Clauses"
+seoTitle: "SQL - CASE — CodesCompiler SQL Guide"
+permalink: "sql-case"
+---
+
+
+# SQL - CASE Statement
+
+
+Table of contentThe SQL CASE StatementSimple CASE StatementSearched CASE StatementSQL CASE in SELECT ClauseSQL CASE with ORDER BY ClauseSQL CASE with GROUP BY ClauseSQL CASE with WHERE ClauseSQL CASE with UPDATE StatementSQL CASE with INSERT StatementNested CASE StatementsDifferences Between CASE and IF-ELSE
+
+
+
+
+## The SQL CASE Statement
+
+
+TheSQL CASEstatement is used to apply conditional logic in queries. It acts like an IF-THEN-ELSE statement, which checks conditions and returns a value based on the first match.
+
+
+
+- It returns a value according to the conditions you define.
+- It can be used in SELECT, UPDATE, DELETE, and other SQL statements.
+- There are two types of CASE statements:Simple CASEandSearched CASE.
+- It is useful for changing how data is shown and applying conditions directly in SQL without procedural code.
+
+
+
+### Syntax
+
+
+Following is the syntax of SQL CASE statement:
+
+
+```sql
+CASE
+   WHEN condition1 THEN result1,
+   WHEN condition2 THEN result2,
+   WHEN condition THEN resultN
+   ELSE result
+END;
+```
+
+
+Where,
+
+
+
+- condition1, condition2,...are the conditions to evaluate
+- result1, result2,...are the values returned when the corresponding condition is true.
+
+
+
+Once a condition is true, the CASE statement stops checking the remaining conditions and returns the matching result.
+
+
+
+- If no conditions are true and an ELSE clause is provided, that value is returned.
+- If no conditions are true and there is no ELSE clause, the CASE statement returns NULL.
+
+
+
+### Example: Categorizing by Age
+
+
+Assume we have created a table namedCUSTOMERSwhich contains the personal details of customers including their name, age, address and salary etc. using the following query:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),       
+   PRIMARY KEY (ID)
+);
+```
+
+
+Now, insert values into this table using the INSERT statement as follows:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+(2, 'Khilan', 25, 'Delhi', 1500.00 ),
+(3, 'Kaushik', 23, 'Kota', 2000.00 ),
+(4, 'Chaitali', 25, 'Mumbai', 6500.00 ),
+(5, 'Hardik', 27, 'Bhopal', 8500.00 ),
+(6, 'Komal', 22, 'Hyderabad', 4500.00 ),
+(7, 'Muffy', 24, 'Indore', 10000.00 );
+```
+
+
+The table will be created as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+In the following example, we use the CASE statement to check the customer's age and return a specific label. If the age is greater than 30, we return 'Gen X'. If that condition is not met, the next WHEN conditions are evaluated in order. If none of the conditions match, the ELSE clause returns 'Gen Alpha':
+
+
+```sql
+SELECT NAME, AGE,
+CASE 
+WHEN AGE > 30 THEN 'Gen X'
+WHEN AGE > 25 THEN 'Gen Y'
+WHEN AGE > 22 THEN 'Gen Z'
+ELSE 'Gen Alpha' 
+END AS Generation
+FROM CUSTOMERS;
+```
+
+
+The output produced is as follows:
+
+
+NAMEAGEGenerationRamesh32Gen XKhilan25Gen ZKaushik23Gen ZChaitali25Gen ZHardik27Gen YKomal22Gen AlphaMuffy24Gen Z
+
+
+### Example: Conditional Salary Increment
+
+
+In this example, we increase the salary by 25% for customers earning less than 4500. The CASE statement checks this condition and stores the updated value in the INCREMENT column. Since there is no ELSE clause, customers who do not meet the condition get NULL in the INCREMENT column:
+
+
+```sql
+SELECT *, CASE 
+WHEN SALARY < 4500 THEN (SALARY + SALARY * 25/100) 
+END AS INCREMENT FROM CUSTOMERS;
+```
+
+
+The table produced is as shown below:
+
+
+IDNAMEAGEADDRESSSALARYINCREMENT1Ramesh32Ahmedabad2000.002500.0000002Khilan25Delhi1500.001875.0000003Kaushik23Kota2000.002500.0000004Chaitali25Mumbai6500.00NULL5Hardik27Bhopal8500.00NULL6Komal22Hyderabad4500.00NULL7Muffy24Indore10000.00NULL
+
+
+## Simple CASE Statement
+
+
+ASimple CASEstatement checks one value and compares it to several possible values. It returns a result based on the first match it finds. This is useful when you need to compare the same column or expression to multiple specific values.
+
+
+### Example
+
+
+In this query, we compare theAGEcolumn directly with specific values and return the corresponding title:
+
+
+```sql
+SELECT NAME, AGE,
+CASE AGE
+   WHEN 22 THEN 'Trainee'
+   WHEN 23 THEN 'Junior Engineer'
+   WHEN 25 THEN 'Software Engineer'
+   ELSE 'Senior Staff'
+END AS Title
+FROM CUSTOMERS;
+```
+
+
+We get the output as shown below:
+
+
+
+| NAME | AGE | Title |
+| --- | --- | --- |
+| Ramesh | 32 | Senior Staff |
+| Khilan | 25 | Software Engineer |
+| Kaushik | 23 | Junior Engineer |
+| Chaitali | 25 | Software Engineer |
+| Hardik | 27 | Senior Staff |
+| Komal | 22 | Trainee |
+| Muffy | 24 | Senior Staff |
+
+
+
+## Searched CASE Statement
+
+
+ASearched CASEstatement checks each condition separately, and each condition can use its own boolean expression. This lets you test ranges, compare values with operators, or check multiple columns in the same WHEN clause.
+
+
+
+- Each WHEN clause has its own condition.
+- Useful when conditions are not all checking the same value.
+- Can use operators like>,`<,BETWEEN,LIKE, etc.
+`
+
+
+### Example
+
+
+Here, we use different range conditions to categorize customers by salary:
+
+
+```sql
+SELECT NAME, SALARY,
+CASE
+   WHEN SALARY < 3000 THEN 'Low Income'
+   WHEN SALARY BETWEEN 3000 AND 7000 THEN 'Middle Income'
+   WHEN SALARY > 7000 THEN 'High Income' 
+END AS Income_Level
+FROM CUSTOMERS;
+```
+
+
+Following is the output obtained:
+
+
+
+| NAME | SALARY | Income_Level |
+| --- | --- | --- |
+| Ramesh | 2000.00 | Low Income |
+| Khilan | 1500.00 | Low Income |
+| Kaushik | 2000.00 | Low Income |
+| Chaitali | 6500.00 | Middle Income |
+| Hardik | 8500.00 | High Income |
+| Komal | 4500.00 | Middle Income |
+| Muffy | 10000.00 | High Income |
+
+
+
+## SQL CASE in SELECT Clause
+
+
+A CASE statement in theSELECTclause is used to create new columns or change how data appears in query results, without modifying the actual data in the table.
+
+
+
+- It is used for applying conditions to format query output.
+- It can replace codes or IDs with descriptive text.
+- It allows categorizing or calculating values directly in the query.
+
+
+
+### Example
+
+
+In this query, we display a custom label for each customer's age group directly in the result set:
+
+
+```sql
+SELECT NAME, AGE,
+CASE
+   WHEN AGE < 25 THEN 'Youth'
+   WHEN AGE BETWEEN 25 AND 30 THEN 'Adult'
+   ELSE 'Senior'
+END AS Age_Group
+FROM CUSTOMERS;
+```
+
+
+Following is the output obtained:
+
+
+
+| NAME | AGE | Age_Group |
+| --- | --- | --- |
+| Ramesh | 32 | Senior |
+| Khilan | 25 | Adult |
+| Kaushik | 23 | Youth |
+| Chaitali | 25 | Adult |
+| Hardik | 27 | Adult |
+| Komal | 22 | Youth |
+| Muffy | 24 | Youth |
+
+
+
+## SQL CASE with ORDER BY Clause
+
+
+The ORDER BY clause in SQL sorts the result in ascending (default) or descending order. You can use a CASE statement inside ORDER BY to apply conditional sorting rules.
+
+
+Normally, ORDER BY sorts rows based on one or more columns, but with CASE you can define custom sort values for each row depending on specific conditions. This allows more control over the sort order.
+
+
+### Example
+
+
+In this query, the CASE statement sorts rows based on either the NAME or ADDRESS column, depending on the value in NAME. If NAME starts with 'K', the sorting is done by NAME; otherwise, it is done by ADDRESS:
+
+
+```sql
+SELECT * FROM CUSTOMERS
+ORDER BY
+(CASE
+    WHEN NAME LIKE 'k%' THEN NAME
+    ELSE ADDRESS
+END);
+```
+
+
+The result obtained by executing the above query is as shown below:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.005Hardik27Bhopal8500.007Muffy24Indore10000.003Kaushik23Kota2000.002Khilan25Delhi1500.006Komal22Hyderabad4500.004Chaitali25Mumbai6500.00
+
+
+## SQL CASE with GROUP BY Clause
+
+
+You can use a CASE statement inside the GROUP BY clause to define conditional grouping rules. This allows you to group rows into custom categories based on specific conditions instead of grouping only by the original column values.
+
+
+### Example
+
+
+In this query we group customers into three salary ranges: Lowest paid (≤ 4000), Average paid (> 4000 and ≤ 6500), and Highest paid (all others), and use SUM to calculate the total salary for each group:
+
+
+```sql
+SELECT 
+   CASE 
+      WHEN SALARY <= 4000 THEN 'Lowest paid'
+      WHEN SALARY > 4000 AND SALARY <= 6500 THEN 'Average paid'
+   ELSE 'Highest paid' 
+      END AS SALARY_STATUS,
+   SUM(SALARY) AS Total
+   FROM CUSTOMERS
+   GROUP BY 
+   CASE 
+      WHEN SALARY <= 4000 THEN 'Lowest paid'
+      WHEN SALARY > 4000 AND SALARY <= 6500 THEN 'Average paid'
+   ELSE 'Highest paid'
+END;
+```
+
+
+Following is the output of the above query:
+
+
+SALARY_STATUSTotalLowest paid5500.00Average paid11000.00Highest paid18500.00
+
+
+## SQL CASE with WHERE Clause
+
+
+The SQL WHERE clause is used to filter rows based on a specified condition. While you cannot directly use a CASE statement to control which rows are returned (because CASE returns values rather than boolean conditions), you can use CASE inside the WHERE clause with logical operators to build conditional filtering rules.
+
+
+This approach allows you to apply different filter criteria based on specific conditions in the data.
+
+
+### Example
+
+
+In the following query, the CASE statement is used to return the different designations of the CUSTOMERS based on their AGE. The WHERE clause is used to filter the rows based on the SALARY of the CUSTOMERS:
+
+
+```sql
+SELECT NAME, ADDRESS, 
+   CASE 
+      WHEN AGE < 25 THEN 'Intern'
+      WHEN AGE >= 25 and AGE <= 27 THEN 'Associate Engineer'
+      ELSE 'Senior Developer'
+   END as Designation
+FROM CUSTOMERS
+WHERE SALARY >= 2000;
+```
+
+
+Output of the above query is as follows:
+
+
+NAMEADDRESSDesignationRameshAhmedabadSenior DeveloperKaushikKotaInternChaitaliMumbaiAssociate EngineerHardikBhopalAssociate EngineerKomalHyderabadInternMuffyIndoreIntern
+
+
+## SQL CASE with UPDATE Statement
+
+
+You can use a CASE statement inside an UPDATE query to update rows conditionally. This allows you to assign different values to a column based on specified conditions, all within a single statement.
+
+
+### Example
+
+
+In the following query we are updating the salary of all the customers based on their age.
+
+
+If the age of the customer is equal to '25', their salary will be updated to '17000'. If the age is equal to '32', it will be updated to '25000'. For the customers with other ages, salaries will be updated to '12000':
+
+
+```sql
+UPDATE CUSTOMERS
+SET SALARY= 
+CASE AGE
+WHEN 25 THEN 17000
+WHEN 32 THEN 25000
+ELSE 12000
+END;
+```
+
+
+We get the following result. We can observe that the changes have been done in 7 rows:
+
+
+```sql
+Query OK, 7 rows affected (0.02 sec)
+Rows matched: 7  Changed: 7  Warnings: 0
+```
+
+
+### Verification
+
+
+We can rectify the changes done in the CUSTOMERS table using the below query:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+The table is displayed as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad25000.002Khilan25Delhi17000.003Kaushik23Kota12000.004Chaitali25Mumbai17000.005Hardik27Bhopal12000.006Komal22Hyderabad12000.007Muffy24Indore12000.00
+
+
+As we can see in the above table, the SALARY of all the customers has been updated corresponding to their age.
+
+
+## SQL CASE with INSERT Statement
+
+
+A CASE statement can be used in an INSERT query to set column values conditionally when adding new rows. This allows you to assign values dynamically based on specific conditions during insertion.
+
+
+### Example
+
+
+Here, if the age of the customer is greater than or equal to 25, then the salary will be 23000; otherwise the salary will be 14000:
+
+
+```sql
+INSERT INTO CUSTOMERS (ID, NAME, AGE, ADDRESS, SALARY)
+VALUES (10, 'Viren', 28, 'Varanasi', 
+   CASE 
+      WHEN AGE >= 25 THEN 23000
+      ELSE 14000
+   END
+);
+```
+
+
+We get the following result. We can observe that the change has been done in 1 row:
+
+
+```sql
+Query OK, 1 row affected (0.01 sec)
+```
+
+
+### Verification
+
+
+We can rectify the changes done in the CUSTOMERS table using the below query:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+The table is displayed as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.0010Viren28Varanasi23000.00
+
+
+## Nested CASE Statements
+
+
+ANested CASEstatement is a CASE expression inside another CASE expression. This is used when the result of one CASE needs further evaluation based on additional conditions.
+
+
+
+- It supports multi-level conditional logic within a single query.
+- It is useful when later conditions depend on earlier results.
+
+
+
+### Example
+
+
+Here, the first CASE determines the income category, and the second CASE (nested) assigns a bonus percentage based on that category:
+
+
+```sql
+SELECT NAME, SALARY,
+CASE
+   WHEN SALARY < 5000 THEN
+      CASE
+         WHEN SALARY < 3000 THEN 'Bonus 20%'
+         ELSE 'Bonus 10%'
+      END
+   ELSE 'No Bonus'
+END AS Bonus_Plan
+FROM CUSTOMERS;
+```
+
+
+The table produced is as shown below:
+
+
+
+| NAME | SALARY | Bonus_Plan |
+| --- | --- | --- |
+| Ramesh | 2000.00 | Bonus 20% |
+| Khilan | 1500.00 | Bonus 20% |
+| Kaushik | 2000.00 | Bonus 20% |
+| Chaitali | 6500.00 | No Bonus |
+| Hardik | 8500.00 | No Bonus |
+| Komal | 4500.00 | Bonus 10% |
+| Muffy | 10000.00 | No Bonus |
+
+
+
+## Differences Between CASE and IF-ELSE
+
+
+BothCASEstatements andIF-ELSElogic are used for conditional processing in SQL, but they differ in how they are written and where they can be used:
+
+
+
+| CASE Statement | IF-ELSE |
+| --- | --- |
+| Used within SQL queries (SELECT, UPDATE, ORDER BY, etc.) | Used mainly in procedural SQL blocks or stored programs |
+| Returns a value for each row in a result set | Executes procedural logic, not directly used in SELECT output |
+| Evaluates multiple conditions in a compact, inline format | Requires separate control flow statements |
+| Portable across most SQL dialects | Syntax and availability vary depending on RDBMS |
+
+

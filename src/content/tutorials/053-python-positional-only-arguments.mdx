@@ -1,0 +1,134 @@
+---
+title: "PYTHON - Positional-Only Arguments"
+description: "Learn PYTHON - Positional-Only Arguments with clear explanation, code examples, and practical guide."
+category: "python"
+order: 530
+group: "Python Functions & Modules"
+seoTitle: "PYTHON - Positional-Only Arguments — CodesCompiler PYTHON Guide"
+permalink: "python-positional-only-arguments"
+---
+
+
+# Python - Positional-Only Arguments
+
+
+
+
+## Positional Only Arguments
+
+
+It is possible inPythonto define afunctionin which one or more arguments can not accept their value with keywords. Such arguments are calledpositional-only arguments.
+
+
+To make an argument positional-only, use the forward slash (/) symbol. All the arguments before this symbol will be treated as positional-only.
+
+
+Python'sbuilt-in input() functionis an example of positional-only arguments. The syntax of input function is −
+
+
+```python
+input(prompt = "")
+```
+
+
+Prompt is an explanatory string for the benefit of the user. However, you cannot use the prompt keyword inside the parentheses.
+
+
+### Example
+
+
+In this example, we are usingpromptkeyword, which will lead to error.
+
+
+```python
+name = input(prompt="Enter your name ")
+```
+
+
+On executing, this code will show the following error message −
+
+
+```python
+name = input (prompt="Enter your name ")
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: input() takes no keyword arguments
+```
+
+
+## Positional-Only Arguments Examples
+
+
+Let's understand positional-only arguments with the help of some examples −
+
+
+### Example 1
+
+
+In this example, we make both the arguments ofintr() functionas positional-only by putting "/" at the end.
+
+
+```python
+def intr(amt, rate, /):
+   val = amt * rate / 100
+   return val
+   
+print(intr(316200, 4))
+```
+
+
+When you run the code, it will show the following result −
+
+
+```python
+12648.0
+```
+
+
+### Example 2
+
+
+If we try to use the arguments as keywords, Python raises errors as shown in the below example.
+
+
+```python
+def intr(amt, rate, /):
+   val = amt * rate / 100
+   return val
+   
+print(intr(amt=1000, rate=10))
+```
+
+
+On running this code, it will show following error message −
+
+
+```python
+interest = intr(amt=1000, rate=10)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: intr() got some positional-only arguments passed as keyword arguments: 'amt, rate'
+```
+
+
+### Example 3
+
+
+A function may be defined in such a way that it has some keyword-only and some positional-only arguments. Here,xis a required positional-only argument,yis a regular positional argument, andzis a keyword-only argument.
+
+
+```python
+def myfunction(x, /, y, *, z):
+   print (x, y, z)
+   
+myfunction(10, y=20, z=30)
+myfunction(10, 20, z=30)
+```
+
+
+The above code will show the following output −
+
+
+```python
+10 20 30
+10 20 30
+```
+

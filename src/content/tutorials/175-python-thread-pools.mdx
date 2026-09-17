@@ -1,0 +1,188 @@
+---
+title: "PYTHON - Thread Pools"
+description: "Learn PYTHON - Thread Pools with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1750
+group: "Python Multithreading"
+seoTitle: "PYTHON - Thread Pools — CodesCompiler PYTHON Guide"
+permalink: "python-thread-pools"
+---
+
+
+# Python - Thread Pools
+
+
+
+
+A thread pool is a mechanism that automatically manages multiple threads efficiently, allowing tasks to be executed concurrently. Python does not provide thread pooling directly through thethreadingmodule.
+
+
+Instead, it offers thread-based pooling through themultiprocessing.dummymodule and theconcurrent.futuresmodule. These modules provide convenient interfaces for creating and managing thread pools, making it easier to perform concurrent task execution.
+
+
+### What is a Thread Pool?
+
+
+A thread pool is a collection of threads that are managed by a pool. Each thread in the pool is called a worker or a worker thread. These threads can be reused to perform multiple tasks, which reduces the burden of creating and destroying threads repeatedly.
+
+
+Thread pools control the creation of threads and their life cycle, making them more efficient for handling large numbers of tasks.
+
+
+We can implement thread-pools in Python using the following classes −
+
+
+
+- Python ThreadPool Class
+- Python ThreadPoolExecutor Class
+
+
+
+## Using Python ThreadPool Class
+
+
+Themultiprocessing.pool.ThreadPoolclass provides a thread pool interface within themultiprocessingmodule. It manages a pool of worker threads to which jobs can be submitted for concurrent execution.
+
+
+A ThreadPool object simplifies the management of multiple threads by handling the creation and distribution of tasks among the worker threads. It shares an interface with thePoolclass, originally designed for processes, but has been adjusted to work with threads too.
+
+
+ThreadPool instances are fully interface-compatible withPoolinstances and should be managed either as a context manager or by calling close() and terminate() manually.
+
+
+### Example
+
+
+This example demonstrates the parallel execution of the square and cube functions on the list of numbers using the Pythonthread pool, where each function is applied to the numbers concurrently with up to 3 threads, each with a delay of 1 second between executions.
+
+
+```python
+from multiprocessing.dummy import Pool as ThreadPool
+import time
+
+def square(number):
+   sqr = number * number
+   time.sleep(1)
+   print("Number:{} Square:{}".format(number, sqr))
+
+def cube(number):
+   cub = number*number*number
+   time.sleep(1)
+   print("Number:{} Cube:{}".format(number, cub))
+
+numbers = [1, 2, 3, 4, 5]
+pool = ThreadPool(3)
+pool.map(square, numbers)
+pool.map(cube, numbers)
+
+pool.close()
+```
+
+
+Output
+
+
+On executing the above code you will get the following output −
+
+
+```python
+Number:2 Square:4
+Number:1 Square:1
+Number:3 Square:9
+Number:4 Square:16
+Number:5 Square:25
+Number:1 Cube:1
+Number:2 Cube:8
+Number:3 Cube:27
+Number:4 Cube:64
+Number:5 Cube:125
+```
+
+
+## Using Python ThreadPoolExecutor Class
+
+
+TheThreadPoolExecutorclass of the Python theconcurrent.futuresmodule provides a high-level interface for asynchronously executing functions using threads. The concurrent.futures module includesFutureclass  and two Executor classes −ThreadPoolExecutorandProcessPoolExecutor.
+
+
+### The Future Class
+
+
+Theconcurrent.futures.Futureclass is responsible for handling asynchronous execution of any callable such as a function. To obtain aFutureobject, you should call thesubmit()method on anyExecutorobject. It should not be created directly by its constructor.
+
+
+Important methods in the Future class are −
+
+
+
+- result(timeout`=` None): This method returns the value returned by the call. If the call hasn't yet completed, then this method will wait up to timeout seconds. If the call hasn't completed in timeout seconds, then a TimeoutError will be raised. If timeout is not specified, there is no limit to the wait time.
+- cancel(): This method, attempt to cancel the call. If the call is currently being executed or finished running and cannot be cancelled then the method will return a boolean valueFalse. Otherwise the call will be cancelled and the method returns True.
+- cancelled(): Returns True if the call was successfully cancelled.
+- running(): Returns True if the call is currently being executed and cannot be cancelled.
+- done(): Returns True if the call was successfully cancelled or finished running.
+
+
+
+### The ThreadPoolExecutor Class
+
+
+This class represents a pool of specified number maximum worker threads to execute calls asynchronously.
+
+
+```python
+concurrent.futures.ThreadPoolExecutor(max_threads)
+```
+
+
+### Example
+
+
+Here is an example that uses theconcurrent.futures.ThreadPoolExecutorclass to manage and execute tasks asynchronously in Python. Specifically, it shows how to submit multiple tasks to a thread pool and how to check their execution status.
+
+
+```python
+from concurrent.futures import ThreadPoolExecutor
+from time import sleep
+def square(numbers):
+   for val in numbers:
+      ret = val*val
+      sleep(1)
+      print("Number:{} Square:{}".format(val, ret))
+def cube(numbers):
+   for val in numbers:
+      ret = val*val*val
+      sleep(1)
+      print("Number:{} Cube:{}".format(val, ret))
+if __name__ == '__main__':
+   numbers = [1,2,3,4,5]
+   executor = ThreadPoolExecutor(4)
+   thread1 = executor.submit(square, (numbers))
+   thread2 = executor.submit(cube, (numbers))
+   print("Thread 1 executed ? :",thread1.done())
+   print("Thread 2 executed ? :",thread2.done())
+   sleep(2)
+   print("Thread 1 executed ? :",thread1.done())
+   print("Thread 2 executed ? :",thread2.done())
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Thread 1 executed ? : False
+Thread 2 executed ? : False
+Number:1 Square:1
+Number:1 Cube:1
+Thread 1 executed ? : False
+Thread 2 executed ? : False
+Number:2 Square:4
+Number:2 Cube:8
+Number:3 Square:9
+Number:3 Cube:27
+Number:4 Square:16
+Number:4 Cube:64
+Number:5 Square:25
+Number:5 Cube:125
+```
+

@@ -1,0 +1,165 @@
+---
+title: "SQL - BOOLEAN (BIT) Operator"
+description: "Learn SQL - BOOLEAN (BIT) Operator with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 450
+group: "SQL Operators and Clauses"
+seoTitle: "SQL - BOOLEAN (BIT) Operator — CodesCompiler SQL Guide"
+permalink: "sql-boolean-bit-operator"
+---
+
+
+# SQL - BOOLEAN
+
+
+Table of contentBoolean in MySQLBoolean in MS SQL ServerFiltering Boolean DataNegating Boolean ConditionsWorking with NULL ValuesUpdating Boolean Values
+
+
+
+
+ABooleanis a universal data type which stores true or false values. It is used when we define a variable in a column of the table.
+
+
+For instance, a customer wants a list of all theredcars. So, we can find this using the BOOLEAN operator as given in the below table −
+
+
+Here,IS_REDis the BOOLEAN column that returns either TRUE or FALSE values based on the color of the cars.
+
+
+The databases like PostgreSQL and PL/SQL provides the Boolean data type which is abbreviated as BOOL. Whereas the databases like MySQL and oracle SQL does not have a Boolean data type. To represent Boolean values, they provide TINYINT and BIT data type respectively.
+
+
+## Boolean in MySQL
+
+
+MySQL provides various options for handling Boolean data. You can use BOOL, BOOLEAN, or TINYINT to represent Boolean values.
+
+
+When you use BOOL or BOOLEAN, MySQL internally converts them into TINYINT. Similar to many programming languages like PHP, C, and C++, MySQL represents the TRUE literal as 1 and the FALSE literal as 0.
+
+
+### Example
+
+
+Here, we are creating a table 'CARS' with column BOOLEAN. The query to create a table is as follows −
+
+
+```sql
+CREATE TABLE CARS (
+   ID INT NOT NULL,
+   Name VARCHAR(150),
+   IsRed BOOLEAN
+);
+```
+
+
+In the above example, a table is created with a BOOLEAN columnIsRed. You can insert TRUE as 1 or FALSE as 0 in this column to represent the corresponding Boolean values.
+
+
+## Boolean in MS SQL Server
+
+
+In MS SQL Server, there is no direct BOOLEAN data type. Instead, you can use the BIT data type to represent Boolean values, where 0 represents FALSE and 1 represents TRUE. The BIT data type can also accept NULL values.
+
+
+### Example
+
+
+Following is an example to create a table with a BOOLEAN column in SQL Server −
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   Name VARCHAR(150),
+   IsAvailable BIT
+);
+```
+
+
+In the example above, a table named CUSTOMERS is created with a BOOLEAN columnIsAvailablerepresented as a BIT data type. You can insert 0 for FALSE, 1 for TRUE, or NULL for an unknown value in this column.
+
+Now that you understand how Boolean data types are implemented in SQL Server and MySQL, let us explore how to handle Boolean data in SQL, including filtering and querying based on Boolean columns.
+
+## Filtering Boolean Data
+
+
+You can filter data based on Boolean columns in SQL. For example, in MySQL, to find all the red cars, you can use the BOOLEAN column 'IsRed' to filter for TRUE values as shown below −
+
+
+```sql
+SELECT * FROM CARS WHERE IsRed = TRUE;
+```
+
+
+In SQL Server, to find cars that are red, you can filter for TRUE values (IsRed `=` 1) as follows −
+
+
+```sql
+SELECT * FROM CARS WHERE IsRed = 1;
+```
+
+
+## Negating Boolean Conditions
+
+
+You can also negate Boolean conditions to find records that are NOT TRUE. For example, to find cars that are not red, use the following query in MySQL −
+
+
+```sql
+SELECT * FROM CARS WHERE IsRed = 0;
+```
+
+
+Following is the query in SQL Server −
+
+
+```sql
+SELECT * FROM CARS WHERE IsRed = FALSE;
+```
+
+
+## Working with NULL Values
+
+
+You can handle NULL values of Boolean data in SQL as well. As mentioned earlier, the BIT data type in SQL Server and the BOOL/BOOLEAN data types in MySQL can accept NULL values, which can represent unknown or unspecified conditions.
+
+
+To filter records with NULL values in a Boolean column, you can use theIS NULLorIS NOT NULLcondition in both MySQL and SQL Server −
+
+
+```sql
+-- Finding cars with unspecified availability
+SELECT * FROM CARS WHERE IsAvailable IS NULL;
+
+-- Finding cars with specified availability
+SELECT * FROM CARS WHERE IsAvailable IS NOT NULL;
+```
+
+
+In the queries above, we filter cars based on whether their IsAvailable column is NULL or not NULL.
+
+
+## Updating Boolean Values
+
+
+You can also update Boolean values in your SQL tables. To change the value of a Boolean column in MySQL, you can use the UPDATE statement as shown below −
+
+
+```sql
+-- Changing IsRed to TRUE for car with ID 123
+UPDATE CARS SET IsRed = TRUE WHERE ID = 123;
+```
+
+
+In the above example, we updated the IsRed column for a specific car with the ID of 123, setting it to TRUE.
+
+
+To update Boolean values in SQL Server, use the following query −
+
+
+```sql
+-- Changing IsRed to TRUE for car with ID 123
+UPDATE CARS SET IsRed = 1 WHERE ID = 123;
+```
+

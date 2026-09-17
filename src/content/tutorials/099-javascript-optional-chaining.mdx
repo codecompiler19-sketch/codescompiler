@@ -1,0 +1,383 @@
+---
+title: "JavaScript - Optional Chaining"
+description: "Learn JavaScript - Optional Chaining with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 990
+group: "Object Oriented JavaScript"
+seoTitle: "JavaScript - Optional Chaining — CodesCompiler JavaScript Guide"
+permalink: "javascript-optional-chaining"
+---
+
+
+# JavaScript - Optional Chaining
+
+
+
+
+The optional chaining in JavaScript allows you to access nested properties and methods of an object without checking if each property exists. This can help to make your code more concise and easier to read.
+
+
+The optional chaining operator (?.) is sued to achieve optional chaining in JavaScript. It is placed before the property or method that you want to access. If the property or method does not exist, the expression will evaluate to undefined instead of throwing an error.
+
+
+## The Non-existing Property Problem
+
+
+Let's understand the need for optional chaining in JavaScript via the non-existing property problem.
+
+
+While working with objects in JavaScript, you may have objects with dynamic properties. Some properties also contain the object as a value, called nested objects.
+
+
+JavaScript can throw an error if you try to access the nested property whose parent doesn't exist.
+
+
+For example,
+
+
+```javascript
+const parent = {
+    child: {
+        name: "Smith",
+    }
+}
+const name = parent.child.name;
+```
+
+
+The parent object contains the 'ch' property, and the 'ch' property contains the nested object as a value.
+
+
+In the code, you access the 'name' property of the 'child' nested object, but the 'child' property doesn't exist in the parent object. So, JavaScript will throw the below error as you access the undefined property.
+
+
+```javascript
+Uncaught TypeError: Cannot read properties of undefined
+```
+
+
+To solve the above problem, the '&&' operator was used before ES11.
+
+
+For example,
+
+
+```javascript
+if (parent.child && parent.child.name) {
+   // access parent.child.name here
+}
+```
+
+
+In the above code, we first check whether the parent.child exists. If yes, we access its name property to avoid the error.
+
+
+You got the solution, but what if you need to access the property from the 4th or 5th level of the object? You need to use multiple && operators and write complex code.
+
+
+Here, the optional chaining operator (?.) comes into the picture to solve the non-existing property problem easily.
+
+
+## What is an Optional Chaining in JavaScript?
+
+
+In JavaScript, optional chining operator (?.) is introduced in ECMAScript 2020 (ES2020). It provides the best way to access object properties, array elements, etc.
+
+
+The optional chaining is very similar to normal chaining used to access the nested properties of the object. It checks whether the nested property exists before accessing the object property to avoid the error.
+
+
+### Syntax
+
+
+You can follow the syntax below to use the optional chaining operator in JavaScript.
+
+
+```javascript
+Obj?.prop1?.nestedprop; // Accessing nested properties
+Obj?.[expression]; // Accessing object property via expression
+Array?.[index]; // Accessing array element
+funcName?.(); // Executing the funciton
+```
+
+
+
+- In the above syntax, if the obj object exists, it will access the prop1 property. Again the code checks if the prop1 property exists in the obj object, it will access the nestedProp property. Otherwise, it will stop the code execution to avoid errors.
+- You can also access the object property value using the expression and optional chaining.
+- Optional chaining can also be used for accessing array elements and executing the function.
+
+
+
+### Return value
+
+
+If a property does not exist, the optional chain returns undefined without throwing any error.
+
+
+### Example
+
+
+In the example below, the car object contains the 'info' nested object. The info object contains the color and price property.
+
+
+We try to access the price property of the info object using the optional chain, it returns 5000000.
+
+
+After that, we try to access the gears property of the engine property of the car object using the optional chain. In the output, you can see that it returns undefined rather than throwing an error.
+
+
+```html
+<html>
+<body>
+   <div id = "output1">The price of the Audi Q6 is: </div>
+   <div id = "output2">Total gears in the Audi Q6 is: </div>
+   <script>
+      const car = {
+         brand: "Audi",
+         model: "Q6",
+         info: {
+            price: 5000000,
+            color: "Black",
+         }
+      }
+      document.getElementById("output1").innerHTML += car.info?.price;
+      document.getElementById("output2").innerHTML += car.engine?.gears;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The price of the Audi Q6 is: 5000000
+Total gears in the Audi Q6 is: undefined
+```
+
+
+## Optional Chaining with Function Calls
+
+
+In JavaScript, you can also use the optional chaining with the function calls. If the function is not defined, it will return the undefined. Otherwise, the code will execute the function.
+
+
+### Example
+
+
+In the below code, we used the optional chain with object methods.
+
+
+The car object contains the getBrand() method. We used the optional chain while executing the getBrand() method, which returns 'Audi'.
+
+
+Also, we try to execute the getColor() method of the car object with an optional chain. It returns undefined as the car object doesn't contain the getColor() method.
+
+
+```html
+<html>
+<body>
+   <div id = "output1">The brand of the car is: </div>
+   <div id = "output2">The color of the car is: </div>
+   <script>
+      const car = {
+         getBrand() {
+            return "Audi";
+         },
+      }
+      document.getElementById("output1").innerHTML += car.getBrand?.();
+      document.getElementById("output2").innerHTML += car.getColor?.();
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The brand of the car is: Audi
+The color of the car is: undefined
+```
+
+
+## Optional Chaining with Expression
+
+
+You can use the optional chain while accessing the object properties using the expression or array element.
+
+
+### Example
+
+
+In the below code, the animal object contains the name and info property. The info property again contains the nested object having legs and tail properties.
+
+
+We access the object properties using the optional chain and expression. You can see that it prints the output in the code without throwing any error, even the 'specs' property doesn't exist in the animal object.
+
+
+```html
+<html>
+<body>
+   <div id = "output1">Total number of legs of the tiger is: </div>
+   <div id = "output2">The color of the tiger is: </div>
+   <script>
+      const animal = {
+         name: "Tiger",
+         info: {
+            legs: 4,
+            tail: 1,
+         }
+      }
+      document.getElementById("output1").innerHTML += animal.info?.["legs"];
+      document.getElementById("output2").innerHTML += animal.specs?.["color"];
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Total number of legs of the tiger is: 4
+The color of the tiger is: undefined
+```
+
+
+## Optional Chaining with the "delete" Operator
+
+
+The JavaScript delete operator is used to delete the object properties. If you try to delete properties that do not exist, the code will throw an error. So, you can use the optional chain operator with the delete operator.
+
+
+### Example
+
+
+In the below code, we delete the legs property of the nested info object and the tail property of the 'specs' nested object using the delete operator and access properties using the optional chain.
+
+
+The animal object doesn't contain the specs property. Still, the code runs without any error due to the optional chain.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+      const animal = {
+         name: "Tiger",
+         info: {
+            legs: 4,
+            tail: 1,
+         }
+      }
+      delete animal.info?.legs;
+      delete animal.sepcs?.tail;
+      document.getElementById("demo").innerHTML = 
+      "Updated object is: " + JSON.stringify(animal);
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Updated object is: {"name":"Tiger","info":{"tail":1}}
+```
+
+
+## Short-circuiting with Optional Chaining
+
+
+In JavaScript, the meaning of short-circuiting is that whenever you get an error, stop the execution of the code. You can use the optional chain for accessing each nested property of the object to avoid any error and stop the execution of the code on error.
+
+
+### Example
+
+
+In the below code, the animal object contains the info object, and the info object contains the legs object. We use the optional chain to access each nested property. So, if any property doesn't exist, it will return undefined and avoid errors.
+
+
+```html
+<html>
+<body>
+   <div id = "output1">The size of the first leg is: </div>
+   <div id = "output2"> The size of the third leg is: </div>
+   <script>
+      const animal = {
+         name: "Tiger",
+         info: {
+            legs: {
+               first: 1.32,
+               second: 1.31,
+            },
+            tail: 1,
+         }
+      }
+      document.getElementById("output1").innerHTML += animal?.info?.legs?.first;
+      document.getElementById("output2").innerHTML += animal?.specs?.legs?.third;
+    </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The size of the first leg is: 1.32
+The size of the third leg is: undefined
+```
+
+
+## Nullish Coalescing Operator with Optional Chaining
+
+
+When any object property doesn't exist, the optional chain stops the code execution and returns undefined. If you use the JavaScript nullish coalescing operator with it, you can return the default value when the object property doesn't exist.
+
+
+### Example
+
+
+In the below code, we try to access the color property of the 'specs' object of the 'animal' object. Here, 'specs' do not exist in the animal object. So, it returns 'red' as we used the nullish coalescing operator.
+
+
+```html
+<html>
+<body>
+   <div id = "output">The color of the animal is: </div>
+   <script>
+      const animal = {
+         name: "Tiger",
+         info: {
+            legs: 2,
+            tail: 1,
+         }
+      }
+      animal.info?.legs;
+      const color = animal?.spec?.color ?? "Red";
+      document.getElementById("output").innerHTML += color;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The color of the animal is: Red
+```
+
+
+In simple terms, you can use the optional chain operator wherever you need to access the properties of the dynamic object to avoid an error.
+

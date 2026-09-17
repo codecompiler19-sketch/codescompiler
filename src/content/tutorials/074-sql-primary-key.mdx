@@ -1,0 +1,333 @@
+---
+title: "SQL - Primary Key"
+description: "Learn SQL - Primary Key with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 740
+group: "SQL Keys"
+seoTitle: "SQL - Primary Key — CodesCompiler SQL Guide"
+permalink: "sql-primary-key"
+---
+
+
+# SQL - Primary Key Constraint
+
+
+Table of contentThe SQL Primary KeyProperties of SQL Primary KeySQL Primary Key On CREATE TABLESQL Composite Primary KeySQL Primary Key on an Existing ColumnDropping the SQL Primary Key ConstraintImportant Points About SQL PRIMARY KEY
+
+
+
+
+## The SQL Primary Key
+
+
+APrimary Keyin SQL is a column (or a combination of columns) that uniquely identifies each row in a table. It ensures that no two rows have the same value in the primary key column(s) and that the value cannot beNULL.
+
+
+Each table can have only one primary key, but that primary key may consist of multiple columns (known as a composite primary key).
+
+
+## Properties of SQL Primary Key
+
+
+Following are some of the important properties of SQL PRIMARY KEY:
+
+
+
+- It contains only a unique value.
+- It can not be null.
+- One table can have only one Primary Key.
+- A primary key length cannot be more than 900 bytes.
+
+
+
+### Syntax
+
+
+There are several syntaxes to create or add a primary key in a table.
+
+
+Create a table with a primary key on a single column:
+
+
+```sql
+CREATE TABLE table_name (
+    column1 datatype PRIMARY KEY,
+    column2 datatype,
+    column3 datatype
+);
+```
+
+
+Create a table with a composite primary key (multiple columns):
+
+
+```sql
+CREATE TABLE table_name (
+    column1 datatype,
+    column2 datatype,
+    column3 datatype,
+    PRIMARY KEY (column1, column2)
+);
+```
+
+
+Add a primary key to an existing table:
+
+
+```sql
+ALTER TABLE table_name
+ADD CONSTRAINT pk_table PRIMARY KEY (column_name);
+```
+
+
+## SQL Primary Key On CREATE TABLE
+
+
+APrimary Keycan be defined while creating a new table using theCREATE TABLEstatement. This makes sure that the column (or group of columns) uniquely identifies each row in the table from the moment it is created.
+
+
+You can add the primary key constraint on a particular column of the table just by specifying the name of the column along with the keyword "PRIMARY KEY" as shown in the syntax above.
+
+
+### Example
+
+
+In the following example, we are trying to create a table with the name CUSTOMERS with various fields in an SQL database. While creating the table, we will add the constraint "PRIMARY KEY" on the column named ID:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),       
+   PRIMARY KEY (ID)
+);
+```
+
+
+Following is the output of the above SQL statement:
+
+
+```sql
+Query OK, 0 rows affected (0.03 sec)
+```
+
+
+### Verification
+
+
+As we know primary key value must be unique, so you can not insert the record with the same ID. Here, we will verify the constraint created on the ID column, by inserting records with duplicate ID values.
+
+
+First of all, let's insert a record into the CUSTOMERS table:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES
+(3, 'Kaushik', 23, 'Kota', 2000.00);
+```
+
+
+Now, let's insert one more record with same ID:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+(3, 'Chaitali', 25, 'Mumbai', 6500.00);
+```
+
+
+As we have mentioned above, if any field/column is defined as Primary Key in a database table, two records can not have the same value in that column/field. Therefore, the second insert statement generates the following error:
+
+
+```sql
+ERROR 1062 (23000): Duplicate entry '3' for key 'customers.PRIMARY'
+```
+
+
+Similarly, a primary key column cannot contain null values. Here, using the INSERT statement we are passing a NULL value to the  primary key column (ID).
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES
+(NULL, 'Komal', 22, 'Hyderabad', 4500.00);
+```
+
+
+This statement generates the following error:
+
+
+```sql
+ERROR 1048 (23000): Column 'ID' cannot be null
+```
+
+
+## SQL Composite Primary Key
+
+
+AComposite Primary Keyis a primary key made up of two or more columns. It makes sure that the combination of values across these columns is unique for each row, even if the individual column values are not unique by themselves.
+
+
+Composite primary keys are often used in junction tables (many-to-many relationships) or when a single column is not sufficient to uniquely identify a record.
+
+
+### Example
+
+
+In this example, we are creating a tableORDERSwhere the combination ofORDER_IDandPRODUCT_IDforms the primary key:
+
+
+```sql
+CREATE TABLE ORDERS (
+   ORDER_ID INT NOT NULL,
+   PRODUCT_ID INT NOT NULL,
+   QUANTITY INT,
+   PRIMARY KEY (ORDER_ID, PRODUCT_ID)
+);
+```
+
+
+We get the output as shown below:
+
+
+```sql
+Query OK, 0 rows affected (0.04 sec)
+```
+
+
+### Verification
+
+
+Now, let us insert some records to see how the composite primary key works:
+
+
+```sql
+INSERT INTO ORDERS VALUES (101, 5001, 2);
+INSERT INTO ORDERS VALUES (101, 5002, 1);
+```
+
+
+Both rows are valid since the combination ofORDER_IDandPRODUCT_IDis unique. However, inserting the following will cause an error:
+
+
+```sql
+INSERT INTO ORDERS VALUES (101, 5001, 3);
+```
+
+
+We get the following error:
+
+
+```sql
+ERROR 1062 (23000): Duplicate entry '(101, 5001)' for key 'orders.PRIMARY'
+```
+
+
+## SQL Primary Key on an Existing Column
+
+
+You can also add the PRIMARY KEY constraint on an existing column of a table using theALTER TABLEstatement. This is useful when the table is already created but does not yet have a primary key defined.
+
+
+### Example
+
+
+In this example, we are adding the PRIMARY KEY constraint on the NAME column of the existing CUSTOMERS table:
+
+
+```sql
+ALTER TABLE CUSTOMERS ADD CONSTRAINT PRIMARY KEY(NAME);
+```
+
+
+Following is the output of the above statement:
+
+
+```sql
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+```
+
+
+## Dropping the SQL Primary Key Constraint
+
+
+In SQL, you can remove an existingPrimary Keyfrom a table using theALTER TABLEstatement. This is useful when you need to redefine the primary key or modify the table structure.
+
+
+### Syntax
+
+
+Following is the syntax to drop a Primary key constraints from the column of a table:
+
+
+```sql
+ALTER TABLE table_name DROP PRIMARY KEY;
+```
+
+
+### Example
+
+
+Let us consider the CUSTOMERS table where we have created a primary key constraint on a column named ID. You can drop this constraint from the column ID by executing the following statement:
+
+
+```sql
+ALTER TABLE CUSTOMERS DROP PRIMARY KEY;
+```
+
+
+The above SQL query produces the following output:
+
+
+```sql
+Query OK, 1 row affected (0.03 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+```
+
+
+### Verification
+
+
+As we have dropped the Primary key from the column named ID, we can insert multiple records with the same ID. Following statement inserts four records with the same ID:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+(3, 'Chaitali', 25, 'Mumbai', 6500.00 ),
+(3, 'Hardik', 27, 'Bhopal', 8500.00 ),
+(3, 'Komal', 22, 'Hyderabad', 4500.00 ),
+(3, 'Muffy', 24, 'Indore', 10000.00 );
+```
+
+
+If you verify the content of this table, you can find multiple records with same ID:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+The table will be displayed as:
+
+
+IDNAMEAGEADDRESSSALARY3Kaushik23Kota2000.003Chaitali25Mumbai6500.003Hardik27Bhopal8500.003Komal22Hyderabad4500.003Muffy24Indore10000.00
+
+
+## Important Points About SQL PRIMARY KEY
+
+
+Following are the important points you should remember about the SQL PRIMARY KEY Constraint:
+
+
+
+- A table can have onlyone primary key, but that key may consist of one or multiple columns (composite primary key).
+- Primary key columnsmust contain unique valuesfor each row in the table.
+- Primary key columnscannot contain NULLvalues, making sure that every row is identifiable.
+- When a primary key is created, most database systemsautomatically create an indexon it for faster lookups.
+- A composite primary key ses two or more columns together to make sure the row is unique (when one column alone isn't enough).
+
+

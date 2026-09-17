@@ -1,0 +1,337 @@
+---
+title: "JavaScript - ECMAScript 2018"
+description: "Learn JavaScript - ECMAScript 2018 with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1090
+group: "JavaScript Versions"
+seoTitle: "JavaScript - ECMAScript 2018 — CodesCompiler JavaScript Guide"
+permalink: "javascript-ecmascript-2018"
+---
+
+
+# JavaScript - ECMAScript 2018
+
+
+
+
+TheECMAScript 2018version of JavaScript was released in 2018. ECMAScript 2017 introduced singnificant enhancement to the language. Two important features introduced in this version areasynchronous iterationfor improved handling of asynchronous operations, andpromise finally()to execute code regardless of promise resolution. This chapter will discuss all the new added features in ECMAScript 2018.
+
+
+## New Added Features in ECMAScript 2018
+
+
+Here are the new methods, features, etc., added to the ECMAScript 2018 version of JavaScript.
+
+
+
+- Asynchronous iteration
+- New features of the RegExp() Object
+- Promise.finally()
+- Rest object properties
+
+
+
+Here, we have explained each feature in detail.
+
+
+## JavaScript Asynchronous Iteration
+
+
+You can also use the 'await' keyword with the for loop to make asynchronous iterations.
+
+
+For example, you are iterating multiple promises, and in each iteration, you need to stop the code execution until the current promise gets resolved or rejected.
+
+
+### Example
+
+
+In the below code, we have defined the async generator function named gen_function. The gen_func() function makes 5 iterations using the loop. In each iteration, it awaits to resolve the promise and returns p.
+
+
+In the test() function, we used the 'await' keyword with the for loop to make asynchronous iterations. It updates the output after every 0.5 seconds.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+      const output = document.getElementById("demo");
+      // Generator function
+      async function* gen_function() {
+         for (let p = 0; p < 5; p++) {
+            await new Promise(res => setTimeout(res, 500));
+            yield p;
+         }
+      }
+      async function test() {
+         for await (const ele of gen_function()) {
+            output.innerHTML += "Returned element is: " + ele + "<br>";
+         }
+      }
+      test();
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Returned element is: 0
+Returned element is: 1
+Returned element is: 2
+Returned element is: 3
+Returned element is: 4
+```
+
+
+## New features of the RegExp() object
+
+
+In ECMAScript 2018, the following four new regular expression features were introduced −
+
+
+
+- Unicode Property Escapes (\p&#123;...&#125;)
+- Lookbehind Assertions (?`<=` ) and (?`<! )
+`- Named Capture Groups
+- s (dotAll) Flag
+
+
+
+### Unicode Property Escapes (\p&#123;...&#125;)
+
+
+The Unicode property escape allows you to escape the Unicode character. You need to represent the Unicode in the curly braces followed by the '\p'.
+
+
+### Example
+
+
+In the below code, we use the regular expression to check whether the tet contains the letter using the Unicode property access.
+
+
+```html
+<html>
+<body>
+   <div id = "output1">regex.test('Y'):  </div>
+   <div id = "output2">regex.test('6'):  </div>
+   <script>
+      const regex = /\p{Letter}/u; // To Match letters only
+      document.getElementById("output1").innerHTML += regex.test('Y'); // true
+      document.getElementById("output2").innerHTML += regex.test('6'); // false
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+regex.test('Y'): true
+regex.test('6'): false
+```
+
+
+### Lookbehind Assertions (?`<=` ) and (?`<! )
+`
+
+The Lookbehind assertion allows you to find a particular subpattern followed by a particular sub patter. The positive look-behind assertion is equal to ?`<=`, and the negative look-behind assertion is ?`<!.
+`
+
+### Example
+
+
+In the below code, we are looking for a word after the '@' using the look behind the assertion. It finds words after the '@' pattern.
+
+
+```html
+<html>
+<body>
+   <div id = "output">lookBeind.exec('abcd@domain.com')[0]:  </div>
+   <script>
+      const lookBeind = /(?<=@)\w+/;
+      document.getElementById("output").innerHTML += 
+	  lookBeind.exec('abcd@tutorialspoint.com')[0]; // Prints domain
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+lookBeind.exec('abcd@domain.com')[0]: tutorialspoint
+```
+
+
+### Named Capture Groups
+
+
+You can give a unique name to each group of the regular expression. The group names make it easy to extract the patterns from the string.
+
+
+### Example
+
+
+In the code below, we have defined the regular expression to match the date pattern. Also, we have named the groups' year, month, and day.
+
+
+After that, we extracted the year from the date using the group name.
+
+
+```html
+<html>
+<body>
+   <div id = "output">The year of the date is: </div>
+   <script>
+      const datePattern = /(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})/;
+      const match = datePattern.exec('2023-08-22');
+      document.getElementById("output").innerHTML += match.groups.year;
+   </script>
+</body
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The year of the date is: 2023
+```
+
+
+### s (dotAll) Flag
+
+
+The '.' (dot) character matches any character except the new line in a regular expression. If you also want to match the new line using the '.' Character, you need to use the '/s' flag, as shown in the example below.
+
+
+### Example
+
+
+In the below code, we have added the '.' Character in the regular expression pattern to match any character, and also added \s flag.
+
+
+In the output, you can see that '.' character also matches with the '\n'.
+
+
+```html
+<html>
+<body>
+   <div id = "output">strRegex.test('Hello\nprogrammers'):  </div>
+   <script>
+      const strRegex = /Hello.programmers/s;
+      document.getElementById("output").innerHTML += 
+	  strRegex.test('Hello\nprogrammers');
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+strRegex.test('Hello\nprogrammers'): true
+```
+
+
+## JavaScript Promise finally()
+
+
+You can use the finally() block with promises to execute the particular code after the promise gets resolved or rejected. It is similar to the try...catch...finally block.
+
+
+### Example
+
+
+In the example below, we created the promise and stored it in the getData variable. The promise gets resolved after 1000 milliseconds.
+
+
+After that, we use the 'then...finally', block to execute the promise. In the output, you can observe that code of the 'finally' block always gets executed.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      const getData = new Promise((res, rej) => {
+         setTimeout(() => {
+            res("Promise resolved!");
+         }, 1000);
+      });
+      getData
+         .then(result => {
+            document.getElementById("output").innerHTML += result + "<br>";
+         })
+         .finally(() => {
+            document.getElementById("output").innerHTML += "In the finally block!";
+         });
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Promise resolved!
+In the finally block!
+```
+
+
+## JavaScript Rest Object Properties
+
+
+You can use the spread operator while destructuring the objects. The spread operator allows you to collect the remaining properties in a single variable in the object format.
+
+
+### Example
+
+
+In the example below, the numbers object contains 4 properties. While destructuring, we get the value of the num1 property and store other properties in the nums variable using the spread operator.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      const numbers = {
+         num1: 40,
+         num2: 50,
+         num3: 80,
+         num4: 90,
+      }
+      const { num1, ...nums } = numbers;
+      document.getElementById("output").innerHTML = 
+	  "num1 = " + num1 + "<br>" + 
+      "nums = " + JSON.stringify(nums);
+    </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+num1 = 40
+nums = {"num2":50,"num3":80,"num4":90}
+```
+

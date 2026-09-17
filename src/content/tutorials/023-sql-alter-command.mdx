@@ -1,0 +1,524 @@
+---
+title: "SQL - Alter Tables"
+description: "Learn SQL - Alter Tables with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 230
+group: "SQL Table"
+seoTitle: "SQL - Alter Tables — CodesCompiler SQL Guide"
+permalink: "sql-alter-command"
+---
+
+
+# SQL ALTER TABLE
+
+
+
+
+
+
+## SQL ALTER TABLE Command
+
+
+TheALTER TABLEcommand in SQL is used to change the structure of an existing table. It allows you to add new columns, delete existing columns, change column data types, and even rename columns or the table (in some databases).
+
+
+### Syntax
+
+
+Following is the basic syntax of theALTER TABLEstatement:
+
+
+```sql
+ALTER TABLE table_name 
+
+-- operation here (ADD / DROP / RENAME / MODIFY)
+```
+
+
+Different database systems (MySQL, SQL Server, PostgreSQL) have slight variations in syntax, which we will cover throughout this tutorial.
+
+
+Let us explore the most common operations using theALTER TABLEcommand, based on theCUSTOMERStable given below.
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+
+   ID INT NOT NULL,
+
+   NAME VARCHAR (20) NOT NULL,
+
+   AGE INT NOT NULL,
+
+   ADDRESS CHAR (25),
+
+   SALARY DECIMAL (18, 2),
+
+   PRIMARY KEY (ID)
+
+);
+```
+
+
+Let us insert some records in the table:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+
+(2, 'Khilan', 25, 'Delhi', 1500.00 ),
+
+(3, 'Kaushik', 23, 'Kota', 2000.00 ),
+
+(4, 'Chaitali', 25, 'Mumbai', 6500.00 ),
+
+(5, 'Hardik', 27, 'Bhopal', 8500.00 ),
+
+(6, 'Komal', 22, 'Hyderabad', 4500.00 ),
+
+(7, 'Muffy', 24, 'Indore', 10000.00 );
+```
+
+
+We get the following table which we will use in all examples:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## ALTER TABLE: Add a Column
+
+
+Sometimes you need to store new information in your database. To do this, you can add a new column to an existing table using theALTER TABLEstatement with theADDkeyword.
+
+
+### Syntax
+
+
+Following is the basic syntax to add a column usingALTER TABLEstatement in MySQL database:
+
+
+```sql
+ALTER TABLE table_name 
+
+ADD column_name datatype;
+```
+
+
+### Example
+
+
+In the following example, we add anEMAILcolumn to theCUSTOMERStable that can store up to 100 characters:
+
+
+```sql
+ALTER TABLE CUSTOMERS 
+
+ADD EMAIL VARCHAR(100);
+```
+
+
+We get the output as shown below:
+
+
+```sql
+Query OK, 0 rows affected (0.18 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+```
+
+
+### Verification
+
+
+To verify whether the CUSTOMERS table is altered by adding a new columnEMAIL, use the SELECT statement to retrieve the records of the table:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+Now, the CUSTOMERS table will be displayed as follows:
+
+
+IDNAMEAGEADDRESSSALARYEMAIL1Ramesh32Ahmedabad2000.00NULL2Khilan25Delhi1500.00NULL3Kaushik23Kota2000.00NULL4Chaitali25Mumbai6500.00NULL5Hardik27Bhopal8500.00NULL6Komal22Hyderabad4500.00NULL7Muffy24Indore10000.00NULL
+
+
+## ALTER TABLE: Drop a Column
+
+
+If you no longer need a column, you can remove it from your table using theALTER TABLEstatement with theDROP COLUMNkeyword.
+
+
+### Syntax
+
+
+Here is the basic syntax to drop a column from a table in MySQL:
+
+
+```sql
+ALTER TABLE table_name 
+
+DROP COLUMN column_name;
+```
+
+
+### Example
+
+
+In this example, we remove theAGEcolumn from theCUSTOMERStable:
+
+
+```sql
+ALTER TABLE CUSTOMERS 
+
+DROP COLUMN AGE;
+```
+
+
+The output obtained is as shown below:
+
+
+```sql
+Query OK, 0 rows affected (0.23 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+```
+
+
+### Verification
+
+
+We can use the following SELECT statement to check if theAGEcolumn is removed:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+The CUSTOMERS table will now appear without the AGE column as shown in the table below:
+
+
+IDNAMEADDRESSSALARYEMAIL1RameshAhmedabad2000.00NULL2KhilanDelhi1500.00NULL3KaushikKota2000.00NULL4ChaitaliMumbai6500.00NULL5HardikBhopal8500.00NULL6KomalHyderabad4500.00NULL7MuffyIndore10000.00NULL
+
+
+## ALTER TABLE: Modify Column Data Type
+
+
+When you want to change the type of data a column holds, or adjust its size (like making a string longer or a number more precise), you can use theALTER TABLEstatement with theMODIFY COLUMNkeyword in MySQL.
+
+
+### Syntax
+
+
+Here is the basic syntax to modify a column in MySQL:
+
+
+```sql
+ALTER TABLE table_name 
+
+MODIFY COLUMN column_name new_datatype;
+```
+
+
+### Example
+
+
+Now, we change theSALARYcolumn in theCUSTOMERStable to have a smaller decimal format:
+
+
+```sql
+ALTER TABLE CUSTOMERS 
+
+MODIFY COLUMN SALARY DECIMAL(10, 2);
+```
+
+
+Following is the output obtained:
+
+
+```sql
+Query OK, 7 rows affected (0.12 sec)
+
+Records: 7  Duplicates: 0  Warnings: 0
+```
+
+
+### Verification
+
+
+To confirm the change, you can describe the structure of the table:
+
+
+```sql
+DESCRIBE CUSTOMERS;
+```
+
+
+TheSALARYcolumn will now show the updated data type and other column details as part of the table structure when you run the above command:
+
+
+FieldTypeNullKeyDefaultExtraIDintNOPRINULLNAMEvarchar(20)NONULLADDRESSchar(25)YESNULLSALARYdecimal(10,2)YESNULLEMAILvarchar(100)YESNULL
+
+
+## ALTER TABLE: Rename a Column
+
+
+If you want to give a column a new name (for example, for clarity or to follow naming conventions), you can use theALTER TABLEstatement. The syntax depends on your database system.
+
+
+### MySQL Syntax
+
+
+Following is the basic syntax to rename a column in MySQL database:
+
+
+```sql
+ALTER TABLE table_name 
+
+CHANGE old_column_name new_column_name datatype;
+```
+
+
+### MySQL Example
+
+
+In the following example, we rename theNAMEcolumn toFULLNAMEin theCUSTOMERStable in MySQL database:
+
+
+```sql
+ALTER TABLE CUSTOMERS 
+
+CHANGE NAME FULLNAME VARCHAR(50);
+```
+
+
+The result produced is as shown below:
+
+
+```sql
+Query OK, 0 rows affected (0.12 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+```
+
+
+### Verification
+
+
+To verify the column has been renamed, use theDESCRIBEstatement to view the table structure:
+
+
+```sql
+DESCRIBE CUSTOMERS;
+```
+
+
+You will now see the column listed asFULLNAMEinstead ofNAME:
+
+
+FieldTypeNullKeyDefaultExtraIDintNOPRINULLFULLNAMEvarchar(20)YESNULLADDRESSchar(25)YESNULLSALARYdecimal(10,2)YESNULLEMAILvarchar(100)YESNULL
+
+
+### SQL Server Syntax
+
+
+Following is the basic syntax to rename a column in SQL Server:
+
+
+```sql
+EXEC sp_rename 'table_name.old_column', 'new_column', 'COLUMN';
+```
+
+
+### SQL Server Example
+
+
+Here, we rename theNAMEcolumn toFULLNAMEin theCUSTOMERStable in SQL Server:
+
+
+```sql
+EXEC sp_rename 'CUSTOMERS.NAME', 'FULLNAME', 'COLUMN';
+```
+
+
+We get the output as shown below:
+
+
+```sql
+Caution: Changing any part of an object name could break scripts and stored procedures.
+
+Completion time: 2025-08-04T10:04:09.4015824+05:30
+```
+
+
+### PostgreSQL Syntax
+
+
+Following is the basic syntax to rename a column in PostgreSQL:
+
+
+```sql
+ALTER TABLE table_name 
+
+RENAME COLUMN old_column TO new_column;
+```
+
+
+### PostgreSQL Example
+
+
+Now, we rename theNAMEcolumn toFULLNAMEin theCUSTOMERStable in PostgreSQL:
+
+
+```sql
+ALTER TABLE STUDENTS 
+
+RENAME COLUMN NAME TO FULLNAME;
+```
+
+
+After executing the above command, we get the following output:
+
+
+```sql
+ALTER TABLE
+```
+
+
+## ALTER TABLE: Rename the Table
+
+
+Sometimes you may want to change the name of a table entirely, for example, fromCUSTOMERStoCLIENTS. You can do this using theALTER TABLEstatement. The syntax varies depending on the database system you are using.
+
+
+### MySQL Syntax
+
+
+Following is the basic syntax to rename a table in MySQL:
+
+
+```sql
+RENAME TABLE old_table_name TO new_table_name;
+```
+
+
+### MySQL Example
+
+
+In the following example, we rename theCUSTOMERStable toCLIENTSin the MySQL database:
+
+
+```sql
+RENAME TABLE CUSTOMERS TO CLIENTS;
+```
+
+
+The result produced is as shown below:
+
+
+```sql
+Query OK, 0 rows affected (0.05 sec)
+```
+
+
+### Verification
+
+
+To verify whether the table name has been successfully changed, use the following command to list all tables:
+
+
+```sql
+SHOW TABLES;
+```
+
+
+The tableCLIENTSwill now be listed instead ofCUSTOMERS:
+
+
+Tables_in_testdbsalaryCLIENTS
+
+
+### SQL Server Syntax
+
+
+Following is the basic syntax to rename a table in SQL Server:
+
+
+```sql
+EXEC sp_rename 'old_table_name', 'new_table_name';
+```
+
+
+### SQL Server Example
+
+
+Here, we rename theCUSTOMERStable toCLIENTSin SQL Server:
+
+
+```sql
+EXEC sp_rename 'CUSTOMERS', 'CLIENTS';
+```
+
+
+We get the output as shown below:
+
+
+```sql
+Caution: Changing any part of an object name could break scripts and stored procedures.
+
+Completion time: 2025-08-04T10:11:24.0473044+05:30
+```
+
+
+### PostgreSQL Syntax
+
+
+Following is the basic syntax to rename a table in PostgreSQL:
+
+
+```sql
+ALTER TABLE old_table_name 
+
+RENAME TO new_table_name;
+```
+
+
+### PostgreSQL Example
+
+
+Now, we rename theCUSTOMERStable toCLIENTSin the PostgreSQL database:
+
+
+```sql
+ALTER TABLE CUSTOMERS 
+
+RENAME TO CLIENTS;
+```
+
+
+After executing the above command, we get the following output:
+
+
+```sql
+ALTER TABLE
+```
+
+
+## Important Points to Know About ALTER TABLE
+
+
+Following are the important points you should remember when altering tables in SQL databases:
+
+
+
+- ALTER TABLEchanges a table's structure without deleting its data.
+- Renaming columns may affect views, procedures, or application code referencing them.
+- Syntax varies slightly between MySQL, SQL Server, and PostgreSQL.
+- Always back up your database before making structural changes.
+
+

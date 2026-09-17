@@ -1,0 +1,139 @@
+---
+title: "HTML - Microdata"
+description: "Learn HTML - Microdata with clear HTML concepts, practical examples, and maintainable markup."
+category: "html"
+order: 720
+group: "HTML Miscellaneous"
+seoTitle: "HTML - Microdata — CodesCompiler HTML Guide"
+permalink: "html-microdata"
+---
+
+## HTML - Microdata
+
+Microdata is a standardized way to provide additional semantics in the web pages. It lets us define our own customized elements and start embedding custom properties in the web pages. The microdata consists of a group of name-value pairs.
+
+The groups are called items , and each name-value pair is a property . Items and properties are represented by regular elements.
+
+## Using Microdata in HTML document
+
+Earlier, we mentioned that the microdata has group of name-value pairs (property) and this group is known as items.
+
+- To create an item, the itemscope attribute is used.
+
+To create an item, the itemscope attribute is used.
+
+- To add a property to an item, the itemprop attribute is used on one of the item's descendants.
+
+To add a property to an item, the itemprop attribute is used on one of the item's descendants.
+
+### Example
+
+In this example, there are two items, each of which has the property "name" −
+
+```html
+<html>
+<body>
+   <div itemscope>
+      pMy name is <span itemprop="name">Zara</span>.
+   </div>
+   <div itemscope>
+      pMy name is <span itemprop="name">Nuha</span>.
+   </div>
+</body>
+</html>
+```
+
+Properties generally have values that are strings but it can have following data types −
+
+## Global Attributes
+
+Microdata introduces five global attributes which would be available for any element to use and give context for machines about your data.
+
+| S.No. | Attribute & Description |
+| :--- | :--- |
+| 1 | itemscope This is used to create an item. The itemscope attribute is a Boolean attribute that tells that there is Microdata on this page, and this is where it starts. |
+| 2 | itemtype This attribute is a valid URL which defines the item and provides the context for the properties. |
+| 3 | itemid This attribute is global identifier for the item. |
+| 4 | itemprop This attribute defines a property of the item. |
+| 5 | itemref This attribute gives a list of additional elements to crawl to find the name-value pairs of the item. |
+
+## Properties Datatypes
+
+Properties generally have values that are strings as mentioned in above example but they can also have values that are URLs. Following example has one property, "image", whose value is a URL −
+
+```html
+<div itemscope>
+   <img itemprop="image" src="tp-logo.gif" alt="TutorialsPoint">
+</div>
+```
+
+Properties can also have values that are dates, times, or dates and times. This is achieved using the time element and its datetime attribute.
+
+```html
+<html>
+<body>
+   <div itemscope>
+      My birthday is −
+      <time itemprop="birthday" datetime="1971-05-08">
+         Aug 5th 1971
+      </time>
+   </div>
+</body>
+</html>
+```
+
+Properties can also themselves be groups of name-value pairs, by putting the itemscope attribute on the element that declares the property.
+
+## Microdata API support
+
+If a browser supports the HTML5 microdata API, there will be a getItems() function on the global document object. If browser doesn't support microdata, the getItems() function will be undefined.
+
+```html
+function supports_microdata_api() {
+   return !!document.getItems;
+}
+```
+
+Modernizr does not yet support checking for the microdata API, so we will need to use the function like the one listed above.
+
+The HTML5 microdata standard includes both HTML markup (primarily for search engines) and a set of DOM functions (primarily for browsers).
+
+We can include microdata markup in our web pages and the search engines that are not capable to understand the microdata attributes will just ignore them. But if we need to access or manipulate microdata through the DOM, we need to check whether the browser supports the microdata DOM API.
+
+## Defining Microdata Vocabulary
+
+To define microdata vocabulary, you need a namespace URL which points to a working web page. For example, http://data-vocabulary.org/Person can be used as the namespace for a personal microdata vocabulary with the following named properties −
+
+- name − Person name as a simple string
+
+name − Person name as a simple string
+
+- Photo − A URL to a picture of the person.
+
+Photo − A URL to a picture of the person.
+
+- URL − A website belonging to the person.
+
+URL − A website belonging to the person.
+
+Using about properties a person microdata could be as follows −
+
+```html
+<html>
+<body>
+   <div itemscope>
+      <section itemscope itemtype="http://data-vocabulary.org/Person">
+         <h1 itemprop="name">Gopal K Varma</h1>
+         p
+            <img itemprop="photo" src="http://www.tutorialspoint.com/green/images/logo.png">
+         
+         <a itemprop="url" href="#">Site</a>
+      </section>
+   </div>
+</body>
+</html>
+```
+
+Google supports microdata as part of their Rich Snippets program. When Google's web crawler parses your page and finds microdata properties that conform to the vocabulary, it parses out those properties and stores them alongside the rest of the page data.
+
+For further development on Microdata you can always refer to HTML5 Microdata.

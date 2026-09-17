@@ -1,0 +1,230 @@
+---
+title: "JavaScript - Constants"
+description: "Learn JavaScript - Constants with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 130
+group: "Javascript Basics Tutorial"
+seoTitle: "JavaScript - Constants — CodesCompiler JavaScript Guide"
+permalink: "javascript-constants"
+---
+
+
+# JavaScript - Constants
+
+
+
+
+JavaScriptconstantsare the variables whose values remain unchanged throughout the execution of the program. You can declare constants using theconstkeyword.
+
+
+## JavaScript const Keyword
+
+
+Theconstkeyword is introduced in the ES6 version of JavaScript with theletkeyword. The const keyword is used to define the variables havingconstant reference.
+
+
+A variable defined with const can't bere-declared,reassigned. The const declaration have block as well as function scope.
+
+
+## Declaring JavaScript Constants
+
+
+You always need to assign a value at the time of declaration if the variable is declared using the const keyword.
+
+
+```javascript
+const x = 10; // Correct Way
+```
+
+
+In any case, you can't declare the variables with the const keyword without initialization.
+
+
+```javascript
+const y; // Incorrect way
+y = 20;
+```
+
+
+## Can't be Reassigned
+
+
+You can't update the value of the variables declared with the const keyword.
+
+
+```javascript
+const y = 20; 
+y = 40; // This is not possible
+```
+
+
+## Block Scope
+
+
+A JavaScript variable declared withconstkeyword has block-scope. This means same variable is treated as different outside the block.
+
+
+In the below example, the x declared within block is different from x declared outside the block. So we canre-declarethe same variable outside the block
+
+
+```javascript
+{
+   const x = "john";
+}
+const x = "Doe"
+```
+
+
+But wecan't re-declarethe const variable within the same block.
+
+
+```javascript
+{
+   const x = "john";
+   const x = "Doe" // incorrect
+}
+```
+
+
+## Constant Arrays and Objects in JavaScript
+
+
+We can declare the arrays and objects using the const keyword, but there is a little twist in the array and object declaration.
+
+
+The variable with the const keyword keeps the constant reference but not the constant value. So, you can update the same array or object declared with the const keyword, but you can't reassign the reference of the new array or object to the constant variable.
+
+
+### Example (Constant Arrays)
+
+
+In the example below, we have defined the array named 'arr' using the const keyword. After that, we update the array element at the 0th index and insert the 'fence' string at the end of the array.
+
+
+In the output, you can observe that it prints the updated array.
+
+
+```html
+<html>
+<head>
+   <title> Constant Arrays </title>
+</head>
+<body>
+   <script>
+      // Defining the constant array
+      const arr = ["door", "window", "roof", "wall"];
+      // Updating arr[0]
+      arr[0] = "gate";
+      // Inserting an element to the array
+      arr.push("fence");
+	  //arr = ["table", "chair"] // re-assigning array will cause error.
+      // Printing the array
+      document.write(arr);
+   </script>
+</body>
+</html>
+```
+
+
+When you execute the above code, it will produce the following result −
+
+
+```javascript
+gate,window,roof,wall,fence
+```
+
+
+### Example (Constant Objects)
+
+
+In the below example, we created the 'obj' object with the const keyword. Next, we update the 'animal' property of the object and insert the 'legs' property in the object. In the output, the code prints the updated object.
+
+
+```html
+<html>
+<head>
+   <title> Constant Objects </title>
+</head>
+<body>
+   <script>
+      // Defining the constant object
+      const obj = {
+         animal: "Lion",
+         color: "Yellow",
+      };
+      // Changing animal name
+      obj.animal = "Tiger";
+      // Inserting legs property
+      obj.legs = 4;
+      // Printing the object
+      document.write(JSON.stringify(obj));
+      // obj = { name: "cow" } // This is not possible
+   </script>
+</body>
+</html>
+```
+
+
+It will produce the following result −
+
+
+```javascript
+{"animal":"Tiger","color":"Yellow","legs":4}
+```
+
+
+So, we can't change the reference to the variables (arrays and objects) declared with the const keyword but update the elements and properties.
+
+
+## No Const Hoisting
+
+
+Variables defined with const keyword are not hoisted at the top of the code.
+
+
+In the example below, the const variable x is accessed before it defined. It will cause an error. We can catch the error using try-catch statement.
+
+
+```html
+<html>
+<body>
+   <script>
+      document.write(x);
+	  const x = 10;	  
+   </script>
+</body>
+</html>
+```
+
+
+Here are some other properties of the variables declared with the const keyword.
+
+
+
+- Block scope.
+- It can't be re-declared in the same scope.
+- Variables declared with the const keyword can't be hoisted at the top of the code.
+- Constant variables value is a primitive value.
+
+
+
+## Difference between var, let and const
+
+
+We have given the comparison table between the variables declared with the var, let, and const keywords.
+
+
+Comparison basisvarletconstScopeFunctionBlockBlockHoistedYesNoNoReassignYesYesNoRe-declareYesNoNoBind ThisYesNoNo
+
+
+## Which should you use among var, let, and const?
+
+
+
+- For the block scope, you should use the let keyword.
+- If you need to assign the constant reference to any value, use the const keyword.
+- When you require to define the variable inside any particular block, like a loop, 'if statement', etc. and need to access outside the block but inside the function, you may use the var keyword.
+- However, you can use any keyword to define global variables.
+- Re-declaring variables is not a good practice. So, you should avoid it, but if necessary, you may use the var keyword.
+
+

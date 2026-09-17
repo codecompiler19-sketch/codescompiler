@@ -1,0 +1,177 @@
+---
+title: "JavaScript - Parse S-Expressions"
+description: "Learn JavaScript - Parse S-Expressions with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1930
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Parse S-Expressions — CodesCompiler JavaScript Guide"
+permalink: "javascript-parse-s-expressions"
+---
+
+
+# JavaScript - Parse S-expressions
+
+
+
+
+The Lisp programming language family is built around S-expressions. In this article, you will learn about the steps of making a simple S-expression parser. This can form the basis for the Lisp parser.
+
+
+Lisp is the easiest language to implement and creating a parser is the first step. We can use a parser generator for this but it is easier to write the parser ourselves. We will use JavaScript.
+
+
+## What are S-expressions?
+
+
+To define nested list data structures, we use s-expressions which are commonly used in Lisp and other functional programming languages. One s-expression can be either one atom or a sequence of s-expressions.
+
+
+If you do not know the Lisp language, S-expressions look like this −
+
+
+```javascript
+(+ (second (list "xxx" 10)) 20)
+```
+
+
+This is a data format in which everything is made up of atoms or lists surrounded by parenthesis (atoms from other lists are separated by spaces).
+
+
+Like JSON, S-expressions can have a variety of data types. Numbers, strings, and symbols (without quotations) can represent variable names in several languages.
+
+
+In addition, you can use a specific dot operator to form a pair like the below.
+
+
+```javascript
+(1 . b)
+```
+
+
+A list can be represented as doted pairs (which means that it is a linked list data structure).
+
+
+This is a list −
+
+
+```javascript
+(1 2 3 4)
+```
+
+
+It can be written as −
+
+
+```javascript
+(1 . (2 . (3 . (4 . Nil))))
+```
+
+
+The special symbol "nil" represents the conclusion of an empty list. This format allows you to generate any binary tree. However, we will not use this doted notation in our parser to avoid complicating things.
+
+
+## What are the Uses of S-expressions?
+
+
+S-expressions are used for creating Lisp code, which can also be used to communicate data.
+
+
+They are also present in the textual version of WebAssembly. Probably because the parser is easy and you do not have to create your own format. Instead of JSON, use them to communicate between the server and the browser.
+
+
+## Step-by-step S-expression Parser in JavaScript
+
+
+Here are the steps you need to follow for s-expression parser −
+
+
+
+- Tokenize the Input:First, divide the input string into tokens, which can be parenthesis (,) or symbols.
+- Recursive parsing:Tokens are processed recursively to create the structure. When it finds an opening parenthesis, it generates a new list. A closing parenthesis indicates the end of the current list.
+- Base Cases:Symbols (like integers or words) are returned as values but lists are created using expressions within parentheses.
+
+
+
+## Example
+
+
+The following code converts the input string to readable tokens (symbols, integers, and parentheses). The parse() method loops over each token continuously. When it detects a (, it creates a new list. When it finds a ), it finishes the list. Numbers are parsed as JavaScript numbers; everything else is interpreted as a symbol (string).
+
+
+```javascript
+// Function to tokenize the input string into S-expression tokens
+function tokenize(input) {
+   return input
+      // Add spaces around '('    
+      .replace(/\(/g, ' ( ')  
+      
+      // Add spaces around ')'
+      .replace(/\)/g, ' ) ')  
+      .trim()
+      
+      // Split by whitespace
+      .split(/\s+/);          
+}
+
+// Recursive function to parse tokens into an S-expression
+function parse(tokens) {
+   if (tokens.length === 0) {
+      throw new Error("Unexpected end of input");
+   }
+   
+   // Get the next token
+   let token = tokens.shift();  
+   
+   // Start a new list
+   if (token === '(') {        
+      let list = [];
+      // Process until we reach a closing parenthesis
+      while (tokens[0] !== ')') {   
+        // Recursively parse the inner expressions  
+        list.push(parse(tokens)); 
+      }
+      tokens.shift();  // Remove the closing ')'
+      return list;
+   } else if (token === ')') {
+      throw new Error("Unexpected ')'");
+   } else {
+      // Return an atom (symbol or number) 
+      return atom(token);  
+   }
+}
+
+// Function to identify if a token is a number or symbol
+function atom(token) {
+   let number = Number(token);
+   if (!isNaN(number)) {
+      // If it's a number, return it 
+      return number;  
+   } else {
+      // Otherwise, return it as a symbol 
+      return token;   
+   }
+}
+
+// Usage
+let input = "(+ 1 (* 2 3))";
+
+// Tokenize the input
+let tokens = tokenize(input);    
+
+// Parse the tokens into an AST (Abstract Syntax Tree)
+let ast = parse(tokens);         
+
+console.log(ast);
+```
+
+
+### Output
+
+
+If you run the above code with the input, the output will be −
+
+
+```javascript
+["+", 1, ["*", 2, 3]]
+```
+

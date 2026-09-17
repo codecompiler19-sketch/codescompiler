@@ -1,0 +1,547 @@
+---
+title: "JavaScript - Objects"
+description: "Learn JavaScript - Objects with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 800
+group: "Object Oriented JavaScript"
+seoTitle: "JavaScript - Objects — CodesCompiler JavaScript Guide"
+permalink: "javascript-objects"
+---
+
+
+# JavaScript - Objects Overview
+
+
+
+
+## JavaScript Objects
+
+
+The JavaScriptobjectis a non-primitive data type that is used to store data askey-valuepairs. The key-value pairs are often referred as properties. A key in a key-value pair, also called a "property name", is a string and value can be anything. If a property's value is a function, the property is known as amethod.
+
+
+Objects are created using curly braces and each property is separated by a comma. Each property is written as property name followed by colon (:) followed by property value. The key: value pairs are not stored in the specific order in the object. So an object is an unordered collection of properties written as key: value pairs.
+
+
+JavaScript is an Object Oriented Programming (OOP) language. A programming language can be called object-oriented if it provides four basic capabilities to developers.
+
+
+
+- Encapsulation− the capability to store related information, whether data or methods, together in an object.
+- Abstraction− the capability to hide object's implementation details from users.
+- Inheritance− the capability of a class to rely upon another class (or number of classes) for some of its properties and methods.
+- Polymorphism− the capability to write one function or method that works in a variety of different ways.
+
+
+
+Let's understand in details about the JavaScript objects.
+
+
+## Object Properties
+
+
+Object properties can be any of the primitive data types, objects or functions. Object properties are usually variables that are used internally in the object's methods, but can also be globally visible variables that are used throughout the page.
+
+
+The syntax for adding a property to an object is −
+
+
+```javascript
+objectName.objectProperty = propertyValue;
+```
+
+
+For example− The following code gets the document title using the"title"property of thedocumentobject.
+
+
+```javascript
+var str = document.title;
+```
+
+
+## Object Methods
+
+
+Methods are the functions that let the object do something or let something be done to it. There is a small difference between a function and a method  at a function is a standalone unit of statements and a method is attached to an object and can be referenced by thethiskeyword.
+
+
+Methods are useful for everything from displaying the contents of the object to the screen to performing complex mathematical operations on a group of local properties and parameters.
+
+
+For example− Following is a simple example to show how to use thewrite()method of document object to write any content on the document.
+
+
+```javascript
+document.write("This is test");
+```
+
+
+## Creating New Objects
+
+
+All user-defined objects and built-in objects are descendants of an object called Object.
+
+
+We can use object literals to create a new user-defined object. Alternatively, we can create a constructor function and then invoke this function using new keyword to instantiate an object.
+
+
+There are different ways to create an object in JavaScript. Here, we will learn all ways given below.
+
+
+
+- Using the Object Literal
+- Using the Object Constructor
+- Using the Object.create() Method
+- Using JavaScript ES6 Classes
+
+
+
+### The JavaScript Object Literal
+
+
+In JavaScript, &#123;&#125; is represented by the object literal. You can add pair of key-value pairs between curly braces to define an object.
+
+
+You can follow the syntax below to use the object literal to define objects.
+
+
+```javascript
+const obj = {
+   key: val,
+}
+```
+
+
+You can add key-value pairs between curly braces. Each key-value pair is comma separated, and you need to add a colon (:) between the key and value.
+
+
+#### Example
+
+
+In the example below, we have defined a wall object containing the 4 properties. Each property contains the different values of different data types.
+
+
+In the output, you can observe the object properties and its value.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      const myBook = {
+         title: "Perl",
+         author: "Mohtashim",
+         pages: 355,
+      }
+      document.getElementById("output").innerHTML =
+      "Book name is : " + myBook.title + "<br>"
+      +"Book author is : " + myBook.author + "<br>"
+      +"Total pages : " + myBook.pages;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Book name is : Perl
+Book author is : Mohtashim
+Total pages : 355
+```
+
+
+### The JavaScript new Operator
+
+
+The new operator is used to create an instance of an object. To create an object, the new operator is followed by the constructor method.
+
+
+In the following example, the constructor methods are Object(), Array(), and Date(). These constructors are built-in JavaScript functions.
+
+
+```javascript
+var employee = new Object();
+var books = new Array("C++", "Perl", "Java");
+var day = new Date("August 15, 1947");
+```
+
+
+### The JavaScript Object() Constructor
+
+
+A constructor is a function that creates and initializes an object. JavaScript provides a special constructor function called Object() to build the object. The return value of the Object() constructor is assigned to a variable.
+
+
+The variable contains a reference to the new object. The properties assigned to the object are not variables and are not defined with the var keyword.
+
+
+#### Example
+
+
+Try the following example; it demonstrates how to create an Object.
+
+
+```html
+<html>
+<body>  
+   p id = "output" 
+   <script>
+      var book = new Object();   // Create the object
+      book.subject = "Perl";     // Assign properties to the object
+      book.author  = "Mohtashim";
+      document.getElementById("output").innerHTML = 
+      "Book name is : " + book.subject + "<br>" + 
+      "Book author is : " + book.author;
+   </script>   
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Book name is : Perl
+Book author is : Mohtashim
+```
+
+
+### The JavaScript Constructor Function
+
+
+In JavaScript, you can define a custom function and use it as a constructor function to define a new object. Here, the custom function works as a template.
+
+
+The benefit of the custom user-defined constructor function over the Object() constructor is that you can add arguments to the custom function according to your requirements.
+
+
+Below is simple syntax to use the custom user-defined constructor function to create an object.
+
+
+```javascript
+// Object template
+function ConstructorFunc(para) {
+    this.para = para;
+}
+const obj = new ConstructorFunc(arg);
+```
+
+
+The ConstructorFunc() function works as an object template. It uses the 'this' keyword to access the context of the function and define the key in the function context. Also, the key is initialized with the 'para' value.
+
+
+Next, you can use the function as a constructor with a 'new' keyword to define the object and pass the required arguments to the constructor.
+
+
+#### Example
+
+
+This example demonstrates how to create an object with a user-defined constructor Function. Here this keyword is used to refer to the object that has been passed to a function.
+
+
+```html
+<html>
+<body>   
+   <div id = "output"> </div>
+   <script>
+      function Book(title, author) {
+         this.title = title; 
+         this.author  = author;
+      }
+      const myBook = new Book("Perl", "Mohtashim");
+      document.getElementById("output").innerHTML = 
+      "Book title is : " + myBook.title + "<br>" +
+      "Book author is : " + myBook.author + "<br>";
+   </script>      
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Book title is : Perl
+Book author is : Mohtashim
+```
+
+
+### The JavaScript Object.create() Method
+
+
+The Object.create() method creates a new object from the already defined object. Also, you can add some new properties to the object prototype while cloning one object from another object using the Object.create() method.
+
+
+Follow the syntax below to use the Object.create() method to define a new object.
+
+
+```javascript
+const obj = Object.create({}, {
+    key: { value: val },
+})
+```
+
+
+
+- &#123;&#125;− It is an empty object. The Object.create() method creates a copy of it.
+- &#123; key: &#123; value: val &#125;, &#125;− It is an object containing the properties to add to the prototype of the cloned object.
+
+
+
+#### Example
+
+
+In the example below, we added multiple properties to the prototype of the empty object. However, if you print the object, you won't be able to see any properties as they are added to the prototype.
+
+
+You can access the object properties with a dot notation.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      const myBook = Object.create({}, {
+         title: { value: "Perl" },
+         author: { value: "Mohtashim" },
+      })
+        
+      document.getElementById("output").innerHTML = 
+      "Book title is : " + myBook.title + "<br>" + 
+      "Book author is : " + myBook.author + "<br>";
+
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Book title is : Perl
+Book author is : Mohtashim
+```
+
+
+### The JavaScript ES6 Classes
+
+
+The JavaScript classes are introduced in ES6. The JavaScript classes are template to create objects. A class is defined using the "class" keyword. It is similar to the function while defining a class. The class keyword is followed by the class name and then class body.
+
+
+```javascript
+class MyClass{
+  //class body
+}
+```
+
+
+You can use the new operator to create an object using a class −
+
+
+```javascript
+const myObj = new MyClass();
+```
+
+
+Here ClassName is the name of class and myObject is the name of object creating using this class.
+
+
+We have discussed the JavaScript classes in details in the next chapter.
+
+
+## Defining Methods for an Object
+
+
+The previous examples demonstrate how the constructor creates the object and assigns properties. But we need to complete the definition of an object by assigning methods to it.
+
+
+### Example
+
+
+Try the following example; it shows how to add a function along with an object.
+
+
+```html
+<html>   
+  <head>
+    <title>User-defined objects</title>
+    <script>
+      // Define a function which will work as a method
+      function addPrice(amount) {
+        this.price = amount; 
+      }
+
+      function Book(title, author) {
+        this.title = title;
+        this.author  = author;
+        this.addPrice = addPrice;  // Assign that method as property.
+      }
+    </script>      
+  </head>
+
+  <body>   
+    <div id = "output"> </div>
+    <script>
+      var myBook = new Book("Perl", "Mohtashim");
+      myBook.addPrice(100);
+
+      document.getElementById("output").innerHTML = 
+      "Book title is : " + myBook.title + "<br>"
+      +"Book author is : " + myBook.author + "<br>"
+      +"Book price is : " + myBook.price + "<br>";
+    </script>      
+  </body>
+</html>
+```
+
+
+### Output
+
+
+```javascript
+Book title is : Perl 
+Book author is : Mohtashim 
+Book price is : 100
+```
+
+
+## The 'with' Keyword
+
+
+Thewithkeyword is used as a kind of shorthand for referencing an object's properties or methods.
+
+
+The object specified as an argument towithbecomes the default object for the duration of the block that follows. The properties and methods for the object can be used without naming the object.
+
+
+### Syntax
+
+
+The syntax for with object is as follows −
+
+
+```javascript
+with (object) {
+   properties used without the object name and dot
+}
+```
+
+
+### Example
+
+
+Try the following example.
+
+
+```html
+<html>
+<head>
+  <script>
+    // Define a function which will work as a method
+    function addPrice(amount) {
+      with(this) {
+        price = amount;
+      }
+    }
+    function Book(title, author) {
+      this.title = title;
+      this.author = author;
+      this.price = 0;
+      this.addPrice = addPrice;  // Assign that method as property.
+    }
+  </script>      
+</head>
+<body>   
+  <div id = "output"></div>
+  <script>
+    var myBook = new Book("Perl", "Mohtashim");
+    myBook.addPrice(100);
+         
+    document.getElementById("output").innerHTML = 
+    "Book title is : " + myBook.title + "<br>"
+    +"Book author is : " + myBook.author + "<br>"
+    +"Book price is : " + myBook.price + "<br>";
+    
+  </script>      
+</body>
+</html>
+```
+
+
+### Output
+
+
+```javascript
+Book title is : Perl 
+Book author is : Mohtashim 
+Book price is : 100
+```
+
+
+## JavaScript Native Objects
+
+
+JavaScript has several built-in or native objects. These objects are accessible anywhere in your program and will work the same way in any browser running in any operating system.
+
+
+Here is the list of all important JavaScript Native Objects −
+
+
+
+- JavaScript Number Object
+- JavaScript Boolean Object
+- JavaScript String Object
+- JavaScript Array Object
+- JavaScript Date Object
+- JavaScript Math Object
+- JavaScript RegExp Object
+- JavaScript Symbol Object
+- JavaScript Set Object
+- JavaScript WeakSet Object
+- JavaScript Map Object
+- JavaScript WeakMap Object
+- JavaScript Iterables Object
+- JavaScript Reflect Object
+- JavaScript TypedArray Object
+
+
+
+## JavaScript Object Methods
+
+
+Here, we have listed the methods of JavaScript object.
+
+
+### Static methods
+
+
+These methods are invoked using the Object class itself.
+
+
+Sr.No.MethodDescription1assign()To copy properties and their values from one object to another object.2create()To create a new object using an existing object as prototype.3defineProperty()To make a clone of the object and add new properties to its prototype.4defineProperties()To define a property into a particular object and get the updated object.5entries()It returns an array containing the [key, value] pairs.6freeze()To prevent adding or updating object properties by freezing the object.7fromEntries()To create a new object from the array of the [key, value] pairs.8getOwnPropertyDescriptor()To get the property descriptor for the properties of the object.9getOwnPropertyNames()To get object properties.10getOwnPropertySymbols()To get all symbols in the array form which are present in the object.11getPrototypeOf()To get the prototype of the object.12hasOwn()To check whether the particular property exists in the object.13Object.is()To check whether the two objects contain a similar value.14isExtensible()To check if an object is extensible.15isFrozen()To check if the object is frozen.16isSealed()To check if the object is sealed.17keys()To get all keys of the object in the array format.18preventExtensions()To prevent the prototype updation of the object.19seal()To seal the object.20setPrototypeOf()To set a prototype of the object.21toLocaleString()To get the object in the string format.22values()To get all values of the object in the array format.
+
+
+### Instance methods
+
+
+These methods are invoked using the instance of the object.
+
+
+Sr.No.MethodDescription1defineGetter()To define getters to get the particular property value.2hasOwnProperty()To check if the object has a particular property as its own property.3isPrototypeOf()To check whether the particular object exists as a prototype of the other object.4propertyIsEnumerable()To check whether the property of the object is enumerable.
+
+
+### Object Properties
+
+
+Sr.No.PropertyDescription1constructorTo get the reference to the constructor function of the object.
+

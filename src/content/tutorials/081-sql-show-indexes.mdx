@@ -1,0 +1,151 @@
+---
+title: "SQL - Show Indexes"
+description: "Learn SQL - Show Indexes with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 810
+group: "SQL Indexes"
+seoTitle: "SQL - Show Indexes — CodesCompiler SQL Guide"
+permalink: "sql-show-indexes"
+---
+
+
+# SQL - Show Indexes
+
+
+Table of contentThe SQL Show Index StatementShowing Indexes in SQL Server
+
+
+
+
+## The SQL Show Index Statement
+
+
+TheSHOW INDEXis the basic SQL statement to retrieve the information about the indexes that have been defined on a table. However, the SHOW INDEX statement only works on MySQL RDBMS and is not a valid statement in the SQL Server.
+
+
+To list the indexes created on a table in SQL Server, a system stored proceduresp_helpindexis used.
+
+
+The result-set obtained from querying the SHOW INDEX statement on a MySQL table contains the index information.
+
+
+### Syntax
+
+
+Following is the syntax of theSHOW INDEXstatement in MySQL:
+
+
+```sql
+SHOW INDEX FROM table_name;
+```
+
+
+### Example
+
+
+Following example demonstrates the working of SHOW INDEX statement in MySQL. First, create a table with the name CUSTOMERS in the MySQL database using the CREATE query below:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (20, 2),       
+   PRIMARY KEY (ID)
+ );
+```
+
+
+Let us now insert some values into the above created table using the following query:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+(1, 'Ramesh', '32', 'Ahmedabad', 2000),
+(2, 'Khilan', '25', 'Delhi', 1500),
+(3, 'Kaushik', '23', 'Kota', 2000),
+(4, 'Chaitali', '25', 'Mumbai', 6500),
+(5, 'Hardik','27', 'Bhopal', 8500),
+(6, 'Komal', '22', 'Hyderabad', 9000),
+(7, 'Muffy', '24', 'Indore', 5500);
+```
+
+
+Once the data is inserted, create an index for the columnNAMEin the CUSTOMERS table using the following query:
+
+
+```sql
+CREATE INDEX INDEX_NAME ON CUSTOMERS(NAME);
+```
+
+
+Now, you can list all the indexes that are defined on the CUSTOMERS table using the following query:
+
+
+```sql
+SHOW INDEX FROM CUSTOMERS;
+```
+
+
+### Output
+
+
+On executing the above query, the output is displayed as follows:
+
+
+TableNon_uniqueKey_nameSeq_in_indexColumn_namecustomers0PRIMARY1IDcustomers1index_name1NAME
+
+
+## Showing Indexes in SQL Server
+
+
+In SQL server, the system stored proceduresp_helpindexis used to retrieve the information about the indexes that have been defined on a table. It returns the result as a table that contains detailed information about each index, including the name, type, and columns.
+
+
+### Syntax
+
+
+Following is the basic syntax to list indexes defined on a table in SQL Server:
+
+
+```sql
+sp_helpindex [ @objname = ] 'name'
+```
+
+
+Here,[ @objname `=` ] 'name'specifies the name of the table for which the index information is being retrieved. The index information includes:
+
+
+
+- index_nameis the names of the columns that are included in index.
+- index_descriptionis the brief description of the index such as the type of index (like clustered or non-clustered).
+- index_keysis the keys that are included in the index.
+
+
+
+### Example
+
+
+```sql
+CREATE INDEX INDEX_NAME on CUSTOMERS(NAME);
+```
+
+
+Now, let us list all the indexes that are created on the CUSTOMERS table using the system stored proceduresp_helpindexas shown below:
+
+
+```sql
+EXEC sys.sp_helpindex @objname = N'CUSTOMERS';
+```
+
+
+### Output
+
+
+On executing the above query, the output is displayed as follows:
+
+
+index_nameindex_descriptionindex_keysINDEX_NAMEnonclustered located on PRIMARYNAMEPK__CUSTOMER__ 3214EC27755869D9clustered, unique, primary key located on PRIMARYID
+

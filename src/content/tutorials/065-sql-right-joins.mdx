@@ -1,0 +1,336 @@
+---
+title: "SQL - Right Join"
+description: "Learn SQL - Right Join with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 650
+group: "SQL Joins"
+seoTitle: "SQL - Right Join — CodesCompiler SQL Guide"
+permalink: "sql-right-joins"
+---
+
+
+# SQL - Right Join
+
+
+Table of contentThe SQL Right JoinJoining Multiple Tables with Right JoinRight Join with WHERE ClauseUsing Aliases with RIGHT JOINImportant Points About SQL RIGHT JOIN
+
+
+
+
+## The SQL Right Join
+
+
+ARIGHT JOIN(orRIGHT OUTER JOIN) in SQL returns all rows from the right table, along with the matching rows from the left table.
+
+
+If there is no match in the left table, the result will includeNULLvalues for the left table's columns.
+
+
+### Venn Diagram of a SQL RIGHT JOIN
+
+
+The following Venn diagram illustrates the relationship between two tables in a SQL RIGHT JOIN:
+
+
+If the number of rows in the second table is less than the number of rows in the first table, the rows in the first table that do not have any matching rows in the second table will be discarded from the result.
+
+
+### Syntax
+
+
+Following is the basic syntax of Right Join in SQL:
+
+
+```sql
+SELECT 
+    left_table.column1,
+    left_table.column2,
+    right_table.column1,
+    right_table.column2
+FROM left_table
+RIGHT JOIN right_table
+ON 
+left_table.common_column = right_table.common_column;
+```
+
+
+If the ON clause matches zero records in the left table; the join will still return a row in the result, but with a NULL value in each column of the left table.
+
+
+### Example
+
+
+The tables we are using in this example are named CUSTOMERS and ORDERS.
+
+
+Assume we are creating a table named CUSTOMERS, which contains the personal details of customers including their name, age, address and salary etc.
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),       
+   PRIMARY KEY (ID)
+);
+```
+
+
+Now, insert values into this table using the INSERT statement as follows:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+(2, 'Khilan', 25, 'Delhi', 1500.00 ),
+(3, 'Kaushik', 23, 'Kota', 2000.00 ),
+(4, 'Chaitali', 25, 'Mumbai', 6500.00 ),
+(5, 'Hardik', 27, 'Bhopal', 8500.00 ),
+(6, 'Komal', 22, 'Hyderabad', 4500.00 ),
+(7, 'Muffy', 24, 'Indore', 10000.00 );
+```
+
+
+The table will be created as:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+Let us create another table ORDERS, containing the details of orders made and the date they are made on.
+
+
+```sql
+CREATE TABLE ORDERS (
+   OID INT NOT NULL,
+   DATE VARCHAR (20) NOT NULL,
+   CUSTOMER_ID INT NOT NULL,
+   AMOUNT DECIMAL (18, 2)
+);
+```
+
+
+Using the INSERT statement, insert values into this table as follows:
+
+
+```sql
+INSERT INTO ORDERS VALUES 
+(102, '2009-10-08 00:00:00', 3, 3000.00),
+(100, '2009-10-08 00:00:00', 3, 1500.00),
+(101, '2009-11-20 00:00:00', 2, 1560.00),
+(103, '2008-05-20 00:00:00', 4, 2060.00);
+```
+
+
+The table is displayed as follows:
+
+
+OIDDATECUSTOMER_IDAMOUNT1022009-10-08 00:00:0033000.001002009-10-08 00:00:0031500.001012009-11-20 00:00:0021560.001032008-05-20 00:00:0042060.00
+
+
+Now, let us join these two tables using the Right Join query as follows:
+
+
+```sql
+SELECT ID, NAME, AMOUNT, DATE
+FROM CUSTOMERS
+RIGHT JOIN ORDERS
+ON CUSTOMERS.ID = ORDERS.CUSTOMER_ID;
+```
+
+
+This would produce the following result:
+
+
+IDNAMEAMOUNTDATE3Kaushik3000.002009-10-08 00:00:003Kaushik1500.002009-10-08 00:00:002Khilan1560.002009-11-20 00:00:004Chaitali2060.002008-05-20 00:00:00
+
+
+## Joining Multiple Tables with Right Join
+
+
+Similar to aLEFT JOIN, aRIGHT JOINcan also join multiple tables. The difference is that all rows from the rightmost table are returned as it is, while the rows from the other tables are matched with the rows in the second table.
+
+
+If no matching rows exist in the left table,NULLvalues are returned for its columns. This ensures that all rows from the right table are preserved in the result set.
+
+
+### Syntax
+
+
+Following is the syntax to join multiple tables using Right Join:
+
+
+```sql
+SELECT column1, column2, column3... 
+FROM table1
+RIGHT JOIN table2
+ON condition_1
+RIGHT JOIN table3
+ON condition_2
+....
+....
+RIGHT JOIN tableN
+ON condition_N;
+```
+
+
+### Example
+
+
+Here, let us consider the previously created tables CUSTOMERS and ORDERS; and create a new table named EMPLOYEE using the following query:
+
+
+```sql
+CREATE TABLE EMPLOYEE (
+   EID INT NOT NULL,
+   EMPLOYEE_NAME VARCHAR (30) NOT NULL,
+   SALES_MADE DECIMAL (20)
+);
+```
+
+
+Now, we can insert values into this empty tables using the INSERT statement as follows:
+
+
+```sql
+INSERT INTO EMPLOYEE VALUES
+(102, 'SARIKA', 4500),
+(100, 'ALEKHYA', 3623),
+(101, 'REVATHI', 1291),
+(103, 'VIVEK', 3426);
+```
+
+
+The details of EMPLOYEE table can be seen below:
+
+
+EIDEMPLOYEE_NAMESALES_MADE102SARIKA4500100ALEKHYA3623101REVATHI1291103VIVEK3426
+
+
+Following query joins these three tables using theRight Join query:
+
+
+```sql
+SELECT CUSTOMERS.ID, CUSTOMERS.NAME, 
+ORDERS.DATE, EMPLOYEE.EMPLOYEE_NAME
+FROM CUSTOMERS
+RIGHT JOIN ORDERS
+ON CUSTOMERS.ID = ORDERS.CUSTOMER_ID
+RIGHT JOIN EMPLOYEE
+ON ORDERS.OID = EMPLOYEE.EID;
+```
+
+
+Through this query, we will display the id, name of the customer along with the date on which the orders are made and the name of the employee who sold the item.
+
+
+The resultant table is obtained as follows:
+
+
+IDNAMEDATEEMPLOYEE_NAME3Kaushik2009-10-08 00:00:00SARIKA3Kaushik2009-10-08 00:00:00ALEKHYA2Khilan2009-11-20 00:00:00REVATHI4Chaitali2008-05-20 00:00:00VIVEK
+
+
+## Right Join with WHERE Clause
+
+
+AWHEREclause can be used with aRIGHT JOINto filter the results after the join. The RIGHT JOIN ensures all rows from the right table are included, while the WHERE clause can apply additional conditions on either the right or left table.
+
+
+Be cautious because filtering on the left table in the WHERE clause can exclude rows withNULLvalues, converting the RIGHT JOIN into an INNER JOIN.
+
+
+### Syntax
+
+
+The syntax of Right Join when used with WHERE clause is given below:
+
+
+```sql
+SELECT column_name(s)
+FROM table1
+RIGHT JOIN table2
+ON table1.column_name = table2.column_name
+WHERE condition;
+```
+
+
+### Example
+
+
+Records in the combined database tables can be filtered using the WHERE clause. Consider the previous two tables CUSTOMERS and ORDERS; and join them using the right join query by applying some constraints using the WHERE clause.
+
+
+```sql
+SELECT ID, NAME, DATE, AMOUNT FROM CUSTOMERS
+RIGHT JOIN ORDERS
+ON CUSTOMERS.ID = ORDERS.CUSTOMER_ID
+WHERE ORDERS.AMOUNT > 1000.00;
+```
+
+
+The resultant table after applying the where clause with right join contains the rows that has amount values greater than 1000.00:
+
+
+IDNAMEDATEAmount3Kaushik2009-10-08 00:00:003000.003Kaushik2009-10-08 00:00:001500.002Khilan2009-11-20 00:00:001560.004Chaitali2008-05-20 00:00:002060.00
+
+
+## Using Aliases with RIGHT JOIN
+
+
+In SQL,aliasesallow you to give a temporary name to a table or column, making queries easier to read and write.
+
+
+When you use aRIGHT JOIN, giving tables short nicknames (aliases) makes it easier to write and read your query.
+
+
+### Syntax
+
+
+Following is the syntax to use aliases with RIGHT JOIN in SQL:
+
+
+```sql
+SELECT t1.column1, t2.column2
+FROM table1 AS t1
+RIGHT JOIN table2 AS t2
+ON t1.common_field = t2.common_field;
+```
+
+
+### Example
+
+
+Using the previously created tablesCUSTOMERSandORDERS, we can assign aliases to make the query simpler:
+
+
+```sql
+SELECT c.NAME, o.AMOUNT, o.DATE
+FROM CUSTOMERS AS c
+RIGHT JOIN ORDERS AS o
+ON c.ID = o.CUSTOMER_ID;
+```
+
+
+The result is the same as a standard RIGHT JOIN, but the use of aliasescandomakes the query easier to read:
+
+
+NAMEAMOUNTDATEKaushik3000.002009-10-08 00:00:00Kaushik1500.002009-10-08 00:00:00Khilan1560.002009-11-20 00:00:00Chaitali2060.002008-05-20 00:00:00
+
+
+## Important Points About SQL RIGHT JOIN
+
+
+Following are some important points you should know for using LEFT JOIN in SQL:
+
+
+
+- ARIGHT JOINreturns all records from the right table and matched records from the left table. If there is no match, the left table's columns will containNULL.
+- It is the opposite of aLEFT JOIN. In LEFT JOIN, all rows from the left table are returned, while RIGHT JOIN returns all rows from the right table.
+- When using multiple joins, therightmost tablewill always retain all its rows.
+- Be careful when using aWHEREclause on the left table's columns. It may filter out rows with NULL values and effectively turn the RIGHT JOIN into an INNER JOIN.
+- Aliases can simplify complex queries and make it easy to read, especially when joining multiple tables.
+- RIGHT JOINs are often used when you want to include all records from a reference or master table (the right table) regardless of whether related records exist in the left table.
+
+

@@ -1,0 +1,201 @@
+---
+title: "JavaScript - Nullish Coalescing Operator"
+description: "Learn JavaScript - Nullish Coalescing Operator with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 260
+group: "JavaScript Operators"
+seoTitle: "JavaScript - Nullish Coalescing Operator — CodesCompiler JavaScript Guide"
+permalink: "javascript-nullish-coalescing-operator"
+---
+
+
+# JavaScript - Nullish Coalescing Operator
+
+
+
+
+## Nullish Coalescing Operator
+
+
+TheNullish Coalescingoperator in JavaScript is represented by two question marks (??). It takes two operands and returns the first operand if it is notnullorundefined. Otherwise, it returns the second operand. It is a logical operator introduced in ES2020.
+
+
+In many cases, we can have the null or empty values stored in the variables, which can change the behavior of the code or generate errors. So, we can use the Nullish Coalescing operator to use the default values when a variable contains falsy values.
+
+
+## Syntax
+
+
+We can follow the syntax below to use the Nullish Coalescing operator.
+
+
+```javascript
+op1 ?? op2
+```
+
+
+Thenullish coalescingoperator (??) returns the second operand (op2) if the first operand (op1) isnullorundefined. Otherwise, the 'res' variable will contain 'op2'.
+
+
+The above syntax is similar to the below code.
+
+
+```javascript
+let res;
+if (op1 != null || op1 != undefined) {
+   res = op1;
+} else {
+   res = op2;
+}
+```
+
+
+## Examples
+
+
+Let's undersand the nullish coalescing operator in details with the help of some examples.
+
+
+### Example: Handling null or undefined
+
+
+In the example below, the value of thexisnull. We used the x as the first operand and 5 as the second. You can see in the output that the value of y is 5, as x isnull. You can assign undefined to the variable.
+
+
+```html
+<html>
+<body>
+   <div id = "output"></div>
+   <script>
+      let x = null;
+      let y = x ?? 5;
+      document.getElementById("output").innerHTML = 
+	  "The value of y is: " + y;
+   </script>
+   </body>
+</html>
+```
+
+
+It will produce the following result −
+
+
+```javascript
+The value of y is: 5
+```
+
+
+### Example: Handling null or undefined in Arrays
+
+
+In the example below, we have defined an array containing numbers. We used the empty array ([]) as a second operand. So, if arr is null or undefined, we assign an empty array to the arr1 variable.
+
+
+```html
+<html>
+<body>
+   <div id = "output"></div>
+   <script>
+      const arr = [65, 2, 56, 2, 3, 12];
+      const arr1 = arr ?? [];
+      document.getElementById("output").innerHTML = "The value of arr1 is: " + arr1;
+   </script>
+</body>
+</html>
+```
+
+
+It will produce the following result
+
+
+```javascript
+The value of arr1 is: 65,2,56,2,3,12
+```
+
+
+### Example: Accessing Object Properties
+
+
+In the example below, we created the object containing the mobile-related properties. After that, we access the properties of the object and initialize the variables with value. The object doesn't contain the 'brand' property, so the code initializes the 'brand' variable with the 'Apple', which you can see in the output.
+
+
+In this way, we can use the Nullish Coalescing operator while accessing the properties of objects having different properties.
+
+
+```html
+<html>
+<body>
+   <div id = "output"></div>
+   <script>
+      const obj = {
+         product: "Mobile",
+         price: 20000,
+         color: "Blue",
+      }
+
+     let product = obj.product ?? "Watch";
+     let brand = obj.brand ?? "Apple";
+     document.getElementById("output").innerHTML =
+	 "The product is " + product + " of the brand " + brand;
+   </script>
+</body>
+</html>
+```
+
+
+It will produce the following result
+
+
+```javascript
+The product is Mobile of the brand Apple
+```
+
+
+## Short-Circuiting
+
+
+Like Logical AND, and OR operators, the Nullish Coalescing operator doesn't evaluate the right-hand operand if the left-hand operand is neither null nor undefined.
+
+
+### Using ?? with && or ||
+
+
+When we use the ?? operator with logical AND or OR operators, we should use the parenthesis to explicitly specify the precedence.
+
+
+```javascript
+let x = 5 || 7 ?? 9; // Syntax Error
+let x = (5 || 7) ?? 9; // works
+```
+
+
+### Example
+
+
+In the example below, we have used nullish coalescing operator with OR operator (||) and AND operator (&&).
+
+
+```html
+<html>
+<body>
+  <div id = "output"></div>
+  <script>
+    let x = (5 || 7) ?? 9;
+    let y = (5 && 7) ?? 9;
+    document.getElementById("output").innerHTML =
+      "The value of x is : " + x + "<br>" + 
+      "The value of y is : " + y;
+</script>
+</body>
+</html>
+```
+
+
+The above program will produce the following result −
+
+
+```javascript
+The value of x is : 5
+The value of y is : 7
+```
+

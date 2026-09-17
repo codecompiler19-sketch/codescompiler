@@ -1,0 +1,149 @@
+---
+title: "PYTHON - Encapsulation"
+description: "Learn PYTHON - Encapsulation with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1450
+group: "Object Oriented Programming"
+seoTitle: "PYTHON - Encapsulation — CodesCompiler PYTHON Guide"
+permalink: "python-encapsulation"
+---
+
+
+# Python - Encapsulation
+
+
+
+
+Encapsulationis the process of bundling attributes and methods within a single unit. It is one of the main pillars on which theobject-oriented programmingparadigm is based.
+
+
+We know that a class is a user-defined prototype for an object. It defines a set of data members andmethods, capable of processing the data.
+
+
+According to the principle of data encapsulation, the data members that describe an object are hidden from the environment external to the class. They can only be accessed through the methods within the same class. Methods themselves on the other hand are accessible from outside class context. Hence, object data is said to be encapsulated by the methods. In this way, encapsulation prevents direct access to the object data.
+
+
+## Implementing Encapsulation in Python
+
+
+Languages such asC++andJavauseaccess modifiersto restrict access to class members (i.e., variables and methods). These languages have keywords public, protected, and private to specify the type of access.
+
+
+A class member is said to bepublicif it can be accessed from anywhere in the program.Private membersare allowed to be accessed from within the class only. Usually, methods are defined as public, and instance variables are private. This arrangement of private instance variables and public methods ensures the implementation ofencapsulation.
+
+
+Unlike these languages,Pythonhas no provision to specify the type of access that a class member may have. By default, all the variables and methods in a Python class are public, as demonstrated by the following example.
+
+
+### Example 1
+
+
+Here, we have an Employee class with instance variables,nameandage. An object of this class has these twoattributes. They can be directly accessed from outside the class, because they are public.
+
+
+```python
+class Student:
+   def __init__(self, name="Rajaram", marks=50):
+      self.name = name
+      self.marks = marks
+
+s1 = Student()
+s2 = Student("Bharat", 25)
+
+print ("Name: {} marks: {}".format(s1.name, s2.marks))
+print ("Name: {} marks: {}".format(s2.name, s2.marks))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Name: Rajaram marks: 50
+Name: Bharat marks: 25
+```
+
+
+In the above example, the instance variables are initialized inside the class. However, there is no restriction on accessing the value of instance variables from outside the class, which is against the principle of encapsulation.
+
+
+Although there are no keywords to enforce visibility, Python has a convention of naming the instance variables in a peculiar way. In Python, prefixing name of a variable/method with a single or double underscore to emulate the behavior of protected and private access modifiers.
+
+
+If a variable is prefixed by a single double underscore (such as "__age"), the instance variable is private, similarly if a variable name is prefixed with a single underscore (such as "_salary")
+
+
+### Example 2
+
+
+Let us modify the Student class. Add another instance variable salary. Make name private andmarksas private by prefixing double underscores to them.
+
+
+```python
+class Student:
+
+   def __init__(self, name="Rajaram", marks=50):
+      self.__name = name
+      self.__marks = marks
+   def studentdata(self):
+      print ("Name: {} marks: {}".format(self.__name, self.__marks))
+      
+s1 = Student()
+s2 = Student("Bharat", 25)
+
+s1.studentdata()
+s2.studentdata()
+print ("Name: {} marks: {}".format(s1.__name, s2.__marks))
+print ("Name: {} marks: {}".format(s2.__name, __s2.marks))
+```
+
+
+When you run this code, it will produce the followingoutput−
+
+
+```python
+Name: Rajaram marks: 50
+Name: Bharat marks: 25
+Traceback (most recent call last):
+ File "C:\Python311\hello.py", line 14, in <module>
+  print ("Name: {} marks: {}".format(s1.__name, s2.__marks))
+AttributeError: 'Student' object has no attribute '__name'
+```
+
+
+The above output makes it clear that the instance variables name and age, can be accessed by a method declared inside the class (the studentdata() method), but the double underscores prefix makes the variables private, and hence, accessing them outside the class is restricted which raises Attribute error.
+
+
+### What is Name Mangling?
+
+
+Python doesn't block access to private data entirely. It just leaves it to the wisdom of the programmer, not to write any code that accesses it from outside the class. You can still access the private members by Python's name mangling technique.
+
+
+Name manglingis the process of changing name of a member with double underscore to the formobject._class__variable. If so required, it can still be accessed from outside the class, but the practice should be refrained.
+
+
+In our example, the private instance variable "__name" is mangled by changing it to the format
+
+
+```python
+obj._class__privatevar
+```
+
+
+So, to access the value of "__marks" instance variable of "s1" object, change it to "s1._Student__marks".
+
+
+Change the print() statement in the above program to −
+
+
+```python
+print (s1._Student__marks)
+```
+
+
+It now prints 50, the marks of s1.
+
+
+Hence, we can conclude that Python doesn't implement encapsulation exactly as per the theory of object-oriented programming. It adapts a more mature approach towards it by prescribing a name convention and letting the programmer use name mangling if it is really required to have access to private data in the public scope.
+

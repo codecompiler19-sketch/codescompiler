@@ -1,0 +1,370 @@
+---
+title: "SQL - Check Constraint"
+description: "Learn SQL - Check Constraint with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 900
+group: "Advanced SQL"
+seoTitle: "SQL - Check Constraint — CodesCompiler SQL Guide"
+permalink: "sql-check-constraint"
+---
+
+
+# SQL - Check Constraint
+
+
+Table of contentThe SQL CHECK ConstraintCheck Constraint on Single ColumnCheck Constraint on Multiple ColumnsCheck Constraint at the Table LevelCheck Constraint on an Existing ColumnRemoving a Check Constraint
+
+
+
+
+## The SQL CHECK Constraint
+
+
+The SQLCHECK constraintis used to add conditions on a column of a table.
+
+
+Once you add the check constraint on a column, it ensures that the data entered into the column meets the specified conditions. If a particular record does not meet the conditions, the database will prevent you from inserting or updating that record.
+
+
+Suppose we have a table CUSTOMERS having a column AGE. We can add aCHECK constrainton this column to ensure that the age entered is always a positive number and not greater than 50 years. If someone tries to input a negative age or an age over 50, the database will reject it, ensuring that your data remains accurate and valid.
+
+
+## Check Constraint on Single Column
+
+
+To add a check constraint on a column level, we have to specify the check constraint just after the column name during table creation.
+
+
+### Syntax
+
+
+Following is the syntax to specify thecheck constrainton a single column −
+
+
+```sql
+CREATE TABLE table_name (
+   column_name data_type CHECK (condition)
+);
+```
+
+
+### Example
+
+
+In the following query, we are creating a table named CUSTOMERS. Here, we are specifying a column-level check constraint on the AGE column, that allows only those records to be inserted where the age value of the customer is greater than "20" −
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL CHECK(AGE>=20),
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),       
+   PRIMARY KEY (ID)
+);
+```
+
+
+### Verification
+
+
+To verify whether the check constraint is added to the AGE column, we can use the following query in the MySQL database −
+
+
+```sql
+SELECT table_name, constraint_type, constraint_name
+FROM information_schema.table_constraints
+WHERE table_name='CUSTOMERS';
+```
+
+
+### Output
+
+
+The above query will show all the details of the CUSTOMERS table, including how many columns have check constraints and what constraints we have specified in the table as shown below −
+
+
+TABLE_NAMECONSTRAINT_TYPECONSTRAINT_NAMEcustomersPRIMARY KEYPRIMARYcustomersPRIMARY KEYPRIMARYcustomersPRIMARY KEYPRIMARYcustomersPRIMARY KEYPRIMARYcustomersCHECKemployees_chk_1
+
+
+Now, to verify if the CHECK constraint is working properly, let us insert a record into CUSTOMERS where AGE contains a value less than 20 (does not satisfy the given condition) −
+
+
+```sql
+INSERT INTO CUSTOMERS (ID,NAME,AGE,ADDRESS,SALARY) VALUES 
+(1, 'Ramesh', 15, 'Ahmedabad', 2000.00 );
+```
+
+
+The output of the above query is as shown below −
+
+
+```sql
+ERROR 3819 (HY000): Check constraint 'customers_chk_1' is violated.
+```
+
+
+## Check Constraint on Multiple Columns
+
+
+We can also add check constraint on multiple columns of a table by specifying the conditions that must be met for the combination of values in those columns.
+
+
+Suppose we have a table containing the details of products, including their start and end dates. We can add a CHECK constraint that ensures the end date is always greater than or equal to the start date. In this case, the constraint is checking the values in two columns (start date and end date) within the same row to make sure they follow a specific relationship.
+
+
+### Example
+
+
+In the following example, we are specifying a column-level check constraint on multiple columns (AGE and SALARY) of the CUSTOMERS table. Here, the AGE column will allow only those records where the AGE is greater than or equal to 20, and the SALARY column will allow only those records where the SALARY is greater than 20000 −
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL CHECK(AGE >= 20),
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2) CHECK(SALARY >= 20000),
+   PRIMARY KEY (ID)
+);
+```
+
+
+### Verification
+
+
+To verify whether the check constraint is applied on both the columns, we can use the following query in the MySQL database −
+
+
+```sql
+SELECT table_name, constraint_type, constraint_name
+FROM information_schema.table_constraints
+WHERE table_name='CUSTOMERS';
+```
+
+
+### Output
+
+
+It will show all the details of the created table, including how many columns have check constraints and what constraints we have specified in the table −
+
+
+TABLE_NAMECONSTRAINT_TYPECONSTRAINT_NAMEcustomersPRIMARY KEYPRIMARYcustomersPRIMARY KEYPRIMARYcustomersPRIMARY KEYPRIMARYcustomersPRIMARY KEYPRIMARYcustomersCHECKcustomers_chk_1customersCHECKcustomers_chk_2
+
+
+Now, we are inserting values into the CUSTOMERS table where the age is less than 20 and the salary is less than 20000.
+
+
+```sql
+INSERT INTO CUSTOMERS (ID,NAME,AGE,ADDRESS,SALARY) 
+VALUES (1, 'Ramesh', 15, 'Ahmedabad', 2000.00 );
+```
+
+
+The above query throws an error because the values passed in the AGE and the SALARY columns are not satisfying the CHECK constraints −
+
+
+```sql
+ERROR 3819 (HY000): Check constraint 'customers_chk_1' is violated.
+```
+
+
+## Check Constraint at the Table Level
+
+
+We must use the check constraint before completing the table creation in order to ensure the check constraint at the table level.
+
+
+### Syntax
+
+
+Following is the syntax to specify thecheck constrainton the table level −
+
+
+```sql
+CREATE TABLE table_name (
+   column1 data_type,
+   column2 data_type,...,
+   CONSTRAINT constraint_name CHECK(column_name condition_value)
+);
+```
+
+
+### Example
+
+
+In the following SQL query, we are creating a table PRODUCTS. In here, we are specifying a table level check constraint on the DATE_OF_ORDER column, that allows only those records to be inserted where the DATE_OF_ORDER is less than (before) "2023-02-09" −
+
+
+```sql
+CREATE TABLE PRODUCTS(
+   PID INT NOT NULL,
+   PNAME VARCHAR(30),
+   DELIVERY_CITY VARCHAR(20),
+   DATE_OF_ORDER Date NOT NULL,
+   PRICE INT,
+   PRIMARY KEY(PID),
+   CONSTRAINT Constraint_DOO CHECK(DATE_OF_ORDER <= '2023-02-09')
+);
+```
+
+
+### Verification
+
+
+We can verify the CHECK constraint on the created table using the following SQL query −
+
+
+```sql
+SELECT table_name, constraint_type, constraint_name
+FROM information_schema.table_constraints
+WHERE table_name='PRODUCTS';
+```
+
+
+### Output
+
+
+It will show all the details of the created table, including how many columns have check constraints on the table level as shown below −
+
+
+TABLE_NAMECONSTRAINT_TYPECONSTRAINT_NAMEproductsPRIMARY KEYPRIMARYproductsCHECKConstraint_DOO
+
+
+In here, we are inserting values in the PRODUCTS which have the constraintless than "2023-02-09"on the column DATE_OF_ORDER −
+
+
+```sql
+INSERT INTO PRODUCTS VALUES
+(001, 'Nike Shoe', 'Ranchi', '2023-01-11', 2000);
+```
+
+
+Following is the output of the above query −
+
+
+```sql
+Query OK, 1 row affected (0.01 sec)
+```
+
+
+## Check Constraint on an Existing Column
+
+
+We can use theALTER TABLEstatement to add the check constraint on an existing column of the table.
+
+
+### Syntax
+
+
+Following is the Syntax to add a check-constraint on an existing table −
+
+
+```sql
+ALTER TABLE table_name
+ADD CONSTRAINT constraint_name CHECK(ColumnName condition_value);
+```
+
+
+### Example
+
+
+In the following query, we are creating a table named CUSTOMERS −
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR(20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),
+   PRIMARY KEY (ID)
+);
+```
+
+
+To add a check constraint on the AGE column, we are using the following query −
+
+
+```sql
+ALTER TABLE CUSTOMERS 
+ADD CONSTRAINT Constraint_Age CHECK (AGE >= 21);
+```
+
+
+### Verification
+
+
+To verify whether the check constraint is applied after the table creation, use the following SQL query −
+
+
+```sql
+SELECT table_name, constraint_type, constraint_name
+FROM information_schema.table_constraints
+WHERE table_name='CUSTOMERS';
+```
+
+
+### Output
+
+
+It will display all of the table's information, including the constraint we added to the age column −
+
+
+TABLE_NAMECONSTRAINT_TYPECONSTRAINT_NAMEcustomersPRIMARY KEYPRIMARYcustomersPRIMARY KEYPRIMARYcustomersPRIMARY KEYPRIMARYcustomersPRIMARY KEYPRIMARYcustomersCHECKConstraint_Age
+
+
+## Removing a Check Constraint
+
+
+If there is a way to add a constraint on a column, then you must also be able to remove the constraint from that column. To do that, you can use theALTER DROPstatement.
+
+
+### Syntax
+
+
+Following is the syntax to remove a check constraint from the table −
+
+
+```sql
+ALTER TABLE table_name 
+DROP CONSTRAINT constraint_name;
+```
+
+
+### Example
+
+
+Following example shows how to drop the check constraint from the CUSTOMERS table created above −
+
+
+```sql
+ALTER TABLE CUSTOMERS 
+DROP CONSTRAINT Constraint_Age;
+```
+
+
+### Verification
+
+
+Using the following SQL query, we are verifying whether the constraint is removed −
+
+
+```sql
+SELECT table_name, constraint_type, constraint_name
+FROM information_schema.table_constraints
+WHERE table_name='CUSTOMERS';
+```
+
+
+### Output
+
+
+We can see that the check constraint added on the age column is removed −
+
+
+TABLE_NAMECONSTRAINT_TYPECONSTRAINT_NAMEcustomersPRIMARY KEYPRIMARYcustomersPRIMARY KEYPRIMARYcustomersPRIMARY KEYPRIMARYcustomersPRIMARY KEYPRIMARY
+

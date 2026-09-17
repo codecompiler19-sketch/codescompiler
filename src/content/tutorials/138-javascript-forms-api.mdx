@@ -1,0 +1,250 @@
+---
+title: "JavaScript - Forms API"
+description: "Learn JavaScript - Forms API with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1380
+group: "JavaScript Web APIs"
+seoTitle: "JavaScript - Forms API — CodesCompiler JavaScript Guide"
+permalink: "javascript-forms-api"
+---
+
+
+# JavaScript - Forms API
+
+
+
+
+## Web Forms API
+
+
+JavaScriptForms APIis a web API that allows us to interact with and manipulate HTML forms. It provides a set of methods and properties that are used to perform client-side form validation.  Its also helpful to ensure data integrity before form submission. The forms API also referred to as Form Validation API or Constraint Validation API.
+
+
+Here, we will discuss how to use various methods and properties to validate the form data using JavaScript.
+
+
+## Constraint Validation DOM Methods
+
+
+In JavaScript, the constraint validation DOM method validates the input value by referencing the input fields. It validates the input value based on the HTML attributes you have used with the input.
+
+
+After validating the input value, it returns a boolean value, representing whether the input value is valid.
+
+
+Here is the list of the constraint validation methods.
+
+
+MethodDescriptioncheckValidity()It returns a boolean value based on whether the input element contains a valid value.setCustomValidity()It is used to set the custom message to the validationMessage property.
+
+
+### Syntax
+
+
+We can follow the syntax below to use the form validation methods.
+
+
+```javascript
+element.checkValidity()
+OR
+element.setCustomValidity(message);
+```
+
+
+In the above syntax, you need to access the element using the selector and take it as a reference of the checkValidity() or setCustomValidity() method. The setCustomValidity() method takes the string message as an argument.
+
+
+### Example: Using the checkValidity() method
+
+
+We created the number input in the code below and set 10 to the min attribute.
+
+
+In the validateInput() function, we access the number input using the id and use the checkValidity() to validate the value of the number input.
+
+
+If checkValidity() method returns false, we print the validation message. Otherwise, we print the numeric value.
+
+
+```html
+<html>
+<body>
+   <input type = "number" min = "10" id = "num" required>
+   p id = "output" 
+   <button onclick = "validateInput()"> Validate Number </button>
+   <script>
+      const output = document.getElementById("output");
+      function validateInput() {
+         let num = document.getElementById("num");
+         if (num.checkValidity() == false) {
+            output.innerHTML = "Please enter a number greater than 10";
+         } else {
+            output.innerHTML = "Your number is " + num.value;
+         }
+      }
+   </script>
+</body>
+</html>
+```
+
+
+### Example: Using the setCustomValidity() Method
+
+
+In the below code, we have defined the number input to take the users age in the input.
+
+
+In the validateAge() function, we access the age input using its id and perform the custom validation on the input value. Based on the validation, we use the setCustomValidity() to set the custom validation message.
+
+
+At last, we use the reportValidity() method to show the validation message set using the setCustomValidity() method.
+
+
+You can enter the age below 18, and observe the validation message.
+
+
+```html
+<html>
+<body>
+   <form>
+      <label> Enter your age: </label>
+      <input type = "number" id = "age" required> <br> <br>
+      <button type = "button" onclick = "validateAge()"> Validate Age </button>
+   </form>
+   <div id = "message"> </div>
+   <script>
+      function validateAge() {
+         const ageInp = document.getElementById("age");
+         const output = document.getElementById("message");
+         const age = parseInt(ageInp.value);
+         if (isNaN(age)) {
+            ageInp.setCustomValidity("Please enter a valid number.");
+         } else if (age < 18) {
+            ageInp.setCustomValidity("You must be at least 18 years old.");
+         } else {
+            ageInp.setCustomValidity(""); // To remove custom error message
+            output.innerHTML = "Age is valid!";
+         }
+
+         ageInp.reportValidity(); // To display custom validation message
+      }
+   </script>
+</body>
+</html>
+```
+
+
+## Constraint Validation DOM Properties
+
+
+JavaScript also contains the DOM properties for constraint validation. It is used to check the particular validation of the input value.
+
+
+Here, we have listed all DOM properties that can be used for the constraint validation.
+
+
+PropertyDescriptionvalidityIt contains multiple properties to perform the particular validation on the input element.validationMessageIt contains the validation message when the input element doesn't contain valid data.willValidateIt represents whether the input data will be validated.
+
+
+## Properties of the 'validity' Property
+
+
+In JavaScript, each element has the 'validity' property, containing multiple properties. You can use the particular property of the 'validation' property to perform the validation.
+
+
+Here, we have listed all properties of the 'validity' property.
+
+
+PropertyDescriptioncustomErrorIt contains a true boolean value when you set the custom validity message.patternMismatchWhen the parent element's value doesn't match the pattern, it sets true.rangeOverflowIt returns a boolean value based on whether the input value is greater than the max attribute's value.rangeUnderflowIt returns a boolean value based on whether the input value is less than the min attribute's value.stepMismatchIt returns a boolean value based on whether the step is mismatching in the numeric input.tooLongIf the length of the input element's value is greater than the maxLength attribute's value, it returns true. Otherwise, it returns false.typeMismatchWhen the type of entered value doesn't match the 'type' attribute's value, it returns true.valueMissingIt returns a boolean value based on whether the input element is empty.validIt returns true when the input element is valid.
+
+
+### Syntax
+
+
+Users can follow the syntax below to use the properties of the validation property.
+
+
+```javascript
+element.validity.property;
+```
+
+
+You can use the different properties of the validity property of the element to validate the input elements value.
+
+
+### Example
+
+
+In the below code, we have defined the number input and set 300 for the value of the max attribute.
+
+
+In the validateNumber() function, we use the rangeOverflow property of the validity property of the input element to check whether the input value is greater than 300.
+
+
+If the rangeOverflow property returns true, we print the Number is too large. Otherwise, we print the numeric value.
+
+
+```html
+<html>
+<body>
+   <form>
+      <label> Enter Any Number: </label>
+      <input type = "number" id = "num" max = "300" required> <br> <br>
+      <button type = "button" onclick = "validateNumber()"> Validate Number </button>
+   </form>
+   <div id = "output"> </div>
+   <script>
+      const output = document.getElementById('output');
+      function validateNumber() {
+         const numInput = document.getElementById('num');
+         if (numInput.validity.rangeOverflow) {
+            output.innerHTML = "Number is too large";
+         } else {
+            output.innerHTML = "Number is valid";
+         }
+      }
+   </script>
+  </body>
+</html>
+```
+
+
+### Example
+
+
+In the below code, we have defined the text input.
+
+
+In the validateText() function, we access the string input. After that, we used the valueMissing property of the validity property to check whether the input value is empty.
+
+
+In the output, you can keep the input value empty, click the validate text button and observe the error message.
+
+
+```html
+<html>
+<body>
+   <form>
+      <label> Enter any text: </label>
+      <input type = "text" id = "str" required> <br> <br>
+      <button type = "button" onclick = "validateText()"> Validate Text </button>
+   </form>
+   <div id = "output"> </div>
+   <script>
+      const output = document.getElementById('output');
+      function validateText() {
+         const strInput = document.getElementById('str');
+         if (strInput.validity.valueMissing) {
+            output.innerHTML = "Please enter a value.";
+         } else {
+            output.innerHTML = "You have entered " + strInput.value + ".";
+         }
+      }
+   </script>
+</body>
+</html>
+```
+
+
+You can also use the other properties of the validity property to validate the form input data. If the data is not valid, you can show the custom error message using the setCustomValidity() method.
+

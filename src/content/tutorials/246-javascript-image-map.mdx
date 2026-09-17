@@ -1,0 +1,86 @@
+---
+title: "JavaScript - Image Map"
+description: "Learn JavaScript - Image Map with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2460
+group: "JavaScript Miscellaneous"
+seoTitle: "JavaScript - Image Map — CodesCompiler JavaScript Guide"
+permalink: "javascript-image-map"
+---
+
+
+# JavaScript - Image Map
+
+
+
+
+You can use JavaScript to create client-side image map. Client-side image maps are enabled by theusemapattribute for the `<img />` tag and defined by special `<map>` and `<area>` extension tags.
+
+
+The image that is going to form the map is inserted into the page using the `<img />` element as normal, except that it carries an extra attribute calledusemap. The value of the usemap attribute is the value of the name attribute on the `<map>` element, which you are about to meet, preceded by a pound or hash sign.
+
+
+The `<map>` element actually creates the map for the image and usually follows directly after the `<img />` element. It acts as a container for the `<area />` elements that actually define the clickable hotspots. The `<map>` element carries only one attribute, thenameattribute, which is the name that identifies the map. This is how the `<img />` element knows which `<map>` element to use.
+
+
+The `<area>` element specifies the shape and the coordinates that define the boundaries of each clickable hotspot.
+
+
+### Example
+
+
+The following code combines imagemaps and JavaScript to produce a message in a text box when the mouse is moved over different parts of an image.
+
+
+```html
+<html>   
+   <head>
+      <title>Using JavaScript Image Map</title>
+      
+      <script type = "text/javascript">
+         function showTutorial(name) {
+            document.myform.stage.value = name
+         }
+      </script>
+   </head>
+   
+   <body>
+      <form name = "myform">
+         <input type = "text" name = "stage" size = "20" />
+      </form>
+      
+      <!-- Create  Mappings -->
+      <img src = "/images/usemap.gif" alt = "HTML Map" border = "0" usemap = "#tutorials"/>
+      
+      <map name = "tutorials">
+         <area shape="poly" 
+            coords = "74,0,113,29,98,72,52,72,38,27"
+            href = "/perl/index.htm" alt = "Perl Tutorial"
+            target = "_self" 
+            onMouseOver = "showTutorial('perl')" 
+            onMouseOut = "showTutorial('')"/>
+         
+         <area shape = "rect" 
+            coords = "22,83,126,125"
+            href = "/html/index.htm" alt = "HTML Tutorial" 
+            target = "_self" 
+            onMouseOver = "showTutorial('html')" 
+            onMouseOut = "showTutorial('')"/>
+         
+         <area shape = "circle" 
+            coords = "73,168,32"
+            href = "/php/index.htm" alt = "PHP Tutorial"
+            target = "_self" 
+            onMouseOver = "showTutorial('php')" 
+            onMouseOut = "showTutorial('')"/>
+      </map>
+   </body>
+</html>
+```
+
+
+### Output
+
+
+You can feel the map concept by placing the mouse cursor on the image object.
+

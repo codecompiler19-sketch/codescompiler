@@ -1,0 +1,286 @@
+---
+title: "SQL - Backup Database"
+description: "Learn SQL - Backup Database with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 160
+group: "SQL Database"
+seoTitle: "SQL - Backup Database — CodesCompiler SQL Guide"
+permalink: "sql-backup-database"
+---
+
+
+# SQL BACKUP DATABASE
+
+
+
+
+## The SQL BACKUP DATABASE Statement
+
+
+The SQLBACKUP DATABASEstatement is used to create a backup copy of an existing database. A backup is a safety copy of your database that you can restore later in case something goes wrong, such as accidental deletion, data corruption, or server failure.
+
+
+For example, if you are working on a website or system that stores user profiles, transactions, or inventory, backing up your database protects that important information.
+
+
+TheBACKUP DATABASEcommand works inSQL Server. It does not apply toMySQLorPostgreSQL, which use different methods like command-line tools for backups (e.g.,mysqldump,phpMyAdmin Export).Always choose a secure and reliable location to store your backup files.You can schedule regular backups using SQL Server Agent or external scripts.
+
+
+### Syntax
+
+
+Following is the syntax to back up a database in SQL Server:
+
+
+```sql
+BACKUP DATABASE database_name
+
+TO DISK = 'file_path.bak';
+```
+
+
+Here,
+
+
+
+- BACKUP DATABASE:This is the SQL command used to back up the database.
+- database_name:The name of the database you want to back up.
+- TO DISK:Specifies that the backup will be written to a disk file.
+- 'file_path.bak':The complete path and filename (with.bakextension) where the backup will be stored.
+
+
+
+### Example
+
+
+Let us back up a database namedtestDBto a file namedtestDB_backup.baklocated in theD:\Backupsfolder:
+
+
+```sql
+BACKUP DATABASE testDB
+
+TO DISK = 'D:\Backups\testDB_backup.bak';
+```
+
+
+After executing the above command inSQL Server, you will see an output similar to the following:
+
+
+```sql
+Processed 352 pages for database 'testDB', file 'testDB' on file 1.
+
+Processed 2 pages for database 'testDB', file 'testDB_log' on file 1.
+
+BACKUP DATABASE successfully processed 354 pages in 0.030 seconds (92.057 MB/sec).
+```
+
+
+## SQL BACKUP DATABASE with the WITH Clause
+
+
+SQL Server provides additional options to customize the backup process using theWITHclause. A commonly used option isINIT, which tells SQL Server to overwrite any existing backup file.
+
+
+### Syntax
+
+
+Following is the syntax to useWITH INITto replace an existing backup file:
+
+
+```sql
+BACKUP DATABASE testDB
+
+TO DISK = 'D:\Backups\filename_backup.bak'
+
+WITH INIT;
+```
+
+
+### Example
+
+
+In this example, we are backing up thetestDBdatabase and overwriting any existing backup file:
+
+
+```sql
+BACKUP DATABASE testDB
+
+TO DISK = 'D:\Backups\testDB_backup.bak'
+
+WITH INIT;
+```
+
+
+The output looks something like this:
+
+
+```sql
+Processed 352 pages for database 'testDB', file 'testDB' on file 1.
+
+Processed 2 pages for database 'testDB', file 'testDB_log' on file 1.
+
+BACKUP DATABASE successfully processed 354 pages in 0.023 seconds (120.074 MB/sec).
+```
+
+
+### Other Common WITH Options
+
+
+Some other commonly used options with theWITHclause are:
+
+
+
+- FORMAT:Formats the backup media (mainly used when backing up to tapes).
+- COMPRESSION:Reduces the size of the backup file (if supported by your SQL Server edition).
+- STATS `=` 10:Displays progress updates for every 10% completed during the backup process.
+
+
+
+## Types of Backups in SQL
+
+
+In SQL Server, there are three main types of backups you can perform. Each type helps to protect your data in a different way and allows you to restore it depending on your needs. The three types are as follows:
+
+
+
+- Full Backup
+- Differential Backup
+- Transaction Log (T-log) Backup
+
+
+
+### Full Backup
+
+
+AFull Backupin SQL saves a complete copy of the entire database. It includes all tables, data, and objects at the time of the backup. This backup can fully restore the database if needed. It is the most complete type of backup.
+
+
+Syntax
+
+
+Following is the syntax to take a full backup of a database in SQL Server:
+
+
+```sql
+BACKUP DATABASE database_name 
+
+TO DISK = 'file_path.bak';
+```
+
+
+Example
+
+
+In this example, we create a full backup of thetestDBdatabase and store it in theD:\Backupsfolder:
+
+
+```sql
+BACKUP DATABASE testDB 
+
+TO DISK = 'D:\Backups\testDB_backup.bak';
+```
+
+
+We get the output as shown below:
+
+
+```sql
+Processed 376 pages for database 'testDB', file 'testDB' on file 2.
+
+Processed 2 pages for database 'testDB', file 'testDB_log' on file 2.
+
+BACKUP DATABASE successfully processed 378 pages in 0.025 seconds (117.968 MB/sec).
+```
+
+
+### Differential Backup
+
+
+ADifferential Backupin SQL saves only the data that has changed since the last full backup. It is faster and smaller than a full backup, but it depends on the last full backup to restore the database completely.
+
+
+Syntax
+
+
+Following is the syntax to take a differential backup of a database in SQL Server:
+
+
+```sql
+BACKUP DATABASE database_name 
+
+TO DISK = 'file_path.bak' WITH DIFFERENTIAL;
+```
+
+
+Example
+
+
+In this example, we create a differential backup of thetestDBdatabase and store it in theD:\Backupsfolder:
+
+
+```sql
+BACKUP DATABASE testDB 
+
+TO DISK = 'D:\Backups\testDB_diff.bak' WITH DIFFERENTIAL;
+```
+
+
+We get the output as shown below:
+
+
+```sql
+Processed 56 pages for database 'testDB', file 'testDB' on file 1.
+
+Processed 2 pages for database 'testDB', file 'testDB_log' on file 1.
+
+BACKUP DATABASE WITH DIFFERENTIAL successfully processed 58 pages in 0.016 seconds (28.076 MB/sec).
+```
+
+
+### Transaction Log (T-log) Backup
+
+
+ATransaction Log (T-log) Backupin SQL saves a record of all the changes (called transactions) made to the database since the last time a log backup was taken. This type of backup is important because:
+
+
+
+- It lets you restore the database to a specific point in time, like right before a mistake or crash happened.
+- It prevents the transaction log file from growing too large, which helps keep the system running smoothly.
+
+
+
+Syntax
+
+
+Following is the syntax to take a transaction log backup of a database in SQL Server:
+
+
+```sql
+BACKUP LOG database_name 
+
+TO DISK = 'file_path.trn';
+```
+
+
+Example
+
+
+In this example, we create a transaction log backup of thetestDBdatabase and store it in theD:\Backupsfolder:
+
+
+```sql
+BACKUP LOG testDB 
+
+TO DISK = 'D:\Backups\testDB_log.trn';
+```
+
+
+We get the output as shown below:
+
+
+```sql
+Processed 2 pages for database 'testDB', file 'testDB_log' on file 4. 
+
+BACKUP LOG successfully processed 2 pages in 0.002 seconds (5.234 MB/sec).
+```
+

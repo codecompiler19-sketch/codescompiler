@@ -1,0 +1,149 @@
+---
+title: "JavaScript - Abstraction"
+description: "Learn JavaScript - Abstraction with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 920
+group: "Object Oriented JavaScript"
+seoTitle: "JavaScript - Abstraction — CodesCompiler JavaScript Guide"
+permalink: "javascript-abstraction"
+---
+
+
+# JavaScript - Abstraction
+
+
+
+
+## Abstraction in JavaScript
+
+
+The Abstraction in JavaScript can be achieved using the abstract class. In object-oriented programming, the abstraction concept allows you to hide the implementation details and expose features only to the users.
+
+
+For example, you can execute the Math object methods in JavaScript by accessing the method using its name but cant see how it is implemented. Same way array methods like push(), pop(), etc., can be executed, but you dont know how it is implemented internally.
+
+
+So, the abstraction makes code cleaner by exposing the required features and hiding the internal implementation details.
+
+
+## How to Achieve Abstraction in JavaScript?
+
+
+In most programming languages, you can achieve abstraction using theabstract class. Theabstract classcontains only method declaration but not implementation. Furthermore, you need to implement the methods declared in the abstract class into the child class. Also, you cant create an instance of the abstract class.
+
+
+JavaScript doesnt allow to create an abstract class like Java or CPP natively, but you can achieve the same functionality using the object constructor function.
+
+
+First, lets create an abstract class using the example below.
+
+
+### Creating the Abstract Class
+
+
+In the below example, the fruit() function initializes the name property. When anyone creates an instance of the fruit(), the value of the constructor property becomes equal to the fruit. So, we throw an error to prevent creating an instance of the fruit.
+
+
+Also, we have added the getName() method to the prototype. After that, we create an instance of the fruit() constructor, and you can observe the error in the output.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      try {
+         // Object constructor
+         function fruit() {
+            this.name = "Fruit";
+            if (this.constructor === fruit) {// Preventing the instance of the object
+               throw new Error("You can't create the instance of the fruit.");
+            }
+         }
+         // Implementing method in the prototype
+         fruit.prototype.getName = function () {
+            return this.name;
+         }
+         const apple = new fruit();
+      } catch (error) {
+         document.getElementById("output").innerHTML = error;
+      }
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Error: You can't create the instance of the fruit.
+```
+
+
+In the above example, you learned to achieve the abstract class functionality.
+
+
+Now, you will learn toextend the abstract classandimplement the methodsdefined in the abstract class via the example below.
+
+
+### Extending the Abstract Class
+
+
+In the example below, fruit() constructor is similar to the above example. We have implemented the Apple() constructor, initializing the name property.
+
+
+After that, we assign the prototype of the fruit() function to the Apple() function using the Object.create() method. It means Apple() function inherits the properties and methods of the fruit() class.
+
+
+After that, we have created the instance of the Apple() class and invoked the getName() method.
+
+
+```html
+<html>
+<body>
+   <div id = "output">The name of the fruit is: </div>
+   <script>
+      // Abstract class
+      function fruit() {
+         this.name = "Fruit";
+         if (this.constructor === fruit) { // Preventing the instance of the object
+            throw new Error("You can't create the instance of the fruit.");
+         }
+      }
+
+      // Implementing method in the prototype
+      fruit.prototype.getName = function () {
+         return this.name;
+      }
+
+      // Child class
+      function Apple(fruitname) {
+         this.name = fruitname;
+      }
+
+      // Extending the Apple class with the fruit class
+      Apple.prototype = Object.create(fruit.prototype);
+
+      const apple = new Apple("Apple");
+      document.getElementById("output").innerHTML += apple.getName();
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The name of the fruit is: Apple
+```
+
+
+The prototype implements the getName() method in the above code. So, it is hidden.
+
+
+This way, you can use an object constructor to achieve abstraction in JavaScript.
+

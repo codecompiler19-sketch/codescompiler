@@ -1,0 +1,292 @@
+---
+title: "SQL - Top Clause"
+description: "Learn SQL - Top Clause with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 390
+group: "SQL Operators and Clauses"
+seoTitle: "SQL - Top Clause — CodesCompiler SQL Guide"
+permalink: "sql-top-clause"
+---
+
+
+# SQL - TOP Clause
+
+
+Table of contentThe SQL TOP ClauseTOP with ORDER BY ClauseTOP Clause with PERCENTTOP with WHERE ClauseTOP Clause With DELETE StatementTOP and WITH TIES ClauseUses of TOP Clause
+
+
+
+
+## The SQL TOP Clause
+
+
+While we are retrieving data from an SQL table, the SQLTOP clauseis used to restrict the number of rows returned by a SELECT query in SQL server. In addition, we can also use it with UPDATE and DELETE statements to limit (restrict) the resultant records.
+
+
+For instance, if you have a large number of data stored in a database table, and you only want to perform operations on first N rows, you can use the TOP clause in your SQL server query.
+
+
+MySQL database does not support TOP clause instead of this, we can use theLIMITclause to select a limited number of records from a MySQL table. Similarly, Oracle supports the ROWNUM clause to restrict the records of a table. The TOP clause is similar to the LIMIT clause.
+
+
+### Syntax
+
+
+The basic syntax of the SQL TOP clause is as follows −
+
+
+```sql
+SELECT TOP value column_name(s)
+FROM table_name
+WHERE [condition]
+```
+
+
+Where,valueis the number/ percentage of number of rows to return from the top.
+
+
+### Example
+
+
+To understand it better let us consider the CUSTOMERS table which contains the personal details of customers including their name, age, address and salary etc. as shown below −
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),
+   PRIMARY KEY (ID)
+);
+```
+
+
+Now, insert values into this table using the INSERT statement as follows −
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+(2, 'Khilan', 25, 'Delhi', 1500.00 ),
+(3, 'Kaushik', 23, 'Kota', 2000.00 ),
+(4, 'Chaitali', 25, 'Mumbai', 6500.00 ),
+(5, 'Hardik', 27, 'Bhopal', 8500.00 ),
+(6, 'Komal', 22, 'Hyderabad', 4500.00 ),
+(7, 'Muffy', 24, 'Indore', 10000.00 );
+```
+
+
+The table will be created as follows −
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+Now, we are using the TOP clause to fetch the top 4 records from the CUSTOMERS table without specifying any conditional clauses such as WHERE, ORDER BY, etc. −
+
+
+```sql
+SELECT TOP 4 * FROM CUSTOMERS;
+```
+
+
+### Output
+
+
+This would produce the following result −
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.00
+
+
+## TOP with ORDER BY Clause
+
+
+The ORDER BY clause in SQL is used to sort the result-set of a query in ascending or descending order. We can use it along with the TOP clause to retrieve (or, update or, delete etc.) firstNrecords in sorted order.
+
+
+### Example
+
+
+Using the following query we are retrieving the top4records of theCUSTOMERStable in a sorted order. Here, we are sorting the table in descending order based on theSALARYcolumn −
+
+
+```sql
+SELECT TOP 4 * FROM CUSTOMERS ORDER BY SALARY DESC;
+```
+
+
+### Output
+
+
+We obtain the result as follows −
+
+
+IDNAMEAGEADDRESSSALARY7Muffy24Indore10000.005Hardik27Bhopal8500.004Chaitali25Mumbai6500.006Komal22Hyderabad4500.00
+
+
+Note −By default, the ORDER BY clause sorts the data in ascending order. So, if we need to sort the data in descending order, we must use the DESC keyword.
+
+
+## TOP Clause with PERCENT
+
+
+We can also restrict the records by specifying percentage value instead of number, using the PERCENT clause along with the TOP clause.
+
+
+### Example
+
+
+The following query selects the first 40% of the records from the CUSTOMERS table sorted in the ascending order by their SALARY −
+
+
+```sql
+SELECT TOP 40 PERCENT * FROM CUSTOMERS ORDER BY SALARY
+```
+
+
+### Output
+
+
+We have the total of 7 records in our table. So 40% of 7 is 2.8. Therefore, SQL server rounds the result to three rows (the next whole number) as shown in the output below −
+
+
+IDNAMEAGEADDRESSSALARY2Khilan25Delhi1500.003Kaushik23Kota2000.001Ramesh32Ahmedabad2000.00
+
+
+## TOP with WHERE Clause
+
+
+We can use the TOP clause with the WHERE clause to limit the given number of rows and filter them based on a specified condition.
+
+
+### Example
+
+
+Following is the query to show the details of the first two customers whose name starts withKfrom the CUSTOMERS table −
+
+
+```sql
+SELECT TOP 2 * FROM CUSTOMERS WHERE NAME LIKE 'k%'
+```
+
+
+### Output
+
+
+Following result is produced −
+
+
+IDNAMEAGEADDRESSSALARY2Khilan25Delhi1500.003Kaushik23Kota2000.00
+
+
+## TOP Clause With DELETE Statement
+
+
+The TOP clause can be used with the DELETE statement to delete a specific number of rows that meet the given criteria.
+
+
+### Example
+
+
+In the following query, we are using DELETE statement with TOP clause. Here, we are deleting the top 2 customers whose NAME starts withK−
+
+
+```sql
+DELETE TOP(2) FROM CUSTOMERS WHERE NAME LIKE 'K%';
+```
+
+
+### Output
+
+
+We get the output as shown below −
+
+
+```sql
+(2 rows affected)
+```
+
+
+### Verification
+
+
+We can verify whether the changes are reflected in a table by retrieving its contents using the SELECT statement as shown below −
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+The table is displayed as follows −
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## TOP and WITH TIES Clause
+
+
+While sorting the data in a table using the ORDER BY clause based on a column, some times multiple rows may contain same values in the column(s) specified in the ORDER BY clause.
+
+
+If you try to restrict the number of records using the TOP clause, all the eligible columns may not be filtered.
+
+
+TheWITH TIESclause is used to ensure that the records having the same values (records with"tied"values) are included in the query results.
+
+
+### Example
+
+
+Consider the above created tableCUSTOMERS. If we need to retrieve the top 2 customers sorted by the ascending order of their SALARY values, the query would be −
+
+
+```sql
+SELECT TOP 2 * FROM CUSTOMERS ORDER BY SALARY;
+```
+
+
+The resultant table would be −
+
+
+IDNAMEAGEADDRESSSALARY2Khilan25Delhi1500.003Kaushik23Kota2000.00
+
+
+But, the first two salary values (in ascending order) in the table are 1500 and 2000 and there is another column in the CUSTOMERS table with salary value 2000 which is not included in the result.
+
+
+If you want to retrieve all the columns with first two salary values (when arranged in the ascending order). We need to use theWITH TIESclause as showb below −
+
+
+```sql
+SELECT TOP 2 WITH TIES * FROM CUSTOMERS ORDER BY SALARY;
+```
+
+
+### Output
+
+
+The resultant table would be −
+
+
+IDNAMEAGEADDRESSSALARY2Khilan25Delhi1500.003Kaushik23Kota2000.001Ramesh32Ahmedabad2000.00
+
+
+## Uses of TOP Clause
+
+
+Some common use cases for the TOP clause include −
+
+
+
+- Pagination −When displaying a large number of records, the TOP clause can be used to return only a certain number of records at a time, allowing for more manageable and efficient pagination of the data.
+- Sampling data −The TOP clause can be used to quickly retrieve a sample of data from a table for testing or analysis.
+- Improving performance −By limiting the number of rows returned, the TOP clause can help improve the performance of a query, especially when dealing with large tables.
+- Debugging −When developing or debugging a query, the TOP clause can be used to quickly return a small number of rows to test the correctness of the query.
+- Data visualization −The TOP clause can be used to limit the number of rows returned for visualization purposes, such as creating charts or graphs.
+
+

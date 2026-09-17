@@ -1,0 +1,318 @@
+---
+title: "JavaScript - Session Storage"
+description: "Learn JavaScript - Session Storage with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1980
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Session Storage — CodesCompiler JavaScript Guide"
+permalink: "javascript-session-storage"
+---
+
+
+# JavaScript - SessionStorage
+
+
+
+
+## Session Storage in JavaScript
+
+
+The JavaScript sessionStorage object is a window object property that appears in all current browsers. The page's protocol, host-name and port are linked to any sessionStorage data. Each window contains its own session storage. The JavaScript sessionStorage method contributes to the reliable storage of user data.
+
+
+In JavaScript, we use the getItem() method to get elements that are always stored in the session storage attribute. The storage object includes a getItem() method. It could be a JavaScript session Storage object or a local Storage object.
+
+
+### Syntax
+
+
+Below is the syntax of the JavaScriptSessionStorage−
+
+
+```javascript
+window.sessionStorage;
+```
+
+
+## Methods of SessionStorage
+
+
+To get an element from JavaScript sessionStorage we have to create the element and save it to session storage. We can get it back later. The storage object has four methods: setItem(), getItem(), removeItem(), key() and clean().
+
+
+### setItem()
+
+
+Used to save information in a session storage item. Here is how you can use it in your code −
+
+
+```javascript
+sessionStorage.setItem("key", "value");
+```
+
+
+### getItem()
+
+
+Used to retrieve and display a session storage item. Following is way you can use it in your code −
+
+
+```javascript
+let lastname = sessionStorage.getItem("key");
+```
+
+
+### removeItem()
+
+
+Used to delete a specific item from session storage. The following is how you can utilize it in your code −
+
+
+```javascript
+sessionStorage.removeItem("key");
+```
+
+
+### key()
+
+
+Used to get the name of a data item in session storage. Here is how you can utilize it in your code −
+
+
+```javascript
+let keyName = sessionStorage.key(index);
+```
+
+
+### clear()
+
+
+Used to clear all items in session storage. Here's how you can put it into your code −
+
+
+```javascript
+sessionStorage.clear();
+```
+
+
+## Why do use sessionStorage in JavaScript
+
+
+SessionStorage can be used in many different ways. And these are the most important ones:
+
+
+
+- The web-page interface can be saved in session storage.
+- When the user returns to the page later, you can use sessionStorage to restore the previously saves user interface.
+- SessionStorage can also be used to transmit data between pages instead of using hidden input fields or URL parameters.
+
+
+
+## Key Features
+
+
+Below are some key features of JavaScript's SessionStorage −
+
+
+
+- Temporary Storage:Data is only stored for the duration of the session.
+- Tab-specific:Data is only accessible in the same browser tab or window.
+- Simple API:Provides simple methods for configuring, retrieving, and removing items.
+- Persistent During Reloads:Data is preserved after a page reload within the same session.
+- Storage Limit:Typically gives about 5MB of storage per origin for session data.
+
+
+
+## Examples
+
+
+Following are some examples of the session storage −
+
+
+### Example 1
+
+
+The example below shows how to use JavaScript sessionStorage with the set and get items methods. A session storage object helps us to create arrays and set data. After that, display information by calling the object's getItem() function.
+
+
+```html
+<html>  
+<head>  
+<title>Display Data Using sessionStorage in JavaScript</title>  
+</head>  
+<body style="text-align: center;">  
+<h4>Display Data Using sessionStorage in JavaScript</h4>  
+p id="displayStudent"  
+p id="displayTutorial"  
+
+<script>  
+   const studentInfo = {  
+      name: 'Amit',  
+      rollNumber: 41,  
+      website: 'Tutorialspoint',  
+      learningMode: 'online',  
+      age: 20,  
+      subject: 'JavaScript'  
+   };  
+
+   const tutorialInfo = {  
+      subject: 'JavaScript',  
+      website: 'Tutorialspoint',  
+      mode: 'online',  
+      cost: 'Free',  
+      targetAudience: 'students and beginners'  
+   };  
+
+   // Set and display studentInfo in sessionStorage
+   sessionStorage.setItem("studentInfo", JSON.stringify(studentInfo));  
+   console.log("Student info saved in sessionStorage.");
+   let retrievedStudent = sessionStorage.getItem('studentInfo');  
+   document.getElementById('displayStudent').innerHTML = retrievedStudent;  
+
+   // Set and display tutorialInfo in sessionStorage
+   sessionStorage.setItem("tutorialInfo", JSON.stringify(tutorialInfo));  
+   console.log("Tutorial info saved in sessionStorage.");
+   let retrievedTutorial = sessionStorage.getItem('tutorialInfo');  
+   document.getElementById('displayTutorial').innerHTML = retrievedTutorial;  
+</script>  
+
+</body>  
+</html>
+```
+
+
+Output
+
+
+This will generate the below result −
+
+
+```javascript
+Display Data Using sessionStorage in JavaScript
+
+{"name":"Amit","rollNumber":37,"website":"Tutorialspoint","learningMode":"online","age":19,"subject":"JavaScript"}
+
+{"subject":"JavaScript","website":"Tutorialspoint","mode":"online","cost":"Free","targetAudience":"students and beginners"}
+```
+
+
+### Example 2
+
+
+This example shows how to use JavaScript session storage with the set and get items methods. To display the date and time, we can use the object's getItem() method. The array value use the get and set methods, whereas the date value writes data immediately.
+
+
+```html
+<html>  
+<head>  
+<title> Display Data Using sessionStorage in JavaScript </title>  
+</head>  
+<body style="text-align: center;">  
+<h4> Display Data Using sessionStorage in JavaScript </h4>  
+p id="displayStudentInfo"  
+p id="displayCurrentTime"  
+<script>  
+   const learnerDetails = {  
+      name: 'Amit',  
+      rollNumber: 52,  
+      website: 'TutorialsPoint',  
+      learningMode: 'online mode',  
+      age: 22,  
+      subject: 'JavaScript'  
+   };  
+   
+   // Store student info in sessionStorage
+   sessionStorage.setItem("learnerDetails", JSON.stringify(learnerDetails));  
+   console.log("Learner details saved in sessionStorage.");
+   
+   // Retrieve and display student info
+   let retrievedStudentInfo = sessionStorage.getItem('learnerDetails');  
+   document.getElementById('displayStudentInfo').innerHTML = retrievedStudentInfo;  
+   
+   // Store and display current date and time
+   let currentDateTime = new Date();  
+   sessionStorage.currentDateTime = currentDateTime;  
+   console.log("Current date and time saved in sessionStorage.");
+   let retrievedDateTime = sessionStorage.getItem('currentDateTime');  
+   document.getElementById('displayCurrentTime').innerHTML = retrievedDateTime;  
+</script>  
+
+</body>  
+</html>
+```
+
+
+Output
+
+
+This will lead to the following result −
+
+
+```javascript
+Display Data Using sessionStorage in JavaScript
+{"name":"Amit","rollNumber":52,"website":"TutorialsPoint","learningMode":"online mode","age":22,"subject":"JavaScript"}
+Fri Oct 25 2024 13:14:10 GMT+0530 (India Standard Time)
+```
+
+
+### Example 3
+
+
+Here is an example of using sessionStorage in an HTML file with JavaScript. The sessionStorage is used to save data for the life of the session and makes it available as long as the browser tab is open.
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <title>Session Storage Example</title>
+</head>
+<body>
+   <h1>Session Storage Demo</h1>
+   <label for="name">Enter your name:</label>
+   <input type="text" id="name" />
+   <button onclick="saveName()">Save Name</button>
+   <button onclick="showName()">Show Name</button>
+   <button onclick="clearName()">Clear Name</button>
+   p id="result"
+
+<script>
+   // Function to save name in sessionStorage
+   function saveName() {
+      let name = document.getElementById('name').value;
+      sessionStorage.setItem('userName', name);
+      document.getElementById('result').innerText = 'Name saved in session storage!';
+   }
+   
+   // Function to show name from sessionStorage
+   function showName() {
+      let name = sessionStorage.getItem('userName');
+      if (name) {
+         document.getElementById('result').innerText = 'Stored Name: ' + name;
+      } else {
+         document.getElementById('result').innerText = 'No name found in session storage!';
+      }
+   }   
+   // Function to clear name from sessionStorage
+   function clearName() {
+      sessionStorage.removeItem('userName');
+      document.getElementById('result').innerText = 'Name cleared from session storage!';
+   }
+</script>
+</body>
+</html>
+```
+
+
+Output
+
+
+So you have to open the file in a browser. Then enter a name and then click Save Name. After that you have to click Show Name to see the stored name. And click Clear Name to remove it from storage.
+
+
+## Summary
+
+
+The sessionStorage allows you to store data just for a single session. When you close a browser tab or window, the sessionStorage data is automatically removed. As the sessionStorage is a Storage system object, you can handle its data using Storage-specific methods.
+

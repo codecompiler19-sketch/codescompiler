@@ -1,0 +1,276 @@
+---
+title: "JavaScript - Clickjacking Attack"
+description: "Learn JavaScript - Clickjacking Attack with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2620
+group: "JavaScript Miscellaneous"
+seoTitle: "JavaScript - Clickjacking Attack — CodesCompiler JavaScript Guide"
+permalink: "javascript-clickjacking-attack"
+---
+
+
+# JavaScript - Clickjacking Attack
+
+
+
+
+## Clickjacking Attack
+
+
+An attacker employs clickjacking, a form of cyber-attack, to deceive a user into clicking on an object different from their perception; this deception may result in unintended actions. The attacker achieves this by overlaying invisible elements or frames over valid content thus camouflaging the malicious intent or manipulating the appearance of webpage elements outright.
+
+
+Severe risks such as unauthorized financial transactions, potential data breaches and compromise of sensitive information are posed by clickjacking. Clickjacking impacts users and website owners alike leading to legal consequences, financial loss, and heightened cybersecurity concerns. The deceptive nature of clickjacking can erode user trust with far-reaching consequences in the digital ecosystem.
+
+
+Disclaimer: The contents of this chapter are only for education purposes!
+
+
+## How clickjacking works?
+
+
+### Overlaying Content
+
+
+
+- The attackers create a malicious/spam/scam website or injects malicious code into a website which is actually legitimate in nature.
+- The attacker positions invisible elements or frames over the legitimate content on the page. These elements can be transparent iframes or other HTML elements.
+
+
+
+### Deceptive Presentation
+
+
+
+- The attacker then entices the user to interact with the visible elements on the page, which are typically buttons, links, or forms.
+- However, these visible elements are actually on top of the invisible, malicious elements.
+
+
+
+### User Interaction
+
+
+
+- When the user interacts with the visible elements (clicking, typing, etc.), they are unknowingly interacting with the hidden, malicious elements that are overlaid on top of the legitimate content.
+
+
+
+### Unintended Actions
+
+
+
+- The attacker can manipulate the hidden elements to perform unintended actions on behalf of the user. This could include making unwanted transactions, changing account settings, or even submitting sensitive information.
+
+
+
+### User Unawareness
+
+
+
+- Because the user believes they are interacting with the visible elements they see, they remain unaware that their actions are being redirected to perform malicious activities.
+
+
+
+## Examples
+
+
+### Example 1: Button Overlay
+
+
+The provided HTML code demonstrates a button overlay clickjacking example. The button is presented to the user, but it is actually overlaid on a hidden, malicious iframe, leading the user to a potentially harmful page.
+
+
+home.html
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+   ## This is content of the home page
+      <iframe src="legitimate-site.html" width="100%" height="100%"></iframe>
+   <div>
+   <button onclick="window.location.href='malicious-site.html'">Click Me</button>
+   </div>
+</body>
+</html>
+```
+
+
+legitimate-site.html
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+   <header>
+      <h1>Welcome to Legitimate Site</h1>
+   </header>
+   <section>
+      pThis is a legitimate website. You can trust the content here.
+   </section>
+   <footer>
+      p© 2024 Legitimate Site. All rights reserved.
+   </footer>
+</body>
+</html>
+```
+
+
+malicious-site.html
+
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+   <style>
+      body {
+         font-family: Arial, sans-serif;
+      }
+      .danger-sign {
+         color: red;
+         font-size: 2em;
+      }
+      .warning-message {
+         color: red;
+         font-weight: bold;
+      }
+   </style>
+</head>
+<body>
+   <header>
+      <h1 class="danger-sign"> Danger: Malicious Site</h1>
+   </header>
+   <section>
+      p class="warning-message"This website has been identified as potentially harmful. Visiting it may pose a security risk to your computer and personal information.
+   </section>
+   <footer>
+      pPlease close this page immediately and do not proceed.
+   </footer>
+</body>
+</html>
+```
+
+
+### Output
+
+
+### Example 2
+
+
+When the webpage loads in this example, it initiates an automatic click on a button identified as "clickMe." This specific button, upon receiving user interaction by means of clicking, activates a JavaScript event that re-routes the user to a potentially harmful site named 'malicious-site.html.' Such covert manipulation disconcertingly guides users towards unintended destinations without their knowledge or consent. Always note: these practices are indeed, potentially harmful and unethical in nature; one must approach them with responsibility and within legal and ethical boundaries.
+
+
+Themalicious-site.htmlcode is same as above.
+
+
+home.html
+
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+   <style>
+      body {
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         height: 100vh;
+         margin: 0;
+      }
+
+      button {
+         position: absolute;
+         z-index: 1;
+         background-color: transparent;
+         border: none;
+         font-size: 20px;
+         cursor: pointer;
+      }
+   </style>
+</head>
+<body onload="myFunction()">
+   ## Your Content Goes Here
+   <button id="clickMe">Click Me</button>
+   <script>
+      window.onload = function() {
+         var button = document.getElementById("clickMe");
+         button.click();
+      };
+      document.getElementById("clickMe").addEventListener("click", function() {
+         window.location.href = "malicious-site.html";
+      });
+   </script>
+</body>
+</html>
+```
+
+
+### Output
+
+
+## Real World Clickjacking Incidents
+
+
+### 1. Facebook "Like" Button (2011)
+
+
+Attackers overlaid a malicious "Like" button on an enticing video thumbnail, tricking users into unknowingly liking a malicious page.
+
+
+### 2. Adobe Flash Update Scam (2015):
+
+
+Malicious buttons disguised as Adobe Flash updates were overlayed on legitimate websites, leading users to unwittingly download malware.
+
+
+### 3. Twitter Clickjacking Attack
+
+
+Malicious links on Twitter, disguised as enticing content, led users to unintentionally retweet and spread malicious content.
+
+
+### 4. LinkedIn Fake Connection Requests
+
+
+Clickjacking was used to trick LinkedIn users into connecting with fake profiles by overlaying connection request buttons on seemingly innocent content.
+
+
+### 5. Google Play Store Deception
+
+
+Malicious overlays on the Google Play Store tricked users into unintended downloads or actions, often related to ads.
+
+
+## Preventive Measures
+
+
+### 1. X-Frame-Options Header
+
+
+Set the X-Frame-Options header to DENY or SAMEORIGIN in your web server's response to prevent your site from being embedded in iframes.
+
+
+### 2. Frame-Busting Scripts
+
+
+Implement frame-busting scripts in your web pages to prevent them from being embedded in iframes.
+
+
+### 3. Content Security Policy (CSP)
+
+
+Use Content Security Policy headers to control the sources from which your website can load content, reducing the risk of clickjacking.
+
+
+### 4. User Education
+
+
+Educate users about potential risks associated with interacting with unfamiliar or suspicious-looking content.
+
+
+As cybersecurity evolves, future trends in clickjacking may include more sophisticated techniques leveraging artificial intelligence, increased use of social engineering tactics, and a focus on bypassing advanced security measures. Additionally, with the rise of emerging technologies like augmented reality (AR) and virtual reality (VR), new vectors for immersive clickjacking experiences may emerge, demanding continuous innovation in defensive strategies and user awareness.
+

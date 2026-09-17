@@ -1,0 +1,195 @@
+---
+title: "JavaScript - Shallow Copy"
+description: "Learn JavaScript - Shallow Copy with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2580
+group: "JavaScript Miscellaneous"
+seoTitle: "JavaScript - Shallow Copy — CodesCompiler JavaScript Guide"
+permalink: "javascript-shallow-copy"
+---
+
+
+# JavaScript - Shallow Copy
+
+
+
+
+## Shallow Copy
+
+
+In JavaScript, a shallow copy is a duplication of an array or object that replicates its top-level elements, but not its nested structures. When creating a shallow copy of an array, common methods include using the spread operator ([...]), Array.from(), or the slice() method.
+
+
+For objects, the spread operator (&#123;...&#125;) and Object.assign() are commonly used. It is important to note that while the top-level statements are being duplicated, any nested object or arrays that are within the original structure are not cloned, instead their references are retained in the shallow copy.
+
+
+Consequently, modifications to nested structures in the copied version affect the original and vice versa. For deep cloning, where nested structures are also duplicated, alternative techniques or libraries such as lodash's _.cloneDeep are required.
+
+
+## Deep Copy vs. Shallow Copy
+
+
+Two methods exist for duplicating objects or arrays: deep copying and shallow copying. Deep copying creates an entirely independent duplicate even including nested structures; conversely, shallow copying only replicates top-level elements while maintaining references to the nested ones.
+
+
+While deep copying guarantees complete independence, shallow copy proves more memory-efficient and faster but at a cost: modifications in nested structures impact both original and copied objects. Task requirements dictate the choice: for total independence, deep copying is preferred; however, when efficiency is paramount and nested references can be preserved, shallow copying becomes the optimal option.
+
+
+## Examples
+
+
+### Example 1: Shallow copy using Object assign() method
+
+
+In the following example, we use the Object.assign() method create a shallow copy of an object.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+   ## Shallow copy using Object.assign() method
+   pOriginal Object:
+   p id="originalObject"
+   pCopied Object:
+   p id="copiedObject"
+   <script>
+      const originalObject = { name: "Alice", age: 30 };
+      const copiedObject = Object.assign({}, originalObject);
+      document.getElementById("originalObject").textContent = JSON.stringify(originalObject);
+      document.getElementById("copiedObject").textContent = JSON.stringify(copiedObject);
+   </script>
+</body>
+</html>
+```
+
+
+### Example 2: Shallow copy using spread operator
+
+
+In this example we use the spread operator (...) to creating a shallow copy of an array.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+   ## Shallow copy using spread operator (...)
+   pOriginal Array:
+   p id="originalArray"
+   pCopied Object:
+   p id="copiedArray"
+   <script>
+      const originalArray = [1, 2, 3];
+      const copiedArray = [...originalArray];
+      document.getElementById("originalArray").textContent = JSON.stringify(originalArray);
+      document.getElementById("copiedArray").textContent = JSON.stringify(copiedArray);
+   </script>
+</body>
+</html>
+```
+
+
+### Example 3:Shallow copy of object with array
+
+
+In the example below, a combination of Object.assign() and Array.prototype.slice() is used to create a shallow copy of an object, emphasizing proper handling of arrays within the object structure.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+   ## Shallow copy using array slice() method
+   pOriginal Object:
+   p id="originalObject"
+   pCopied Object:
+   p id="copiedObject"
+   <script>
+      const originalObject = { name: "Bob", hobbies: ["reading", "coding"] };
+      const copiedObject = Object.assign({}, originalObject, { hobbies: originalObject.hobbies.slice() });
+      document.getElementById("originalObject").textContent = JSON.stringify(originalObject);
+      document.getElementById("copiedObject").textContent = JSON.stringify(copiedObject);
+   </script>
+</body>
+</html>
+```
+
+
+### Example 4: Shallow Copy with Nested Objects
+
+
+In this example we demonstrate creating of shallow copies of an object with nested properties using the JSON.stringify and JSON.parse methods of JavaScript. The original object contains of a nested structure which has properties like name and address. Address further consists of properties like street and city. We then use JSON.stringify to convert the original object into a JSON formatted string & then apply the JSON.parse to parse the string back into a new object thereby creating a shallow copy.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+   ## Shallow Copy with Nested objects using JSON.stringify & JSON.parse
+   pOriginal Object:
+   <pre id="originalObject"></pre>
+   pCopied Object:
+   <pre id="copiedObject"></pre>
+   <script>
+      const originalObject = {
+         name: "Charlie",
+         address: {
+            street: "123 Main St",
+            city: "New York"
+         }
+      };
+
+      const copiedObject = JSON.parse(JSON.stringify(originalObject));
+
+      document.getElementById("originalObject").textContent = JSON.stringify(originalObject, null, 2);
+      document.getElementById("copiedObject").textContent = JSON.stringify(copiedObject, null, 2);
+   </script>
+</body>
+</html>
+```
+
+
+### Example 5: Shallow copy impact of modification
+
+
+Illustrating the impact of modifications on a shallow copy created via JavaScript's Object.assign() method, the following code initially presents an original object. The original object features properties named "name" and "age," side by side with its corresponding shallow copy. Next, we observe how this code alters the "age" property of our copied object. Subsequently, the code presents an exposition of both the original and copied objects' states post-modification. This instance accentuates that alterations to the shallow copy despite isolating within its duplicated object do not influence the base object; it thereby confirms a peculiar behaviour wherein top-level properties are captured by shallow copies while preserving independence between primary and secondary instances.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+   ## Shallow Copy impact of modification
+   ### Before Modification
+   pOriginal Object
+   <pre id="originalObjectBefore"></pre>
+   pCopied Object
+   <pre id="copiedObjectBefore"></pre>
+   ### After Modification
+   pOriginal Object
+   <pre id="originalObjectAfter"></pre>
+   pCopied Object
+   <pre id="copiedObjectAfter"></pre>
+   <script>
+      const originalObject = { name: "Alice", age: 30 };
+      const copiedObject = Object.assign({}, originalObject);
+
+      document.getElementById("originalObjectBefore").textContent = JSON.stringify(originalObject, null, 2);
+      document.getElementById("copiedObjectBefore").textContent = JSON.stringify(copiedObject, null, 2);
+
+      copiedObject.age = 40;
+
+      document.getElementById("originalObjectAfter").textContent = JSON.stringify(originalObject, null, 2);
+      document.getElementById("copiedObjectAfter").textContent = JSON.stringify(copiedObject, null, 2);
+   </script>
+</body>
+</html>
+```
+
+
+## Importance of Shallow Copy
+
+
+To preserve the original data structure and manage memory efficiently, one must critically understand shallow copying in JavaScript: it duplicates top-level elements a concept that achieves balance. This understanding empowers non-destructive manipulation tasks; for example, array sorting. Furthermore, it simplifies feature implementation processes like undo/redo functionalities, all while significantly enhancing overall user experience  an integral role indeed. Shallow copies possessing the capacity to adeptly handle alterations in practical applications maintain data integrity: a crucial aspect when isolating modifications from an original object is necessary in certain scenarios.
+

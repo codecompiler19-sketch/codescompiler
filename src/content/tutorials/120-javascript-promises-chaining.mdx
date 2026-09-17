@@ -1,0 +1,740 @@
+---
+title: "JavaScript - Promises Chaining"
+description: "Learn JavaScript - Promises Chaining with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1200
+group: "JavaScript Asynchronous"
+seoTitle: "JavaScript - Promises Chaining — CodesCompiler JavaScript Guide"
+permalink: "javascript-promises-chaining"
+---
+
+
+# JavaScript - Promises Chaining
+
+
+
+
+Thepromise chainingin JavaScript can handle multiple related asynchronous operations evenwitha single promise. While a single promise handles a single asynchronous operation, the promise chaining allows you to create a sequence of promises. Here success or rejection of one promise triggers the execution of the next promise. This enables you to handle multiple asynchronous operations.
+
+
+In JavaScript, we can produce the promise code using the Promise() constructor and consume using the then() method. It handles the single asynchronous operation. To handle the multiple asynchronous operations, we require to use the multiple promises, as shown in the example below.
+
+
+### Example
+
+
+In the code below, we have defined promise1, which gets resolved in 1 second. Also, we have defined the global data variable.
+
+
+After that, we used the then() method to consume the promise1, and inside the callback function, we stored the return value from the promise in the data.
+
+
+Next, we have defined the promise2, which gets resolved after 2 seconds. Next, we used the then() method with promise2 and used the data variable inside the callback function.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      let output = document.getElementById("output");
+
+      var data;
+
+      // First promise
+
+      let promise1 = new Promise((resolve, reject) => {
+
+         setTimeout(() => {
+
+            resolve(10);
+
+         }, 1000);
+
+      });
+
+      promise1.then((value) => {
+
+         data = value; // Stroing value into the data
+
+         output.innerHTML += "The promise1 is resolved and data is: " + data + "<br>";
+
+      });
+
+
+
+      // Second promise
+
+      let promise2 = new Promise((resolve, reject) => {
+
+         setTimeout(() => {
+
+            resolve(20);
+
+         }, 2000);
+
+      });
+
+      promise2.then((value) => {
+
+         data = data * value; // Using the data from the first promise
+
+         output.innerHTML += "The promise2 is resolved and data is: " + value + "<br>";
+
+         output.innerHTML += "The final value of the data is: " + data + "<br>";
+
+      });
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The promise1 is resolved and data is: 10
+
+The promise2 is resolved and data is: 20
+
+The final value of the data is: 200
+```
+
+
+In the above example, we have created two different promises to perform multiple operations on the data returned from the promise1.
+
+
+It increases the code complexity and decreases the readability.
+
+
+Here, promise chaining comes into the picture.
+
+
+## JavaScript Promise Chaining
+
+
+The concept of promise chaining in JavaScript allows you to do multiple related asynchronous operations with a single promise.
+
+
+You can use the multiple then() methods while consuming the promise to perform the multiple asynchronous operations.
+
+
+### Syntax
+
+
+The syntax of the promise chaining in JavaScript is as follows −
+
+
+```javascript
+Promise
+
+   .then(callback);
+
+   .then(callback);
+
+   ...
+
+   .then(callback);
+```
+
+
+In the above syntax, we have used multiple then() methods to handle the multiple asynchronous operations. Each then() method executes the single callback function.
+
+
+### Example
+
+
+In the code below, we have defined the promise1. After that, we used the promise chain to perform the multiple asynchronous operations.
+
+
+From the first then() method, we return the value after multiplying with 2. In the next then() method, we print the updated value and return the new value after multiplying the old value with 2. Similarly, the operation we are doing is in the third then() method.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      let output = document.getElementById("output");
+
+      const promise1 = new Promise((resolve, reject) => {
+
+         resolve(2);
+
+      });
+
+
+
+      // Promise chaining
+
+      promise1
+
+      .then((value) => {
+
+         output.innerHTML = "The square of 2 is " + value * 2 + "<br>";
+
+         return value * 2; // Returning a promise for next then() method
+
+      })
+
+      .then((value) => {
+
+         output.innerHTML += "The square of 4 is " + value * 2 + "<br>";
+
+         return value * 2;
+
+      })
+
+      .then((value) => {
+
+         output.innerHTML += "The square of 8 is " + value * 2 + "<br>";
+
+      });
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The square of 2 is 4
+
+The square of 4 is 8
+
+The square of 8 is 16
+```
+
+
+## Multiple Promise Handlers
+
+
+You can also use the multiple promise handlers to consume the single promise. However, if you use multiple promise handlers, it is not called promise chaining.
+
+
+### Example
+
+
+In the code below, we have created the promise1.
+
+
+After that, we used the multiple promise handlers to consume the promise. Each promise handler solves the promise separately.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      let output = document.getElementById("output");
+
+      const promise1 = new Promise((resolve, reject) => {
+
+         resolve(2);
+
+      });
+
+
+
+      promise1
+
+      .then((value) => {
+
+         output.innerHTML += "Inside the first promise handler. <br>";
+
+         return value * 2;
+
+      })
+
+
+
+      promise1
+
+      .then((value) => {
+
+         output.innerHTML += "Inside the second promise handler. <br>";
+
+         return value * 2;
+
+      })
+
+
+
+      promise1
+
+      .then((value) => {
+
+         output.innerHTML += "Inside the third promise handler. <br>";
+
+         return value * 2;
+
+      })
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Inside the first promise handler.
+
+Inside the second promise handler.
+
+Inside the third promise handler.
+```
+
+
+## Error Handling with Promise Chaining
+
+
+You can use the catch() method with promise chaining to handle the error.
+
+
+If you use the catch() method at last after all then() methods, it catches the error in any then() method and handles it. If you use the catch() method in between then() methods, it catches the error in the then() methods used before it.
+
+
+Lets understand it via the example below.
+
+
+### Example
+
+
+In the code below, we have defined the promise and rejected it.
+
+
+After that, we used the promise chaining to consume the promise. We used two then() methods and 1 catch() after all then() methods.
+
+
+In the output, you can see that as we rejected the promise, control goes into the catch() method.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      let output = document.getElementById("output");
+
+      const promise1 = new Promise((resolve, reject) => {
+
+         reject("There is an error.");
+
+      });
+
+
+
+      promise1
+
+      .then((value) => {
+
+         output.innerHTML += "The returned value is: " + value + "<br />";
+
+         return value + " Everything is fine!";
+
+      })
+
+      .then((value) => {
+
+         output.innerHTML += value;
+
+      })
+
+      .catch((error) => {
+
+         output.innerHTML += error;
+
+      });
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+There is an error.
+```
+
+
+## Returning the Promise
+
+
+When you return the value from the then() method, it returns the promise by default and resolves it with a returned value, as it is an asynchronous method.
+
+
+However, you can manually return the promise to reject the promise or perform any other operation.
+
+
+### Example
+
+
+In the code below, we have defined the primise1 and used the setTimeOut() method inside the callback function.
+
+
+After that, we consume the promise using multiple then() methods. From each then() method, we return a new promise.
+
+
+When you return only the value from the then() method, it returns the promise, which gets resolved immediately. But when you want to add some delay, you can return the promise from then() method.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      let output = document.getElementById("output");
+
+      const promise1 = new Promise((resolve, reject) => {
+
+         setTimeout(() => {
+
+            resolve("Stage 1");
+
+         }, 500);
+
+      });
+
+
+
+      promise1
+
+      .then((value) => {
+
+         output.innerHTML += value + "<br />";
+
+         return new Promise((resolve, reject) => {
+
+            setTimeout(() => {
+
+               resolve("Stage 2");
+
+            }, 1000);
+
+         });
+
+      })
+
+      .then((value) => {
+
+         output.innerHTML += value + "<br />";
+
+         return new Promise((resolve, reject) => {
+
+            setTimeout(() => {
+
+               resolve("Stage 3");
+
+            }, 200);
+
+         });
+
+      })
+
+      .then((value) => {
+
+         output.innerHTML += value + "<br />";
+
+         output.innerHTML += "Finished";
+
+      })
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Stage 1
+
+Stage 2
+
+Stage 3
+
+Finished
+```
+
+
+## Converting Nested Callback Functions into the Promise Chaining
+
+
+You learned about the nested callback functions in the JavaScript-callbacks' chapter. It is also called the callback hell due to its complex syntax.
+
+
+Here, we will learn to convert the callback hell into the promise chaining to make it more readable.
+
+
+Lets look at the example of the nested callback functions.
+
+
+## Nested Callback functions
+
+
+### Example
+
+
+In the code below, the updateData() function takes the data as a first parameter and the callback function as a second parameter.
+
+
+The updateData() function calls the callback function by passing the data as an argument after 1000 milliseconds.
+
+
+Next, we have invoked the updateData() function and passed the 10 as a first argument and the anonymous function as a callback function.
+
+
+The callback function stores the resultant value into p after adding 1 to the num1 value.
+
+
+Next, we call the updateData() function inside the callback function. Also, we have passed the data and callback function as an argument. This way, we have defined the nested callback functions.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      let output = document.getElementById("output");
+
+      output.innerHTML += "Wait for updating the data...<br>";
+
+      //    Callback hell
+
+      function updateData(data, callback) {
+
+         setTimeout(() => {
+
+            callback(data);
+
+         }, 1000);
+
+      }
+
+      updateData(10, function (num1) {
+
+         let p = 1 + num1;
+
+         updateData(30, function (num2) {
+
+            let q = 1 + num2;
+
+            updateData("The numeric value is: " + (p + q), function (answer) {
+
+               output.innerText += answer;
+
+            });
+
+         });
+
+      });
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Wait for updating the data...
+
+The numeric value is: 42
+```
+
+
+Now, lets learn to convert the above example into promise chaining.
+
+
+## Converting nested callback functions to promise chaining
+
+
+### Example
+
+
+In the code below, the updateData() function returns a single promise.
+
+
+After that, we used the promise chaining, an alternative to the callback hell defined in the above example.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      let output = document.getElementById("output");
+
+      output.innerHTML += "Wait for updating the data...<br>";
+
+      function updateData(data) {
+
+         return new Promise((resolve, reject) => {
+
+            setTimeout(() => {
+
+               resolve(data);
+
+            }, 1000);
+
+         });
+
+      }
+
+
+
+      updateData(10)
+
+      .then((num1) => {
+
+         let p = 1 + num1;
+
+         return updateData(p);
+
+      })
+
+      .then((num2) => {
+
+         let q = 31;
+
+         return updateData("The final value is: " + (num2 + q));
+
+      })
+
+      .then((res) => {
+
+         output.innerText += res;
+
+      });
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Wait for updating the data...
+
+The final value is: 42
+```
+
+
+## Real-time Examples of Promise Chaining
+
+
+In real-time development, you can use the promise chaining to fetch the data and perform the operations on the data.
+
+
+### Example
+
+
+In the code below, when users click the fetch data button, it invokes the fetchData() function.
+
+
+In the fetchData() function, we have used the fetch() API to fetch data from the API.
+
+
+After that, we used the then() method to convert the data into JSON.
+
+
+Next, we used the then() method again to print the JSON data.
+
+
+```html
+<html>
+
+<body>  
+
+   <button onclick = "fetchData()"> Fetch Data </button>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      let output = document.getElementById("output");
+
+      function fetchData() {
+
+         fetch('https://jsonplaceholder.typicode.com/todos/1')
+
+         .then(response => response.json()) // Promise chaining
+
+         .then((data) => {
+
+            output.innerHTML += "The data is - " + JSON.stringify(data);
+
+         })
+
+      }
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+

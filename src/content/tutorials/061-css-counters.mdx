@@ -1,0 +1,219 @@
+---
+title: "CSS - Counters"
+description: "Learn CSS - Counters with clear CSS layout principles, modern selectors, and practical examples."
+category: "css"
+order: 610
+group: "CSS Basics"
+seoTitle: "CSS - Counters — CodesCompiler CSS Guide"
+permalink: "css-counters"
+---
+
+## CSS - Counters
+
+CSS counters act as variables that are used for numbering purposes. They can be increased or decreased by CSS rules. Counters enable us to modify the presentation of content depending on its position. For instance, you can use counters to automatically assign numbers to paragraphs, headings, and lists.
+
+```css
+body {
+    counter-reset: section;
+}
+
+/* A simple counter when a new h2 element starts */
+h2::before {
+    counter-increment: section;
+    content: "Section " counter(section) ": ";
+}
+```
+
+CSS counters are a kind of variables maintained by CSS, which can be incremented, decremented, or reset at different points in your document. In this tutorial we will how to implemented and manage counter using CSS.
+
+## Table of Contents
+
+- How to Implement Counters in CSS?
+
+- Automatic Numbering With Counters
+
+- Nesting Counters
+
+- Reversed counter
+
+- CSS Counter Related Properties
+
+## How to Implement Counters in CSS?
+
+Counters can be used to create numbered lists, sections, or any other content that needs counting. Follow these steps to create counter in a webpage
+
+- Initialize the Counter: To start using a counter, you first need to initialize it using the counter-reset property.
+
+```css
+body {
+    counter-reset: section;
+} 
+```
+
+This example initializes a counter named section with an initial value of 0. The counter is reset to 0 every time the body element appears.
+
+- Increment the Counter: To increment the counter, use the counter-increment property.
+
+```css
+li::before {
+    counter-increment: section;
+}
+```
+
+This example increments the section counter every time an `<li>` element appears and displays the count before text.
+
+- Display the Counter: To display the value of the counter, use the counters() function.
+
+```css
+li::before {
+    content: counters(section, ".") " ";
+}
+```
+
+This example displays the value of the section counter followed by a period and a space before the content of the li element.
+
+## Automatic Numbering With Counters
+
+Counters can be used to automatically number elements in a document. The following example demonstrates how to use counters to number list items.
+
+### Example
+
+```html
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            counter-reset: section;
+        }
+        
+        h2::before {
+            counter-increment: section;
+            content: "Section " counter(section) ": ";
+        }
+    </style>
+</head>
+
+<body>
+    <h1> CSS Counters</h1>
+
+    ## SQL Tutorial
+    ## JavaScript Tutorial
+    ## Python Tutorial
+    ## HTML Tutorial
+    ## CSS Tutorial
+</body>
+</html>
+```
+
+## Nesting Counters
+
+Counters can be nested to create more complex numbering schemes. You can use the counters() function to display the value of a nested counter.
+
+### Example
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        ol {
+            counter-reset: section;
+            list-style-type: none;
+        }
+        li::before {
+            counter-increment: section;
+            content: counters(section, ".") " ";
+        }
+    </style>
+</head>
+
+<body>
+    <ol>
+        <li>Section 1
+            <ol>
+                <li>Subsection 1.1</li>
+                <li>Subsection 1.2</li>
+                <li>Subsection 1.3</li>
+            </ol>
+        </li>
+
+        <li>Section 2
+            <ol>
+                <li>Subsection 2.1</li>
+                <li>Subsection 2.2</li>
+                <li>Subsection 2.3</li>
+            </ol>
+        </li>
+
+        <li>Section 3
+            <ol>
+                <li>Subsection 3.1</li>
+                <li>Subsection 3.2</li>
+                <li>Subsection 3.3</li>
+            </ol>
+        </li>
+    </ol>
+</body>
+
+</html>
+```
+
+## Reversed counter
+
+A reversed counter is a special kind of counter that counts backwards instead of forward. To create a reversed counter, name it with the reversed() function when you set it up with counter-reset.
+
+```css
+body{
+    counter-reset: reversed(section);
+}
+```
+
+The reversed counters start with a default initial value equal to the number of elements, not zero. This means that it can simply count down from the number of elements to one.
+
+> The reversed counter property is supported only by Firefox browser
+
+### Example
+
+Try this in Firefox browser
+
+```html
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            counter-reset: reversed(
+            section);
+        }
+        p::before {
+            counter-increment: section -1;
+            content: "Section " counter(section) ": "; 
+        }
+    </style>
+</head>
+
+<body>
+    pThis is fourth paragraph
+    pThis is Third paragraph
+    pThis is second paragraph
+    pThis is first paragraph
+</body>
+
+</html>
+```
+
+## CSS Counter Related Properties
+
+Following is the list of CSS properties of counter:
+
+| Property | Description | Example |
+| :--- | :--- | :--- |
+| counter-reset | It is used to create or reset a counter. | Try It |
+| counter-set | It is used to set a counter to a specific value. | Try It |
+| counter-increment | It is used to increment the counter value. | Try It |
+| counter() | It provides a string that represents the current value of named counter. | Try It |
+| counters() | It is used to work with nested counters. | Try It |
+| @counter-styles | It is used to create custom counter styles. | Try It |

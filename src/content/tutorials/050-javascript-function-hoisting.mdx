@@ -1,0 +1,304 @@
+---
+title: "JavaScript - Function Hoisting"
+description: "Learn JavaScript - Function Hoisting with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 500
+group: "JavaScript Functions"
+seoTitle: "JavaScript - Function Hoisting — CodesCompiler JavaScript Guide"
+permalink: "javascript-function-hoisting"
+---
+
+
+# JavaScript - Function Hoisting
+
+
+
+
+## Function Hoisting
+
+
+Thefunction hoistingin JavaScript is a default behavior in whichfunction declarationsare moved at the top of their local scope before execution of the code. So, you can call the function in its scope before it is declared. It's important to notice that only declaration is hoisted not the initialization. So the variables or functions should have been initialized before they are used.
+
+
+Similar to the function hoisting, the variable hoisting is also a default behavior in which the variable declarations are moved at the top of their local scope. We can use the function before it has been declared.
+
+
+Let's consider the following JavaScript code.
+
+
+```javascript
+add(5,10); // 15
+function add(x, y){
+   return x + y;
+}
+```
+
+
+In the above JavaScript code, the function add is called before it's declaration. This is possible because JavaScript interpreter hoists the function declaration to the top of the scope. So the above code is equivalent to
+
+
+```javascript
+function add(x, y){
+   return x + y;
+}
+add(5,10); // 15
+```
+
+
+The function hoisting only works withfunction declarationnot withfunction expression. So, if the function is defined using thefunction expression,., it is not hoisted at the top.
+
+
+```javascript
+add(5,10); // ReferenceError: Cannot access 'add' before initialization
+const add = function (x, y){
+   return x + y;
+}
+```
+
+
+Let's write some complete JavaScript examples of function hoisting.
+
+
+### Example: Function Hoisting
+
+
+In the example below, we have defined the printMessage() function, printing the position from where it is called.
+
+
+Also, we call the printMessage() function before and after the function definition. It prints the output without any error as the function is hoisted at the top of its scope.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      printMessage("Top");        
+      function printMessage(pos) {
+         document.getElementById("output").innerHTML += 
+         "The function is called from the " + pos + "<br/>";
+      }        
+      printMessage("Bottom");
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The function is called from the Top
+The function is called from the Bottom
+```
+
+
+### Example
+
+
+In the example below, we have defined the function inside the 'if' block. So, the function is hoisted at the top of the 'if' block, and you can execute the function only inside the 'if' block before its initialization.
+
+
+You can't access the function outside the 'if' block.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      // test("Top"); // Out of scope
+      if (1) {
+         test("Top"); // In the same scope
+         function test(pos) {
+            document.getElementById("output").innerHTML += 
+            "The function is called from the " + pos + "<br/>";
+         }
+         test("Bottom"); // In the same scope
+      }
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The function is called from the Top
+The function is called from the Bottom
+```
+
+
+The hoisting is very important behavior in JavaScript. But it is always advisable to declare the function or variable at the beginning of the code. Since JavaScript always interprets the code in sequence of declaration, then initialization and then usage.
+
+
+## JavaScript Variable Hoisting
+
+
+The hoisting behaviors of JavaScript move the variables declaration to the top of the variable's scope by default. In JavaScript, variables declared with the 'var' keyword are hoisted at the top of its scope, but variables declared with the 'let' and 'const' keyword is not hoisted at the top.
+
+
+For example,
+
+
+```javascript
+var x = y;
+var y;
+```
+
+
+The above code is similar to the below code, as the variables declaration is hoisted at the top.
+
+
+```javascript
+var y;
+var x = y;
+```
+
+
+Let's understand the variable hoisting by following examples.
+
+
+### Example: Variable Hoisting
+
+
+In the example below, we have initialized the variable y, printed its value in the output, and declared it at the end. The below code prints a value without any error, as variable y is hoisted at the top in the global scope.
+
+
+```html
+<html>
+<head>
+   <title> JavaScript - Variable Hoisting </title>
+</head>
+<body>
+   p id = "output" 
+   <script>
+      y = 10;
+      document.getElementById("output").innerHTML = 
+	  "The value of the y is : " + y;
+      var y;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The value of the y is : 10
+```
+
+
+### Example: Variable Hoisting with Function
+
+
+In the example below, we have defined the printNum() function. In the printNum() function, we have initialized the variable y, printed its value, and declared it afterward.
+
+
+The variable y is hoisted at the top of the function so you can access it before its declaration, but you can't access it outside the function.
+
+
+```html
+<html>
+<head>
+   <title> JavaScript - Variable Hoisting with function </title>
+</head>
+<body>
+   p id = "output" 
+   <script>
+      const output = document.getElementById("output");
+      function printNum() {
+         y = 20;
+         output.innerHTML += "The value of the variable y is : " + y;
+         var y; // Function scope
+      }
+      printNum();
+      // Variable Y can't be accessible here
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The value of the variable y is : 20
+```
+
+
+However, variable initialization is not hoisted at the top of the block.
+
+
+### Example: variable initialization is not hoisted
+
+
+The example below demonstrates that the variable is hoisted at the top, but the variable initialization is not. Here, we print the variable x without initialization of it. So, it prints the 'undefined' in the output.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      var x;
+      document.getElementById("output").innerHTML = "x is -> " + x;
+      x = 10;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+x is -> undefined
+```
+
+
+### Example: Hoisting with let and const keywords
+
+
+The below example demonstrates that the variable declared with the 'let' and 'const' keywords are not hoisted at the top. So, you always need to define it before using it.
+
+
+We used the 'trycatch' block to handle the error. In the output, users can observe the error the below code gives when we access the variable declared with the 'let' keyword.
+
+
+```html
+<html>
+<head>
+   <title> Hoisting with let and const </title>
+</head>
+<body>
+   p id = "output" 
+   <script>
+      const output = document.getElementById("output");
+      try {
+         x = 10;
+         output.innerHTML += "The value of x is -> " + x;
+         let x;
+      }catch (error) {
+         output.innerHTML += error.message;
+      }
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Cannot access 'x' before initialization
+```
+

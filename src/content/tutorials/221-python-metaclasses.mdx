@@ -1,0 +1,217 @@
+---
+title: "PYTHON - Metaclasses"
+description: "Learn PYTHON - Metaclasses with clear explanation, code examples, and practical guide."
+category: "python"
+order: 2210
+group: "Python Advanced Concepts"
+seoTitle: "PYTHON - Metaclasses — CodesCompiler PYTHON Guide"
+permalink: "python-metaclasses"
+---
+
+
+# Python - Metaclasses
+
+
+
+
+Metaclassesare a powerful feature in Python that allow you to customize class creation. By using metaclasses, you can add specific behaviors, attributes, and methods to classes, and allowing you to create more flexible, efficient programs. This classes provides the ability to work withmetaprogrammingin Python.
+
+
+Metaclassesare anOOP conceptpresent in all python code by default. Python provides the functionality to create custom metaclasses by using the keywordtype. Type is a metaclass whose instances are classes. Any class created in python is an instance oftypemetaclass.
+
+
+## Creating Metaclasses in Python
+
+
+A metaclass is a class of a class that defines how a class behaves. Every class in Python is an instance of its metaclass. By default, Python usestype()functionto construct the metaclasses. However, you can define your own metaclass to customize class creation and behavior.
+
+
+When defining a class, if no base classes or metaclass are explicitly specified, then Python usestype()to construct the class. Then its body is executed in a new namespace, resulting class name is locally linked to the output oftype(name, bases, namespace).
+
+
+### Example
+
+
+Let's observe the result of creating a class object without specifying specific bases or a metaclass
+
+
+```python
+class Demo:
+   pass
+   
+obj = Demo()
+
+print(obj)
+```
+
+
+Output
+
+
+On executing the above program, you will get the following results −
+
+
+```python
+<__main__.Demo object at 0x7fe78f43fe80>
+```
+
+
+This example demonstrates the basics of metaprogramming in Python using metaclasses. The above output indicates thatobjis an instance of theDemoclass, residing in memory location0x7fe78f43fe80. This is the default behavior of the Python metaclass, allowing us to easily inspect the details of the class.
+
+
+## Creating Metaclasses Dynamically
+
+
+Thetype()function in Python can be used to create classes metaclasses dynamically.
+
+
+### Example
+
+
+In this example, DemoClass will created using type() function, and an instance of this class is also created and displayed.
+
+
+```python
+# Creating a class dynamically using type()
+DemoClass = type('DemoClass', (), {})
+obj = DemoClass()
+print(obj)
+```
+
+
+Output
+
+
+Upon executing the above program, you will get the following results −
+
+
+```python
+<__main__.DemoClass object at 0x7f9ff6af3ee0>
+```
+
+
+### Example
+
+
+Here is another example ofcreating a Metaclass with inheritancewhich can be done by inheriting one from another class usingtype()function.
+
+
+```python
+class Demo:
+   pass
+   
+Demo2 = type('Demo2', (Demo,), dict(attribute=10))
+obj = Demo2()
+
+print(obj.attribute)
+print(obj.__class__)
+print(obj.__class__.__bases__)
+```
+
+
+Output
+
+
+Following is the output −
+
+
+```python
+10
+<class '__main__.Demo2'>
+(<class '__main__.Demo'>,)
+```
+
+
+## Customizing Metaclass Creation
+
+
+In Python, you can customize how classes are created and initialized by defining your own metaclass. This customization is useful for various metaprogramming tasks, such as adding specific behavior to all instances of a class or enforcing certain patterns across multiple classes.
+
+
+Customizing the classes can be done by overriding methods in the metaclass, specifically__new__and__init__.
+
+
+### Example
+
+
+Let's see the example of demonstrating how we can customize class creation using the__new__method of a metaclass in python.
+
+
+```python
+# Define a custom metaclass
+class MyMetaClass(type):
+   def __new__(cls, name, bases, dct):
+      dct['version'] = 1.0
+        
+      # Modify the class name
+      name = 'Custom' + name
+        
+      return super().__new__(cls, name, bases, dct)
+
+# MetaClass acts as a template for the custom metaclass
+class Demo(metaclass=MyMetaClass):
+   pass
+
+# Instantiate the class
+obj = Demo()
+
+# Print the class name and version attribute
+print("Class Name:", type(obj).__name__)
+print("Version:", obj.version)
+```
+
+
+Output
+
+
+While executing above code, you will get the following results −
+
+
+```python
+Class Name: CustomDemo
+Version: 1.0
+```
+
+
+### Example
+
+
+Here is another example that demonstrates how to customize the metaclass using the__init__in Python.
+
+
+```python
+# Define a custom metaclass
+class 2yCreating MetaClass(type):
+   def __init__(cls, name, bases, dct):
+      print('Initializing class', name)
+        
+      # Add a class-level attribute
+      cls.version= 10
+      
+      super().__init__(name, bases, dct)
+
+# Define a class using the custom metaclass
+class MyClass(metaclass=MyMetaClass):
+   def __init__(self, value):
+      self.value = value
+    
+   def display(self):
+      print(f"Value: {self.value}, Version: {self.__class__.version}")
+
+# Instantiate the class and demonstrate its usage
+obj = MyClass(42)
+obj.display()
+```
+
+
+Output
+
+
+While executing above code, you will get the following results −
+
+
+```python
+Initializing class MyClass
+Value: 42, Version: 10
+```
+

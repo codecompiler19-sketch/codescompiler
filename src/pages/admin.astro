@@ -8,6 +8,35 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>CodesCompiler CMS</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script is:inline>
+    // Prevent automatic page reloads (e.g. from Vite dev server HMR when files are saved) on the Admin Panel
+    if (typeof Location !== 'undefined' && Location.prototype && !Location.prototype._origReload) {
+      Location.prototype._origReload = Location.prototype.reload;
+      Location.prototype.reload = function(...args) {
+        if (window.isBatchUploading || window.__preventAdminReload) {
+          console.warn('[Admin] Suppressed automatic page reload during file upload / admin session.');
+          return;
+        }
+        return this._origReload(...args);
+      };
+    }
+    window.__preventAdminReload = true;
+    if (import.meta.hot) {
+      import.meta.hot.on('vite:beforeFullReload', (payload) => {
+        if (window.isBatchUploading || window.__preventAdminReload) {
+          console.warn('[Admin] Vetoed Vite HMR full reload on admin panel');
+          payload.veto = true;
+        }
+      });
+    }
+    window.addEventListener('beforeunload', function (e) {
+      if (window.isBatchUploading) {
+        e.preventDefault();
+        e.returnValue = 'File upload in progress. Are you sure you want to leave?';
+        return e.returnValue;
+      }
+    });
+  </script>
   <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
   <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
   <style is:global>

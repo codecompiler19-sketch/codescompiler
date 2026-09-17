@@ -1,0 +1,379 @@
+---
+title: "PYTHON - Multithreading"
+description: "Learn PYTHON - Multithreading with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1680
+group: "Python Multithreading"
+seoTitle: "PYTHON - Multithreading — CodesCompiler PYTHON Guide"
+permalink: "python-multithreading"
+---
+
+
+# Python - Multithreading
+
+
+
+
+In Python, multithreading allows you to run multiple threads concurrently within a single process, which is also known as thread-based parallelism. This means a program can perform multiple tasks at the same time, enhancing its efficiency and responsiveness.
+
+
+Multithreading in Python is especially useful for multiple I/O-bound operations, rather than for tasks that require heavy computation.
+
+
+Generally, a computer program sequentially executes the instructions, from start to the end. Whereas, Multithreading divides the main task into more than one sub-task and executes them in an overlapping manner.
+
+
+## Comparison with Processes
+
+
+An operating system is capable of handling multiple processes concurrently. It allocates a separate memory space to each process so that one process cannot access or write anything in other's space.
+
+
+On the other hand, a thread can be considered a lightweight sub-process in a single program that shares the memory space allocated to it, facilitating easier communication and data sharing. As they are lightweight and do not require much memory overhead; they are cheaper than processes.
+
+
+A process always starts with a single thread (main thread). As and when required, a new thread can be started and sub task is delegated to it. Now the two threads are working in an overlapping manner. When the task assigned to the secondary thread is over, it merges with the main thread.
+
+
+A thread has a beginning, an execution sequence, and a conclusion. It has an instruction pointer that keeps track of where it is currently running within its context.
+
+
+
+- It can be pre-empted (interrupted)
+- It can temporarily be put on hold (also known as sleeping) while other threads are running - this is called yielding.
+
+
+
+## Thread Handling Modules in Python
+
+
+Python's standard library provides two main modules for managing threads:_threadandthreading.
+
+
+### The _thread Module
+
+
+The _thread module, also known as the low-level thread module, has been a part of Python's standard library since version 2. It offers a basic API for thread management, supporting concurrent execution of threads within a shared global data space. The module includes simple locks (mutexes) for synchronization purposes.
+
+
+### The threading Module
+
+
+The threading module, introduced in Python 2.4, builds upon _thread to provide a higher-level and more comprehensive threading API. It offers powerful tools for managing threads, making it easier to work with threads in Python applications.
+
+
+Key Features of the threading Module
+
+
+The threading module exposes all the methods of the thread module and provides some additional methods −
+
+
+
+- threading.activeCount()  Returns the number of thread objects that are active.
+- threading.currentThread()  Returns the number of thread objects in the caller's thread control.
+- threading.enumerate()  Returns a list of all thread objects that are currently active.
+
+
+
+In addition to the methods, the threading module has the Thread class that implements threading. The methods provided by the Thread class are as follows −
+
+
+
+- run()  The run() method is the entry point for a thread.
+- start()  The start() method starts a thread by calling the run method.
+- join([time])  The join() waits for threads to terminate.
+- isAlive()  The isAlive() method checks whether a thread is still executing.
+- getName()  The getName() method returns the name of a thread.
+- setName()  The setName() method sets the name of a thread.
+
+
+
+## Starting a New Thread
+
+
+To create and start a new thread in Python, you can use either the low-level_threadmodule or the higher-levelthreadingmodule. The threading module is generally recommended due to its additional features and ease of use. Below, you can see both approaches.
+
+
+### Starting a New Thread Using the _thread Module
+
+
+Thestart_new_thread()method of the_threadmodule provides a basic way to create and start new threads. This method provides a fast and efficient way to create new threads in both Linux and Windows. Following is the syntax of the method −
+
+
+```python
+thread.start_new_thread(function, args[, kwargs] )
+```
+
+
+This method call returns immediately, and the new thread starts executing the specified function with the given arguments. When the function returns, the thread terminates.
+
+
+Example
+
+
+This example demonstrates how to use the_threadmodule to create and run threads. Each thread runs the print_name function with different arguments. The time.sleep(0.5) call ensures that the main program waits for the threads to complete their execution before exiting.
+
+
+```python
+import _thread
+import time
+
+def print_name(name, *arg):
+   print(name, *arg)
+
+name="Tutorialspoint..."
+_thread.start_new_thread(print_name, (name, 1))
+_thread.start_new_thread(print_name, (name, 1, 2))
+
+time.sleep(0.5)
+```
+
+
+When the above code is  executed, it produces the following result −
+
+
+```python
+Tutorialspoint... 1
+Tutorialspoint... 1 2
+```
+
+
+Although it is very effective for low-level threading, but the _thread module is limited compared to thethreadingmodule, which offers more features and higher-level thread management.
+
+
+### Starting a New Thread Using theThreadingModule
+
+
+Thethreadingmodule provides theThreadclass, which is used to create and manage threads.
+
+
+Here are a few steps to start a new thread using the threading module −
+
+
+
+- Create a function that you want the thread to execute.
+- Then create a Thread object using theThreadclass by passing the target function and its arguments.
+- Call the start method on the Thread object to begin execution.
+- Optionally, call the join method to wait for the thread to complete before proceeding.
+
+
+
+Example
+
+
+The following example demonstrates how to create and start threads using the threading module. It runs a function print_name that prints a name along with some arguments. This example creates two threads, starts them using the start() method, and waits for them to complete using thejoinmethod.
+
+
+```python
+import threading
+import time
+
+def print_name(name, *args):
+    print(name, *args)
+
+name = "Tutorialspoint..."
+
+# Create and start threads
+thread1 = threading.Thread(target=print_name, args=(name, 1))
+thread2 = threading.Thread(target=print_name, args=(name, 1, 2))
+
+thread1.start()
+thread2.start()
+
+# Wait for threads to complete
+thread1.join()
+thread2.join()
+
+print("Threads are finished...exiting")
+```
+
+
+When the above code is  executed, it produces the following result −
+
+
+```python
+Tutorialspoint... 1
+Tutorialspoint... 1 2
+Threads are finished...exiting
+```
+
+
+## Synchronizing Threads
+
+
+The threading module provided with Python includes a simple-to-implement locking mechanism that allows you to synchronize threads. A new lock is created by calling theLock()method, which returns the new lock.
+
+
+Theacquire(blocking)method of the new lock object is used to force threads to run synchronously. The optionalblockingparameter enables you to control whether the thread waits to acquire the lock.
+
+
+Ifblockingis set to 0, the thread returns immediately with a 0 value if the lock cannot be acquired and with a 1 if the lock was acquired. If blocking is set to 1, the thread blocks and wait for the lock to be released.
+
+
+Therelease()method of the new lock object is used to release the lock when it is no longer required.
+
+
+### Example
+
+
+```python
+import threading
+import time
+
+class myThread (threading.Thread):
+   def __init__(self, threadID, name, counter):
+      threading.Thread.__init__(self)
+      self.threadID = threadID
+      self.name = name
+      self.counter = counter
+   def run(self):
+      print ("Starting " + self.name)
+      # Get lock to synchronize threads
+      threadLock.acquire()
+      print_time(self.name, self.counter, 3)
+      # Free lock to release next thread
+      threadLock.release()
+
+def print_time(threadName, delay, counter):
+   while counter:
+      time.sleep(delay)
+      print ("%s: %s" % (threadName, time.ctime(time.time())))
+      counter -= 1
+
+threadLock = threading.Lock()
+threads = []
+
+# Create new threads
+thread1 = myThread(1, "Thread-1", 1)
+thread2 = myThread(2, "Thread-2", 2)
+
+# Start new Threads
+thread1.start()
+thread2.start()
+
+# Add threads to thread list
+threads.append(thread1)
+threads.append(thread2)
+
+# Wait for all threads to complete
+for t in threads:
+    t.join()
+print ("Exiting Main Thread")
+```
+
+
+When the above code is  executed, it produces the following result −
+
+
+```python
+Starting Thread-1
+Starting Thread-2
+Thread-1: Thu Mar 21 09:11:28 2013
+Thread-1: Thu Mar 21 09:11:29 2013
+Thread-1: Thu Mar 21 09:11:30 2013
+Thread-2: Thu Mar 21 09:11:32 2013
+Thread-2: Thu Mar 21 09:11:34 2013
+Thread-2: Thu Mar 21 09:11:36 2013
+Exiting Main Thread
+```
+
+
+## Multithreaded Priority Queue
+
+
+TheQueuemodule allows you to create a new queue object that can hold a specific number of items. There are following methods to control the Queue −
+
+
+
+- get()− The get() removes and returns an item from the queue.
+- put()− The put adds item to a queue.
+- qsize()− The qsize() returns the number of items that are currently in the queue.
+- empty()− The empty( ) returns True if queue is empty; otherwise, False.
+- full()− the full() returns True if queue is full; otherwise, False.
+
+
+
+### Example
+
+
+```python
+import queue
+import threading
+import time
+
+exitFlag = 0
+
+class myThread (threading.Thread):
+   def __init__(self, threadID, name, q):
+      threading.Thread.__init__(self)
+      self.threadID = threadID
+      self.name = name
+      self.q = q
+   def run(self):
+      print ("Starting " + self.name)
+      process_data(self.name, self.q)
+      print ("Exiting " + self.name)
+
+def process_data(threadName, q):
+   while not exitFlag:
+      queueLock.acquire()
+      if not workQueue.empty():
+         data = q.get()
+         queueLock.release()
+         print ("%s processing %s" % (threadName, data))
+      else:
+         queueLock.release()
+         time.sleep(1)
+
+threadList = ["Thread-1", "Thread-2", "Thread-3"]
+nameList = ["One", "Two", "Three", "Four", "Five"]
+queueLock = threading.Lock()
+workQueue = queue.Queue(10)
+threads = []
+threadID = 1
+
+# Create new threads
+for tName in threadList:
+   thread = myThread(threadID, tName, workQueue)
+   thread.start()
+   threads.append(thread)
+   threadID += 1
+
+# Fill the queue
+queueLock.acquire()
+for word in nameList:
+   workQueue.put(word)
+queueLock.release()
+
+# Wait for queue to empty
+while not workQueue.empty():
+   pass
+
+# Notify threads it's time to exit
+exitFlag = 1
+
+# Wait for all threads to complete
+for t in threads:
+   t.join()
+print ("Exiting Main Thread")
+```
+
+
+When the above code is  executed, it produces the following result −
+
+
+```python
+Starting Thread-1
+Starting Thread-2
+Starting Thread-3
+Thread-1 processing One
+Thread-2 processing Two
+Thread-3 processing Three
+Thread-1 processing Four
+Thread-2 processing Five
+Exiting Thread-3
+Exiting Thread-1
+Exiting Thread-2
+Exiting Main Thread
+```
+

@@ -1,0 +1,237 @@
+---
+title: "PYTHON - Multilevel Inheritance"
+description: "Learn PYTHON - Multilevel Inheritance with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1380
+group: "Object Oriented Programming"
+seoTitle: "PYTHON - Multilevel Inheritance — CodesCompiler PYTHON Guide"
+permalink: "python-multilevel-inheritance"
+---
+
+
+# Multi Level Inheritance in Python
+
+
+
+
+Inheritanceis a feature in object-oriented programming through which a class can inherit attributes and methods from another class. In Python, you can implement different types of inheritance, such as single inheritance, multiple inheritance, and multilevel inheritance. This chapter covers how to implementmultilevel inheritancein Python.
+
+
+## Multilevel Inheritance in Python
+
+
+Multilevel inheritanceis a type of inheritance that happens hierarchically such that a derived class inherits from another derived class. Meaning, a class is derived from a class which is also derived from another class. This forms a chain of inheritance.
+
+
+The class at the top of the chain is called thebase classorparent class, the class in the middle is called thederived classorchild class, and the class at the bottom of the chain is called thesub-derived classorsub-child class.
+
+
+The following illustrations depicts the concept of multilevel inheritance −
+
+
+### Example of Multilevel Inheritance in Python
+
+
+Let's look at an example to understand how multilevel inheritance works in Python −
+
+
+```python
+# Base class
+
+class Network:
+
+    def connectivity(self):
+
+        return "Network connects"
+
+
+
+# Derived class
+
+class Network_5G(Network):
+
+    def fast_connectivity(self):
+
+        return "5G Network provides superfast connectivity"
+
+
+
+# Sub-derived class
+
+class Network_5G_Airtel(Network_5G):
+
+    def fast_and_stable_connectivity(self):
+
+        return "Airtel 5G network is fast and remains stable"    
+
+
+
+# Creating an instance of Network_5G_Airtel
+
+network_object = Network_5G_Airtel()
+
+print(network_object.connectivity())        # Inherited from Network class
+
+print(network_object.fast_connectivity())   # Inherited from Network_5G class
+
+print(network_object.fast_and_stable_connectivity())   # Inherited from Network_5G_Airtel class
+```
+
+
+In this code, theNetwork_5G_Airtelclass inherits the functions and attributes from theNetwork_5Gclass, which in turn inherits from theNetworkclass. So theNetwork_5G_Airtelwill have access to methods such asconnectivity()(fromNetwork),fast_connectivity()(fromNetwork_5G), andfast_and_stable_connectivity()(fromNetwork_5G_Airtelitself).
+
+
+When you run the code, itsoutputwill be −
+
+
+```python
+Network connects
+
+5G Network provides superfast connectivity
+
+Airtel 5G network is fast and remains stable
+```
+
+
+## MRO for Multilevel Inheritance in Python
+
+
+Let's consider a scenario from the above example in which theNetwork_5Gclass also have a method namedconnectivity(). Now, What will happen if we call theconnectivity()method from the instance of theNetwork_5G_Airtelclass?. This is where theMethod Resolution Order (MRO)comes into play.
+
+
+Let's modify the previous example to include aconnectivity()method in theNetwork_5Gclass −
+
+
+```python
+# Base class
+
+class Network:
+
+    def connectivity(self):
+
+        return "Network connects"
+
+
+
+# Derived class
+
+class Network_5G(Network):
+
+    def fast_connectivity(self):
+
+        return "5G Network provides superfast connectivity"
+
+
+
+    def connectivity(self):
+
+        return "5G Network connects faster"
+
+
+
+# Sub-derived class
+
+class Network_5G_Airtel(Network_5G):
+
+    def fast_and_stable_connectivity(self):
+
+        return "Airtel 5G network is fast and remains stable"
+
+
+
+# Creating an instance of Network_5G_Airtel
+
+obj1 = Network_5G_Airtel()
+
+print(obj1.connectivity())  # Inherited from Network class
+```
+
+
+Theoutputof the above code will be −
+
+
+```python
+5G Network connects faster
+```
+
+
+This shows that theconnectivity()method from theNetwork_5Gclass is called instead of the one from theNetworkclass. This is because the method resolution order (MRO) in Python follows a depth-first approach, meaning it will first look for the method in the current class, then in the parent class, and so on up the hierarchy.
+
+
+To know the method resolution order of any class, you can use themro()method. Here's how you can do it:
+
+
+```python
+print(Network_5G_Airtel.mro())
+
+
+
+Output:
+
+[<class '__main__.Network_5G_Airtel'>, <class '__main__.Network_5G'>, 
+
+<class '__main__.Network'>, <class 'object'>]
+```
+
+
+## Overriding Methods in Multilevel Inheritance
+
+
+In multilevel inheritance, a derived class can override methods of its parent class. Meaning, if a method is defined in both the parent class and the child class, the method in the child class will override the one in the parent class.
+
+
+Here's anexampleto illustrate method overriding in multilevel inheritance −
+
+
+```python
+# Base class
+
+class Vehicle:
+
+    def start(self):
+
+        return "Vehicle starts"
+
+
+
+# Derived class
+
+class Car(Vehicle):
+
+    def start(self):
+
+        return "Car starts"
+
+
+
+# Sub-derived class
+
+class SportsCar(Car):
+
+    def start(self):
+
+        return "Sports Car starts"
+
+
+
+# Creating an instance of SportsCar
+
+sports_car = SportsCar()
+
+print(sports_car.start())  # Calls the start method of SportsCar class
+```
+
+
+Theoutputof the above code will be −
+
+
+```python
+Sports Car starts
+```
+
+
+## Conclusion
+
+
+To conclude, multilevel inheritance is a type of inheritance where a class is derived from another derived class such that a chain of inheritance is formed. The method resolution order (MRO) will determine which method is called when there are methods with the same name in the inheritance chain. Method overriding can be performed to override the methods of the parent class in the child class.
+

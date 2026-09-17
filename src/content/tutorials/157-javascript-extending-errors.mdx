@@ -1,0 +1,251 @@
+---
+title: "JavaScript - Extending Errors"
+description: "Learn JavaScript - Extending Errors with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1570
+group: "JavaScript Error Handling"
+seoTitle: "JavaScript - Extending Errors — CodesCompiler JavaScript Guide"
+permalink: "javascript-extending-errors"
+---
+
+
+# JavaScript - Extending Errors
+
+
+
+
+Thecustomerrors in JavaScript are errors that you create yourself, as opposed to the built-in errors that JavaScript throws. You can create custom errors to handle specific types of errors that may occur in your code.
+
+
+To create acustom error, you can use the Error constructor. The Error constructor takes a string as its argument, which will be the message of the error.
+
+
+## Extending the Error Class: Creating Custom Errors
+
+
+The best way to create custom errors is by creating a new class and extending it using the 'extends' keyword. It uses the concept of inheritance, and the custom error class inherits the properties of the Error class.
+
+
+In the constructor() function, you can initialize the properties of the custom error class.
+
+
+### Syntax
+
+
+You can follow the syntax below to create custom errors by extending the Error class.
+
+
+```javascript
+class customError extends Error {
+   constructor(message) {
+      super(message)
+      // Initialize properties
+   }
+}
+```
+
+
+In the above code, we call the parent class constructor using the super() method.
+
+
+You can also initialize the properties of the customError class in the constructor function.
+
+
+### Example
+
+
+In the code below, we take the input from the user. When a user clicks the check age button, it calls the checkAge() function.
+
+
+We have defined the ageError class in JavaScript code and extended it with the Error class. In the ageError class, we have added the constructor() function to initialize the properties.
+
+
+In the constructor() function, we used the super() method to initialize the message property of the Error class. Also, we have initialized the 'name' and 'age' properties in the constructor function.
+
+
+In the checkAge() function, we throw the error if the age is less than 18, and in the catch&#123;&#125; block, we print the error message and age.
+
+
+```html
+<html>
+<body>
+   pEnter your age: <input type = "number" id = "age" /> 
+   <button onclick = "checkAge()"> Check Age </button>
+   p id = "demo" 
+   <script>
+      const output = document.getElementById("demo");
+      class ageError extends Error {
+         constructor(message, age) {
+            super(message);
+            this.name = "ageError";
+            this.age = age // Custom property
+         }
+      }
+      function checkAge() {
+         const ageValue = document.getElementById('age').value;
+         try {
+            if (ageValue < 18) { // Throw error when age is less than 18
+               throw new ageError("You are too young", ageValue);
+            } else {
+               output.innerHTML = "You are old enough";
+            }
+         } catch (e) {
+            output.innerHTML = "Error: " + e.message + ". <br>";
+            output.innerHTML += "Age: " + e.age + "<br>";
+         }
+      }
+   </script>
+</body>
+</html>
+```
+
+
+### Output
+
+
+```javascript
+Enter your age: 5
+Check Age
+Error: You are too young.
+Age: 5
+```
+
+
+If you want to create multiple new classes for the custom errors only to provide the clarified error type and message and don't want to change the properties of the Error class, you can use the syntax below.
+
+
+```javascript
+class InputError extends Error {};
+```
+
+
+Let's learn it via the example below.
+
+
+### Example
+
+
+In the code below, we have created 3 different custom classes and extended them with the Error class to create custom errors.
+
+
+In the try&#123;&#125; block, we throw the StringError.
+
+
+In the catch&#123;&#125; block, we used the instanceOf operator to check the type of the error object and print the error message accordingly.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+      const output = document.getElementById("demo");
+      class StringError extends Error { };
+      class NumberError extends Error { };
+      class BooleanError extends Error { };
+      try {
+         throw new StringError("This is a string error");
+      } catch (e) {
+         if (e instanceof StringError) {
+            output.innerHTML = "String Error";
+         } else if (e instanceof NumberError) {
+            output.innerHTML = "Number Error";
+         } else if (e instanceof BooleanError) {
+            output.innerHTML = "Boolean Error";
+         } else {
+            output.innerHTML = "Unknown Error";
+         }
+      }
+   </script>
+</body>
+</html>
+```
+
+
+### Output
+
+
+```javascript
+String Error
+```
+
+
+## Multilevel Inheritance
+
+
+You can create a general custom error by extending it with the Error class. After that, you can extend the custom error class to create a more generalized error class.
+
+
+Let's understand it via the example below.
+
+
+### Example
+
+
+In the code below, we have defined the 'NotFound' class and extended it using the Error class.
+
+
+After that, we defined the 'propertyNotFound' and 'valueNotFound' classes and extended them with the 'NotFound' class. Here, we have done the multilevel inheritance.
+
+
+In the try block, we throw a valueNotFound error if the array doesn't contain 6.
+
+
+In the catch block, we print the error.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      const output = document.getElementById("output");
+      class NotFound extends Error {
+         constructor(message) {
+            super(message);
+            this.name = "NotFound";
+         }
+      }
+      
+      // Further Inheritance
+      class propertyNotFound extends NotFound {
+         constructor(message) {
+            super(message);
+            this.name = "propertyNotFound";
+         }
+      }
+      
+      // Further Inheritance
+      class ElementNotFound extends NotFound {
+         constructor(message) {
+            super(message);
+            this.name = "ElementNotFound";
+         }
+      }
+
+      try {
+         let arr = [1, 2, 3, 4, 5];
+         
+         // Throw an error if array doesn't contain 6
+         if (!arr.includes(6)) {
+            throw new propertyNotFound("Array doesn't contain 6");
+         }
+      } catch (e) {
+         output.innerHTML = e.name + ": " + e.message;
+      }
+   </script>
+</body>
+</html>
+```
+
+
+### Output
+
+
+```javascript
+propertyNotFound: Array doesn't contain 6
+```
+
+
+You can also throw the propertyNotFound error if any object doesn't contain the particular property.
+

@@ -1,0 +1,281 @@
+---
+title: "JavaScript - Object Constructors"
+description: "Learn JavaScript - Object Constructors with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 870
+group: "Object Oriented JavaScript"
+seoTitle: "JavaScript - Object Constructors — CodesCompiler JavaScript Guide"
+permalink: "javascript-object-constructors"
+---
+
+
+# JavaScript - Object Constructors
+
+
+
+
+## Object Constructors
+
+
+Anobject constructorin JavaScript is a function that creates an instance of a class, which is typically called anobject. A constructor is called when you declare an object using the new keyword. The purpose of a constructor is to create an object and set values if there are any object properties present.
+
+
+There are two ways to create a template for the object in JavaScript - using a class and using an object constructor.
+
+
+Whenever you need to create multiple objects with the same syntax, you require a template for the object. For example, you are managing the car inventory. So, it is not a good idea to create a new object every time using the object literal. In such cases, you need to use the object constructors.
+
+
+The main benefit of the object constructors is that you can reuse the code.
+
+
+### Syntax
+
+
+You can follow the syntax below to use the object constructor to create an object.
+
+
+```javascript
+function Funcname(p1, p2, ... , pN) {
+   this.prop1 = p1;
+}
+const obj = new Funcname(args);
+```
+
+
+In the above syntax, Funcname() is a constructor function, and you can replace any valid identifier with the Funcname.
+
+
+A p1, p2, , and pN are parameters you can use inside the function body. You need to pass arguments to the constructor while creating the object.
+
+
+The 'this' keyword represents the function context you are using. Here, the 'this' keyword refers to the current instance of the object.
+
+
+To create an object, you can use the function constructor with a 'new' keyword.
+
+
+### Example: Creating an object using a constructor function
+
+
+In the example below, we have created a Tree() function. In the function body, we initialize the name and age properties.
+
+
+After that, we use the function name with a 'new' keyword to create an object of the Tree() constructor.
+
+
+```html
+<html>
+<body>
+  p id = "output" 
+  <script>
+  
+    function Tree() {
+      this.name = "palm";
+      this.age = 5;
+    }
+    const tree1 = new Tree();
+    document.getElementById("output").innerHTML = 
+    "name = " + tree1.name + ", age = " + tree1.age;
+    
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+name = palm, age = 5
+```
+
+
+### Example: Constructor function with parameters
+
+
+In the example below, the Bike() function takes three parameters. In the function body, we initialize the properties using the parameters.
+
+
+After that, we created bike1 and bike2 objects with different values using the Bike() constructor. In the output, you can observe the object property values.
+
+
+```html
+<html>
+<body>
+  p id = "output1"The bike1 object is : 
+  p id = "output2"The bike2 object is :  
+  <script>
+
+    function Bike(name, speed, gear) {
+      this.name = name;
+      this.speed = speed;
+      this.gear = gear;
+    }
+    
+    const bike1 = new Bike("Honda", 100, 4);
+    const bike2 = new Bike("Yamaha", 200, 6);
+    document.getElementById("output1").innerHTML += JSON.stringify(bike1);
+    document.getElementById("output2").innerHTML += JSON.stringify(bike2);
+    
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The bike1 object is : {"name":"Honda","speed":100,"gear":4}
+
+The bike2 object is : {"name":"Yamaha","speed":200,"gear":6}
+```
+
+
+In this way, you can use the object constructor to reuse the object syntax code and create multiple objects of the same type.
+
+
+## Adding a Property or Method to a Constructor
+
+
+You learned to add a property of method using the dot or square bracket notation into the object in the Objects chapter. But what if you want to add a property or method to the object constructor?
+
+
+The object constructor doesn't allow you to add the property or method after defining it. So, you always need to add the required properties and methods while defining it. Let's understand it via the example below.
+
+
+### Example
+
+
+The below example demonstrates adding methods and properties into the object constructor. We added the three properties and the getFullAddress() method in the houseAddress() constructor function.
+
+
+Also, we have executed the method by taking the object as a reference.
+
+
+```html
+<html>
+<body>
+  p id = "output1"The house object is  
+  p id = "output2"The full address of the house is  
+  <script>
+    function HouseAddress(no, street, city) {
+      // Adding properties
+      this.houseNo = no,
+      this.street = street,
+      this.city = city;
+      // Adding a method
+      this.getFullAddress = function () {
+        return this.houseNo + ", " + this.street + ", " + this.city;
+      };
+    }
+    const house = new HouseAddress(20, "Cooper Square", "New York");
+    document.getElementById("output1").innerHTML += JSON.stringify(house);
+    document.getElementById("output2").innerHTML += house.getFullAddress();
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The house object is {"houseNo":20,"street":"Cooper Square","city":"New York"}
+
+The full address of the house is 20, Cooper Square, New York
+```
+
+
+If you add the method or property as shown below. It will be added to the particular object but not to the constructor function.
+
+
+```javascript
+Obj.prop = 20;
+```
+
+
+Other objects created using the object constructor don't contain the prop property as it is added to the obj object only.
+
+
+## JavaScript Object Prototype
+
+
+In JavaScript, each object contains the prototype property by default, and the object constructor is also one kind of object. So, you can add properties or methods to the object prototype.
+
+
+### Syntax
+
+
+You can follow the syntax below to add properties or methods to the object constructor prototype.
+
+
+```javascript
+obj.prototype.name = value;
+```
+
+
+In the above syntax, 'obj' is an object constructor in which you need to add a property or method.
+
+
+The 'name' is a property or method name.
+
+
+For the property, you can replace a 'value' with an actual value; for the method, you can replace a 'value' with a function expression.
+
+
+### Example
+
+
+In the example below, we have added the BikeDetails() method to the prototype of the Bike() constructor.
+
+
+The BikDetails() method can be executed using any object of the Bike() constructor. However, when you print the bike1 and bike2 objects, it won't show you BikeDetails() method as it is added in the prototype.
+
+
+```html
+<html>
+<body>
+  p id = "output1"The bike1 details is: 
+  p id = "output2"The bike2 details is: 
+  <script>
+    function Bike(name, speed, gear) {
+      this.name = name;
+      this.speed = speed;
+      this.gear = gear;
+    }
+    Bike.prototype.BikeDetails = function () {
+      return this.name + ", " + this.speed + ", " + this.gear + "<br>";
+    };
+    const bike1 = new Bike("Honda", 100, 4);
+    const bike2 = new Bike("Yamaha", 200, 6);
+    document.getElementById("output1").innerHTML += bike1.BikeDetails();
+    document.getElementById("output2").innerHTML += bike2.BikeDetails();
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The bike1 details is: Honda, 100, 4
+
+The bike2 details is: Yamaha, 200, 6
+```
+
+
+## Built-in Object Constructors in JavaScript
+
+
+JavaScript contains a built-in constructor, which we have listed in the below table.
+
+
+Sr. No.ConstructorDescriptionExample1ArrayTo create an array.new Array()2StringTo create a string.new String("Hello")3NumberTo create a number.new Number(92)4BooleanTo create a boolean.new Boolean(true)5SetTo create a new set.new Set()6MapTo create a new map.new Map()7ObjectTo create a new object.new Object()8FunctionTo create a new function.new Function("x", "return x * x;")9DateTo create an instance of Date object.new Date()10RegExpTo create a new regular expression.new RegExp("\\d+")11ErrorTo create a new error.new Error("new error.")12SymbolTo create a symbol.Symbol("description")However, you can also use literal expressions to define the number, strings, boolean, etc., variables containing primitive values.
+

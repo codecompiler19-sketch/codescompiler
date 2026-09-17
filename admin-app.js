@@ -1,4 +1,15 @@
 // CodesCompiler Content Manager — WordPress-style CMS
+if (typeof Location !== 'undefined' && Location.prototype && !Location.prototype._origReload) {
+  Location.prototype._origReload = Location.prototype.reload;
+  Location.prototype.reload = function(...args) {
+    if (window.isBatchUploading || window.__preventAdminReload) {
+      console.warn('[Admin] Suppressed automatic page reload during file upload.');
+      return;
+    }
+    return this._origReload(...args);
+  };
+}
+window.__preventAdminReload = true;
 const API='http://localhost:3001';
 let page='dashboard',stats={},tutorials=[],blogs=[],navItems=[],siteSettings={},pages=[],adsConfig={},trashBin=[],themeSettings={},stagedUploads={blog:[],tutorial:[],page:[],book:[]};
 let modalCb=null,confirmCb=null;
@@ -811,129 +822,135 @@ window.clearStagedUploads = function(type) {
 async function startSequentialUpload(type) {
   const files = stagedUploads[type] || [];
   if (!files.length) return;
+  window.isBatchUploading = true;
 
-  const btnSubmit = $('btn-submit-upload-' + type);
-  const btnCancel = $('btn-cancel-upload-' + type);
-  if (btnSubmit) { btnSubmit.disabled = true; btnSubmit.innerHTML = '⏳ Submitting &amp; Updating Pages...'; }
-  if (btnCancel) { btnCancel.style.display = 'none'; }
+  try {
+    const btnSubmit = $('btn-submit-upload-' + type);
+    const btnCancel = $('btn-cancel-upload-' + type);
+    if (btnSubmit) { btnSubmit.disabled = true; btnSubmit.innerHTML = '⏳ Submitting &amp; Updating Pages...'; }
+    if (btnCancel) { btnCancel.style.display = 'none'; }
 
-  const progressBar = $('progress-bar-container-' + type);
-  const progressText = $('progress-text-' + type);
-  const progressPercent = $('progress-percent-' + type);
-  const progressFill = $('progress-fill-' + type);
-  if (progressBar) progressBar.style.display = 'block';
+    const progressBar = $('progress-bar-container-' + type);
+    const progressText = $('progress-text-' + type);
+    const progressPercent = $('progress-percent-' + type);
+    const progressFill = $('progress-fill-' + type);
+    if (progressBar) progressBar.style.display = 'block';
 
-  const allowedExt = { blog: ['.mdx','.md'], tutorial: ['.mdx','.md'], page: ['.astro'], book: ['.json'] };
-  const apiMap    = { blog: '/api/blogs/save', tutorial: '/api/tutorials/save', page: '/api/pages/save', book: '/api/books/save' };
+    const allowedExt = { blog: ['.mdx','.md'], tutorial: ['.mdx','.md'], page: ['.astro'], book: ['.json'] };
+    const apiMap    = { blog: '/api/blogs/save', tutorial: '/api/tutorials/save', page: '/api/pages/save', book: '/api/books/save' };
 
-  let okCount = 0;
-  let failCount = 0;
-  const total = files.length;
-  const confirmationList = [];
+    let okCount = 0;
+    let failCount = 0;
+    const total = files.length;
+    const confirmationList = [];
 
-  for (let i = 0; i < total; i++) {
-    const file = files[i];
-    const itemText = $('staged-status-text-' + type + '-' + i);
-    const itemIcon = $('staged-status-icon-' + type + '-' + i);
-    const itemBadge = $('staged-status-badge-' + type + '-' + i);
-    const itemRow = $('staged-item-' + type + '-' + i);
+    for (let i = 0; i < total; i++) {
+      const file = files[i];
+      const itemText = $('staged-status-text-' + type + '-' + i);
+      const itemIcon = $('staged-status-icon-' + type + '-' + i);
+      const itemBadge = $('staged-status-badge-' + type + '-' + i);
+      const itemRow = $('staged-item-' + type + '-' + i);
 
-    const currentNum = i + 1;
-    const pct = Math.round((currentNum / total) * 100);
-    if (progressText) progressText.textContent = `Submitting page ${currentNum} of ${total}: ${file.name}`;
-    if (progressPercent) progressPercent.textContent = `${pct}%`;
-    if (progressFill) progressFill.style.width = `${pct}%`;
+      const currentNum = i + 1;
+      const pct = Math.round((currentNum / total) * 100);
+      if (progressText) progressText.textContent = `Submitting page ${currentNum} of ${total}: ${file.name}`;
+      if (progressPercent) progressPercent.textContent = `${pct}%`;
+      if (progressFill) progressFill.style.width = `${pct}%`;
 
-    if (itemRow) {
-      itemRow.style.background = '#f0f9ff';
-      itemRow.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-    }
-    if (itemIcon) itemIcon.textContent = '⏳';
-    if (itemBadge) itemBadge.innerHTML = '<span class="badge" style="background:#e0f2fe;color:#0369a1;">Submitting...</span>';
+      if (itemRow) {
+        itemRow.style.background = '#f0f9ff';
+        itemRow.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+      if (itemIcon) itemIcon.textContent = '⏳';
+      if (itemBadge) itemBadge.innerHTML = '<span class="badge" style="background:#e0f2fe;color:#0369a1;">Submitting...</span>';
 
-    const ext = '.' + file.name.split('.').pop().toLowerCase();
-    if (!allowedExt[type].includes(ext)) {
-      failCount++;
-      if (itemIcon) itemIcon.textContent = '❌';
-      if (itemText) { itemText.textContent = `Wrong file type. Expected: ${allowedExt[type].join(' or ')}`; itemText.style.color = '#b91c1c'; }
-      if (itemBadge) itemBadge.innerHTML = '<span class="badge" style="background:#fee2e2;color:#991b1b;">Failed</span>';
-      if (itemRow) itemRow.style.background = '#fff5f5';
-      confirmationList.push({ file: file.name, title: file.name, ok: false, error: 'Invalid file format' });
-      continue;
-    }
-
-    try {
-      const content = await file.text();
-      let extractedTitle = file.name;
-      const tm = content.match(/^title:\s*["']?([^"\n\r]+)["']?/m);
-      if (tm && tm[1]) extractedTitle = tm[1].trim();
-
-      const errs = validateContentFile(type, content, file.name);
-
-      if (errs.length) {
+      const ext = '.' + file.name.split('.').pop().toLowerCase();
+      if (!allowedExt[type].includes(ext)) {
         failCount++;
         if (itemIcon) itemIcon.textContent = '❌';
-        if (itemText) { itemText.textContent = 'Validation error: ' + errs.join(' · '); itemText.style.color = '#b91c1c'; }
-        if (itemBadge) itemBadge.innerHTML = '<span class="badge" style="background:#fee2e2;color:#991b1b;">Validation Error</span>';
+        if (itemText) { itemText.textContent = `Wrong file type. Expected: ${allowedExt[type].join(' or ')}`; itemText.style.color = '#b91c1c'; }
+        if (itemBadge) itemBadge.innerHTML = '<span class="badge" style="background:#fee2e2;color:#991b1b;">Failed</span>';
         if (itemRow) itemRow.style.background = '#fff5f5';
-        confirmationList.push({ file: file.name, title: extractedTitle, ok: false, error: errs.join(' · ') });
+        confirmationList.push({ file: file.name, title: file.name, ok: false, error: 'Invalid file format' });
         continue;
       }
 
-      const payload = { filename: file.name, content };
-      const r = await post(apiMap[type], payload);
+      try {
+        const rawContent = await file.text();
+        const content = autoEnrichContent(type, rawContent, file.name);
+        let extractedTitle = file.name;
+        const tm = content.match(/^title:\s*["']?([^"\n\r]+)["']?/m);
+        if (tm && tm[1]) extractedTitle = tm[1].trim();
 
-      if (r.ok !== false) {
-        okCount++;
-        if (itemIcon) itemIcon.textContent = '✅';
-        if (itemText) { itemText.textContent = 'Updation Confirmed & Published ✅ (' + extractedTitle + ')'; itemText.style.color = '#15803d'; }
-        if (itemBadge) itemBadge.innerHTML = '<span class="badge bpub">Confirmed ✅</span>';
-        if (itemRow) itemRow.style.background = '#f0fdf4';
-        confirmationList.push({ file: file.name, title: extractedTitle, ok: true });
-      } else {
+        const errs = validateContentFile(type, content, file.name);
+
+        if (errs.length) {
+          failCount++;
+          if (itemIcon) itemIcon.textContent = '❌';
+          if (itemText) { itemText.textContent = 'Validation error: ' + errs.join(' · '); itemText.style.color = '#b91c1c'; }
+          if (itemBadge) itemBadge.innerHTML = '<span class="badge" style="background:#fee2e2;color:#991b1b;">Validation Error</span>';
+          if (itemRow) itemRow.style.background = '#fff5f5';
+          confirmationList.push({ file: file.name, title: extractedTitle, ok: false, error: errs.join(' · ') });
+          continue;
+        }
+
+        const payload = { filename: file.name, content };
+        const r = await post(apiMap[type], payload);
+
+        if (r.ok !== false) {
+          okCount++;
+          if (itemIcon) itemIcon.textContent = '✅';
+          if (itemText) { itemText.textContent = 'Updation Confirmed & Published ✅ (' + extractedTitle + ')'; itemText.style.color = '#15803d'; }
+          if (itemBadge) itemBadge.innerHTML = '<span class="badge bpub">Confirmed ✅</span>';
+          if (itemRow) itemRow.style.background = '#f0fdf4';
+          confirmationList.push({ file: file.name, title: extractedTitle, ok: true });
+        } else {
+          failCount++;
+          if (itemIcon) itemIcon.textContent = '❌';
+          if (itemText) { itemText.textContent = r.error || 'Server save failed'; itemText.style.color = '#b91c1c'; }
+          if (itemBadge) itemBadge.innerHTML = '<span class="badge" style="background:#fee2e2;color:#991b1b;">Server Error</span>';
+          if (itemRow) itemRow.style.background = '#fff5f5';
+          confirmationList.push({ file: file.name, title: extractedTitle, ok: false, error: r.error || 'Server error' });
+        }
+      } catch (err) {
         failCount++;
         if (itemIcon) itemIcon.textContent = '❌';
-        if (itemText) { itemText.textContent = r.error || 'Server save failed'; itemText.style.color = '#b91c1c'; }
-        if (itemBadge) itemBadge.innerHTML = '<span class="badge" style="background:#fee2e2;color:#991b1b;">Server Error</span>';
+        if (itemText) { itemText.textContent = 'Read error: ' + err.message; itemText.style.color = '#b91c1c'; }
+        if (itemBadge) itemBadge.innerHTML = '<span class="badge" style="background:#fee2e2;color:#991b1b;">Read Error</span>';
         if (itemRow) itemRow.style.background = '#fff5f5';
-        confirmationList.push({ file: file.name, title: extractedTitle, ok: false, error: r.error || 'Server error' });
+        confirmationList.push({ file: file.name, title: file.name, ok: false, error: err.message });
       }
-    } catch (err) {
-      failCount++;
-      if (itemIcon) itemIcon.textContent = '❌';
-      if (itemText) { itemText.textContent = 'Read error: ' + err.message; itemText.style.color = '#b91c1c'; }
-      if (itemBadge) itemBadge.innerHTML = '<span class="badge" style="background:#fee2e2;color:#991b1b;">Read Error</span>';
-      if (itemRow) itemRow.style.background = '#fff5f5';
-      confirmationList.push({ file: file.name, title: file.name, ok: false, error: err.message });
+
+      await new Promise(res => setTimeout(res, 50));
     }
 
-    await new Promise(res => setTimeout(res, 50));
-  }
+    if (progressText) progressText.textContent = 'Completed! Updation confirmed for ' + okCount + ' of ' + total + ' pages.';
+    if (progressPercent) progressPercent.textContent = '100%';
+    if (progressFill) progressFill.style.width = '100%';
 
-  if (progressText) progressText.textContent = 'Completed! Updation confirmed for ' + okCount + ' of ' + total + ' pages.';
-  if (progressPercent) progressPercent.textContent = '100%';
-  if (progressFill) progressFill.style.width = '100%';
+    if (btnSubmit) {
+      btnSubmit.disabled = false;
+      btnSubmit.innerHTML = '✅ Updation Complete (' + okCount + ' Published, ' + failCount + ' Failed)';
+      btnSubmit.style.background = okCount > 0 ? '#15803d' : '#b91c1c';
+    }
 
-  if (btnSubmit) {
-    btnSubmit.disabled = false;
-    btnSubmit.innerHTML = '✅ Updation Complete (' + okCount + ' Published, ' + failCount + ' Failed)';
-    btnSubmit.style.background = okCount > 0 ? '#15803d' : '#b91c1c';
-  }
+    if (okCount > 0) {
+      await loadAll();
+      if (type === 'blog') applyBlogFilters();
+      else if (type === 'tutorial') applyTutFilters();
+    }
 
-  if (okCount > 0) {
-    await loadAll();
-    if (type === 'blog') applyBlogFilters();
-    else if (type === 'tutorial') applyTutFilters();
-  }
+    renderUploadConfirmationReport(type, confirmationList, okCount, failCount);
 
-  renderUploadConfirmationReport(type, confirmationList, okCount, failCount);
-
-  if (okCount > 0 && failCount === 0) {
-    toast('🎉 Updation Confirmed! All ' + okCount + ' pages published successfully.');
-  } else if (okCount > 0 && failCount > 0) {
-    toast('Updation Confirmed for ' + okCount + ' pages (' + failCount + ' failed).', false);
-  } else {
-    toast('Submission failed for all ' + failCount + ' files.', false);
+    if (okCount > 0 && failCount === 0) {
+      toast('🎉 Updation Confirmed! All ' + okCount + ' pages published successfully.');
+    } else if (okCount > 0 && failCount > 0) {
+      toast('Updation Confirmed for ' + okCount + ' pages (' + failCount + ' failed).', false);
+    } else {
+      toast('Submission failed for all ' + failCount + ' files.', false);
+    }
+  } finally {
+    window.isBatchUploading = false;
   }
 }
 
@@ -992,15 +1009,93 @@ function renderUploadConfirmationReport(type, confirmationList, okCount, failCou
   }
 }
 
+function autoEnrichContent(type, rawContent, filename) {
+  if (type === 'book' || type === 'page') return rawContent;
+
+  const fm = parseFM(rawContent);
+  let body = extractBody(rawContent);
+  if (!body || body === rawContent) {
+    body = rawContent.replace(/^---\n[\s\S]*?\n---\n?/, '').trim();
+  }
+
+  // Derive title if missing
+  let title = fm.title;
+  if (!title) {
+    const baseName = filename.replace(/\.(mdx?|astro|json)$/i, '');
+    title = baseName.replace(/[-_]+/g, ' ').replace(/\b\w/g, c => c.toUpperCase()).trim();
+  }
+
+  // Derive description if missing
+  let description = fm.description;
+  if (!description) {
+    description = `Learn ${title} with practical examples and code tutorials.`;
+  }
+
+  let category = fm.category || '';
+
+  if (type === 'tutorial') {
+    let cat = String(category).toLowerCase().trim();
+    if (!TCAT.includes(cat)) {
+      const lower = (cat + ' ' + filename).toLowerCase();
+      if (lower.includes('css')) cat = 'css';
+      else if (lower.includes('html')) cat = 'html';
+      else if (lower.includes('js') || lower.includes('javascript')) cat = 'javascript';
+      else if (lower.includes('python')) cat = 'python';
+      else if (lower.includes('sql')) cat = 'sql';
+      else if (lower.includes('php')) cat = 'php';
+      else if (lower.includes('seo')) cat = 'seo';
+      else cat = 'html'; // fallback default
+    }
+    const order = (fm.order !== undefined && fm.order !== null && fm.order !== '') ? Number(fm.order) : 99;
+
+    let res = `---\ntitle: "${String(title).replace(/"/g, '\\"')}"\ndescription: "${String(description).replace(/"/g, '\\"')}"\ncategory: "${cat}"\norder: ${order}\n`;
+    if (fm.group) res += `group: "${String(fm.group).replace(/"/g, '\\"')}"\n`;
+    if (fm.seoTitle) res += `seoTitle: "${String(fm.seoTitle).replace(/"/g, '\\"')}"\n`;
+    if (fm.permalink) res += `permalink: "${String(fm.permalink).replace(/"/g, '\\"')}"\n`;
+    res += `---\n\n${body}`;
+    return res;
+  }
+
+  if (type === 'blog') {
+    let cat = category ? String(category).trim() : '';
+    const matchBCat = BCAT.find(c => c.toLowerCase() === cat.toLowerCase());
+    if (matchBCat) {
+      cat = matchBCat;
+    } else {
+      const lower = (cat + ' ' + filename).toLowerCase();
+      if (lower.includes('css') || lower.includes('html')) cat = 'HTML & CSS';
+      else if (lower.includes('js') || lower.includes('javascript')) cat = 'JavaScript';
+      else if (lower.includes('python')) cat = 'Blog';
+      else if (lower.includes('sql')) cat = 'Blog';
+      else cat = 'HTML & CSS'; // fallback default
+    }
+
+    let dateStr = fm.date;
+    if (!dateStr || String(dateStr).trim() === '') {
+      dateStr = new Date().toISOString().split('T')[0];
+    } else if (typeof dateStr === 'string' && dateStr.includes('T')) {
+      dateStr = dateStr.split('T')[0];
+    }
+
+    let res = `---\ntitle: "${String(title).replace(/"/g, '\\"')}"\ndescription: "${String(description).replace(/"/g, '\\"')}"\ndate: "${dateStr}"\ncategory: "${cat}"\n`;
+    if (fm.status) res += `status: "${fm.status}"\n`;
+    if (fm.author) res += `author: "${fm.author}"\n`;
+    if (fm.image) res += `image: "${fm.image}"\n`;
+    if (fm.permalink) res += `permalink: "${fm.permalink}"\n`;
+    res += `---\n\n${body}`;
+    return res;
+  }
+
+  return rawContent;
+}
+
 function validateContentFile(type, content, filename) {
   const errs = [];
 
   if (type === 'book') {
-    // JSON validation
     try {
       const data = JSON.parse(content);
-      if (!data.title)       errs.push('"title" is required');
-      if (!data.description) errs.push('"description" is required');
+      if (!data.title) errs.push('"title" is required');
     } catch(e) {
       errs.push('Invalid JSON: ' + e.message);
     }
@@ -1008,39 +1103,17 @@ function validateContentFile(type, content, filename) {
   }
 
   if (type === 'page') {
-    // .astro — just check it's not empty and has BaseLayout
     if (!content.trim()) errs.push('File is empty');
-    if (!content.includes('BaseLayout')) errs.push('Page must import and use BaseLayout');
     return errs;
   }
 
-  // MDX (blog / tutorial) — validate frontmatter
-  const norm  = content.replace(/\r\n/g, '\n');
-  const match = norm.match(/^---\n([\s\S]*?)\n---/);
-  if (!match) { errs.push('Missing frontmatter (the --- block at the top)'); return errs; }
+  if (!content.trim()) {
+    errs.push('File is empty');
+    return errs;
+  }
 
   const fm = parseFM(content);
-
-  if (!fm.title)       errs.push('"title" is required');
-  if (!fm.description) errs.push('"description" is required');
-
-  if (type === 'blog') {
-    if (!fm.date) errs.push('"date" is required (format: YYYY-MM-DD)');
-    if (!fm.category) {
-      errs.push('"category" is required');
-    } else if (!BCAT.includes(fm.category)) {
-      errs.push(`Invalid category "${fm.category}". Must be one of: ${BCAT.join(', ')}`);
-    }
-  }
-
-  if (type === 'tutorial') {
-    if (!fm.category) {
-      errs.push('"category" is required');
-    } else if (!TCAT.includes(fm.category)) {
-      errs.push(`Invalid category "${fm.category}". Must be one of: ${TCAT.join(', ')}`);
-    }
-    if (!fm.order && fm.order !== 0) errs.push('"order" is required (a number)');
-  }
+  if (!fm.title) errs.push('"title" is required');
 
   return errs;
 }
@@ -1302,8 +1375,11 @@ function showTuts(f){
   if(!pagedItems.length) h+=`<tr><td colspan="6" class="empty">No tutorials found</td></tr>`;
   pagedItems.forEach((t,i)=>{
     const itemNum = startIdx + i + 1;
-    const slug = t.file.replace(/\.mdx?$/, '');
+    const cleanFile = t.file.replace(/\.(htm|html)\.mdx$/i, '.mdx').replace(/\.mdx?$/i, '');
+    const rawSlug = t.permalink || cleanFile;
+    const slug = rawSlug.replace(/^\/+|\/+$/g, '');
     const isSelected = selectedTuts.has(t.file);
+    const viewUrl = (window.location.port === '3001') ? `http://localhost:4321/tutorial/${slug}` : `/tutorial/${slug}`;
     h+=`<tr style="${isSelected?'background:#f0f6fc;':''}">
       <td style="text-align:center;"><input type="checkbox" class="tut-cb" value="${esc(t.file)}" ${isSelected?'checked':''} onchange="toggleTutSelect('${esc(t.file)}', this.checked)"></td>
       <td>${itemNum}</td>
@@ -1312,7 +1388,7 @@ function showTuts(f){
         <div class="row-actions" style="font-size:12px; margin-top:4px;">
           <a href="#" style="color:#2271b1; text-decoration:none;" onclick="event.preventDefault(); editTut('${esc(t.file)}')">Edit</a> <span style="color:#ddd">|</span> 
           <a href="#" style="color:#d63638; text-decoration:none;" onclick="event.preventDefault(); delTut('${esc(t.file)}')">Trash</a> <span style="color:#ddd">|</span> 
-          <a href="/tutorial/${slug}/" target="_blank" style="color:#2271b1; text-decoration:none;">View</a>
+          <a href="${viewUrl}" target="_blank" style="color:#2271b1; text-decoration:none;">View</a>
         </div>
       </td>
       <td><span class="badge ${CB[t.category]||'bdf'}">${CATNAME[t.category]||esc(t.category||'?')}</span></td>

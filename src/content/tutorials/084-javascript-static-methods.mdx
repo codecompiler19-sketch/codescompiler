@@ -1,0 +1,259 @@
+---
+title: "JavaScript - Static Methods"
+description: "Learn JavaScript - Static Methods with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 840
+group: "Object Oriented JavaScript"
+seoTitle: "JavaScript - Static Methods — CodesCompiler JavaScript Guide"
+permalink: "javascript-static-methods"
+---
+
+
+# JavaScript - Static Methods
+
+
+
+
+## What are Static Methods?
+
+
+Astatic methodin JavaScript is defined using thestatickeyword followed by the method name. You can execute thestatic methodby taking the class name as a reference rather than an instance of the class.
+
+
+The main benefit of the static method is that it can be used to create autilityfunction that doesn't require the instance of the class for the execution. For example, aMathobject contains variousstatic methods, which we can invoke through Math class directly.
+
+
+Also, you can use static methods to add all related methods under a single namespace. Furthermore, static methods give better performance than the regular class methods due to memory optimization.
+
+
+In the following syntax, we define a static method calledgetSize()in the class calledTable−
+
+
+```javascript
+class Table {
+	static getSize() { // Static method
+		return "10 x 10";
+	}
+}
+Table.getSize(); // Static method invocation
+```
+
+
+In the above syntax,getSize()is a static method. We used the class name to execute thegetSize()method.
+
+
+## Examples
+
+
+Let's understand the JavaScript static methods with the help of some examples of difference use-cases −
+
+
+### Example: Static Method
+
+
+In the example below,printSize()is a static method, andgetSize()is a regular method in the table class. You can see thatprintSize()method is invoked using the table class name, andgetSize()method is executed using the class instance.
+
+
+So, the class can contain static and non-static both methods.
+
+
+```html
+<html>
+<body>
+	p id = "demo" 
+	<script>
+		const output = document.getElementById("demo");
+
+		class Table {
+			static printSize() {
+				return "The size of the table is: 20 x 20 <br>";
+			}
+
+			getColor() {
+				return "Black";
+			}
+		}
+
+		output.innerHTML = Table.printSize(); // Static method execution
+		const tableObj = new Table();
+		output.innerHTML += "The color of the table is: " + tableObj.getColor();
+	</script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The size of the table is: 20 x 20
+The color of the table is: Black
+```
+
+
+The single class can also contain multiple static methods.
+
+
+### Example: Multiple Static Methods
+
+
+In the below code, the table class contains theprintSize()andgetSize()static methods. Both methods are executed by taking the class name as a reference.
+
+
+```html
+<html>
+<body>
+	p id = "output" 
+	<script>
+		class Table {
+			static printSize() {
+				return "The size of the table is 20 x 20 <br>";
+			}
+
+			static getColor() {
+				return "The color of the table is Pink";
+			}
+		}
+
+		document.getElementById("output").innerHTML = 
+		Table.printSize() + "br" +
+		Table.getColor();
+	</script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The size of the table is 20 x 20
+brThe color of the table is Pink
+```
+
+
+A single class can contain multiple static methods with the same name. When you execute the static method with the same name, it executes the last method.
+
+
+### Example: Static Methods with the Same Name
+
+
+In the example below, the table class contains the duplicateprintSize()method. In the output, you can observe that the code executes the secondprintSize()method.
+
+
+```html
+<html>
+<body>
+	p id = "output" 
+	<script>
+		class Table {
+			static printSize() {
+				return"The size of the table is: 20 x 20 <br>";
+			}
+
+			static printSize() {
+				return "The size of the table is: 30 x 30 <br>";
+			}
+		}
+		document.getElementById("output").innerHTML = Table.printSize(); // Static method execution
+	</script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The size of the table is: 30 x 30
+```
+
+
+You can also execute the static method of the class in the constructor. You can use this keyword followed by the constructor keyword followed by the static method name to execute the static method in the constructor.
+
+
+### Example: Static Method Execution in the Constructor
+
+
+In the example below, theNumclass contains thegetSqrt()static method. We have executed thegetSqrt()method in the constructor.
+
+
+Whenever you create a new object of theNumclass, it will store the square root of the number in the 'sqrt' property of the class.
+
+
+```html
+<html>
+<body>
+	p id = "output"The square root of the 10 is: 
+	<script>
+		class Num {
+			constructor(a) {
+				// Static method execution
+				this.sqrt = this.constructor.getSqrt(a);
+			}
+
+			static getSqrt(a) {
+				return a * a;
+			}
+		}
+		const num1 = new Num(10);
+		document.getElementById("output").innerHTML += num1.sqrt;
+	</script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The square root of the 10 is: 100
+```
+
+
+You can also execute the static method in the non-static method. You need to use the class name as a reference to execute the static method in the non-static method.
+
+
+### Example: Static Method Execution in Non-Static Method
+
+
+In the example below,getSqrt()is a static method, andprintSqrt()is a regular class method. In theprintSqrt()method, we execute thegetSqrt()method.
+
+
+We used the instance of theNumclass to execute the printSqrt() method.
+
+
+```html
+<html>
+<body>
+	p id = "demo" 
+	<script>
+		const output = document.getElementById("demo");
+		class Num {
+			static getSqr(a) {
+				return a * a;
+			}
+
+			printSqr(a) {
+				output.innerHTML += "The square of " + a + " is: " + Num.getSqr(a) + "<br>";
+			}
+		}
+		const num1 = new Num();
+		num1.printSqr(6);
+	</script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The square of 6 is: 36
+```
+

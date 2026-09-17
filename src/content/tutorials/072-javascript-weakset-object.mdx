@@ -1,0 +1,189 @@
+---
+title: "JavaScript - WeakSet"
+description: "Learn JavaScript - WeakSet with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 720
+group: "JavaScript Objects"
+seoTitle: "JavaScript - WeakSet — CodesCompiler JavaScript Guide"
+permalink: "javascript-weakset-object"
+---
+
+
+# JavaScript - The WeakSet Object
+
+
+
+
+The JavaScript WeakSet object is a collection of objects. The WeakSet is very similar to the Set. The main difference between the WeakSet and Set is that the WeakSet contains only objects, and the Set can also contain the values like numbers, Boolean, string, etc.
+
+
+WeakSet objects are weak, meaning that references to objects in a WeakSet are held weakly. If no other references to a value stored in the WeakSet exist, those values can be garbage collected.
+
+
+WeakSet objects are useful for keeping track of objects without preventing them from being garbage collected. An example of this would be keeping track of DOM nodes without having to remove them from the DOM manually.
+
+
+## Syntax
+
+
+Follow the syntax below to define a new instance of the WeakSet class in JavaScript.
+
+
+```javascript
+const weakest = new WeakSet([iterable]);
+```
+
+
+We used the WeakSet() constructor function with a 'new' keyword in the above syntax.
+
+
+### Parameters
+
+
+
+- iterable− It is an iterable containing multiple objects to initialize the WeakSet.
+
+
+
+In JavaScript, if two objects contain the same properties and value, they are still different as their references are different.
+
+
+Here, we have listed the methods and properties of the WeakSet.
+
+
+## WeakSet Properties
+
+
+Here is a list of all the properties of WeakSet and their description.
+
+
+Sr.No.Property & Description1constructorIt returns the WeakSet constructor function.
+
+
+## WeakSet Methods
+
+
+Here is a list of the methods associated with WeakSet object and their description.
+
+
+Sr.No.Methods & Description1add()To insert the object into the WeakSet.2delete()To delete a single object from the WeakSet.3has()Check whether a particular object exists in the WeakSet.
+
+
+## Examples
+
+
+### Example: Similar Objects with WeakSet
+
+
+In the example below, we have defined the obj1 and obj2 empty objects and added them to the WeakSet.
+
+
+Also, we used the has() method to check whether the set contains the obj1 and obj2 objects. Both objects look similar but have different references in the memory. So, the WeakSet contains both objects.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      const output = document.getElementById("output");
+      const obj1 = {};
+      const obj2 = {};
+      const weak_set = new WeakSet([obj1, obj2]);
+
+      if(weak_set.has(obj1)) {
+         output.innerHTML += "The weak_set contains the obj1 object! <br>";
+      }
+
+      if(weak_set.has(obj2)) {
+         output.innerHTML += "The weak_set contains the obj2 object! <br>";
+      }
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The weak_set contains the obj1 object!
+The weak_set contains the obj2 object!
+```
+
+
+### Example: Add Object in WeakSet
+
+
+In the example below, we have defined the WeakSet containing 0 elements. Also, we have defined the car object and used the add() method to add the object in the set.
+
+
+After that, we use the has() method to check whether the object has been added into the WeakSet.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      const output = document.getElementById("output");
+      const weak_set = new WeakSet();
+      const car = {
+         brand: "Audi",
+         model: "Q5",
+      }
+      weak_set.add(car);
+      
+      if (weak_set.has(car)) {
+         output.innerHTML = "The car object is added successfully to the weak_set.";
+      }
+   </script>
+</body>
+</html>
+```
+
+
+### Output
+
+
+```javascript
+The car object is added successfully to the weak_set.
+```
+
+
+### Example: Delete Object from the WeakSet
+
+
+In the example below, we have initialized the WeakSet with the car object. After that, we use the delete() method to delete the object from the WeakSet.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      const output = document.getElementById("output");
+      const car = {
+         brand: "Audi",
+         model: "Q5",
+      }
+      const carWeakSet = new WeakSet([car]);
+	   const flag = carWeakSet.delete(car); // returns true if deleted successfully
+      output.innerHTML = "The car object is deleted successfully from the carWeakSet? " + flag;
+   </script>
+</body>
+</html>
+```
+
+
+### Output
+
+
+```javascript
+The car object is deleted successfully from the carWeakSet? true
+```
+
+
+WeakSet is not iterable. So, you can't traverse through its elements.
+

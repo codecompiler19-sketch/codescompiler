@@ -1,0 +1,199 @@
+---
+title: "JavaScript - User Defined Iterators"
+description: "Learn JavaScript - User Defined Iterators with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 440
+group: "JavaScript Control Flow"
+seoTitle: "JavaScript - User Defined Iterators — CodesCompiler JavaScript Guide"
+permalink: "javascript-user-defined-iterators"
+---
+
+
+# JavaScript - User Defined Iterators
+
+
+
+
+In JavaScript, an iterable is an object which has Symbol.iterator() method in the object prototype. Some examples of iterable are array, set, map, string, etc. The Symbol.iterator() method returns an object containing the next() method is callediterator. Here, the next() method returns the elements of iterable in each call.
+
+
+## The next() Method
+
+
+The next() method of the iterator object returns an object containing two key-value pairs given below.
+
+
+
+- value− The value key contains the element as a value.
+- done− The done key contains the boolean value. It contains true if all iterations of iterable are finished. Otherwise, it contains false.
+
+
+
+### Example
+
+
+In the example below, we have created the array and stored the array iterator in the 'iter' variable. After that, we use the next() method of the iterator object to get the next value.
+
+
+The output shows that the next() method returns the object containing 'value' and 'done' properties. The last iteration returns the object containing the 'done' property only.
+
+
+```html
+<html>
+<head>
+   <title> JavaScript - Iterators </title>
+</head>
+<body>
+   p id = "output" 
+   <script>
+      const output = document.getElementById("output");
+      const nums = [10, 72, 45];
+      const iter = nums[Symbol.iterator]();
+      output.innerHTML += JSON.stringify(iter.next()) + "<br>";
+      output.innerHTML += JSON.stringify(iter.next()) + "<br>";
+      output.innerHTML += JSON.stringify(iter.next()) + "<br>";
+      output.innerHTML += JSON.stringify(iter.next()) + "<br>";
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+{"value":10,"done":false}
+{"value":72,"done":false}
+{"value":45,"done":false}
+{"done":true}
+```
+
+
+## User-defined Iterators
+
+
+In the above part, we have looked at how an iterator works in JavaScript. The Symbol.iterator() method returns the object containing the next() method, and whenever we execute the next() method, it returns an object.
+
+
+So, in the same way, we can implement the user-defined iterators.
+
+
+### Example
+
+
+In the example below, we have created the custom iterator using the function. The function returns the object containing the next() method. The next() method returns the object containing the array element and the false boolean value from the nth index if n is less than the array length. If the n is greater than or equal to the array's length, it returns the object containing only the 'done' property with a 'true' boolean value.
+
+
+After that, we use the iter.next() syntax to get the next array element.
+
+
+```html
+<html>
+<head>
+   <title> JavaScript - User defined iterators </title>
+</head>
+<body>
+   p id = "output" 
+   <script>
+      const output = document.getElementById("output");
+      function customIterator(chars) {
+         // To track index
+         let n = 0;
+         return {
+            // next() method
+            next() {
+               if (n < chars.length) {
+                  return {
+                     value: chars[n++],
+                     done: false
+                  }
+               }
+               return {
+                  done: true
+               }
+            }
+         }
+      }
+      const chars = ['A', 'C', 'E'];
+      const iter = customIterator(chars);
+      output.innerHTML += JSON.stringify(iter.next()) + "<br>";
+      output.innerHTML += JSON.stringify(iter.next()) + "<br>";
+      output.innerHTML += JSON.stringify(iter.next()) + "<br>";
+      output.innerHTML += JSON.stringify(iter.next()) + "<br>";
+      output.innerHTML += JSON.stringify(iter.next()) + "<br>";
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+{"value":"A","done":false}
+{"value":"C","done":false}
+{"value":"E","done":false}
+{"done":true}
+{"done":true}
+```
+
+
+The above code uses the function to define the iterator. So, you can't use the forof loop with the iterator. Let's learn to define the iterator using the object in the example below.
+
+
+### Example
+
+
+In the example below, we add a function as a value of the 'Symbol.iterator' key. The function returns the next() method. The next() method returns the odd numbers. If the value of the odd number is 9, it finishes the iteration by returning the &#123;done: true&#125; object.
+
+
+Here, we created the iterator using the object. So, you can use the forof loop. The loop will automatically execute the next() method of the iterator and returns a value of the 'value' property of the object returned by the next() method.
+
+
+```html
+<html>
+<head>
+   <title> JavaScript - User defined iterators </title>
+</head>
+<body>
+   p id = "output" 
+    <script>
+       const output = document.getElementById("output");
+       // Empty object
+       oddNum = {};
+       // Add iterator 
+       oddNum[Symbol.iterator] = function () {
+          let p = -1;
+          done = false;
+          return {
+             next() {
+                p += 2;
+                if (p == 9) return { done: true }
+                return { value: p, done: done };
+             }
+          };
+       }
+       for (const odd of oddNum) {
+          output.innerHTML += odd + "<br>";
+       }
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+1
+3
+5
+7
+```
+
+
+You should create user-defined iterators when they need customization in the traversal of iterable. For example, to traverse alternative array elements, to get even or odd numbers from an iterator, etc.
+

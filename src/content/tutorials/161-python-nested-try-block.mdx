@@ -1,0 +1,163 @@
+---
+title: "PYTHON - Nested try Block"
+description: "Learn PYTHON - Nested try Block with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1610
+group: "Python Errors & Exceptions"
+seoTitle: "PYTHON - Nested try Block — CodesCompiler PYTHON Guide"
+permalink: "python-nested-try-block"
+---
+
+
+# Python - Nested try Block
+
+
+
+
+## Nested try Block in Python
+
+
+In a Python program, if there is anothertry-exceptconstruct either inside either atryblock or inside itsexceptblock, it is known as a nested-try block. This is needed when different blocks like outer and inner may cause different errors. To handle them, we need nested try blocks.
+
+
+We start with an example having a single "try − except − finally" construct. If the statements inside try encounter exception, it is handled by except block. With or without exception occurred, the finally block is always executed.
+
+
+### Example 1
+
+
+Here, thetryblock has "division by 0" situation, hence theexceptblock comes into play. It is equipped to handle the generic exception with Exception class.
+
+
+```python
+a=10
+b=0
+try:
+   print (a/b)
+except Exception:
+   print ("General Exception")
+finally:
+   print ("inside outer finally block")
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+General Exception
+inside outer finally block
+```
+
+
+### Example 2
+
+
+Let us now see how to nest thetryconstructs. We put another "try − except − finally" blocks inside the existing try block. The except keyword for inner try now handles generic Exception, while we ask the except block of outer try to handle ZeroDivisionError.
+
+
+Since exception doesn't occur in the innertryblock, its corresponding generic Except isn't called. The division by 0 situation is handled by outer except clause.
+
+
+```python
+a=10
+b=0
+try:
+   print (a/b)
+   try:
+      print ("This is inner try block")
+   except Exception:
+      print ("General exception")
+   finally:
+      print ("inside inner finally block")
+      
+except ZeroDivisionError:
+   print ("Division by 0")
+finally:
+   print ("inside outer finally block")
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Division by 0
+inside outer finally block
+```
+
+
+### Example 3
+
+
+Now we reverse the situation. Out of the nestedtryblocks, the outer one doesn't have any exception raised, but the statement causing division by 0 is inside inner try, and hence the exception handled by innerexceptblock. Obviously, theexceptpart corresponding to outertry: will not be called upon.
+
+
+```python
+a=10
+b=0
+try:
+   print ("This is outer try block")
+   try:
+      print (a/b)
+   except ZeroDivisionError:
+      print ("Division by 0")
+   finally:
+      print ("inside inner finally block")
+      
+except Exception:
+   print ("General Exception")
+finally:
+   print ("inside outer finally block")
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+This is outer try block
+Division by 0
+inside inner finally block
+inside outer finally block
+```
+
+
+In the end, let us discuss another situation which may occur in case of nested blocks. While there isn't any exception in the outertry:, there isn't a suitable except block to handle the one inside the innertry: block.
+
+
+### Example 4
+
+
+In the following example, the innertry: faces "division by 0", but its corresponding except: is looking for KeyError instead of ZeroDivisionError. Hence, the exception object is passed on to the except: block of the subsequent except statement matching with outer try: statement. There, the zeroDivisionError exception is trapped and handled.
+
+
+```python
+a=10
+b=0
+try:
+   print ("This is outer try block")
+   try:
+      print (a/b)
+   except KeyError:
+      print ("Key Error")
+   finally:
+      print ("inside inner finally block")
+      
+except ZeroDivisionError:
+   print ("Division by 0")
+finally:
+   print ("inside outer finally block")
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+This is outer try block
+inside inner finally block
+Division by 0
+inside outer finally block
+```
+

@@ -1,0 +1,594 @@
+---
+title: "CSS - Overlay"
+description: "Learn CSS - Overlay with clear CSS layout principles, modern selectors, and practical examples."
+category: "css"
+order: 500
+group: "CSS Basics"
+seoTitle: "CSS - Overlay — CodesCompiler CSS Guide"
+permalink: "css-overlay"
+---
+
+## CSS - Overlay
+
+An overlay is a transparent layer of content that is placed on top of another element. It can be used to create different effects, such as a modal window, a tooltip, or a popover.
+
+The overlay element should be positioned absolutely and have a higher z-index than the content element. This will ensure that the overlay is displayed on top of the content.
+
+## Example of Overlay Effect
+
+Here you can see overlay effect when you hover mouse on top of TutorialsPoint logo. This types of styling give a dynamic experience for users that are visiting to your webpage.
+
+## Table of Contents
+
+## How to Create Overlay Effect?
+
+To create an overlay using CSS, follow these steps:
+
+- Create the Container: Use a container element to hold the content you want to overlay. A container can be div element, span element or even an image.
+
+- Set Up the Positioning: Make the container position: relative so that any absolutely positioned elements inside it will be positioned relative to this container.
+
+- Add the Overlay Element: Inside the container, add another element (the overlay) and set position: absolute to ensure it covers the entire container. Also make sure the overlay's top, left properties are set to 0 and width, height properties are set to 100%, so it fully covers the container.
+
+- Style the Overlay: Set the background color of the overlay using rgba() function to give a semi-transparent effect. And initially, set the opacity of the overlay to 0 to make it invisible by default.
+
+- Add Hover Effect: Use hover pseudo-class to the overlay container to change the overlay's opacity from 0 to 1 when user moves mouse over container.
+
+## CSS Overlay Basic Example
+
+The following example shows how to create a simple overlay effect in CSS using above steps.
+
+### Example
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        .container {
+            height: 150px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+
+        .overlay-container {
+            position: relative;
+            width: auto; 
+            height: auto; 
+            display: inline-block;
+        }
+
+        img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 128, 0, 0.5); 
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .overlay-container:hover .overlay {
+            opacity: 1;
+        }
+
+        .login-button {
+            padding: 10px 20px;
+            background-color: #ffffff;
+            color: #228B22;
+            border: 2px solid #228B22;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .login-button:hover {
+            background-color: #228B22;
+            color: #ffffff;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <div class="overlay-container">
+        <img src="/html/images/test.png" alt="Image">
+        <div class="overlay">
+            <a href="/css/index.htm" 
+               target="_blank" class="login-button">
+                    Learn CSS
+            </a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+```
+
+## Overlay Effect Using JavaScript
+
+The following example uses javascript to create an overlay effect that appears when you click a button and disappears when you click anywhere on the page.
+
+JavaScript can be used to show and hide the overlay div element by using the 'querySelector()' method to get the overlay element. When the button is clicked, a function is executed that toggles the display property of the overlay container between block (visible) and none (hidden).
+
+### Example
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        .container {
+            position: fixed;
+            display: none;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            background-color: rgba(213, 86, 207, 0.3);
+            z-index: 999; 
+            cursor: pointer;
+        }
+        .content {
+            padding: 20px;
+        }
+        .button {
+            background-color: #38dc29; 
+            color: white; 
+            border: none;
+            padding: 20px;
+            cursor: pointer;
+            font-size: 20px;
+            text-align: center; 
+            display: block; 
+            margin: 50px auto;  
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" onclick="overlay()">
+        <h1>TutorialsPoint CSS Overlay</h1>
+    </div>
+
+    <div style="padding:20px">
+        <button class="button" onclick="overlay()">
+            Click on Button
+        </button>
+    </div>
+
+    <script>
+        let Visible = false;
+        function overlay() {
+            const overlay = document.querySelector(".container");
+            overlay.style.display = Visible ? "none" : "block";
+            Visible = !Visible;
+        }
+    </script>
+</body>
+</html>  
+```
+
+## CSS Overlay Top to Bottom Sliding
+
+The following example shows an image with an overlay that slides down from the top of the image to the bottom when the user hovers over it
+
+### Example
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head> 
+    <style> 
+        img { 
+            width: 200px; 
+            height: 200px; 
+            margin-left: 40%;
+        } 
+        .overlay-container { 
+            position: relative; 
+            width: 25%; 
+            height: auto;
+        }  
+        .overlay-container:hover .top-bottom { 
+            opacity: 1; 
+            height: 200px; 
+        } 
+        .top-bottom{ 
+            position: absolute; 
+            transition: 0.9s ease; 
+            opacity: 0.3; 
+            width: 200px; 
+            border-radius: 5px;
+            height: 0; 
+            top: 0; 
+            left: 40%;  
+            background-color: #d346e6; 
+            text-align: center;
+            color: #ffffff;
+        }
+        h2 {
+            text-align: center;
+        }   
+    </style> 
+</head> 
+
+<body> 
+    <h2> Hover your cursor over the image.</h2>
+
+    <div class="overlay-container"> 
+        <img src= "/css/images/tutimg.png"> 
+        <div class="top-bottom">
+            <h2> Top to Bottom Image Overlay </h2>
+        </div> 
+    </div> 
+</body> 
+
+</html>   
+```
+
+## CSS Overlay Bottom to Top Sliding
+
+The following example shows an image with an overlay effect that slides up from the bottom of the image to the top when the user hovers over it
+
+### Example
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head> 
+    <style> 
+        img { 
+            width: 200px; 
+            height: 200px; 
+        } 
+        .overlay-container { 
+            position: relative; 
+            width: 25%; 
+            height: auto;
+        }  
+        .overlay-container:hover .bottom-top { 
+            opacity: 1; 
+            height: 200px; 
+        } 
+        .bottom-top { 
+            position: absolute; 
+            transition: 0.9s ease; 
+            opacity: 0.3; 
+            width: 200px; 
+            border-radius: 5px;
+            height: 0; 
+            bottom: 0; 
+            background-color: #d346e6; 
+            text-align: center;
+            color: #ffffff;
+        }
+        h2 {
+            text-align: center;
+        }   
+    </style> 
+</head> 
+
+<body> 
+    <h2>Hover your cursor over the image.</h2>
+    <div class="overlay-container"> 
+        <img src= "/css/images/tutimg.png"> 
+        <div class="bottom-top">
+            <h2>Bottom to Top Image Overlay</h2>
+        </div> 
+    </div> 
+</body> 
+
+</html>   
+```
+
+## CSS Overlay Left to Right Sliding
+
+The following example shows an image with an overlay effect that slides from left to right when you hover over it
+
+### Example
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        img {
+            width: 200px;
+            height: 200px;             
+        }
+        .overlay-container {
+            position: relative;
+            width: 25%;
+            height: auto;
+        }
+        .overlay-container:hover .left-right { 
+            opacity: 1;
+            width: 200px;
+        }
+        .left-right { 
+            position: absolute;
+            transition: 0.9s ease;
+            opacity: 0.3;
+            width: 0; 
+            border-radius: 5px;
+            height: 200px; 
+            top: 0;
+            left: 0; 
+            background-color: #d346e6;
+            text-align: center;
+            color: #ffffff;
+        }
+        h2 {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+   <h2>Hover your cursor over the image.</h2>
+
+   <div class="overlay-container">
+        <img src="/css/images/tutimg.png">
+        <div class="left-right">
+            <h2>Left to Right Image Overlay</h2>
+        </div>
+   </div>
+</body>
+
+</html>
+```
+
+## CSS Overlay Right to Left Sliding
+
+The following example shows an image with an overlay effect that slides from right to left when you hover over it
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        img {
+            width: 200px;
+            height: 200px;           
+        }
+        .overlay-container {
+            position: relative;
+            width: 67%;
+            height: auto;
+        }
+        .overlay-container:hover .right-left { 
+            opacity: 1;
+            width: 200px; 
+        }
+        .right-left { 
+            position: absolute;
+            transition: 0.9s ease;
+            opacity: 0.3;
+            width: 0; 
+            border-radius: 5px;
+            height: 200px; 
+            top: 0;
+            background-color: #d346e6;
+            text-align: center;
+            color: #ffffff;
+        }
+        h2 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h2>Hover your cursor over the image.</h2>
+
+    <div class="overlay-container">
+        <img src="/css/images/tutimg.png">
+        <div class="right-left">
+            <h2>Right to Left Image Overlay</h2>
+        </div>
+    </div>
+</body>
+</html>
+```
+
+## CSS Overlay Fade Effect
+
+The following example shows how to create an overlay that appears on top of an image when the user hovers over it
+
+### Example
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head> 
+    <style> 
+        img { 
+            width: 200px; 
+            height: 200px;       
+        } 
+        .overlay-container { 
+            position: relative; 
+            width: 25%; 
+        }  
+        .overlay-container:hover .fade-effect { 
+            opacity: 0.9; 
+            height: 200px; 
+        } 
+        .fade-effect { 
+            position: absolute; 
+            transition: 0.9s ease; 
+            opacity: 0; 
+            width: 200px; 
+            height: 200px; 
+            border-radius: 5px;
+            top: 0; 
+            background-color: #d346e6; 
+            text-align: center;
+            color: #ffffff;
+        }
+        h2 {
+            text-align: center;
+        }   
+    </style> 
+</head>
+
+<body> 
+    <h2>Hover your cursor over the image.</h2>
+
+    <div class="overlay-container"> 
+        <img src= "/css/images/tutimg.png"> 
+        <div class="fade-effect">
+            <h2>Fade Overlay Effect</h2>
+        </div> 
+    </div> 
+</body> 
+
+</html> 
+```
+
+## CSS Overlay Image Title
+
+Here is an example of an overlay that displays the title of an image when the user hovers over it
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head> 
+    <style> 
+        img { 
+            width: 200px; 
+            height: 200px;            
+        } 
+        .overlay-container { 
+            position: relative; 
+            width: 25%; 
+        }  
+        .overlay-container:hover .title-overlay { 
+            opacity: 0.9; 
+            height: 80px; 
+        } 
+        .title-overlay { 
+            position: absolute; 
+            transition: 0.9s ease; 
+            opacity: 0; 
+            width: 200px; 
+            height: 80px; 
+            border-radius: 5px;
+            bottom: 0;  
+            background-color: #f0f0f0; 
+            text-align: center;
+        }
+        h1 {
+            text-align: center;
+            color: black;
+        }   
+    </style> 
+</head>
+
+<body> 
+   <h2>Hover your cursor over the image.</h2>
+
+   <div class="overlay-container"> 
+        <img src= "/css/images/tutimg.png"> 
+        <div class="title-overlay">
+            <h1>TutorialsPoint</h1>
+        </div> 
+   </div> 
+</body> 
+
+</html> 
+```
+
+## CSS Image Icon Overlay
+
+Here is an example of an overlay that displays the icons over an image when the user hovers over it
+
+### Example
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head> 
+<link rel="stylesheet" 
+    href=
+"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style> 
+        .overlay-container {
+            position: relative;
+            width: 200px; 
+            height: 200px; 
+        }  
+        img { 
+            width: 100%; 
+            height: 100%;
+        }
+        .icon-overlay {
+            position: absolute; 
+            transition: 0.9s ease; 
+            opacity: 0; 
+            width: 100%;
+            height: 100%; 
+            top: 0;
+            background-color: rgba(211, 70, 230, 0.9); 
+            text-align: center;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .overlay-container:hover .icon-overlay {
+            opacity: 1;
+        }
+        .display-icon {
+            color: rgb(60, 235, 50);
+            font-size: 100px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        } 
+        h2 {
+            text-align: center;
+        }
+    </style> 
+</head> 
+
+<body> 
+   <h2>Hover your cursor over the image.</h2>
+    <div class="overlay-container"> 
+        <img src="/css/images/tutimg.png"> 
+        <div class="icon-overlay">
+            <a href="#" class="display-icon">
+                <i class="fa fa-star"></i> 
+            </a>
+        </div> 
+    </div> 
+</body> 
+
+</html>
+```

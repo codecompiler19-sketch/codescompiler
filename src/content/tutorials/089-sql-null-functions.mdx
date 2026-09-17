@@ -1,0 +1,259 @@
+---
+title: "SQL - Null Functions"
+description: "Learn SQL - Null Functions with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 890
+group: "Advanced SQL"
+seoTitle: "SQL - Null Functions — CodesCompiler SQL Guide"
+permalink: "sql-null-functions"
+---
+
+
+# SQL - Null Functions
+
+
+
+
+
+
+SQLNULLfunctions are used to perform operations on NULL values that are stored in the database tables.
+
+
+A NULL value serves as a placeholder in the database when data is absent or the required information is unavailable. It is a flexible value not associated to any specific data type and can be used in columns of various data types, including string, int, varchar, and more.
+
+
+Following are the various features of a NULL value −
+
+
+
+- The NULL value is different from a zero value or a field containing a space. A record with a NULL value is one that has been left empty or unspecified during record creation.
+- The NULL value assists us in removing ambiguity from data. Thus, maintaining the uniform datatype across the column.
+
+
+
+## SQL NULL Functions
+
+
+To handle these NULL values in a database table, SQL provides various NULL functions. They are listed as follows −
+
+
+
+- ISNULL()
+- COALESCE()
+- NULLIF()
+- IFNULL()
+
+
+
+## The ISNULL() Function
+
+
+The SQLISNULL()function returns 0 and 1 depending on whether the expression is null or not. If the expression is null, then this function returns 1; otherwise, it returns 0.
+
+
+### Syntax
+
+
+Following is the syntax for theISNULL()function −
+
+
+```sql
+ISNULL(column_name)
+```
+
+
+### Example
+
+
+First of all let us create a table named CUSTOMERS, containing the personal details of customers including their name, age, address and salary etc., using the following query −
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),       
+   PRIMARY KEY (ID)
+);
+```
+
+
+Now, insert records into this table using the INSERT INTO statement as follows −
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+(2, 'Khilan', 25, 'Delhi', 1500.00 ),
+(3, 'Kaushik', 23, 'Kota', NULL ),
+(4, 'Chaitali', 25, 'Mumbai', 6500.00 ),
+(5, 'Hardik', 27, 'Bhopal', 8500.00 ),
+(6, 'Komal', 22, 'Hyderabad', NULL ),
+(7, 'Indore', 24, 'Indore', 10000.00 );
+```
+
+
+The table will be created as −
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23KotaNULL4Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22HyderabadNULL7Indore24Indore10000.00
+
+
+Following is the query to check whether SALARY is NULL or not −
+
+
+```sql
+SELECT SALARY, ISNULL(SALARY) AS Null_value FROM CUSTOMERS;
+```
+
+
+### Output
+
+
+On execution of the above query, we get the column "SALARY" and Null_value. If the SALARY is NULL, then their null value is 1; otherwise, it is 0. −
+
+
+SALARYNull_value2000.0001500.000NULL16500.0008500.000NULL110000.000
+
+
+## The COALESCE() Function
+
+
+The SQLCOALESCE()function returns the first occurred NON-NULL expression among its arguments. If all the expressions are NULL, then the COALESCE() function will return NULL.
+
+
+An integer is evaluated first in the COALESCE() function, and an integer followed by a character expression always produces an integer as the output.
+
+
+### Syntax
+
+
+Following is the syntax for theCOALESCE()function −
+
+
+```sql
+COALESCE(expression_1, expression_2, expression_n);
+```
+
+
+### Example
+
+
+In the following query, we are returning the first occurred NON-NULL value −
+
+
+```sql
+SELECT COALESCE (NULL, 'welcome', 'tutorialspoint') AS Result;
+```
+
+
+### Output
+
+
+On executing the above query, we get "welcome" as a result, because it is the first NON-NULL value −
+
+
+Resultwelcome
+
+
+### Example
+
+
+In the following query, we are using the COALESCE() function on the SALARY and AGE columns of CUSTOMERS table. The first NON-NULL values evaluated from these two columns are displayed in another column named "Result".
+
+
+```sql
+SELECT NAME, SALARY, AGE, COALESCE(SALARY, AGE) AS Result FROM CUSTOMERS;
+```
+
+
+### Output
+
+
+When you execute the above query, we get the following table as a result −
+
+
+NAMESALARYAGEResultRamesh2000.00322000.00Khilan1500.00251500.00KaushikNULL2323.00Chaitali6500.00256500.00Hardik8500.00278500.00KomalNULL2222.00Indore10000.002410000.00
+
+
+## The NULLIF() Function
+
+
+The SQLNULLIF()function compares two expressions. If both expressions are the same, it returns NULL. Otherwise, it returns the first expression. This function can be used directly with clauses like SELECT, WHERE, and GROUP BY.
+
+
+### Syntax
+
+
+Following is the syntax ofNULLIF()function −
+
+
+```sql
+NULLIF(expression_1, expression_2);
+```
+
+
+### Example
+
+
+The following SQL query uses NULLIF() function to compare values in NAME and ADDRESS columns of the CUSTOMERS table. If the NAME value matches the ADDRESS value, the result is NULL; otherwise, it returns the NAME value. The result values are stored in another column called "Result".
+
+
+```sql
+SELECT NAME, ADDRESS, NULLIF(NAME, ADDRESS) AS Result FROM CUSTOMERS;
+```
+
+
+### Output
+
+
+When you execute the above query, we get the following table as a result −
+
+
+NAMEADDRESSResultRameshAhmedabadRameshKhilanDelhiKhilanKaushikKotaKaushikChaitaliMumbaiChaitaliHardikBhopalHardikKomalHyderabadKomalIndoreIndoreNULL
+
+
+## The IFNULL() Function
+
+
+TheIFNULL()function replaces the NULL values in a database table with a specific value. This function accepts two arguments. If the first argument is a NULL value, it is replaced with the second argument. Otherwise, the first argument is returned as it is.
+
+
+This function does not work in the SQL Server database.
+
+
+If both the arguments are NULL, the result of this function is also NULL.
+
+
+### Syntax
+
+
+Following is the syntax forIFNULL()function −
+
+
+```sql
+IFNULL(column_name, value_to_replace);
+```
+
+
+### Example
+
+
+The following query evaluates the values in SALARY column of the CUSTOMERS table. Using the IFNULL() function, we are replacing the NULL values in this column (if any) with the value5500−
+
+
+```sql
+SELECT NAME, SALARY, IFNULL(SALARY, 5500) AS Result FROM CUSTOMERS;
+```
+
+
+### Output
+
+
+Following is the output of the above query −
+
+
+NAMESALARYResultRamesh2000.002000.00Khilan1500.001500.00KaushikNULL5500.00Chaitali6500.006500.00Hardik8500.008500.00KomalNULL5500.00Indore10000.0010000.00
+

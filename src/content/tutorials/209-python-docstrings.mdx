@@ -1,0 +1,362 @@
+---
+title: "PYTHON - Docstrings"
+description: "Learn PYTHON - Docstrings with clear explanation, code examples, and practical guide."
+category: "python"
+order: 2090
+group: "Python Miscellenous"
+seoTitle: "PYTHON - Docstrings — CodesCompiler PYTHON Guide"
+permalink: "python-docstrings"
+---
+
+
+# Python - Docstrings
+
+
+
+
+## Docstrings in Python
+
+
+In Python, docstrings are a way of documenting modules, classes, functions, and methods. They are written within triple quotes(""" """)and can span multiple lines.
+
+
+Docstrings serve as convenient way of associating documentation with Python code. They are accessible through the__doc__attribute of the respective Python objects they document. Below are the different ways to write docstrings −
+
+
+## Single-Line Docstrings
+
+
+Single-line docstrings are used for brief and simple documentation. They provide a concise description of what the function or method does. Single-line docstrings should fit on one line within triple quotes and end with a period.
+
+
+### Example
+
+
+In the following example, we are using a single line docstring to write a text −
+
+
+```python
+def add(a, b):
+   """Return the sum of two numbers."""
+   return a + b
+
+result = add(5, 3)
+print("Sum:", result)
+```
+
+
+## Multi-Line Docstrings
+
+
+Multi-line docstrings are used for more detailed documentation. They provide a more comprehensive description, including the parameters, return values, and other relevant details. Multi-line docstrings start and end with triple quotes and include a summary line followed by a blank line and a more detailed description.
+
+
+### Example
+
+
+The following example uses multi-line docstrings as an explanation of the code −
+
+
+```python
+def multiply(a, b):
+   """
+   Multiply two numbers and return the result.
+
+   Parameters:
+   a (int or float): The first number.
+   b (int or float): The second number.
+
+   Returns:
+   int or float: The result of multiplying a and b.
+   """
+   return a * b
+result = multiply(5, 3)
+print("Product:", result)
+```
+
+
+## Docstrings for Modules
+
+
+When writing docstrings for modules, place the docstring at the top of the module, right after any import statements. The module docstring provide an overview of the module's functionality and list its primary components, such as list of functions, classes, and exceptions provided by the module.
+
+
+### Example
+
+
+In this example, we demonstrate the use of docstrings for modules in Python −
+
+
+```python
+import os
+
+"""
+This module provides Utility functions for file handling operations.
+
+Functions:
+- 'read_file(filepath)': Reads and returns the contents of the file.
+- 'write_file(filepath, content)': Writes content to the specified file.
+
+Classes:
+- 'FileNotFoundError': Raised when a file is not found.
+
+Example usage:
+
+   >>> import file_utils
+   >>> content = file_utils.read_file("example.txt")
+   >>> print(content)
+   'Hello, world!'
+   >>> file_utils.write_file("output.txt", "This is a test.")
+"""
+print("This is os module")
+```
+
+
+## Docstrings for Classes
+
+
+Classes can have docstrings to describe their purpose and usage. Each method within the class can also have its own docstring. The class docstring should provide an overview of the class and its methods.
+
+
+### Example
+
+
+In the example below, we showcase the use of docstrings for classes in Python −
+
+
+```python
+class Calculator:
+   """
+   A simple calculator class to perform basic arithmetic operations.
+
+   Methods:
+   - add(a, b): Return the sum of two numbers.
+   - multiply(a, b): Return the product of two numbers.
+   """
+
+   def add(self, a, b):
+      """Return the sum of two numbers."""
+      return a + b
+
+   def multiply(self, a, b):
+      """
+      Multiply two numbers and return the result.
+
+      Parameters:
+      a (int or float): The first number.
+      b (int or float): The second number.
+
+      Returns:
+      int or float: The result of multiplying a and b.
+      """
+      return a * b
+	  
+cal = Calculator()
+print(cal.add(87, 98))
+print(cal.multiply(87, 98))
+```
+
+
+## Accessing Docstrings
+
+
+Docstrings in Python are accessed using the__doc__attribute of the object they document. This attribute contains the documentation string (docstring) associated with the object, providing a way to access and display information about the purpose and usage of functions, classes, modules, or methods.
+
+
+### Example
+
+
+In the following example, we are defining two functions, "add" and "multiply", each with a docstring describing their parameters and return values. We then use the "__doc__" attribute to access and print these docstrings −
+
+
+```python
+# Define a function with a docstring
+def add(a, b):
+    """
+    Adds two numbers together.
+
+    Parameters:
+    a (int): The first number.
+    b (int): The second number.
+
+    Returns:
+    int: The sum of a and b.
+    """
+    return a + b
+result = add(5, 3)
+print("Sum:", result)
+
+# Define another function with a docstring
+def multiply(x, y):
+    """
+    Multiplies two numbers together.
+
+    Parameters:
+    x (int): The first number.
+    y (int): The second number.
+
+    Returns:
+    int: The product of x and y.
+    """
+    return x * y
+result = multiply(4, 7)
+print("Product:", result)
+
+# Accessing the docstrings
+print(add.__doc__)
+print(multiply.__doc__)
+```
+
+
+## Best Practices for Writing Docstrings
+
+
+Following are the best practices for writing docstrings in Python −
+
+
+
+- Be Clear and Concise −Ensure the docstring clearly explains the purpose and usage of the code, avoiding unnecessary details.
+- Use Proper Grammar and Spelling −Ensure the docstring is well-written with correct grammar and spelling.
+- Follow Conventions −Use the standard conventions for formatting docstrings, such as the Google style, NumPy style, or Sphinx style.
+- Include Examples −Provide examples where applicable to illustrate how to use the documented code.
+
+
+
+## Google Style Docstring
+
+
+Google style docstrings provide a structured way to document Python code using indentation and headings. They are designed to be readable and informative, following a specific format.
+
+
+### Example
+
+
+Following is an example of a function with a Google style docstring −
+
+
+```python
+def divide(dividend, divisor):
+   """
+   Divide two numbers and return the result.
+
+   Args:
+      dividend (float): The number to be divided.
+      divisor (float): The number to divide by.
+
+   Returns:
+      float: The result of the division.
+
+   Raises:
+      ValueError: If `divisor` is zero.
+   """
+   if divisor == 0:
+      raise ValueError("Cannot divide by zero")
+   return dividend / divisor
+
+result = divide(4, 7)
+print("Division:", result)
+```
+
+
+## NumPy/SciPy Style Docstring
+
+
+NumPy/SciPy style docstrings are common in scientific computing. They include sections for parameters, returns, and examples.
+
+
+### Example
+
+
+Following is an example of a function with a NumPy/SciPy style docstring −
+
+
+```python
+def fibonacci(n):
+   """
+   Compute the nth Fibonacci number.
+
+   Parameters
+   ----------
+   n : int
+      The index of the Fibonacci number to compute.
+
+   Returns
+   -------
+   int
+      The nth Fibonacci number.
+
+   Examples
+   --------
+   >>> fibonacci(0)
+   0
+   >>> fibonacci(5)
+   5
+   >>> fibonacci(10)
+   55
+   """
+   if n == 0:
+      return 0
+   elif n == 1:
+      return 1
+   else:
+      return fibonacci(n-1) + fibonacci(n-2)
+	  
+result = fibonacci(4)
+print("Result:", result)
+```
+
+
+## Sphinx Style Docstring
+
+
+Sphinx style docstrings are compatible with the Sphinx documentation generator and usereStructuredTextformatting.
+
+
+The reStructuredText (reST) is a lightweight markup language used for creating structured text documents. The Sphinx documentation generator takes "reStructuredText" files as input and generates high-quality documentation in various formats, including HTML, PDF, ePub, and more.
+
+
+### Example
+
+
+Following is an example of a function with a Sphinx style docstring −
+
+
+```python
+def divide(dividend, divisor):
+   """
+   Divide two numbers and return the result.
+
+   Args:
+      dividend (float): The number to be divided.
+      divisor (float): The number to divide by.
+
+   Returns:
+      float: The result of the division.
+
+   Raises:
+      ValueError: If `divisor` is zero.
+   """
+   if divisor == 0:
+      raise ValueError("Cannot divide by zero")
+   return dividend / divisor
+   
+result = divide(76, 37)
+print("Result:", result)
+```
+
+
+## Docstring vs Comment
+
+
+Following are the differences highlighted between Python docstrings and comments, focusing on their purposes, formats, usages, and accessibility respectively −
+
+
+
+| Docstring | Comment |
+| --- | --- |
+| Used to document Python objects such as functions, classes, methods, modules, or packages. | Used to annotate code for human readers, provide context, or temporarily disable code. |
+| Written within triple quotes (""" """ or ''' ''') and placed immediately after the object's definition. | Start with the # symbol and are placed on the same line as the annotated code. |
+| Stored as an attribute of the object and accessible programmatically. | Ignored by the Python interpreter during execution, purely for human understanding. |
+| Accessed using the __doc__ attribute of the object. | Not accessible programmatically; exists only in the source code. |
+
+

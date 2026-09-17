@@ -1,0 +1,155 @@
+---
+title: "PYTHON - Static Methods"
+description: "Learn PYTHON - Static Methods with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1330
+group: "Object Oriented Programming"
+seoTitle: "PYTHON - Static Methods — CodesCompiler PYTHON Guide"
+permalink: "python-static-methods"
+---
+
+
+# Python - Static Methods
+
+
+
+
+## What is Python Static Method?
+
+
+In Python, astatic methodis a type of method that does not require any instance to be called. It is very similar to the class method but the difference is that the static method doesn't have a mandatory argument like reference to the object− selfor reference to the class− cls.
+
+
+Static methods are used to access static fields of a given class. They cannot modify the state of a class since they are bound to the class, not instance.
+
+
+## How to Create Static Method in Python?
+
+
+There are two ways to create Python static methods −
+
+
+
+- Using staticmethod() Function
+- Using @staticmethod Decorator
+
+
+
+## Using staticmethod() Function
+
+
+Python's standard library function named staticmethod() is used to create a static method. It accepts a method as an argument and converts it into a static method.
+
+
+### Syntax
+
+
+```python
+staticmethod(method)
+```
+
+
+### Example
+
+
+In the Employee class below, the showcount() method is converted into a static method. This static method can now be called by its object or reference of class itself.
+
+
+```python
+class Employee:
+   empCount = 0
+   def __init__(self, name, age):
+      self.__name = name
+      self.__age = age
+      Employee.empCount += 1
+   
+   # creating staticmethod
+   def showcount():
+      print (Employee.empCount)
+      return
+   counter = staticmethod(showcount)
+
+e1 = Employee("Bhavana", 24)
+e2 = Employee("Rajesh", 26)
+e3 = Employee("John", 27)
+
+e1.counter()
+Employee.counter()
+```
+
+
+Executing the above code will print the following result −
+
+
+```python
+3
+3
+```
+
+
+## Using @staticmethod Decorator
+
+
+The second way to create a static method is by using the Python @staticmethod decorator. When we use this decorator with a method it indicates to the Interpreter that the specified method is static.
+
+
+### Syntax
+
+
+```python
+@staticmethod
+def method_name():
+   # your code
+```
+
+
+### Example
+
+
+In the following example, we are creating a static method using the @staticmethod decorator.
+
+
+```python
+class Student:
+   stdCount = 0
+   def __init__(self, name, age):
+      self.__name = name
+      self.__age = age
+      Student.stdCount += 1
+   
+   # creating staticmethod
+   @staticmethod
+   def showcount():
+      print (Student.stdCount)
+
+e1 = Student("Bhavana", 24)
+e2 = Student("Rajesh", 26)
+e3 = Student("John", 27)
+
+print("Number of Students:")
+Student.showcount()
+```
+
+
+Running the above code will print the following result −
+
+
+```python
+Number of Students:
+3
+```
+
+
+## Advantages of Static Method
+
+
+There are several advantages of using static method, which includes −
+
+
+
+- Since a static method cannot access class attributes, it can be used as a utility function to perform frequently re-used tasks.
+- We can invoke this method using the class name. Hence, it eliminates the dependency on the instances.
+- A static method is always predictable as its behavior remain unchanged regardless of the class state.
+- We can declare a method as a static method to prevent overriding.
+
+

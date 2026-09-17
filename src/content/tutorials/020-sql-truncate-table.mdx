@@ -1,0 +1,159 @@
+---
+title: "SQL - Truncate Table"
+description: "Learn SQL - Truncate Table with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 200
+group: "SQL Table"
+seoTitle: "SQL - Truncate Table — CodesCompiler SQL Guide"
+permalink: "sql-truncate-table"
+---
+
+
+# SQL TRUNCATE TABLE Statement
+
+
+
+
+
+
+In SQL, sometimes we may need to remove all the data from a table but still want to keep the table structure for future use. In such cases, we use theTRUNCATE TABLEstatement.
+
+
+## SQL TRUNCATE TABLE Statement
+
+
+The SQLTRUNCATE TABLEcommand is used to remove all records from a table without deleting the table itself (i.e. empty a table). The table remains in the database, and you can insert new data into it later.
+
+
+### Syntax
+
+
+The basic syntax of a TRUNCATE TABLE command in SQL is as follows:
+
+
+```sql
+TRUNCATE TABLE table_name;
+```
+
+
+Here:
+
+
+
+- TRUNCATE TABLE:It is the SQL command to remove all records.
+- table_name:It is the name of the table from which you want to remove all data.
+
+
+
+### Example
+
+
+First let us create a tableCUSTOMERSwhich can store the personal details of customers including their name, age, address and salary etc. as shown below:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+
+   ID INT NOT NULL,
+
+   NAME VARCHAR (20) NOT NULL,
+
+   AGE INT NOT NULL,
+
+   ADDRESS CHAR (25),
+
+   SALARY DECIMAL (18, 2),       
+
+   PRIMARY KEY (ID)
+
+);
+```
+
+
+Now, insert values into this table using theINSERTstatement as follows:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+
+(2, 'Khilan', 25, 'Delhi', 1500.00 ),
+
+(3, 'Kaushik', 23, 'Kota', 2000.00 ),
+
+(4, 'Chaitali', 25, 'Mumbai', 6500.00 ),
+
+(5, 'Hardik', 27, 'Bhopal', 8500.00 ),
+
+(6, 'Komal', 22, 'Hyderabad', 4500.00 ),
+
+(7, 'Muffy', 24, 'Indore', 10000.00 );
+```
+
+
+The table will be created as follows −
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+Following SQLTRUNCATE TABLEstatement will remove all the records of theCUSTOMERStable:
+
+
+```sql
+TRUNCATE TABLE CUSTOMERS;
+```
+
+
+## Verifying the Table After Truncation
+
+
+After executing the above command, you can verify whether the table is empty using aSELECTstatement as shown below:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+If the table was truncated, the result will show no rows as shown below:
+
+
+```sql
+Empty set (0.00 sec)
+```
+
+
+## SQL TRUNCATE vs DELETE
+
+
+TheTRUNCATEandDELETEcommands may seem to be similar because they both remove data from a table, but there are some important differences between them. These differences are shown in the table below:
+
+
+DELETETRUNCATEDeletes one or more rows based on a condition using theWHEREclause.Deletes all rows in the table without any condition.A DML (Data Manipulation Language) command.A DDL (Data Definition Language) command.Requires manualCOMMITto save changes permanently.Automatically commits changes; cannot be rolled back in most systems.Deletes rows one by one and logs each transaction.Removes all data in one operation with minimal logging.SupportsWHEREclause to filter which rows to delete.Does not supportWHEREclause.Locks each row during deletion.Applies a table-level lock.Consumes more transaction log space.Consumes less log space (only page deallocations are logged).Identity column values are not reset.Identity values are reset to the original seed.RequiresDELETEpermission.RequiresALTERpermission.Slower for large datasets.Much faster for large datasets.
+
+
+## SQL TRUNCATE vs DROP
+
+
+In SQL, bothTRUNCATEandDROPare commands used to change the structure of a table. However, they are quite different in what they do and how they affect the database. The table below shows the main differences between them:
+
+
+DROPTRUNCATERemoves the table completely from the database including data, structure, constraints, and indexes.Removes all data from the table but keeps the table structure and constraints intact.A DDL (Data Definition Language) command.A DDL (Data Definition Language) command.Frees up the table space from memory.The table remains in the database and memory.All constraints, indexes, and definitions are removed permanently.All constraints and indexes remain intact.RequiresALTERandCONTROLpermissions.Requires onlyALTERpermission.Faster thanDELETEbut slower thanTRUNCATE.Faster than bothDROPandDELETE.
+
+
+## Important Points on Using TRUNCATE TABLE
+
+
+Following are some of the important points we should remember about theTRUNCATE TABLEstatement:
+
+
+
+- TRUNCATEquickly removes all rows from a table.
+- You cannot use aWHEREclause withTRUNCATEbecause it removes everything.
+- The table remains in the database and can still be used after truncation.
+- In most databases (like MySQL),TRUNCATEalso resets auto-increment values.
+- Once executed,TRUNCATEcannot be undone unless your database supports transactions and you are using one.
+
+

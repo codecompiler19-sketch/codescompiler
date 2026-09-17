@@ -1,0 +1,176 @@
+---
+title: "PYTHON - Walrus Operator"
+description: "Learn PYTHON - Walrus Operator with clear explanation, code examples, and practical guide."
+category: "python"
+order: 260
+group: "PYTHON Basics"
+seoTitle: "PYTHON - Walrus Operator — CodesCompiler PYTHON Guide"
+permalink: "python-walrus-operator"
+---
+
+
+# Python Walrus Operator (:`=`)
+
+
+
+
+Thewalrus operator (:`=`)is a new type of assignment operator that was introduced in Python 3.8. This chapter will give a clear understanding of the walrus operator and how to use it to reduce number of lines in your Python code.
+
+
+## What is Walrus Operator?
+
+
+The walrus operator (:`=`) is used to assign a value to a variable from an expression inside loop conditions. This is useful when you need to use a value multiple times in a loop, but don't want to repeat the calculation. Hence it is also known as theassignment expression operator. The name "walrus operator" comes because the operator (:`=`) looks likes the eyes and tusks of a walrus.
+
+
+Thesyntaxof the walrus operator is as follows −
+
+
+```python
+variable := expression
+
+
+
+# Example
+
+n := len(arr) + 10
+```
+
+
+
+- variable− This is the name of the variable to which the value will be assigned.
+- expression− The mathematical expression, function call, or any valid Python expression that returns a value.
+
+
+
+## Example of Walrus Operator
+
+
+Now, let's look at an example to understand how the walrus operator can be used to simplify code. Consider the following code that uses awhile loopto pop elements from a stack until it is empty. At each iteration of the loop, we calculate the length of the stack usinglen(stack)and assign it to the variablen.
+
+
+The walrus operator allows us to combine these two operations into a single line, see the code below −
+
+
+```python
+# Traditional way
+
+print("Using traditional way:")
+
+stack = [1, 2, 3, 4, 5]
+
+n = len(stack)
+
+while len(stack) > 0:
+
+    print(stack.pop(), end=" ")
+
+print("\n\n")
+
+
+
+# Simplify using walrus operator
+
+print("Using walrus operator:")
+
+stack = [1, 2, 3, 4, 5]
+
+while (n := len(stack)) > 0:
+
+    print(stack.pop(), end=" ")
+```
+
+
+Theoutputof both the above code will be −
+
+
+```python
+Using traditional way:
+
+5 4 3 2 1
+
+
+
+Using walrus operator:
+
+5 4 3 2 1
+```
+
+
+## Walrus Operator for List Comprehensions
+
+
+Thelist comprehensionsis a simple way to create lists in Python using a single line of code. The walrus operator can be used in list comprehensions to assign a value to a variable as part of the expression.
+
+
+In theexamplebelow, we show how list comprehensions and the walrus operator simplify the code that generates a list of squares of numbers greater than 20 from a range of 10 numbers.
+
+
+```python
+# Traditional way
+
+print("Using traditional way:")
+
+results = []
+
+for x in range(10):
+
+    y = x * x
+
+    if y > 20:
+
+        results.append(y)
+
+print(results, "\n")
+
+
+
+
+
+# Simplify using walrus operator
+
+print("Using walrus operator:")
+
+results = [y for x in range(10) if (y := x * x) > 20]
+
+print(results)
+```
+
+
+Theoutputof both the above code will be −
+
+
+```python
+Using traditional way:
+
+[25, 36, 49, 64, 81]
+
+
+
+Using walrus operator:
+
+[25, 36, 49, 64, 81]
+```
+
+
+## When to Avoid Using Walrus Operator?
+
+
+We already saw that the walrus operator can be used to reduce the number of lines in your code and make it more readable. However, there are some scenarios where using the walrus operator may not be appropriate.
+
+
+Avoid using the walrus operator in following scenarios −
+
+
+
+- The assignment expression is too complex and makes the code harder to read.
+- Direct assignment to a variable is restricted. For example,x :`=` 10will result in a syntax error.
+- The walrus operator is not allowed in lambda functions. For example,lambda x :`=` 5: x * 2will result in a syntax error.
+
+
+
+## Conclusion
+
+
+If you are using Python 3.8 or later, you can use the walrus operator to reduce the number of lines in your code and make it more readable. However, it is important to use the walrus operator carefully, because it can make code harder to read if overused or used inappropriately. It is recommended to use the walrus operator only when it improves the clarity of the code.
+

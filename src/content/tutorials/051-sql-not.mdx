@@ -1,0 +1,349 @@
+---
+title: "SQL - NOT Operator"
+description: "Learn SQL - NOT Operator with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 510
+group: "SQL Operators and Clauses"
+seoTitle: "SQL - NOT Operator — CodesCompiler SQL Guide"
+permalink: "sql-not"
+---
+
+
+# SQL - NOT Operator
+
+
+Table of contentThe SQL NOT OperatorSQL NOT with LIKE OperatorSQL NOT with IN OperatorSQL NOT with IS NULL OperatorSQL NOT with BETWEEN OperatorSQL NOT with EXISTS OperatorSQL NOT with Greater Than OperatorSQL NOT with Less Than OperatorSQL NOT with AND Operator
+
+
+
+
+## The SQL NOT Operator
+
+
+The NOT operator in SQL is used to negate a condition, meaning it returns rows where the specified condition is not true. It is applied with comparison and logical operators to filter out certain values or ranges. For example:
+
+
+
+- NOT `=`excludes rows with a specific value.
+- NOT INexcludes rows matching any value in a given list.
+- NOT LIKEexcludes rows matching a specific pattern.
+- NOT BETWEENexcludes rows within a given range.
+
+
+
+By usingNOToperator, you can refine query results to include only data that does not meet certain criteria.
+
+
+### Syntax
+
+
+Following is the syntax for SQL NOT operator:
+
+
+```sql
+SELECT column1, column2, ...
+FROM table_name
+WHERE NOT condition;
+```
+
+
+### Example
+
+
+In the following example, let us first create a table to demonstrate the usage of NOT operator.
+
+
+Using the query below, we are creating a table namedCUSTOMERS, which contains the personal details of customers including their name, age, address and salary etc.:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),       
+   PRIMARY KEY (ID)
+);
+```
+
+
+Now, insert values into this table using the INSERT statement as follows:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+(2, 'Khilan', 25, 'Delhi', 1500.00 ),
+(3, 'Kaushik', 23, 'Kota', 2000.00 ),   
+(4, 'Chaitali', 25, 'Mumbai', 6500.00 ),   
+(5, 'Hardik', 27, 'Bhopal', 8500.00 ), 
+(6, 'Komal', 22, 'Hyderabad', 4500.00 ),
+(7, 'Muffy', 24, 'Indore', 10000.00 );
+```
+
+
+The table will be created as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+The SQL query below retrieves all rows from the 'CUSTOMERS' table where the 'SALARY' column is not greater than 2000.00:
+
+
+```sql
+SELECT * FROM CUSTOMERS WHERE NOT (SALARY > 2000.00);
+```
+
+
+Following is the output of the above query:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.00
+
+
+## SQL NOT with LIKE Operator
+
+
+We can use the SQLNOTkeyword with theLIKEoperator to find rows that do not match a specific pattern.
+
+
+While LIKE searches for values that fit a given pattern using wildcards (% for multiple characters, _ for a single character),NOT LIKEreturns the opposite, i.e. only rows that fail to match that pattern.
+
+
+### Example
+
+
+We use the following query to retrieve all rows from the 'CUSTOMERS' table where the 'NAME' column does not start with the letter 'K':
+
+
+```sql
+SELECT * FROM CUSTOMERS WHERE NAME NOT LIKE 'K%';
+```
+
+
+On executing the query above, the table will be displayed as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.007Muffy24Indore10000.00
+
+
+## SQL NOT with IN Operator
+
+
+TheNOTkeyword can be used with theINoperator to exclude rows where a column's value matches any value in a specified list.
+
+
+WhileINreturns rows with values found in the list,NOT INreturns only those that are not in the list.
+
+
+### Example
+
+
+The following SQL query selects all rows from the 'CUSTOMERS' table where the 'AGE' column does not have values 25, 26, or 32:
+
+
+```sql
+SELECT * FROM CUSTOMERS WHERE AGE NOT IN (25, 26, 32);
+```
+
+
+The result table is displayed as follows:
+
+
+IDNAMEAGEADDRESSSALARY3Kaushik23Kota2000.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## SQL NOT with IS NULL Operator
+
+
+TheNOTkeyword can be used with theIS NULLoperator to find rows where a column does not containNULLvalues.
+
+
+SinceNULLrepresents missing or unknown data in SQL,NOT IS NULLreturns only rows with actual (non-null) values.
+
+
+### Example
+
+
+This SQL query retrieves all rows from the 'CUSTOMERS' table where the 'AGE' column is not null, i.e. it contains valid age values:
+
+
+```sql
+SELECT * FROM CUSTOMERS WHERE AGE IS NOT NULL;
+```
+
+
+The result table is exactly as the original table as it contains no NULL values:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+However, if the table contains any NULL values, the rows containing it will be omitted in the resultant table.
+
+
+## SQL NOT with BETWEEN Operator
+
+
+TheNOTkeyword can be used with theBETWEENoperator to exclude rows where a column's value falls within a specific range.
+
+
+WhileBETWEENreturns values within the range (inclusive),NOT BETWEENreturns values outside that range.
+
+
+### Example
+
+
+Using the following query, we are displaying records in the CUSTOMERS table whose salary does not fall between 1500.00 and 2500.00:
+
+
+```sql
+SELECT * FROM CUSTOMERS 
+WHERE SALARY NOT BETWEEN 1500.00 AND 2500.00;
+```
+
+
+The resultant table is as follows:
+
+
+IDNAMEAGEADDRESSSALARY4Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## SQL NOT with EXISTS Operator
+
+
+TheNOTkeyword can be used with theEXISTSoperator to return rows where a subquery does not produce any results. WhileEXISTSreturnsTRUEif the subquery finds matching rows,NOT EXISTSreturnsTRUEonly when the subquery finds none.
+
+
+### Example
+
+
+In the following example, let us create another table Orders to help in demonstrating the usage of NOT operator with EXISTS operator:
+
+
+```sql
+CREATE TABLE ORDERS (
+   OID INT NOT NULL,
+   DATE VARCHAR (20) NOT NULL,
+   CUSTOMER_ID INT NOT NULL,
+   AMOUNT DECIMAL (18, 2)
+);
+```
+
+
+Using the INSERT statement, insert values into this table as follows:
+
+
+```sql
+INSERT INTO ORDERS VALUES 
+(102, '2009-10-08 00:00:00', 3, 3000.00),
+(100, '2009-10-08 00:00:00', 3, 1500.00),
+(101, '2009-11-20 00:00:00', 2, 1560.00),
+(103, '2008-05-20 00:00:00', 4, 2060.00);
+```
+
+
+The table is displayed as follows:
+
+
+OIDDATECUSTOMER_IDAMOUNT1022009-10-08 00:00:0033000.001002009-10-08 00:00:0031500.001012009-11-20 00:00:0021560.001032008-05-20 00:00:0042060.00
+
+
+Following query is used to print the IDs of customers in CUSTOMERS table that do not exist in the ORDERS table:
+
+
+```sql
+SELECT * FROM CUSTOMERS WHERE NOT EXISTS (
+SELECT CUSTOMER_ID FROM ORDERS 
+WHERE ORDERS.CUSTOMER_ID = CUSTOMERS.ID);
+```
+
+
+The output obtained after executing the query is as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## SQL NOT with Greater Than Operator
+
+
+TheNOTkeyword can be used with theGreater Than (>)operator to return rows where a column's value is not greater than a given number.
+
+
+While>returns values strictly greater than the specified number,NOT (> value)returns the opposite, i.e. values that are either less than or equal to that number.
+
+
+### Example
+
+
+In the following query, we retrieve all customers whose salary is not greater than 5000.00:
+
+
+```sql
+SELECT * FROM CUSTOMERS 
+WHERE NOT (SALARY > 5000.00);
+```
+
+
+The resultant table will be as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.006Komal22Hyderabad4500.00
+
+
+## SQL NOT with Less Than Operator
+
+
+TheNOTkeyword can be used with theLess Than (`<)operator to return rows where a column's value is not less than a given number.
+`
+
+While<returns values strictly smaller than the specified number,NOT (`<` value)returns the opposite, i.e. values that are greater than or equal to that number.
+
+
+### Example
+
+
+The following query retrieves all customers whose age is not less than 25:
+
+
+```sql
+SELECT * FROM CUSTOMERS 
+WHERE NOT (AGE < 25);
+```
+
+
+The output is as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.00
+
+
+## SQL NOT with AND Operator
+
+
+TheNOTkeyword can also be used with theANDlogical operator to negate a compound condition.
+
+
+When used withAND, theNOToperator reverses the truth value of the combined conditions. In other words,NOT (condition1 AND condition2)returns rows where at least one of the conditions is false.
+
+
+### Example
+
+
+The following query retrieves all customers whose age is not between 25 and 30 inclusive, when combined with a salary condition, by negating theANDlogic:
+
+
+```sql
+SELECT * FROM CUSTOMERS 
+WHERE NOT (AGE >= 25 AND SALARY >= 5000.00);
+```
+
+
+The result table is shown below:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+

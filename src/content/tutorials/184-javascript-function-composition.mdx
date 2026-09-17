@@ -1,0 +1,103 @@
+---
+title: "JavaScript - Function Composition"
+description: "Learn JavaScript - Function Composition with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1840
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Function Composition — CodesCompiler JavaScript Guide"
+permalink: "javascript-function-composition"
+---
+
+
+# JavaScript - Function Composition
+
+
+
+
+Function composition is a powerful functional programming approach that allows programmers to combine numerous functions into a single function. This compositional method enhances readability, modularity and code reuse. The compose function is important for JavaScript's ability to provide function composition.
+
+
+## What is Function Composition?
+
+
+The method of combining several functions to create a new function is known as function composition. The output of one function becomes the input of the subsequent function in the composition chain, involving an order of operations or transformations performed to an input value.
+
+
+After receiving two or more functions, the compose function creates a new function that applies the functions in a right to left order. It means that the function on the right is applied first, then the function on the left, and so forth.
+
+
+### Example
+
+
+Let's consider an example to get a better understanding of function composition. Now look at the three functions increaseBy5, tripleValue, and reduceBy10. We want to create a composite function that uses these functions to a given input value. To do that, use the compose function as follows −
+
+
+```javascript
+const increaseBy5 = (num) => num + 5;
+const tripleValue = (num) => num * 3;
+const reduceBy10 = (num) => num - 10;
+
+const applyOperations = compose(reduceBy10, tripleValue, increaseBy5);
+const finalResult = applyOperations(7);
+
+console.log("The final result after applying the operations is:", finalResult);
+```
+
+
+Three basic functions are defined in the above example: reduceBy10, tripleValue, and increaseBy5. In order to apply these functions to an input value of 7, we have to create a composite function. By linking the functions together in the right order, the compose function enables us to do this.
+
+
+TripleValue, increaseBy5, and reduceBy10 are all represented by the composite function applyOperations. The functions are applied in the given order when we call applyOperations with the input value 7, yielding the output value 36.
+
+
+## Implement the Compose Function
+
+
+To take advantage of the power of function composition, we need to define the compose function. Here is the implementation −
+
+
+```javascript
+const compose = (...ops) => {
+  return (value) => {
+    return ops.reduceRight((result, operation) => {
+      return operation(result);
+    }, value);
+  };
+};
+console.log("Chained functions have been successfully executed.");
+```
+
+
+### Output
+
+
+This will produce the following result −
+
+
+```javascript
+Chained functions have been successfully executed.
+The final result after applying the operations is: 26
+```
+
+
+This implementation uses the spread operator...functions to allow the compose function to take any number of functions as arguments. It returns a new function that applies each function on the accumulated result by iterating over the functions in reverse order using reduceRight.
+
+
+## Benefits of Function Composition
+
+
+When creating clear and maintainable code, function composition has the following advantages −
+
+
+
+- Re-usability:We can create large operations without duplicating code by assembling smaller, reusable functions. By allowing each function focus on a particular task, code modularity and re-usability are encouraged.
+- Readability:We can express complex operations in a more easy and concise way by using function composition. We can define the desired transformation in a manner that closely resembles the issue domain by chaining functions together.
+- Maintainability:Understanding, testing, and modifying individual functions is made simpler by the clear purpose of each function. Code that is easier to maintain and understand results from changes made to one function that have no effect on other functions in the composition.
+
+
+
+## Summary
+
+
+One effective functional programming technique that promotes code modularity, reusability, and readability is function composition. By simply chaining several functions together and applying them to input values, the compose function allows us to write more expressive and maintainable code.
+

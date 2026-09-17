@@ -1,0 +1,301 @@
+---
+title: "SQL - Order By Clause"
+description: "Learn SQL - Order By Clause with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 410
+group: "SQL Operators and Clauses"
+seoTitle: "SQL - Order By Clause — CodesCompiler SQL Guide"
+permalink: "sql-order-by"
+---
+
+
+# SQL - ORDER BY Clause
+
+
+Table of contentThe SQL ORDER BY ClauseORDER BY Clause with ASC (Default)ORDER BY Clause with DESC KeywordORDER BY Using Both ASC and DESCORDER BY Clause on Single ColumnORDER BY Clause on Multiple ColumnsORDER BY with WHERE ClauseORDER BY with LIMIT ClauseSorting Results in a Preferred Order
+
+
+
+
+## The SQL ORDER BY Clause
+
+
+TheSQL ORDER BYclause is used to sort the result set of a query by one or more columns. By default, it sorts the data in ascending order (from lowest to highest), but you can use theDESCkeyword to sort the results in descending order (from largest to lowest).
+
+
+This clause is placed at the end of a query, following theWHERE,HAVING, andGROUP BYclauses, if present. Following are some of the important point we should know about the ORDER BY clause:
+
+
+
+- Most databases sort query results in ascending order by default.
+- Use theASCkeyword to explicitly specify ascending order.
+- Use theDESCkeyword to sort in descending order.
+
+
+
+### Syntax
+
+
+The basic syntax of the ORDER BY clause is as follows:
+
+
+```sql
+SELECT column-list
+FROM table_name
+[ORDER BY column1, column2, .. columnN] [ASC | DESC];
+```
+
+
+Where,column-listis list of the columns we want to retrieve; and ASC or DESC specifies the sort order.
+
+
+We can use more than one column in the ORDER BY clause, but we need to make sure that the column we are using to sort is specified in the column-list.
+
+
+## ORDER BY Clause with ASC (Default)
+
+
+We can sort the result-set of a query in ascending order (based on one or more columns) using theSQL ORDER BYclause by specifyingASCas the sort order. ASC is the default sort order for this clause, i.e. while using the ORDER BY clause if you do not explicitly specify the sort order, the data will be sorted in ascending order.
+
+
+### Example
+
+
+Assume we have created a table with name CUSTOMERS in the MySQL database using CREATE TABLE statement as shown below:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),
+   PRIMARY KEY (ID)
+);
+```
+
+
+Following query inserts values into this table using the INSERT statement:
+
+
+```sql
+insert INTO CUSTOMERS VALUES
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00),
+(2, 'Khilan', 25, 'Delhi', 1500.00),
+(3, 'Kaushik', 23, 'Kota', 2000.00),
+(4, 'Chaitali', 25, 'Mumbai', 6500.00),
+(5, 'Hardik', 27, 'Bhopal', 8500.00),
+(6, 'Komal', 22, 'Hyderabad', 4500.00),
+(7, 'Muffy', 24, 'Indore', 10000.00);
+```
+
+
+The table obtained is as shown below:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+In the following query, we are sorting the records of the CUSTOMERS table in ascending order based on the column NAME:
+
+
+```sql
+SELECT * FROM CUSTOMERS ORDER BY NAME ASC;
+```
+
+
+This would produce the following result:
+
+
+IDNAMEAGEADDRESSSALARY4Chaitali25Mumbai6500.005Hardik27Bhopal8500.003Kaushik23Kota2000.002Khilan25Delhi1500.006Komal22Hyderabad4500.007Muffy24Indore10000.001Ramesh32Ahmedabad2000.00
+
+
+## ORDER BY Clause with DESC Keyword
+
+
+To sort the result-set of a query in descending order (based on one or more columns), we need to use the ORDER BY clause by specifying DESC as the sort order.
+
+
+### Example
+
+
+The following query sorts the records of the CUSTOMER table based on the descending order of the name of the customers:
+
+
+```sql
+SELECT * FROM CUSTOMERS ORDER BY NAME DESC;
+```
+
+
+This would produce the result as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.007Muffy24Indore10000.006Komal22Hyderabad4500.002Khilan25Delhi1500.003Kaushik23Kota2000.005Hardik27Bhopal8500.004Chaitali25Mumbai6500.00
+
+
+## ORDER BY Using Both ASC and DESC
+
+
+In SQL, theORDER BYclause allows you to specify different sort directions for different columns within the same query. You can applyASC(ascending) to one column andDESC(descending) to another.
+
+
+### Example
+
+
+In the following query, we are sorting the records from theCUSTOMERStable byAGEin ascending order andSALARYin descending order:
+
+
+```sql
+SELECT * FROM CUSTOMERS ORDER BY AGE ASC, SALARY DESC;
+```
+
+
+Following is the result produced:
+
+
+IDNAMEAGEADDRESSSALARY6Komal22Hyderabad4500.003Kaushik23Kota2000.007Muffy24Indore10000.004Chaitali25Mumbai6500.002Khilan25Delhi1500.005Hardik27Bhopal8500.001Ramesh32Ahmedabad2000.00
+
+
+## ORDER BY Clause on Single Column
+
+
+TheORDER BYclause can also be used to sort the result-set based on a single column. This is the most basic usage of the clause and is commonly used when we want to view data in a simple sorted order.
+
+
+### Example
+
+
+In the following query, we are retrieving all records from theCUSTOMERStable and sorting them by theAGEcolumn in ascending order (default):
+
+
+```sql
+SELECT * FROM CUSTOMERS ORDER BY AGE;
+```
+
+
+The result will be sorted from the youngest to the oldest customer:
+
+
+IDNAMEAGEADDRESSSALARY6Komal22Hyderabad4500.003Kaushik23Kota2000.007Muffy24Indore10000.002Khilan25Delhi1500.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.001Ramesh32Ahmedabad2000.00
+
+
+## ORDER BY Clause on Multiple Columns
+
+
+We can use the ORDER BY clause to sort the result-set of a query by multiple (more than one) columns. When sorting by multiple columns, the sorting is done in the order that is specified in the ORDER BY clause. In other words, the table will be sorted based on the first column (specified in the query), then the second column, and so on.
+
+
+### Example
+
+
+In the following query, we are retrieving all records from the CUSTOMERS table and sorting them first by their address in ascending order, and then by their salary in descending order:
+
+
+```sql
+SELECT * FROM CUSTOMERS ORDER BY AGE ASC, SALARY DESC;
+```
+
+
+Following is the result produced:
+
+
+IDNAMEAGEADDRESSSALARY6Komal22Hyderabad4500.003Kaushik23Kota2000.007Muffy24Indore10000.004Chaitali25Mumbai6500.002Khilan25Delhi1500.005Hardik27Bhopal8500.001Ramesh32Ahmedabad2000.00
+
+
+## ORDER BY with WHERE Clause
+
+
+We can also use the WHERE clause with the ORDER BY clause to sort the rows that meet certain conditions. This can be useful when we want to sort a subset of the data in a table based on the specific criteria.
+
+
+### Example
+
+
+Now, we are retrieving all records from the CUSTOMERS table where the age of the customer is 25, and sorting them as per the descending order of their names:
+
+
+```sql
+SELECT * FROM CUSTOMERS 
+WHERE AGE = 25 ORDER BY NAME DESC;
+```
+
+
+Following is the output of the above query:
+
+
+IDNAMEAGEADDRESSSALARY2Khilan25Delhi1500.004Chaitali25Mumbai6500.00
+
+
+## ORDER BY with LIMIT Clause
+
+
+We can use the LIMIT clause with ORDER BY clause to limit the specified number of rows by sorting them either in ascending or in descending order.
+
+
+### Syntax
+
+
+Following is the syntax of using the LIMIT clause with the ORDER BY clause in MySQL database:
+
+
+```sql
+SELECT column1, column2, ...
+FROM table_name
+ORDER BY column_name1 [ASC | DESC], column_name2 [ASC | DESC], ...
+LIMIT N;
+```
+
+
+### Example
+
+
+In here, we are retrieving the top 4 records from the CUSTOMERS table based on their salary, and sorting them in ascending order based on their name:
+
+
+```sql
+SELECT SALARY FROM CUSTOMERS ORDER BY NAME LIMIT 4;
+```
+
+
+### Output
+
+
+Following is the output of the above query:
+
+
+SALARY6500.008500.002000.001500.00
+
+
+## Sorting Results in a Preferred Order
+
+
+One can also sort the records of a table in their own preferred order using theCASEstatement within the ORDER BY clause. All the values are specified in the clause along with the position they are supposed to be sorted in; if the values are not given any number, they are automatically sorted in ascending order.
+
+
+### Example
+
+
+To fetch the rows with their own preferred order, the SELECT query used would be as follows:
+
+
+```sql
+SELECT * FROM CUSTOMERS ORDER BY (
+CASE ADDRESS
+   WHEN 'MUMBAI' THEN 1
+   WHEN 'DELHI' THEN 2
+   WHEN 'HYDERABAD' THEN 3
+   WHEN 'AHMEDABAD' THEN 4
+   WHEN 'INDORE' THEN 5
+   WHEN 'BHOPAL' THEN 6
+   WHEN 'KOTA' THEN 7
+   ELSE 100 END
+);
+```
+
+
+The above query sorts the CUSTOMERS table based on the custom order defined using the CASE statement. Here, we are sorting the records based on the population of the cities specified in the ADDRESS column.
+
+
+IDNAMEAGEADDRESSSALARY4Chaitali25Mumbai6500.002Khilan25Delhi1500.006Komal22Hyderabad4500.001Ramesh32Ahmedabad2000.007Muffy24Indore10000.005Hardik27Bhopal8500.003Kaushik23Kota2000.00
+

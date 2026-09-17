@@ -1,0 +1,287 @@
+---
+title: "SQL - Indexes"
+description: "Learn SQL - Indexes with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 780
+group: "SQL Indexes"
+seoTitle: "SQL - Indexes — CodesCompiler SQL Guide"
+permalink: "sql-indexes"
+---
+
+
+# SQL - Indexes
+
+
+Table of contentThe SQL IndexesThe CREATE INDEX StatementTypes of IndexesSQL Unique IndexesSQL Single-Column IndexesSQL Composite IndexesSQL Implicit IndexesThe SQL DROP INDEX StatementWhen should indexes be avoided?
+
+
+
+
+## The SQL Indexes
+
+
+SQL Indexesare special lookup tables that are used to speed up the process of data retrieval. They hold pointers that refer to the data stored in a database, which makes it easier to locate the required data records in a database table.
+
+
+SQL Indexes work similar to the index of a book or a journal.
+
+
+While an index speeds up the performance of data retrieval queries (SELECT statement), it slows down the performance of data input queries (UPDATE and INSERT statements). However, these indexes do not have any effect on the data.
+
+
+SQL Indexes need their own storage space within the database. Despite that, the users cannot view them physically as they are just performance tools.
+
+
+## The CREATE INDEX Statement
+
+
+An index in SQL can be created using theCREATE INDEXstatement. This statement allows you to name the index, to specify the table and which column or columns to index, and to indicate whether the index is in an ascending or descending order.
+
+
+Preferably, an index must be created on column(s) of a large table that are frequently queried for data retrieval.
+
+
+### Syntax
+
+
+The basic syntax of aCREATE INDEXis as follows:
+
+
+```sql
+CREATE INDEX index_name ON table_name;
+```
+
+
+### Example
+
+
+First, let us create a tableCUSTOMERStable as shown below:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR(20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR(25),
+   SALARY DECIMAL(18, 2),
+   PRIMARY KEY (ID)
+);
+```
+
+
+Now, we will create an index on theAGEcolumn in the CUSTOMERS table:
+
+
+```sql
+CREATE INDEX idx_age
+ON CUSTOMERS(AGE);
+```
+
+
+We get the output as shown below:
+
+
+```sql
+Query OK, 0 rows affected (0.03 sec)
+```
+
+
+## Types of Indexes
+
+
+There are various types of indexes that can be created using the CREATE INDEX statement. They are:
+
+
+
+- Unique Index
+- Single-Column Index
+- Composite Index
+- Implicit Index
+
+
+
+We will discuss about all the indexes one-by-one in this tutorial.
+
+
+## SQL Unique Indexes
+
+
+Unique indexes are used not only for performance, but also for data integrity. A unique index does not allow any duplicate values to be inserted into the table. It is automatically created by PRIMARY and UNIQUE constraints when they are applied on a database table, in order to prevent the user from inserting duplicate values into the indexed table column(s).
+
+
+### Syntax
+
+
+The basic syntax of creating SQL UNIQUE INDEX is as follows:
+
+
+```sql
+CREATE UNIQUE INDEX index_name
+on table_name (column_name);
+```
+
+
+### Example
+
+
+In this example, we create a unique index on theADDRESScolumn:
+
+
+```sql
+CREATE UNIQUE INDEX idx_address
+ON CUSTOMERS(ADDRESS);
+```
+
+
+The output produced is as shown below:
+
+
+```sql
+Query OK, 0 rows affected (0.01 sec)
+```
+
+
+## SQL Single-Column Indexes
+
+
+ASingle-Column Indexis created on only one column of a table. It allows the database to quickly locate rows based on the values in that specific column, improving query performance when filtering, searching, or sorting by that column.
+
+
+When you create an index on a single column, the database internally builds a data structure (usually a B-tree) that makes lookups much faster compared to scanning the entire table.
+
+
+### Syntax
+
+
+The basic syntax of creating SQL single column index is as follows:
+
+
+```sql
+CREATE INDEX index_name
+ON table_name (column_name);
+```
+
+
+### Example
+
+
+In the example below, we create an index on theSALARYcolumn:
+
+
+```sql
+CREATE INDEX idx_salary
+ON CUSTOMERS(SALARY);
+```
+
+
+Following is the output obtained:
+
+
+```sql
+Query OK, 0 rows affected (0.02 sec)
+```
+
+
+## SQL Composite Indexes
+
+
+AComposite Indexis an index created on two or more columns of a table. It is useful when queries use multiple columns together inWHEREclauses,JOINconditions, orORDER BYstatements. A composite index helps the database quickly locate rows based on the combination of values across those columns.
+
+
+Unlike a single-column index, a composite index can optimize queries involving multiple columns at once. However, the order of columns in the composite index is very important.
+
+
+### Syntax
+
+
+The basic syntax of composite index as follows:
+
+
+```sql
+CREATE INDEX index_name
+on table_name (column1, column2);
+```
+
+
+### Example
+
+
+Here, we create a composite index on(AGE, SALARY)columns:
+
+
+```sql
+CREATE INDEX idx_age_salary
+ON CUSTOMERS(AGE, SALARY);
+```
+
+
+We get the output as shown below:
+
+
+```sql
+Query OK, 0 rows affected (0.02 sec)
+```
+
+
+## SQL Implicit Indexes
+
+
+Implicit indexes are indexes that are automatically created by the database server when an object is created. For example, indexes are automatically created when primary key and unique constraints are created on a table in MySQL database.
+
+
+For example, when you define aPRIMARY KEYorUNIQUEconstraint on a column, the database automatically creates an index on that column to ensure values remain unique. Similarly, when you define aFOREIGN KEY, an index may be created on the referencing column(s) for faster lookups, depending on the database system.
+
+
+## The SQL DROP INDEX Statement
+
+
+An index can be dropped using SQLDROPcommand. Dropping an index can effect the query performance in a database. Thus, an index needs to be dropped only when it is absolutely necessary.
+
+
+### Syntax
+
+
+The basic syntax to drop an index is as follows:
+
+
+```sql
+DROP INDEX index_name;
+```
+
+
+### Example
+
+
+In the following example, we drop the indexidx_salaryfrom CUSTOMERS table:
+
+
+```sql
+DROP INDEX idx_salary ON CUSTOMERS;
+```
+
+
+ollowing is the output obtained:
+
+
+```sql
+Query OK, 0 rows affected (0.01 sec)
+```
+
+
+## When should indexes be avoided?
+
+
+Although indexes are intended to enhance a database's performance, there are times when they should be avoided.
+
+
+The following guidelines indicate when the use of an index should be reconsidered.
+
+
+
+- Indexes should not be used on small tables.
+- They should not be used on tables that have frequent, large batch updates or insert operations.
+- Indexes should not be used on columns that contain a high number of NULL values.
+- Columns that are frequently manipulated should not be indexed.
+
+

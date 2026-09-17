@@ -1,0 +1,249 @@
+---
+title: "JavaScript - BigInt"
+description: "Learn JavaScript - BigInt with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2550
+group: "JavaScript Miscellaneous"
+seoTitle: "JavaScript - BigInt — CodesCompiler JavaScript Guide"
+permalink: "javascript-bigint"
+---
+
+
+# JavaScript - BigInt
+
+
+
+
+## BigInt
+
+
+The BigInt data type in JavaScript is a numeric primitive that can represent integers with arbitrary magnitude. This is in contrast to the Number data type, which is limited to representing integers between -(253- 1) and 253- 1.
+
+
+JavaScript which powers dynamic web applications, traditionally employs the Number type for numeric representations in accordance with double-precision floating-point format of the widely adopted IEEE-754 standard. This standard imposes a significant constraint: it can precisely represent only up to 253- 1 as its maximum safe integer. However, crossing this numerical threshold starts to erode fidelity of numeric values and introduces potential inaccuracies into critical computations.
+
+
+JavaScript introduced the BigInt data type in response to these limitations; as its name suggests BigInt addresses the shortcomings of finite precision. This capability, proving indispensable in various scenarios notably within fields such as cryptographic algorithms, financial computations and intricate mathematical operations demanding utmost precision: it allows for the representation of integers with arbitrary accuracy, a significant advancement.
+
+
+## Declaration and Initialization
+
+
+You can create a BigInt using a numeric literal followed by the n suffix or by using the BigInt() constructor.
+
+
+```javascript
+const bigIntLiteral = 123n;
+const anotherBigInt = BigInt(456);
+```
+
+
+It's important to note that attempting to mix regular numbers and BigInt without explicit conversion can result in an error.
+
+
+## Basic Operations
+
+
+BigInt supports standard arithmetic operations like addition, subtraction, multiplication, and division. When performing operations, both operands must be of type BigInt.
+
+
+```javascript
+const a = 123n;
+const b = 456n;
+const sum = a + b; // 579n
+const product = a * b; // 56088n
+```
+
+
+## Comparison
+
+
+BigInt values can be compared using standard comparison operators, such as `<, `>, <=, `>=`, and =`=`=`.
+
+
+```javascript
+const a = 123n;
+const b = 456n;
+a > b; // false
+a === b; // false
+```
+
+
+## Conversions
+
+
+Converting between BigInt and regular numbers is possible, but keep in mind that there might be a loss of precision for very large BigInt values.
+
+
+```javascript
+const bigIntValue = BigInt("12345678901234567890");
+const regularNumber = Number(bigIntValue);
+const bigIntValue = BigInt("12345678901234567890");
+const regularNumber = Number(bigIntValue);
+```
+
+
+## Examples
+
+
+### Example 1: Simple BigInt Arithmetic
+
+
+In this example we demonstrate addition and multiplication of 2 BigInt numbers num1 and num2 whos values are 123n and 456n respectively. By enabling the accurate representation of large integer values without risking precision loss, BigInt overcomes a potential shortcoming in regular JavaScript numbers.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+   ## Simple BigInt Arithmetic
+   p id="result"
+   <script>
+      const num1 = 123n;
+      const num2 = 456n;
+
+      const sum = num1 + num2;
+      const product = num1 * num2;
+
+      document.addEventListener("DOMContentLoaded", function () {
+         document.getElementById("result").innerText = 
+			`Sum of ${num1} & ${num2} is ${sum} and their product: ${product}`;
+      });
+   </script>
+</body>
+</html>
+```
+
+
+### Example 2: Fibonacci Sequence Generator with BigInt
+
+
+The Fibonacci sequence: a series of numbers in which each number is the sum of its two preceding ones; employs BigInt to handle larger values exceeding the precision limits of regular JavaScript numbers. Through the generateFibonacci function, an array serves as storage for these sequence values, guaranteeing precise calculations even for terms with substantial numeric magnitude.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+   ## Fibonacci Sequence
+   p id="result"
+   <script>
+      function generateFibonacci(n) {
+         const sequence = [0n, 1n];
+         for (let i = 2; i <= n; i++) {
+            sequence[i] = sequence[i - 1] + sequence[i - 2];
+         }
+         return sequence;
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+         const result = generateFibonacci(20); 
+         document.getElementById("result").innerText = "Fibonacci Sequence of 1st 20 terms: " + result.join(", ");
+      });
+   </script>
+</body>
+</html>
+```
+
+
+### Example 3: Factorial Calculator with BigInt
+
+
+Factorial is the product of all the positive integers less than or equal to the number. In order to find the factorial we have made use of BigInt. For small numbers like 5 & 10, a regular number would work but what happens when we have to find the factorial of 10000, the output would be too huge. Hence BigInt would come to our rescue. In this example we find the factorial of 20n with the help of a loop.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+   ## Factorial of a Large Number
+   p id="result"
+   <script>
+      function calculateFactorial() {
+         const num = 20n; // Calculate factorial of 20
+         let result = 1n;
+
+         for (let i = 2n; i <= num; i++) {
+            result *= i;
+         }
+         document.getElementById("result").innerText = "Factorial of 20 is " + result;
+      }
+      document.addEventListener("DOMContentLoaded", function () {
+         calculateFactorial();
+      });
+   </script>
+</body>
+</html>
+```
+
+
+### Example 4: BigInt Color Square
+
+
+Utilizing BigInt in this example, we generate random colours within our predefined parameters and apply them to the colorSquare for demonstration. The generation of a random colour involves multiplication: a floating-point number between 0 and 1--obtained through Math.random()  is multiplied by the maximum color value. We subsequently round down this result to its nearest integer via Math.floor(), before converting it into BigInt using BigInt(). The BigInt generated is the converted to a hexadecimal string and returned.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+   <style>
+      body {
+         font-family: Arial, sans-serif;
+      }
+      #colorSquare {
+         width: 400px;
+         height: 200px;
+         border: 2px solid #000;
+      }
+   </style>
+</head>
+<body>
+   ## BigInt Color Example
+   <div id="colorSquare"></div>
+   <script> 
+      function generateRandomColor() {
+         const maxColorValue = 16777215n; // 0xFFFFFF in hexadecimal
+         const randomColor = BigInt(Math.floor(Math.random() * Number(maxColorValue)));
+         return #${randomColor.toString(16).padStart(6, '0')};
+      }
+      const colorSquare = document.getElementById('colorSquare');
+      colorSquare.style.backgroundColor = generateRandomColor();
+   </script>
+</body>
+</html>
+```
+
+
+## Error Handling with BigInt
+
+
+This code demonstrates a unique case of adding BigInt with regular numbers. In JavaScript, we need to perform explicit conversion to BigInt. When we tried to perform the addition of 42 (regular number) with 42n (or BigInt), it threw an error which caught and displayed on the screen with the help of try catch.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+   ## Adding BigInt & Regular Number
+   <div id="output"></div>
+   <script>
+      const regularNumber = 42;
+      const bigIntValue = BigInt(regularNumber); // Explicit conversion
+
+      document.getElementById("output").innerHTML = 
+	   `pRegular Number: ${regularNumber}`+
+      `pBigInt Value: ${bigIntValue}` +
+      `pRegular Number + BigInt Value results in:`;
+
+      try {
+         const result = regularNumber + bigIntValue;
+         document.getElementById("output").innerHTML += Result: ${result};
+      } catch (e) {
+         document.getElementById("output").innerHTML += Error: ${e};
+      }
+   </script>
+</body>
+</html>
+```
+

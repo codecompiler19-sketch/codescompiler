@@ -1,0 +1,378 @@
+---
+title: "SQL - Temporary Tables"
+description: "Learn SQL - Temporary Tables with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 220
+group: "SQL Table"
+seoTitle: "SQL - Temporary Tables — CodesCompiler SQL Guide"
+permalink: "sql-temporary-tables"
+---
+
+
+# SQL Temporary Table
+
+
+Table of contentThe SQL Temporary TableCreating Temporary Tables in SQLInserting Data into Temporary TableDropping a Temporary Table in SQLWhat Happens After Session Ends?Types of Temporary Tables in SQL ServerTemporary Table vs Permanent TableImportant Points About Temporary Tables
+
+
+
+
+In SQL, sometimes we need a table just for a short time while running a query or during a session. In such cases, we can use aTemporary Table. It helps us to store and work with data temporarily, without changing the main database tables.
+
+
+## The SQL Temporary Table
+
+
+ATemporary Tablein SQL is a special type of table that only exists during your current database session. It is created using theCREATE TEMPORARY TABLEstatement and is only visible to the session (or user) that created it.
+
+
+Once the session ends or the connection is closed, the table is automatically deleted. Temporary tables do not affect the actual database structure. They are useful when you want to:
+
+
+
+- Store results in the middle of complex queries.
+- Split (break) a big task into smaller steps.
+- Use data temporarily without saving it permanently in the main database.
+
+
+
+## Creating Temporary Tables in SQL
+
+
+To create temporary tables in SQL, you use a query similar to creating regular tables. The only difference is that instead of using theCREATE TABLEstatement, you useCREATE TEMPORARY TABLE.
+
+
+### Syntax
+
+
+Following is the basic syntax to create a temporary table in SQL:
+
+
+```sql
+CREATE TEMPORARY TABLE table_name (
+
+  column1 datatype,
+
+  column2 datatype,
+
+  ...
+
+  columnN datatype,
+
+  PRIMARY KEY( one or more columns )
+
+);
+```
+
+
+Here:
+
+
+
+- CREATE TEMPORARY TABLE:It is the SQL command to create a temporary table.
+- table_name:It is the name of the temporary table (usually prefixed).
+- column1, column2, ...:These are the names of the columns to store data.
+- datatype:These are the type of data each column holds, likeINT,VARCHAR,DATE, etc.
+
+
+
+### Example
+
+
+Let us create a temporary table namedCUSTOMERSin SQL:
+
+
+```sql
+CREATE TEMPORARY TABLE CUSTOMERS(
+
+   ID   INT              NOT NULL,
+
+   NAME VARCHAR (20)     NOT NULL,
+
+   AGE  INT              NOT NULL,
+
+   ADDRESS  CHAR (25) ,
+
+   SALARY   DECIMAL (18, 2),
+
+   PRIMARY KEY (ID)
+
+);
+```
+
+
+After executing the above command, a temporary table is created in the current session:
+
+
+```sql
+Query OK, 0 rows affected (0.03 sec)
+```
+
+
+## Inserting Data into Temporary Table
+
+
+We can insert data into the temporary table just like any regular table using theINSERT INTOstatement.
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES
+
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+
+(2, 'Khilan', 25, 'Delhi', 1500.00 ),
+
+(3, 'Kaushik', 23, 'Kota', 2000.00 );
+```
+
+
+Following is the output obtained:
+
+
+```sql
+Query OK, 3 rows affected (0.01 sec)
+
+Records: 3  Duplicates: 0  Warnings: 0
+```
+
+
+To view the data in the CUSTOMERS table, we can use theSELECTstatement as shown below:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+We get the following result:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.00
+
+
+## Dropping a Temporary Table in SQL
+
+
+If you want to delete the temporary table before the session ends, you can use theDROP TEMPORARY TABLEcommand.
+
+
+### Syntax
+
+
+Following is the basic syntax to delete a temporary table in SQL:
+
+
+```sql
+DROP TEMPORARY TABLE table_name;
+```
+
+
+### Example
+
+
+Following query drops the temporary table CUSTOMERS created in the previous example:
+
+
+```sql
+DROP TEMPORARY TABLE CUSTOMERS;
+```
+
+
+We get the following output:
+
+
+```sql
+Query OK, 0 rows affected (0.00 sec)
+```
+
+
+This will delete the temporary table and free up memory. If you try to access it after dropping, you will get an error.
+
+
+## What Happens After Session Ends?
+
+
+When your session or connection to the database ends, any temporary table you created is automatically deleted by the database engine. You don't need to manually drop it.
+
+
+## Types of Temporary Tables in SQL Server
+
+
+In MySQL, temporary tables are visible only to the session that creates them. However, inMicrosoft SQL Server, you can create two types of temporary tables:
+
+
+
+- Local Temporary Tables
+- Global Temporary Tables
+
+
+
+### Local Temporary Tables
+
+
+ALocal Temporary Tablein SQL Server is accessible only within the session (or connection) that created it. It is automatically deleted when the session is closed.
+
+
+If a local temporary table is created inside astored procedure, it is dropped automatically as soon as the stored procedure finishes execution.
+
+
+Syntax
+
+
+To create a local temporary table in SQL Server, use asingle hash (#)as a prefix to the table name, as shown below:
+
+
+```sql
+CREATE TABLE #table_name (
+
+   column1 datatype,
+
+   column2 datatype,
+
+   column3 datatype,
+
+   ...
+
+   columnN datatype,
+
+   PRIMARY KEY (one or more columns)
+
+);
+```
+
+
+Example
+
+
+Let us create a local temporary table named#CUSTOMERSin SQL Server:
+
+
+```sql
+CREATE TABLE #CUSTOMERS (
+
+   ID       INT NOT NULL,
+
+   NAME     VARCHAR(20) NOT NULL,
+
+   AGE      INT NOT NULL,
+
+   ADDRESS  CHAR(25),
+
+   SALARY   DECIMAL(18, 2),
+
+   PRIMARY KEY (ID)
+
+);
+```
+
+
+We will get the output as shown below:
+
+
+```sql
+Commands completed successfully.
+```
+
+
+This table will be accessible only in the current SQL session and will be automatically removed when the session ends or the stored procedure (if used inside one) finishes execution.
+
+
+### Global Temporary Tables
+
+
+AGlobal Temporary Tableis accessible to all sessions and connections on the SQL Server. However, it remains available only as long as at least one session is actively using it. Once the last session referencing the table is closed, the table is automatically dropped.
+
+
+Syntax
+
+
+To create a global temporary table, use adouble hash (##)prefix before the table name, as shown below:
+
+
+```sql
+CREATE TABLE ##table_name (
+
+   column1 datatype,
+
+   column2 datatype,
+
+   column3 datatype,
+
+   ...
+
+   columnN datatype,
+
+   PRIMARY KEY (one or more columns)
+
+);
+```
+
+
+Example
+
+
+Let us create a global temporary table named##Buyersin SQL Server:
+
+
+```sql
+CREATE TABLE ##Buyers (
+
+   ID       INT NOT NULL,
+
+   NAME     VARCHAR(20) NOT NULL,
+
+   AGE      INT NOT NULL,
+
+   ADDRESS  CHAR(25),
+
+   SALARY   DECIMAL(18, 2),
+
+   PRIMARY KEY (ID)
+
+);
+```
+
+
+We will get the output as shown below:
+
+
+```sql
+Commands completed successfully.
+```
+
+
+This table can be accessed by all sessions and will only be deleted when the last session using it is closed.
+
+
+### Differences Between Local and Global Temporary Tables
+
+
+Following are the major differences between Local and Global Temporay tables in SQL:
+
+
+Local Temporary TableGlobal Temporary TableCreated with a single#prefix (e.g.,#TempTable).Created with a double##prefix (e.g.,##TempTable).Accessible only within the session that created it.Accessible to all sessions.Dropped automatically when the session ends.Dropped when the last session using it is closed.Often used in stored procedures for temporary data handling.Used when shared temporary data is needed across sessions.
+
+
+## Temporary Table vs Permanent Table
+
+
+The table below shows the differences between temporary and permanent tables:
+
+
+Temporary TablePermanent TableExists only during the current session.Exists permanently in the database until dropped.Automatically removed when the session ends.Must be deleted manually usingDROP TABLE.Does not affect the main database structure.Part of the main database structure.Useful for temporary or intermediate data storage.Useful for long-term data storage and management.
+
+
+## Important Points About Temporary Tables
+
+
+Following are some simple things to remember about temporary tables in SQL:
+
+
+
+- They are useful for storing temporary or intermediate data.
+- Created using theCREATE TEMPORARY TABLEcommand.
+- They are automatically removed when the session ends.
+- You can use them like regular tables insert, update, or select data.
+- Each session has its own temporary tables, other users can't see them.
+
+

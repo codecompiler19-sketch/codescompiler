@@ -1,0 +1,472 @@
+---
+title: "CSS - Dropdowns"
+description: "Learn CSS - Dropdowns with clear CSS layout principles, modern selectors, and practical examples."
+category: "css"
+order: 270
+group: "CSS Basics"
+seoTitle: "CSS - Dropdowns — CodesCompiler CSS Guide"
+permalink: "css-dropdown"
+---
+
+## CSS - Dropdowns
+
+Dropdown is a user interface element that includes a list of options. It allows the user to choose one value from a list by hovering or clicking on a trigger element. It is typically used in navigation menus, forms, and other interactive components of a website.
+
+Dropdown menu is created using HTML's unordered list ( `<ul>` ) and list item ( `<li>` ) elements.
+
+This chapter will cover the utilization of CSS for styling and arranging dropdown menu elements, controlling their appearance and behavior.
+
+## CSS Dropdown - Basic Example
+
+Let us see a simple example of dropdowns with list of options. When you hover over the "Select an Option" text, a dropdown menu appears with options.
+
+```html
+<html>
+<head>
+<style>
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    .dropdown-button {
+        background-color: #e81a1a;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        color: #ffffff;
+        margin: 0;
+    }
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        margin: 0;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        padding: 12px 16px;
+        z-index: 1;
+    }
+    .dropdown:hover .dropdown-menu {
+        display: block;
+    }
+</style>
+</head>
+<body>
+    <div class="dropdown">
+        <span class="dropdown-button">Select an Option</span>
+        <div class="dropdown-menu">
+            pOption 1
+            pOption 2
+            pOption 3
+        </div>
+    </div>
+</body>
+</html>
+```
+
+In the above example:
+
+- Use any HTML element such as `<span>`, or a `<button>` to open the dropdown content.
+
+Use any HTML element such as `<span>`, or a `<button>` to open the dropdown content.
+
+- To create the dropdown content or menu, use a container element (like >div<
+
+To create the dropdown content or menu, use a container element (like >div<
+
+- Use CSS to wrap and position dropdown content correctly.
+
+Use CSS to wrap and position dropdown content correctly.
+
+- The .dropdown class uses position:relative . This property places dropdown menu right below the dropdown button (using position:absolute ).
+
+The .dropdown class uses position:relative . This property places dropdown menu right below the dropdown button (using position:absolute ).
+
+- .dropdown-menu class holds the actual dropdown content. It is hidden by default, and will be displayed on hover.
+
+.dropdown-menu class holds the actual dropdown content. It is hidden by default, and will be displayed on hover.
+
+- CSS box-shadow property to make the dropdown menu look like a card .
+
+CSS box-shadow property to make the dropdown menu look like a card .
+
+- The :hover selector shows the dropdown menu when the user moves the mouse over the dropdown button.
+
+The :hover selector shows the dropdown menu when the user moves the mouse over the dropdown button.
+
+## CSS Dropdown - Hoverable Effect
+
+A hoverable dropdown is a user interface element where a dropdown menu appears when a user hovers their cursor over the trigger element. The dropdown menu usually disappears when the user moves their cursor away from the trigger element.
+
+Let us see an example. This example uses anchor tags inside the dropdown box and style them to fit a styled dropdown button:
+
+```html
+<html>
+<head>
+<style>
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    .dropdown-button {
+        background-color: #e81a1a;
+        padding: 15px;
+        border: none;
+        cursor: pointer;
+        color: #ffffff;
+        margin: 0;
+    }
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 0;
+        margin: 0;
+    }
+    .dropdown-menu li {
+        padding: 10px;
+        background-color: #15AD39;
+    }
+    .dropdown-menu li a {
+        display: block;
+        text-decoration: none;
+        color: #ffffff;
+    }
+    .dropdown:hover .dropdown-menu {
+        display: block;
+    }
+    .dropdown-menu li:hover {
+        background-color: #82ea32;
+    }
+</style>
+</head>
+<body>
+    <div class="dropdown">
+        <button class="dropdown-button">Select an Option</button>
+        <ul class="dropdown-menu">
+            <li><a href="#">Option 1</a></li>
+            <li><a href="#">Option 2</a></li>
+            <li><a href="#">Option 3</a></li>
+        </ul>
+    </div>
+</body>
+</html>
+```
+
+## CSS Dropdown - Clicked Dropdowns
+
+When you click on a dropdown, it expands to show the available options, and you can select one of these options by clicking on it.
+
+Let us see an example:
+
+```html
+<html>
+<head>
+<style>
+    .dropdown-button {
+        background-color: #e81a1a;
+        padding: 15px;
+        border: none;
+        cursor: pointer;
+        color: #ffffff;
+        margin: 0;
+    }
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 0;
+        margin: 0;
+
+    }
+    .dropdown-menu li {
+        padding: 10px;
+        background-color: #15AD39;
+    }
+    .dropdown-menu li a {
+        display: block;
+        text-decoration: none;
+        color: #ffffff;
+    }
+    .dropdown-menu li:hover {
+        background-color: #82ea32;
+    }
+    .show {
+        display: block;
+    }
+</style>
+</head>
+<body>
+    <div class="dropdown">
+        <button class="dropdown-button">Select an Option</button>
+        <ul class="dropdown-menu">
+            <li><a href="#">Option 1</a></li>
+            <li><a href="#">Option 2</a></li>
+            <li><a href="#">Option 3</a></li>
+        </ul>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const button = document.querySelector('.dropdown-button');
+            const dropdownContent = document.querySelector('.dropdown-menu');
+
+            button.addEventListener('click', function () {
+                dropdownContent.classList.toggle('show');
+            });
+
+            window.addEventListener('click', function (event) {
+                if (!event.target.matches('.dropdown-button') && dropdownContent.classList.contains('show')) {
+                    dropdownContent.classList.remove('show');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+```
+
+## CSS Dropdown - Right-aligned Menu
+
+You can place a dropdown menu on the right side of the screen by applying a float: right style to the `<div>` that contains the dropdown menu. This arrangement shifts the menu to the right-hand side of the
+    screen.
+
+Let us see an example:
+
+```html
+<html>
+<head>
+<style>
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    .dropdown-button {
+        background-color: #e81a1a;
+        padding: 15px;
+        border: none;
+        cursor: pointer;
+        color: #ffffff;
+        margin: 0;
+    }
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+    .dropdown-menu li {
+        padding: 10px;
+        background-color: #15AD39;
+    }
+    .dropdown-menu li a {
+        display: block;
+        text-decoration: none;
+        color: #ffffff;
+    }
+    .dropdown:hover .dropdown-menu {
+        display: block;
+    }
+    .dropdown-menu li:hover {
+        background-color: #82ea32;
+    }
+</style>
+</head>
+<body>
+    <div class="dropdown" style="float: right;">
+        <button class="dropdown-button">Select an Option</button>
+        <ul class="dropdown-menu">
+            <li><a href="#">Option 1</a></li>
+            <li><a href="#">Option 2</a></li>
+            <li><a href="#">Option 3</a></li>
+        </ul>
+    </div>
+</body>
+</html>
+```
+
+## CSS Dropdown - Left-aligned Menu
+
+You can achieve a left-aligned dropdown menu by adding the float: left style to the `<div>` containing the dropdown menu. This arrangement shifts the menu to the leftmost part of the screen.
+
+Let us see an example:
+
+```html
+<html>
+<head>
+<style>
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    .dropdown-button {
+        background-color: #e81a1a;
+        padding: 15px;
+        border: none;
+        cursor: pointer;
+        color: #ffffff;
+        margin: 0;
+    }
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+    .dropdown-menu li {
+        padding: 10px;
+        background-color: #15AD39;
+    }
+    .dropdown-menu li a {
+        display: block;
+        text-decoration: none;
+        color: #ffffff;
+    }
+    .dropdown:hover .dropdown-menu {
+        display: block;
+    }
+    .dropdown-menu li:hover {
+        background-color: #82ea32;
+    }
+</style>
+</head>
+<body>
+    <div class="dropdown" style="float: left;">
+        <button class="dropdown-button">Select an Option</button>
+        <ul class="dropdown-menu">
+            <li><a href="#">Option 1</a></li>
+            <li><a href="#">Option 2</a></li>
+            <li><a href="#">Option 3</a></li>
+        </ul>
+    </div>
+</body>
+</html>
+```
+
+## CSS Dropdown - With Image
+
+You can enhance the dropdown by including images alongside the textual options. When you hover over an image, a larger size image appears along with a description.
+
+Let us see an example:
+
+```html
+<html>
+<head>
+<style>
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    .dropdown-img-menu {
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        border: 1px solid #ccc;
+
+    }
+    .dropdown:hover .dropdown-img-menu {
+        display: block;
+    }
+    .img-descripition {
+        padding: 15px;
+        background-color: rgb(38, 222, 53);
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+    <div class="dropdown">
+        <img src="images/red-flower.jpg" alt="Cinque Terre" width="200" height="100">
+        <div class="dropdown-img-menu">
+            <div class="img-descripition">Red color flower</div>
+            <img src="images/red-flower.jpg" alt="Cinque Terre" width="300" height="150">
+        </div>
+    </div>
+</body>
+</html>
+```
+
+## CSS Dropdown - With Navbar
+
+A dropdown navbar is commonly found in website navigation menus. It consists of a horizontal bar that contains a list of links. When users hover over or click on a specific link, a dropdown menu appears, display additional navigation options or content related to the selected link.
+
+Let us see an example:
+
+```html
+<html>
+<head>
+<style>
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background-color: #208926;
+    }
+    li {
+        float: left;
+    }
+    li a,
+    .dropdown-option {
+        display: inline-block;
+        color: white;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+    }
+    li a:hover,
+    .dropdown:hover .dropdown-option {
+        background-color: #f39a1d;
+    }
+
+    li.dropdown {
+        display: inline-block;
+    }
+    .dropdown-menu {
+        display: none;
+        position: absolute;
+        background-color: #44e2d5;
+        border: 1px solid #ccc;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        width: 120px;
+    }
+    .dropdown-menu a {
+        color: black;
+        text-decoration: none;
+        display: block;
+        text-align: left;
+    }
+    .dropdown-menu a:hover {
+        background-color: #ee3131;
+    }
+    .dropdown:hover .dropdown-menu {
+        display: block;
+    }
+</style>
+</head>
+<body>
+    <ul>
+        <li><a href="#">Tutorialspoints</a></li>
+        <li><a href="#">Home</a></li>
+        <li class="dropdown">
+            <a href="#" class="dropdown-option">Articles</a>
+            <div class="dropdown-menu">
+                <a href="#">HTML</a>
+                <a href="#">CSS</a>
+                <a href="#">Bootstrap</a>
+            </div>
+        </li>
+    </ul>
+</body>
+</html>
+```

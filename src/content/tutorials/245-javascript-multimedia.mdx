@@ -1,0 +1,144 @@
+---
+title: "JavaScript - Multimedia"
+description: "Learn JavaScript - Multimedia with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2450
+group: "JavaScript Miscellaneous"
+seoTitle: "JavaScript - Multimedia — CodesCompiler JavaScript Guide"
+permalink: "javascript-multimedia"
+---
+
+
+# JavaScript - Multimedia
+
+
+
+
+The JavaScriptnavigatorobject includes a child object calledplugins. This object is an array, with one entry for each plug-in installed on the browser. The navigator.plugins object is supported only by Netscape, Firefox, and Mozilla only.
+
+
+### Example
+
+
+Here is an example that shows how to list down all the plug-on installed in your browser −
+
+
+```html
+<html>
+   <head>
+      <title>List of Plug-Ins</title>
+   </head>
+   
+   <body>
+      <table border = "1">
+         <tr>
+            <th>Plug-in Name</th>
+            <th>Filename</th>
+            <th>Description</th>
+         </tr>
+         
+         <script language = "JavaScript" type = "text/javascript">
+            for (i = 0; i<navigator.plugins.length; i++) {
+               document.write("<tr><td>");
+               document.write(navigator.plugins[i].name);
+               document.write("</td><td>");
+               document.write(navigator.plugins[i].filename);
+               document.write("</td><td>");
+               document.write(navigator.plugins[i].description);
+               document.write("</td></tr>");
+            }
+         </script>
+      </table>      
+   </body>
+</html>
+```
+
+
+## Checking for Plug-Ins
+
+
+Each plug-in has an entry in the array. Each entry has the following properties −
+
+
+
+- name− is the name of the plug-in.
+- filename− is the executable file that was loaded to install the plug-in.
+- description− is a description of the plug-in, supplied by the developer.
+- mimeTypes− is an array with one entry for each MIME type supported by the plug-in.
+
+
+
+You can use these properties in a script to find out the installed plug-ins, and then using JavaScript, you can play appropriate multimedia file. Take a look at the following example.
+
+
+```html
+<html>   
+   <head>
+      <title>Using Plug-Ins</title>
+   </head>
+   
+   <body>   
+      <script language = "JavaScript" type = "text/javascript">
+         media = navigator.mimeTypes["video/quicktime"];
+         
+         if (media) {
+            document.write("<embed src = 'quick.mov' height = 100 width = 100>");
+         } else {
+            document.write("<img src = 'quick.gif' height = 100 width = 100>");
+         }
+      </script>      
+   </body>
+</html>
+```
+
+
+NOTE− Here we are using HTML `<embed>` tag to embed a multimedia file.
+
+
+## Controlling Multimedia
+
+
+Let us take one real example which works in almost all the browsers −
+
+
+```html
+<html>   
+   <head>
+      <title>Using Embeded Object</title>
+      
+      <script type = "text/javascript">
+         function play() {
+            if (!document.demo.IsPlaying()) {
+               document.demo.Play();
+            }
+         }
+         function stop() {
+            if (document.demo.IsPlaying()) {
+               document.demo.StopPlay();
+            }
+         }
+         function rewind() {
+            if (document.demo.IsPlaying()) {
+               document.demo.StopPlay();
+            }
+            document.demo.Rewind();
+         }
+      </script>
+   </head>
+   
+   <body>      
+      <embed id = "demo" name = "demo"
+         src = "http://www.amrood.com/games/kumite.swf"
+         width = "318" height = "300" play = "false" loop = "false"
+         pluginspage = "http://www.macromedia.com/go/getflashplayer"
+         swliveconnect = "true">
+      
+      <form name = "form" id = "form" action = "#" method = "get">
+         <input type = "button" value = "Start" onclick = "play();" />
+         <input type = "button" value = "Stop" onclick = "stop();" />
+         <input type = "button" value = "Rewind" onclick = "rewind();" />
+      </form>      
+   </body>
+</html>
+```
+

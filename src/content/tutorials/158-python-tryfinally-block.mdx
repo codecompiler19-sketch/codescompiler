@@ -1,0 +1,131 @@
+---
+title: "PYTHON - try-finally Block"
+description: "Learn PYTHON - try-finally Block with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1580
+group: "Python Errors & Exceptions"
+seoTitle: "PYTHON - try-finally Block — CodesCompiler PYTHON Guide"
+permalink: "python-tryfinally-block"
+---
+
+
+# Python - The try-finally Block
+
+
+
+
+## Python Try-Finally Block
+
+
+In Python, the try-finally block is used to ensure that certain code executes, regardless of whether an exception is raised or not. Unlike the try-except block, which handles exceptions, the try-finally block focuses on cleanup operations that must occur, ensuring resources are properly released and critical tasks are completed.
+
+
+### Syntax
+
+
+The syntax of thetry-finallystatement is as follows −
+
+
+```python
+try:
+   # Code that might raise exceptions
+   risky_code()
+finally:
+   # Code that always runs, regardless of exceptions
+   cleanup_code()
+```
+
+
+In Python, when using exception handling with try blocks, you have the option to include either except clauses to catch specific exceptions or a finally clause to ensure certain cleanup operations are executed, but not both together.
+
+
+### Example
+
+
+Let us consider an example where we want to open a file in write mode ("w"), writes some content to it, and ensures the file is closed regardless of success or failure using a finally block −
+
+
+```python
+try:
+   fh = open("testfile", "w")
+   fh.write("This is my test file for exception handling!!")
+finally:
+   print ("Error: can\'t find file or read data")
+   fh.close()
+```
+
+
+If you do not have permission to open the file in writing mode, then it will produce the followingoutput−
+
+
+```python
+Error: can't find file or read data
+```
+
+
+The same example can be written more cleanly as follows −
+
+
+```python
+try:
+   fh = open("testfile", "w")
+   try:
+      fh.write("This is my test file for exception handling!!")
+   finally:
+      print ("Going to close the file")
+      fh.close()
+except IOError:
+   print ("Error: can\'t find file or read data")
+```
+
+
+When an exception is thrown in the try block, the execution immediately passes to thefinallyblock. After all the statements in thefinallyblock are executed, the exception is raised again and is handled in the except statements if present in the next higher layer of the try-except statement.
+
+
+## Exception with Arguments
+
+
+An exception can have an argument, which is a value that gives additional information about the problem. The contents of the argument vary by exception. You capture an exception's argument by supplying a variable in the except clause as follows −
+
+
+```python
+try:
+   You do your operations here
+   ......................
+except ExceptionType as Argument:
+   You can print value of Argument here...
+```
+
+
+If you write the code to handle a single exception, you can have a variable follow the name of the exception in the except statement. If you are trapping multiple exceptions, you can have a variable follow the tuple of the exception.
+
+
+This variable receives the value of the exception mostly containing the cause of the exception. The variable can receive a single value or multiple values in the form of a tuple. This tuple usually contains the error string, the error number, and an error location.
+
+
+### Example
+
+
+Following is an example for a single exception −
+
+
+```python
+# Define a function here.
+def temp_convert(var):
+   try:
+      return int(var)
+   except ValueError as Argument:
+      print("The argument does not contain numbers\n",Argument)
+# Call above function here.
+temp_convert("xyz")
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+The argument does not contain numbers
+invalid literal for int() with base 10: 'xyz'
+```
+

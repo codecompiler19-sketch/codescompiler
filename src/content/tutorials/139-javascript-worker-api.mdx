@@ -1,0 +1,218 @@
+---
+title: "JavaScript - Worker API"
+description: "Learn JavaScript - Worker API with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1390
+group: "JavaScript Web APIs"
+seoTitle: "JavaScript - Worker API — CodesCompiler JavaScript Guide"
+permalink: "javascript-worker-api"
+---
+
+
+# JavaScript - Worker API
+
+
+
+
+## Web Worker API
+
+
+Theworker APIis a web API that allows us to runJavaScriptcode in the background thread. Whenever the web page loads in the browser, it becomes interactive after every `<script>` tag loads in the browser. Web workers allows users to interact with the web page without loading the whole JavaScript code in the browser.  It increases the response time of the web page.
+
+
+## Create a Web Worker File
+
+
+To create a web worker, you need to write a script in the external file, which you need to execute in a different file.
+
+
+The filename should have a '.js' extension.
+
+
+In the below JavaScript code, we defined the counter() function. We used the setTimeout() method inside the function to call the counter() function after every 1000 milliseconds.
+
+
+The important part of the code is thepostMessage()method. It is used to send the data in the main thread.
+
+
+```javascript
+function counter() {
+    postMessage(data); // To send data to the main thread
+    setTimeout("counter()", 1000);
+}
+counter();
+```
+
+
+## Check for Web Worker Support
+
+
+You should check that your browser supports the web worker or not before creating the web worker. You can use the typeof operator to check for this.
+
+
+```javascript
+if (typeof(Worker) !== "undefined") {
+    //"Web worker is supported by your browser!";
+} else {
+    //"Web worker is not supported by your browser!";
+}
+```
+
+
+## Create a Web Worker Object
+
+
+After creating the external JavaScript file, you need to create a new Worker object by passing the path of the external JavaScript file as an argument, as shown below.
+
+
+```javascript
+const workerObj = new Worker("testWorker.js");
+```
+
+
+To get the message main thread from the worker file, which we send using the postMessage() method, you can use the 'onmessage' event on the worker object, as shown below.
+
+
+```javascript
+workerObj.onmessage = function(e) {
+  // Use the event.data
+};
+```
+
+
+## Terminate the Execution of the Web Worker
+
+
+When you start the execution of the web worker script, it continues the execution until you terminate the execution.
+
+
+You can use the terminate() method to terminate the execution of the web worker as shown below.
+
+
+```javascript
+workerObj.terminate();
+```
+
+
+## Example: Complete Program of Web Worker
+
+
+Filename: - index.html
+
+
+In the below code, we have defined the startWorker() and stopWorker() functions to start and stop the execution of the worker.
+
+
+In the startWorker() function, first, we check whether the browser supports the workers. After that, we check whether any instance of the worker is running. If not, we create a new instance of the Worker object using the script defined in the external file.
+
+
+After that, we added the onmessage event on the worker object. So, whenever it gets data from the external script file, it prints it and performs other operations.
+
+
+In the stopWorker() function, we use the terminate() method with the workerObj object to terminate the execution of the worker.
+
+
+```html
+<html>
+<body>
+<button onclick = "startWorker()"> Start Counter </button>
+<button onclick = "stopWorker()"> Stop Counter </button>
+<div id = "output"></div>
+<script>
+   let output = document.getElementById('output');
+   let workerObj;
+   function startWorker() {
+      if (typeof (Worker) !== "undefined") {
+         if (typeof workerObj === "undefined") {
+            workerObj = new Worker("app.js");
+            workerObj.onmessage = function (event) {//Getting the message from web worker
+               output.innerHTML += "Event data is: " + event.data + "<br>";
+            };
+         }
+      } else {
+         output.innerHTML += "Web worker is not supported by your browser.";
+      }
+   }
+   function stopWorker() { // To stop the web worker.
+      if (typeof workerObj !== "undefined") {
+         workerObj.terminate();
+         workerObj = undefined;
+      }
+   }
+</script>
+</body>
+</html>
+```
+
+
+Filename: - app.js
+
+
+In the below code, we have defined the counter() function. In the counter() function, we used the setTimeOut() method to call the counter() function after every second. It also posts the data into the main thread using the postMessage() method.
+
+
+```javascript
+var i = 0;
+function timedCount() {
+   i = i + 1;
+   postMessage(i);
+   setTimeout("timedCount()",500);
+}
+timedCount();
+```
+
+
+### Output
+
+
+To run the above code, you need to make sure that the index.html and app.js file is on the live web server. You can also use the localhost. Also, make sure to add the correct path for the app.js file in the Worker object inside the index.html file.
+
+
+You can also use multiple workers in the same file to run multiple scripts in the background.
+
+
+## Web Worker Use Cases
+
+
+The above example is simple, and in such cases, you dont need to use web workers, but it is only for demonstrations.
+
+
+Here are the real-time use cases of the web workers.
+
+
+
+- When you need to execute large or complex mathematical script
+- In the HTML games, you may use web workers
+- If you want to improve the website performance
+- In parallel downloads, when you need to execute multiple threads
+- For the background data synchronization
+- In the machine learning
+- For generating reports
+- To process audio and videos
+
+
+
+## Web Workers and the DOM
+
+
+As you need to define the scripts for the web workers in the external file, you can't use the below objects in the external file.
+
+
+
+- The window object
+- The document object
+- The parent object
+
+
+
+However, you can use the below objects in the web workers.
+
+
+
+- The location object
+- The navigator object
+- The Application Cache
+- Importing external script using importScripts()
+- XMLHttpRequest
+
+

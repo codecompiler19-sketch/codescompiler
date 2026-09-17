@@ -1,0 +1,584 @@
+---
+title: "SQL - Roadmap"
+description: "Learn SQL - Roadmap with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 20
+group: "SQL Basics"
+seoTitle: "SQL - Roadmap — CodesCompiler SQL Guide"
+permalink: "sql-roadmap"
+---
+
+
+# SQL - Roadmap
+
+
+
+
+TheSQL Roadmapis like a simple study plan for learning SQL. It shows you which topics to learn first and what to learn next, starting from basic ideas and moving to advanced skills. This helps you understand how to work with databases step by step.
+
+
+It is helpful for everyone i.e. students, developers, data analysts, or anyone who wants to manage databases because it makes sure you learn all the important concepts in the right order.
+
+
+## SQL Roadmap: Quick Complete Guide
+
+
+## 1. SQL Basics
+
+SQL stands for
+
+Structured Query Language
+
+. It is the standard language used to store, retrieve, update, and delete data in relational databases. In other words, whenever you need to work with data inside a database, SQL provides the commands to do it.
+
+### 1.1 RDBMS Concepts
+
+
+AnRDBMS(Relational Database Management System) is software that stores information intables, which look like spreadsheets with rows and columns. Each table usually represents one type of real-world thing, such as employees, products, or orders.
+
+
+
+- Relation (Table):A table is called arelationand represents a specific entity.Example: anemployeestable stores details like name, email, and salary.
+- Primary Key:A special column (or set of columns) thatuniquely identifies each rowin a table.Example: anidcolumn that gives each employee a unique number.
+- Foreign Key:A column in one table thatlinks to the primary key of another table, creating a relationship between them.Example: anorderstable might have anemployee_idcolumn to show which employee handled the order.
+- Normalization:The process of organizing the database so thatdata is not unnecessarily repeated.Example: instead of storing a customer's address in every order, keep it in a separatecustomerstable and link it using a foreign key.
+
+
+
+### 1.2 RDBMS Benefits
+
+
+Relational databases provide several advantages:
+
+
+
+- Data integrity:Ensures that data stays accurate and consistent.
+- ACID transactions:Guarantees reliable operations so data is never left incomplete.
+- Concurrent access:Allows multiple users to safely work with data at the same time.
+- Powerful queries:Enables complex searching and combining of data using SQL.
+- Mature tools:RDBMS technology is stable and well-supported after decades of use.
+
+
+
+### 1.3 Database-level commands
+
+
+SQL provides commands to create and delete entire databases:
+
+
+
+- CREATE:Makes a new database. Example:
+
+
+
+```sql
+CREATE DATABASE company;
+```
+
+
+
+- DROP:Permanently deletes a database (this cannot be undone). Example:
+
+
+
+```sql
+DROP DATABASE company;
+```
+
+
+## 2. SQL Basic Syntax
+
+
+SQL statements follow a specific structure and let you perform key operations such asselectingdata, adding new records, updating existing information, and deleting rows when needed. Understanding the basic syntax is the first step to writing SQL queries.
+
+
+### 2.1 SQL Comments
+
+
+Comments are notes inside your SQL code that help to explain what the code does. They are ignored by the database engine and are only for humans to read.
+
+
+```sql
+-- Single-line comment
+
+/* Multi-line
+comment */
+```
+
+
+### 2.2 SQL Data Types
+
+
+Each column in a database table has adata typethat defines what kind of values it can store.
+
+
+
+- INT:Whole numbers (integers) such as 1, 42, or -10.
+- VARCHAR(n):Text of variable length, up toncharacters. Example: names or email addresses.
+- DECIMAL(p,s):Numbers with a fixed precision.pis total digits andsis digits after the decimal point. Example: DECIMAL(6,2) can store 1234.56.
+- DATE / TIMESTAMP:Dates and times. DATE stores only the date, while TIMESTAMP stores both date and time.
+
+
+
+### 2.3 SQL Operators & Expressions
+
+
+You can useoperators(arithmetic, comparison, and logical) in SQL to create expressions and filter data in queries. This is commonly done in theWHEREclause.
+
+
+```sql
+SELECT id, salary, salary * 0.1 AS bonus
+FROM employees
+WHERE salary > 50000 AND department = 'Sales';
+```
+
+
+In this example:
+
+
+
+- The query retrieves each employee'sid,salary, and calculates abonus(10% of salary).
+- TheWHEREclause filters only employees earning more than 50,000 and working in the Sales department.
+
+
+
+### 2.4 Core DML Statements
+
+
+SQL's core Data Manipulation Language (DML) commands allow you to manage the data inside tables:
+
+
+
+- SELECT:Retrieve (read) data from a table.
+- INSERT:Add new rows of data.
+- UPDATE:Modify existing rows.
+- DELETE:Remove rows from a table.
+
+
+
+```sql
+-- Insert a new employee
+INSERT INTO employees (name, department, salary)
+VALUES ('Alice', 'Sales', 65000);
+
+-- Update salary for the employee with id = 5
+UPDATE employees
+SET salary = salary + 2000
+WHERE id = 5;
+
+-- Delete the employee with id = 10
+DELETE FROM employees WHERE id = 10;
+```
+
+
+## 3. Data Definition Language (DDL)
+
+
+DDL commands define the structure of the database itself. They are used tocreate,change, orremovedatabase objects like tables, constraints, and indexes. Think of DDL as the "blueprint" stage deciding how data will be organized.
+
+
+### 3.1 CREATE / ALTER / DROP
+
+
+These commands are the core tools to design and modify your database schema:
+
+
+
+- CREATE:Build new database objects such as tables.
+- ALTER:Change an existing table, for example by adding a column.
+- DROP:Permanently delete a database object such as a table.
+
+
+
+```sql
+CREATE TABLE employees (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(100) NOT NULL,
+  department_id INT,
+  salary DECIMAL(10,2),
+  hire_date DATE
+);
+
+ALTER TABLE employees ADD COLUMN email VARCHAR(255);
+
+DROP TABLE old_table;
+```
+
+
+Explanation:
+
+
+
+- The first statement creates a table namedemployeeswith columns for id, name, department, salary, and hire date.ThePRIMARY KEYandAUTO_INCREMENTensure each employee has a unique id that increases automatically.
+- The second statement adds a new columnemailto the existingemployeestable.
+- The third statement permanently deletes the table namedold_table.
+
+
+
+### 3.2 TRUNCATE vs DELETE
+
+
+Both commands remove data, but work differently:
+
+
+
+- TRUNCATE:Quickly removesall rowsfrom a table. It resets the storage space and uses minimal logging.It is fast but cannot remove only some rows.
+- DELETE:Removes rows selectively using aWHEREclause.Each row removal is logged, so it can be rolled back inside a transaction if needed.
+
+
+
+### 3.3 TEMPORARY & CLONE
+
+
+
+- TEMPORARY tables:Created for the current session only. They disappear automatically when the session ends.Example:CREATE TEMPORARY TABLE tmp(...);
+- CLONE:Some database systems provide commands to duplicate the structure and/or data of an existing table.The exact syntax depends on the database engine.
+
+
+
+### 3.4 Constraints
+
+
+Constraints are rules that ensure the accuracy and consistency of data. They enforce certain conditions when inserting or updating records:
+
+
+
+- PRIMARY KEY:Ensures each row has a unique identifier.
+- FOREIGN KEY:Maintains a valid link between tables to preserve referential integrity.
+- UNIQUE:Guarantees that no two rows have the same value in this column.
+- NOT NULL:Requires that a column always has a value.
+- CHECK:Ensures a column's value meets a specified condition (e.g., salary > 0).
+
+
+
+```sql
+CREATE TABLE orders (
+  id INT PRIMARY KEY,
+  customer_id INT,
+  amount DECIMAL(10,2) CHECK (amount > 0),
+  CONSTRAINT fk_customer FOREIGN KEY (customer_id) REFERENCES customers(id)
+);
+```
+
+
+In this example:
+
+
+
+- TheCHECKconstraint makes sure theamountis greater than zero.
+- TheFOREIGN KEYconstraint namedfk_customerensures that eachcustomer_idmatches an existingidin thecustomerstable.
+
+
+
+## 4. Data Manipulation Language (DML)
+
+
+DML commands are used toretrieveandmanipulatethe data stored in database tables. This section focuses on selecting data and combining data from multiple tables using joins.
+
+
+### 4.1 SELECT basics
+
+
+The basic pattern for reading data is:
+
+
+SELECT ... FROM ... WHERE ...
+
+
+```sql
+SELECT e.name, d.name AS department, e.salary
+FROM employees e
+JOIN departments d ON e.department_id = d.id
+WHERE e.salary > 50000
+ORDER BY e.salary DESC
+LIMIT 10;
+```
+
+
+Explanation:
+
+
+
+- Retrievesemployee names, department names, and salaries.
+- JOINcombines employee and department tables based ondepartment_id.
+- WHEREfilters employees earning more than 50,000.
+- ORDER BYsorts salaries in descending order.
+- LIMITreturns only the top 10 results.
+
+
+
+### 4.2 JOIN types
+
+
+Joins combine data from multiple tables. The common types are:
+
+
+
+- INNER JOIN:Returns only rows with matches in both tables.
+- LEFT JOIN:Returns all rows from the left table, with matching rows from the right table if available.
+- RIGHT JOIN:Returns all rows from the right table, with matching rows from the left table (less common).
+- FULL JOIN:Returns all rows where a match exists in either table (supported in some DBs).
+- CROSS JOIN:Cartesian product of both tables; use carefully.
+
+
+
+```sql
+-- Example: LEFT JOIN
+SELECT c.name, o.id AS order_id
+FROM customers c
+LEFT JOIN orders o ON c.id = o.customer_id;
+```
+
+
+### 4.3 Aggregate Functions & GROUPING
+
+
+Aggregates summarize multiple rows into single results. UseGROUP BYto group rows and optionallyHAVINGto filter groups.
+
+
+
+- SUM:Total of a numeric column.
+- COUNT:Number of rows (or non-NULL values).
+- AVG:Average value of a column.
+- MIN:Minimum value.
+- MAX:Maximum value.
+
+
+
+```sql
+SELECT department_id, 
+   COUNT(*) AS staff_count,
+   AVG(salary) AS avg_salary,
+   SUM(salary) AS total_pay
+FROM employees
+GROUP BY department_id
+HAVING COUNT(*) > 5;
+```
+
+
+### 4.4 Indexes
+
+
+Indexes improve query performance by providing fast lookup paths.
+
+
+
+- Create Index:CREATE INDEX idx_name ON table(col);
+- Drop Index:DROP INDEX idx_name;(varies by database)
+- Unique Index:Ensures column values are unique.
+- Clustered vs Non-Clustered:Clustered changes physical order of rows, non-clustered is separate.
+
+
+
+```sql
+CREATE INDEX idx_employees_department ON employees(department_id);
+CREATE UNIQUE INDEX idx_customers_email ON customers(email);
+```
+
+
+## 5. Advanced SQL Topics
+
+
+Advanced SQL features help you to perform complex queries, optimize performance, ensure security, and manage data more effectively.
+
+
+### 5.1 Wildcards & Pattern Matching
+
+
+Use wildcards to search for data that matches a pattern rather than an exact value.
+
+
+```sql
+SELECT * FROM products
+WHERE name LIKE 'Apple%'; -- finds products with names starting with 'Apple'
+```
+
+
+Explanation:
+
+
+
+- %represents any number of characters.
+- _represents a single character.
+- This is useful for searches where exact matches are not known.
+
+
+
+### 5.2 SQL Injection & Prevention
+
+
+SQL injection happens when a user enters malicious data into a form or input field, and that data is inserted directly into an SQL query. The database executes it as if it were part of the normal query, which can allow attackers to see, change, or delete sensitive data.
+
+
+You can use prepared statements or parameterized queries to prevent SQL injection by ensuring that user input is treated strictly as data, not executable SQL code.
+
+
+```sql
+-- Use prepared statements to avoid injection
+PREPARE stmt FROM 'SELECT * FROM users WHERE username = ?';
+EXECUTE stmt USING @username;
+```
+
+
+Explanation:
+
+
+
+- The query structure is predefined, and user input is passed separately.
+- This prevents attackers from injecting malicious SQL code.
+
+
+
+### 5.3 Query Execution Order
+
+
+SQL queries are processed in a specific order, which affects how results are computed:
+
+
+
+- FROM→WHERE→GROUP BY→HAVING→SELECT→ORDER BY→LIMIT
+
+
+
+Explanation:
+
+
+
+- Data is first fetched from tables (FROM) and filtered (WHERE).
+- Rows are grouped (GROUP BY) and filtered at the group level (HAVING).
+- Columns are selected (SELECT), sorted (ORDER BY), and limited (LIMIT).
+
+
+
+### 5.4 Subqueries
+
+
+A subquery is a query inside another query, used for filtering, aggregating, or calculating values dynamically.
+
+
+```sql
+SELECT name
+FROM employees
+WHERE salary > (SELECT AVG(salary) FROM employees);
+```
+
+
+Explanation:
+
+
+
+- The inner query calculates the average salary.
+- The outer query retrieves employees earning more than that average.
+
+
+
+### 5.5 Stored Procedures & Functions
+
+
+Stored procedures are pre-written SQL code blocks stored in the database. Functions return a value and can be reused in queries.
+
+
+```sql
+DELIMITER $$
+CREATE PROCEDURE give_raise(IN dept INT, IN pct DECIMAL(4,2))
+BEGIN
+  UPDATE employees
+  SET salary = salary * (1 + pct)
+  WHERE department_id = dept;
+END$$
+DELIMITER ;
+```
+
+
+Explanation:
+
+
+
+- This procedure increases salaries for a given department by a specified percentage.
+- Stored procedures simplify repetitive tasks and ensure consistency.
+
+
+
+### 5.6 Transactions & ACID
+
+
+Transactions ensure multiple operations succeed together or fail together, maintaining data integrity (ACID principles).
+
+
+```sql
+BEGIN;
+UPDATE accounts SET balance = balance - 100 WHERE id = 1;
+UPDATE accounts SET balance = balance + 100 WHERE id = 2;
+COMMIT;
+-- If error occurs:
+-- ROLLBACK;
+```
+
+
+Explanation:
+
+
+
+- BEGINstarts a transaction.
+- COMMITsaves all changes.
+- ROLLBACKreverts changes if an error occurs.
+
+
+
+### 5.7 Auto Increment / Serial
+
+
+Auto-incrementing columns automatically assign a unique value for each new row.
+
+
+```sql
+-- MySQL
+id INT PRIMARY KEY AUTO_INCREMENT
+-- PostgreSQL
+id SERIAL PRIMARY KEY
+```
+
+
+Explanation:
+
+
+
+- Simplifies generating unique identifiers for each row.
+- Useful for primary keys without manually specifying values.
+
+
+
+### 5.8 Handling Duplicates
+
+
+Detecting and removing duplicate records ensures data quality.
+
+
+```sql
+SELECT email, COUNT(*) FROM customers
+GROUP BY email
+HAVING COUNT(*) > 1;
+
+WITH ranked AS (
+  SELECT *, ROW_NUMBER() OVER (PARTITION BY email ORDER BY id) AS rn
+  FROM customers
+)
+DELETE FROM customers
+WHERE id IN (SELECT id FROM ranked WHERE rn > 1);
+```
+
+
+Explanation:
+
+
+
+- The first query identifies duplicate emails.
+- The second query usesROW_NUMBER()to keep the first occurrence and remove duplicates.
+
+
+
+## Conclusion
+
+
+This roadmap provides a structured approach to learning SQL, from basics to advanced topics. Following this flow helps you write efficient queries, maintain data integrity, and manage relational databases confidently.
+

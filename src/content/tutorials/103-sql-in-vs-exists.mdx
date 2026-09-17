@@ -1,0 +1,196 @@
+---
+title: "SQL - IN vs EXISTS"
+description: "Learn SQL - IN vs EXISTS with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 1030
+group: "Advanced SQL"
+seoTitle: "SQL - IN vs EXISTS — CodesCompiler SQL Guide"
+permalink: "sql-in-vs-exists"
+---
+
+
+# SQL - IN vs EXISTS
+
+
+Table of contentThe SQL IN OperatorThe SQL EXISTS OperatorIN vs EXISTS
+
+
+
+
+In SQL, we use the IN operator to simplify queries and reduce the need for multiple OR conditions. It allows us to match a value against a list of values. On the other hand, the EXISTS operator checks whether one or more rows exist in a subquery and returns either true or false based on this condition. If the subquery finds at least one row, the EXISTS operator returns true; otherwise, it returns false.
+
+
+## The SQL IN Operator
+
+
+The IN operator in SQL is used to check if a particular value matches any within a given set. This set of values can be specified individually or obtained from a subquery. We can use the IN operator with the WHERE clause to simplify queries and reduce the use of multiple OR conditions.
+
+
+Suppose we have a table named CUSTOMERS and we want to retrieve customer details based on their IDs. In this scenario, we can use the IN operator with the WHERE clause to fetch the details of these specific IDs.
+
+
+### Syntax
+
+
+Following is the syntax of the SQLINoperator −
+
+
+```sql
+SELECT column_name
+FROM table_name
+WHERE column_name
+IN (value1, value2, valueN);
+```
+
+
+In the above syntax, the column_name matches every value (value1, value2, ... valueN). If the matches occur, The IN operators returns true; otherwise, false.
+
+
+### Example
+
+
+First of all, let us create a table named CUSTOMERS using the following query −
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),       
+   PRIMARY KEY (ID)
+);
+```
+
+
+Now, add records into the above created table using the INSERT INTO statement as shown below −
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00),
+(2, 'Khilan', 25, 'Delhi', 1500.00),
+(3, 'Kaushik', 23, 'Kota', 2000.00),
+(4, 'Chaitali', 25, 'Mumbai', 6500.00),
+(5, 'Hardik', 27, 'Bhopal', 8500.00),
+(6, 'Komal', 22, 'Hyderabad', 4500.00),
+(7, 'Muffy', 24, 'Indore', 10000.00);
+```
+
+
+The table will be created as follows −
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+The following query retrieves the NAME and SALARY columns from the CUSTOMERS table for rows where the ID is 1, 2, or 3.
+
+
+```sql
+SELECT NAME, SALARY FROM CUSTOMERS WHERE ID IN(1, 2, 3);
+```
+
+
+### Output
+
+
+On executing the query above, the output is displayed as −
+
+
+NameSalaryRamesh2000.00Khilan1500.00Kaushik2000.00
+
+
+## The SQL EXISTS Operator
+
+
+The EXISTS operator is used to look for the existence of a row in a given table that satisfies a set of criteria. It is a Boolean operator that compares the result of the subquery to an existing record and returns true or false.
+
+
+The returned value is true, if the subquery fetches single or multiple records; and false, if no record is matched. EXISTS operator follows the querys efficiency features, i.e. when the first true event is detected, it will automatically stop processing further.
+
+
+We can use the EXISTS operator with theSELECT,UPDATE,INSERTandDELETEqueries.
+
+
+### Syntax
+
+
+Following is the basic syntax of SQL EXISTS operator −
+
+
+```sql
+SELECT column_name FROM table_name
+WHERE EXISTS (
+   SELECT column_name FROM table_name
+   WHERE condition 
+);
+```
+
+
+### Example
+
+
+First of all, consider the CUSTOMERS table, and create another table named EMPLOYEES using the following query −
+
+
+```sql
+CREATE TABLE EMPLOYEES (
+   EID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   CITY CHAR (25),
+   CONTACT INT,       
+   PRIMARY KEY (EID)
+);
+```
+
+
+Now, let us insert some records into the EMPLOYEES table using the INSERT INTO statement as shown below −
+
+
+```sql
+INSERT INTO EMPLOYEES VALUES 
+(1, 'Varun', 32, 'Ahmedabad', 12345),
+(2, 'Mahesh', 22, 'Kashmir', 34235 ),
+(3, 'Suresh', 43, 'Kerala', 12355 );
+```
+
+
+The table will be created as follows −
+
+
+EIDNAMEAGECITYCONTACT1Varun32Ahmedabad123452Mahesh22Kashmir342353Suresh43Kerala12355
+
+
+In the following query, we are using the EXISTS operator to fetch the names and ages of CUSTOMERS whose AGE is same as the AGE in the EMPLOYEES table.
+
+
+```sql
+SELECT NAME, AGE 
+FROM CUSTOMERS 
+WHERE EXISTS(
+   SELECT * FROM EMPLOYEES 
+   WHERE CUSTOMERS.AGE = EMPLOYEES.AGE
+);
+```
+
+
+### Output
+
+
+Following is the output of the above query −
+
+
+NAMEAGERamesh32Komal22
+
+
+## IN vs EXISTS
+
+
+Following table summarizes all the differences between IN and EXISTS −
+
+
+S.No.INEXISTS1It is applied to the SQL query to remove the multiple OR conditions.It is used to find whether the data in the subquery truly exist.2It executes all values contained within the IN block.If the value is matched, displays the details of the given value. It will terminate the further process if the condition is met.3It can be used for the comparison of a null value because it returns true, false, and a null value.It cannot be used for the comparison of a null value because it returns only true and false values.4It can be used with subqueries as well as with values.It can be used only with subqueries.5It executes faster when the subquery is smaller.It executes faster when the subquery is larger. Because it is more efficient than IN and returns only a Boolean value.
+

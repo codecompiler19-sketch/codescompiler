@@ -1,0 +1,256 @@
+---
+title: "SQL - Self Join"
+description: "Learn SQL - Self Join with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 680
+group: "SQL Joins"
+seoTitle: "SQL - Self Join — CodesCompiler SQL Guide"
+permalink: "sql-self-joins"
+---
+
+
+# SQL - Self Join
+
+
+Table of contentThe SQL Self JoinSelf Join with ORDER BY ClauseSQL Self Join for Hierarchical DataSQL Self Join vs. SubqueryWhy Do We Use Self Join in SQL?
+
+
+
+
+## The SQL Self Join
+
+
+ASELF JOINis a type of join in SQL where a table is joined with itself. This is used when you need to compare rows within the same table or find relationships among data stored in a single table. You can use aliases to distinguish between the two instances of the same table.
+
+
+### Self Join Explained with Diagram
+
+
+Suppose an organization, while organizing a Christmas party, is choosing a Secret Santa among its employees based on some colors. It is designed to be done by assigning one color to each of its employees and having them pick a color from the pool of various colors. In the end, they will become the Secret Santa of an employee this color is assigned to.
+
+
+As we can see in the figure below, the information regarding the colors assigned and a color each employee picked is entered into a table. The table is joined to itself using self join over the color columns to match employees with their Secret Santa.
+
+
+### Syntax
+
+
+Following is the basic syntax of SQL Self Join:
+
+
+```sql
+SELECT A.column1,B.column2
+FROM table_name A
+JOIN table_name B
+ON A.common_column = B.common_column;
+```
+
+
+### Example
+
+
+Self Join only requires one table, so, let us create a CUSTOMERS table containing the customer details like their names, age, address and the salary they earn:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),       
+   PRIMARY KEY (ID)
+);
+```
+
+
+Now, insert values into this table using the INSERT statement as follows:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+(2, 'Khilan', 25, 'Delhi', 1500.00 ),
+(3, 'Kaushik', 23, 'Kota', 2000.00 ),
+(4, 'Chaitali', 25, 'Mumbai', 6500.00 ),
+(5, 'Hardik', 27, 'Bhopal', 8500.00 ),
+(6, 'Komal', 22, 'Hyderabad', 4500.00 ),
+(7, 'Muffy', 24, 'Indore', 10000.00 );
+```
+
+
+The table will be created as:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+Now, let us join this table using the following Self Join query. Our aim is to establish a relationship among the said Customers on the basis of their earnings. We are doing this with the help of the WHERE clause:
+
+
+```sql
+SELECT a.ID, b.NAME as EARNS_HIGHER, a.NAME 
+as EARNS_LESS, a.SALARY as LOWER_SALARY
+FROM CUSTOMERS a, CUSTOMERS b
+WHERE a.SALARY < b.SALARY;
+```
+
+
+The resultant table displayed will list out all the customers that earn lesser than other customers:
+
+
+IDEARNS_HIGHEREARNS_LESSLOWER_SALARY2RameshKhilan1500.002KaushikKhilan1500.006ChaitaliKomal4500.003ChaitaliKaushik2000.002ChaitaliKhilan1500.001ChaitaliRamesh2000.006HardikKomal4500.004HardikChaitali6500.003HardikKaushik2000.002HardikKhilan1500.001HardikRamesh2000.003KomalKaushik2000.002KomalKhilan1500.001KomalRamesh2000.006MuffyKomal4500.005MuffyHardik8500.004MuffyChaitali6500.003MuffyKaushik2000.002MuffyKhilan1500.001MuffyRamesh2000.00
+
+
+## Self Join with ORDER BY Clause
+
+
+ASELF JOINcan be combined with theORDER BYclause to sort the results after joining a table with itself. This is used when you want to organize hierarchical or relational data, such as listing employees along with their managers in a sorted order.
+
+
+### Syntax
+
+
+Following is the syntax to use the ORDER BY clause in self join:
+
+
+```sql
+SELECT column_name(s)
+FROM table1 a, table1 b
+WHERE a.common_field = b.common_field
+ORDER BY column_name;
+```
+
+
+### Example
+
+
+Let us join the CUSTOMERS table with itself using self join on a WHERE clause; then, arrange the records in an ascending order using the ORDER BY clause with respect to a specified column, as shown in the following query:
+
+
+```sql
+SELECT  a.ID, b.NAME as EARNS_HIGHER, a.NAME 
+as EARNS_LESS, a.SALARY as LOWER_SALARY
+FROM CUSTOMERS a, CUSTOMERS b
+WHERE a.SALARY < b.SALARY
+ORDER BY a.SALARY;
+```
+
+
+The resultant table is displayed as follows:
+
+
+IDEARNS_HIGHEREARNS_LESSLOWER_SALARY2RameshKhilan1500.002KaushikKhilan1500.002ChaitaliKhilan1500.002HardikKhilan1500.002KomalKhilan1500.002MuffyKhilan1500.003ChaitaliKaushik2000.001ChaitaliRamesh2000.003HardikKaushik2000.001HardikRamesh2000.003KomalKaushik2000.001KomalRamesh2000.003MuffyKaushik2000.001MuffyRamesh2000.006ChaitaliKomal4500.006HardikKomal4500.006MuffyKomal4500.004HardikChaitali6500.004MuffyChaitali6500.005MuffyHardik8500.00
+
+
+Not just the salary column, the records can be sorted based on the alphabetical order of names, numerical order of Customer IDs etc.
+
+
+## SQL Self Join for Hierarchical Data
+
+
+ASELF JOINcan also be used to represent hierarchical data such as a manager-employee relationship, even when the information is stored in the same table. By joining the table with itself, we can identify the relationship between two rows in the same dataset.
+
+
+### Example
+
+
+Let us assume that theCUSTOMERStable stores information about employees, and we use theIDcolumn as the employee ID and add a new columnMANAGER_IDto specify who manages them. For demonstration, we update the table as follows:
+
+
+```sql
+ALTER TABLE CUSTOMERS ADD MANAGER_ID INT;
+
+UPDATE CUSTOMERS SET MANAGER_ID = NULL WHERE ID = 1; -- Ramesh is top-level
+UPDATE CUSTOMERS SET MANAGER_ID = 1 WHERE ID IN (2,3); -- Khilan, Kaushik report to Ramesh
+UPDATE CUSTOMERS SET MANAGER_ID = 2 WHERE ID = 4; -- Chaitali reports to Khilan
+UPDATE CUSTOMERS SET MANAGER_ID = 2 WHERE ID = 5; -- Hardik reports to Khilan
+UPDATE CUSTOMERS SET MANAGER_ID = 3 WHERE ID = 6; -- Komal reports to Kaushik
+UPDATE CUSTOMERS SET MANAGER_ID = 4 WHERE ID = 7; -- Muffy reports to Chaitali
+```
+
+
+Now, let us write a Self Join query to display employees along with their managers:
+
+
+```sql
+SELECT a.NAME AS EMPLOYEE, b.NAME AS MANAGER
+FROM CUSTOMERS a
+LEFT JOIN CUSTOMERS b
+ON a.MANAGER_ID = b.ID;
+```
+
+
+The resultant table is displayed as follows:
+
+
+EMPLOYEEMANAGERRameshNULLKhilanRameshKaushikRameshChaitaliKhilanHardikKhilanKomalKaushikMuffyChaitali
+
+
+## SQL Self Join vs. Subquery
+
+
+ASELF JOINand asubquerycan sometimes be used to achieve similar results, but they work differently and are used for different scenarios.
+
+
+
+- SELF JOIN:A table is joined with itself to compare rows within the same table.     It is useful for hierarchical data, such as finding employees and their managers or comparing rows based on certain conditions.
+- Subquery:A query inside another query that returns a single value or a set of values. It is used for filtering, aggregation, or checking conditions without directly joining the same table.
+
+
+
+In short, a SELF JOIN is more helpful for comparing rows directly, while a subquery is preferred for filtering or calculating values before applying conditions in the main query.
+
+
+### Example
+
+
+In this example, we useSelf Jointo find customers earning less than others:
+
+
+```sql
+SELECT a.NAME AS EARNS_LESS, a.SALARY, b.NAME AS EARNS_MORE
+FROM CUSTOMERS a
+JOIN CUSTOMERS b
+ON a.SALARY < b.SALARY;
+```
+
+
+It produces the following table:
+
+
+EARNS_LESSSALARYEARNS_MOREKhilan1500.00RameshKhilan1500.00KaushikKomal4500.00ChaitaliKaushik2000.00ChaitaliKhilan1500.00ChaitaliRamesh2000.00ChaitaliKomal4500.00HardikChaitali6500.00HardikKaushik2000.00HardikKhilan1500.00HardikRamesh2000.00HardikKaushik2000.00KomalKhilan1500.00KomalRamesh2000.00KomalKomal4500.00MuffyHardik8500.00MuffyChaitali6500.00MuffyKaushik2000.00MuffyKhilan1500.00MuffyRamesh2000.00Muffy
+
+
+Here, we usesubqueryfor the same logic:
+
+
+```sql
+SELECT NAME AS EARNS_LESS, SALARY
+FROM CUSTOMERS
+WHERE SALARY < (SELECT MAX(SALARY) FROM CUSTOMERS);
+```
+
+
+Following is the table produced:
+
+
+EARNS_LESSSALARYRamesh2000.00Khilan1500.00Kaushik2000.00Chaitali6500.00Hardik8500.00Komal4500.00
+
+
+We can see that theSELF JOINexplicitly compares each row with others, producing detailed pairwise results. Whereas, thesubquerygives a summarized or filtered view without duplicating rows. In general, Self Join is better for comparisons between multiple rows, while Subqueries are useful for aggregated checks.
+
+
+## Why Do We Use Self Join in SQL?
+
+
+TheSELF JOINis useful in the following scenarios:
+
+
+
+- Finding relationships in the same table:For example, identifying which customers earn less compared to others using salary values.
+- Working with hierarchical data:Representing manager-employee relationships within theCUSTOMERStable using theMANAGER_IDcolumn.
+- Alternative to subqueries:When we want to compare rows directly instead of relying on aggregate functions.
+- Data exploration:Helps in checking dependencies, overlaps, or comparisons within a single table without needing multiple tables.
+
+

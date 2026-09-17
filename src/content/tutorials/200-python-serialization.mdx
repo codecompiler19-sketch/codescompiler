@@ -1,0 +1,418 @@
+---
+title: "PYTHON - Serialization"
+description: "Learn PYTHON - Serialization with clear explanation, code examples, and practical guide."
+category: "python"
+order: 2000
+group: "Python Miscellenous"
+seoTitle: "PYTHON - Serialization — CodesCompiler PYTHON Guide"
+permalink: "python-serialization"
+---
+
+
+# Python - Serialization
+
+
+
+
+## Serialization in Python
+
+
+Serialization refers to the process of converting an object into a format that can be easily stored, transmitted, or reconstructed later. In Python, this involves converting complex data structures, such as objects or dictionaries, into a byte stream.
+
+
+### Why Do We Use Serialization?
+
+
+Serialization allows data to be easily saved to disk or transmitted over a network, and later reconstructed back into its original form. It is important for tasks like saving game states, storing user preferences, or exchanging data between different systems.
+
+
+## Serialization Libraries in Python
+
+
+Python offers several libraries for serialization, each with its own advantages. Here is a detailed overview of some commonly used serialization libraries in Python −
+
+
+
+- Pickle −This is Python's built-in module for serializing and deserializing Python objects. It is simple to use but specific to Python and may have security implications if used with untrusted data.
+- JSON −JSON (JavaScript Object Notation) is a lightweight data interchange format that is human-readable and easy to parse. It is ideal for web APIs and cross-platform communication.
+- YAML −YAML: YAML (YAML Ain't Markup Language) is a human-readable data serialization standard that is also easy for both humans and machines to read and write. It supports complex data structures and is often used in configuration files.
+
+
+
+## Serialization Using Pickle Module
+
+
+The pickle module in Python is used for serializing and deserializing objects. Serialization, also known aspickling, involves converting a Python object into a byte stream, which can then be stored in a file or transmitted over a network.
+
+
+Deserialization, orunpickling, is the reverse process, converting the byte stream back into a Python object.
+
+
+### Serializing an Object
+
+
+We can serialize an object using thedump()function and write it to a file. The file must be opened in binary write mode ('wb').
+
+
+Example
+
+
+In the following example, a dictionary is serialized and written to a file named "data.pkl" −
+
+
+```python
+import pickle
+
+data = {'name': 'Alice', 'age': 30, 'city': 'New York'}
+
+# Open a file in binary write mode
+with open('data.pkl', 'wb') as file:
+   # Serialize the data and write it to the file
+   pickle.dump(data, file)
+   print ("File created!!")
+```
+
+
+When above code is executed, the dictionary object's byte representation will be stored in data.pkl file.
+
+
+### Deserializing an Object
+
+
+To deserialize or unpickle the object, you can use the load() function. The file must be opened in binary read mode ('rb') as shown below −
+
+
+```python
+import pickle
+
+# Open the file in binary read mode
+with open('data.pkl', 'rb') as file:
+   # Deserialize the data
+   data = pickle.load(file)
+print(data)
+```
+
+
+This will read the byte stream from "data.pkl" and convert it back into the original dictionary as shown below −
+
+
+```python
+{'name': 'Alice', 'age': 30, 'city': 'New York'}
+```
+
+
+## Pickle Protocols
+
+
+Protocols are the conventions used in constructing and deconstructing Python objects to/from binary data.
+
+
+Thepicklemodule supports different serialization protocols, with higher protocols generally offering more features and better performance. Currently pickle module defines 6 different protocols as listed below −
+
+
+
+| Sr.No. | Protocol & Description |
+| --- | --- |
+|  |
+| 1 | Protocol version 0Original "human-readable" protocol backwards compatible with earlier versions. |
+| 2 | Protocol version 1Old binary format also compatible with earlier versions of Python. |
+| 3 | Protocol version 2Introduced in Python 2.3 provides efficient pickling of new-style classes. |
+| 4 | Protocol version 3Added in Python 3.0. recommended when compatibility with other Python 3 versions is required. |
+| 5 | Protocol version 4Introduced in Python 3.4. It adds support for very large objects. |
+| 6 | Protocol version 5Introduced in Python 3.8. It adds support for out-of-band data. |
+
+
+
+You can specify the protocol by passing it as an argument to pickle.dump() function.
+
+
+To know the highest and default protocol version of your Python installation, use the following constants defined in thepicklemodule −
+
+
+```python
+>>> import pickle
+>>> pickle.HIGHEST_PROTOCOL
+5
+>>> pickle.DEFAULT_PROTOCOL
+4
+```
+
+
+## Pickler and Unpickler Classes
+
+
+Thepicklemodule in Python also definesPicklerandUnpicklerclasses for more detailed control over the serialization and deserialization processes. The "Pickler" class writes pickle data to a file, while the "Unpickler" class reads binary data from a file and reconstructs the original Python object.
+
+
+### Using the Pickler Class
+
+
+To serialize a Python object using the Pickler class, you can follow these steps −
+
+
+```python
+from pickle import Pickler
+
+# Open a file in binary write mode
+with open("data.txt", "wb") as f:
+   # Create a dictionary
+   dct = {'name': 'Ravi', 'age': 23, 'Gender': 'M', 'marks': 75}
+   # Create a Pickler object and write the dictionary to the file
+   Pickler(f).dump(dct)
+   print ("Success!!")
+```
+
+
+After executing the above code, the dictionary object's byte representation will be stored in "data.txt" file.
+
+
+### Using the Unpickler Class
+
+
+To deserialize the data from a binary file using the Unpickler class, you can do the following −
+
+
+```python
+from pickle import Unpickler
+
+# Open the file in binary read mode
+with open("data.txt", "rb") as f:
+   # Create an Unpickler object and load the dictionary from the file
+   dct = Unpickler(f).load()
+   # Print the dictionary
+   print(dct)
+```
+
+
+We get the output as follows −
+
+
+```python
+{'name': 'Ravi', 'age': 23, 'Gender': 'M', 'marks': 75}
+```
+
+
+## Pickling Custom Class Objects
+
+
+The pickle module can also serialize and deserialize custom classes. The class definition must be available at both the time of pickling and unpickling.
+
+
+### Example
+
+
+In this example, an instance of the "Person" class is serialized and then deserialized, maintaining the state of the object −
+
+
+```python
+import pickle
+class Person:
+   def __init__(self, name, age, city):
+      self.name = name
+      self.age = age
+      self.city = city
+
+# Create an instance of the Person class
+person = Person('Alice', 30, 'New York')
+
+# Serialize the person object
+with open('person.pkl', 'wb') as file:
+   pickle.dump(person, file)
+
+# Deserialize the person object
+with open('person.pkl', 'rb') as file:
+   person = pickle.load(file)
+
+print(person.name, person.age, person.city)
+```
+
+
+After executing the above code, we get the following output −
+
+
+```python
+Alice 30 New York
+```
+
+
+The Python standard library also includes themarshalmodule, which is used for internal serialization of Python objects. Unlike pickle, which is designed for general-purpose use, marshal is primarily intended for use by Python itself (e.g., for writing .pyc files).It is generally not recommended for general-purpose serialization due to potential compatibility issues between Python versions.
+
+
+## Using JSON for Serialization
+
+
+JSON (JavaScript Object Notation) is a popular format for data interchange. It is human-readable, easy to write, and language-independent, making it ideal for serialization.
+
+
+Python provides built-in support for JSON through thejsonmodule, which allows you to serialize and deserialize data to and from JSON format.
+
+
+### Serialization
+
+
+Serialization is the process of converting a Python object into a JSON string or writing it to a file.
+
+
+Example: Serialize Data to a JSON String
+
+
+In the example below, we use the json.dumps() function to convert a Python dictionary to a JSON string −
+
+
+```python
+import json
+
+# Create a dictionary
+data = {"name": "Alice", "age": 25, "city": "San Francisco"}
+
+# Serialize the dictionary to a JSON string
+json_string = json.dumps(data)
+print(json_string)
+```
+
+
+Following is the output of the above code −
+
+
+```python
+{"name": "Alice", "age": 25, "city": "San Francisco"}
+```
+
+
+Example: Serialize Data and Write to a File
+
+
+In here, we use the json.dump() function to write the serialized JSON data directly to a file −
+
+
+```python
+import json
+
+# Create a dictionary
+data = {"name": "Alice", "age": 25, "city": "San Francisco"}
+
+# Serialize the dictionary and write it to a file
+with open("data.json", "w") as f:
+   json.dump(data, f)
+   print ("Success!!")
+```
+
+
+### Deserialization
+
+
+Deserialization is the process of converting a JSON string back into a Python object or reading it from a file.
+
+
+Example: Deserialize a JSON String
+
+
+In the following example, we use the json.loads() function to convert a JSON string back into a Python dictionary −
+
+
+```python
+import json
+
+# JSON string
+json_string = '{"name": "Alice", "age": 25, "city": "San Francisco"}'
+
+# Deserialize the JSON string into a Python dictionary
+loaded_data = json.loads(json_string)
+print(loaded_data)
+```
+
+
+It will produce the following output −
+
+
+```python
+{'name': 'Alice', 'age': 25, 'city': 'San Francisco'}
+```
+
+
+Example: Deserialize Data from a File
+
+
+Here, we use the json.load() function to read JSON data from a file and convert it to a Python dictionary−
+
+
+```python
+import json
+
+# Open the file and load the JSON data into a Python dictionary
+with open("data.json", "r") as f:
+   loaded_data = json.load(f)
+   print(loaded_data)
+```
+
+
+The output obtained is as follows −
+
+
+```python
+{'name': 'Alice', 'age': 25, 'city': 'San Francisco'}
+```
+
+
+## Using YAML for Serialization
+
+
+YAML (YAML Ain't Markup Language) is a human-readable data serialization standard that is commonly used for configuration files and data interchange.
+
+
+Python supports YAML serialization and deserialization through thepyyamlpackage, which needs to be installed first as shown below −
+
+
+```python
+pip install pyyaml
+```
+
+
+### Example: Serialize Data and Write to a YAML File
+
+
+In the below example, yaml.dump() function converts the Python dictionary data into a YAML string and writes it to the file "data.yaml".
+
+
+The "default_flow_style" parameter ensures that the YAML output is more human-readable with expanded formatting −
+
+
+```python
+import yaml
+
+# Create a Python dictionary
+data = {"name": "Emily", "age": 35, "city": "Seattle"}
+
+# Serialize the dictionary and write it to a YAML file
+with open("data.yaml", "w") as f:
+   yaml.dump(data, f, default_flow_style=False)
+   print("Success!!")
+```
+
+
+### Example: Deserialize Data from a YAML File
+
+
+Here, yaml.safe_load() function is used to safely load the YAML data from "data.yaml" and convert it into a Python dictionary (loaded_data) −
+
+
+Using safe_load() is preferred for security reasons as it only allows basic Python data types and avoids executing arbitrary code from YAML files.
+
+
+```python
+import yaml
+
+# Deserialize data from a YAML file
+with open("data.yaml", "r") as f:
+   loaded_data = yaml.safe_load(f)
+   print(loaded_data)
+```
+
+
+The output produced is as shown below −
+
+
+```python
+{'age': 35, 'city': 'Seattle', 'name': 'Emily'}
+```
+

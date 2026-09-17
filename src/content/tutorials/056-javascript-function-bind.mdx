@@ -1,0 +1,218 @@
+---
+title: "JavaScript - Function bind()"
+description: "Learn JavaScript - Function bind() with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 560
+group: "JavaScript Functions"
+seoTitle: "JavaScript - Function bind() — CodesCompiler JavaScript Guide"
+permalink: "javascript-function-bind"
+---
+
+
+# JavaScript - Function bind() Method
+
+
+
+
+## Function bind() Method
+
+
+The functionbind()method in JavaScript creates a new function with a specifiedthisvalue and optional arguments, without invoking the original function immediately. It is commonly used to set the context (this) for a function and partially apply arguments. This method is used to bind a particular object to a common function.
+
+
+To understand the function bind() method, we should first understand the "this" keyword. In JavaScript (and other programming languages also),thisis a special keyword that is used within functions to refer to the object on which the function is invoked. The value ofthisis depended on how a function is being called and behaviour ofthiscan vary in different contexts.
+
+
+## Syntax
+
+
+The syntax of JavaScript function bind() method is as follows −
+
+
+```javascript
+functionToBind.bind(thisValue, arg1, arg2, ...);
+```
+
+
+HerefunctionToBindis the original function whosethisvalue and arguments you want to set.
+
+
+### Parameters
+
+
+
+- thisValue− The value that should be passed as thethisparameter when the new function is called.
+- arg1, arg2, ...− Optional arguments that will be fixed (partially applied) when the new function is called. These arguments will be prepended to the arguments provided to the new function.
+
+
+
+Lets now understand the Function bind() method with the help of some program examples.
+
+
+## Without Function bind() Method
+
+
+Here we will create a general and common function greet() which simply prints to the console. We create a constant object named person and give it some property i.e. name and we then invoke the function greet by passing it a message "Hello".
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+	  const output = document.getElementById("demo");
+      function greet(message) {
+         output.innerHTML = message + ', ' + this.name;    
+	  }
+      const person = { name: 'John Doe' };
+      greet('Hello'); 
+   </script>      
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Hello,
+```
+
+
+In this example, when thegreetfunction is called directly without usingbind, thethisvalue is not explicitly set, leading to an undefined or global object (windowin a browser environment) being used asthis.
+
+
+## With Function bind() method
+
+
+To overcome the issue in the previous code where it could not fetch any associated name, we make use of thebindfunction to bind the object person to the function greet.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+      const output = document.getElementById("demo");
+      // Original function
+      function greet(message) {
+         output.innerHTML = message + ', ' + this.name;
+      }
+      // Object with a 'name' property
+      const person = { name: 'John Doe' };    
+      const greetPerson = greet.bind(person, 'Hello');
+      greetPerson();
+   </script>      
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Hello, John Doe
+```
+
+
+The bind method was able to create a new function greetPerson wherein thethisvalue has been explicitly set to the person object and argument "Hello" is partially applied as in the previous code as well.
+
+
+Usingbind()ensures that the function is executed in the desired context, preventing issues related to the default behaviour ofthisin JavaScript functions.
+
+
+## Example: Binding different objects to same function
+
+
+We have created three objects with x and y coordinates of a point, a functionprintValis created to print to the console the coordinates of the point. The bind methodbindsthe points to theprintValfunction and prints the x, y coordinates of each of the points.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+      const output = document.getElementById("demo");
+      const points1 = { 
+         X: 100, 
+         Y: 100
+      } 
+      const points2 = { 
+         X: 200, 
+         Y: 100
+      } 
+
+      const points3 = { 
+         X: 350, 
+         Y: 400
+      } 
+      function printVal() { 
+         output.innerHTML += "Coordinates: "+this.X + "," + this.Y + "<br>"; 
+      } 
+
+      const printFunc2 = printVal.bind(points1); 
+      printFunc2(); 
+
+      const printFunc3 = printVal.bind(points2); 
+      printFunc3(); 
+
+      const printFunc4 = printVal.bind(points3); 
+      printFunc4(); 
+   </script>      
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Coordinates: 100,100
+Coordinates: 200,100
+Coordinates: 350,400
+```
+
+
+## Example: Setting the default values of function parameters
+
+
+This is a new scenario wherein we make use of the bind function to predefine the parameter. Themultiply()function simply takes 2 inputs and returns their product. By using thebind()method we can set any of the parameters to a default value as needed.
+
+
+In the below example, it sets the variableyto 2 and hence upon calling the function by passing just 1 parameter i.e. x as 5 it gets multiplies by the preset 2 and returns the output of 5x2`=`10.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      // Original function with parameters
+      function multiply(x, y) {
+         return x * y;
+      }
+
+      // Using bind to preset the first parameter
+      const multiplyByTwo = multiply.bind(null, 2);
+      
+      // Calling the bound function with only the second parameter
+      document.getElementById("output").innerHTML= multiplyByTwo(5); 
+   </script>      
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+10
+```
+
+
+It is important to note that the bind method creates and returns a new function and does not modify the original function. The same function can be reused and yet made to match different use cases without actually modifying.
+

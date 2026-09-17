@@ -1,0 +1,370 @@
+---
+title: "SQL - Aliases"
+description: "Learn SQL - Aliases with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 610
+group: "SQL Operators and Clauses"
+seoTitle: "SQL - Aliases — CodesCompiler SQL Guide"
+permalink: "sql-alias-syntax"
+---
+
+
+# SQL - Aliases
+
+
+Table of contentThe SQL AliasingAliasing Column NamesTable AliasingCombining Column Aliasing and Table AliasingAliasing with Self JoinAlias Without AS KeywordAliasing with Space Characters in NamesAliasing When Concatenating Columns
+
+
+
+
+You can rename a table or a column in a database temporarily by giving them another pseudo name. This pseudo name is known asAlias. The use of aliases is to address a specific table or a column in an SQL statement without changing their original name in the database. Aliases are created with theASkeyword.
+
+
+Aliases can be especially useful when working with complex queries involving multiple tables or columns with similar names. By assigning temporary names to these tables or columns, you can make your SQL query more readable and easier to understand.
+
+
+## The SQL Aliasing
+
+
+Aliases are used to address database tables or a column with a shorter or more meaningful name within an SQL query.
+
+
+
+- Column Alias:Renames a column in the result set using theASkeyword. Example: SELECT first_name AS Name FROM employees;
+- Table Alias:Provides a temporary name for a table, often used in joins to simplify references. Example: SELECT e.first_name FROM employees AS e;
+
+
+
+Aliases are temporary and only exist for the duration of the query. They do not change the actual table or column names in the database.
+
+
+### Syntax
+
+
+The basic syntax of a table alias is as follows:
+
+
+```sql
+SELECT column1, column2....
+FROM table_name AS alias_name;
+```
+
+
+### Example
+
+
+Assume we have created a table with name CUSTOMERS in MySQL database using CREATE TABLE statement as shown below:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),       
+   PRIMARY KEY (ID)
+);
+```
+
+
+Following query inserts values into this table using the INSERT statement:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00),
+(2, 'Khilan', 25, 'Delhi', 1500.00),
+(3, 'Kaushik', 23, 'Kota', 2000.00),
+(4, 'Chaitali', 25, 'Mumbai', 6500.00),
+(5, 'Hardik', 27, 'Bhopal', 8500.00),
+(6, 'Komal', 22, 'Hyderabad', 4500.00),
+(7, 'Muffy', 24, 'Indore', 10000.00);
+```
+
+
+The CUSTOMERS table obtained is as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+Now, we are creating the second table ORDERS using CREATE TABLE statement as shown below:
+
+
+```sql
+CREATE TABLE ORDERS (
+   OID INT NOT NULL,
+   DATES DATETIME NOT NULL,
+   CUSTOMER_ID INT NOT NULL,
+   AMOUNT INT NOT NULL,      
+   PRIMARY KEY (OID)
+);
+```
+
+
+Following query inserts values into this table using the INSERT statement:
+
+
+```sql
+INSERT INTO ORDERS VALUES
+(102, '2009-10-08 00:00:00', 3, 3000),
+(100, '2009-10-08 00:00:00', 3, 1500),
+(101, '2009-11-20 00:00:00', 2, 1560),
+(103, '2008-05-20 00:00:00', 4, 2060);
+```
+
+
+The ORDERS table obtained is as shown below:
+
+
+OIDDATECUSTOMER_IDAMOUNT1022009-10-08 00:00:0033000.001002009-10-08 00:00:0031500.001012009-11-20 00:00:0021560.001032008-05-20 00:00:0042060.00
+
+
+Now, the following query shows the usage of atable alias. The CUSTOMERS table is aliased as 'C' and the ORDERS table is aliased as 'O':
+
+
+```sql
+SELECT C.ID, C.NAME, C.AGE, O.AMOUNT 
+FROM CUSTOMERS AS C, ORDERS AS O
+WHERE  C.ID = O.CUSTOMER_ID;
+```
+
+
+This would produce the following result:
+
+
+IDNAMEAGEAMOUNT3Kaushik233000.003Kaushik231500.002Khilan251560.004Chaitali252060.00
+
+
+## Aliasing Column Names
+
+
+We can also use an alias for a column name in SQL to give it a different name in the result set of a query. The basic syntax of acolumnalias is as follows:
+
+
+```sql
+SELECT column_name AS alias_name
+FROM table_name;
+```
+
+
+### Example
+
+
+Following is the usage of acolumn alias. Here, the NAME column is aliased as 'CUSTOMER_NAME':
+
+
+```sql
+SELECT ID AS CUSTOMER_ID, NAME AS CUSTOMER_NAME
+FROM CUSTOMERS;
+```
+
+
+This would produce the following result:
+
+
+CUSTOMER_IDCUSTOMER_NAME1Ramesh2Khilan3Kaushik4Chaitali5Hardik6Komal7Muffy
+
+
+## Table Aliasing
+
+
+Table aliasing in SQL assigns a temporary name to a table within a query. It is applied when working with long table names or multiple tables in joins, allowing the query to remain shorter and easier to read.
+
+
+### Syntax
+
+
+Following is the syntax for aliasing a table in SQL:
+
+
+```sql
+SELECT t.column_name
+FROM table_name t;
+```
+
+
+### Example
+
+
+This query lists customer names and their order amounts by matching customers with their orders using table aliases:
+
+
+```sql
+SELECT C.NAME, O.AMOUNT
+FROM CUSTOMERS C, ORDERS O
+WHERE C.ID = O.CUSTOMER_ID;
+```
+
+
+Following is the output of the above code:
+
+
+NAMEAMOUNTKaushik1500.00Khilan1560.00Kaushik3000.00Chaitali2060.00
+
+
+## Combining Column Aliasing and Table Aliasing
+
+
+In SQL, column aliasing and table aliasing can be used together within a query. Table aliases shorten table names in complex queries, while column aliases assign meaningful names to calculated or concatenated columns.
+
+
+This approach is used when you want to join multiple tables or present results with specific column headings.
+
+
+### Example
+
+
+This query retrieves each customer's ID, name, and order amount, renames the columns in the result set, and uses table aliases to join the CUSTOMERS and ORDERS tables where their IDs match:
+
+
+```sql
+SELECT 
+    C.ID AS CUSTOMER_ID, 
+    C.NAME AS CUSTOMER_NAME, 
+    O.AMOUNT AS ORDER_AMOUNT
+FROM CUSTOMERS C, ORDERS O
+WHERE C.ID = O.CUSTOMER_ID;
+```
+
+
+Following is the output obtained:
+
+
+CUSTOMER_IDCUSTOMER_NAMEORDER_AMOUNT3Kaushik3000.003Kaushik1500.002Khilan1560.004Chaitali2060.00
+
+
+## Aliasing with Self Join
+
+
+The SQL Self Join is used to join a table to itself as if the table were two tables. During this process, we need to use alias for one of the tables with a temporary name to avoid misunderstandings. This renaming is done using aliases.
+
+
+Following is the syntax for performing a self-join with aliases:
+
+
+```sql
+SELECT column_name(s)
+FROM my_table a, my_table b
+ON a.join_column = b.join_column;
+```
+
+
+### Example
+
+
+Now, let us join the CUSTOMERS table to itself using the following Self Join query. Our aim is to establish a relationship among customers on the basis of their earnings. In here, we are using aliases with column names as well as with the table names:
+
+
+```sql
+SELECT 
+   a.ID, b.NAME as EARNS_HIGHER, 
+   a.NAME as EARNS_LESS, 
+   a.SALARY as LOWER_SALARY
+FROM CUSTOMERS a, CUSTOMERS b
+WHERE a.SALARY < b.SALARY;
+```
+
+
+Output of the above query is as follows:
+
+
+IDEARNS_HIGHEREARNS_LESSLOWER_SALARY2RameshKhilan1500.002KaushikKhilan1500.006ChaitaliKomal4500.003ChaitaliKaushik2000.002ChaitaliKhilan1500.001ChaitaliRamesh2000.006HardikKomal4500.004HardikChaitali6500.003HardikKaushik2000.002HardikKhilan1500.001HardikRamesh2000.003KomalKaushik2000.002KomalKhilan1500.001KomalRamesh2000.006MuffyKomal4500.005MuffyHardik8500.004MuffyChaitali6500.003MuffyKaushik2000.002MuffyKhilan1500.001MuffyRamesh2000.00
+
+
+## Alias Without AS Keyword
+
+
+In SQL, theASkeyword is commonly used to create an alias, but it is actuallyoptionalin most SQL databases. You can simply put the alias name after the column or table name separated by a space.
+
+
+### Syntax
+
+
+Following is the syntax of using alias without theASkeyword:
+
+
+```sql
+SELECT column_name alias_name
+FROM table_name;
+```
+
+
+### Example
+
+
+The following query renames theNAMEcolumn toCUSTOMER_NAMEwithout using theASkeyword:
+
+
+```sql
+SELECT ID CUSTOMER_ID, NAME CUSTOMER_NAME
+FROM CUSTOMERS;
+```
+
+
+Following is the output obtained:
+
+
+CUSTOMER_IDCUSTOMER_NAME1Ramesh2Khilan3Kaushik4Chaitali5Hardik6Komal7Muffy
+
+
+## Aliasing with Space Characters in Names
+
+
+When you want your alias name to containspacesorspecial characters, you need to enclose the alias indouble quotes (")orsquare brackets ([]), depending on your SQL database.
+
+
+### Syntax
+
+
+Following is the syntax to use alias with space characters in names:
+
+
+```sql
+SELECT column_name AS "Alias With Spaces"
+FROM table_name;
+```
+
+
+### Example
+
+
+This SQL query selects theNAMEandSALARYcolumns from theCUSTOMERStable, renaming them in the result set asCustomer NameandMonthly Incomerespectively:
+
+
+```sql
+SELECT NAME AS "Customer Name", SALARY AS "Monthly Income"
+FROM CUSTOMERS;
+```
+
+
+Following is the table produced:
+
+
+Customer NameMonthly IncomeRamesh2000.00Khilan1500.00Kaushik2000.00Chaitali6500.00Hardik8500.00Komal4500.00Muffy10000.00
+
+
+## Aliasing When Concatenating Columns
+
+
+Aliases are very useful when you combine two or more columns into a single output column using functions likeCONCAT(). Without an alias, the column name might appear as an expression, which can be hard to read.
+
+
+### Example
+
+
+Here we combineNAMEandADDRESSinto one column calledCUSTOMER_DETAILS:
+
+
+```sql
+SELECT CONCAT(NAME, ' - ', ADDRESS) AS CUSTOMER_DETAILS
+FROM CUSTOMERS;
+```
+
+
+We get the output as shown below:
+
+
+CUSTOMER_DETAILSRamesh - AhmedabadKhilan - DelhiKaushik - KotaChaitali - MumbaiHardik - BhopalKomal - HyderabadMuffy - Indore
+

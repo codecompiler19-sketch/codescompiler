@@ -1,0 +1,275 @@
+---
+title: "JavaScript - new Keyword"
+description: "Learn JavaScript - new Keyword with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1600
+group: "JavaScript Important Keywords"
+seoTitle: "JavaScript - new Keyword — CodesCompiler JavaScript Guide"
+permalink: "javascript-new-keyword"
+---
+
+
+# JavaScript - new Keyword
+
+
+
+
+Thenewkeyword in JavaScript is used to create an instance of the object that has constructor function. Using new keyword, we can create the instances of a user-defined as well as built-in object types.  We can create instances of the classes, prototype, or constructor functions.
+
+
+When a JavaScript function is called with new keyword, the function is used as constructor. The new keyword will do the following:
+
+
+
+- Creates a blank/ empty JavaScript object.
+- Sets its prototype for inheritance.
+- Bindsthisvariable internally with newly created object.
+- Executes the constructor function using new crated object wheneverthisis used.
+- Returns newly created object, unless the contractor function returns a non-null object reference.
+
+
+
+Thenewkeyword is also used to create an instance of the built-in JavaScript objects like String, Boolean, Number, etc.
+
+
+## Syntax
+
+
+The syntax to use the new keyword in JavaScript is as follows
+
+
+```javascript
+new Constructor(arguments);
+```
+
+
+### Parameters
+
+
+
+- Constructor − It is the name of the constructor function or class name.
+- arguments −It can be multiple arguments to initialize the object properties with them.
+
+
+
+### Return Value
+
+
+
+- It returns the newly created object if the constructor function returns nothing or a primitive value.
+- It returns the value that is returned by constructor function if constructor returns a non-primitive value.
+
+
+
+## Using 'new' keyword with Function Constructor
+
+
+To use a function as a constructor, we should call the function with new keyword placing it before the function name.
+
+
+We can define multiple objects using function constructor. The function constructor works as the object's prototype.
+
+
+Follow the syntax below to use the 'new' keyword and constructor function to define the object.
+
+
+```javascript
+new FuncName(arguments);
+```
+
+
+### Example
+
+
+We have defined the Watch() constructor function in the code below.
+
+
+The Watch() constructor function initializes the brand, price, and type properties.
+
+
+After that, we have created two new instances of the Watch() function and printed them in the output.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      function Watch(brand, price, type) {
+      this.brand = brand;
+      this.price = price;
+      this.type = type;
+   }
+   const titan = new Watch('titen', 4000, 'analog');
+   const sonata = new Watch('sonata', 3000, 'digital');
+   document.getElementById('output').innerHTML += 
+   "The titan object is: " + JSON.stringify(titan) + "<br>" +
+   "The sonata object is: " + JSON.stringify(sonata);
+</script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The titan object is: {"brand":"titen","price":4000,"type":"analog"}
+The sonata object is: {"brand":"sonata","price":3000,"type":"digital"}
+```
+
+
+### Example
+
+
+In the below code, we have defined the Laptop() constructor function, initializing various properties related to the laptop. Also, we have defined the getLaptop() function, which prints the laptop details.
+
+
+After that, we created the two instances of the Laptop() object and used the getLaptop() method with both. In this way, you can share single methods with different objects.
+
+
+```html
+<html>
+<body>
+<div id = "output"> </div>
+   <script>
+   const output = document.getElementById('output');
+   function Laptop(brand, model, processor) {
+	  this.brand = brand;
+	  this.model = model;
+	  this.processor = processor;
+	  this.getLaptop = function () {
+	     output.innerHTML += this.brand + ", " + 
+		 this.model + ", " + this.processor + "<br>";
+      }
+   }
+   const HP = new Laptop('HP', "VIKING", "i7");
+   const Dell = new Laptop('Dell', "Inspiron", "i5");
+   HP.getLaptop();
+   Dell.getLaptop();
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+HP, VIKING, i7
+Dell, Inspiron, i5
+```
+
+
+## Using 'new' keyword with Class
+
+
+You can also use the new keyword to define the instance of a class. The class also provides the blueprint for the object.
+
+
+Before ES6, the constructor function was used to define the template for the object. After ES6, classes are used to define the template for the object.
+
+
+### Example
+
+
+In the below example, we have defined the 'WindowClass class. In the 'WindowClass' we have added the constructor to initialize the properties. We have also added the getDetails() method in the class.
+
+
+After that, we used the 'new' keyword followed by the class name to define an object of the WindowClass.
+
+
+Next, we invoke the getDetails() method on the instance of the class.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+      const output = document.getElementById('demo')
+      class WindowClass {
+         constructor(color, size, type) {
+            this.color = color;
+            this.size = size;
+            this.type = type;
+         }
+         getDetails = function () {
+            output.innerHTML =  
+	        "Color: " + this.color + "<br>" +
+            "Size: " + this.size + "<br>" +
+            "Type: " + this.type;
+         }
+      }
+      // Creating the instance of WindowClass class
+      const window1 = new WindowClass('blue', 'small', 'wooden'); 
+      // Calling function object
+      window1.getDetails(); 
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Color: blue
+Size: small
+Type: wooden
+```
+
+
+## Using 'new' keyword with built-in object
+
+
+You can also use the 'new' keyword to define the instance of the built-in object having constructor functions.
+
+
+Follow the syntax below to create an instance of the built-in object Number.
+
+
+```javascript
+const num = new Number(10);
+```
+
+
+In the above syntax, we have passed the numeric value as an argument of the Number() constructor.
+
+
+### Example
+
+
+In the code below, we have used the Number() and String() constructors with a new keyword to define the numeric and string objects.
+
+
+After that, we used the 'typeof' operator to check the type of num and str variables. In the output, you can see that the num and str variable type is an object.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      const num = new Number(10);
+      const str = new String("Hello");
+      document.getElementById("output").innerHTML = 
+	  "num = " + num + ", typeof num " + typeof num + "<br>" +
+      "str = " + str + ", typeof str " + typeof str;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+num = 10, typeof num object
+str = Hello, typeof str object
+```
+

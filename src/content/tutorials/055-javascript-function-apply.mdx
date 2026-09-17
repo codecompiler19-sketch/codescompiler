@@ -1,0 +1,224 @@
+---
+title: "JavaScript - Function apply()"
+description: "Learn JavaScript - Function apply() with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 550
+group: "JavaScript Functions"
+seoTitle: "JavaScript - Function apply() — CodesCompiler JavaScript Guide"
+permalink: "javascript-function-apply"
+---
+
+
+# JavaScript - Function apply() Method
+
+
+
+
+## Function apply() Method
+
+
+The Functionapply()method in JavaScript allows us to invoke a function given a specific value forthisand arguments provided as an array.
+
+
+The Function call() and apply() methods are very similar, but the main difference between them is function apply() method takes a single array containing all function arguments, and the function call() method takes individual arguments.
+
+
+Same as the Function call() method, we can use the apply() method to manipulate thethisvalue and can assign an orbitrary object tothis.
+
+
+## Syntax
+
+
+The syntax of the Function apply() method in JavaScriot is as follows −
+
+
+```javascript
+func.apply(thisArg, [arg1, arg2, ... argN]);
+```
+
+
+### Parameters
+
+
+
+- thisArg− The 'thisArg' grument represents the function context. It is an object whose properties are needed to access the reference function using the 'this' keyword.
+- [arg1, arg2, ... argN]− They are arguments to pass to the function.
+
+
+
+### Return value
+
+
+It returns the resultant value returned from the function.
+
+
+## Examples
+
+
+Let's understand JavaScript Function apply() method with the help of some examples.
+
+
+### Using apply() method without passing argument
+
+
+In the below code, we have defined the test() function printing the message in the output.
+
+
+We invoked the function in a standard way and used the apply() method without passing any argument to invoke the function. The output shows that the apply() method gives the same output as a normal function call.
+
+
+```html
+<html>
+<head>
+    <title> JavaScript - Function apply() method </title>
+</head>
+<body>
+  p id = "output1" 
+  p id = "output2" 
+  <script>
+    function test() {
+      return "The function test is invoked!";
+    }
+    document.getElementById("output1").innerHTML = test();
+    document.getElementById("output2").innerHTML = test.apply();
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The function test is invoked!
+The function test is invoked!
+```
+
+
+### Using apply() method with this argument only
+
+
+In the below code, the 'car' object contains three different properties. We passed the car object as a 'thisArg' argument of the apply() method.
+
+
+In the showCar() function, we access the properties of the car object using the 'this' keyword and print it into the output.
+
+
+```html
+<html>
+<head>
+  <title> JavaScript - Function apply() method </title>
+</head>
+<body>
+  p id = "output" 
+  <script>
+    function showCar() {
+      return "The price of the " + this.name + " " + 
+        this.model + " is: " + this.price;
+    }
+    let car = {
+      name: "OD",
+      model: "Q6",
+      price: 10000000,
+    }
+    document.getElementById("output").innerHTML = showCar.apply(car);
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The price of the OD Q6 is: 10000000
+```
+
+
+### Using apply() method with an array of function arguments
+
+
+In the example below, we pass the nums object as the first argument of the apply() method. After that, we pass the array of arguments as an apply() method's argument.
+
+
+In the printSum() function, we access the object properties using the 'this' keyword and function arguments using the function parameters.
+
+
+```html
+<html>
+<head>
+    <title> JavaScript - Function apply() method </title>
+</head>
+<body>
+p id = "output" 
+<script>
+
+    function printSum(p1, p2) {
+      return this.num1 + this.num2 + p1 + p2;
+    }
+
+    const nums = {
+      num1: 5,
+      num2: 10,
+    }
+
+    const ans = printSum.apply(nums, [40, 32]);
+    document.getElementById("output").innerHTML = "Total sum is " + ans;
+</script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Total sum is 87
+```
+
+
+### Using apply() method with built-in functions
+
+
+You can also use the apply() method with built-in object methods. We can invoke the built-in object methods (such as Math.max or Math.min) using apply() method.
+
+
+In the example below, we use apply() method with built-in JavaScript functions - Math.max and Math.min. We can't directly use these methods for the arrays. We invoke the Math.max and Math.min methods using apply() method. We pass null as thisArg and the array of five integers as the function argument.
+
+
+```html
+<html>
+<head>
+    <title> JavaScript - Function apply() method </title>
+</head>
+<body>
+p id = "output-max" Max element in the array: 
+p id = "output-min" Max element in the array:
+<script>
+
+  const numbers = [7, 6, 4, 3, 9];
+
+  document.getElementById("output-max").innerHTML += Math.max.apply(null, numbers);
+
+  document.getElementById("output-min").innerHTML += Math.min.apply(null, numbers);
+
+</script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Max element in the array: 9
+Max element in the array:3
+```
+
+
+Notice if you use Math.max() or Math.min() methods directly for arrays to find max or min element in the array, the result will be NaN.
+

@@ -1,0 +1,207 @@
+---
+title: "JavaScript - Insertion Sort"
+description: "Learn JavaScript - Insertion Sort with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2160
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Insertion Sort — CodesCompiler JavaScript Guide"
+permalink: "javascript-insertion-sort"
+---
+
+
+# JavaScript - Insertion Sort Algorithm
+
+
+
+
+The Insertion Sort is a sorting algorithm that works very similar to the way we sort the playing cards when we play. The arrangement of elements in a sorted manner is done through insertion sort.
+
+
+In this algorithm, the array will be divided virtually into two parts which are sorted and unsorted parts. The values present in unsorted part will be picked and placed at the correct position where it satisfies the sorting order.
+
+
+The Insertion sort is simple algorithm having simple implementation. Generally, this algorithm is efficient for smart data values. This is suitable for data sets which are already partly sorted.
+
+
+## How Insertion Sort Works?
+
+
+Consider an array having some elements in it in a random order which are not sorted. Here we can sort the elements by performing insertion sort. So, Lets check the scenario below.
+
+
+```javascript
+Input: [24, 22, 26, 10, 12]; 
+
+Output: [10, 12, 22, 24, 26];
+```
+
+
+To know how the insertion sort is working, lets assume an array arr`=`[24, 22, 26, 10, 12].
+
+
+### First Pass
+
+
+
+- At first in insertion sort, the initial two elements in the array are compared first.
+- 22 is less than 24 here, thus they are not in ascending order and 24 is not in a correct position. So swap 22 and 24. And for now 24 is stored in a sub array.
+
+
+
+### Second Pass
+
+
+
+- Now, compare the next two elements in the array.
+
+
+
+
+- Here, both the elements 24 and 26 are in ascending order as 26 is greater than 24. Thus no swapping will be occurred.
+- 24 is also stored in the sub array along with 22.
+
+
+
+### Third Pass
+
+
+
+- Present there are two elements 22 and 24 are in sub-array.
+- Now compare the next two elements 10 and 26.
+
+
+
+
+- As 10 is smaller than 26, Swap both the values.
+
+
+
+
+- Even after swapping 10 and 24 are sorted, thus swap again.
+
+
+
+
+- Again 10 and 22 are not sorted, so swap again.
+
+
+
+
+- Now, 10 is at correct position.
+
+
+
+### Fourth Pass
+
+
+
+- Currently, the elements in the sorted sub array are 10, 22 and 24.
+- Comparing the next two elements 26 and 12.
+
+
+
+
+- As they are not sorted, swap both the values.
+
+
+
+
+- Now, 12 is smaller than 24. Thus swap them.
+
+
+
+
+- Here 12 is smaller than 22 and they are not sorted, so swap them.
+
+
+
+
+- Now, 12 is at correct position and the array is perfectly sorted.
+
+
+
+## Alogrithm
+
+
+To sort an array sized n in ascending order using insertion sort algorithm.
+
+
+
+- If it is the first element, it is already sorted. return 1;
+- Pick next element
+- Compare with all elements in the sorted sub-list
+- Shift all the elements in the sorted sub-list that is greater than the value to be sorted
+- Insert the value
+- Repeat until list is sorted
+
+
+
+## Insertion Sort Implementation
+
+
+Following is an example of insertion sort
+
+
+```html
+<!DOCTYPE html>
+
+<html>
+
+   <head>
+
+      <title>Insertion Sort Algorithm</title>
+
+   </head>
+
+   <body>
+
+   p id = "demo"
+
+      <script>
+
+         function insertionSort(arr){
+
+            let n = arr.length;
+
+            for(let i = 1; i < n; i++){
+
+               let current = arr[i];
+
+               let j = i-1; 
+
+               while ((j > -1) && (current < arr[j])) {
+
+                  arr[j+1] = arr[j];
+
+                  j--;
+
+               }
+
+               arr[j+1] = current;
+
+            }
+
+            return arr;
+
+         }
+
+         let arr = [24, 22, 26, 10, 12];
+
+         document.getElementById("demo").innerHTML = insertionSort(arr);
+
+      </script>
+
+   </body>
+```
+
+
+### Output
+
+
+Lets see the output of the above code snippet.
+
+
+```javascript
+[10, 12, 22, 24, 26]
+```
+

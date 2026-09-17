@@ -1,0 +1,126 @@
+---
+title: "PYTHON - Singleton Class"
+description: "Learn PYTHON - Singleton Class with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1500
+group: "Object Oriented Programming"
+seoTitle: "PYTHON - Singleton Class — CodesCompiler PYTHON Guide"
+permalink: "python-singleton-class"
+---
+
+
+# Python - Singleton Class
+
+
+
+
+In Python, aSingleton classis the implementation of singleton design pattern which means this type of class can have only one object. This helps in optimizing memory usage when you perform some heavy operation, like creating a database connection.
+
+
+If we try to create multiple objects for a singleton class, the object will be created only for the first time. After that, the same object instance will be returned.
+
+
+## Creating Singleton Classes in Python
+
+
+We can create and implement singleton classes in Python using the following ways −
+
+
+
+- using __init__
+- using __new__
+
+
+
+## Using __init__
+
+
+The__init__ methodis an instance method that is used for initializing a  newly created object. Its automatically called when an object is created from a class.
+
+
+If we use this method with a static method and provide necessary checks i.e., whether an instance of the class already exists or not, we can restrict the creation of a new object after the first one is created.
+
+
+### Example
+
+
+In the below example, we are creating a singleton class using the __init__ method.
+
+
+```python
+class Singleton:
+  __uniqueInstance = None
+
+  @staticmethod
+  def createInstance():
+    if Singleton.__uniqueInstance == None:
+      Singleton()
+    return Singleton.__uniqueInstance
+    
+  def __init__(self):
+      if Singleton.__uniqueInstance != None:
+          raise Exception("Object exist!")
+      else:
+          Singleton.__uniqueInstance = self
+           
+obj1 = Singleton.createInstance()
+print(obj1)
+obj2 = Singleton.createInstance()
+print(obj2)
+```
+
+
+When we run the above code, it will show the following result −
+
+
+```python
+<__main__.Singleton object at 0x7e4da068a910>
+<__main__.Singleton object at 0x7e4da068a910>
+```
+
+
+## Using __new__
+
+
+The__new__ methodis a special static method in Python that is called to create a new instance of a class. It takes the class itself as the first argument and returns a new instance of that class.
+
+
+When an instance of a Python class is declared, it internally calls the __new__() method. If you want to implement a Singleton class, you can override this method.
+
+
+In the overridden method, you first check whether an instance of the class already exists. If it doesnt (i.e., if the instance is None), you call the super() method to create a new object. At the end, save this instance in a class attribute and return the result.
+
+
+### Example
+
+
+In the following example, we are creating a singleton class using the __new__ method.
+
+
+```python
+class SingletonClass:
+   _instance = None
+   
+   def __new__(cls):
+      if cls._instance is None:
+         print('Creating the object')
+         cls._instance = super(SingletonClass, cls).__new__(cls)
+      return cls._instance
+      
+obj1 = SingletonClass()
+print(obj1)
+
+obj2 = SingletonClass()
+print(obj2)
+```
+
+
+The above code gives the following result −
+
+
+```python
+Creating the object
+<__main__.SingletonClass object at 0x000002A5293A6B50>
+<__main__.SingletonClass object at 0x000002A5293A6B50>
+```
+

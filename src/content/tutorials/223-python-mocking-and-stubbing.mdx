@@ -1,0 +1,149 @@
+---
+title: "PYTHON - Mocking and Stubbing"
+description: "Learn PYTHON - Mocking and Stubbing with clear explanation, code examples, and practical guide."
+category: "python"
+order: 2230
+group: "Python Advanced Concepts"
+seoTitle: "PYTHON - Mocking and Stubbing — CodesCompiler PYTHON Guide"
+permalink: "python-mocking-and-stubbing"
+---
+
+
+# Python - Mocking and Stubbing
+
+
+
+
+Python mocking and stubbingare important techniques in unit testing that help to isolate the functionality being tested by replacing real objects or methods with controlled substitutes. In this chapter we are going to understand about Mocking and Stubbing in detail −
+
+
+## Python Mocking
+
+
+Mockingis a testing technique in which mock objects are created to simulate the behavior of real objects.
+
+
+This is useful when testing a piece of code that interacts with complex, unpredictable or slow components such as databases, web services or hardware devices.
+
+
+The primary purpose of mocking is to isolate the code under test and ensure that its behavior is evaluated independently of its dependencies.
+
+
+### Key Characteristics of Mocking
+
+
+The following are the key characteristics of mocking in python −
+
+
+
+- Behavior Simulation:Mock objects can be programmed to return specific values, raise exceptions or mimic the behavior of real objects under various conditions.
+- Interaction Verification:Mocks can record how they were used by allowing the tester to verify that specific methods were called with the expected arguments.
+- Test Isolation:By replacing real objects with mocks, tests can focus on the logic of the code under test without worrying about the complexities or availability of external dependencies.
+
+
+
+### Example of Python Mocking
+
+
+Following is the example of thedatabase.get_usermethod, which is mocked to return a predefined user dictionary. The test can then verify that the method was called with the correct arguments −
+
+
+```python
+from unittest.mock import Mock
+
+# Create a mock object
+database = Mock()
+
+# Simulate a method call
+database.get_user.return_value = {"name": "Prasad", "age": 30}
+
+# Use the mock object
+user = database.get_user("prasad_id")
+print(user)  
+
+# Verify the interaction
+database.get_user.assert_called_with("prasad_id")
+```
+
+
+Output
+
+
+```python
+{'name': 'Prasad', 'age': 30}
+```
+
+
+## Python Stubbing
+
+
+Stubbingis a related testing technique where certainmethodsorfunctionsare replaced with "stubs" that return fixed, predetermined responses.
+
+
+Stubbing is simpler than mocking because it typically does not involve recording or verifying interactions. Instead, stubbing focuses on providing controlled inputs to the code under test by ensuring consistent and repeatable results.
+
+
+### Key Characteristics of Stubbing
+
+
+The following are the key characteristics of Stubbing in python −
+
+
+
+- Fixed Responses:Stubs return specific, predefined values or responses regardless of how they are called.
+- Simplified Dependencies:By replacing complex methods with stubs, tests can avoid the need to set up or manage intricate dependencies.
+- Focus on Inputs:Stubbing emphasizes providing known inputs to the code under test by allowing the tester to focus on the logic and output of the tested code.
+
+
+
+### Example of Python Stubbing
+
+
+Following is the example of theget_user_from_dbfunction, which is  stubbed to always return a predefined user dictionary. The test does not need to interact with a real database for simplifying the setup and ensuring consistent results −
+
+
+```python
+from unittest.mock import patch
+
+# Define the function to be stubbed
+def get_user_from_db(user_id):
+   # Simulate a complex database operation
+   pass
+
+# Test the function with a stub
+with patch('__main__.get_user_from_db', return_value={"name": "Prasad", "age": 25}):
+   user = get_user_from_db("prasad_id")
+   print(user)
+```
+
+
+Output
+
+
+```python
+{'name': 'Prasad', 'age': 25}
+```
+
+
+## Python Mocking Vs. Stubbing
+
+
+The comparison of the Mocking and Stubbing key features, purposes and use cases gives the clarity on when to use each method. By exploring these distinctions, developers can create more effective and maintainable tests which ultimately leads to higher quality software.
+
+
+The following table shows the key difference between mocking and stubbing based on the different criteria −
+
+
+
+| Criteria | Mocking | Stubbing |
+| --- | --- | --- |
+| Purpose | Simulate the behavior of real objects | Provide fixed, predetermined responses |
+| Interaction Verification | Can verify method calls and arguments | Typically does not verify interactions |
+| Complexity | More complex; can simulate various behaviors | Simpler; focuses on providing controlled inputs |
+| Use Case | Isolate and test code with complex dependencies | Simplify tests by providing known responses |
+| Recording Behavior | Records how methods were called | Does not record interactions |
+| State Management | Can maintain state across calls | Usually stateless; returns fixed output |
+| Framework Support | Primarily usesunittest.mockwith features like Mock and MagicMock | Uses unittest.mock's patch for simple replacements |
+| Flexibility | Highly flexible; can simulate exceptions and side effects | Limited flexibility; focused on return values |
+
+

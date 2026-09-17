@@ -1,0 +1,197 @@
+---
+title: "PYTHON - Copy Dictionaries"
+description: "Learn PYTHON - Copy Dictionaries with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1060
+group: "Python Dictionaries"
+seoTitle: "PYTHON - Copy Dictionaries — CodesCompiler PYTHON Guide"
+permalink: "python-copy-dictionaries"
+---
+
+
+# Python - Copy Dictionaries
+
+
+
+
+## Copy Dictionaries
+
+
+Copying dictionaries in Python refers to creating a new dictionary that contains the same key-value pairs as the original dictionary.
+
+
+We can copy dictionaries using various ways, depending on the requirements and the nature of the dictionary's values (whether they are mutable or immutable, nested or not).
+
+
+## Shallow Copy
+
+
+When you perform a shallow copy, a new dictionary object is created, but it contains references to the same objects that the original dictionary references.
+
+
+This is useful when you want to duplicate the structure of a dictionary without duplicating the nested objects it contains.
+
+
+This can be done using the copy() method or the dict() function as shown below −
+
+
+### Example: Using the copy() Method
+
+
+In the following example, we can see that changing the "age" in the shallow copy does not affect the original.
+
+
+However, modifying the list in the shallow copy also affects the original because the list is a mutable object and only a reference is copied.
+
+
+```python
+original_dict = {"name": "Alice", "age": 25, "skills": ["Python", "Data Science"]}
+shallow_copy = original_dict.copy()
+
+# Modifying the shallow copy
+shallow_copy["age"] = 26
+shallow_copy["skills"].append("Machine Learning")
+
+print("Original dictionary:", original_dict)
+print("Shallow copy:", shallow_copy)
+```
+
+
+Following is the output of the above code −
+
+
+```python
+Original dictionary: {'name': 'Alice', 'age': 25, 'skills': ['Python', 'Data Science', 'Machine Learning']}
+Shallow copy: {'name': 'Alice', 'age': 26, 'skills': ['Python', 'Data Science', 'Machine Learning']}
+```
+
+
+### Example: Using the dict() Method
+
+
+Similar to the copy() method, thedict() methodcreates a shallow copy as shown in the example below −
+
+
+```python
+original_dict = {"name": "Bob", "age": 30, "skills": ["Java", "C++"]}
+shallow_copy = dict(original_dict)
+
+# Modifying the shallow copy
+shallow_copy["age"] = 31
+shallow_copy["skills"].append("C#")
+
+print("Original dictionary:", original_dict)
+print("Shallow copy:", shallow_copy)
+```
+
+
+Output of the above code is as follows −
+
+
+```python
+Original dictionary: {'name': 'Bob', 'age': 30, 'skills': ['Java', 'C++', 'C#']}
+Shallow copy: {'name': 'Bob', 'age': 31, 'skills': ['Java', 'C++', 'C#']}
+```
+
+
+## Deep Copy
+
+
+A deep copy creates a new dictionary and recursively copies all objects found in the original dictionary. This means that not only the dictionary itself but also all objects it contains (including nested dictionaries, lists, etc.) are copied. As a result, changes made to the deep copy do not affect the original dictionary and vice versa.
+
+
+We can achieve this using the deepcopy() function in the copy module.
+
+
+### Example
+
+
+We can see in the example below that the "age" value in the deep copy is changed, the "skills" list in the deep copy is modified (an item is appended) and the "education" dictionary in the deep copy is modified, all without affecting the original −
+
+
+```python
+import copy
+
+original_dict = {
+    "name": "Alice",
+    "age": 25,
+    "skills": ["Python", "Data Science"],
+    "education": {
+      "degree": "Bachelor's",
+      "field": "Computer Science"
+   }
+}
+
+# Creating a deep copy
+deep_copy = copy.deepcopy(original_dict)
+
+# Modifying the deep copy
+deep_copy["age"] = 26
+deep_copy["skills"].append("Machine Learning")
+deep_copy["education"]["degree"] = "Master's"
+
+# Retrieving both dictionaries
+print("Original dictionary:", original_dict)
+print("Deep copy:", deep_copy)
+```
+
+
+This will produce the following output -- MOHTASHIM −
+
+
+```python
+Original dictionary: {'name': 'Alice', 'age': 25, 'skills': ['Python', 'Data Science'], 'education': {'degree': "Bachelor's", 'field': 'Computer Science'}}
+Deep copy: {'name': 'Alice', 'age': 26, 'skills': ['Python', 'Data Science', 'Machine Learning'], 'education': {'degree': "Master's", 'field': 'Computer Science'}}
+```
+
+
+## Copy Dictionaries Using copy() Method
+
+
+Dictionariescannot be copied directly by using the assignment operator (`=`), you can use thecopy() methodto create a shallowcopy of a dictionary.
+
+
+### Syntax
+
+
+Following is the basic syntax of the copy() method in Python −
+
+
+```python
+new_dict = original_dict.copy()
+```
+
+
+Where,original_dictis the dictionary you want to copy.
+
+
+### Example
+
+
+The following example demonstrates the creation of a shallow copy of a dictionary using the copy() method −
+
+
+```python
+# Creating a dictionary
+dict1 = {"name": "Krishna", "age": "27", "doy": 1992}
+
+# Copying the dictionary
+dict2 = dict1.copy()
+
+# Printing both of the dictionaries
+print("dict1 :", dict1)
+print("dict2 :", dict2)
+```
+
+
+Output
+
+
+We will get the output as shown below −
+
+
+```python
+dict1 : {'name': 'Krishna', 'age': '27', 'doy': 1992}
+dict2 : {'name': 'Krishna', 'age': '27', 'doy': 1992}
+```
+

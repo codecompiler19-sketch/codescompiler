@@ -1,0 +1,485 @@
+---
+title: "PYTHON - Namedtuple"
+description: "Learn PYTHON - Namedtuple with clear explanation, code examples, and practical guide."
+category: "python"
+order: 870
+group: "Python Tuples"
+seoTitle: "PYTHON - Namedtuple — CodesCompiler PYTHON Guide"
+permalink: "python-namedtuple"
+---
+
+
+# Python - NamedTuple
+
+
+
+
+In Python,tuplesare immutable data structures that can hold a collection of items. We already discussed tuples, it's properties and usage in the previous chapters. In this chapter, we will explainnamedtuple()and its usage in Python.
+
+
+## What is NamedTuple?
+
+
+In Python, anamedtuple()is a subclass oftuplethat allows you to create tuples with named fields. Meaning, you can access the elements of the tuple using fieldnames instead of just numerical indices. It is part of thecollectionsmodule in Python.
+
+
+### Syntax
+
+
+```python
+from collections import namedtuple
+
+ 
+
+# Define a namedtuple
+
+Point = namedtuple('typename', fieldnames )
+```
+
+
+
+- Type Name:The typename is the name of the namedtuple class. It is a string that represents the name of the tuple type.
+- Field Names:The field names are the names of the elements in the tuple. They are defined as a list of strings.
+
+
+
+## Create a NamedTuple in Python
+
+
+To create a namedtuple, you need to import thenamedtuplefunction from thecollectionsmodule. Then, you can define a namedtuple by specifying its name and field names.
+
+
+The followingexampleshows how to create a namedtuple calledPointwith fieldsxandy−
+
+
+```python
+from collections import namedtuple
+
+
+
+# Define a namedtuple
+
+Vertex = namedtuple('Vertex', ['x', 'y'])
+
+
+
+# Create an instance
+
+v = Vertex(10, 20)
+
+
+
+# Access fields
+
+print("Vertex-1:", v.x)
+
+print("Vertex-2:", v.y)
+```
+
+
+Theoutputof the above code will be −
+
+
+```python
+Vertex-1: 10
+
+Vertex-2: 20
+```
+
+
+## Access NamedTuple Fields
+
+
+We already saw how to access the fields of a namedtuple using dot notation(i.e., using keyname). There are some other ways to access the fields as well −
+
+
+
+- Accessing by Indexing− You can access the fields using their index, just like a regular tuple.
+- Accessing by keyname− You can also access the fields using their key names, similar to a dictionary.
+- Accessing Using getattr()− You can use thegetattr()function to access the fields by name.
+
+
+
+### Example: Accessing by Indexing
+
+
+In this example, we will access the fields of the namedtuple using their index.
+
+
+```python
+from collections import namedtuple
+
+
+
+# Define a namedtuple
+
+Point = namedtuple('Point', ['x', 'y'])
+
+
+
+# Create an instance
+
+p = Point(10, 20)
+
+
+
+# Access fields by indexing
+
+print("Point-1", p[0])
+
+print("Point-2", p[1])
+```
+
+
+Theoutputof the above code will be −
+
+
+```python
+Point-1 10
+
+Point-2 20
+```
+
+
+### Example: Accessing by keyname
+
+
+In this example, we will access the fields of the namedtuple using their key names.
+
+
+```python
+from collections import namedtuple
+
+
+
+# Define a namedtuple
+
+Point = namedtuple('Point', ['x', 'y'])
+
+
+
+# Create an instance
+
+p = Point(10, 20)
+
+
+
+# Access fields by keyname
+
+print("Point-1:", p.x)
+
+print("Point-2:", p.y)
+```
+
+
+Theoutputof the above code will be −
+
+
+```python
+Point-1: 10
+
+Point-2: 20
+```
+
+
+### Example: Accessing Using getattr()
+
+
+In this example, we will access the fields of the namedtuple using thegetattr()function.
+
+
+```python
+from collections import namedtuple
+
+
+
+# Define a namedtuple
+
+Point = namedtuple('Point', ['x', 'y'])
+
+
+
+# Create an instance
+
+p = Point(10, 20)
+
+ 
+
+# Access fields using getattr()
+
+print("getattr(p, 'x'):", getattr(p, 'x'))
+
+print("getattr(p, 'y'):", getattr(p, 'y'))
+```
+
+
+Theoutputof the above code will be −
+
+
+```python
+getattr(p, 'x'): 10
+
+getattr(p, 'y'): 20
+```
+
+
+## NamedTuple Methods
+
+
+Namedtuples come with additional built-in methods to handle common operations. The section below discusses some of these methods with examples.
+
+
+### The _fields() method
+
+
+The_fields()method is used to access the field names of the namedtuple. It doesn't need any arguments and returns a tuple of the field names.
+
+
+The followingexampledemonstrates how to use the_fields()method −
+
+
+```python
+from collections import namedtuple
+
+
+
+# Define a namedtuple
+
+Point = namedtuple('Point', ['x', 'y'])
+
+
+
+# Create an instance
+
+p = Point(10, 20)
+
+
+
+# Access fields using _fields()
+
+print("Fields of p:", p._fields)
+```
+
+
+Theoutputof the above code will be −
+
+
+```python
+Fields of p: ('x', 'y')
+```
+
+
+### The _replace() method
+
+
+The_replace()method is used to create a new instance of the namedtuple with one or more fields replaced with new values. It takes keyword arguments where the keys are the field names and the values are the new values to be assigned.
+
+
+The followingexampledemonstrates how to use the_replace()method −
+
+
+```python
+from collections import namedtuple
+
+
+
+# Define a namedtuple
+
+Point = namedtuple('Point', ['x', 'y'])
+
+
+
+# Create an instance
+
+p = Point(10, 20)
+
+
+
+# Replace a field value
+
+p2 = p._replace(x=30)
+
+
+
+# Access fields
+
+print("p2.x:", p2.x)
+
+print("p2.y:", p2.y)
+```
+
+
+Theoutputof the above code will be −
+
+
+```python
+p2.x: 30
+
+p2.y: 20
+```
+
+
+### The _asdict() method
+
+
+The_asdict()method is used to convert the namedtuple into a regular dictionary. This function returns the OrderedDict() as constructed from the mapped values of namedtuple().
+
+
+The followingexampledemonstrates how to use the_asdict()method −
+
+
+```python
+from collections import namedtuple
+
+
+
+# Define a namedtuple
+
+Point = namedtuple('Point', ['x', 'y'])
+
+
+
+# Create an instance
+
+p = Point(10, 20)
+
+
+
+# Convert to dictionary
+
+d = p._asdict()
+
+print(d)
+```
+
+
+Theoutputof the above code will be −
+
+
+```python
+{'x': 10, 'y': 20}
+```
+
+
+### The _make() method
+
+
+The_make()method is used to create a new instance of the namedtuple from an iterable (like a list or a tuple).
+
+
+The followingexampledemonstrates how to use the_make()method −
+
+
+```python
+from collections import namedtuple
+
+
+
+# Define a namedtuple
+
+Point = namedtuple('Point', ['x', 'y'])
+
+
+
+# Create an instance
+
+p = Point(10, 20)
+
+
+
+# Create a new instance using _make()
+
+p2 = Point._make([30, 40])
+
+
+
+# Access fields
+
+print("p2.x:", p2.x)
+
+print("p2.y:", p2.y)
+```
+
+
+Theoutputof the above code will be −
+
+
+```python
+p2.x: 30
+
+p2.y: 40
+```
+
+
+### The ** (double star) operator
+
+
+The**(double star) operator is used to unpack the fields of the namedtuple into keyword arguments. This can be useful when you want to pass the fields of a namedtuple to a function that accepts keyword arguments.
+
+
+The followingexampledemonstrates how to use the**operator −
+
+
+```python
+import collections
+
+
+
+# Declaring namedtuple()
+
+Student = collections.namedtuple('Student',
+
+                                 ['name', 'age', 'DOB'])
+
+
+
+# Adding values
+
+S = Student('farhan', '23', '2541997')
+
+
+
+# initializing iterable
+
+li = ['nishu', '19', '411997']
+
+
+
+# initializing dict
+
+di = {'name': "ravi", 'age': 24, 'DOB': '1391997'}
+
+
+
+# using ** operator to return namedtuple from dictionary
+
+print("The namedtuple instance from dict is  : ")
+
+print(Student(**di))
+```
+
+
+Theoutputof the above code will be −
+
+
+```python
+The namedtuple instance from dict is  :
+
+Student(name='ravi', age=24, DOB='1391997')
+```
+
+
+## NamedTuple vs Dictionary vs Classes
+
+
+The main differences between NamedTuple, Dictionary, and Classes are as follows −
+
+
+FeatureNamedTupleDictionaryClassSyntaxSimple, just like tupleKey value pairsMore complex, with methods and attributesAccessing ElementsBy name or indexBy keyBy attributeMutabilityImmutableMutableMutableMemory EfficiencyMost efficientLess efficientLeast efficient
+
+
+## Conclusion
+
+
+In this chapter, we have learned about namedtuples in Python, and it's differences from dictionaries and classes. A common question arise is that, when to use NamedTuple, Dictionary, or a Class? TheNamedTuplecan be used when you need an immutable object with fixed fields, i.e., if you want features of both tuples and dictionaries. TheDictionarycan be used when you need a mutable object with dynamic keys. andClassis used when you need a complex data structure with methods and behavior.
+

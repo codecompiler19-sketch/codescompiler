@@ -1,0 +1,381 @@
+---
+title: "PYTHON - JSON"
+description: "Learn PYTHON - JSON with clear explanation, code examples, and practical guide."
+category: "python"
+order: 2100
+group: "Python Miscellenous"
+seoTitle: "PYTHON - JSON — CodesCompiler PYTHON Guide"
+permalink: "python-json"
+---
+
+
+# Python - JSON
+
+
+
+
+## JSON in Python
+
+
+JSON in Python is a popular data format used for data exchange between systems. Thejsonmodule provides functions to work with JSON data, allowing you to serialize Python objects into JSON strings and deserialize JSON strings back into Python objects.
+
+
+JSON (JavaScript Object Notation) is a lightweight data interchange format that is easy for humans to read and write, and easy for machines to parse and generate. It is mainly used to transmit data between a server and web application as text.
+
+
+## JSON Serialization
+
+
+JSON serialization is the process of converting a Python object into a JSON format. This is useful for saving data in a format that can be easily transmitted or stored, and later reconstructed back into its original form.
+
+
+Python provides thejsonmodule to handle JSON serialization and deserialization. We can use the json.dumps() method for serialization in this module.
+
+
+You can serialize the following Python object types into JSON strings −
+
+
+
+- dict
+- list
+- tuple
+- str
+- int
+- float
+- bool
+- None
+
+
+
+### Example
+
+
+Following a basic example of how to serialize a Python dictionary into a JSON string −
+
+
+```python
+import json
+
+# Python dictionary
+data = {"name": "Alice", "age": 30, "city": "New York"}
+
+# Serialize to JSON string
+json_string = json.dumps(data)
+print(json_string)
+```
+
+
+It will produce the following output −
+
+
+```python
+{"name": "Alice", "age": 30, "city": "New York"}
+```
+
+
+## JSON Deserialization
+
+
+JSON deserialization is the process of converting a JSON string back into a Python object. This is essential for reading and processing data that has been transmitted or stored in JSON format.
+
+
+In Python, we can use json.loads() method to deserialize JSON data from astring, and json.load() method to deserialize JSON data from afile.
+
+
+### Example: Deserialize JSON string to Python object
+
+
+In the following example we are deserializing a JSON string into a Python dictionary using the json.loads() method −
+
+
+```python
+import json
+
+# JSON string
+json_string = '{"name": "John", "age": 30, "is_student": false,
+ "courses": ["Math", "Science"], "address": {"city": "New York", "state": "NY"}}'
+
+# Deserialize JSON string to Python object
+python_obj = json.loads(json_string)
+
+print(python_obj)
+```
+
+
+Following is the output of the above code −
+
+
+```python
+{'name': 'John', 'age': 30, 'is_student': False, 'courses': ['Math', 'Science'], 
+'address': {'city': 'New York', 'state': 'NY'}}
+```
+
+
+### Example: Deserialize JSON from File
+
+
+Now, to read and deserialize JSON data from a file, we use the json.load() method −
+
+
+```python
+import json
+
+# Read and deserialize from file
+with open("data.json", "r") as f:
+   python_obj = json.load(f)
+
+print(python_obj)
+```
+
+
+Output of the above code is as follows −
+
+
+```python
+{'name': 'John', 'age': 30, 'is_student': False, 'courses': ['Math', 'Science'],
+ 'address': {'city': 'New York', 'state': 'NY'}}
+```
+
+
+## Advanced JSON Handling
+
+
+If your JSON data includes objects that need special handling (e.g., custom classes), you can define custom deserialization functions. Use theobject_hookparameter of json.loads() or json.load() method to specify a function that will be called with the result of every JSON object decoded.
+
+
+### Example
+
+
+In the example below, we are demonstrating the usage of custom object serialization −
+
+
+```python
+import json
+from datetime import datetime
+
+# Custom deserialization function
+def custom_deserializer(dct):
+   if 'joined' in dct:
+      dct['joined'] = datetime.fromisoformat(dct['joined'])
+   return dct
+
+# JSON string with datetime
+json_string = '{"name": "John", "joined": "2021-05-17T10:15:00"}'
+
+# Deserialize with custom function
+python_obj = json.loads(json_string, object_hook=custom_deserializer)
+
+print(python_obj)
+```
+
+
+We get the output as shown below −
+
+
+```python
+{'name': 'John', 'joined': datetime.datetime(2021, 5, 17, 10, 15)}
+```
+
+
+## JSONEncoder Class
+
+
+TheJSONEncoderclass in Python is used to encode Python data structures into JSON format. Each Python data type is converted into its corresponding JSON type, as shown in the following table −
+
+
+
+| Python | JSON |
+| --- | --- |
+| Dict | object |
+| list, tuple | array |
+| Str | string |
+| int, float, int- & float-derived Enums | number |
+| True | true |
+| False | false |
+| None | null |
+
+
+
+TheJSONEncoderclass is instantiated using theJSONEncoder()constructor. The following important methods are defined in this class −
+
+
+
+- encode(obj)− Serializes a Python object into a JSON formatted string.
+- iterencode(obj)− Encodes the object and returns an iterator that yields the encoded form of each item in the object.
+- indent− Determines the indent level of the encoded string.
+- sort_keys− If True, the keys appear in sorted order.
+- check_circular− If True, checks for circular references in container-type objects.
+
+
+
+### Example
+
+
+In the following example, we are encoding Python list object. We use the iterencode() method to display each part of the encoded string −
+
+
+```python
+import json
+
+data = ['Rakesh', {'marks': (50, 60, 70)}]
+e = json.JSONEncoder()
+
+# Using iterencode() method 
+for obj in e.iterencode(data):
+   print(obj)
+```
+
+
+It will produce the following output −
+
+
+```python
+["Rakesh", { "marks" : [50, 60, 70]}]
+```
+
+
+## JSONDecoder class
+
+
+TheJSONDecoderclass is used to decode a JSON string back into a Python data structure. The main method in this class is decode().
+
+
+### Example
+
+
+In this example, the "JSONEncoder" is used to encode a Python list into a JSON string, and the "JSONDecoder" is then used to decode the JSON string back into a Python list −
+
+
+```python
+import json
+
+data = ['Rakesh', {'marks': (50, 60, 70)}]
+e = json.JSONEncoder()
+s = e.encode(data)
+d = json.JSONDecoder()
+obj = d.decode(s)
+print(obj, type(obj))
+```
+
+
+The result obtained is as shown below −
+
+
+```python
+['Rakesh', {'marks': [50, 60, 70]}] <class 'list'>
+```
+
+
+## Python JSON Module Methods
+
+
+Thejsonmodule in Python provides methods for working with JSON (JavaScript Object Notation). It allows you to serialize and deserialize Python objects to and from JSON format, which is a commonly used data interchange format.
+
+
+## Core Functions
+
+
+The core functions in thejsonmodule allow you to serialize and deserialize JSON data.
+
+
+Sr.No.Function & Description1json.dump()Serializes a Python object and writes it to a file-like object.2json.dumps()Serializes a Python object and returns it as a JSON-formatted string.3json.load()Deserializes a JSON-formatted stream into a Python object.4json.loads()Deserializes a JSON-formatted string into a Python object.
+
+
+## JSON Encoder Methods
+
+
+JSON encoder methods handle the conversion of Python objects to JSON format.
+
+
+Sr.No.Function & Description1json.JSONEncoderEncoder class for converting Python objects to JSON format.2json.JSONEncoder.encode()Encodes a Python object to JSON format as a string.3json.JSONEncoder.iterencode()Encodes a Python object to JSON format in an iterator style.4json.JSONEncoder.default()Override method to handle objects that are not serializable by default.
+
+
+## JSON Decoder Methods
+
+
+JSON decoder methods handle the conversion of JSON data into Python objects.
+
+
+Sr.No.Function & Description1json.JSONDecoderDecoder class for converting JSON data to Python objects.2json.JSONDecoder.decode()Deserializes a JSON string into a Python object.3json.JSONDecoder.raw_decode()Deserializes a JSON string with extra information for error handling.
+
+
+## Utility Functions
+
+
+Utility functions provide a simple way to process JSON data in Python.
+
+
+Sr.No.Function & Description1json.toolProvides a command-line tool to format JSON data for better readability.
+
+
+## Dunder (Magic) Methods in JSONEncoder
+
+
+These are the special methods for theJSONEncoderclass in thejsonmodule that enable custom behavior for JSON serialization.
+
+
+Sr.No.Method & Description1json.JSONEncoder.__init__Initializes the encoder with custom settings.2json.JSONEncoder.__repr__Returns a string representation of the encoder object.3json.JSONEncoder.__str__Returns a string version of the encoder object.
+
+
+## Dunder (Magic) Methods in JSONDecoder
+
+
+These are the special methods for theJSONDecoderclass that enable custom behavior for JSON deserialization.
+
+
+Sr.No.Method & Description1json.JSONDecoder.__init__Initializes the decoder with custom settings.2json.JSONDecoder.__repr__Returns a string representation of the decoder object.3json.JSONDecoder.__str__Returns a string version of the decoder object.
+
+
+## Functions in json.encoder (Internal Utility Functions)
+
+
+These functions are used internally in thejson.encodermodule to handle specific encoding tasks.
+
+
+Sr.No.Function & Description1json.encoder.encode_basestring()Encodes a string into a JSON-compatible format.2json.encoder.encode_basestring_ascii()Encodes a string into a JSON-compatible ASCII format.
+
+
+## Functions in json.decoder (Internal Utility Functions)
+
+
+These functions are used internally in thejson.decodermodule to handle specific decoding tasks.
+
+
+Sr.No.Function & Description1json.decoder.scanstring()Scans a string in JSON format.2json.decoder.JSONArray()Handles JSON array decoding.
+
+
+## Attributes in json Module
+
+
+Attributes that provide various configuration settings and constants within thejsonmodule.
+
+
+Sr.No.Attribute & Description1json.decoderContains decoder-related functions and classes.2json.encoderContains encoder-related functions and classes.3json.__all__A list of module attributes that are exported whenimport *is used.4json.__version__The version number of thejsonmodule.
+
+
+## Attributes in json.encoder
+
+
+Attributes related to encoding functionality in thejson.encodermodule.
+
+
+Sr.No.Attribute & Description1json.encoder.FLOAT_REPRControl the representation of floating-point numbers during serialization.2json.encoder._make_iterencode()Internal utility function for creating an iterator-based encoder.
+
+
+## Attributes in json.decoder
+
+
+Attributes related to decoding functionality in thejson.decodermodule.
+
+
+Sr.No.Attribute & Description1json.decoder.JSONDecoderDecoder class for converting JSON data into Python objects.2json.decoder.JSONDecoder.object_hookFunction that is used for parsing and transforming JSON objects.3json.decoder.JSONDecoder.parse_floatFunction to customize float decoding in JSON data.4json.decoder.JSONDecoder.parse_intFunction to customize integer decoding in JSON data.5json.decoder.JSONDecoder.parse_constantFunction for handling constant values like True, False, and None during JSON decoding.6json.decoder.JSONDecoder.object_pairs_hookFunction that is used for parsing JSON objects and controlling their key-value pairs.
+
+
+## Attributes in JSON (For Internal Use)
+
+
+These attributes are for internal use in thejsonmodule.
+
+
+Sr.No.Attribute & Description1json._default_decoderDefault JSON decoder used for decoding JSON data.2json._default_encoderDefault JSON encoder used for encoding Python objects to JSON.
+

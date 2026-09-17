@@ -1,0 +1,204 @@
+---
+title: "SQL - NOT EQUAL"
+description: "Learn SQL - NOT EQUAL with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 520
+group: "SQL Operators and Clauses"
+seoTitle: "SQL - NOT EQUAL — CodesCompiler SQL Guide"
+permalink: "sql-not-equal"
+---
+
+
+# SQL - NOT EQUAL Operator
+
+
+Table of contentThe SQL NOT EQUAL OperatorSQL NOT EQUAL with TextSQL NOT EQUAL with GROUP BY ClauseSQL NOT EQUAL with Multiple ConditionsNegating a Condition Using SQL NOT EQUALImportant Points About SQL NOT EQUAL Operator
+
+
+
+
+## The SQL NOT EQUAL Operator
+
+
+The SQLNOT EQUALoperator is used to compare two values and return TRUE if they are not the same. It is represented by"`<>`"and"!=". The difference between these two is that `<>` follows the ISO standard, but != doesn't. So, it is recommended to use `<>`.
+
+
+The NOT EQUAL operator is often used in the WHERE clause to filter rows that do not match a given value, and it can also be used in the GROUP BY clause to group results.
+
+
+When using the NOT EQUAL operator (`<>` or `!=`) with text values, the comparison is case-sensitive by default unless the database is configured.
+
+
+### Syntax
+
+
+Following is the standard SQL syntax for the NOT EQUAL operator using the ANSI standard symbol (`<>`):
+
+
+```sql
+SELECT * FROM table_name
+WHERE column_name <> value;
+```
+
+
+Alternatively, many SQL databases also support the NOT EQUAL operator using the symbol (`!=`):
+
+
+```sql
+SELECT * FROM table_name
+WHERE column_name != value;
+```
+
+
+### Example
+
+
+To understand it better let us consider the CUSTOMERS table which contains the personal details of customers including their name, age, address and salary etc. as shown below:
+
+
+```sql
+CREATE TABLE CUSTOMERS(
+   ID   INT              NOT NULL,
+   NAME VARCHAR (20)     NOT NULL,
+   AGE  INT              NOT NULL,
+   ADDRESS  CHAR (25) ,
+   SALARY   DECIMAL (18, 2),
+   PRIMARY KEY (ID)
+);
+```
+
+
+Now, insert values into this table using the INSERT statement as follows:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+(2, 'Khilan', 25, 'Delhi', 1500.00 ),
+(3, 'Kaushik', 23, 'Kota', 2000.00 ),
+(4, 'Chaitali', 25, 'Mumbai', 6500.00 ),
+(5, 'Hardik', 27, 'Bhopal', 8500.00 ),
+(6, 'Komal', 22, 'Hyderabad', 4500.00 ),
+(7, 'Muffy', 24, 'Indore', 10000.00 );
+```
+
+
+The table will be created as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## SQL NOT EQUAL with Text
+
+
+We can use the NOT EQUAL operator with text in SQL to compare two text values and return. We can use "`<>`" or "`!=`" in the WHERE clause of a SQL statement and exclude rows that match a specific text value.
+
+
+### Example
+
+
+In the following query, we are retrieving all the records from the CUSTOMERS table whose NAME is not 'Ramesh':
+
+
+```sql
+SELECT * FROM CUSTOMERS WHERE NAME <> 'Ramesh';
+```
+
+
+The output of the above code is as shown below:
+
+
+IDNAMEAGEADDRESSSALARY2Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## SQL NOT EQUAL with GROUP BY Clause
+
+
+We can use the NOT EQUAL operator with the GROUP BY clause to group the results by the values that are not equal to the specified text value.
+
+
+The aggregate functions such as COUNT(), MAX(), MIN(), SUM(), and AVG() are frequently used with the GROUP BY statement.
+
+
+### Example
+
+
+Here, we are retrieving the number of records with distinct ages (excluding '22') in the 'CUSTOMERS' table and grouping them by age value:
+
+
+```sql
+SELECT COUNT(ID), AGE FROM CUSTOMERS 
+WHERE AGE <> '22' GROUP BY AGE;
+```
+
+
+On executing the above query, it will generate the output as shown below:
+
+
+COUNT(id)AGE132225123127124
+
+
+## SQL NOT EQUAL with Multiple Conditions
+
+
+The not equal operator can also be used with multiple conditions in a WHERE clause to filter out rows that match specific criteria.
+
+
+### Example
+
+
+Now, we are retrieving all the customers whose salary is either ">2000" or "`=`2000". At the same time, the customer must not be from "Bhopal":
+
+
+```sql
+SELECT * FROM CUSTOMERS 
+WHERE ADDRESS <> 'Bhopal' AND (SALARY>'2000' OR SALARY='2000');
+```
+
+
+Following is the output of the above code:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.003Kaushik23Kota2000.004Chaitali25Mumbai6500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## Negating a Condition Using SQL NOT EQUAL
+
+
+In SQL, the NOT EQUAL operator can also be combined with theNOTOperator to negate a condition. It filters out the rows that meet a specific condition.
+
+
+### Example
+
+
+In the following query, we are retrieving all rows from the "CUSTOMERS" table where the "SALARY" is equal to '2000':
+
+
+```sql
+SELECT * FROM CUSTOMERS WHERE NOT SALARY != '2000';
+```
+
+
+After executing the above code, we get the following output:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.003Kaushik23Kota2000.00
+
+
+## Important Points About SQL NOT EQUAL Operator
+
+
+Following are some of the important points we should know about the SQL NOT EQUAL Operator:
+
+
+
+- The SQLNOT EQUALoperator is used to filter records where a column's value does not match the specified value.
+- There are two common forms: the ANSI standard syntax`<>`and the alternative syntax`!=`. Both work the same way in most databases.
+- Some older SQL databases may not support`!=`, so using`<>`is safer for cross-database compatibility.
+- The comparison is case-sensitive or case-insensitive depending on the database collation settings.
+- When comparing withNULL, theNOT EQUALoperator will not returnTRUEbecauseNULLrepresents unknown. UseIS NOT NULLinstead.
+- It can be combined with other logical operators such asAND,OR, andNOTto create complex filter conditions.
+- Performance may depend on indexing and query optimization, especially when filtering large datasets.
+
+

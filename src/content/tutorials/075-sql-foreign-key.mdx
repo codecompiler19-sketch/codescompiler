@@ -1,0 +1,345 @@
+---
+title: "SQL - Foreign Key"
+description: "Learn SQL - Foreign Key with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 750
+group: "SQL Keys"
+seoTitle: "SQL - Foreign Key — CodesCompiler SQL Guide"
+permalink: "sql-foreign-key"
+---
+
+
+# SQL - Foreign Key Constraint
+
+
+Table of contentThe SQL Foreign KeyFeatures of SQL Foreign KeySQL Foreign Key On CREATE TABLESQL Composite Foreign KeySQL Foreign Key on an Existing ColumnDropping the SQL Foreign Key ConstraintPrimary Key vs Foreign KeyImportant Points About SQL FOREIGN KEY
+
+
+
+
+## The SQL Foreign Key
+
+
+In SQL, aForeign Keyis a column in one table that refers to the Primary Key in another table, creating a connection between the two tables.
+
+
+A foreign key ensuresreferential integrityby making sure that the relationship between the tables remains valid. For example, it prevents you from deleting a record in the parent table if related records still exist in the child table.
+
+
+A foreign key can reference the unique key of any table in the database. The table containing the primary key is called theparent table, while the table containing the foreign key is called thechild table.
+
+
+### SQL FOREIGN KEY Diagram Illustration
+
+
+Assume we have two tables namely CUSTOMERS (ID, NAME, AGE, ADDRES, SALARY) and ORDERS (ID, DATE, CUSTOMER_ID, AMOUNT). Here the id of the customer is primary key (ID) in the CUSTOMERS table and foreign key in the ORDERS (CUSTOMER_ID) table observe the following diagram:
+
+
+## Features of SQL Foreign Key
+
+
+Following are the important features of SQL Foreign Key constraint:
+
+
+
+- A Foreign Key is used to reduce the redundancy (or duplicates) in the table.
+- It helps to normalize (or organize the data in a database) the data in multiple tables.
+- It establishes a link between two tables, where the child table refers to the parent table.
+- It ensures referential integrity by making sure that a value in the child table must exist in the parent table.
+- It prevents inserting invalid data into the foreign key column.
+- It restricts deletion or update of a record in the parent table if related rows exist in the child table (unless cascading options are defined).
+- A table can have more than one foreign key, allowing it to connect with multiple parent tables.
+
+
+
+### Syntax
+
+
+There are several syntaxes to create or add a foreign key in a table.
+
+
+Create a table with a foreign key on a single column:
+
+
+```sql
+CREATE TABLE child_table (
+    column1 datatype PRIMARY KEY,
+    column2 datatype,
+    column3 datatype,
+    FOREIGN KEY (column2) REFERENCES parent_table(parent_column)
+);
+```
+
+
+Create a table with a composite foreign key (multiple columns):
+
+
+```sql
+CREATE TABLE child_table (
+    column1 datatype,
+    column2 datatype,
+    column3 datatype,
+    PRIMARY KEY (column1),
+    FOREIGN KEY (column2, column3) REFERENCES parent_table(parent_col1, parent_col2)
+);
+```
+
+
+Add a foreign key to an existing table:
+
+
+```sql
+ALTER TABLE child_table
+ADD CONSTRAINT fk_child_parent FOREIGN KEY (column_name)
+REFERENCES parent_table(parent_column);
+```
+
+
+## SQL Foreign Key On CREATE TABLE
+
+
+AForeign Keycan be defined while creating a new table using theCREATE TABLEstatement. It is used to establish a link between the data in two tables. The foreign key in the child table points to the primary key in the parent table.
+
+
+You can add the foreign key constraint on a column of the child table using the keyword "FOREIGN KEY" along with the column name and reference to the parent table and column.
+
+
+### Example
+
+
+Let us create two tables with the names CUSTOMERS and ORDERS. The following query creates a table with the name CUSTOMERS:
+
+
+```sql
+CREATE TABLE CUSTOMERS(
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25) ,
+   SALARY DECIMAL (18, 2),       
+   PRIMARY KEY (ID)
+);
+```
+
+
+Following is the output of the above SQL statement:
+
+
+```sql
+Query OK, 0 rows affected (0.02 sec)
+```
+
+
+Now, let us create the ORDERS table. While doing so, we add the foreign key constraint on column CUSTOMER_ID reference on column ID of the CUSTOMERS table as shown in the statement below:
+
+
+```sql
+CREATE TABLE ORDERS (
+   ID INT NOT NULL,
+   DATE DATETIME, 
+   CUSTOMER_ID INT,
+   CONSTRAINT FK_CUSTOMER 
+   FOREIGN KEY(CUSTOMER_ID) 
+   REFERENCES CUSTOMERS(ID),
+   AMOUNT DECIMAL,
+   PRIMARY KEY (ID)
+);
+```
+
+
+The above statement produces the following output:
+
+
+```sql
+Query OK, 0 rows affected (0.04 sec)
+```
+
+
+### Verification
+
+
+We have created a Foreign Key Constraint on a column named CUSTOMER_ID in the ORDERS table that references the column named ID of the CUSTOMERS table; so you can't drop table1 (CUSTOMERS) before dropping the table2 (ORDERS).
+
+
+First of all, let's drop the CUSTOMERS table without dropping the ORDERS table using the DROP TABLE statement:
+
+
+```sql
+DROP TABLE CUSTOMERS;
+```
+
+
+If you verify the error message below, you will observe that it says that the table can not be dropped because it is referenced by a FOREIGN KEY constraint:
+
+
+```sql
+ERROR 3730 (HY000): Cannot drop table 'customers' referenced by a foreign key constraint 'FK_CUSTOMER' on table 'orders'.
+```
+
+
+## SQL Composite Foreign Key
+
+
+AComposite Foreign Keyis a foreign key that consists of two or more columns. It makes sure that the combination of values in these columns matches values in a composite primary key of another table.
+
+
+### Example
+
+
+In this example, we are creating a tableORDER_DETAILSwhere the combination ofORDER_IDandPRODUCT_IDis defined as a foreign key referencing the composite primary key in the ORDERS_PRODUCTS table:
+
+
+```sql
+CREATE TABLE ORDER_DETAILS (
+   ORDER_ID INT NOT NULL,
+   PRODUCT_ID INT NOT NULL,
+   QUANTITY INT,
+   FOREIGN KEY (ORDER_ID, PRODUCT_ID) REFERENCES ORDERS_PRODUCTS(ORDER_ID, PRODUCT_ID)
+);
+```
+
+
+We get the output as shown below:
+
+
+```sql
+Query OK, 0 rows affected (0.04 sec)
+```
+
+
+## SQL Foreign Key on an Existing Column
+
+
+You can also add the FOREIGN KEY constraint on an existing column of a table using theALTER TABLEstatement.
+
+
+This is useful when the table is already created but does not yet have a foreign key defined, or when you want to add this constraint on another column even if one Foreign Key column exists in a table.
+
+
+### Example
+
+
+Assume the CUSTOMERS and ORDERS tables have already been created in the SQL database. Now, we will add a Foreign Key Constraint on the ID column of the ORDERS table.
+
+
+Following is the SQL query to add the foreign key constraint on an the column of an existing table:
+
+
+```sql
+ALTER TABLE ORDERS 
+ADD CONSTRAINT FK_ORDERS 
+FOREIGN KEY(ID) 
+REFERENCES CUSTOMERS(ID);
+```
+
+
+Following is the output of the above program:
+
+
+```sql
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+```
+
+
+### Verification
+
+
+We have created a Foreign Key Constraint on a column named CUSTOMER_ID in the ORDERS table that references the column name ID of the CUSTOMERS table. So, you can't drop table1 (CUSTOMERS) before dropping the table2 (ORDERS).
+
+
+First of all, let us drop the CUSTOMERS table without dropping the ORDERS table by executing the following statement:
+
+
+```sql
+DROP TABLE CUSTOMERS;
+```
+
+
+This generates an error message saying that the table can not be dropped because it is referenced by a FOREIGN KEY constraint:
+
+
+```sql
+ERROR 3730 (HY000): Cannot drop table 'customers' referenced by a foreign key constraint 'FK_CUSTOMER' on table 'orders'.
+```
+
+
+## Dropping the SQL Foreign Key Constraint
+
+
+In SQL, you can remove an existingForeign Keyfrom a table using theALTER TABLEstatement. This is useful when you need to redefine relationships or modify the table structure.
+
+
+### Syntax
+
+
+Following is the syntax to drop a foreign key constraint from a table:
+
+
+```sql
+ALTER TABLE table_name DROP FOREIGN KEY constraint_name;
+```
+
+
+### Example
+
+
+The SQL query to drop the foreign key constraint from the column of a table is as follows:
+
+
+```sql
+ALTER TABLE ORDERS DROP FOREIGN KEY FK_ORDERS;
+```
+
+
+Following is the output of the above SQL query:
+
+
+```sql
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+```
+
+
+### Verification
+
+
+Since we have dropped the Foreign key constraint from the ORDERS table, you can now directly drop the CUSTOMERS table without dropping the ORDERS table, as shown below:
+
+
+```sql
+DROP TABLE CUSTOMERS;
+```
+
+
+If you verify the below status code thrown by the above SQL command, you observe that the CUSTOMERS table has dropped.
+
+
+```sql
+Query OK, 0 rows affected (0.02 sec)
+```
+
+
+## Primary Key vs Foreign Key
+
+
+Even though both the primary key and foreign key refer to the same column, there are many differences to be observed in the way they work. They are listed below:
+
+
+Primary KeyForeign KeyThe primary key is always unique.The foreign key can be duplicated.The primary key can not be NULL.The Foreign can be NULL.A table can contain only one Primary Key.We can have more than one Foreign Key per table.
+
+
+## Important Points About SQL FOREIGN KEY
+
+
+Following are the important points you should remember about the SQL FOREIGN KEY Constraint:
+
+
+
+- A foreign key in one table points to aprimary keyin another table.
+- Foreign keys ensurereferential integrityof the data.
+- A table can havemultiple foreign keys, but each must reference a valid primary key or unique key in another table.
+- You cannot insert a value in a foreign key column that does not exist in the referenced primary key column.
+- Foreign keys can be defined with actions likeON DELETE CASCADEorON UPDATE CASCADEto automatically propagate changes.
+
+

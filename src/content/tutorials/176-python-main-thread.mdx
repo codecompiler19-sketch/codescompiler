@@ -1,0 +1,208 @@
+---
+title: "PYTHON - Main Thread"
+description: "Learn PYTHON - Main Thread with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1760
+group: "Python Multithreading"
+seoTitle: "PYTHON - Main Thread — CodesCompiler PYTHON Guide"
+permalink: "python-main-thread"
+---
+
+
+# Python - Main Thread
+
+
+
+
+In Python, themain threadis the initial thread that starts when the Python interpreter is executed. It is the default thread within a Python process, responsible for managing the program and creating additional threads. Every Python program has at least one thread of execution called the main thread.
+
+
+The main thread by default is a non-daemon thread. In this tutorial you will see the detailed explanation with relevant examples about main thread in Python programming.
+
+
+## Accessing the Main Thread
+
+
+The threading module in Python provides functions to access the threads. Here are the key functions −
+
+
+
+- threading.current_thread(): This function returns a threading.Thread instance representing the current thread.
+- threading.main_thread(): Returns a threading.Thread instance representing the main thread.
+
+
+
+### Example
+
+
+Thethreading.current_thread()function returns a threading.Thread instance representing the current thread. Here is an example.
+
+
+```python
+import threading
+
+name = 'Tutorialspoint'
+print('Output:', name)
+print(threading.current_thread())
+```
+
+
+It will produce the following output −
+
+
+```python
+Output: Tutorialspoint
+<_MainThread(MainThread, started 140260292161536)>
+```
+
+
+### Example
+
+
+This example demonstrates how to use thethreading.main_thread()function to get a reference to the main thread. And it is also shows the difference between the main thread and other threads usingthreading.current_thread()function.
+
+
+```python
+import threading
+import time
+
+def func(x):
+   time.sleep(x)
+   if not threading.current_thread() is threading.main_thread():
+      print('threading.current_thread() not threading.main_thread()')
+
+t = threading.Thread(target=func, args=(0.5,))
+t.start()
+
+print(threading.main_thread())
+print("Main thread finished")
+```
+
+
+When the above code is executed, it produces the following result −
+
+
+```python
+<_MainThread(MainThread, started 140032182964224)>
+Main thread finished
+threading.current_thread() not threading.main_thread()
+```
+
+
+## Main Thread Behavior in Python
+
+
+The main thread will exit whenever it has finished executing all the code in your script that is not started in a separate thread. For instance, when youstart a new threadusingstart()method, the main thread will continue to execute the remaining code in the script until it reaches the end and then exit.
+
+
+Since the other threads are started in a non-daemon mode by default, they will continue running until they  are finished, even if the main thread has exited.
+
+
+### Example
+
+
+The following example shows the main thread behavior in a python multithreaded program.
+
+
+```python
+import threading
+import time
+
+def func(x):
+   print('Current Thread Details:',threading.current_thread())
+   for n in range(x):
+      print('Internal Thread Running', n)
+   print('Internal Thread Finished...')
+
+t = threading.Thread(target=func, args=(6,))
+t.start()
+
+for i in range(3):
+   print('Main Thread Running',i)
+print("Main Thread Finished...")
+```
+
+
+It will produce the following output −
+
+
+```python
+Current Thread Details: Thread(Thread-1 (func), started 140562647860800)>
+Main Thread Running 0
+Internal Thread Running 0
+Main Thread Running 1
+Main Thread Running 2
+Internal Thread Running 1
+Main Thread Finished...
+Internal Thread Running 2
+Internal Thread Running 3
+Internal Thread Running 4
+Internal Thread Running 5
+Internal Thread Finished...
+```
+
+
+The above code can produce different outputs for different runs and different compilers.
+
+
+## Main Thread Waiting for Other Threads
+
+
+To ensure that the main thread waits for all other threads to finish, you canjoin the threadsusing thejoin()method. By using the join() method, you can control the execution flow and ensure that the main thread properly waits for all other threads to complete their tasks before exiting. This helps in managing the lifecycle of threads in a multi-threaded Python program effectively.
+
+
+### Example
+
+
+This example demonstrates how to properly manage the main thread and ensure it does not exit before the worker threads have finished their tasks.
+
+
+```python
+from threading import Thread
+from time import sleep
+
+def my_function_1():
+   print("Worker 1 started")
+   sleep(1)
+   print("Worker 1 done")
+
+def my_function_2(main_thread):
+   print("Worker 2 waiting for Worker 1 to finish")
+   main_thread.join()
+   print("Worker 2 started")
+   sleep(1)
+   print("Worker 2 done")
+
+worker1 = Thread(target=my_function_1)
+worker2 = Thread(target=my_function_2, args=(worker1,))
+
+worker1.start()
+worker2.start()
+
+for num in range(6):
+   print("Main thread is still working on task", num)
+   sleep(0.60)
+
+worker1.join()
+print("Main thread Completed")
+```
+
+
+When the above code is executed, it produces the following result −
+
+
+```python
+Worker 1 started
+Worker 2 waiting for Worker 1 to finish
+Main thread is still working on task 0
+Main thread is still working on task 1
+Worker 1 done
+Worker 2 started
+Main thread is still working on task 2
+Main thread is still working on task 3
+Worker 2 done
+Main thread is still working on task 4
+Main thread is still working on task 5
+Main thread Completed
+```
+

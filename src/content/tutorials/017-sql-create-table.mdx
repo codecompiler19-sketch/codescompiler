@@ -1,0 +1,397 @@
+---
+title: "SQL - Create Table"
+description: "Learn SQL - Create Table with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 170
+group: "SQL Table"
+seoTitle: "SQL - Create Table — CodesCompiler SQL Guide"
+permalink: "sql-create-table"
+---
+
+
+# SQL CREATE TABLE Statement
+
+
+Table of contentThe SQL CREATE TABLE StatementVerifying Table CreationSQL CREATE TABLE with PRIMARY KEYSQL CREATE TABLE IF NOT EXISTSCREATE TABLE Using Another TableImportant Points for Creating a Table
+
+
+
+
+In an RDBMS (Relational Database Management System), database tables are used to store data in a structured way, usingfieldsandrecords.
+
+
+
+- Afieldis a column in the table, and it defines what kind of data will be stored (like names, dates, or numbers).
+- Arecordis a row in the table, and it holds the actual data for each field.
+
+
+
+In simple words, a table is made up of rows and columns, just like a spreadsheet. SQL provides us with different types of commands to work with this data easily. We can use SQL to:
+
+
+
+- Create or delete tables
+- Insert, update, or delete data in those tables
+
+
+
+## The SQL CREATE TABLE Statement
+
+
+TheCREATE TABLEstatement in SQL is used to create a new table in an existing database.
+
+
+When creating a table, you must define its structure by specifying a unique table name and listing all the column names along with their respective data types. These data types can include numbers, text, dates, etc. depending on the kind of data you want to store.
+
+
+### Syntax
+
+
+Following is the basic syntax to create a table in SQL:
+
+
+```sql
+CREATE TABLE table_name (
+
+  column1 datatype,
+
+  column2 datatype,
+
+  column3 datatype,
+
+  ...
+
+  columnN datatype
+
+);
+```
+
+
+Here:
+
+
+
+- CREATE TABLE:It is the SQL command to create a new table.
+- table_name:It is the name you want to give to your table.
+- column1, column2, ...:These are the names of the columns you want in the table.
+- datatype:Specifies the type of data that each column will store, such asINT,VARCHAR,DATE, etc.
+
+
+
+### Example
+
+
+Let us create a table namedCUSTOMERSwith the following columns:
+
+
+
+- ID:Customer ID (integer), not null
+- NAME:Customer name (text), not null
+- AGE:Customer age (integer), not null
+- ADDRESS:Customer address (fixed length text)
+- SALARY:Customer salary (decimal number)
+
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+
+   ID       INT NOT NULL,
+
+   NAME     VARCHAR(20) NOT NULL,
+
+   AGE      INT NOT NULL,
+
+   ADDRESS  CHAR(25),
+
+   SALARY   DECIMAL(18, 2)
+
+);
+```
+
+
+After executing the above command in a MySQL database, you get the following output:
+
+
+```sql
+Query OK, 0 rows affected (0.13 sec)
+```
+
+
+## Verifying Table Creation
+
+
+You can check if the table has been created successfully by listing all tables using the following SQL command:
+
+
+```sql
+SHOW TABLES;
+```
+
+
+If theCUSTOMERStable is listed, it means the table has been successfully created:
+
+
+Tables_in_testdbcustomersordersproducts
+
+
+Also, you can use SQLDESC table_namecommand to list down the description of the table as follows:
+
+
+```sql
+DESC CUSTOMERS;
+```
+
+
+This will display the structure of the table created: column names, their respective data types, constraints (if any) etc. as shown below:
+
+
+FieldTypeNullKeyDefaultExtraIDintNONULLNAMEvarchar(20)NONULLAGEintNONULLADDRESSchar(25)YESNULLSALARYdecimal(18,2)YESNULL
+
+
+## SQL CREATE TABLE with PRIMARY KEY
+
+
+In SQL, you can use constraints like thePRIMARY KEYto make sure that a column (or a combination of columns) contains only unique and non-null values. It is used to uniquely identify each record in a table.
+
+
+### Syntax
+
+
+Following is the syntax to create a table with aPRIMARY KEYin SQL:
+
+
+Method 1: Define PRIMARY KEY directly on a column
+
+
+```sql
+CREATE TABLE table_name (
+
+  column1 datatype PRIMARY KEY,
+
+  column2 datatype,
+
+  ...
+
+);
+```
+
+
+Method 2: Define PRIMARY KEY separately for one or more columns
+
+
+```sql
+CREATE TABLE table_name (
+
+  column1 datatype,
+
+  column2 datatype,
+
+  column3 datatype,
+
+  ...
+
+  columnN datatype,
+
+  PRIMARY KEY (column_name)
+
+);
+```
+
+
+You can use the second method to define a primary key on multiple columns (called acomposite primary key) by listing more than one column inside the parentheses.
+
+
+### Example
+
+
+Let us create theCUSTOMERStable again, this time with theIDcolumn as the primary key:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+
+   ID       INT NOT NULL PRIMARY KEY,
+
+   NAME     VARCHAR(20) NOT NULL,
+
+   AGE      INT NOT NULL,
+
+   ADDRESS  CHAR(25),
+
+   SALARY   DECIMAL(18, 2)
+
+);
+```
+
+
+After executing the above command, you will get the following output:
+
+
+```sql
+Query OK, 0 rows affected (0.07 sec)
+```
+
+
+## SQL CREATE TABLE IF NOT EXISTS
+
+
+Sometimes, you may try to create a table that already exists in the database. In such cases, SQL will return an error like this:
+
+
+```sql
+ERROR 1050 (42S01): Table 'CUSTOMERS' already exists
+```
+
+
+To avoid this error, you can use theCREATE TABLE IF NOT EXISTScommand. This will create the table only if it doesn't already exist. If the table is already there, the command will simply do nothing and exit without any error.
+
+
+### Syntax
+
+
+Following is the basic syntax of a CREATE TABLE IF NOT EXISTS statement:
+
+
+```sql
+CREATE TABLE IF NOT EXISTS table_name(
+
+   column1 datatype,
+
+   column2 datatype,
+
+   column3 datatype,
+
+   .....
+
+   columnN datatype,
+
+   PRIMARY KEY( one or more columns )
+
+);
+```
+
+
+### Example
+
+
+The following SQL command will create theCUSTOMERStable only if it doesn't already exist in the database otherwise it will exit without any error:
+
+
+```sql
+CREATE TABLE IF NOT EXISTS CUSTOMERS (
+
+   ID       INT NOT NULL,
+
+   NAME     VARCHAR(20) NOT NULL,
+
+   AGE      INT NOT NULL,
+
+   ADDRESS  CHAR(25),
+
+   SALARY   DECIMAL(18, 2),
+
+   PRIMARY KEY (ID)
+
+);
+```
+
+
+We get the output as shown below:
+
+
+```sql
+Query OK, 0 rows affected, 1 warning (0.02 sec)
+```
+
+
+## CREATE TABLE Using Another Table
+
+
+Instead of creating a completely new table from scratch, you can also create a table by copying the structure and/or data from an existing table. This is helpful when you want to clone or back up part of a table quickly.
+
+
+### Syntax
+
+
+The basic syntax for creating a table from another table in SQL is as follows:
+
+
+```sql
+CREATE TABLE NEW_TABLE_NAME AS
+
+SELECT [column1, column2...columnN]
+
+FROM EXISTING_TABLE_NAME
+
+WHERE Condition;
+```
+
+
+This command will:
+
+
+
+- Create a new table with the same columns as the selected fields
+- Copy all the matching data rows into the new table
+
+
+
+### Example
+
+
+The following SQL command creates a new table calledSALARYusing two columns from theCUSTOMERStable:IDandSALARY:
+
+
+```sql
+CREATE TABLE SALARY AS
+
+SELECT ID, SALARY
+
+FROM CUSTOMERS;
+```
+
+
+After running this, the newSALARYtable will have the following structure:
+
+
+FieldTypeNullKeyDefaultExtraIDint(11)NOPRINULLSALARYdecimal(18,2)YESNULL
+
+
+If you want to copy only the structure and not the data, you can add a condition that is always false as shown below:
+
+
+```sql
+CREATE TABLE SALARY AS
+
+SELECT ID, SALARY
+
+FROM CUSTOMERS
+
+WHERE 1 = 0;
+```
+
+
+We get the output as shown below:
+
+
+```sql
+Query OK, 0 rows affected (0.07 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+```
+
+
+## Important Points for Creating a Table
+
+
+Following are the important points to remember when creating a table in SQL:
+
+
+
+- Table names should be meaningful and unique within the same database.
+- Use clear and descriptive column names likeFIRST_NAME(not 1stname),AGE,SALARY.
+- Choose correct data types for each column. For example, useDECIMALfor currency,VARCHARfor names, andINTfor IDs or ages.
+- Always usePRIMARY KEYfor identifying records uniquely.
+
+

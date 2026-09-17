@@ -1,0 +1,266 @@
+---
+title: "JavaScript - Native Prototypes"
+description: "Learn JavaScript - Native Prototypes with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 880
+group: "Object Oriented JavaScript"
+seoTitle: "JavaScript - Native Prototypes — CodesCompiler JavaScript Guide"
+permalink: "javascript-native-prototypes"
+---
+
+
+# JavaScript - Native Prototypes
+
+
+
+
+## Native Prototypes
+
+
+Thenative prototypesin JavaScript are property ofObject.prototypeobject. The prototypes are the mechanism by which the objects inherit features from one another.
+
+
+In JavaScript, each object contains theprototypeproperty. The prototype of each object contains themethodsandpropertiesrelated to the object. So, it is also called thenative prototype.
+
+
+However, you can update or add new methods and properties to the native prototype object, but you can't delete any already existing.
+
+
+The JavaScript object and object constructor are the main prerequisites to understand JavaScript native prototypes.
+
+
+### Syntax
+
+
+You can follow the syntax below to access the native prototype of the object.
+
+
+```javascript
+Object.prototype;
+```
+
+
+In the above syntax, the object can be any JavaScript object.
+
+
+### Example: Accessing the array's prototype
+
+
+Whenever you execute the below code in the browser, it will print the prototype of the array in the browser console. In the same way, you can check the prototype of the other objects.
+
+
+In the console, you can see that the prototype object contains the methods which you can use with array methods.
+
+
+```html
+<html>
+<body>
+	<script>
+		console.log(Array.prototype);
+	</script>
+	pPlease open the web console before executing the above program.
+</body>
+</html>
+```
+
+
+#### Output
+
+
+On running the above program, you will see the result in web console similar to the following screenshot −
+
+
+## Updating the Native Prototype
+
+
+You can update the existing method or property of the native prototype object or add a new method or property to the native prototype object.
+
+
+### Syntax
+
+
+You can follow the syntax below to update or add new properties or methods to the prototype object.
+
+
+```javascript
+objName.prototype.name = value
+```
+
+
+In the above syntax, objName is an object whose prototype you need to update.
+
+
+The 'name' is a method or property name. You can assign new values or function expressions to the 'name.
+
+
+### Example: Updating the toLowerCase() method of the string object's prototype
+
+
+The prototype of the String object contains the toLowerCase() method. Here, we update the toLowerCase() method.
+
+
+The updated toLowerCase() method returns the string in the uppercase. In the output, you can observe the string, which is in uppercase.
+
+
+In this way, you can update the functionality of the built-in methods of the object.
+
+
+```html
+<html>
+<body>
+	p id = "output"After updating the string.toLowerCase() method: 
+	<script>
+		String.prototype.toLowerCase = function () {
+			return this.toUpperCase();
+		}
+		let str = "Hello World";
+		document.getElementById("output").innerHTML += str.toLowerCase();
+	</script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+After updating the string.toLowerCase() method: HELLO WORLD
+```
+
+
+You shouldn't update the methods and properties of the native prototype object. However, you can add new as shown in the example below.
+
+
+### Example: Adding a new method to the prototype object
+
+
+You can also add a new method to the Object prototype. Here, we added the firstCase() method in the object prototype.
+
+
+The firstCase() method returns a string after converting the string's first character to the uppercase.
+
+
+```html
+<html>
+<body>
+   p id = "output"After executing the string.firstCase() method: 
+   <script>
+		String.prototype.firstCase = function () {
+			// First character in uppercase. Other characters in lowercase.
+			return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase();
+		}
+		let str = "hello world";
+		document.getElementById("output").innerHTML += str.firstCase();
+	</script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+After executing the string.firstCase() method: Hello world
+```
+
+
+## Adding a method to the constructor function
+
+
+Whenever you define an object using the constructor function, you can't add a method or property to the constructor function using its instance. So, you need to add the method to the constructor function prototype. So it can be accessible through all instances of the object.
+
+
+### Example
+
+
+In the example below, the Person() is a constructor function that initializes object properties.
+
+
+After that, we added the display() method to the prototype of the person() function.
+
+
+Next, we created two instances of the Person() function and used the display() method with them. So, methods and properties added in the prototype of the object constructor can be accessed through all instances of the constructor function.
+
+
+```html
+<html>
+<body>
+   p id = "demo" 
+	<script>
+		const output = document.getElementById("demo");
+
+		function Person(id, name) {
+			this.id = id;
+			this.name = name;
+		}
+		Person.prototype.display = function () {
+			output.innerHTML += this.id + ", " + this.name + "<br>";
+		}
+		const p1 = new Person(1, "James");
+		const p2 = new Person(2, "Nayan");
+		p1.display();
+		p2.display();
+	</script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+1, James
+2, Nayan
+```
+
+
+All instances of the object inherit the properties and methods from their parent's prototype.
+
+
+## JavaScript Prototype Chaining
+
+
+Simply, you can say that the prototype stores the default values of the properties. The code overrides the prototype property value if the object constructor and its prototype contain the same properties.
+
+
+### Example
+
+
+In the below code, the Person() function contains the name property. We have added the name and age property in the function's prototype.
+
+
+We have created the p1 object using the Person() constructor function. The value of the name property of the p1 object is 'Nayan' as the name already exists in the constructor. The value of the age property is 20, which is the same as the age property value in the prototype.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+	<script>
+		function Person(id, name) {
+			this.id = id;
+			this.name = name;
+		}
+
+		Person.prototype.name = "John";
+		Person.prototype.age = 20;
+
+		const p1 = new Person(1, "Adam");
+		document.getElementById("output").innerHTML = 
+      "Id: " + p1.id + ", Name: " + p1.name + ", Age: " + p1.age;
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Id: 1, Name: Adam, Age: 20
+```
+

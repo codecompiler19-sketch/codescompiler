@@ -1,0 +1,325 @@
+---
+title: "JavaScript - Microtasks"
+description: "Learn JavaScript - Microtasks with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1180
+group: "JavaScript Asynchronous"
+seoTitle: "JavaScript - Microtasks — CodesCompiler JavaScript Guide"
+permalink: "javascript-microtasks"
+---
+
+
+# JavaScript - Microtasks
+
+
+
+
+Microtasks in JavaScript are small functions that are executed after the completion of the function or program code that creates them and if the JavaScript execution stack is empty. Microtasks are executed before any macrotasks, such as setImmediate() and setTimeout(). Microtasks are used to implement features such as promises.
+
+
+JavaScript is a single-threaded programming language. However, you can use the promises, callbacks, and asynchronous functions to run the JavaScript code in parallel.
+
+
+JavaScript runs the code based on the event loop. The event loop is responsible for executing the code, processing it, collecting the event data, and executing the sub-tasks.
+
+
+Let's understand the JavaScript event loop first.
+
+
+## JavaScript Event Loop
+
+
+The event loop executes the JavaScript code line-by-line. It adds the code to the call stack, a queue to execute it.
+
+
+JavaScript contains two types of queues to execute the tasks.
+
+
+
+- Micro tasks queues
+- Macro tasks queues
+
+
+
+When the call stack queue is empty, the event loop executes all tasks inside the microtask queue. After that, it executes all functions and code in the Macro task queue.
+
+
+We will understand more about the JavaScript code execution after understanding the micro and macro tasks.
+
+
+## What is Microtasks in JavaScript?
+
+
+In JavaScript, a microtask is a shorter function that is produced by the promise, or asynchronous function, and consumed later.
+
+
+Here is the list of Micro tasks.
+
+
+
+- Promise callback
+- Queue MicroTasks
+
+
+
+Whatever callback function you pass as an argument of the then(), catch(), or finally() method while consuming the promise code it gets added into the microtask queue.
+
+
+First, the JavaScript run engine executes the whole script, adds code from the main thread to the call stack, and micro-tasks into the microtask queue. When the execution of all tasks of the call stack is completed, it completes the execution of all tasks in the microtask queue.
+
+
+Let's understand it via the example below.
+
+
+### Example
+
+
+In the code below, we print the start message at the start of the script and the end message at the end of the script.
+
+
+In the middle, we have defined the promise, which gets resolved immediately. After that, we consumed the promise using the then() method and printed the message returned by the promise.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      const output = document.getElementById("output");
+
+      output.innerHTML += "The start of the code execution. <br>";
+
+      
+
+      // Creating the promise
+
+      let promise = new Promise(function (resolve, reject) {
+
+         resolve("The promise is resolved. <br>");
+
+      });
+
+      
+
+      // Consuming the promise code
+
+      promise.then(function (result) {
+
+         output.innerHTML += result;
+
+      });
+
+      output.innerHTML += "The end of the code execution. <br>";
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The start of the code execution.
+
+The end of the code execution.
+
+The promise is resolved.
+```
+
+
+The interesting thing is happening in the output of the above code.
+
+
+In the output, you can see that it prints the start, end, and promise messages at last.
+
+
+Now, the question is why it happened. The answer is that the callback function of the then() method is added to the microtask queue, and it gets executed only if the call stack is empty.
+
+
+## What is Macrotaks?
+
+
+Now, let's understand what Macrotaks is.
+
+
+The Macrotasks are also a short function that gets executed after the execution of all code, which is inside the call stack and microtask queue.
+
+
+JavaScript run-time engine adds the macro tasks into the microtask queue.
+
+
+The callback functions produced by the below methods get added to the Macrotask queue.
+
+
+
+- setTimeout
+- setInterval
+- setImmediate
+
+
+
+Let's understand the Macrotaks via the example below.
+
+
+### Example
+
+
+In the code below, we have added the start message, setTimeOut() method, and end message.
+
+
+In the setTimeOut() method, we have passed the callback function as a first argument, printing the message in the output, and set 0 seconds delay.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "demo"> </div>
+
+   <script>
+
+      let output = document.getElementById("demo");
+
+      output.innerHTML += "The start of the code execution.<br>";
+
+      setTimeout(function () {
+
+         output.innerHTML += "The code execution is being delayed for 0 seconds. <br>";
+
+      }, 0);
+
+      output.innerHTML += "The end of the code execution.<br>";
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The start of the code execution.
+
+The end of the code execution.
+
+The code execution is being delayed for 0 seconds.
+```
+
+
+The output of the above code is also interesting.
+
+
+It prints the start message first, the end message after that, and the message from the setTimeOut() method at the end.
+
+
+Here, we set the 0 delay for the setTimeOut() method. Still, it gets executed at the end because the JavaScript run engine adds the callback function in the macro task queue.
+
+
+Let's understand the microtask and macro tasks together via the example below.
+
+
+### Example
+
+
+In the code below, we have added the setTimeOut() method with 0 delay, and the callback function prints the message.
+
+
+After that, we defined a promise using the Promise() constructor and consumed the promise code using the then() method.
+
+
+At last, we have printed the end method.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      let output = document.getElementById("output");
+
+      output.innerHTML += "Start <br>";
+
+      setTimeout(function () { // Macro task
+
+         output.innerHTML += "In setTimeOut() method. <br>";
+
+      }, 0);
+
+
+
+      let promise = new Promise(function (resolve, reject) {
+
+         resolve("In Promise constructor. <br>");
+
+      });
+
+      promise.then(function (value) { // Micro tasks
+
+         output.innerHTML += value;
+
+      });
+
+      output.innerHTML += "End <br>";
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Start
+
+End
+
+In Promise constructor.
+
+In setTimeOut() method.
+```
+
+
+Lets understand the output of the above example.
+
+
+First, it prints the start message due to the JavaScript call stack.
+
+
+After that, it adds the callback function of the setTimeOut() method into the Macrotask queue.
+
+
+Next, it adds the callback function of the then() method into the Microtask queue.
+
+
+Next, it executes the last line of the code and prints the End message.
+
+
+Now, the call stack is empty. So, it executes all tasks which are in the Microtask queue. So, it completes the execution of the callback function of the then() method.
+
+
+Now, the call stack and Microtask queue are both empty. So, it executes all the tasks in the Macrotask queue and completes the execution of the callback function of the setTimeOut() method.
+
+
+This chapter has demonstrated how the JavaScript run engine executes the code. If you want to change the execution order of the code, you can be careful about using the micro and macro tasks.
+

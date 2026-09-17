@@ -1,0 +1,325 @@
+---
+title: "JavaScript - Mutability vs Immutability"
+description: "Learn JavaScript - Mutability vs Immutability with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1910
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Mutability vs Immutability — CodesCompiler JavaScript Guide"
+permalink: "javascript-mutability-vs-immutability"
+---
+
+
+# JavaScript - Mutability vs Immutability
+
+
+
+
+If you are a web developer you have seen the terms mutable and immutable objects in JavaScript. But what these words mean, and why do they matter? This section will help you understand.
+
+
+
+- What mutable and immutable objects are
+- The main differences between them
+- How to make and change them
+- The benefits and drawbacks of using each type in your code
+
+
+
+This knowledge is very helpful for writing cleaner, safer, and more reliable JavaScript code.
+
+
+## Mutable Objects
+
+
+Mutable objects in JavaScript are ones that can be changed after they are created, including arrays, objects, functions, and dates. To add, removeor modify values in these objects, use bracket notation (object["property"]) or dot notation (object.property).
+
+
+But, changing these objects can sometimes lead to problems: it can unintentionally affect other parts of your code, make debugging more difficult, and use more memory. Because of this, even if you can directly change mutable objects, it is usually better to avoid doing so to keep your code simpler and more reliable.
+
+
+A mutable data type allows you to change it. Mutability lets you change existing values without creating new ones.
+
+
+For each object a pointer is added to the stack, pointing to the object in the heap. Consider the following code −
+
+
+```javascript
+const student = {
+   name: "Aarav",
+   age: 15,
+   hobbies: ["drawing", "playing guitar", "cycling"]
+};
+```
+
+
+On the stack, you will see student, which is a pointer to the actual object on the heap.
+
+
+```javascript
+const student2 = student;
+console.log(student);
+console.log(student2);
+```
+
+
+When student is assigned to student2, an additional pointer is added to the stack. Now, these pointers are pointing to a single item on the heap.
+
+
+Reference data copies pointers rather than values.
+
+
+```javascript
+student2.age = 25;
+console.log(student);
+console.log(student2);
+```
+
+
+Changing the age of student2 affects the age of the student object. You know it is because they both point to the same thing.
+
+
+### Clone Object Properties
+
+
+To clone the properties of an object, use the Object.assign() function with the spread operator. These allow you to update the attributes of the cloned object while keeping the original object's properties unchanged.
+
+
+#### How Object.assign() Function Works
+
+
+The object.assign method replicates properties from one object (the source) to another (the target), returning the updated target object.
+
+
+Here is the syntax −
+
+
+```javascript
+Object.assign (target, source)
+```
+
+
+The method takes two arguments: target and source. The target is the object that receives the new attributes, whereas the source is where the properties originate. The target may be an empty object &#123;&#125;.
+
+
+When the source and target have the same key, the source object overwrites the value of the key on the target.
+
+
+```javascript
+const student = {
+   name: "Aarav",
+   age: 15,
+   hobbies: ["drawing", "playing guitar", "cycling"]
+}
+const student2 = Object.assign({}, student);
+```
+
+
+The properties of the student object were copied into an empty target.
+
+
+student2 now owns its own properties. You can show this by modifying the values of any of its characteristics. Making this adjustment will have no effect on the student object's property values.
+
+
+```javascript
+student2.age = 25;
+console.log(student);
+console.log(student2);
+```
+
+
+The value of student2.age, which was modified to 25, has no bearing on the value of student.age because they both have separate attributes.
+
+
+## Immutable Objects
+
+
+Immutable objects are those that cannot be modified after it has been created. Strings, numbers, booleans, nulls, and undefined are all immutable in JavaScript. You can not alter their values or characteristics directly.
+
+
+Rather, you have to create a new object with the changes that are required. For example, you can combine two strings or add two integers, but this will result in a new string or number that does not change the original ones.
+
+
+Immutable objects offer several advantages over mutable ones. They can reduce side effects, make your code easier to understand and maintain, and boost performance.
+
+
+### Creating Immutable Objects
+
+
+There are several methods to build immutable objects in JavaScript. One option is to use the Object.freeze() method which blocks changes to an existing object. For example- if you freeze an array or object and then attempt to edit it you will receive an error or have no effect.
+
+
+Another option is to use the const keyword which creates a constant variable that cannot be reassigned. For example- if you declare a string or an integer as const and then try to reassign it, you will receive an error. But const just makes the variable immutable not the object it refers to.
+
+
+Let us consider an example −
+
+
+```javascript
+const num = 46;
+const newNum = num;
+```
+
+
+By looking at the code above, num has been reassigned to newNum. Both num and newNum now have the same value: 46. Changing the value on newNum does not affect the value on num.
+
+
+```javascript
+let student1 = "Aarti";
+let student2 = student1;
+```
+
+
+The code above creates a variable called student1 and assigns it to student2.
+
+
+```javascript
+student1 = "Saurabh"
+console.log(student1);
+console.log(student2);
+```
+
+
+Changing student1 to Saurabh does not affect student2's initial value. This shows that in primitive data types, actual values are duplicated, so each has its own. Student1 and student2 have distinct stack memory addresses.
+
+
+The stack follows the Last-In, First-Out principle. The first thing to enter the stack is the last to leave, and vice versa. Accessing objects saved in the stack is simple.
+
+
+### Modifying Immutable Objects
+
+
+Immutable objects cannot be changed directly, so you have to use other techniques to edit them. One option is to use the spread operator (...), which duplicates the properties or elements of an object or array into a new one. For example, you can use the spread operator to generate a new array with a new item or a new object with a new attribute without changing the originals.
+
+
+Another option is to use the Object.assign() method, which transfers the properties of one or more source objects to a target object. For example, you can use Object.assign() to create a new object that inherits the properties of two existing objects without modifying them.
+
+
+#### Using the Spread Operator
+
+
+For arrays:Assume you have an array named fruits −
+
+
+```javascript
+const fruits = ["apple", "banana", "orange"];
+```
+
+
+For creating a new array using an additional item without modifying or altering fruits −
+
+
+```javascript
+const newFruits = [...fruits, "grape"];
+console.log(newFruits);
+// Original array is unchanged
+console.log(fruits);
+```
+
+
+Here is the outcome of the above code −
+
+
+```javascript
+[ 'apple', 'banana', 'orange', 'grape' ]
+[ 'apple', 'banana', 'orange' ]
+```
+
+
+For Objects:Let us say you have an object called person −
+
+
+```javascript
+const person = { name: "Maya", age: 30 };
+```
+
+
+For creating a new object with an additional attribute (for example- country) without modifying the person −
+
+
+```javascript
+const newPerson = { ...person, country: "India" };
+console.log(newPerson); 
+// Original object is unchanged
+console.log(person);
+```
+
+
+Following is the output of the above code −
+
+
+```javascript
+{ name: 'Maya', age: 30, country: 'India' }
+{ name: 'Maya', age: 30 }
+```
+
+
+#### Using Object.assign()
+
+
+For Objects:Object.assign() creates a new object by combining the properties from multiple objects. Assume you have two objects: person and additionalInfo.
+
+
+```javascript
+const person = { name: "Maya", age: 30 };
+const additionalInfo = { country: "India", hobby: "reading" };
+```
+
+
+For creating a new object using the properties from both person and additionalInfo −
+
+
+```javascript
+const newPerson = Object.assign({}, person, additionalInfo);
+console.log(newPerson);  
+// Original object is unchanged
+console.log(person);
+```
+
+
+Here is the output of the following code −
+
+
+```javascript
+{ name: "Maya", age: 30, country: "India", hobby: "reading" }
+{ name: "Maya", age: 30 }
+```
+
+
+### Benefits of Immutability
+
+
+Immutability can have several advantages for your web development projects −
+
+
+
+- One of them is to avoid side effects which are changes in your program's state or behavior that you did not want or determine.
+- For example- if you send a mutable object as an argument to a function, the function may change the object, affecting other sections of your code that depend on it.
+- But if you supply an immutable object the function cannot change it, allowing you to avoid this problem. Another benefit is improved performance, particularly in frameworks that use a virtual DOM, like React.
+- A virtual DOM is a replica of the real DOM that is updated in memory and then compared to the actual DOM to apply the changes.
+- If you use immutable objects the comparison can be faster and more efficient because you just need to check the reference rather than the value.
+
+
+
+### Drawbacks of Immutability
+
+
+Immutability can have various disadvantages, which you should be aware of −
+
+
+
+- One of them is to increase memory consumption as you must build new objects every time you wish to change them.
+- This can also have an impact on trash collection which is the process of cleaning up memory by removing unneeded items.
+- For example- if you generate a large number of temporary objects in a loop, you risk overloading memory and slowing trash collection.
+- Another disadvantage is that creating and modifying immutable objects requires the use of additional methods or operators, making your code more verbose and difficult to read.
+- To get the same outcome you may need to write more lines of code or utilize layered spread operators.
+
+
+
+## Mutability vs Immutability
+
+
+Here is the basic difference between mutability vs immutability in the tabular form −
+
+
+AspectMutabilityImmutabilityMeaningYou can change the value after creation.Once created, the value cannot be changed.ExampleArrays or objects (e.g., let numbers `=` [1, 2, 3];')Strings or numbers (e.g., 'const name = "Amit";')Can you change it?Yes, you can change or modify it.No, you cannot change it directly.How to change?You modify the original value.You create a new value instead of changing the original.Example code (change)'numbers.push(4);''const newName `=` name + " Deepak";'
+

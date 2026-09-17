@@ -1,0 +1,214 @@
+---
+title: "PYTHON - Function Annotations"
+description: "Learn PYTHON - Function Annotations with clear explanation, code examples, and practical guide."
+category: "python"
+order: 560
+group: "Python Functions & Modules"
+seoTitle: "PYTHON - Function Annotations — CodesCompiler PYTHON Guide"
+permalink: "python-function-annotations"
+---
+
+
+# Python - Function Annotations
+
+
+
+
+## Function Annotations
+
+
+Thefunction annotationfeature ofPythonenables you to add additional explanatory metadata about the arguments declared in a function definition, and also the return data type. They are not considered byPython interpreterwhile executing thefunction. They are mainly for the Python IDEs for providing a detailed documentation to the programmer.
+
+
+Although you can use thedocstringfeature of Python for documentation of a function, it may be obsolete if certain changes in the function's prototype are made. Hence, the annotation feature was introduced in Python as a result of PEP 3107.
+
+
+Annotations are any valid Python expressions added to the arguments or return data type. Simplest example of annotation is to prescribe the data type of the arguments. Annotation is mentioned as an expression after putting a colon in front of the argument.
+
+
+### Example
+
+
+Remember that Python is a dynamically typed language, and doesn't enforce any type checking at runtime. Hence annotating the arguments withdata typesdoesn't have any effect while calling the function. Even if non-integer arguments are given, Python doesn't detect any error.
+
+
+```python
+def myfunction(a: int, b: int):
+   c = a+b
+   return c
+   
+print (myfunction(10,20))
+print (myfunction("Hello ", "Python"))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+30
+Hello Python
+```
+
+
+## Function Annotations With Return Type
+
+
+Annotations are ignored at runtime, but are helpful for the IDEs and static type checker libraries such as mypy.
+
+
+You can give annotation for the return data type as well. After the parentheses and before the colon symbol, put an arrow (->) followed by the annotation.
+
+
+### Example
+
+
+In this example, we are providing annotation for return type.
+
+
+```python
+def myfunction(a: int, b: int) -> int:
+   c = a+b
+   return c
+print(myfunction(56,88))
+print(myfunction.__annotations__)
+```
+
+
+This will generate the following output −
+
+
+```python
+144
+{'a': <class 'int'>, 'b': <class 'int'>, 'return': <class 'int'>}
+```
+
+
+## Function Annotations With Expression
+
+
+As using the data type as annotation is ignored at runtime, you can put any expression which acts as the metadata for the arguments. Hence, function may have any arbitrary expression as annotation.
+
+
+### Example
+
+
+In the below example, we are using expression as a function annotation.
+
+
+```python
+def total(x : 'marks in Physics', y: 'marks in chemistry'):
+   return x+y
+print(total(86, 88))
+print(total.__annotations__)
+```
+
+
+Following is the output −
+
+
+```python
+174
+{'x': 'marks in Physics', 'y': 'marks in chemistry'}
+```
+
+
+## Function Annotations With Default Arguments
+
+
+If you want to specify adefault argumentalong with the annotation, you need to put it after the annotation expression. Default arguments must come after the required arguments in the argument list.
+
+
+### Example 1
+
+
+The following example demonstrates how to provide annotation for default arguments of a function.
+
+
+```python
+def myfunction(a: "physics", b:"Maths" = 20) -> int:
+   c = a+b
+   return c
+print (myfunction(10))
+```
+
+
+The function in Python is also anobject, and one of its attributes is __annotations__. You can check with dir() function.
+
+
+```python
+print (dir(myfunction))
+```
+
+
+This will print the list of myfunction object containing __annotations__ as one of the attributes.
+
+
+```python
+['__annotations__', '__builtins__', '__call__', '__class__', '__closure__', '__code__', '__defaults__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__get__', '__getattribute__', '__getstate__', '__globals__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__kwdefaults__', '__le__', '__lt__', '__module__', '__name__', '__ne__', '__new__', '__qualname__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__']
+```
+
+
+### Example 2
+
+
+The __annotations__ attribute itself is adictionaryin which arguments are keys and anotations their values.
+
+
+```python
+def myfunction(a: "physics", b:"Maths" = 20) -> int:
+   c = a+b
+   return c
+print (myfunction.__annotations__)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+{'a': 'physics', 'b': 'Maths', 'return': <class 'int'>}
+```
+
+
+### Example 3
+
+
+You may have arbitrary positional and/or arbitrary keyword arguments for a function. Annotations can be given for them also.
+
+
+```python
+def myfunction(*args: "arbitrary args", **kwargs: "arbitrary keyword args") -> int:
+   pass
+print (myfunction.__annotations__)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+{'args': 'arbitrary args', 'kwargs': 'arbitrary keyword args', 'return': <class 'int'>}
+```
+
+
+### Example 4
+
+
+In case you need to provide more than one annotation expressions to a function argument, give it in the form of a dictionary object in front of the argument itself.
+
+
+```python
+def division(num: dict(type=float, msg='numerator'), den: dict(type=float, msg='denominator')) -> float:
+   return num/den
+print (division.__annotations__)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+{'num': {'type': <class 'float'>, 'msg': 'numerator'}, 'den': {'type': <class 'float'>, 'msg': 'denominator'}, 'return': <class 'float'>}
+```
+

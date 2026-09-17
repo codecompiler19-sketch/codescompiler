@@ -1,0 +1,556 @@
+---
+title: "JavaScript - Async/Await"
+description: "Learn JavaScript - Async/Await with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1170
+group: "JavaScript Asynchronous"
+seoTitle: "JavaScript - Async/Await — CodesCompiler JavaScript Guide"
+permalink: "javascript-async-and-await"
+---
+
+
+# JavaScript - Async/Await
+
+
+
+
+The JavaScript functions defined with theasync/awaitkeyword can perform the same task as promises with fewer lines of code, and it makes the code readable. The promise's syntax is a bit complex, so the async/await syntax is introduced.
+
+
+To use async/await, we need to define an aync function first. For this we write async before function definition. An async function returns a promise. The await keyword is used inside an async function only. The await keyword makes JavaScript to wait for the promise to resolve before continuing the function.
+
+
+Let's understand the async/await keywords in details taking them separately −
+
+
+## The JavaScript Async Keyword
+
+
+A JavaScript function defined with the async keyword is called the asynchronous function. The async function allows you to produce the asynchronous code.
+
+
+It always returns the promise. If you don't return the promise manually and return the data, string, number, etc., it creates a new promise and resolves that promise with the returned value.
+
+
+### Syntax
+
+
+You could use the syntax below to define a function using the async keyword in JavaScript −
+
+
+```javascript
+async function func_name(parameters) {
+
+   // function body
+
+}
+```
+
+
+In the above syntax, we have used the 'async' keyword before the function name.
+
+
+### Parameters
+
+
+
+- Func_name− It is a valid identifier for the function name.
+- Parameters− It takes multiple parameters, the same as a regular function.
+
+
+
+Look at the below asynchronous function, returning the 'hello world' text. It returns the promise with the 'hello world' success message.
+
+
+```javascript
+async function printMessage() {
+
+   return "Hello World";
+
+}
+```
+
+
+The below code is similar to the above code.
+
+
+```javascript
+function printMessage() {
+
+   return Promise.resolve("Hello World");
+
+}
+```
+
+
+You can use the then() and catch() methods to solve the promise returned from the asynchronous function.
+
+
+### Example
+
+
+We return the text from the getText() function in the code below.
+
+
+After that, we use the then() and catch() method with the execution of the getText() method to consume the promise returned by the getText() function.
+
+
+Here, you can observe that we have returned text from the asynchronous function, but it is returning the promise.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      async function getText() {
+
+         return "Text from the getText() function.";
+
+      }
+
+      getText().then((text) => {
+
+         document.getElementById('output').innerHTML = text + "<br>";
+
+      }).catch((err) => {
+
+         document.getElementById('output').innerHTML += JSON.stringify(err);
+
+      });
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Text from the getText() function.
+```
+
+
+## JavaScript Await Keyword
+
+
+You can use the await keyword inside a JavaScript asynchronous function only. It pauses the execution of the function until the promise gets settled, which means it is either rejected or fulfilled.
+
+
+### Syntax
+
+
+Following is the syntax to use the await keyword inside an asyn function in JavaScript −
+
+
+```javascript
+async function func_name(parameters) {
+
+   await promise;
+
+   // Function body
+
+}
+```
+
+
+In the above syntax, we have used the await keyword inside the async function.
+
+
+### Example
+
+
+We have defined the solvePromise() async function in the code below. We have created the new promise using the Promise() constructor in the function. After that, we used the await keyword with the promise to resolve it rather than using the then() or catch() method.
+
+
+In the output, you can observe that it prints the fulfillment message.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output">The resultant value from the promise is:</div>
+
+   <script>
+
+      async function solvePromise() {
+
+         const promise = new Promise((resolve, reject) => {
+
+            resolve('Promise is solved');
+
+         })
+
+         const result = await promise;
+
+         document.getElementById('output').innerHTML += result;
+
+      }
+
+      solvePromise();
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The resultant value from the promise is: Promise is solved
+```
+
+
+### Example (Waiting for Timeout)
+
+
+In the code below, we set the timeout of 2000 milliseconds using the setTimeOut() method to resolve the promise.
+
+
+After that, we used the await keyword with a promise to pause the execution of the function until the promise is settled. In the output, you can see that it prints the message returned from the promise after 2 seconds.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output">The promise is being solved <br> </div>
+
+   <script>
+
+      async function solvePromise() {
+
+         const promise = new Promise((resolve, reject) => {
+
+            setTimeout(() => { // Setting up timeout for promises
+
+               resolve('The promise is solved after 2 seconds');
+
+            }, 2000);
+
+         })
+
+         const result = await promise;
+
+         document.getElementById('output').innerHTML += result;
+
+      }
+
+      solvePromise();
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The promise is being solved
+
+The promise is solved after 2 seconds
+```
+
+
+## Error Handling with JavaScript Async/Await
+
+
+While consuming the promise, we used the then() and catch() methods to handle the data and errors.
+
+
+With the asynchronous function, you can use the trycatch block to handle the errors.
+
+
+When the promise is fulfilled successfully, the control executes the remaining code of the try block. Otherwise, it executes the code of the catch block to fix the errors.
+
+
+### Syntax
+
+
+Following is the syntax to handle errors in the asynchronous function −
+
+
+```javascript
+try {
+
+   const result = await promise;
+
+   // Manipulate data
+
+} catch (err) {
+
+   // Handle errors
+
+}
+```
+
+
+We need to consume the promise in the try block and handle the errors in the catch block. The catch() method also takes the err as a parameter, which is a promise rejection message or an error object.
+
+
+### Example
+
+
+In the code below, we have defined a promise and rejected it.
+
+
+After that, we consume the promise in the try block. As the promise is rejected, the execution control will go into the catch block and print the rejection message.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "demo"> </div>
+
+   <script>
+
+      let output = document.getElementById('demo');
+
+      async function solvePromise() {
+
+         const promise = new Promise((resolve, reject) => {
+
+            reject("The promise is rejected");
+
+         })
+
+         try {
+
+            const result = await promise;
+
+            output.innerHTML += "Inside the try block. <br>";
+
+            output.innerHTML += result;
+
+         } catch (err) {
+
+            output.innerHTML += "Inside the catch block. <br>";
+
+            output.innerHTML += err;
+
+         }
+
+      }
+
+      solvePromise();
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Inside the catch block.
+
+The promise is rejected
+```
+
+
+## JavaScript Async Class Methods
+
+
+You can also define the asynchronous class methods using the async keyword to handle the asynchronous operations.
+
+
+It has the same syntax as the asynchronous function.
+
+
+### Syntax
+
+
+Following is the syntax to use the async/await with class methods in JavaScript −
+
+
+```javascript
+async method_name() {
+
+   return await promise;
+
+}
+```
+
+
+In the above syntax, method_name is an identifier for the class method, and it uses the async/await keyword to make the method asynchronous.
+
+
+You can consume the promise returned by the method using the then() and catch() methods.
+
+
+### Example
+
+
+In the below code, we have created the animal class.
+
+
+The animal class contains the getAnimalName() method and returns the Lion text. We have used the await keyword before the Lion string, which pauses the execution of the method until the string is created. However, you can also return the promise.
+
+
+After that, we use the then() method to consume the promise and print the animal name in the output.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      class animal {
+
+         async getAnimalName() {
+
+            return await "Lion";
+
+         }
+
+      }
+
+      const lionObj = new animal();
+
+      lionObj.getAnimalName().then((data) => {
+
+         document.getElementById('output').innerHTML = "The animal name is: " + data;
+
+      })
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The animal name is: Lion
+```
+
+
+## Real-time Example of JavaScript Async/Await
+
+
+The above examples are basic examples to demonstrate the use of the async/await keywords in JavaScript.
+
+
+Lets understand how to use the async/await in real-time development.
+
+
+### Example
+
+
+In the code below, when the user clicks the button, it calls the getData() function.
+
+
+The getData() function is an asynchronous function. We used the trycatch block inside the function to handle errors.
+
+
+In the try block, we used the fetch() API to fetch the data from the API and used the await keyword.
+
+
+After that, we used the json() method with the response to convert into the JSON and used the await keyword with that.
+
+
+Next, we print the data.
+
+
+Also, we print the error message in the catch() method.
+
+
+```html
+<html>
+
+<body>
+
+   <button onclick = "getData()">Get Data</button>
+
+   <div id = "demo"> </div>
+
+   <script>
+
+      let output = document.getElementById('demo');
+
+      async function getData() {
+
+         try {
+
+            let response = await fetch('https://api.github.com/users'); 
+
+            // Pauses the execution until it gets the data
+
+            let data = await response.json(); 
+
+            // Pauses the execution until it converts the data into json
+
+            output.innerHTML += "login: " + data[0].login + "<br>";
+
+            output.innerHTML += "id: " + data[0].id + "<br>";
+
+            output.innerHTML += "node_id: " + data[0].node_id + "<br>";
+
+            output.innerHTML += "avatar_url: " + data[0].avatar_url + "<br>";
+
+         } catch (err) {
+
+            output.innerHTML += "The error is: " + json.stringify(err);
+
+         }
+
+      }
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+## Benefits of Using JavaScript Async Function
+
+
+Here are some benefits of using the asynchronous function.
+
+
+
+- It increases the readability of code.
+- It reduces the complexity of the code.
+- It can handle multiple promises easily.
+- It makes debugging easier.
+- You can replace the callback function and promises with the asynchronous function.
+
+

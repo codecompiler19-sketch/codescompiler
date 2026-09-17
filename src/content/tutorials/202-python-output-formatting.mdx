@@ -1,0 +1,488 @@
+---
+title: "PYTHON - Output Formatting"
+description: "Learn PYTHON - Output Formatting with clear explanation, code examples, and practical guide."
+category: "python"
+order: 2020
+group: "Python Miscellenous"
+seoTitle: "PYTHON - Output Formatting — CodesCompiler PYTHON Guide"
+permalink: "python-output-formatting"
+---
+
+
+# Python - Output Formatting
+
+
+
+
+## Output Formatting in Python
+
+
+Output formatting in Python is used to make your code more readable and your output more user-friendly. Whether you are displaying simple text strings, complex data structures, or creating reports, Python offers several ways for formatting output.
+
+
+These ways include using −
+
+
+
+- The string modulo operator (%)
+- The format() method
+- The f-strings (formatted string literals)
+- The template strings
+
+
+
+Additionally, Python's "textwrap" and "pprint" modules offer advanced functionalities for wrapping text and pretty-printing data structures.
+
+
+## Using String Modulo Operator (%)
+
+
+We can format output using the string modulo operator %. This operator is unique to strings and makes up for the pack of having functions from C's printf() family. Format specification symbols like%d,%c,%f, and%sare used as placeholders in a string, similar to those in C.
+
+
+Following is a simple example −
+
+
+```python
+print ("My name is %s and weight is %d kg!" % ('Zara', 21))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+My name is Zara and weight is 21 kg!
+```
+
+
+## Using the format() Method
+
+
+We can format output using the format() method, which was introduced in Python 3.0 and has been backported to Python 2.6 and 2.7.
+
+
+The format() method is part of the built-instringclass and allows for complex variable substitutions and value formatting. It is considered a more elegant and flexible way to format strings compared to the string modulo operator.
+
+
+### Syntax
+
+
+The general syntax of format() method is as follows −
+
+
+```python
+str.format(var1, var2,...)
+```
+
+
+### Return Value
+
+
+The method returns a formatted string.
+
+
+The string itself contains placeholders &#123;&#125; in which values of variables are successively inserted.
+
+
+### Example
+
+
+```python
+name="Rajesh"
+age=23
+print ("my name is {} and my age is {} years".format(name, age))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+my name is Rajesh and my age is 23 years
+```
+
+
+You can use variables as keyword arguments to format() method and use the variable name as the placeholder in the string.
+
+
+```python
+print ("my name is {name} and my age is {age}
+years".format(name="Rajesh", age=23))
+```
+
+
+## Using F-Strings
+
+
+F-strings, or formatted string literals, are a way to format strings in Python that is simple, fast, and easy to read. You create an f-string by adding anfbefore the opening quotation mark of a string.
+
+
+Inside the string, you can include placeholders for variables, which are enclosed in curly braces&#123;&#125;. The values of these variables will be inserted into the string at those places.
+
+
+### Example
+
+
+In this example, the variables "name" and "age" are inserted into the string where their placeholders "&#123;name&#125;" and "&#123;age&#125;" are located. F-strings make it easy to include variable values in strings without having to use the format() method or string concatenation −
+
+
+```python
+name = 'Rajesh'
+age = 23
+
+fstring = f'My name is {name} and I am {age} years old'
+print (fstring)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+My name is Rajesh and I am 23 years old
+```
+
+
+## Format Conversion Rule in Python
+
+
+You can also specify C-style formatting symbols. The only change is using:instead of%. For example, instead of%suse&#123;:s&#125;and instead of%duse&#123;:d&#125;as shown below −
+
+
+```python
+name = "Rajesh"
+age = 23
+print("my name is {:s} and my age is {:d} years".format(name, age))
+```
+
+
+You will get the output as shown below −
+
+
+```python
+my name is Rajesh and my age is 23 years
+```
+
+
+## Template Strings
+
+
+TheTemplateclass instringmodule provides an alternative method to format the strings dynamically. One of the benefits of Template class is to be able to customize the formatting rules.
+
+
+A valid template string, or placeholder, consists of two parts: The$symbol followed by a valid Python identifier.
+
+
+You need to create an object of Template class and use the template string as an argument to the constructor. Next, call thesubstitute()method of Template class. It puts the values provided as the parameters in place of template strings.
+
+
+### Example
+
+
+```python
+from string import Template
+
+temp_str = "My name is $name and I am $age years old"
+tempobj = Template(temp_str)
+ret = tempobj.substitute(name='Rajesh', age=23)
+print (ret)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+My name is Rajesh and I am 23 years old
+```
+
+
+## The textwrap Module
+
+
+The wrap class in Python's textwrap module contains functionality to format and wrap plain texts by adjusting the line breaks in the input paragraph. It helps in making the text wellformatted and beautiful.
+
+
+The textwrap module has the following convenience functions −
+
+
+### textwrap.wrap(text, width`=`70)
+
+
+The textwrap.wrap() function wraps the single paragraph in text (a string) so every line is at most width characters long. Returns a list of output lines, without final newlines. Optional keyword arguments correspond to the instance attributes of TextWrapper. width defaults to 70.
+
+
+### textwrap.fill(text, width`=`70)
+
+
+The textwrap.fill() function wraps the single paragraph in text, and returns a single string containing the wrapped paragraph.
+
+
+Both methods internally create an object of TextWrapper class and calling a single method on it. Since the instance is not reused, it will be more efficient for you to create your own TextWrapper object.
+
+
+### Example
+
+
+```python
+import textwrap
+
+text = '''
+Python is a high-level, general-purpose programming language. Its design philosophy emphasizes code readability with the use of significant indentation via the off-side rule.
+
+Python is dynamically typed and garbage-collected. It supports multiple programming paradigms, including structured (particularly procedural), object-oriented and functional programming. It is often described as a "batteries included" language due to its comprehensive standard library.
+'''
+
+wrapper = textwrap.TextWrapper(width=40)
+wrapped = wrapper.wrap(text = text)
+
+# Print output
+for element in wrapped:
+   print(element)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Python is a high-level, general-purpose
+programming language. Its design
+philosophy emphasizes code readability
+with the use of significant indentation
+via the off-side rule. Python is
+dynamically typed and garbage-collected.
+It supports multiple programming
+paradigms, including structured
+(particularly procedural), objectoriented and functional programming. It
+is often described as a "batteries
+included" language due to its
+comprehensive standard library.
+```
+
+
+Following attributes are defined for a TextWrapper object −
+
+
+
+- width− (default: 70) The maximum length of wrapped lines.
+- expand_tabs− (default: True) If true, then all tab characters in text will be expanded to spaces using the expandtabs() method of text.
+- tabsize− (default: 8) If expand_tabs is true, then all tab characters in text will be expanded to zero or more spaces, depending on the current column and the given tab size.
+- replace_whitespace− (default: True) If true, after tab expansion but before wrapping, the wrap() method will replace each whitespace character with a single space.
+- drop_whitespace− (default: True) If true, whitespace at the beginning and ending of every line (after wrapping but before indenting) is dropped. Whitespace at the beginning of the paragraph, however, is not dropped if non-whitespace follows it. If whitespace being dropped takes up an entire line, the whole line is dropped.
+- initial_indent− (default: '') String that will be prepended to the first line of wrapped output.
+- subsequent_indent− (default: '') String that will be prepended to all lines of wrapped output except the first.
+- fix_sentence_endings− (default: False) If true, TextWrapper attempts to detect sentence endings and ensure that sentences are always separated by exactly two spaces. This is generally desired for text in a monospaced font.
+- break_long_words− (default: True) If true, then words longer than width will be broken in order to ensure that no lines are longer than width. If it is false, long words will not be broken, and some lines may be longer than width.
+- break_on_hyphens− (default: True) If true, wrapping will occur preferably on whitespaces and right after hyphens in compound words, as it is customary in English. If false, only whitespaces will be considered as potentially good places for
+line breaks.
+
+
+
+## The shorten() Function
+
+
+The shorten() function collapse and truncate the given text to fit in the given width. The text first has its whitespace collapsed. If it then fits in the *width*, it is returned as is. Otherwise, as many words as possible are joined and then the placeholder is appended −
+
+
+### Example
+
+
+```python
+import textwrap
+
+python_desc = """Python is a general-purpose interpreted, interactive, object-oriented, and high-level programming language. It was created by Guido van Rossum during 1985- 1990. Like Perl, Python source code is also available under the GNU General Public License (GPL). This tutorial gives enough understanding on Python programming language."""
+
+my_wrap = textwrap.TextWrapper(width = 40)
+
+short_text = textwrap.shorten(text = python_desc, width=150)
+print('\n\n' + my_wrap.fill(text = short_text))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Python is a general-purpose interpreted,
+interactive, object-oriented,and high
+level programming language. It was 
+created by Guido van Rossum [...]
+```
+
+
+## The pprint Module
+
+
+Thepprintmodule in Python's standard library enables aesthetically good looking appearance of Python data structures. The name pprint stands for pretty printer. Any data structure that can be correctly parsed by Python interpreter is elegantly formatted.
+
+
+The formatted expression is kept in one line as far as possible, but breaks into multiple lines if the length exceeds the width parameter of formatting. One unique feature of pprint output is that the dictionaries are automatically sorted before the display representation is formatted.
+
+
+### PrettyPrinter Class
+
+
+The pprint module contains definition ofPrettyPrinterclass. Its constructor takes following
+format −
+
+
+### Syntax
+
+
+```python
+pprint.PrettyPrinter(indent, width, depth, stream, compact)
+```
+
+
+### Parameters
+
+
+
+- indent− defines indentation added on each recursive level. Default is 1.
+- width− by default is 80. Desired output is restricted by this value. If the length is greater than width, it is broken in multiple lines.
+- depth− controls number of levels to be printed.
+- stream− is by default std.out − the default output device. It can take any stream object such as file.
+- compact− id set to False by default. If true, only the data adjustable within width will be displayed.
+
+
+
+The PrettyPrinter class defines following methods −
+
+
+### pprint() method
+
+
+The pprint() method prints the formatted representation of PrettyPrinter object.
+
+
+### pformat() method
+
+
+The pformat() method returns the formatted representation of object, based on parameters to the constructor.
+
+
+### Example
+
+
+The following example demonstrates a simple use of PrettyPrinter class −
+
+
+```python
+import pprint
+students={"Dilip":["English", "Maths", "Science"],"Raju":{"English":50,"Maths":60, "Science":70},"Kalpana":(50,60,70)}
+pp=pprint.PrettyPrinter()
+print ("normal print output")
+print (students)
+print ("----")
+print ("pprint output")
+pp.pprint(students)
+```
+
+
+The output shows normal as well as pretty print display −
+
+
+```python
+normal print output
+{'Dilip': ['English', 'Maths', 'Science'], 'Raju': {'English': 50, 'Maths': 60, 'Science': 70}, 'Kalpana': (50, 60, 70)}
+----
+pprint output
+{'Dilip': ['English', 'Maths', 'Science'],
+ 'Kalpana': (50, 60, 70),
+ 'Raju': {'English': 50, 'Maths': 60, 'Science': 70}}
+```
+
+
+Thepprintmodule also defines convenience functions pprint() and pformat() corresponding to PrettyPrinter methods. The example below uses pprint() function.
+
+
+```python
+from pprint import pprint
+students={"Dilip":["English", "Maths", "Science"],
+   "Raju":{"English":50,"Maths":60, "Science":70},
+      "Kalpana":(50,60,70)}
+print ("normal print output")
+print (students)
+print ("----")
+print ("pprint output")
+pprint (students)
+```
+
+
+### Example Using pformat() Method
+
+
+The next example uses pformat() method as well as pformat() function. To use pformat() method, PrettyPrinter object is first set up. In both cases, the formatted representation is displayed using normal print() function.
+
+
+```python
+import pprint
+students={"Dilip":["English", "Maths", "Science"],
+   "Raju":{"English":50,"Maths":60, "Science":70},
+      "Kalpana":(50,60,70)}
+print ("using pformat method")
+pp=pprint.PrettyPrinter()
+string=pp.pformat(students)
+print (string)
+print ('------')
+print ("using pformat function")
+string=pprint.pformat(students)
+print (string)
+```
+
+
+Here is the output of the above code −
+
+
+```python
+using pformat method
+{'Dilip': ['English', 'Maths', 'Science'],
+ 'Kalpana': (50, 60, 70),
+ 'Raju': {'English': 50, 'Maths': 60, 'Science': 70}}
+------
+using pformat function
+{'Dilip': ['English', 'Maths', 'Science'],
+ 'Kalpana': (50, 60, 70),
+ 'Raju': {'English': 50, 'Maths': 60, 'Science': 70}}
+```
+
+
+Pretty printer can also be used with custom classes. Inside the class __repr__() method is overridden. The __repr__() method is called when repr() function is used. It is the official string representation of Python object. When we use object as parameter to print() function it prints return value of repr() function.
+
+
+### Example
+
+
+In this example, the __repr__() method returns the string representation of player object −
+
+
+```python
+import pprint
+class player:
+   def __init__(self, name, formats=[], runs=[]):
+      self.name=name
+      self.formats=formats
+      self.runs=runs
+   def __repr__(self):
+      dct={}
+      dct[self.name]=dict(zip(self.formats,self.runs))
+      return (repr(dct))
+
+l1=['Tests','ODI','T20']
+l2=[[140, 45, 39],[15,122,36,67, 100, 49],[78,44, 12, 0, 23, 75]]
+p1=player("virat",l1,l2)
+pp=pprint.PrettyPrinter()
+pp.pprint(p1)
+```
+
+
+Theoutputof above code is −
+
+
+```python
+{'virat': {'Tests': [140, 45, 39], 'ODI': [15, 122, 36, 67, 100, 49],
+'T20': [78, 44, 12, 0, 23, 75]}}
+```
+

@@ -1,0 +1,230 @@
+---
+title: "PYTHON - Synchronizing Threads"
+description: "Learn PYTHON - Synchronizing Threads with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1790
+group: "Python Multithreading"
+seoTitle: "PYTHON - Synchronizing Threads — CodesCompiler PYTHON Guide"
+permalink: "python-synchronizing-threads"
+---
+
+
+# Python - Synchronizing Threads
+
+
+
+
+In Python, when multiple threads are working concurrently with shared resources, it's important to synchronize their access to maintain data integrity and program correctness. Synchronizing threads in python can be achieved using various synchronization primitives provided by thethreadingmodule, such as locks, conditions, semaphores, and barriers to control access to shared resources and coordinate the execution of multiple threads.
+
+
+In this tutorial, we'll learn about various synchronization primitives provided by Python'sthreadingmodule.
+
+
+## Thread Synchronization using Locks
+
+
+The lock object in the Python's threading module provide the simplest synchronization primitive. They allow threads to acquire and release locks around critical sections of code, ensuring that only one thread can execute the protected code at a time.
+
+
+A new lock is created by calling theLock()method, which returns a lock object. The lock can be acquired using theacquire(blocking)method, which force the threads to run synchronously. The optional blocking parameter enables you to control whether the thread waits to acquire the lock and released using therelease()method.
+
+
+### Example
+
+
+The following example demonstrates how to use locks (the threading.Lock() method) to synchronize threads in Python, ensuring that multiple threads access shared resources safely and correctly.
+
+
+```python
+import threading
+
+counter = 10
+
+def increment(theLock, N):
+   global counter
+   for i in range(N):
+      theLock.acquire()
+      counter += 1
+      theLock.release()
+
+lock = threading.Lock()
+t1 = threading.Thread(target=increment, args=[lock, 2])
+t2 = threading.Thread(target=increment, args=[lock, 10])
+t3 = threading.Thread(target=increment, args=[lock, 4])
+
+t1.start()
+t2.start()
+t3.start()
+
+# Wait for all threads to complete
+for thread in (t1, t2, t3):
+   thread.join()
+
+print("All threads have completed")
+print("The Final Counter Value:", counter)
+```
+
+
+### Output
+
+
+When the above code is executed, it produces the following output −
+
+
+```python
+All threads have completed
+The Final Counter Value: 26
+```
+
+
+## Condition Objects for Synchronizing Python Threads
+
+
+Condition variables enable threads to wait until notified by another thread. They are useful for providingcommunication between the threads. Thewait()method is used to block a thread until it is notified by another thread throughnotify()ornotify_all().
+
+
+### Example
+
+
+This example demonstrates how Condition objects can synchronize threads using thenotify()andwait()methods.
+
+
+```python
+import threading
+
+counter = 0  
+
+# Consumer function
+def consumer(cv):
+   global counter
+   with cv:
+      print("Consumer is waiting")
+      cv.wait()  # Wait until notified by increment
+      print("Consumer has been notified. Current Counter value:", counter)
+
+# increment function
+def increment(cv, N):
+   global counter
+   with cv:
+      print("increment is producing items")
+      for i in range(1, N + 1):
+         counter += i  # Increment counter by i
+        
+      # Notify the consumer 
+      cv.notify()  
+      print("Increment has finished")
+
+# Create a Condition object
+cv = threading.Condition()
+
+# Create and start threads
+consumer_thread = threading.Thread(target=consumer, args=[cv])
+increment_thread = threading.Thread(target=increment, args=[cv, 5])
+
+consumer_thread.start()
+increment_thread.start()
+
+consumer_thread.join()
+increment_thread.join()
+
+print("The Final Counter Value:", counter)
+```
+
+
+### Output
+
+
+On executing the above program, it will produce the following output −
+
+
+```python
+Consumer is waiting
+increment is producing items
+Increment has finished
+Consumer has been notified. Current Counter value: 15
+The Final Counter Value: 15
+```
+
+
+## Synchronizing threads using the join() Method
+
+
+Thejoin()method in Python's threading module is used to wait until all threads have completed their execution. This is a straightforward way to synchronize the main thread with the completion of other threads.
+
+
+### Example
+
+
+This demonstrates synchronization of threads using thejoin()method to ensure that the main thread waits for all started threads to complete their work before proceeding.
+
+
+```python
+import threading
+import time
+
+class MyThread(threading.Thread):
+   def __init__(self, threadID, name, counter):
+      threading.Thread.__init__(self)
+      self.threadID = threadID
+      self.name = name
+      self.counter = counter
+      
+   def run(self):
+      print("Starting " + self.name)    
+      print_time(self.name, self.counter, 3)
+      
+def print_time(threadName, delay, counter):
+   while counter:
+      time.sleep(delay)
+      print("%s: %s" % (threadName, time.ctime(time.time())))
+      counter -= 1
+      
+threads = []
+
+# Create new threads
+thread1 = MyThread(1, "Thread-1", 1)
+thread2 = MyThread(2, "Thread-2", 2)
+
+# Start the new Threads
+thread1.start()
+thread2.start()
+
+# Join the threads
+thread1.join()
+thread2.join()
+
+print("Exiting Main Thread")
+```
+
+
+### Output
+
+
+On executing the above program, it will produce the following output −
+
+
+```python
+Starting Thread-1
+Starting Thread-2
+Thread-1: Mon Jul  1 16:05:14 2024
+Thread-2: Mon Jul  1 16:05:15 2024
+Thread-1: Mon Jul  1 16:05:15 2024
+Thread-1: Mon Jul  1 16:05:16 2024
+Thread-2: Mon Jul  1 16:05:17 2024
+Thread-2: Mon Jul  1 16:05:19 2024
+Exiting Main Thread
+```
+
+
+## Additional Synchronization Primitives
+
+
+In addition to the above synchronization primitives, Python's threading module offers: −
+
+
+
+- RLocks (Reentrant Locks):A variant of locks that allow a thread to acquire the same lock multiple times before releasing it, useful in recursive functions or nested function calls.
+- Semaphores:Similar to locks but with a counter. Threads can acquire the semaphore up to a certain limit defined during initialization. Semaphores are useful for limiting access to resources with a fixed capacity.
+- Barriers:Allows a fixed number of threads to synchronize at a barrier point and continue executing only when all threads have reached that point. Barriers are useful for coordinating a group of threads that must all complete a certain phase of execution before any of them can proceed further.
+
+

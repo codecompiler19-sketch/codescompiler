@@ -1,0 +1,217 @@
+---
+title: "JavaScript - TRPC Library"
+description: "Learn JavaScript - TRPC Library with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2030
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - TRPC Library — CodesCompiler JavaScript Guide"
+permalink: "javascript-trpc-library"
+---
+
+
+# JavaScript - tRPC Library
+
+
+
+
+tRPC is a type-safe TypeScript module that uses the RPC API design to process API requests and return results.
+
+
+RPC refers to Remote Procedure Call. The tRPC builds on RPC. RPC is an architectural method for creating REST-like APIs. RPC replaces the Fetch and REST APIs.
+
+
+## What is tRPC?
+
+
+As the name suggests, tRPC adds a type-safe layer to the RPC architectural framework. Traditionally, we used RESTful APIs. It supports GET, POST, PULL, and other request types. The tRPC has no request types.
+
+
+Every request to the tRPC back end passes through a query system, which returns a response based on the input and query.
+
+
+However, tRPC and react-query provide built-in functions for processing requests. Each request is processed the same. It depends on whether the API endpoint accepts an input, throws an output or modifies it.
+
+
+When using REST you create a main folder called /API and then route files within it. There is no requirement for a folder with a large number of files with tRPC. You will need a few built-in functions and a simple react-query system.
+
+
+You do not need to call retrieve() process the output and so forth. As you will see tRPC uses URLs to describe individual queries.
+
+
+## Need of tRPC
+
+
+The tRPC library makes RPC types secure. It implies that your client cannot send data that the server cannot accept. I cannot assign a string to a number-based property.
+
+
+If the client tries to do so you will immediately receive an error message stating "Invalid Type". If the data types do not match the IDE and browsers will generate problems.
+
+
+JavaScript applications rely significantly on type safety. So tRPC takes advantage of TypeScript. This reduces route building and back-end processes.
+
+
+The tRPC requires the Zod library. It helps tRPC construct the data schema for each route. A schema is an object that contains properties and their matching data types.
+
+
+For example, if an API route needed the user's information you would create an object on the back end and provide a datatype to each property with Zod.
+
+
+On the front end tRPC will ensure that the data provided by the user or API request matches the data types recorded at the back end. The tRPC makes use of this type of secure integration between the front and back ends.
+
+
+## Usage of tRPC
+
+
+It only takes a few seconds to launch an Express server and start creating tRPC routes and queries. Traditionally the client-side (front-end) and server-side (back-end) were separate. So we follows that separation for this example. Let's start by creating the client side with React and connecting it to the server side with Express via CORS.
+
+
+## Folder Structure
+
+
+First, set up a directory called tRPC Demo. Inside this directory, set up a new directory called trpclibrary to divide up the client and server sides, which will be executed as a library later.
+
+
+Your server (Express) and client (React) will be placed under the trpclibrary directory soon.
+
+
+Insert a package.json file into the tRPC Demo root directory with the following code to connect all of the folders and run the client and server-side with a single command.
+
+
+```javascript
+{
+  "name": "trpclibrary",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "concurrently \"wsrun --parallel start\""
+  },
+  "workspaces": [
+    "trpclibrary/*"
+  ],
+  "devDependencies": {
+    "concurrently": "^5.2.0",
+    "wsrun": "^5.2.0"
+  }
+}
+```
+
+
+After completing the package.json in the root directory, you can set up your Express server in the trpclibrary folder.
+
+
+Use cd `<folder_name>` to go to a folder in the terminal and execute instructions. In this case, you are at the root directory. So, cd.\trpclibrary can help you. You can also use the Visual Studio Code terminal.
+
+
+You can use the npx create-mf-app starter command to launch your server using a pre-defined template, saving you time.
+
+
+```javascript
+PS C: \Users\abc\Desktop\tRPC-Demo\trpclibrary> npx create-mf-app
+? Pick the name of your app: server-side
+? Project Type: API Server
+? Port number: 3005
+? Template: express
+Your 'server-side' project is ready to go.
+
+Next steps:
+
+ cd server-side
+ npm install
+ npm start
+```
+
+
+You may see errors indicating that you do not have Express or other libraries installed. Relax because you can install all of the necessary libraries.
+
+
+After we have created the server, let us create the client with React and the same command in the same trpclibrary directory.
+
+
+```javascript
+PS C: \Users\abc\Desktop\tRPC-Demo\trpclibrary> npx create-mf-app
+? Pick the name of your app: client-side
+? Project Type: Application
+? Port number: 3000
+? Framework: react
+? Language: typescript
+? CSS: Tailwind
+? Bundler: Webpack
+Your 'client-side' project is ready to go.
+
+Next steps:
+
+ cd client-side
+ npm install
+ npm start
+```
+
+
+Your React client-side is ready now. But you can feel overwhelmed by the number of errors related to modules and packages. So, let us start by downloading them.
+
+
+I am using yarn, and I encourage that you do the same. In the trpcDemo root directory, run the yarn command.
+
+
+Also use the cd.. command to exit the current directory and enter the outside one.
+
+
+The TS Configuration file may not exist on either the server or the client side. So I recommend using the npx tsc --init command in both directories.
+
+
+```javascript
+PS C: \Users\abc\Desktop\tRPC-Demo\trpclibrary> npx tsc --init         
+
+Created a new tsconfig.json with:                                                                                       
+                                TS 
+  target: es2016
+  module: commonjs
+  strict: true
+  esModuleInterop: true
+  skipLibCheck: true
+  forceConsistentCasingInFileNames: true
+
+You can learn more at https://aka.ms/tsconfig
+```
+
+
+You must now install tRPC, CORS, and Zod on your project's server side.
+
+
+```javascript
+PS C: \Users\abc\Desktop\tRPC-Demo\trpclibrary> yarn add @trpc/server zod cors 
+yarn add v1.22.22
+[1/4] Resolving packages...
+[2/4] Fetching packages...
+[3/4] Linking dependencies...
+"workspace-aggregator-b6ab05ef-dbef-4a8e-831d-1f0ec5e2a670 > server-side > ts-node@1
+warning pes/node@*".
+[4/4] Building fresh packages...
+success Saved lockfile.
+success Saved 3 new dependencies. info Direct dependencies
+info All dependencies
+@trpc/server@10.45.2
+cors@2.8.5
+zod@3.23.8
+Done in 15.15s.
+```
+
+
+Next, install @trpc/client, @trpc/react-query, @tanstack/react-query, @trpc/server, and Zod for the client. You will use the same "yarn add `<package_names>`" command.
+
+
+This time, I will not share the screenshot. Refer to the previous procedures and try to download them.
+
+
+We have finished most of the installations and setups. Your folder structure should look like this:
+
+
+```javascript
+tRPC-Demo
+ trpclibrary
+    client-side (React App Folder)
+    server-side (Express Server Folder)
+ package.json
+```
+

@@ -1,0 +1,374 @@
+---
+title: "PYTHON - Humanize Package"
+description: "Learn PYTHON - Humanize Package with clear explanation, code examples, and practical guide."
+category: "python"
+order: 2280
+group: "Python Advanced Concepts"
+seoTitle: "PYTHON - Humanize Package — CodesCompiler PYTHON Guide"
+permalink: "python-humanize-package"
+---
+
+
+# Python - Humanize Package
+
+
+
+
+TheHumanize Packagein Python is a library which is specifically designed to convert numerical values, dates, times and file sizes into formats that are more easily understood by humans.
+
+
+
+- This package is essential for creating user-friendly interfaces and readable reports where data interpretation needs to be quick and intuitive.
+- The primary goal of theHumanize Packageis to bridge the gap between raw data and human understanding.
+
+
+
+Although computers and databases excel at processing raw numerical data but these formats can be challenging for humans to quickly grasp. TheHumanize Packagetackles this issue by converting these data points into more intuitive and user-friendly formats.
+
+
+## Installation of Humanize Package
+
+
+To install the humanize package in Python we can use pip which is the standard package manager for Python. Following code has to be run in the command line or terminal to install Humanize Package −
+
+
+```python
+pip install humanize
+```
+
+
+After installation we can verify if humanize is installed correctly by running a Python interpreter and importing the Humanize package by using the below code −
+
+
+```python
+import humanize
+```
+
+
+## Different Utilities in Humanize Package
+
+
+TheHumanize packagein Python provides a wide range of utilities that transform data into human-readable formats by enhancing usability and comprehension. Let's explore the different utilities offered by humanize package in detail −
+
+
+## Number Utilities
+
+
+The Humanize package in Python provides several number of utilities that enhance the readability and comprehension of numerical data. These utilities convert numbers into formats that are more natural and understandable for humans.
+
+
+### Integer Formatting
+
+
+The Integer Formatting utility converts large integers into strings with commas for improved readability. Following is the example of applying the integer formatting utility −
+
+
+```python
+import humanize
+print(humanize.intcomma(123456))
+```
+
+
+Output
+
+
+```python
+123,456
+```
+
+
+### Integer Word Representation
+
+
+The Integer Word Representation converts large integers into their word representation for easier understanding, especially for very large numbers. Below is the example of it −
+
+
+```python
+import humanize
+print(humanize.intword(12345678908545944))
+```
+
+
+Output
+
+
+```python
+12.3 quadrillion
+```
+
+
+### Ordinal Numbers
+
+
+The Ordinal numbers converts integers into their ordinal form. For example 1 will be given as 1st and 2 as 2nd. Below is the example converting 3 as 3rd −
+
+
+```python
+import humanize
+print(humanize.ordinal(3))
+```
+
+
+Output
+
+
+```python
+3rd
+```
+
+
+### AP Numbers
+
+
+These converts the integers into their corresponding words. Here is the example of it −
+
+
+```python
+import humanize
+print(humanize.apnumber(9))
+```
+
+
+Output
+
+
+```python
+nine
+```
+
+
+### Fractional Units
+
+
+This converts decimal numbers into fractions for more intuitive representation. Following is the example of it −
+
+
+```python
+import humanize
+print(humanize.fractional(0.5))
+```
+
+
+Output
+
+
+```python
+1/2
+```
+
+
+## File Size Utilities
+
+
+As we already know that the humanize package in Python provides several utilities among themFile Size Utilitiesis one which is specifically designed to convert raw byte values into human-readable file sizes.
+
+
+These utilities help to make file sizes more understandable by converting them into formats that are easier to read and interpret. Here is a detailed overview of the file size utilities available in the humanize package −
+
+
+### File Size Formatting using naturalsize()
+
+
+Thenaturalsize()function is the primary utility for converting file sizes into human-readable formats. It automatically selects the appropriate units such as bytes, KB, MB, GB based on the size provided.
+
+
+Syntax
+
+
+Following is the syntax of the naturalsize() function of the File Size Utilities of Python Humanize package −
+
+
+```python
+humanize.naturalsize(value,binary,gnu,format)
+```
+
+
+Parameter
+
+
+Below are the parameters of the naturalsize() function of the python humanize package −
+
+
+
+- value:The file size in bytes.
+- binary:A boolean flag to indicate whether to use binary units. The default value is False.
+- gnu:A boolean flag to indicate whether to use GNU-style output and the default value is False.
+- format:A string to specify the output format. The default value is "%.1f".
+
+
+
+Example
+
+
+Following is the example of using the naturalsize() of humanize package in python −
+
+
+```python
+import humanize
+
+# Default usage with decimal units
+file_size = 123456789
+print(f"File size: {humanize.naturalsize(file_size)}")  
+
+# Using binary units
+print(f"File size (binary): {humanize.naturalsize(file_size, binary=True)}")  
+
+# Using GNU-style prefixes
+print(f"File size (GNU): {humanize.naturalsize(file_size, gnu=True)}")  
+
+# Custom format
+print(f"File size (custom format): {humanize.naturalsize(file_size, format='%.2f')}")
+```
+
+
+Following is the output −
+
+
+```python
+File size: 123.5 MB
+File size (binary): 117.7 MiB
+File size (GNU): 117.7M
+File size (custom format): 123.46 MB
+```
+
+
+## Date Time Utilities
+
+
+TheHumanize packagein Python provides several utilities for making dates and times more readable. These utilities transform date-time objects into formats that are easier for humans to understand such as relative times, natural dates and more. Following is the detailed overview of the date and time utilities offered by the humanize package −
+
+
+### Natural Time
+
+
+TheNatural Timeconverts date-time objects into human-readable relative times such as 2 days ago, 3 hours ago. Following is the example of natural time −
+
+
+```python
+import humanize
+from datetime import datetime, timedelta
+
+past_date = datetime.now() - timedelta(days=2)
+print(humanize.naturaltime(past_date))
+```
+
+
+Output
+
+
+```python
+2 days ago
+```
+
+
+### Natural Date
+
+
+TheNatural Dateformats specific dates into a readable format like "July 11, 2024". Here is the example −
+
+
+```python
+import humanize
+from datetime import datetime
+some_date = datetime(2022, 7, 8)
+print(humanize.naturaldate(some_date))
+```
+
+
+Output
+
+
+```python
+Jul 08 2022
+```
+
+
+### Natural Day
+
+
+TheNatural Dayprovides a human-readable representation of a date by considering today's date for contextual relevance, for example "today", "tomorrow", "yesterday" etc. Below is the example of it −
+
+
+```python
+import humanize
+from datetime import datetime, timedelta 
+today = datetime.now()
+tomorrow = today + timedelta(days=1)
+print(humanize.naturalday(today))      
+print(humanize.naturalday(tomorrow))
+```
+
+
+Output
+
+
+```python
+today
+tomorrow
+```
+
+
+### Precise Delta
+
+
+ThePrecise Deltaconverts time duration into human-readable strings by breaking down into days, hours, minutes and second. Here is the example of it −
+
+
+```python
+import humanize
+from datetime import timedelta
+duration = timedelta(days=2, hours=3, minutes=30)
+print(humanize.precisedelta(duration))
+```
+
+
+Output
+
+
+```python
+2 days, 3 hours and 30 minutes
+```
+
+
+## Duration Utilities
+
+
+The humanize package in Python also includes theDuration Utilitiesfor converting duration (time intervals) into human-readable formats. These utilities help to present duration in a way that is understandable and meaningful to users. Here's an overview of the duration utilities provided by humanize package −
+
+
+### Duration Formatting using naturaldelta()
+
+
+Thenaturaldelta()function converts time deltas (duration) into human-readable strings that describe the duration in a natural language format such as "2 hours ago", "3 days from now", etc.
+
+
+Following is the example of using the naturaldelta() function of the Python Humanize Package −
+
+
+```python
+from datetime import timedelta
+import humanize
+
+Using naturaldelta for time durations
+delta1 = timedelta(days=3, hours=5)
+print(f"Time duration: {humanize.naturaldelta(delta1)} from now")  
+
+Example of a future duration (delta2)
+delta2 = timedelta(hours=5)
+print(f"Future duration: in {humanize.naturaldelta(delta2)}") 
+
+Example of a past duration (delta3)
+delta3 = timedelta(days=1, hours=3)
+print(f"Past duration: {humanize.naturaldelta(delta3)} ago")
+```
+
+
+Output
+
+
+```python
+Time duration: 3 days from now
+Future duration: in 5 hours
+Past duration: a day ago
+```
+

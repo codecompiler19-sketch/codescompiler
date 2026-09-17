@@ -1,0 +1,433 @@
+---
+title: "SQL - UNION Operator"
+description: "Learn SQL - UNION Operator with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 570
+group: "SQL Operators and Clauses"
+seoTitle: "SQL - UNION Operator — CodesCompiler SQL Guide"
+permalink: "sql-unions-operator"
+---
+
+
+# SQL - UNION Operator
+
+
+Table of contentThe SQL UNION OperatorSQL UNION on Single FieldSQL UNION on Multiple FieldsSQL UNION with WHERE ClauseSQL UNION with ORDER BY ClauseSQL UNION with AliasesSQL UNION ALL OperatorSQL UNION ALL with WHERE ClauseImportant Points About SQL UNION Operator
+
+
+
+
+## The SQL UNION Operator
+
+
+TheSQL UNIONoperator is used to combine the result sets of two or moreSELECTqueries into a single result set. It removes duplicate rows by default, returning only distinct records.
+
+
+
+- EachSELECTquery must have the same number of columns.
+- Corresponding columns must have compatible data types.
+- The column names in the result set are taken from the firstSELECTstatement.
+- UseUNION ALLif you want to include duplicate rows.
+
+
+
+### Syntax
+
+
+The basic syntax of SQLUNIONoperator is as follows:
+
+
+```sql
+SELECT column1, column2, ...
+FROM table1
+WHERE condition
+
+UNION  
+
+SELECT column1, column2, ...
+FROM table2
+WHERE condition;
+```
+
+
+Here, the given condition could be any given expression based on your requirement.
+
+
+## SQL UNION on a Single Field
+
+
+TheSQL UNIONoperator can be applied to combine results of queries that return only a single column (single field) from one or more tables. This is useful when you want to create a combined list of unique values from different tables or queries.
+
+
+### Example
+
+
+Assume we have created a table with name CUSTOMERS in MySQL database using CREATE TABLE statement as shown below:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),       
+   PRIMARY KEY (ID)
+);
+```
+
+
+Following query inserts values into this table using the INSERT statement:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00),
+(2, 'Khilan', 25, 'Delhi', 1500.00),
+(3, 'Kaushik', 23, 'Kota', 2000.00),
+(4, 'Chaitali', 25, 'Mumbai', 6500.00),
+(5, 'Hardik', 27, 'Bhopal', 8500.00),
+(6, 'Komal', 22, 'Hyderabad', 4500.00),
+(7, 'Muffy', 24, 'Indore', 10000.00);
+```
+
+
+The CUSTOMERS table is as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+Now, creating the second table ORDERS using CREATE TABLE statement as shown below:
+
+
+```sql
+CREATE TABLE ORDERS (
+   OID INT NOT NULL,
+   DATE DATETIME NOT NULL,
+   CUSTOMER_ID INT NOT NULL,
+   AMOUNT INT NOT NULL,      
+   PRIMARY KEY (OID)
+);
+```
+
+
+Following query inserts values into this table using the INSERT statement:
+
+
+```sql
+INSERT INTO ORDERS VALUES
+(102, '2009-10-08 00:00:00', 3, 3000),
+(100, '2009-10-08 00:00:00', 3, 1500),
+(101, '2009-11-20 00:00:00', 2, 1560),
+(103, '2008-05-20 00:00:00', 4, 2060);
+```
+
+
+The ORDERS table is as follows:
+
+
+OIDDATECUSTOMER_IDAMOUNT1022009-10-08 00:00:0033000.001002009-10-08 00:00:0031500.001012009-11-20 00:00:0021560.001032008-05-20 00:00:0042060.00
+
+
+Using the following query, let us combine the SALARY and AMOUNT columns from CUSTOMERS and ORDERS table (since these columns have similar datatypes):
+
+
+```sql
+SELECT SALARY FROM CUSTOMERS UNION SELECT AMOUNT FROM ORDERS;
+```
+
+
+Output of the above query is as follows:
+
+
+SALARY2000.001500.006500.008500.004500.0010000.003000.001560.002060.00
+
+
+## SQL UNION on Multiple Fields
+
+
+TheSQL UNIONoperator can also be used to combine results from multiple columns (multiple fields) across different tables or queries. This is useful when you want to create a consolidated dataset containing several columns from multiple sources.
+
+
+When usingUNIONon multiple fields, the number and order of the columns in eachSELECTstatement must match. Additionally, the data types of the corresponding columns must be compatible for theUNIONto work correctly. If the data types are not compatible, you can use conversion functions such asCASTorCONVERTto align them.
+
+
+### Example
+
+
+As the CUSTOMERS and ORDERS tables are not union-compatible individually, let us first join these two tables into a bigger table using Left Join and Right Join. The joined tables retrieved will have same number of columns with same datatypes, becoming union compatible. Now, these tables are combined using UNION query shown below:
+
+
+```sql
+SELECT  ID, NAME, AMOUNT, DATE FROM CUSTOMERS
+LEFT JOIN ORDERS ON CUSTOMERS.ID = ORDERS.CUSTOMER_ID
+UNION
+SELECT  ID, NAME, AMOUNT, DATE FROM CUSTOMERS
+RIGHT JOIN ORDERS ON CUSTOMERS.ID = ORDERS.CUSTOMER_ID;
+```
+
+
+This would produce the following result:
+
+
+IDNAMEAMOUNTDATE1RameshNULLNULL2Khilan15602009-11-20 00:00:003Kaushik30002009-10-08 00:00:003Kaushik15002009-10-08 00:00:004Chaitali20602008-05-20 00:00:005HardikNULLNULL6KomalNULLNULL7MuffyNULLNULL
+
+
+## SQL UNION with WHERE Clause
+
+
+TheSQL UNIONoperator can be used withWHEREclauses in the individualSELECTstatements to filter rows before combining the results. Each query can have its ownWHEREcondition, allowing you to select specific subsets of data from multiple tables.
+
+
+### Syntax
+
+
+Following is the syntax for using the SQL WHERE clause with UNION operator:
+
+
+```sql
+SELECT column1, column2, ...
+FROM table1
+WHERE condition1
+UNION
+SELECT column1, column2, ...
+FROM table2
+WHERE condition2;
+```
+
+
+### Example
+
+
+In the following query, we are retrieving the id's of the customers where id is greater than 5 and 2 from the 'CUSTOMERS' and 'ORDERS' tables respectively:
+
+
+```sql
+SELECT ID, SALARY FROM CUSTOMERS WHERE ID > 5
+UNION
+SELECT CUSTOMER_ID, AMOUNT FROM ORDERS WHERE CUSTOMER_ID > 2;
+```
+
+
+Following is the result produced:
+
+
+IDSALARY64500.00710000.0033000.0031500.0042060.00
+
+
+## SQL UNION with ORDER BY Clause
+
+
+When we use UNION with ORDER BY clause, it combines the sorted result sets of all SELECT statements and produces a single sorted result set.
+
+
+TheSQL UNIONoperator can be combined with anORDER BYclause to sort the final result set after merging multipleSELECTqueries. TheORDER BYapplies to the combined results, not to individual queries.
+
+
+### Syntax
+
+
+Following is the syntax for using the SQL ORDER BY clause with UNION operator:
+
+
+```sql
+SELECT column1, column2, ...
+FROM table1
+WHERE condition1
+UNION
+SELECT column1, column2, ...
+FROM table2
+WHERE condition2
+ORDER BY column1 [ASC|DESC], column2 [ASC|DESC];
+```
+
+
+### Example
+
+
+In here, we are retrieving the id's of the customers where id is greater than 5 and 2 from the 'CUSTOMERS' and 'ORDERS' tables respectively, sorted low to high from their salary:
+
+
+```sql
+SELECT ID, SALARY FROM CUSTOMERS WHERE ID > 5
+UNION
+SELECT CUSTOMER_ID, AMOUNT FROM ORDERS WHERE CUSTOMER_ID > 2
+ORDER BY SALARY;
+```
+
+
+Following is the output of the above query:
+
+
+IDSALARY31500.0042060.0033000.0064500.00710000.00
+
+
+The ORDER BY clause in a UNION statement applies to the entire result set, not just the last SELECT statement.
+
+
+## UNION with Aliases
+
+
+When using the SQLUNIONoperator, you can assign column aliases in the firstSELECTstatement to give names to the columns in the combined result set. These aliases apply to the entire union, while any aliases in the subsequentSELECTstatements are ignored.
+
+
+Aliases provide temporary names for columns or tables, which is helpful when working with multiple tables or columns that have similar names.
+
+
+It is important to remember that the final column names in the union are determined by the firstSELECTstatement. To ensure consistent naming across all queries, use column aliases in the firstSELECTwhen combining results with UNION.
+
+
+### Syntax
+
+
+Following is the syntax for using Union with Aliases:
+
+
+```sql
+SELECT column1 AS alias1, column2 AS alias2, ...
+FROM table1
+WHERE condition1
+UNION
+SELECT column1 AS alias3, column2, ...
+FROM table2
+WHERE condition2;
+```
+
+
+### Example
+
+
+The following query retrieves all the id's from both tables, along with an indication of whether each id is of the customer or the order made by them:
+
+
+```sql
+SELECT ID, 'customer' AS type FROM CUSTOMERS
+UNION
+SELECT OID, 'order' AS type FROM ORDERS;
+```
+
+
+Following is the output produced:
+
+
+IDtype1customer2customer3customer4customer5customer6customer7customer100order101order102order103order
+
+
+## SQL UNION ALL Operator
+
+
+TheSQL UNION ALLoperator is similar to theUNIONoperator, but unlike UNION, it does not remove duplicate rows. It combines the results of two or moreSELECTstatements and returnsallrows, including duplicates.
+
+
+This makesUNION ALLfaster thanUNIONbecause it does not need to check for or remove duplicate rows.
+
+
+
+- EachSELECTmust have the same number of columns.
+- Data types of the columns must be compatible.
+- UseUNION ALLwhen you want to include all occurrences of rows, including duplicates.
+
+
+
+### Syntax
+
+
+Following is the syntax of SQL UNION ALL operator:
+
+
+```sql
+SELECT column1, column2, ...
+FROM table1
+UNION ALL
+SELECT column1, column2, ...
+FROM table2;
+```
+
+
+### Example
+
+
+In the following example, we retrieve theSALARYvalues from theCUSTOMERStable and theAMOUNTvalues from theORDERStable, including duplicate values:
+
+
+```sql
+SELECT SALARY FROM CUSTOMERS
+UNION ALL
+SELECT AMOUNT FROM ORDERS;
+```
+
+
+This query returns a combined list of salaries and order amounts, including repeated values:
+
+
+SALARY2000.001500.002000.006500.008500.004500.0010000.001500.001560.003000.002060.00
+
+
+## SQL UNION ALL with WHERE Clause
+
+
+You can use theUNION ALLoperator in combination with individualWHEREclauses for eachSELECTstatement to retrieve and merge specific subsets of data without removing duplicates.
+
+
+### Syntax
+
+
+Following is the syntax of SQL UNION ALL operator with the WHERE clause:
+
+
+```sql
+SELECT column1, column2, ...
+FROM table1
+WHERE condition1
+UNION ALL
+SELECT column1, column2, ...
+FROM table2
+WHERE condition2;
+```
+
+
+### Example
+
+
+The following query retrieves all entries with ID greater than 5 from theCUSTOMERStable and all entries with CUSTOMER_ID greater than 2 from theORDERStable, preserving duplicates:
+
+
+```sql
+SELECT ID, SALARY FROM CUSTOMERS WHERE ID > 5
+UNION ALL
+SELECT CUSTOMER_ID, AMOUNT FROM ORDERS WHERE CUSTOMER_ID > 2;
+```
+
+
+This would produce the following result, showing all matching rows including duplicates:
+
+
+IDSALARY64500.00710000.0031500.0033000.0042060.00
+
+
+## Important Points About SQL UNION Operator
+
+
+While using theUNIONorUNION ALLoperators, it is important to keep a few points in mind to avoid errors:
+
+
+
+- Column Count Must Match:Each SELECT in a UNION must return the same number of columns.
+- Data Types Should Be Compatible:The columns in each SELECT should have similar or compatible data types to avoid casting or errors.
+- ORDER BY Goes at the End:If used, theORDER BYclause should be placed at the end of the final SELECT statement, as it applies to the full result set.
+- Aliases Matter:Column aliases defined in thefirst SELECTstatement are used as the column names in the final result set. Later SELECT aliases are ignored.
+- Use UNION ALL for Performance:If you don't need to remove duplicates, preferUNION ALLfor better query performance, especially with large datasets.
+- Nulls Are Considered Duplicates:When using UNION, rows containing NULLs are also considered for duplicate elimination.
+- Functions and Expressions:You can use functions or expressions in SELECT queries within UNION, but be mindful of how they affect data types and column compatibility.
+
+
+
+There are two other operators which are like the UNION operator.
+
+
+
+- SQLINTERSECT Operator: This is used to combine two SELECT statements, but returns rows only from the first SELECT statement that are identical to a row in the second SELECT statement.
+- SQLEXCEPT Operator: This combines two SELECT statements and returns rows from the first SELECT statement that are not returned by the second SELECT statement.
+
+

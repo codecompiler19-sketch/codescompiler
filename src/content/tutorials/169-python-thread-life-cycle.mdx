@@ -1,0 +1,169 @@
+---
+title: "PYTHON - Thread Life Cycle"
+description: "Learn PYTHON - Thread Life Cycle with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1690
+group: "Python Multithreading"
+seoTitle: "PYTHON - Thread Life Cycle — CodesCompiler PYTHON Guide"
+permalink: "python-thread-life-cycle"
+---
+
+
+# Python - Thread Life cycle
+
+
+
+
+A thread object goes through different stages during its life cycle. When a new thread object is created, it must be started, which calls the run() method of thread class. This method contains the logic of the process to be performed by the new thread. The thread completes its task as the run() method is over, and the newly created thread merges with the main thread.
+
+
+While a thread is running, it may be paused either for a predefined duration or it may be asked to pause till a certain event occurs. The thread resumes after the specified interval or the process is over.
+
+
+## States of a Thread Life Cycle in Python
+
+
+Following are the stages of the Python Thread life cycle −
+
+
+
+- Creating a Thread− To create a new thread in Python, you typically use theThreadclass from thethreadingmodule.
+- Starting a Thread− Once a thread object is created, it must be started by calling its start() method. This initiates the thread's activity and invokes its run() method in a separate thread.
+- Paused/Blocked State− Threads can be paused or blocked for various reasons, such as waiting for I/O operations to complete or another thread to perform a task. This is typically managed by calling its join() method. This blocks the calling thread until the thread being joined terminates.
+- Synchronizing Threads− Synchronization ensures orderly execution and shared resource management among threads. This can be done by using synchronization primitives like locks, semaphores, or condition variables.
+- Termination− A thread terminates when its run() method completes execution, either by finishing its task or encountering an exception.
+
+
+
+### Example: Python Thread Life Cycle Demonstration
+
+
+This example demonstrates the thread life cycle in Python by showing thread creation, starting, execution, and synchronization with the main thread.
+
+
+```python
+import threading
+
+def func(x):
+   print('Current Thread Details:', threading.current_thread())
+   for n in range(x):
+      print('{} Running'.format(threading.current_thread().name), n)
+   print('Internal Thread Finished...')
+
+# Create thread objects
+t1 = threading.Thread(target=func, args=(2,))
+t2 = threading.Thread(target=func, args=(3,))
+
+# Start the threads
+print('Thread State: CREATED')
+t1.start()
+t2.start()
+
+# Wait for threads to complete
+t1.join()
+t2.join()
+print('Threads State: FINISHED')
+
+# Simulate main thread work
+for i in range(3):
+   print('Main Thread Running', i)
+
+print("Main Thread Finished...")
+```
+
+
+Output
+
+
+When the above code is executed, it produces the following output −
+
+
+```python
+Thread State: CREATED
+Current Thread Details: <Thread(Thread-1 (func), started 140051032258112)>
+Thread-1 (func) Running 0
+Thread-1 (func) Running 1
+Internal Thread Finished...
+Current Thread Details: <Thread(Thread-2 (func), started 140051023865408)>
+Thread-2 (func) Running 0
+Thread-2 (func) Running 1
+Thread-2 (func) Running 2
+Internal Thread Finished...
+Threads State: FINISHED
+Main Thread Running 0
+Main Thread Running 1
+Main Thread Running 2
+Main Thread Finished...
+```
+
+
+### Example: Using a Synchronization Primitive
+
+
+Here is another example demonstrates the thread life cycle in Python, including creation, starting, running, and termination states, along with synchronization using a semaphore.
+
+
+```python
+import threading
+import time
+
+# Create a semaphore 
+semaphore = threading.Semaphore(2)
+
+def worker():
+   with semaphore:
+      print('{} has started working'.format(threading.current_thread().name))
+      time.sleep(2)
+      print('{} has finished working'.format(threading.current_thread().name))
+
+# Create a list to keep track of thread objects
+threads = []
+
+# Create and start 5 threads
+for i in range(5):
+   t = threading.Thread(target=worker, name='Thread-{}'.format(i+1))
+   threads.append(t)
+   print('{} has been created'.format(t.name))
+   t.start()
+
+# Wait for all threads to complete
+for t in threads:
+   t.join()
+   print('{} has terminated'.format(t.name))
+
+print('Threads State: All are FINISHED')
+print("Main Thread Finished...")
+```
+
+
+Output
+
+
+When the above code is executed, it produces the following output −
+
+
+```python
+Thread-1 has been created
+Thread-1 has started working
+Thread-2 has been created
+Thread-2 has started working
+Thread-3 has been created
+Thread-4 has been created
+Thread-5 has been created
+Thread-1 has finished working
+Thread-2 has finished working
+Thread-3 has started working
+Thread-1 has terminated
+Thread-2 has terminated
+Thread-4 has started working
+Thread-3 has finished working
+Thread-5 has started working
+Thread-3 has terminated
+Thread-4 has finished working
+Thread-4 has terminated
+Thread-5 has finished working
+Thread-5 has terminated
+Threads State: All are FINISHED
+Main Thread Finished...
+```
+

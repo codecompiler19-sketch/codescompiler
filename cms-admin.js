@@ -369,7 +369,7 @@ function renderHTML(tutorials) {
   const defaultNavItems = [
     {label:'HTML', href:'/tutorial/html-introduction'},
     {label:'CSS', href:'/tutorial/css-introduction'},
-    {label:'JavaScript', href:'/tutorial/js-introduction'},
+    {label:'JavaScript', href:'/tutorial/javascript-introduction'},
     {label:'About', href:'/about'},
     {label:'Contact', href:'/contact'},
   ];

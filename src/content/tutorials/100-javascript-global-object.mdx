@@ -1,0 +1,232 @@
+---
+title: "JavaScript - Global Object"
+description: "Learn JavaScript - Global Object with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1000
+group: "Object Oriented JavaScript"
+seoTitle: "JavaScript - Global Object — CodesCompiler JavaScript Guide"
+permalink: "javascript-global-object"
+---
+
+
+# JavaScript - Global Object
+
+
+
+
+## Global Objects in JavaScript
+
+
+The JavaScriptglobal objectallows you to access the variables, functions, objects, etc., defined in the global scope and available everywhere in the code.
+
+
+In the browser, a global object is named as 'window', and in Node.js, the global object is named 'global'. However, the global object could have different names in different run-time environments.
+
+
+The 'globalThis' has been introduced in ECMAScript 2020, which works with most browsers and run time environments as a global object.
+
+
+### Syntax
+
+
+We can follow the syntax below to use the global object to access the variables available everywhere in the JavaScript code.
+
+
+```javascript
+var a = 10;
+let b = window.a; // Accessing the global variable in the browser
+```
+
+
+In the above syntax, variable 'a' is a global variable, as it is defined in the global scope using the var keyword.
+
+
+## Examples
+
+
+### Example: Accessing global variables through the global object
+
+
+In the below example, we have defined the 'name' variable in the global scope using the var keyword. After that, we access the name variable using the window (global) object.
+
+
+```html
+<html>
+<body>
+   <div id = "output">The company name is: </div>
+   <script>
+      var name = "Tutorialspoint";
+      let company = window.name;
+      document.getElementById("output").innerHTML += company;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The company name is: Tutorialspoint
+```
+
+
+Similarly, if you define the function in the global scope, you can access it anywhere using the global object.
+
+
+### Example: Accessing the global function through the global object
+
+
+In the below example, we have defined the sum() function in the global scope. After that, we have defined the obj object containing the num1, num2, and sum properties. The sum properties are initialized with a value returned by the sum() function. We used the' window' object to invoke a global sum() function.
+
+
+So, you can access the global variable and instances anywhere in the JavaScript code using the global object.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      function sum(a, b) {
+         return a + b;
+      }
+        
+      const obj = {
+         num1: 10,
+         num2: 20,
+         sum: window.sum(10, 20),
+      }
+        
+      document.getElementById("output").innerHTML += "The object is: " + JSON.stringify(obj);
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The object is: {"num1":10,"num2":20,"sum":30}
+```
+
+
+If you want to make value globally accessible from the local scope, you can directly add value to the 'window' object as a property.
+
+
+Let's look at the example below.
+
+
+### Example: Making variable globally accessible from the function scope
+
+
+In the example below, we add the 'addition' property to the window object in the sum() function's body to make it available everywhere.
+
+
+After that, we access the 'addition' property using the 'window' object.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+    
+      function sum(a, b) {
+         window.addition = a + b;
+      }
+      sum(20, 30);
+      document.getElementById("output").innerHTML = "The sum is: " + window.addition;
+
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The sum is: 50
+```
+
+
+You can also access the global variables without using the global object like a window, as the script is assigned under the object by the JavaScript scripting engine by default. However, you can use the global object to make a variable or expression global.
+
+
+The JavaScriptglobal objectitself contains various methods like isNaN(), decodeURI(), etc. You can access them using the global object-like window in the browser and global in Node.js.
+
+
+### Example: Accessing pre-defined methods of the global object
+
+
+The JavaScript isNaN() method of the window object is used to check whether the argument passed is a number or not. If the argument is a number, it returns false. Otherwise, it returns true.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      let isNumer = window.isNaN("Hello");
+      document.getElementById("output").innerHTML = "Is hello not a number? " + isNumer;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Is hello not a number? true
+```
+
+
+## Using the JavaScript Global Object for Polyfills
+
+
+You can use the JavaScript global object to check whether your browser supports a particular feature. You can show a related message if the user's browser does not support a particular feature.
+
+
+Look at the example below to check whether the user's browser supports the promises.
+
+
+### Example
+
+
+In the below code, we check whether the 'promise' property exists in the window object. If yes, promises are supported by the browser, and you can execute the promise. Otherwise, you can print the message that your browser doesn't support promise.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      const output = document.getElementById("output");
+      if (window.Promise) {
+         output.innerHTML += "Your browser supports promises";
+      } else {
+         output.innerHTML += "Your browser doesn't support promises";
+      }
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Your browser supports promises
+```
+
+
+The JavaScript global object only stores the truly global variables. You shouldn't store the variable in the global object that is not global. Otherwise, it can create conflicts in your project.
+

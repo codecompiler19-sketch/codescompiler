@@ -1,0 +1,320 @@
+---
+title: "JavaScript - Date Validation"
+description: "Learn JavaScript - Date Validation with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2120
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Date Validation — CodesCompiler JavaScript Guide"
+permalink: "javascript-date-validiation"
+---
+
+
+# JavaScript - Date Validation
+
+
+
+
+In JavaScript, we can validate the date. A date should be in a particular format or it should be in a particular range and should be valid.
+
+
+## Why we validate a  date ?
+
+
+Lets understand why we need to validate the date in JavaScript by example. Suppose, you have developed an application that takes some information in the submission form from the user. Users can make a mistake. What if they enter the wrong date in the input box? In such a case, developers need to validate the date.
+
+
+Here, we have three different ways to validate the date in JavaScript.
+
+
+
+- Using getTime() method
+- Using the isFinite() Method
+- Using Moment.js isValid() method
+- Check the Date Format using Regular Expression
+
+
+
+## Using getTime() method
+
+
+In JavaScript, we can create the new date by creating the object of the Date() class. We can apply different methods of Date class to the date object. We will use the getTime() method of date class in this approach to validate the date.
+
+
+We will check for the type of the variable. If the variables are of Date object type, we will check whether the getTime() method for the date variable returns a number or not. The getTime() method returns the total number of milliseconds since 1, Jan 1970. If it doesnt return the number, it means the date is not valid.
+
+
+### Syntax
+
+
+Users can follow the below syntax to validate the date using the getTime() method.
+
+
+```javascript
+if ( Object.prototype.toString.call(date) === "[object Date]" ) {
+
+   if ( !isNaN(date.getTime()) ) {
+
+      // date is valid
+
+   } else {
+
+      //Date is not valid
+
+    }
+
+} else {  
+
+   // date is not valid
+
+}
+```
+
+
+### Parameters
+
+
+Users can follow the below parameters to validate the date using the getTime() method.
+
+
+
+- date:It is a date variable and always required.
+
+
+
+### Example
+
+
+In the below example, we have created one valid and another invalid date. We have created the isValid() function to validate the date. In the function, we are checking whether the object type is a Date or not. Also, we are checking whether the getTime() method returns a number or not using the isNaN() method.
+
+
+```html
+<html>
+
+<head>
+
+</head>
+
+<body>
+
+##  check whether a JavaScript date is valid. 
+
+<h4> Validate the date object using <i>getTime() </i> method. </h4>
+
+p id = "validate" 
+
+<script>
+
+let validate = document.getElementById("validate");
+
+function isValid(date) {
+
+   if ( Object.prototype.toString.call(date) === "[object Date]" ) {
+
+      if ( !isNaN(date.getTime()) ) {
+
+         validate.innerHTML += date + " is valid. <br/> ";
+
+      } else {
+
+         validate.innerHTML += date + " is not valid. <br/> ";
+
+      }
+
+   } else {
+
+      validate.innerHTML += date + " is not valid. <br/> ";
+
+   }
+
+}
+
+let date = new Date("No date");
+
+isValid(date);
+
+date = new Date();
+
+isValid(date);
+
+</script>
+
+</body>
+
+</html>
+```
+
+
+## Using the isFinite() Method
+
+
+In JavaScript, theinstanceof operatorallows us to check whether the variable is an instance of the Date() class or not. We will check for that first, and if it is, we will check if the getTime() method returns the finite number of milliseconds.
+
+
+If the date variable is not the Date object type or the getTime() method returns a different value rather than a number, it returns false.
+
+
+### Syntax
+
+
+Users can follow the below syntax to validate date using the isFinite() method
+
+
+```javascript
+if ( date instanceof Date && isFinite(date) ) {
+
+   // date is valid
+
+} else {
+
+   // date is not valid
+
+}
+```
+
+
+### Example
+
+
+In the following example, we have used the instanceof operator to check weather the type of variable is date or not in the if-else condition. Also, we have used the isFinite() method to check the number of milliseconds is finite. We have tested for various dates, and users can see the result in the output of the below example.
+
+
+```html
+<html>
+
+<head>
+
+</head>
+
+<body>
+
+##  check whether a JavaScript date is valid. 
+
+<h4> Validate the date object using <i>isFinite() </i> method. </h4>
+
+
+
+p id = "validate" 
+
+<script>
+
+let validate = document.getElementById("validate");
+
+function isValid(date) {
+
+   if ( date instanceof Date && isFinite(date) ) {
+
+      validate.innerHTML += date + " is valid. <br/> ";
+
+   } else {
+
+      validate.innerHTML += date + " is not valid. <br/> ";
+
+   }
+
+}
+
+let date = new Date("No date");
+
+isValid(date);
+
+date = new Date();
+
+isValid(date);
+
+</script>
+
+</body>
+
+</html>
+```
+
+
+## Check the Date Format using Regular Expression
+
+
+In JavaScript, we can validate the date format using the regular expression. We can check whether the date is in the format ofYYYY-MM-DDor not. We can use thetest()method of the regular expression to check the date format.
+
+
+### Syntax
+
+
+Users can use the below syntax to validate the date format using the regular expression.
+
+
+```javascript
+let date = "2022-07-32";
+
+let reg = /^\d{4}-\d{2}-\d{2}$/;
+
+let valid = reg.test(date);
+```
+
+
+### Example
+
+
+In the following example, we have created the regular expression to check the date format. We have created the two dates, one is in the correct format, and another is in the wrong format. We are using the test() method of the regular expression to validate the date format.
+
+
+```html
+<html>
+
+<head>
+
+</head>
+
+<body>
+
+##  check whether a JavaScript date is valid. 
+
+<h4> Validate the date object using <i>Regular Expression </i> method. </h4>
+
+p id = "validate" 
+
+<script>
+
+let validate = document.getElementById("validate");
+
+let date = "2022-07-32";
+
+let reg = /^\d{4}-\d{2}-\d{2}$/;
+
+let valid = reg.test(date);
+
+if (valid) {
+
+   validate.innerHTML += date + " is valid. <br/> ";
+
+} else {
+
+   validate.innerHTML += date + " is not valid. <br/> ";
+
+}
+
+date = "2022-07-31";
+
+valid = reg.test(date);
+
+if (valid) {
+
+   validate.innerHTML += date + " is valid. <br/> ";
+
+} else {
+
+   validate.innerHTML += date + " is not valid. <br/> ";
+
+}
+
+</script>
+
+</body>
+
+</html>
+```
+
+
+## Conclusion
+
+
+In this tutorial, we have learned how to validate the date in JavaScript. We have used different methods to validate the date. We have used the getTime() method, isFinite() method, Moment Js isValid() method, and regular expression to validate the date. We have also seen the example of each method to validate the date.
+

@@ -1,0 +1,231 @@
+---
+title: "SQL - NOT NULL"
+description: "Learn SQL - NOT NULL with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 550
+group: "SQL Operators and Clauses"
+seoTitle: "SQL - NOT NULL — CodesCompiler SQL Guide"
+permalink: "sql-not-null-constraint"
+---
+
+
+# SQL - NOT NULL Constraint
+
+
+Table of contentThe SQL NOT NULL ConstraintSQL NOT NULL on CREATE TABLESQL NOT NULL on ALTER TableAdvantages of SQL NOT NULL Constraint
+
+
+
+
+## The SQL NOT NULL Constraint
+
+
+TheNOT NULLconstraint in SQL ensures that a column cannot contain NULL (empty) values. It inserting or updating a row with NULL in that column.
+
+
+By default, if no value is provided for a column when inserting data, SQL assigns it aNULLvalue. However, when theNOT NULLconstraint is applied, a value must be provided for that column during insertion. If aNULLvalue is attempted, SQL will return aconstraint violationerror.
+
+
+## SQL NOT NULL on CREATE TABLE
+
+
+When defining a table, you can use theNOT NULLconstraint in theCREATE TABLEstatement to ensure that specific columns cannot storeNULLvalues. This guarantees that each row will always have a valid value for those columns.
+
+
+### Syntax
+
+
+Following is the basic syntax ofNOT NULLconstraint while creating a table:
+
+
+```sql
+CREATE TABLE table_name (
+   column1 datatype NOT NULL,
+   column2 datatype,
+   column3 datatype NOT NULL,
+   ...
+);
+```
+
+
+### Example
+
+
+First of all, let us create a table namedCUSTOMERSusing the following query:
+
+
+```sql
+CREATE TABLE CUSTOMERS(
+   ID INT             NOT NULL,
+   NAME VARCHAR (20)  NOT NULL,
+   AGE  INT           NOT NULL,
+   ADDRESS CHAR (25) ,
+   SALARY DECIMAL (20, 2),       
+   PRIMARY KEY (ID)
+);
+```
+
+
+Let's insert some values into the above created table using the following INSERT query:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES
+(1, 'Ramesh', '32', 'Ahmedabad', 2000),
+(2, 'Khilan', '25', 'Delhi', 1500),
+(3, 'Kaushik', '23', 'Kota', 2500),
+(4, 'Chaitali', '25', 'Mumbai', 6500),
+(5, 'Hardik','27', 'Bhopal', 8500),
+(6, 'Komal', '22', 'Hyderabad', 9000),
+(7, 'Muffy', '24', 'Indore', 5500);
+```
+
+
+The table will be created as shown below:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+### Verification
+
+
+To display the structure of a table in MySQL database, we use theDESCRIBEcommand. The DESCRIBE command provides a summary of the columns, data types, and various attributes of the table as shown below:
+
+
+```sql
+DESCRIBE CUSTOMERS;
+```
+
+
+As we can see in the output below, the table shows information about the column names of the table, their types, and whether they are nullable or not.
+
+
+FieldTypeNullKeyDefaultExtraIDintNOPRINULLNAMEvarchar(20)NONULLAGEintNONULLADDRESSchar(25)YESNULLSALARYdecimal(20,2)YESNULL
+
+
+## SQL NOT NULL on ALTER Table
+
+
+You can add or remove theNOT NULLconstraint on an existing table using theALTER TABLEstatement. Adding this constraint ensures that a column cannot storeNULLvalues, while removing it allows NULL values in that column.
+
+
+### Syntax
+
+
+Following is the SQL syntax toadd the NOT NULLconstraint to the existing column in MySQL database:
+
+
+```sql
+ALTER TABLE table_name
+MODIFY COLUMN column_name datatype NOT NULL;
+```
+
+
+Following is the syntax toremove a not nullconstraint from the table in MySQL database:
+
+
+```sql
+ALTER TABLE table_name
+MODIFY COLUMN column_name datatype NULL;
+```
+
+
+Where,
+
+
+
+- table_nameis the name of the table that contains the columns we want to modify.
+- column_nameis the name of the column that has the NOT NULL constraint you want to remove.
+- datatypeis the data type of the column.
+
+
+
+### Example: Add NOT NULL constraint
+
+
+Assume the previously created tableCUSTOMERSand let us modify theADDRESScolumn ensuring that it does not allow null values using the following query:
+
+
+```sql
+ALTER TABLE CUSTOMERS MODIFY COLUMN ADDRESS CHAR(25) NOT NULL;
+```
+
+
+When we execute the above query, the output is obtained as follows:
+
+
+```sql
+Query OK, 0 rows affected (0.08 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+```
+
+
+### Verification
+
+
+We can display the structure of the CUSTOMERS table using the following query:
+
+
+```sql
+DESCRIBE CUSTOMERS;
+```
+
+
+As we can see in the output below, the column "ADDRESS" is modified, which means NULL values areNOTallowed in this column.
+
+
+FieldTypeNullKeyDefaultExtraIDintNOPRINULLNAMEvarchar(20)NONULLAGEintNONULLADDRESSchar(25)NONULLSALARYdecimal(20,2)YESNULL
+
+
+### Example: Remove NOT NULL constraint
+
+
+Following is the query to modify the constraint on theNAMEcolumn of the CUSTOMERS table to NULL in MySQL database:
+
+
+```sql
+ALTER TABLE CUSTOMERS MODIFY COLUMN NAME VARCHAR(20) NULL;
+```
+
+
+On executing the above query, the output is displayed as follows:
+
+
+```sql
+Query OK, 0 rows affected (0.10 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+```
+
+
+### Verification
+
+
+Now, let us display the structure of the table named "CUSTOMERS" using the following query:
+
+
+```sql
+DESCRIBE CUSTOMERS;
+```
+
+
+As we can see in the table below, the column "NAME" is modified to nullable, which means NULL values are allowed in this column.
+
+
+FieldTypeNullKeyDefaultExtraIDintNOPRINULLNAMEvarchar(20)YESNULLAGEintNONULLADDRESSchar(25)YESNULLSALARYdecimal(20,2)YESNULL
+
+
+## Advantages of SQL NOT NULL Constraint
+
+
+TheNOT NULLconstraint helps to keep a database accurate by making sure certain fields are never left empty, and it also makes it easier to follow the rules set for the data:
+
+
+
+- It makes sure that important fields in a table are never left empty, so every record has the required information.
+- It helps to keep data accurate and meaningful by not allowing missing values in key columns.
+- It makes queries more consistent because you don't have to deal with unexpected empty values in important fields.
+- It lets you set rules in the database so certain fields must always have data, without depending only on checks in the application.
+- It can make searches and indexing faster in some databases because fields marked as NOT NULL may be stored and processed more effectively.
+
+

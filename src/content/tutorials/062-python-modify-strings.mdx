@@ -1,0 +1,139 @@
+---
+title: "PYTHON - Modify Strings"
+description: "Learn PYTHON - Modify Strings with clear explanation, code examples, and practical guide."
+category: "python"
+order: 620
+group: "Python Strings"
+seoTitle: "PYTHON - Modify Strings — CodesCompiler PYTHON Guide"
+permalink: "python-modify-strings"
+---
+
+
+# Python - Modify Strings
+
+
+
+
+String modificationrefers to the process of changing the characters of a string. If we talk about modifying a string in Python, what we are talking about is creating a new string that is a variation of the original one.
+
+
+InPython, astring(object ofstrclass) is of immutable type. Here, immutable refers to an object thatcannotbe modified in place once it's created in memory. Unlike alist, we cannot overwrite any character in the sequence, nor can we insert or append characters to it directly. If we need to modify a string, we will use certain string methods that return anewstring object. However, the original string remains unchanged.
+
+
+We can use any of the following tricks as a workaround to modify a string.
+
+
+## Converting a String to a List
+
+
+Both strings and lists in Python are sequence types, they are interconvertible. Thus, we can cast a string to a list, modify the list using methods likeinsert(),append(), orremove()and then convert the list back to a string to obtain a modified version.
+
+
+Suppose, we have a string variables1withWORDas its value and we are required to convert it into a list. For this operation, we can use the list() built-in function and insert a characterLat index 3. Then, we can concatenate all the characters using join() method of str class.
+
+
+### Example
+
+
+The below example practically illustrates how to convert a string into a list.
+
+
+```python
+s1="WORD"
+print ("original string:", s1)
+l1=list(s1)
+
+l1.insert(3,"L")
+
+print (l1)
+
+s1=''.join(l1)
+print ("Modified string:", s1)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+original string: WORD
+['W', 'O', 'R', 'L', 'D']
+Modified string: WORLD
+```
+
+
+## Using the Array Module
+
+
+To modify a string, construct anarray objectusing the Python standard library namedarray module. It will create an array of Unicode type from a stringvariable.
+
+
+### Example
+
+
+In the below example, we are using array module to modify the specified string.
+
+
+```python
+import array as ar
+
+# initializing a string
+s1="WORD"
+print ("original string:", s1)
+
+# converting it to an array
+sar=ar.array('u', s1)
+
+# inserting an element
+sar.insert(3,"L")
+
+# getting back the modified string
+s1=sar.tounicode()
+print ("Modified string:", s1)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+original string: WORD
+Modified string: WORLD
+```
+
+
+## Using the StringIO Class
+
+
+Python's io module defines the classes to handle streams. The StringIO class represents a text stream using an in-memory text buffer. A StringIO object obtained from a string behaves like a File object. Hence we can perform read/write operations on it. The getvalue() method of StringIO class returns a string.
+
+
+### Example
+
+
+Let us use the above discussed principle in the following program to modify a string.
+
+
+```python
+import io
+
+s1="WORD"
+print ("original string:", s1)
+
+sio=io.StringIO(s1)
+sio.seek(3)
+sio.write("LD")
+s1=sio.getvalue()
+
+print ("Modified string:", s1)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+original string: WORD
+Modified string: WORLD
+```
+

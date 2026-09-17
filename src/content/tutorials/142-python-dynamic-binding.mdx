@@ -1,0 +1,125 @@
+---
+title: "PYTHON - Dynamic Binding"
+description: "Learn PYTHON - Dynamic Binding with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1420
+group: "Object Oriented Programming"
+seoTitle: "PYTHON - Dynamic Binding — CodesCompiler PYTHON Guide"
+permalink: "python-dynamic-binding"
+---
+
+
+# Python - Dynamic Binding
+
+
+
+
+Inobject-oriented programming, the concept ofdynamic bindingis closely related to polymorphism. In Python, dynamic binding is the process of resolving a method or attribute at runtime, instead of at compile time.
+
+
+According to thepolymorphismfeature, different objects respond differently to the same method call based on their implementations. This behavior is achieved throughmethod overriding, where a subclass provides its implementation of amethoddefined in its superclass.
+
+
+ThePython interpreterdetermines which is the appropriate method orattributeto invoke based on the object's type or class hierarchy at runtime. This means that the specific method or attribute to be called is determined dynamically, based on the actual type of the object.
+
+
+### Example
+
+
+The following example illustrates dynamic binding in Python −
+
+
+```python
+class shape:
+   def draw(self):
+      print ("draw method")
+      return
+
+class circle(shape):
+   def draw(self):
+      print ("Draw a circle")
+      return
+
+class rectangle(shape):
+   def draw(self):
+      print ("Draw a rectangle")
+      return
+
+shapes = [circle(), rectangle()]
+for shp in shapes:
+   shp.draw()
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Draw a circle
+Draw a rectangle
+```
+
+
+As you can see, the draw() method is bound dynamically to the corresponding implementation based on the object's type. This is how dynamic binding is implemented in Python.
+
+
+## Duck Typing
+
+
+Another concept closely related to dynamic binding isduck typing. Whether an object is suitable for a particular use is determined by the presence of certain methods or attributes, rather than its type. This allows for greater flexibility and code reuse in Python.
+
+
+Duck typingis an important feature of dynamic typing languages likePython(Perl,Ruby,PHP,Javascript, etc.) that focuses on an object's behavior rather than its specific type. According to the "duck typing" concept, "If it walks like a duck and quacks like a duck, then it must be a duck."
+
+
+Duck typingallows objects of different types to be used interchangeably as long as they have the required methods or attributes. The goal is to promote flexibility and code reuse. It is a broader concept that emphasizes object behavior and interface rather than formal types.
+
+
+Here is an example of duck typing −
+
+
+```python
+class circle:
+   def draw(self):
+      print ("Draw a circle")
+      return
+
+class rectangle:
+   def draw(self):
+      print ("Draw a rectangle")
+      return
+
+class area:
+   def area(self):
+      print ("calculate area")
+      return
+
+def duck_function(obj):
+   obj.draw()
+
+objects = [circle(), rectangle(), area()]
+for obj in objects:
+   duck_function(obj)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Draw a circle
+Draw a rectangle
+Traceback (most recent call last):
+ File "C:\Python311\hello.py", line 21, in <module>
+  duck_function(obj)
+ File "C:\Python311\hello.py", line 17, in duck_function
+ obj.draw()
+AttributeError: 'area' object has no attribute 'draw'
+```
+
+
+The most important idea behindduck typingis that theduck_function()doesn't care about the specific types of objects it receives. It only requires the objects to have adraw()method. If an object "quacks like a duck" by having the necessary behavior, it is treated as a "duck" for the purpose of invoking thedraw()method.
+
+
+Thus, in duck typing, the focus is on the object's behavior rather than its explicit type, allowing different types of objects to be used interchangeably as long as they exhibit the required behavior.
+

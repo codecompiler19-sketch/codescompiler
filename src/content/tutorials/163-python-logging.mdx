@@ -1,0 +1,204 @@
+---
+title: "PYTHON - Logging"
+description: "Learn PYTHON - Logging with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1630
+group: "Python Errors & Exceptions"
+seoTitle: "PYTHON - Logging — CodesCompiler PYTHON Guide"
+permalink: "python-logging"
+---
+
+
+# Python - Logging
+
+
+
+
+## Logging in Python
+
+
+Logging is the process of recording messages during the execution of a program to provide runtime information that can be useful for monitoring, debugging, and auditing.
+
+
+In Python, logging is achieved through the built-inloggingmodule, which provides a flexible framework for generating log messages.
+
+
+## Benefits of Logging
+
+
+Following are the benefits of using logging in Python −
+
+
+
+- Debugging −Helps identify and diagnose issues by capturing relevant information during program execution.
+- Monitoring −Provides insights into the application's behavior and performance.
+- Auditing −Keeps a record of important events and actions for security purposes.
+- Troubleshooting −Facilitates tracking of program flow and variable values to understand unexpected behavior.
+
+
+
+## Components of Python Logging
+
+
+Python logging consists of several key components that work together to manage and output log messages effectively −
+
+
+
+- Logger −It is the main entry point that you use to emit log messages. Each logger instance is named and can be configured independently.
+- Handler −It determines where log messages are sent. Handlers send log messages to different destinations such as the console, files, sockets, etc.
+- Formatter −It specifies the layout of log messages. Formatters define the structure of log records by specifying which information to include (e.g., timestamp, log level, message).
+- Logger Level −It defines the severity level of log messages. Messages below this level are ignored. Common levels include DEBUG, INFO, WARNING, ERROR, and CRITICAL.
+- Filter −It is the optional components that provide finer control over which log records are processed and emitted by a handler.
+
+
+
+## Logging Levels
+
+
+Logging levels in Python define the severity of log messages, allowing developers to categorize and filter messages based on their importance. Each logging level has a specific purpose and helps in understanding the significance of the logged information −
+
+
+
+- DEBUG −Detailed information, typically useful only for debugging purposes. These messages are used to trace the flow of the program and are usually not seen in production environments.
+- INFO −Confirmation that things are working as expected. These messages provide general information about the progress of the application.
+- WARNING −Indicates potential issues that do not prevent the program from running but might require attention. These messages can be used to alert developers about unexpected situations.
+- ERROR −Indicates a more serious problem that prevents a specific function or operation from completing successfully. These messages highlight errors that need immediate attention but do not necessarily terminate the application.
+- CRITICAL −The most severe level, indicating a critical error that may lead to the termination of the program. These messages are reserved for critical failures that require immediate intervention.
+
+
+
+### Usage
+
+
+Following are the usage scenarios for each logging level in Python applications −
+
+
+Choosing the Right Level −Selecting the appropriate logging level ensures that log messages provide relevant information without cluttering the logs.
+
+
+Setting Levels −Loggers, handlers, and specific log messages can be configured with different levels to control which messages are recorded and where they are outputted.
+
+
+Hierarchy −Logging levels are hierarchical, meaning that setting a level on a logger also affects the handlers and log messages associated with it.
+
+
+## Basic Logging Example
+
+
+Following is a basic logging example in Python to demonstrate its usage and functionality −
+
+
+```python
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+
+# Example usage
+def calculate_sum(a, b):
+   logging.debug(f"Calculating sum of {a} and {b}")
+   result = a + b
+   logging.info(f"Sum calculated successfully: {result}")
+   return result
+
+# Main program
+if __name__ == "__main__":
+   logging.info("Starting the program")
+   result = calculate_sum(10, 20)
+   logging.info("Program completed")
+```
+
+
+### Output
+
+
+Following is the output of the above code −
+
+
+```python
+2024-06-19 09:00:06,774 - INFO - Starting the program
+2024-06-19 09:00:06,774 - DEBUG - Calculating sum of 10 and 20
+2024-06-19 09:00:06,774 - INFO - Sum calculated successfully: 30
+2024-06-19 09:00:06,775 - INFO - Program completed
+```
+
+
+## Configuring Logging
+
+
+Configuring logging in Python refers to setting up various components such as loggers, handlers, and formatters to control how and where log messages are stored and displayed. This configuration allows developers to customize logging behavior according to their application's requirements and deployment environment.
+
+
+### Example
+
+
+In the following example, the getLogger() function retrieves or creates a named logger. Loggers are organized hierarchically based on their names. Then, handlers like "StreamHandler" (console handler) are created to define where log messages go. They can be configured with specific log levels and formatters.
+
+
+The formatters specify the layout of log records, determining how log messages appear when printed or stored −
+
+
+```python
+import logging
+
+# Create logger
+logger = logging.getLogger('my_app')
+logger.setLevel(logging.DEBUG)  # Set global log level
+
+# Create console handler and set level to debug
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.DEBUG)
+
+# Create formatter
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+console_handler.setFormatter(formatter)
+
+# Add console handler to logger
+logger.addHandler(console_handler)
+
+# Example usage
+logger.debug('This is a debug message')
+logger.info('This is an info message')
+logger.warning('This is a warning message')
+logger.error('This is an error message')
+logger.critical('This is a critical message')
+```
+
+
+The result produced is as shown below −
+
+
+```python
+2024-06-19 09:05:20,852 - my_app - DEBUG - This is a debug message
+2024-06-19 09:05:20,852 - my_app - INFO - This is an info message
+2024-06-19 09:05:20,852 - my_app - WARNING - This is a warning message
+2024-06-19 09:05:20,852 - my_app - ERROR - This is an error message
+2024-06-19 09:05:20,852 - my_app - CRITICAL - This is a critical message
+```
+
+
+## Logging Handlers
+
+
+Logging handlers in Python determine where and how log messages are processed and outputted. They play an important role in directing log messages to specific destinations such as the console, files, email, databases, or even remote servers.
+
+
+Each handler can be configured independently to control the format, log level, and other properties of the messages it processes.
+
+
+### Types of Logging Handlers
+
+
+Following are the various types of logging handlers in Python −
+
+
+
+- StreamHandler −Sends log messages to streams such as sys.stdout or sys.stderr. Useful for displaying log messages in the console or command line interface.
+- FileHandler −Writes log messages to a specified file on the file system. Useful for persistent logging and archiving of log data.
+- RotatingFileHandler −Similar to FileHandler but automatically rotates log files based on size or time intervals. Helps manage log file sizes and prevent them from growing too large.
+- SMTPHandler −Sends log messages as emails to designated recipients via SMTP. Useful for alerting administrators or developers about critical issues.
+- SysLogHandler −Sends log messages to the system log on Unix-like systems (e.g., syslog). Allows integration with system-wide logging facilities.
+- MemoryHandler −Buffers log messages in memory and sends them to a target handler after reaching a certain buffer size or timeout. Useful for batching and managing bursts of log messages.
+- HTTPHandler −Sends log messages to a web server via HTTP or HTTPS. Enables logging messages to a remote server or logging service.
+
+

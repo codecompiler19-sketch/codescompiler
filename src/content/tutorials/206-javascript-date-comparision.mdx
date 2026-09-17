@@ -1,0 +1,236 @@
+---
+title: "JavaScript - Date Comparison"
+description: "Learn JavaScript - Date Comparison with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2060
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Date Comparison — CodesCompiler JavaScript Guide"
+permalink: "javascript-date-comparision"
+---
+
+
+# JavaScript - Date Comparison
+
+
+
+
+We often need to compare dates in any programming language. In JavaScript the date is one of the data types, and it is common for developers to work with dates while building applications or, writing certain date based programs.
+
+
+Let's understand the need to compare the date with a real-life example. Most of you are using the internet data, and the company sends a message like "2 days left for your data pack validity". Also, users can see the same notification in the application of network provides. The number of days left is calculated using the date comparison, if we find the difference between the current date and the expiry date we will get the result.
+
+
+There are different ways to compare the date in JavaScript. We will discuss some of the methods to compare the date in JavaScript.
+
+
+
+- Using the getTime() method
+- Using the Moment.js diff() method
+
+
+
+## Using the getTime() method
+
+
+In JavaScript date is represented by the class namedDate. You can perform various operations on date objects using the methods of this class.
+
+
+To compare two date objects we can use the getTime() method. This method returns the total number of milliseconds from theThursday 1 January 1970 00:00:00(epoch time). We can invoke the getTime() method on the both date values and compare the results.
+
+
+### Syntax
+
+
+Following code snippet demonstrates date comparison using thegetTime()method −
+
+
+```javascript
+let date1 = new Date();
+
+let date2 = new Date(2012, 11, 21);
+
+// comparing the dates
+
+if ( date1.getTime() < date2.getTime() ) {
+
+   // date 1 is behind the date2
+
+} else if ( date1 > date2 ) {
+
+   // date1 is further to date2
+
+} else {
+
+   // date1 and date2 is same
+
+}
+```
+
+
+### Example
+
+
+In the example below, we have created the two new date objects and compared the values (milliseconds) of these two dates since the epoch (,retrieved using the getTime() method) using the if-else statement. We can see the result of the comparison between various dates in the output.
+
+
+```html
+<html>
+
+<head>
+
+</head>
+
+<body>
+
+   <h4> compare two date by <i> using total milliseconds </i> of both dates. </h4>
+
+   p id = "output" 
+
+   <script>
+
+      let output0 = document.getElementById("output");
+
+      function compareDates( date1, date2 ) {
+
+         if ( date1.getTime() < date2.getTime() ) {
+
+            output0.innerHTML += date1 + " is behind the " + date2 + " <br/> ";
+
+         } else if ( date1 > date2 ) {
+
+            output0.innerHTML += date2 + " is behind the " + date1 + " <br/> ";
+
+         } else {
+
+            output0.innerHTML += date1 + " is same as " + date2 + " <br/> ";
+
+         }
+
+      }      
+
+      // calling the function for different expressions
+
+      output0.innerHTML += "<br/>";
+
+      let date = new Date();
+
+      let date0 = new Date(2012, 11, 21);
+
+      compareDates( date, date0 );
+
+      output0.innerHTML += "<br/>";
+
+      date0 = new Date();
+
+      compareDates( date, date0 );
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+## Using the Moment.js diff() method
+
+
+JavaScript contains various libraries; one of them isMoment.jswhich is also used to manage the date and time.
+
+
+This library has a method nameddiff(), which gives the difference between two dates in years, months, days, hours, minutes, seconds, milliseconds, etc. We can use the seconds to find the difference between the two dates.
+
+
+Note:Before using the Moment.js library, we need to add Moment.js library or just add CDN to the tag of the HTML code.
+
+
+### Syntax
+
+
+Following is the syntax of the moment.diff() method −
+
+
+```javascript
+diff( date, unit );
+```
+
+
+Where,
+
+
+
+- date:It is the date (object) which we need to compare with the current moment object.
+- unit:It is the unit in which we want to find the difference. It can be years, months, days, hours, minutes, seconds, milliseconds, etc.
+
+
+
+### Example
+
+
+In the example below, we have created the two date objects using themomentlibrary. We invoked thediff()method on these two objects, to compare them and render the message accordingly.
+
+
+```html
+<html>
+
+   <h4> compare two dates using<i> diff() </i> method of Moment.js. </h4>
+
+   p id = "output"    
+
+      let output = document.getElementById("output");
+
+      function compareDates(date1, date2) {
+
+         if ( date1.diff(date2, "seconds") < 0 ) {
+
+            output.innerHTML += date1.format('yy-MM-DD, HH:mm:ss') + " is behind the " + date2.format('yy-MM-DD, HH:mm:ss') + " <br/> ";
+
+         } else if ( date1.diff(date2, "seconds") > 0 ) {
+
+            output.innerHTML += date2.format('yy-MM-DD, HH:mm:ss') + " is behind the " + date1.format('yy-MM-DD, HH:mm:ss') + " <br/> ";
+
+         } else {
+
+            output.innerHTML += date1.format('yy-MM-DD, HH:mm:ss') + " is same as " + date2.format('yy-MM-DD, HH:mm:ss') + " <br/> ";
+
+        }
+
+      }      
+
+      // calling the function for different expressions
+
+      output.innerHTML += "<br/>";
+
+      let date1 = moment();
+
+      let date2 = moment("2024-11-21");
+
+      compareDates(date1, date2);
+
+      output.innerHTML += "<br/>";
+
+      date2 = moment();
+
+      compareDates(date1, date2);
+
+   </script>
+
+</html>
+```
+
+
+To run this program you need to include the following script in the code −
+
+
+```javascript
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>   
+
+<script >
+```
+
+
+## Conclusion
+
+
+We have used the default Date() class to compare the dates in the first section of the tutorial. Also, we have used the Moment.js library method to make a comparison. The moment makes it easy for the developer to play with the dates.
+

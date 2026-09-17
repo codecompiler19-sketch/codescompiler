@@ -1,0 +1,407 @@
+---
+title: "SQL - ANY, ALL Operators"
+description: "Learn SQL - ANY, ALL Operators with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 480
+group: "SQL Operators and Clauses"
+seoTitle: "SQL - ANY, ALL Operators — CodesCompiler SQL Guide"
+permalink: "sql-any-all-operator"
+---
+
+
+# SQL - ANY, ALL Operators
+
+
+Table of contentThe SQL ANY OperatorANY with '>' OperatorANY with '`<' OperatorANY with '`=`' OperatorThe SQL ALL OperatorALL with WHERE StatementALL with HAVING ClauseCombining ANY and ALL with Other SQL ClausesDifferences Between SQL ALL and ANY
+`
+
+
+
+TheSQL ANY and ALLoperators are used to perform a comparison between a single value and a range of values returned by the subquery.
+
+
+The ANY and ALL operators must be preceded by a standard comparison operator i.e. >, `>=`, `<, <=, `=`, <`>, `!=` and followed by a subquery.
+The main difference between ANY and ALL is that ANY returns true if any of the subquery values meet the condition whereas ALL returns true if all of the subquery values meet the condition.
+
+
+## The SQL ANY Operator
+
+
+The ANY operator is used to verify if any single record of a query satisfies the required condition.
+
+
+This operator returns a TRUE, if the given condition is satisfied for any of the values in the range. If none of the values in the specified range satisfy the given condition, this operator returns false. You can also use another query (subquery) along with this operator.
+
+
+### Syntax
+
+
+The basic syntax of the SQL - ANY operator is as follows:
+
+
+```sql
+Column_name operator ANY (subquery);
+```
+
+
+Where,
+
+
+
+- column_nameis the name of a column in the main query.
+- operatoris a comparison operator such as `=`, `<, `>, <=, `>=`, or `<>`.
+- subqueryis a SELECT statement that returns a single column of values.
+
+
+
+## ANY with '>' Operator
+
+
+Typically, the ANY operator is used to compare a value with a set of values returned by a subquery, in such cases we can use it with the>(greater than) operator to verify if a particular column value is greater than column value of any of the records returned by the sub query.
+
+
+### Example
+
+
+To understand it better let us consider the CUSTOMERS table which contains the personal details of customers including their name, age, address and salary etc. as shown below:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),       
+   PRIMARY KEY (ID)
+);
+```
+
+
+Now, insert values into this table using the INSERT statement as follows:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+(2, 'Khilan', 25, 'Delhi', 1500.00 ),
+(3, 'Kaushik', 23, 'Kota', 2000.00 ),
+(4, 'Chaitali', 25, 'Mumbai', 6500.00 ),
+(5, 'Hardik', 27, 'Bhopal', 8500.00 ),
+(6, 'Komal', 22, 'Hyderabad', 4500.00 ),
+(7, 'Muffy', 24, 'Indore', 10000.00 );
+```
+
+
+The table will be created as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+Now, let us list out the details of all the CUSTOMERS whose SALARY isgreater thanthe SALARY of any customer whose AGE is 32 i.e. Chaitali, Hardik, Komal and Muffy in this case:
+
+
+```sql
+SELECT * FROM CUSTOMERS 
+WHERE SALARY > ANY (SELECT SALARY FROM CUSTOMERS WHERE AGE = 32);
+```
+
+
+The result obtained is as follows:
+
+
+IDNAMEAGEADDRESSSALARY4Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## ANY with '`<' Operator
+`
+
+Similar to the '>' operator, we can use the'`<'(less than) operator along with ANY  to verify if a particular column value is less than column value of any of the records returned by the sub query.
+`
+
+### Example
+
+
+In here, we are finding the distinct/different age of customers having any salaryless thanthe average salary of all the customers from the CUSTOMERS table previously created:
+
+
+```sql
+SELECT DISTINCT AGE FROM CUSTOMERS 
+WHERE SALARY < ANY (SELECT AVG(SALARY) FROM CUSTOMERS);
+```
+
+
+We get the following output while executing the above query:
+
+
+AGE32252322
+
+
+## ANY with '`=`' Operator
+
+
+When we use the`=`(equal to) operator along with ANY, it verifies if a particular column value is equal to the column value of any of the records returned by the sub query.
+
+
+### Example
+
+
+In the query given below, we are retrieving the details of all the customers whose age isequal tothe age of any customer whose name starts with 'K':
+
+
+```sql
+SELECT * FROM CUSTOMERS 
+WHERE AGE = ANY (SELECT AGE FROM CUSTOMERS WHERE NAME LIKE 'K%');
+```
+
+
+The result produced is as follows:
+
+
+IDNAMEAGEADDRESSSALARY2Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.006Komal22Hyderabad4500.00
+
+
+## The SQL ALL Operator
+
+
+The SQL ALL operator returns all the records of the SELECT statement.
+
+
+
+- It returns TRUE if the given condition is satisfied for ALL the values in the range.
+- It always returns a Boolean value.
+- It is used with SELECT, WHERE and HAVING statements in SQL queries.
+- The data type of the values returned from a subquery must be the same as the outer query expression data type.
+
+
+
+### Syntax
+
+
+The basic syntax of the SQL ALL operator is as follows:
+
+
+```sql
+Column_name operator ALL (subquery);
+```
+
+
+Where,
+
+
+
+- column_name: is the name of a column in the main query.
+- operator: is a comparison operator such as `=`, `<, `>, <=, `>=`, or `<>`.
+- subquery: is a SELECT statement that returns a single column of values.
+
+
+
+## ALL with WHERE Statement
+
+
+When we use the ALL operator with a WHERE clause, it filters the results of the subquery based on the specified condition.
+
+
+The WHERE clause in SQL is used to filter rows from a query based on specific conditions. It operates on individual rows in the table, and it allows you to specify conditions that must be met by each row in the data returned by the query.
+
+
+### Example
+
+
+If we consider the CUSTOMERS table created above,the following query returns the details of all the customers whose salary isnot equal tothe salary of any customer whose age is 25:
+
+
+```sql
+SELECT * FROM CUSTOMERS 
+WHERE SALARY <> 
+ALL (SELECT SALARY FROM CUSTOMERS WHERE AGE = 25);
+```
+
+
+The output of the above query is as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.003Kaushik23Kota2000.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## ALL with HAVING Clause
+
+
+In SQL, theALLoperator can also be used with the HAVING clause to filter the results of a GROUP BY query based on a condition that applies to all the aggregated values in the group.
+
+
+### Example
+
+
+The following SQL query is used to obtain the details of all the customers whose salary isless thanthe average salary:
+
+
+```sql
+SELECT NAME, AGE, ADDRESS, SALARY FROM CUSTOMERS 
+GROUP BY AGE, SALARY 
+HAVING SALARY < ALL (SELECT AVG(SALARY) FROM CUSTOMERS);
+```
+
+
+Output of the above query is as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.006Komal22Hyderabad4500.00
+
+
+## Combining ANY and ALL with Other SQL Clauses
+
+
+The SQLANYandALLoperators can be combined with other SQL clauses likeJOIN,GROUP BY, andORDER BYto create more advanced queries. This allows you to filter, group, and sort data based on conditions that involve subqueries.
+
+
+### Using ANY and ALL with JOIN
+
+
+You can combineANYorALLwithJOINto compare columns from joined tables against a set of values returned by a subquery.
+
+
+Syntax
+
+
+Following is the basic syntax to combine ANY and ALL operators with JOIN clause in SQL:
+
+
+```sql
+SELECT c1.column1, c1.column2, c2.column3  
+FROM table1 c1  
+JOIN table2 c2 ON c1.id <> c2.id  
+WHERE c1.column_name operator ANY|ALL (subquery);
+```
+
+
+Example
+
+
+This query lists customers whose salary is higher than at least one customer living in Delhi. It joins each such customer with Delhi customers to show the comparison address:
+
+
+```sql
+SELECT DISTINCT c1.NAME, c1.SALARY, c2.ADDRESS AS ComparedAddress
+FROM CUSTOMERS c1
+JOIN CUSTOMERS c2 ON c1.ID <> c2.ID AND c2.ADDRESS = 'Delhi'
+WHERE c1.SALARY > ANY (SELECT SALARY FROM CUSTOMERS WHERE ADDRESS = 'Delhi');
+```
+
+
+We get the output as shown below:
+
+
+
+| NAME | SALARY | ComparedAddress |
+| --- | --- | --- |
+| Ramesh | 2000.00 | Delhi |
+| Kaushik | 2000.00 | Delhi |
+| Chaitali | 6500.00 | Delhi |
+| Hardik | 8500.00 | Delhi |
+| Komal | 4500.00 | Delhi |
+| Muffy | 10000.00 | Delhi |
+
+
+
+### Using ANY and ALL with GROUP BY
+
+
+TheANYandALLoperators can be used in conjunction withGROUP BYandHAVINGclauses to filter groups based on aggregated values that meet specific conditions.
+
+
+Syntax
+
+
+Following is the basic syntax to combine ANY and ALL operators with GROUP BY clause in SQL:
+
+
+```sql
+SELECT column1, AGGREGATE_FUNCTION(column2)  
+FROM table  
+GROUP BY column1  
+HAVING AGGREGATE_FUNCTION(column2) operator ANY|ALL (subquery);
+```
+
+
+Example
+
+
+In this example, we find the age groups where the count of customers is greater thananyaverage count of customers grouped by age:
+
+
+```sql
+SELECT AGE, COUNT(*) AS CountCustomers
+FROM CUSTOMERS
+GROUP BY AGE
+HAVING COUNT(*) > (
+    SELECT AVG(age_count) FROM (
+        SELECT COUNT(*) AS age_count
+        FROM CUSTOMERS
+        GROUP BY AGE
+    ) AS subquery
+);
+```
+
+
+Following is the output obtained:
+
+
+
+| AGE | CountCustomers |
+| --- | --- |
+| 25 | 2 |
+
+
+
+### Using ANY and ALL with ORDER BY
+
+
+AlthoughANYandALLoperators themselves do not directly affect ordering, you can use them within theWHEREclause of a query that also contains anORDER BYclause to filter rows before sorting.
+
+
+Syntax
+
+
+Following is the basic syntax to combine ANY and ALL operators with ORDER BY clause in SQL:
+
+
+```sql
+SELECT * FROM table  
+WHERE column_name operator ANY|ALL (subquery)  
+ORDER BY column_name [ASC|DESC];
+```
+
+
+Example
+
+
+Here, we list all customers whose salary is less thananysalary of customers older than 30, sorted by salary in descending order:
+
+
+```sql
+SELECT * FROM CUSTOMERS  
+WHERE SALARY < ANY (SELECT SALARY FROM CUSTOMERS WHERE AGE > 30)  
+ORDER BY SALARY DESC;
+```
+
+
+We get the output as shown below:
+
+
+
+| ID | NAME | AGE | ADDRESS | SALARY |
+| --- | --- | --- | --- | --- |
+| 2 | Khilan | 25 | Delhi | 1500.00 |
+
+
+
+## Differences Between SQL ALL and ANY
+
+
+Following are some common differences between the ALL and ANY operators in SQL:
+
+
+FeatureSQL ANYSQL ALLPurposeReturns TRUE ifanyvalue in the subquery satisfies the condition.Returns TRUE only ifallvalues in the subquery satisfy the condition.ComparisonChecks if the main query value compares true against at least one subquery value.Checks if the main query value compares true against every subquery value.Boolean ResultTRUE if at least one comparison is true.TRUE only if every comparison is true.Use CasesUsed when you want to verify if a value matches at least one item in a list.Used when you want to ensure a value meets a condition for the entire list.Examplesalary > ANY (SELECT salary FROM employees WHERE dept`=`'Sales')salary > ALL (SELECT salary FROM employees WHERE dept`=`'Sales')
+

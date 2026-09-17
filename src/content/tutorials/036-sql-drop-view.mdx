@@ -1,0 +1,326 @@
+---
+title: "SQL - Drop Views"
+description: "Learn SQL - Drop Views with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 360
+group: "SQL Views"
+seoTitle: "SQL - Drop Views — CodesCompiler SQL Guide"
+permalink: "sql-drop-view"
+---
+
+
+# SQL DROP VIEW Statement
+
+
+
+
+
+
+## SQL DROP VIEW Statement
+
+
+TheDROP VIEWstatement in SQL is used to permanently delete a view from the database. Once dropped, the view and all associated permissions are removed, and it can no longer be queried or referenced unless recreated.
+
+
+This command deletes only the the view definition from the database without affecting the original tables it is based on. It is an irreversible action, so it should be used with caution. Most SQL  databases support dropping multiple views at once, and to avoid errors when a view doesn't exist, we can use the IF EXISTS clause.
+
+
+## Drop Single View in SQL
+
+
+To remove a specific view from the database, you can use theDROP VIEWstatement followed by the name of the view. This is useful when a view is no longer needed or has to be redefined from scratch.
+
+
+### Syntax
+
+
+Following is the basic syntax to drop a single view in SQL:
+
+
+```sql
+DROP VIEW view_name;
+```
+
+
+### Example
+
+
+Assume we have created a table namedCUSTOMERSusing the CREATE TABLE statement using the following query:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+
+   ID INT NOT NULL,
+
+   NAME VARCHAR (20) NOT NULL,
+
+   AGE INT NOT NULL,
+
+   ADDRESS CHAR (25),
+
+   SALARY DECIMAL (18, 2),
+
+   PRIMARY KEY (ID)
+
+);
+```
+
+
+Now, let us insert few records into this table using the INSERT statement as follows:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+
+(2, 'Khilan', 25, 'Delhi', 1500.00 ),
+
+(3, 'Kaushik', 23, 'Kota', 2000.00 ),
+
+(4, 'Chaitali', 25, 'Mumbai', 6500.00 ),
+
+(5, 'Hardik', 27, 'Bhopal', 8500.00 ),
+
+(6, 'Komal', 22, 'Hyderabad', 4500.00 ),
+
+(7, 'Muffy', 24, 'Indore', 10000.00 );
+```
+
+
+We then create three views based on this table using theCREATE VIEWstatement:
+
+
+```sql
+CREATE VIEW CUSTOMERS_VIEW1 AS SELECT * FROM CUSTOMERS;
+
+CREATE VIEW CUSTOMERS_VIEW2 AS SELECT * FROM CUSTOMERS;
+
+CREATE VIEW CUSTOMERS_VIEW3 AS SELECT * FROM CUSTOMERS;
+```
+
+
+The output after creating each view will be:
+
+
+```sql
+Query OK, 0 rows affected (0.01 sec)
+```
+
+
+Now, let us drop one of the views using theDROP VIEWstatement:
+
+
+```sql
+DROP VIEW CUSTOMERS_VIEW2;
+```
+
+
+Following is the output obtained:
+
+
+```sql
+Query OK, 0 rows affected (0.01 sec)
+```
+
+
+### Verification
+
+
+We can verify whether the view has been removed using the following SELECT query:
+
+
+```sql
+SELECT * FROM CUSTOMERS_VIEW2;
+```
+
+
+You will receive the following error message:
+
+
+```sql
+ERROR 1146 (42S02): Table 'testdb.customers_view2' doesn't exist
+```
+
+
+## Drop Multiple Views in SQL
+
+
+SQL allows you to drop more than one view at a time using a singleDROP VIEWstatement. This is useful when you need to clean up several views in your database simultaneously.
+
+
+### Syntax
+
+
+Following is the syntax to drop multiple views at once in SQL:
+
+
+```sql
+DROP VIEW view_name1, view_name2, ...;
+```
+
+
+### Example
+
+
+In this example, we are using theDROP VIEWstatement to drop multiple views at once that were created earlier.
+
+
+```sql
+DROP VIEW CUSTOMERS_VIEW1, CUSTOMERS_VIEW3;
+```
+
+
+We get the output as shown below:
+
+
+```sql
+Query OK, 0 rows affected (0.02 sec)
+```
+
+
+### Verification
+
+
+To confirm that the views have been removed, you can query them using the followingSELECTstatement:
+
+
+```sql
+SELECT * FROM CUSTOMERS_VIEW1;
+
+SELECT * FROM CUSTOMERS_VIEW3;
+```
+
+
+It produces the following error maessage respectively:
+
+
+```sql
+ERROR 1146 (42S02): Table 'testdb.customers_view1' doesn't exist
+
+ERROR 1146 (42S02): Table 'testdb.customers_view3' doesn't exist
+```
+
+
+## Drop Views Using IF EXISTS Clause
+
+
+When deleting an existing view, you can use theIF EXISTSclause with theDROP VIEWstatement. This clause checks whether the specified view exists in the current database before attempting to drop it. If the view exists, it will be deleted; if it does not, the query will be safely ignored without throwing an error.
+
+
+### Syntax
+
+
+Following is the syntax to use the DROP VIEW statement with the IF EXISTS clause:
+
+
+```sql
+DROP VIEW IF EXISTS view_name;
+```
+
+
+### Example
+
+
+Following is an example to safely drop a view namedCUSTOMERS_VIEW1only if it exists:
+
+
+```sql
+DROP VIEW IF EXISTS CUSTOMERS_VIEW3;
+```
+
+
+This generates a warning because the view we attempted to drop has already been removed and no longer exists in the database:
+
+
+```sql
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+```
+
+
+## Deleting Records from a View (Without Dropping It)
+
+
+Rather than removing the entire view, you can delete specific rows from it using theDELETEstatement. When the view is updatable, this operation also removes the corresponding records from the actual table where the data is stored.
+
+
+### Syntax
+
+
+Following is the syntax to remove rows from a view based on a condition:
+
+
+```sql
+DELETE FROM view_name
+
+WHERE condition;
+```
+
+
+### Example
+
+
+In the example below, we delete a customer with age 22 from theCUSTOMERS_VIEW3view created above, which is based on data from theCUSTOMERStable:
+
+
+```sql
+DELETE FROM CUSTOMERS_VIEW3
+
+WHERE AGE = 22;
+```
+
+
+We get the following output:
+
+
+```sql
+Query OK, 1 row affected (0.01 sec)
+```
+
+
+### Verification
+
+
+To verify that the record has been deleted from both the view, run the following query:
+
+
+```sql
+SELECT * FROM CUSTOMERS_VIEW3;
+```
+
+
+Following is the table obtained:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.007Muffy24Indore10000.00
+
+
+Now, to verify that the record has been deleted from the base table as well, run the following query:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+We get the same output:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.007Muffy24Indore10000.00
+
+
+Deleting records is allowed only onupdatable views. Views that use clauses likeJOIN,GROUP BY, orDISTINCTare generally not updatable and will result in an error if you attempt to delete from them.
+
+
+## View Dependency and Permissions
+
+
+When working with views in SQL, it is important to understand how they depend on underlying tables and what permissions are needed to manage them:
+
+
+
+- If a base table is dropped, any views that depend on it do not get removed automatically, you must explicitly drop those views.
+- To drop or modify a view, you needALTERorCONTROLpermissions on the schema, depending on your database system.
+
+

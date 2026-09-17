@@ -1,0 +1,191 @@
+---
+title: "PYTHON - Recursion"
+description: "Learn PYTHON - Recursion with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1950
+group: "Python Miscellenous"
+seoTitle: "PYTHON - Recursion — CodesCompiler PYTHON Guide"
+permalink: "python-recursion"
+---
+
+
+# Python - Recursion
+
+
+
+
+Recursion is a fundamental programming concept where a function calls itself in order to solve a problem. This technique breaks down a complex problem into smaller and more manageable sub-problems of the same type. In Python, recursion is implemented by defining a function that makes one or more calls to itself within its own body.
+
+
+## Components of Recursion
+
+
+As we discussed before Recursion is a technique where a function calls itself. Here for understanding recursion, it's required to know  its key components. Following are the primary components of the recursion −
+
+
+
+- Base Case
+- Recursive Case
+
+
+
+### Base Case
+
+
+The Base case is a fundamental concept in recursion, if serving as the condition under which a recursive function stops calling itself. It is essential for preventing infinite recursion and subsequent stack overflow errors.
+
+
+The base case provides a direct solution to the simplest instance of the problem ensuring that each recursive call gets closer to this terminating condition.
+
+
+The most popular example of recursion is calculation of factorial. Mathematically factorial is defined as −
+
+
+```python
+n! = n × (n-1)!
+```
+
+
+It can be seen that we use factorial itself to define factorial. Hence this is a fit case to write a recursive function. Let us expand above definition for calculation of factorial value of 5.
+
+
+```python
+5! = 5 × 4!
+   5 × 4 × 3!
+   5 × 4 × 3 × 2!
+   5 × 4 × 3 × 2 × 1!
+   5 × 4 × 3 × 2 × 1
+= 120
+```
+
+
+While we can perform this calculation using a loop, its recursive function involves successively calling it by decrementing the number till it reaches 1.
+
+
+#### Example
+
+
+The following example shows hows you can use a recursive function to calculate factorial −
+
+
+```python
+def factorial(n):
+
+   if n == 1:
+      print (n)
+      return 1 #base case
+   else:
+      print (n,'*', end=' ')
+      return n * factorial(n-1) #Recursive case
+      
+print ('factorial of 5=', factorial(5))
+```
+
+
+The above programs generates the following output −
+
+
+```python
+5 * 4 * 3 * 2 * 1
+factorial of 5= 120
+```
+
+
+### Recursive Case
+
+
+The recursive case is the part of a recursive function where the function calls itself to solve a smaller or simpler instance of the same problem. This mechanism allows a complex problem to be broken down into more manageable sub-problems where each them is a smaller version of the original problem.
+
+
+The recursive case is essential for progressing towards the base case, ensuring that the recursion will eventually terminate.
+
+
+#### Example
+
+
+Following is the example of the Recursive case. In this example we are generating the Fibonacci sequence in which the recursive case sums the results of the two preceding Fibonacci numbers −
+
+
+```python
+def fibonacci(n):
+    if n <= 0:
+        return 0  # Base case for n = 0
+    elif n == 1:
+        return 1  # Base case for n = 1
+    else:
+        return fibonacci(n - 1) + fibonacci(n - 2)  # Recursive case
+        
+fib_series = [fibonacci(i) for i in range(6)]
+print(fib_series)
+```
+
+
+The above programs generates the following output −
+
+
+```python
+[0, 1, 1, 2, 3, 5]
+```
+
+
+## Binary Search using Recursion
+
+
+Binary search is a powerful algorithm for quickly finding elements in sorted lists, with logarithmic time complexity making it highly efficient.
+
+
+Let us have a look at another example to understand how recursion works. The problem at hand is to check whether a given number is present in a list.
+
+
+While we can perform a sequential search for a certain number in the list using a for loop and comparing each number, the sequential search is not efficient especially if the list is too large. The binary search algorithm that checks if the index 'high' is greater than index 'low. Based on value present at 'mid' variable, the function is called again to search for the element.
+
+
+We have a list of numbers, arranged in ascending order. The we find the midpoint of the list and restrict the checking to either left or right of midpoint depending on whether the desired number is less than or greater than the number at midpoint.
+
+
+The following diagram shows how binary search works −
+
+
+### Example
+
+
+The following code implements the recursive binary searching technique −
+
+
+```python
+def bsearch(my_list, low, high, elem):
+   if high >= low:
+      mid = (high + low) // 2
+      if my_list[mid] == elem:
+         return mid
+      elif my_list[mid] > elem:
+         return bsearch(my_list, low, mid - 1, elem)
+      else:
+         return bsearch(my_list, mid + 1, high, elem)
+   else:
+      return -1
+
+my_list = [5,12,23, 45, 49, 67, 71, 77, 82]
+num = 67
+print("The list is")
+print(my_list)
+print ("Check for number:", num)
+my_result = bsearch(my_list,0,len(my_list)-1,num)
+
+if my_result != -1:
+   print("Element found at index ", str(my_result))
+else:
+   print("Element not found!")
+```
+
+
+### Output
+
+
+```python
+The list is
+[5, 12, 23, 45, 49, 67, 71, 77, 82]
+Check for number: 67
+Element found at index 5
+```
+

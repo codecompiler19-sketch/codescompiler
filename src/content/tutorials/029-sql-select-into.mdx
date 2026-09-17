@@ -1,0 +1,363 @@
+---
+title: "SQL - Select Into"
+description: "Learn SQL - Select Into with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 290
+group: "SQL Queries"
+seoTitle: "SQL - Select Into — CodesCompiler SQL Guide"
+permalink: "sql-select-into"
+---
+
+
+# SQL SELECT INTO Statement
+
+
+
+
+
+
+## SQL SELECT INTO Statement
+
+
+TheSELECT INTOstatement in SQL is used to copy data from one table into a new table. It creates the new table automatically and inserts the selected data into it, all in a single step.
+
+
+This statement is useful when you want to create a backup of a table, copy only specific data, or generate temporary tables for analysis.
+
+
+TheSELECT INTOstatement is commonly supported by SQL Server, PostgreSQL, and some other databases. In MySQL, you can use theCREATE TABLE ... SELECT ...statement instead, as it does not support theSELECT INTOstatement.
+
+
+### Syntax
+
+
+Following is the basic syntax to copy all columns from one table to a new table in SQL Server:
+
+
+```sql
+SELECT * INTO new_table
+
+FROM existing_table;
+```
+
+
+### Example: Copying All Columns
+
+
+Let us create the CUSTOMERS table which contains the personal details of customers including their name, age, address and salary etc. as shown below:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+
+   ID INT NOT NULL,
+
+   NAME VARCHAR (20) NOT NULL,
+
+   AGE INT NOT NULL,
+
+   ADDRESS CHAR (25),
+
+   SALARY DECIMAL (18, 2),
+
+   PRIMARY KEY (ID)
+
+);
+```
+
+
+Now, let us insert few records into this table using the INSERT statement as follows:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+
+(2, 'Khilan', 25, 'Delhi', 1500.00 ),
+
+(3, 'Kaushik', 23, 'Kota', 2000.00 ),
+
+(4, 'Chaitali', 25, 'Mumbai', 6500.00 ),
+
+(5, 'Hardik', 27, 'Bhopal', 8500.00 ),
+
+(6, 'Komal', 22, 'Hyderabad', 4500.00 ),
+
+(7, 'Muffy', 24, 'Indore', 10000.00 );
+```
+
+
+Now, you can create a copy of this table using theSELECT INTOstatement in SQL server as follows:
+
+
+```sql
+SELECT * INTO CUSTOMERS_BACKUP
+
+FROM CUSTOMERS;
+```
+
+
+Following is the output obtained:
+
+
+```sql
+(7 rows affected)
+
+Completion time: 2025-08-05T16:21:57.0492462+05:30
+```
+
+
+This will create a new table namedCUSTOMERS_BACKUPwith the same columns and data as theCUSTOMERStable.
+
+
+### Verification
+
+
+You can now run a SELECT query to view the contents of the new table as shown below:
+
+
+```sql
+SELECT * FROM CUSTOMERS_BACKUP;
+```
+
+
+The table displayed is as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25NULLNULL5Hardik27Bhopal1800.006Komal22Hyderabad1600.007Muffy24Pune1900.00
+
+
+## Copying Specific Columns Only
+
+
+You can also copy only selected columns into the new table if you don't need the entire data. This allows you to include just the relevant information.
+
+
+### Syntax
+
+
+Following is the syntax to copy specific columns from one table to another in SQL Server:
+
+
+```sql
+SELECT column1, column2, ...
+
+INTO new_table
+
+FROM existing_table;
+```
+
+
+### Example
+
+
+The following statement creates a new table namedCUSTOMER_NAMESwith only theIDandNAMEcolumns:
+
+
+```sql
+SELECT ID, NAME INTO CUSTOMER_NAMES
+
+FROM CUSTOMERS;
+```
+
+
+We get the output as shown below:
+
+
+```sql
+(7 rows affected)
+
+Completion time: 2025-08-05T16:25:55.9850586+05:30
+```
+
+
+### Verification
+
+
+To confirm that the new tableCUSTOMER_NAMEShas been created and contains the expected data, you can use the followingSELECTstatement:
+
+
+```sql
+SELECT * FROM CUSTOMER_NAMES;
+```
+
+
+This will display all the rows and columns from the newly createdCUSTOMER_NAMEStable as shown below:
+
+
+IDNAME1Ramesh2Khilan3Kaushik4Chaitali5Hardik6Komal7Muffy
+
+
+## Using WHERE Clause with SELECT INTO
+
+
+You can use aWHEREclause withSELECT INTOstatement to insert only the rows that match a specific condition into the new table.
+
+
+### Syntax
+
+
+Following is the basic syntax to use WHERE clause with the SELECT INTO statement in SQL Server:
+
+
+```sql
+SELECT column1, column2, ...
+
+INTO new_table
+
+FROM existing_table
+
+WHERE condition;
+```
+
+
+### Example
+
+
+The following query creates a new table with customers whose AGE is greater than 25:
+
+
+```sql
+SELECT * INTO CUSTOMERS_OVER25
+
+FROM CUSTOMERS
+
+WHERE AGE > 25;
+```
+
+
+You get the output as shown below:
+
+
+```sql
+(2 rows affected)
+
+Completion time: 2025-08-05T16:35:02.2841771+05:30
+```
+
+
+### Verification
+
+
+To check if the new tableCUSTOMERS_OVER25has been created correctly and includes only the desired records, use the following query:
+
+
+```sql
+SELECT * FROM CUSTOMERS_OVER25;
+```
+
+
+This will display all the rows from theCUSTOMERS_OVER25table, showing only customers whose age is greater than 25:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.005Hardik27Bhopal8500.00
+
+
+## Copying from Joins Using SELECT INTO
+
+
+TheSELECT INTOstatement can also be used with joins to retrieve data from multiple tables. This allows you to create a new table containing combined results based on related data from those tables.
+
+
+### Syntax
+
+
+Following is the basic syntax to copy data from joins using the SELECT INTO statement in SQL Server:
+
+
+```sql
+SELECT t1.column1, t2.column2, ...
+
+INTO new_table
+
+FROM table1 t1
+
+JOIN table2 t2 ON t1.common_column = t2.common_column
+
+WHERE condition;
+```
+
+
+### Example
+
+
+Assume you have another table namedORDERShaving the following structure:
+
+
+ORDER_IDCUSTOMER_IDAMOUNTORDER_DATE10112502025-07-0110223002025-07-0310311502025-07-05
+
+
+Now, the following query joins theCUSTOMERSandORDERStables using the customer ID, and copies the matching data into a new table namedCUSTOMER_ORDERS. The new table will include customer ID, name, order ID, and amount for each order:
+
+
+```sql
+SELECT C.ID, C.NAME, O.ORDER_ID, O.AMOUNT
+
+INTO CUSTOMER_ORDERS
+
+FROM CUSTOMERS C
+
+JOIN ORDERS O ON C.ID = O.CUSTOMER_ID;
+```
+
+
+We get the output as shown below:
+
+
+```sql
+(3 rows affected)
+
+Completion time: 2025-08-05T17:02:18.9907316+05:30
+```
+
+
+### Verification
+
+
+To verify that the data has been copied correctly into the new table, run the following query:
+
+
+```sql
+SELECT * FROM CUSTOMER_ORDERS;
+```
+
+
+The table displayed is as shown below:
+
+
+IDNAMEORDER_IDAMOUNT1Ramesh101250.002Khilan102300.001Ramesh103150.00
+
+
+## INSERT INTO SELECT vs SELECT INTO
+
+
+BothINSERT INTO SELECTandSELECT INTOstatements are used to copy data from one table to another, but they work differently based on whether the target table already exists:
+
+
+FeatureSELECT INTOINSERT INTO ... SELECTPurposeCreates a new table and copies data into it.Inserts data into an existing table from another table.Target TableMust not exist before the query runs.Must already exist before the query runs.Use CasesUsed for creating backups, temporary or reporting tables.Used for inserting data from one table into another.MySQL SupportNot supported in MySQL. UseCREATE TABLE ... SELECTinstead.Fully supported in MySQL and other databases.ExampleSELECT * INTO NEW_TABLE
+
+FROM EXISTING_TABLE
+
+WHERE condition;INSERT INTO EXISTING_TABLE (col1, col2)
+
+SELECT col1, col2
+
+FROM SOURCE_TABLE
+
+WHERE condition;
+
+
+## Important Points About SELECT INTO Statement
+
+
+Following are some of the important points to remember about theSELECT INTOstatement in SQL:
+
+
+
+- TheSELECT INTOstatement automatically creates a new table. If the table already exists, it will result in an error.
+- It is useful for creating backups, generating reports, or setting up temporary tables for analysis.
+- You can combine it with clauses likeWHERE,JOIN,ORDER BY, and others to control the data being copied.
+- It is not supported in MySQL. Instead, useCREATE TABLE ... SELECT ...as an alternative.
+
+

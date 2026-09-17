@@ -1,0 +1,228 @@
+---
+title: "JavaScript - Yield Operator"
+description: "Learn JavaScript - Yield Operator with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 310
+group: "JavaScript Operators"
+seoTitle: "JavaScript - Yield Operator — CodesCompiler JavaScript Guide"
+permalink: "javascript-yield-operator"
+---
+
+
+# JavaScript - Yield Operator
+
+
+
+
+## JavaScript Yield Operator
+
+
+Theyieldoperator in JavaScript is used to pause and resume the generator function asynchronously. In JavaScript,generatorfunctions are the special functions that you can pause or resume while executing. The generator functions are defined with the 'function*' syntax. Theyieldkeyword can only be used within the generator function that contains it.
+
+
+The yield operator pauses the execution of generator function and returns its operand (expression) to the generator's caller.
+
+
+## Syntax
+
+
+The syntax of the yield operator in JavaScript is as follows −
+
+
+```javascript
+yield expression;
+```
+
+
+### Paramter
+
+
+
+- expression− The value to yield from the generator function via the iterator protocol. 'undefined' is yielded, if expression is omitted.
+
+
+
+### Return value
+
+
+It returns the optional value passed to the generator's next() method to resume its execution.
+
+
+## Yield Operator in Genrator Function
+
+
+To understand the yield operator, let's understand fist the working of the generator function.
+
+
+When a generator function is called, it returns a generator object. When thenext()method this generator object is called it resumes the execution of the generator function. When a yield expression is encountered, it pauses the execution and returns the expression afteryieldkeyword to the object's caller (the next() method).
+
+
+The next() method of the generator object returns aniterator objectwith two propertiesvalueanddone. Thevalueis the actual value of the expression and thedoneis a boolean value. Thedoneproperty is true if the execution of the generator function is completely executed, else it if false.
+
+
+Below is a complete example code of generator function with yield keyword (operator).
+
+
+```javascript
+function* test() {
+ // function code
+ yield expression;
+}
+const genObj = test();
+genObj.next();
+```
+
+
+In the above syntax, 'function*' is used to create a generator function namedtest, and theyieldkeyword is used to return 'expression' from the function.
+
+
+The generator functiontestis called and assigned the returned generator object to the variablegenObj. The next() method resumes the execution of the function and returns iterator object when encounters yield expression.
+
+
+Let's execute the below JavaScript code snippet
+
+
+```javascript
+function* test() {
+    console.log("I'm before yield expression");
+    yield 20;
+}
+const genObj = test();
+console.log(genObj.next());
+```
+
+
+Notice when we call next() method, it display the message in the console first and then display the iterator object.
+
+
+```javascript
+I'm before yield expression
+{ value: 20, done: false }
+```
+
+
+## Example: Returning a value
+
+
+In the example below, we have defined the test() generator function. We used the yield operator 3 times in the function to return a number, an array, and a string, respectively.
+
+
+After that, we used the next() method four times to resume the execution of the function. Whenever the control flow finds the yield operator, it will stop execution and return the value.
+
+
+In the output, you can observe that it returns the object containing the operand of the yield operator and boolean value.
+
+
+```javascript
+function* test() {
+    yield 20;
+    yield [1,2,3];
+    yield "Hello World";
+}
+let res = test();
+console.log(res.next());
+console.log(res.next());
+console.log(res.next());
+console.log(res.next());
+```
+
+
+### Output
+
+
+```javascript
+{ value: 20, done: false }
+{ value: [ 1, 2, 3 ], done: false }
+{ value: 'Hello World', done: false }
+{ value: undefined, done: true }
+```
+
+
+## Example: Returning undefined
+
+
+When we omit the expression following the yield keyword, it will return undefined.
+
+
+```javascript
+function* test() {
+    yield;
+}
+
+let res = test();
+console.log(res.next());
+console.log(res.next());
+```
+
+
+### Output
+
+
+```javascript
+{ value: undefined, done: false }
+{ value: undefined, done: true }
+```
+
+
+## Example: Passing a value to the next() method
+
+
+We can also pass a value to the next() method. In the below example, we have passed 30 to the second next() method. It evaluates yield to 30. The variable result is assigned the value of yield which is evaluated as 30.
+
+
+```javascript
+function* test() {
+    let result = yield 20;
+    console.log("default value paased to next() method " + result);
+}
+
+let res = test();
+console.log(res.next());
+console.log(res.next(30));
+```
+
+
+### Output
+
+
+```javascript
+{ value: 20, done: false }
+default value paased to next() method 30
+{ value: undefined, done: true }
+```
+
+
+## Example
+
+
+In the below code, we used the loop, and in each operation, we stop the execution of the function using the yield operator. Afterward, we use the next() method to start the execution of the generator function.
+
+
+```javascript
+// Generator function
+function* test() {
+    for (let p = 0; p < 6; p += 2) {
+        yield p;
+    }
+}
+let res = test();
+console.log(res.next());
+console.log(res.next());
+console.log(res.next());
+console.log(res.next());
+```
+
+
+### Output
+
+
+```javascript
+{ value: 0, done: false }
+{ value: 2, done: false }
+{ value: 4, done: false }
+{ value: undefined, done: true }
+```
+
+
+In real-time development, programmers use the 'yield' operator for asynchronous operations, lazy evaluations, task scheduling, iterating through large datasets, creating custom iterators, etc.
+

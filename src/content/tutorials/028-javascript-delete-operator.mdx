@@ -1,0 +1,277 @@
+---
+title: "JavaScript - Delete Operator"
+description: "Learn JavaScript - Delete Operator with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 280
+group: "JavaScript Operators"
+seoTitle: "JavaScript - Delete Operator — CodesCompiler JavaScript Guide"
+permalink: "javascript-delete-operator"
+---
+
+
+# JavaScript - Delete Operator
+
+
+
+
+## JavaScript Delete Operator
+
+
+The JavaScript delete operator deletes/ removes a property from an object. It removes the property as well as value of the property from the object. It works only with the objects not with the variables or functions.
+
+
+In JavaScript, an array is an object, so you can use the 'delete' operator to delete an element from the particular index. However, there are methods like pop(), slice(), or shift() available to delete the element from the array.
+
+
+## Syntax
+
+
+Follow the below syntax to delete the object property using the 'delete' operator.
+
+
+```javascript
+delete obj.property;
+ OR
+delete obj["property"];
+```
+
+
+Return value− The 'delete' operator returns true if the operand (specified property) is deleted successfully, otherwise returns false if the property is not deleted.
+
+
+If you try to delete a property that doesn't exist, it will return true but will not affect the object.
+
+
+Follow the below syntax to delete the array element using the 'delete' operator.
+
+
+```javascript
+delete arr[index];
+```
+
+
+## Deleting Object Properties
+
+
+The JavaScript delete operator can be used to delete a property of an object. To delete the property we write the delelte operator followed by the property of the object.
+
+
+```javascript
+delete obj.propertyName;
+or
+delete obj["propertyNmae"];
+```
+
+
+In the above syntas, object property named propertyName is being deleted from the object called obj.
+
+
+### Example: Deleting an Object Property
+
+
+The 'obj' object in the example below contains the product, price, and color properties. We used the delete' operator to delete the price property from the object.
+
+
+```html
+<html>
+<body>
+<div id="output"></div>
+<script>
+   const obj = {
+      product: "Mobile",
+      price: 20000,
+      color: "Blue",
+   }
+   delete obj.price; // deleting price 
+   document.getElementById("output").innerHTML =
+   "The Mobile price is " + obj.price + " and color is " + obj.color;
+</script>
+</body>
+</html>
+```
+
+
+It will produce the following result −
+
+
+```javascript
+The Mobile price is undefined and color is Blue
+```
+
+
+Notice that when we access the deleted property, it returns undefined.
+
+
+### Example: Deleting a Nonexistent object Property
+
+
+Try to delete a property that doesn't exit. It will return true but doesn't affect the original object.
+
+
+```html
+<html>
+<body>
+<div id="output"></div>
+<script>
+   const obj = {
+      product: "Mobile",
+      price: 20000
+   }  
+   document.getElementById("output").innerHTML = delete obj.color;
+</script>
+</body>
+</html>
+```
+
+
+The above program will produce the following result −
+
+
+```javascript
+true
+```
+
+
+## Deleting Array Elements
+
+
+We can use thedeleteoperator to remove or delete an element from an array. To delete an element, we use delete keyword followed by array element. We can use square brackets ([]) to access the elements from the array.
+
+
+### Example
+
+
+The below code contains the array of numbers. We used the 'delete' operator to delete the element from the 1st index of the array. In the output, you can observe that element from the array gets deleted, but the position of the other elements remains as it is. The array length also remains the same.
+
+
+```html
+<html>
+<body>
+<div id="output"></div>
+<script>
+   const arr = [10, 20, 30, 40, 50, 60];
+   delete arr[1]; // deleting 2nd element from array
+   document.getElementById("output").innerHTML = 
+   arr + "<br>" + 
+   arr[1]; 
+</script>
+</body>
+</html>
+```
+
+
+It will produce the following result −
+
+
+```javascript
+10,,30,40,50,60
+undefined
+```
+
+
+## Deleting Predefined Object
+
+
+The JavaScript 'delete' operator can delete the predifiend object such as Math, Date, etc. It is not advisable to delete predefined objects. Once deleted, you can't access the properties of these objects.
+
+
+### Example: Deleting Built-in Math Object
+
+
+In the example below, we try delete Math object so we get the above error.
+
+
+```html
+<html>
+<body>
+<div id="output"></div>
+<script>
+   var x = 10
+   var fun = function(){return 20;};
+   document.getElementById("output").innerHTML = 
+   "delete Math.PI :" + delete Math.PI + "<br>" + 
+   "delete Math :" + delete Math + "<br>";
+  
+   try{
+      document.getElementById("output").innerHTML += Math.PI;
+   }
+   catch(e){
+      document.getElementById("output").innerHTML += e;
+   }  
+</script>
+</body>
+</html>
+```
+
+
+It will produce the following output −
+
+
+```javascript
+delete Math.PI :false
+delete Math :true
+ReferenceError: Math is not defined
+```
+
+
+## Can't Delete Variables and Functions
+
+
+The delete operator can't delete the variables or functions.
+
+
+```html
+<html>
+<body>
+<div id="output1"></div>
+<div id="output2"></div>
+<script>
+   var x = 10
+   var fun = function(){return 20;};
+   document.getElementById("output1").innerHTML = delete x;
+   document.getElementById("output2").innerHTML = delete fun;
+</script>
+</body>
+</html>
+```
+
+
+It will produce the following result −
+
+
+```javascript
+false
+false
+```
+
+
+The variable defined without var, let or const can be deleted. Such a variable is treated as property of window object.
+
+
+```html
+<html>
+<body>
+<div id="output1"></div>
+<div id="output2"></div>
+<script>
+   try{
+	  x = 10
+	  document.getElementById("output1").innerHTML = delete x;
+	  document.getElementById("output2").innerHTML = x;
+   }catch(e){
+      document.getElementById("output2").innerHTML = e;
+   }
+</script>
+</body>
+</html>
+```
+
+
+It will produce the following result −
+
+
+```javascript
+true
+ReferenceError: x is not defined
+```
+

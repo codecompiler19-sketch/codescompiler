@@ -1,0 +1,147 @@
+---
+title: "SQL - Select Database"
+description: "Learn SQL - Select Database with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 130
+group: "SQL Database"
+seoTitle: "SQL - Select Database — CodesCompiler SQL Guide"
+permalink: "sql-select-database"
+---
+
+
+# SQL - SELECT Database, USE Statement
+
+
+Table of contentThe USE DATABASE StatementSelecting a Non Existing Database
+
+
+
+
+To work with a database in SQL, we need to first select the database we want to work with. After selecting the database, we can perform various operations on it such as creating tables, inserting data, updating data, and deleting data.
+
+
+## The USE DATABASE Statement
+
+
+The SQLUSE DATABASEstatement is used to select a database from a list of databases available in the system. Once a database is selected, we can perform various operations on it such ascreating tables,inserting data, updating data, anddeleting data.
+
+
+### Syntax
+
+
+Following is the syntax of theUSE DATABASEstatement in SQL −
+
+
+```sql
+USE DatabaseName;
+```
+
+
+Here, theDatabaseNameis the name of the database that we want to select. The database name is always unique within the RDBMS.
+
+
+### Example
+
+
+First of all we will create a database using the following SQL CREATE DATABASE query −
+
+
+```sql
+CREATE DATABASE testDB;
+```
+
+
+Now, we can list all the available databases as follws −
+
+
+```sql
+SHOW DATABASES;
+```
+
+
+The output will be displayed as −
+
+
+Databasemasterperformance_schemainformation_schemamysqltestDB
+
+
+### Example: Select/Switch Database
+
+
+Following query is used to select/switch the current database totestDB−
+
+
+```sql
+USE testDB;
+```
+
+
+#### Output
+
+
+```sql
+Database changed
+```
+
+
+Once we finish switching to the databasetestDBwe can perform operations such as creating a table, and inserting data in that table as shown below −.
+
+
+```sql
+CREATE TABLE CALENDAR(MONTHS DATE NOT NULL);
+```
+
+
+Now, let us insert some records in the CALENDAR table using SQL INSERT statements as shown in the query below −
+
+
+```sql
+INSERT INTO CALENDAR(MONTHS) VALUES('2023-01-01');
+INSERT INTO CALENDAR(MONTHS) VALUES('2023-02-01');
+INSERT INTO CALENDAR(MONTHS) VALUES('2023-03-01');
+INSERT INTO CALENDAR(MONTHS) VALUES('2023-04-01');
+INSERT INTO CALENDAR(MONTHS) VALUES('2023-12-01');
+```
+
+
+Let's verify the operation by listing all the records from CALENDAR table usingSQL SELECTstatement as shown below −
+
+
+```sql
+SELECT * FROM CALENDAR;
+```
+
+
+#### Output
+
+
+The output will be displayed as −
+
+
+MONTHS2023-01-012023-02-012023-03-012023-04-012023-12-01
+
+
+## Selecting a Non Existing Database
+
+
+An attempt to select a non-existent database will result in an error. In the following query we are trying to switch to the database which does not exist −
+
+
+### Example
+
+
+```sql
+USE unknownDatabase;
+```
+
+
+### Output
+
+
+On executing the above query, the output will be displayed as
+
+
+```sql
+ERROR 1049 (42000): Unknown database 'unknownDatabase'
+```
+

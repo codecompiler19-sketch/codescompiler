@@ -1,0 +1,519 @@
+---
+title: "PYTHON - Type Hints"
+description: "Learn PYTHON - Type Hints with clear explanation, code examples, and practical guide."
+category: "python"
+order: 2260
+group: "Python Advanced Concepts"
+seoTitle: "PYTHON - Type Hints — CodesCompiler PYTHON Guide"
+permalink: "python-type-hints"
+---
+
+
+# Python - Type Hints
+
+
+
+
+Python type hintswere introduced in PEP 484 to bring the benefits of static typing to a dynamically typed language. Although type hints do not enforce type checking at runtime, they provide a way to specify the expected types ofvariables, function parameters, and return values, which can be checked by static analysis tools such asmypy. This enhances code readability, facilitates debugging, and improves the overall maintainability of the code.
+
+
+Type hintsin Python use annotations for function parameters, return values and variable assignments.
+
+## Different Types of Type Hints in Python
+
+Python'stype hintscan be used to specify a wide variety of types such as basicdata types, collections, complex types and custom user-defined types. Thetypingmodule provides many built-in types to represent these various types −
+
+
+
+- Basic Data Types
+- Collections Types
+- Optional Types
+- Union Types
+- Any Type
+- Type Aliases
+- Generic Types
+- Callable Types
+- Literal Types
+- NewType
+
+
+
+Let's see each one, one after another in detail.
+
+
+## Basic Data Types
+
+
+In Python when usingtype hintsto specify basic types we can simply use the name of the type as the annotation.
+
+
+### Example
+
+
+Following is the example of using the basic data types such as integer, float, string etc −
+
+
+```python
+from typing import Optional
+
+# Integer type
+def calculate_square_area(side_length: int) -> int:
+   return side_length ** 2
+
+# Float type
+def calculate_circle_area(radius: float) -> float:
+   return 3.14 * radius * radius
+
+# String type
+def greet(name: str) -> str:
+   return f"Hello, {name}"
+
+# Boolean type
+def is_adult(age: int) -> bool:
+   return age >= 18
+
+# None type
+def no_return_example() -> None:
+   print("This function does not return anything")
+
+# Optional type (Union of int or None)
+def safe_divide(x: int, y: Optional[int]) -> Optional[float]:
+   if y is None or y == 0:
+      return None
+   else:
+      return x / y
+
+# Example usage
+print(calculate_square_area(5))        
+print(calculate_circle_area(3.0))     
+print(greet("Alice"))                 
+print(is_adult(22))                   
+no_return_example()                   
+print(safe_divide(10, 2))             
+print(safe_divide(10, 0))             
+print(safe_divide(10, None))
+```
+
+
+On executing the above code we will get the followingoutput−
+
+
+```python
+25
+28.259999999999998
+Hello, Alice
+True
+This function does not return anything
+5.0
+None
+None
+```
+
+
+## Collections Types
+
+
+In Python when dealing with collections such aslists,tuples,dictionaries, etc. intype hintswe typically use thetypingmodule to specify the collection types.
+
+
+### Example
+
+
+Below is the example of the Collections using intype hints−
+
+
+```python
+from typing import List, Tuple, Dict, Set, Iterable, Generator
+
+# List of integers
+def process_numbers(numbers: List[int]) -> List[int]:
+   return [num * 2 for num in numbers]
+
+# Tuple of floats
+def coordinates() -> Tuple[float, float]:
+   return (3.0, 4.0)
+
+# Dictionary with string keys and integer values
+def frequency_count(items: List[str]) -> Dict[str, int]:
+   freq = {}
+   for item in items:
+      freq[item] = freq.get(item, 0) + 1
+   return freq
+
+# Set of unique characters in a string
+def unique_characters(word: str) -> Set[str]:
+   return set(word)
+
+# Iterable of integers
+def print_items(items: Iterable[int]) -> None:
+   for item in items:
+      print(item)
+
+# Generator yielding squares of integers up to n
+def squares(n: int) -> Generator[int, None, None]:
+   for i in range(n):
+      yield i * i
+
+# Example usage
+numbers = [1, 2, 3, 4, 5]
+print(process_numbers(numbers))                   
+
+print(coordinates())                            
+
+items = ["apple", "banana", "apple", "orange"]
+print(frequency_count(items))                    
+
+word = "hello"
+print(unique_characters(word))                   
+
+print_items(range(5))                           
+
+gen = squares(5)
+print(list(gen))
+```
+
+
+On executing the above code we will get the followingoutput−
+
+
+```python
+[2, 4, 6, 8, 10]
+(3.0, 4.0)
+{'apple': 2, 'banana': 1, 'orange': 1}
+{'l', 'e', 'h', 'o'}
+0
+1
+2
+3
+4
+[0, 1, 4, 9, 16]
+```
+
+
+## Optional Types
+
+
+In Python,Optional typesare used to indicate that a variable can either be of a specified type or None. This is particularly useful when a function may not always return a value or when a parameter can accept a value or be left unspecified.
+
+
+### Example
+
+
+Here is the example of using theoptional typesintype hints−
+
+
+```python
+from typing import Optional
+
+def divide(a: float, b: float) -> Optional[float]:
+   if b == 0:
+      return None
+   else:
+      return a / b
+
+result1: Optional[float] = divide(10.0, 2.0)   # result1 will be 5.0
+result2: Optional[float] = divide(10.0, 0.0)   # result2 will be None
+
+print(result1)  
+print(result2)
+```
+
+
+On executing the above code we will get the followingoutput−
+
+
+```python
+5.0
+None
+```
+
+
+## Union Types
+
+
+Python uses Union types to allow a variable to accept values of different types. This is useful when a function or data structure can work with various types of inputs or produce different types of outputs.
+
+
+### Example
+
+
+Below is the example of this −
+
+
+```python
+from typing import Union
+
+def square_root_or_none(number: Union[int, float]) -> Union[float, None]:
+   if number >= 0:
+      return number ** 0.5
+   else:
+      return None
+
+result1: Union[float, None] = square_root_or_none(50)   
+result2: Union[float, None] = square_root_or_none(-50)  
+
+print(result1)  
+print(result2)
+```
+
+
+On executing the above code we will get the followingoutput−
+
+
+```python
+7.0710678118654755
+None
+```
+
+
+## Any Type
+
+
+In Python,Any typeis a special type hint that indicates that a variable can be of any type. It essentially disables type checking for that particular variable or expression. This can be useful in situations where the type of a value is not known beforehand or when dealing with dynamic data.
+
+
+### Example
+
+
+Following is the example of using Any type inType hint−
+
+
+```python
+from typing import Any
+
+def print_value(value: Any) -> None:
+   print(value)
+
+print_value(10)         
+print_value("hello")    
+print_value(True)       
+print_value([1, 2, 3])  
+print_value({'key': 'value'})
+```
+
+
+On executing the above code we will get the followingoutput−
+
+
+```python
+10
+hello
+True
+[1, 2, 3]
+{'key': 'value'}
+```
+
+
+## Type Aliases
+
+
+Type aliasesin Python are used to give alternative names to existing types. They can make code easier to read by giving clear names to complicated type annotations or combinations of types. This is especially helpful when working with nested structures or long-type hints.
+
+
+### Example
+
+
+Below is the example of using theType Aliasesin theType hints−
+
+
+```python
+from typing import List, Tuple
+
+# Define a type alias for a list of integers
+Vector = List[int]
+
+# Define a type alias for a tuple of coordinates
+Coordinates = Tuple[float, float]
+
+# Function using the type aliases
+def scale_vector(vector: Vector, factor: float) -> Vector:
+    return [int(num * factor) for num in vector]
+
+def calculate_distance(coord1: Coordinates, coord2: Coordinates) -> float:
+   x1, y1 = coord1
+   x2, y2 = coord2
+   return ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5
+
+# Using the type aliases
+v: Vector = [1, 2, 3, 4]
+scaled_v: Vector = scale_vector(v, 2.5)
+print(scaled_v)  
+
+c1: Coordinates = (3.0, 4.0)
+c2: Coordinates = (6.0, 8.0)
+distance: float = calculate_distance(c1, c2)
+print(distance)
+```
+
+
+On executing the above code we will get the followingoutput−
+
+
+```python
+[2, 5, 7, 10]
+5.0
+```
+
+
+## Generic Types
+
+
+Generic typescreate functions, classes or data structures that can handle any type while maintaining type safety. The typing module's TypeVar and Generic constructs make this possible. They are helpful for making reusable components that can work with various types without compromising type checking.
+
+
+### Example
+
+
+Here is the example of it −
+
+
+```python
+from typing import TypeVar, List
+
+# Define a type variable T
+T = TypeVar('T')
+
+# Generic function that returns the first element of a list
+def first_element(items: List[T]) -> T:
+   return items[0]
+
+# Example usage
+int_list = [1, 2, 3, 4, 5]
+str_list = ["apple", "banana", "cherry"]
+
+first_int = first_element(int_list)      # first_int will be of type int
+first_str = first_element(str_list)      # first_str will be of type str
+
+print(first_int)    
+print(first_str)
+```
+
+
+On executing the above code we will get the followingoutput−
+
+
+```python
+1
+apple
+```
+
+
+## Callable Types
+
+
+Python'sCallabletype is utilized to show that a type is a function or a callable object. It is found in the typing module and lets you define the types of the arguments and the return type of a function. This is handy for higher-order functions.
+
+
+### Example
+
+
+Following is the example of using Callable type intype hint−
+
+
+```python
+from typing import Callable
+
+# Define a function that takes another function as an argument
+def apply_operation(x: int, y: int, operation: Callable[[int, int], int]) -> int:
+   return operation(x, y)
+
+# Example functions to be passed as arguments
+def add(a: int, b: int) -> int:
+   return a + b
+
+def multiply(a: int, b: int) -> int:
+   return a * b
+
+# Using the apply_operation function with different operations
+result1 = apply_operation(5, 3, add)        # result1 will be 8
+result2 = apply_operation(5, 3, multiply)   # result2 will be 15
+
+print(result1)  
+print(result2)
+```
+
+
+On executing the above code we will get the followingoutput−
+
+
+```python
+8
+15
+```
+
+
+## Literal Types
+
+
+The Literal type is used to specify that a value must be exactly one of a set of predefined values.
+
+
+### Example
+
+
+Below is the example −
+
+
+```python
+from typing import Literal
+
+def move(direction: Literal["left", "right", "up", "down"]) -> None:
+   print(f"Moving {direction}")
+
+move("left")  # Valid
+move("up")    # Valid
+```
+
+
+On executing the above code we will get the followingoutput−
+
+
+```python
+Moving left
+Moving up
+```
+
+
+## NewType
+
+
+NewTypeis a function in the typing module that allows us to create distinct types derived from existing ones. This can be useful for adding type safety to our code by distinguishing between different uses of the same underlying type. For example we might want to differentiate between user IDs and product IDs even though both are represented as integers.
+
+
+### Example
+
+
+Below is the example −
+
+
+```python
+from typing import NewType
+
+# Create new types
+UserId = NewType('UserId', int)
+ProductId = NewType('ProductId', int)
+
+# Define functions that use the new types
+def get_user_name(user_id: UserId) -> str:
+   return f"User with ID {user_id}"
+
+def get_product_name(product_id: ProductId) -> str:
+   return f"Product with ID {product_id}"
+
+# Example usage
+user_id = UserId(42)
+product_id = ProductId(101)
+
+print(get_user_name(user_id))   # Output: User with ID 42
+print(get_product_name(product_id))  # Output: Product with ID 101
+```
+
+
+On executing the above code we will get the followingoutput−
+
+
+```python
+User with ID 42
+Product with ID 101
+```
+

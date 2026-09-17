@@ -1,0 +1,215 @@
+---
+title: "SQL - Default Constraint"
+description: "Learn SQL - Default Constraint with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 910
+group: "Advanced SQL"
+seoTitle: "SQL - Default Constraint — CodesCompiler SQL Guide"
+permalink: "sql-default-constraint"
+---
+
+
+# SQL - Default Constraint
+
+
+Table of contentThe SQL DEFAULT ConstraintPassing "DEFAULT" as ValueAdding Default Constraint to an Existing ColumnDropping Default Constraint
+
+
+
+
+## The SQL DEFAULT Constraint
+
+
+The SQLDEFAULT Constraintis used to specify the default value for a column of a table. We usually set default value while creating the table.
+
+
+The default values are treated as the column values if no values are provided while inserting the data, ensuring that the column will always have a value. We can specify default values for multiple columns in an SQL table.
+
+
+### Syntax
+
+
+Following is the syntax of the SQL DEFAULT Constraint −
+
+
+```sql
+CREATE TABLE table_name (
+   column1 datatype DEFAULT default_value,
+   column2 datatype DEFAULT default_value,
+   column3 datatype,
+   .....
+   columnN datatype
+);
+```
+
+
+### Example
+
+
+In the following query we are creating the CUSTOMERS table using the CREATE TABLE statement. Here, we are adding a default constraint to the columns NAME, AGE, ADDRESS, and SALARY −
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL DEFAULT 'Ramesh',
+   AGE INT NOT NULL DEFAULT '32',
+   ADDRESS CHAR (25) DEFAULT 'Ahmedabad',
+   SALARY DECIMAL (18, 2) DEFAULT '2000',
+   PRIMARY KEY (ID)
+);
+```
+
+
+Following query inserts values into this table using the INSERT statement −
+
+
+```sql
+INSERT INTO CUSTOMERS (ID) VALUES (1);
+INSERT INTO CUSTOMERS VALUES (2, 'Khilan', 25, 'Delhi', 1500.00 );
+```
+
+
+The table is created with default values in the NAME, AGE, ADDRESS, and SALARY columns for the first row as shown below −
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.00
+
+
+## Passing "DEFAULT" as Value
+
+
+While inserting data into a table, if the column names are not included in the INSERT query, to insert the default value into the record we need to pass "DEFAULT" as a value, as shown below −
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES
+(3, 'Kaushik', DEFAULT, DEFAULT, 2000.00),
+(4, 'Chaitali', DEFAULT, DEFAULT, DEFAULT);
+```
+
+
+The table obtained is as shown below −
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik32Ahmedabad2000.004Chaitali32Ahmedabad2000.00
+
+
+## Adding Default Constraint to an Existing Column
+
+
+We can also add default constraints to an existing column of a table using theALTER TABLEstatement. This allows us to modify the structure of existing table by specifying default values, ensuring data consistency in the database.
+
+
+### Syntax
+
+
+Following is the syntax for adding adefault constraintto a column in an existing table −
+
+
+```sql
+ALTER TABLE table_name
+ALTER COLUMN column_name SET DEFAULT 'default_value';
+```
+
+
+### Example
+
+
+Assume we have created another table named BUYERS using the CREATE TABLE statement as shown below −
+
+
+```sql
+CREATE TABLE BUYERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),
+   PRIMARY KEY (ID)
+);
+```
+
+
+Following query, we adds a default constraint to the ADDRESS column of the BUYERS table.
+
+
+```sql
+ALTER TABLE BUYERS ALTER ADDRESS SET DEFAULT 'Delhi';
+```
+
+
+Following INSERT statement inserts a record into the BUYERS table by providing values to all the columns except ADDRESS −
+
+
+```sql
+INSERT INTO BUYERS (ID, NAME, AGE, SALARY) VALUES
+(01, 'Rahul', 27, 50000);
+```
+
+
+### Verification
+
+
+After inserting the record if you retrieve it back, you can observe the default value ("Delhi") in the address column −
+
+
+```sql
+SELECT * FROM BUYERS WHERE ID = 01;
+```
+
+
+### Output
+
+
+The table obtained is as follows −
+
+
+IDNAMEAGEADDRESSSALARY01Rahul27Delhi50000.00
+
+
+## Dropping Default Constraint
+
+
+We can delete the default constraint from a table using theALTER TABLE... DROPstatement.
+
+
+### Syntax
+
+
+Following is the syntax to delete the default constraint from a table −
+
+
+```sql
+ALTER TABLE table_name
+ALTER COLUMN column_name DROP DEFAULT;
+```
+
+
+### Example
+
+
+In here, we are removing the default constraint from the ADDRESS column of the CUSTOMERS table −
+
+
+```sql
+ALTER TABLE CUSTOMERS ALTER ADDRESS DROP DEFAULT;
+```
+
+
+### Verification
+
+
+We can verify the table details (structure) and check whether there is a default constraint or not using the following query −
+
+
+```sql
+DESC CUSTOMERS;
+```
+
+
+The table obtained is as shown below −
+
+
+FieldTypeNullKeyDefaultExtraIDintNOPRINULLNAMEvarchar(20)NORameshAGEintNO32ADDRESSchar(25)YESNULLSALARYdecimal(18,2)YES2000.00
+

@@ -1,0 +1,322 @@
+---
+title: "JavaScript - Storage API"
+description: "Learn JavaScript - Storage API with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1370
+group: "JavaScript Web APIs"
+seoTitle: "JavaScript - Storage API — CodesCompiler JavaScript Guide"
+permalink: "javascript-storage-api"
+---
+
+
+# JavaScript - Storage API
+
+
+
+
+## What is Web Storage API?
+
+
+The web storage API in JavaScript allows us to store the data in the user's local system or hard disk. Before the storage API was introduced in JavaScript, cookies were used to store the data in the user's browser.
+
+
+The main problem with the cookies is that whenever browsers request the data, the server must send it and store it in the browser. Sometimes, it can also happen that attackers can attack and steal the data.
+
+
+In the case of the storage API, we can store the user's data in the browsers, which remains limited to the user's device.
+
+
+JavaScript contains two different objects to store the data in the local.
+
+
+
+- localStorage
+- sessionStorage
+
+
+
+Here, we have explained the local and session storage.
+
+
+## The Window localStorage Object
+
+
+The localStorage object allows you to store the data locally in the key-value pair format in the user's browser.
+
+
+You can store a maximum of 5 MB data in the local storage.
+
+
+Whatever data you store into the local storage, it never expires. However, you can use the removeItem() method to remove the particular or clear() to remove all items from the local storage.
+
+
+### Syntax
+
+
+We can follow the syntax below to set and get items from the browser's local storage.
+
+
+```javascript
+localStorage.setItem(key, value); // To set key-value pair
+localStorage.getItem(key); // To get data using a key
+```
+
+
+In the above syntax, the setItem() method sets the item in the local storage, and the getItem() method is used to get the item from the local storage using its key.
+
+
+### Parameters
+
+
+
+- key− It can be any string.
+- value− It is a value in the string format.
+
+
+
+### Example
+
+
+In the below code, we set the 'fruit' as a key and 'Apple' as a value in the local storage inside the setItem() function. We invoke the setItem() function when users click the button.
+
+
+In the getItem() function, we get the value of the 'fruit' key from the local storage.
+
+
+Users can click the set item button first and then get the item to get the key-value pair from the local storage.
+
+
+```html
+<html>
+<body>    
+   <button onclick = "setItem()"> Set Item </button>
+   <button onclick = "getItem()"> Get Item </button>
+   p id = "demo" 
+   <script>
+      const output = document.getElementById('demo');
+      function setItem() {
+         localStorage.setItem("fruit", "Apple");
+      }
+      function getItem() {
+         const fruitName = localStorage.getItem("fruit");
+         output.innerHTML = "The name of the fruit is: " + fruitName;
+      }
+   </script>
+</body>
+</html>
+```
+
+
+The localStorage doesn't allow you to store the objects, functions, etc. So, you can use the JSON.stringify() method to convert the object into a string and store it in the local storage.
+
+
+### Example: Storing the object in the local storage
+
+
+In the below code, we have created the animal object. After that, we used the JSON.stringify() method to convert it into the string and store it as a value of the 'animal' object.
+
+
+Users can click the set item button to set the object into the local storage and get the item button to get the key-value pair from the local storage.
+
+
+```html
+<html>
+<body>    
+   <button onclick = "setItem()"> Set Item </button>
+   <button onclick = "getItem()"> Get Item </button>
+   p id = "demo" 
+   <script>
+      const output = document.getElementById('demo');
+      function setItem() {
+         const animal = {
+            name: "Lion",
+            color: "Yellow",
+            food: "Non-vegetarian",
+         }
+         localStorage.setItem("animal", JSON.stringify(animal));
+      }
+
+      function getItem() {
+         const animal = localStorage.getItem("animal");
+         output.innerHTML = "The animal object is: " + animal;
+      }
+   </script>
+</body>
+</html>
+```
+
+
+### Example: Removing the items from the local storage
+
+
+In the below code, we set the 'name' and 'john' key-value pair in the local storage when the web page loads into the browser.
+
+
+After that, users can click the get item button to get the item from local storage. It will show you the name.
+
+
+You can click the get item button again after clicking the remove item button, and it will show you null as the item got deleted from the local storage.
+
+
+```html
+<html>
+<body>
+   <button onclick = "getItem()"> Get Item </button>
+   <button onclick = "removeItem()"> Remvoe Item </button>
+   p id = "demo"
+   <script>
+      const output = document.getElementById('demo');
+      localStorage.setItem('name', 'John');
+      function getItem() {
+         output.innerHTML = "The name of the person is: " + 
+		 localStorage.getItem('name');
+      }
+      function removeItem() {
+         localStorage.removeItem('name');
+         output.innerHTML = 'Name removed from local storage. Now, you can\'t get it.';
+      }
+   </script>
+</body>
+</html>
+```
+
+
+## The Window sessionStorage Object
+
+
+The sessionStorage object also allows storing the data in the browser in the key-value pair format.
+
+
+It also allows you to store the data up to 5 MB.
+
+
+The data stored in the session storage expires when you close the tab of the browsers. This is the main difference between the session storage and local storage. You can also use the removeItem() or clear() method to remove the items from the session storage without closing the browser's tab.
+
+
+Note  Some browsers like Chrome and Firefox maintain the session storage data if you re-open the browser's tab after closing it. If you close the browser window, it will definitely delete the session storage data.
+
+
+### Syntax
+
+
+Follow the syntax below to use the session storage object to set and get data from the session storage.
+
+
+```javascript
+sessionStorage.setItem(key, value); // To set key-value pair
+sessionStorage.getItem(key); // To get data using a key
+```
+
+
+The setItem() and getItem() methods give the same result with the sessionStorage object as the localStorage object.
+
+
+### Parameters
+
+
+
+- key− It is a key in the string format.
+- value− It is a value for the key in the string format.
+
+
+
+### Example
+
+
+In the below code, we used the 'username' as a key and 'tutorialspoint' as a value. We store the key-value pair in the sessionStorage object using the setItem() method.
+
+
+You can click the get item button after clicking the set item button to get the key-value pair from the session storage.
+
+
+```html
+<html>
+<body>
+   <button onclick = "setItem()"> Set Item </button>
+   <button onclick = "getItem()"> Get Item </button>
+   p id = "output" 
+   <script>
+      const output = document.getElementById('output');
+      function setItem() {
+         sessionStorage.setItem("username", "tutorialspoint");
+      }
+      function getItem() {
+         const username = sessionStorage.getItem("username");
+         output.innerHTML = "The user name is: " + username;
+     }
+   </script>
+</body>
+</html>
+```
+
+
+You can't store the file or image data directly in the local or session storage, but you can read the file data, convert it into the string, and store it in the session storage.
+
+
+### Example
+
+
+In the below code, we have used the `<input>` element to take the image input from users. When a user uploads the image, it will call the handleImageUpload() function.
+
+
+In the handleImageUpload() function, we get the uploaded image. After that, we read the image data using the FileReader and set the data into the session storage.
+
+
+In the getImage() function, we get the image from the session storage and set its data as a value of the 'src' attribute of the image.
+
+
+Users can upload the image first and click the get Image button to display the image on the web page.
+
+
+```html
+<html>
+<body>
+   ##  Upload image of size less than 5 MB 
+   <input type = "file" id = "image" accept = "image/*" onchange = "handleImageUpload()">
+   <div id = "output"> </div> <br>
+   <button onclick = "getImage()"> Get Image </button>
+   <script>
+      // To handle image upload
+      function handleImageUpload() {
+         const image = document.getElementById('image');
+         const output = document.getElementById('output');
+         const file = image.files[0];
+         // Read Image file
+         if (file) {
+            const reader = new FileReader();
+            reader.onload = function (event) {
+               const data = event.target.result;
+               // Storing the image data in sessionStorage
+               sessionStorage.setItem('image', data);
+            };
+            reader.readAsDataURL(file);
+         }
+      }
+      // Function to get image
+      function getImage() {
+         let data = sessionStorage.getItem("image");
+         output.innerHTML = <img src="${data}" alt="Uploaded Image" width="300">;
+      }
+   </script>
+</body>
+</html>
+```
+
+
+You can also use the removeItem() or clear() method with the sessionStorage object like the localStorage.
+
+
+## Cookie Vs localStorage Vs sessionStorage
+
+
+Here, we have given the difference between the cookie, localStorage, and sessionStorage objects.
+
+
+FeatureCookieLocal storageSession storageStorage Limit4 KB per cookie5 MB5 MBExpiryIt has an expiry date.It never expires.It gets deleted when you close the browser window.AccessibilityIt can be accessed on both the client and server.It can be accessed by the client only.It can be accessed by the client only.SecurityIt can be vulnerable.It is fully secured.It is fully secured.
+
+
+## Storage Object Properties and Methods
+
+
+Property/MethodDescriptionkey(n)To get the name of the nth key from the local or session storage.lengthTo get the count of key-value pairs in the local or session storage.getItem(key)To get a value related to the key passed as an argument.setItem(key, value)To set or update key-value pair in the local or session storage.removeItem(key)To remove key-value pairs from the storage using its key.clear()To remove all key-value pairs from the local or session storage.
+

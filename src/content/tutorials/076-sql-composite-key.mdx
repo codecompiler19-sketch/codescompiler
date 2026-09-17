@@ -1,0 +1,243 @@
+---
+title: "SQL - Composite Key"
+description: "Learn SQL - Composite Key with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 760
+group: "SQL Keys"
+seoTitle: "SQL - Composite Key — CodesCompiler SQL Guide"
+permalink: "sql-composite-key"
+---
+
+
+# SQL - Composite Key
+
+
+Table of contentThe SQL Composite KeyDropping a Composite Key in MySQLDropping a Composite Key in SQL Server
+
+
+
+
+## The SQL Composite Key
+
+
+An SQLComposite Keyis a key that can be defined on two or more columns in a table to uniquely identify any record. It can also be described as a Primary Key created on multiple columns.
+
+
+Composite Keys are necessary in scenarios where a database table does not have a single column that can uniquely identify each row from the table. In such cases, we might need to use the combination of columns to ensure that each record in the table is distinct and identifiable.
+
+
+Let us understand the composite keys with an example. Suppose if we have a table named CUSTOMERS with various fields like ID, NAME, AGE, AADHAAR_ID, MOBILE_NO and SALARY as shown below −
+
+
+We can select the two columns AADHAAR_ID and MOBILE_NO and define a Composite key on them, and it can be used to fetch the records of the CUSTOMERS table uniquely.
+
+
+### Features of Composite Keys
+
+
+Following are some important features of the SQL Composite Key −
+
+
+
+- A Composite Key can be created by combining more than one Candidate Key.
+- Each Candidate Key (or column) that makes up a Composite Key may or may not be a Foreign Key. However, if all the columns of the Composite Key are Foreign Keys in their own right, then the Composite Key is known as a Compound Key.
+- A Composite Key cannot be NULL; i.e. any column of the Composite Key must not contain NULL values.
+- The individual columns making up the Composite Key can contain duplicate values, but, the combination of these columns must be unique across the database table.
+
+
+
+### Syntax
+
+
+Following is the syntax to create an SQL Composite Key while creating a table −
+
+
+```sql
+CREATE TABLE table_name(
+   column1 datatype,
+   column2 datatype,
+   column3 datatype,
+   .....
+   columnN datatype,
+   CONSTRAINT composite_key_name,
+   PRIMARY KEY(column_name)
+);
+```
+
+
+Here, thecomposite_key_nameis the optional placeholder which holds the name of a Composite Key in a table. It is used while dropping the constraint from a table in some databases.
+
+
+### Example
+
+
+In the following example, we are creating a table named CUSTOMERS with multiple columns. The Composite Key is created when a PRIMARY KEY is defined on ID and NAME columns together. Look at the query below −
+
+
+```sql
+CREATE TABLE CUSTOMERS(
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),       
+   CONSTRAINT ck_customers 
+   PRIMARY KEY (ID, NAME)
+);
+```
+
+
+Where, ck_customers is the name of a composite key of this table.
+
+
+### Output
+
+
+Following is the output of the above statement −
+
+
+```sql
+Query OK, 0 rows affected (0.02 sec)
+```
+
+
+### Verification
+
+
+As we have created a Composite Key on the columns ID and NAME of the CUSTOMERS table, the combination of values in these columns can not be duplicated. To verify it, let us insert two records with same values in these columns into the CUSTOMERS table −
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+(1, 'Ramesh', 25, 'Delhi', 1500.00 );
+```
+
+
+You can observe that the second INSERT statement generates an error message saying"Duplicate entry"as shown below −
+
+
+```sql
+ERROR 1062 (23000): Duplicate entry '1-Ramesh' for key 'customers.PRIMARY'
+```
+
+
+## Dropping a Composite Key in MySQL
+
+
+You can drop the composite key from a table in MySQL database using theALTER TABLE... DROPstatement.
+
+
+### Syntax
+
+
+Following is the syntax to drop the Composite Key in MySQL −
+
+
+```sql
+ALTER TABLE table_name DROP PRIMARY KEY;
+```
+
+
+### Example
+
+
+Using the following SQL statement, we can drop the Composite Key constraint from the CUSTOMERS table −
+
+
+```sql
+ALTER TABLE CUSTOMERS DROP PRIMARY KEY;
+```
+
+
+### Output
+
+
+The above SQL statement produces the following output −
+
+
+```sql
+Query OK, 1 row affected (0.02 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+```
+
+
+### Verification
+
+
+Since, we have dropped the composite from the CUSTOMERS table, so now you can insert the duplicate values in the columns ID and NAME.
+
+
+Let us insert two records with the same ID and NAME into the CUSTOMERS table −
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+(1, 'Ramesh', 25, 'Delhi', 1500.00 ),
+(1, 'Ramesh', 23, 'Kota', 2000.00 );
+```
+
+
+If you retrieve the contents the CUSTOMERS table you can find the records with same ID and NAME as −
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.001Ramesh25Delhi1500.001Ramesh23Kota2000.00
+
+
+## Dropping a Composite Key in SQL Server
+
+
+In SQL Server, we have a different syntax to drop a composite key of a table. The syntax is almost similar, but we just need to specify the composite key name in order to drop it, rather than the keyword PRIMARY KEY.
+
+
+### Syntax
+
+
+Following is the syntax to drop a composite key in SQL Server −
+
+
+```sql
+ALTER TABLE table_name DROP composite_key_name;
+```
+
+
+### Example
+
+
+Assuming that a composite key "ck_customers" is created on ID and NAME columns of the CUSTOMERS table, we will use the following query to drop it −
+
+
+```sql
+ALTER TABLE CUSTOMERS DROP ck_customers;
+```
+
+
+### Output
+
+
+When we execute the above query, the composite key will be dropped.
+
+
+```sql
+Commands completed successfully.
+```
+
+
+### Verification
+
+
+To verify whether we have removed the composite key from the CUSTOMERS table or not, insert duplicate values into the ID and NAME columns using the following query −
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+(1, 'Ramesh', 25, 'Delhi', 1500.00 ),
+(1, 'Ramesh', 23, 'Kota', 2000.00 );
+```
+
+
+As we can see in the table below, both the customers have the same ID and NAME −
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.001Ramesh25Delhi1500.001Ramesh23Kota2000.00
+

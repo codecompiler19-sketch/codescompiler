@@ -1,0 +1,267 @@
+---
+title: "JavaScript - Callback Function"
+description: "Learn JavaScript - Callback Function with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2100
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Callback Function — CodesCompiler JavaScript Guide"
+permalink: "javascript-callback-function"
+---
+
+
+# JavaScript - Callback Function
+
+
+
+
+In JavaScript, functions are considered as objects, which means they can be used just like any other value we pass to the function. So, we can pass them as parameters to other functions just like we do with variables or objects. When you pass a function as a parameter, it will be called or even executed within the other function.
+
+
+This makes it really flexible because you can decide later what function should be run. When a function is passed like this and then it gets called inside the other function, its known as a callback function. Its basically a way to control when and how a certain piece of code should run.
+
+
+## Why do we need Callback Functions?
+
+
+
+- Callback functions are really useful when we have to run certain piece of code after some other function execution or middle of any other function's working. You can simply run after specific task is done as per your need.
+- They come in handy for handling things that dont happen right away, which takes time like loading data from a server or waiting for user input. In JavaScript, these are called asynchronous operations, and callback functions are often used to manage these asynchronous function.
+- Callback function are also used to handle events. For example, you have a function that should run when a user clicks a button or when a page is loaded. You can pass that function as a callback to the event listener, and it will be executed when the event occurs.
+- Callback allow you to use the same function in different situations. which makes easy to handle various tasks without repeating the same code again and again.
+
+
+
+## Example of Callback Function
+
+
+Following is an example of callback function in JavaScript. In this example, we are passing a function as a parameter to another function and then calling it after 5 seconds.
+
+
+```html
+<html>
+
+   <head>
+
+      <script>
+
+         var callback = function(myCallback) {
+
+            setTimeout(function() {
+
+               myCallback();
+
+            }, 5000);
+
+         };
+
+         
+
+         document.write("First is displayed");
+
+         document.write("<br>Second is displayed");
+
+         
+
+         callback(function() {
+
+            document.write("This is Callback function");
+
+         });
+
+         document.write("<br>Last is displayed");
+
+      </script>
+
+   </head>
+
+</html>
+```
+
+
+### Output:
+
+
+```javascript
+First is displayed
+
+Second is displayed
+
+Last is displayed
+```
+
+
+After 5 seconds, the callback function will be executed and the output will be:
+
+
+```javascript
+First is displayed
+
+Second is displayed
+
+This is Callback function
+
+Last is displayed
+```
+
+
+## Callback Function with Parameters
+
+
+Following is an example of callback function with parameters in JavaScript. In this example, we are passing a message to the callback function and then displaying it.
+
+
+```html
+<html>
+
+   <head>
+
+      <script>
+
+         var callback = function(myCallback) {
+
+            setTimeout(function() {
+
+               myCallback("Hello, World!");
+
+            }, 5000);
+
+         };
+
+         
+
+         document.write("First is displayed");
+
+         document.write("<br>Second is displayed");
+
+         
+
+         callback(function(message) {
+
+            document.write("<br>" + message);
+
+         });
+
+         document.write("<br>Last is displayed");
+
+      </script>
+
+   </head>
+```
+
+
+### Output
+
+
+Following is the output of the above code:
+
+
+```javascript
+First is displayed
+
+Second is displayed
+
+Last is displayed
+```
+
+
+After 5 seconds, the callback function will be executed and the output will be:
+
+
+```javascript
+First is displayed
+
+Second is displayed
+
+Hello, World!
+
+Last is displayed
+```
+
+
+## What is Callback Hell?
+
+
+When you nest too many function inside other functions, The code becomes messy and hard to read and maintain. It happens when you have multiple level of nested callbacks to handle a task one after another this is called as Callback Hell.
+
+
+## Example of Callback Hell
+
+
+Following is an example of callback hell in JavaScript:
+
+
+```javascript
+function step1(callback) {
+
+   setTimeout(function() {
+
+      console.log("Step 1");
+
+      callback();
+
+   }, 1000);
+
+}
+
+
+
+function step2(callback) {
+
+   setTimeout(function() {
+
+      console.log("Step 2");
+
+      callback();
+
+   }, 1000);
+
+}
+
+
+
+function step3(callback) {
+
+   setTimeout(function() {
+
+      console.log("Step 3");
+
+      callback();
+
+   }, 1000);
+
+}
+
+
+
+step1(function() {
+
+   step2(function() {
+
+      step3(function() {
+
+         console.log("Done!");
+
+      });
+
+   });
+
+});
+```
+
+
+### Output
+
+
+Following is the output of the above code:
+
+
+```javascript
+Step 1
+
+Step 2
+
+Step 3
+
+Done!
+```
+

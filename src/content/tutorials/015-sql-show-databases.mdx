@@ -1,0 +1,163 @@
+---
+title: "SQL - Show Databases"
+description: "Learn SQL - Show Databases with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 150
+group: "SQL Database"
+seoTitle: "SQL - Show Databases — CodesCompiler SQL Guide"
+permalink: "sql-show-databases"
+---
+
+
+# SQL - Show Databases
+
+
+Table of contentList Databases using SQLThe SHOW SCHEMAS StatementThe SELECT...FROM StatementThe EXEC sp_databases Statement
+
+
+
+
+Many a times you face a situation where you need to list down all the available databases. MySQL provides a convenient way to list down all the databases usingSHOW DATABASEScommand where as there is no particular command in MS SQL Server to show or list the databases but, you can use theSELECT...FROMcommand as a work around list down available databases.
+
+
+## List Databases using SQL
+
+
+The SQLSHOW DATABASESstatement is used to list down all the available databases in MySQL database. You can useSHOW SCHEMASas an alternate command forSHOW DATABASES.
+
+
+### Syntax
+
+
+Following is the syntax of SQLSHOW DATABASESto list down all the available databases in MySQL −
+
+
+```sql
+SHOW DATABASES [LIKE 'pattern' | WHERE expr] ;
+```
+
+
+We can use LIKE or WHERE clause along with SHOW DATABASES to filter out a list of databases.
+
+
+### Example
+
+
+Following is an example to list down all the available databases.
+
+
+```sql
+SHOW DATABASES;
+```
+
+
+The output will be displayed as follows. This output depends on the number of databases available in the system −
+
+
+Databaseperformance_schemainformation_schemamysqltestDB
+
+
+Following is an example to list down all the databases whose name starts with test.
+
+
+```sql
+SHOW DATABASES LIKE 'test%';
+```
+
+
+The output will be displayed as follows −
+
+
+Database (test%)testDB
+
+
+## The SHOW SCHEMAS Statement
+
+
+You can use theSHOW SCHEMASstatement as an alternate for theSHOW DATABASESstatement.
+
+
+### Syntax
+
+
+Following is the syntax of the SQLSHOW SCHEMASstatement to list down all the available databases in MySQL −
+
+
+```sql
+SHOW SCHEMAS [LIKE 'pattern' | WHERE expr] ;
+```
+
+
+We can use LIKE or WHERE clause along with SHOW SCHEMAS to filter out a list of databases.
+
+
+### Example
+
+
+Following is an example to list down all the available databases.
+
+
+```sql
+SHOW SCHEMAS;
+```
+
+
+The output will be displayed as follows. This output depends on the number of databases available in the system −
+
+
+Databaseperformance_schemainformation_schemamysqltestDB
+
+
+Following is an example to list down all the databases whose name starts with test.
+
+
+```sql
+SHOW SCHEMAS LIKE 'test%';
+```
+
+
+The output will be displayed as follows −
+
+
+Database (test%)testDB
+
+
+## The SELECT...FROM Statement
+
+
+If you are working with MS SQL Server then you can use theSELECT...FROMstatement to list down all the available databases as shown below.
+
+
+```sql
+SQL> SELECT * FROM sys.databases;
+```
+
+
+### Output
+
+
+If we execute the above query, it returns a table that lists down all the databases and associated information about the databases.
+
+
+namedatabase_idsource_database_idowner_sidmaster1NULL001tempdb2NULL001model3NULL001msdb4NULL001testDB5NULL001000
+
+
+## The EXEC sp_databases Statement
+
+
+If you are using MS SQL Server then you can use the followingEXEC sp_databasesstatement to list down all the databases −
+
+
+```sql
+SQL> EXEC sp_databases;
+```
+
+
+### Output
+
+
+This will display the same result as we got fromSELECT...FROMstatement.
+
+
+namedatabase_idsource_database_idowner_sidmaster1NULL001tempdb2NULL001model3NULL001msdb4NULL001testDB5NULL001000
+

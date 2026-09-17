@@ -1,0 +1,107 @@
+---
+title: "PYTHON - Monkey Patching"
+description: "Learn PYTHON - Monkey Patching with clear explanation, code examples, and practical guide."
+category: "python"
+order: 2240
+group: "Python Advanced Concepts"
+seoTitle: "PYTHON - Monkey Patching — CodesCompiler PYTHON Guide"
+permalink: "python-monkey-patching"
+---
+
+
+# Python - Monkey Patching
+
+
+
+
+Monkey patchingin Python refers to the practice of dynamically modifying or extending code at runtime typically replacing or adding new functionalities to existingmodules,classes or methodswithout altering their original source code. This technique is often used for quick fixes, debugging or adding temporary features.
+
+
+The term "monkey patching" originates from the idea of making changes in a way that is ad-hoc or temporary, akin to how a monkey might patch something up using whatever materials are at hand.
+
+
+## Steps to Perform Monkey Patching
+
+
+Following are the steps that shows how we can perform monkey patching −
+
+
+
+- First to apply a monkey patch we have to import the module or class we want to modify.
+- In the second step we have to define a new function or method with the desired behavior.
+- Replace the original function or method with the new implementation by assigning it to the attribute of the class or module.
+
+
+
+## Example of Monkey Patching
+
+
+Now let's understand theMonkey patchingwith the help of an example −
+
+
+### Define a Class or Module to Patch
+
+
+First we have to define the original class or module that we want to modify. Below is the code −
+
+
+```python
+# original_module.py
+
+class MyClass:
+   def say_hello(self):
+      return "Hello, Welcome to Tutorialspoint!"
+```
+
+
+### Create a Patching Function or Method
+
+
+Next we have to define a function or method that we will use to monkey patch the original class or module. This function will contain the new behavior or functionality we want to add −
+
+
+```python
+# patch_module.py
+
+from original_module import MyClass
+
+# Define a new function to be patched
+def new_say_hello(self):
+   return "Greetings!"
+
+# Monkey patching MyClass with new_say_hello method
+MyClass.say_hello = new_say_hello
+```
+
+
+### Test the Monkey Patch
+
+
+Now we can test the patched functionality. Ensure that the patching is done before we create an instance of MyClass with the patched method −
+
+
+```python
+# test_patch.py
+
+from original_module import MyClass
+import patch_module
+
+# Create an instance of MyClass
+obj = MyClass()
+
+# Test the patched method
+print(obj.say_hello())  # Output: Greetings!
+```
+
+
+## Drawbacks of Monkey Patching
+
+
+Following are the draw backs of monkey patching −
+
+
+
+- Overuse:Excessive monkey patching can lead to code that is hard to understand and maintain. We have to use it judiciously and consider alternative design patterns if possible.
+- Compatibility:Monkey patching may introduce unexpected behavior especially in complex systems or with large code-bases.
+
+

@@ -1,0 +1,199 @@
+---
+title: "PYTHON - Thread Scheduling"
+description: "Learn PYTHON - Thread Scheduling with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1740
+group: "Python Multithreading"
+seoTitle: "PYTHON - Thread Scheduling — CodesCompiler PYTHON Guide"
+permalink: "python-thread-scheduling"
+---
+
+
+# Python - Thread Scheduling
+
+
+
+
+Thread scheduling in Python is a process of deciding which thread runs at any given time. In a multi-threaded program, multiple threads are executed independently, allowing for parallel execution of tasks. However, Python does not have built-in support for controlling thread priorities or scheduling policies directly. Instead, it relies on the operating system's thread scheduler.
+
+
+Python threads are mapped to native threads of the host operating system, such as POSIX threads (pthreads) on Unix-like systems or Windows threads. The operating system's scheduler manages the execution of these threads, including context switching, thread priorities, and scheduling policies. Python provides basic thread scheduling capabilities through thethreading.Timerclass and theschedmodule.
+
+
+In this tutorial will learn the basics of thread scheduling in Python, including how to use theschedmodule for scheduling tasks and thethreading.Timerclass for delayed execution of functions.
+
+
+## Scheduling Threads using the Timer Class
+
+
+TheTimerclass of the Pythonthreadingmodule allows you to schedule a function to be called after a certain amount of time. This class is a subclass ofThreadand serves as an example of creating custom threads.
+
+
+You start a timer by calling itsstart()method, similar to threads. If needed, you can stop the timer before it begins by using thecancel()method. Note that the actual delay before the action is executed might not match the exact interval specified.
+
+
+### Example
+
+
+This example demonstrates how to use thethreading.Timer()class to schedule and manage the execution of tasks (custom threads) in Python.
+
+
+```python
+import threading
+import time
+
+# Define the event function
+def schedule_event(name, start):
+   now = time.time()
+   elapsed = int(now - start)
+   print('Elapsed:', elapsed, 'Name:', name)
+
+# Start time
+start = time.time()
+print('START:', time.ctime(start))
+
+# Schedule events using Timer
+t1 = threading.Timer(3, schedule_event, args=('EVENT_1', start))
+t2 = threading.Timer(2, schedule_event, args=('EVENT_2', start))
+
+# Start the timers
+t1.start()
+t2.start()
+
+t1.join()
+t2.join()
+# End time
+end = time.time()
+print('End:', time.ctime(end))
+```
+
+
+On executing the above program, it will produce the following output −
+
+
+```python
+START: Tue Jul  2 14:46:33 2024
+Elapsed: 2 Name: EVENT_2
+Elapsed: 3 Name: EVENT_1
+End: Tue Jul  2 14:46:36 2024
+```
+
+
+## Scheduling Threads using theschedModule
+
+
+Theschedmodule in Python's standard library provides a way to schedule tasks. It implements a generic event scheduler for running tasks at specific times. It provides similar tools like task scheduler in windows or Linux.
+
+
+### Key Classes and Methods of the sched Module
+
+
+Thescheduler()class is defined in theschedmodule is used to create a scheduler object. Here is the syntax of the class −
+
+
+```python
+scheduler(timefunc=time.monotonic, delayfunc=time.sleep)
+```
+
+
+The methods defined in scheduler class include −
+
+
+
+- scheduler.enter(delay, priority, action, argument`=`(), kwargs`=`&#123;&#125;)− Events can be scheduled to run after a delay, or at a specific time. To schedule them with a delay, enter() method is used.
+- scheduler.cancel(event)− Remove the event from the queue. If the event is not an event currently in the queue, this method will raise a ValueError.
+- scheduler.run(blocking`=` True)− Run all scheduled events.
+
+
+
+Events can be scheduled to run after a delay, or at a specific time. To schedule them with a delay, use the enter() method, which takes four arguments.
+
+
+
+- A number representing the delay
+- A priority value
+- The function to call
+- A tuple of arguments for the function
+
+
+
+### Example
+
+
+This example demonstrates how to schedule events to run after a delay using theschedmodule. It schedules two different events −
+
+
+```python
+import sched
+import time
+
+scheduler = sched.scheduler(time.time, time.sleep)
+
+def schedule_event(name, start):
+   now = time.time()
+   elapsed = int(now - start)
+   print('elapsed=',elapsed, 'name=', name)
+
+start = time.time()
+print('START:', time.ctime(start))
+scheduler.enter(2, 1, schedule_event, ('EVENT_1', start))
+scheduler.enter(5, 1, schedule_event, ('EVENT_2', start))
+
+scheduler.run()
+
+# End time
+end = time.time()
+print('End:', time.ctime(end))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+START: Tue Jul  2 15:11:48 2024
+elapsed= 2 name= EVENT_1
+elapsed= 5 name= EVENT_2
+End: Tue Jul  2 15:11:53 2024
+```
+
+
+### Example
+
+
+Let's take another example to understand the concept better. This example schedules a function to perform an addition after a 4-second delay using theschedmodule in Python.
+
+
+```python
+import sched
+from datetime import datetime
+import time
+
+def addition(a,b):
+   print("Performing Addition : ", datetime.now())
+   print("Time : ", time.monotonic())
+   print("Result {}+{} =".format(a, b), a+b)
+
+s = sched.scheduler()
+
+print("Start Time : ", datetime.now())
+
+event1 = s.enter(4, 1, addition, argument = (5,6))
+print("Event Created : ", event1)
+s.run()
+print("End Time : ", datetime.now())
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Start Time :  2024-07-02 15:18:27.862524
+Event Created :  Event(time=2927111.05638099, priority=1, sequence=0, action=<function addition at 0x7f31f902bd90>, argument=(5, 6), kwargs={})
+Performing Addition :  2024-07-02 15:18:31.866381
+Time :  2927111.060294749
+Result 5+6 = 11
+End Time :  2024-07-02 15:18:31.866545
+```
+

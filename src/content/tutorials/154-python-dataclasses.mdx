@@ -1,0 +1,376 @@
+---
+title: "PYTHON - Data Classes"
+description: "Learn PYTHON - Data Classes with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1540
+group: "Object Oriented Programming"
+seoTitle: "PYTHON - Data Classes — CodesCompiler PYTHON Guide"
+permalink: "python-dataclasses"
+---
+
+
+# Python - Dataclass
+
+
+
+
+Thedataclassis a feature in Python that helps for automatically adding special methods to user-defined classes. For example, a dataclass can be used to automatically generate a constructor method for your class, so you can easily create instances of the class. In this chapter, we will explain all the features of the dataclass module with the help of examples.
+
+
+## What is a Dataclass?
+
+
+Adataclassis a Python class denoted with the@dataclassdecorator from thedataclassesmodule. It is used to automatically generate special methods like constructor method__init__(), string representation method __repr__(), equality method__eq__(), and others based on the class attributes defined in the class body. This simply means that using dataclasses can reduce boilerplate code in your class definitions.
+
+
+### Syntax of Dataclass
+
+
+The syntax to define a dataclass is as follows −
+
+
+```python
+@dataclass(init=True, repr=True, eq=True, order=False, unsafe_hash=False, frozen=False)
+```
+
+
+Each argument is taking a boolean value, which indicates whether corresponding special methods should be automatically generated.
+
+
+The@dataclassdecorator can take these options:
+
+
+
+- init (default: True)− Automatically creates an __init__() method for initializing class instances.
+- repr (default: True)− Automatically creates a __repr__() method to provide a readable string representation of the object.
+- eq (default: True)− Generates an __eq__() method for comparing objects using the `=`=` operator.
+- order (default: False)− If set to True, comparison methods (like `< and >`) are generated for sorting objects.
+- unsafe_hash (default: False)− If false, it produces a default __hash__() method based on how equality and mutability are defined.
+- frozen (default: False)− Creates immutable instances (they can’t be changed after creation).
+
+
+
+## Creating a Dataclass
+
+
+In the code below, you can see that we have defined a simple dataclass namedStudentwith three attributes:name, age,andpercent. Even though we are not using constructor or other special methods, we can still create instances of the Student class and use its attributes. This is because the dataclass decorator automatically generates these methods for us.
+
+
+```python
+from dataclasses import dataclass  
+
+
+
+@dataclass  
+
+class Student:  
+
+    name: str  
+
+    age: int  
+
+    percent: float
+
+
+
+s1 = Student("Alice", 20, 90.0)
+
+s2 = Student("Bob", 22, 85.5)
+
+
+
+print(s1)         
+
+print(s1 == s2)
+```
+
+
+Theoutputof the above code will be −
+
+
+```python
+Student(name='Alice', age=20, percent=90.0)
+
+False
+```
+
+
+## Example without Dataclass
+
+
+The above code is equivalent to the following code in traditional class definition without using dataclass −
+
+
+```python
+class Student:  
+
+    def __init__(self, name: str, age: int, percent: float):  
+
+        self.name = name  
+
+        self.age = age  
+
+        self.percent = percent  
+
+    def __repr__(self):  
+
+        return f"Student(name={self.name}, age={self.age}, percent={self.percent})"  
+
+    def __eq__(self, other):  
+
+        if not isinstance(other, Student):  
+
+            return NotImplemented  
+
+        return (self.name == other.name and self.age == other.age and self.percent == other.percent)
+
+s1 = Student("Alice", 20, 90.0)
+
+s2 = Student("Bob", 22, 85.5)
+
+print(s1)
+
+print(s1 == s2)
+```
+
+
+Theoutputof this code will same as above −
+
+
+```python
+Student(name='Alice', age=20, percent=90.0)
+
+False
+```
+
+
+## Default Values in Dataclass
+
+
+You can also provide default values for the attributes in a dataclass. If a value is not provided during the creation of an instance, then the default value will be used. In the code below, we have provided a default value of 0.0 for the percent attribute.
+
+
+```python
+from dataclasses import dataclass
+
+
+
+@dataclass
+
+class Student:
+
+    name: str
+
+    age: int
+
+    percent: float = 0.0  # Default value for percent
+
+
+
+s1 = Student("Alice", 20)
+
+s2 = Student("Bob", 22, 85.5)
+
+print(s1)
+
+print(s2)
+```
+
+
+Theoutputof the above code will be −
+
+
+```python
+Student(name='Alice', age=20, percent=0.0)
+
+Student(name='Bob', age=22, percent=85.5)
+```
+
+
+## Dataclass with Mutable Default Values
+
+
+Mutable default values refers to default values that can be modified after the instance is created, such as lists or dictionaries. When using mutable default values in a dataclass, it is recommended to use thefield()function from the dataclasses module with thedefault_factoryparameter. Because if you use a mutable object as a default value directly, it will be shared across all instances of the dataclass. This can lead security issues and unexpected behavior.
+
+
+In the code below, we have defined a dataclass namedCoursewith a mutable default value for the students attribute.
+
+
+```python
+from dataclasses import dataclass, field
+
+from typing import List
+
+@dataclass
+
+class Course:
+
+    name: str
+
+    students: List[str] = field(default_factory=list)  # Mutable default value
+
+
+
+course1 = Course("Math")
+
+course2 = Course("Science", ["Alice", "Bob"])
+
+course1.students.append("Charlie")
+
+print(course1)
+
+print(course2)
+```
+
+
+Theoutputof the above code will be −
+
+
+```python
+Course(name='Math', students=['Charlie'])
+
+Course(name='Science', students=['Alice', 'Bob'])
+```
+
+
+Explantion: If you usedstudents: List[str] `=` []directly, all the instances ofCoursewill get the same list, because default values are evaluated only once, i.e., during creation of class. By usingfield(default_factory`=`list), Python ensures that every Course instance gets its own separate list and avoids security vulnerabilities.
+
+
+## Immuatable/Frozen Dataclasses
+
+
+An immutable or frozen dataclass indicates that the instances of the dataclass cannot be modified after they are created. This can be achieved by setting thefrozenparameter toTruein the @dataclass decorator. When a dataclass is frozen, any attempt to modify its attributes will create aFrozenInstanceError.
+
+
+The frozen dataclasses are often used to secure applications by preventing unauthorized access or modification of sensitive data. In the code below, we have defined a frozen dataclass namedPointwith two attributes: x and y. We will catch the FrozenInstanceError when trying to modify the x attribute.
+
+
+```python
+from dataclasses import dataclass, FrozenInstanceError
+
+@dataclass(frozen=True)
+
+class Point:
+
+    x: int
+
+    y: int
+
+p = Point(1, 2)
+
+print(p)
+
+
+
+try:
+
+    p.x = 10  # This will raise an error
+
+except FrozenInstanceError as e:
+
+    print(e)
+```
+
+
+Theoutputof the above code will be −
+
+
+```python
+Point(x=1, y=2)
+
+cannot assign to field 'x'
+```
+
+
+## Setting Up Post-Initialization
+
+
+Thepost-Initializationrefer to the additional initialization logic that can be added to a dataclass after the automatic __init__() method has been called. This can be done by defining a special method named__post_init__()in the dataclass. The __post_init__() method is called automatically after the instance is created and all the attributes have been initialized.
+
+
+In the code below, we have defined a dataclass namedRectanglewith default value for the area as 0.0. The area is then calculated in the __post_init__() method based on the recived width and height values.
+
+
+```python
+from dataclasses import dataclass
+
+@dataclass
+
+class Rectangle:
+
+    width: float
+
+    height: float
+
+    area: float = 0.0  # This will be calculated in __post_init__
+
+
+
+    def __post_init__(self):
+
+        self.area = self.width * self.height  # Calculate area after initialization
+
+r = Rectangle(5.0, 10.0)
+
+print(r)
+
+print(f"Area of the rectangle: {r.area}")
+```
+
+
+Theoutputof the above code will be −
+
+
+```python
+Rectangle(width=5.0, height=10.0, area=50.0)
+
+Area of the rectangle: 50.0
+```
+
+
+## Convert Dataclass to Dictionary
+
+
+You can convert a dataclass instance to a dictionary using theasdict()function from the dataclasses module. This function recursively converts the dataclass and its fields into a dictionary. This is useful when you want to serialize the dataclass instance or work with its data in a dictionary format.
+
+
+```python
+from dataclasses import dataclass, asdict
+
+from typing import List 
+
+
+
+@dataclass
+
+class Student:
+
+    name: str
+
+    age: int
+
+    grades: List[float]  
+
+
+
+student = Student("Alice", 20, [88.5, 92.0, 79.5])
+
+student_dict = asdict(student)
+
+print(student_dict)
+```
+
+
+Theoutputof the above code will be −
+
+
+```python
+{'name': 'Alice', 'age': 20, 'grades': [88.5, 92.0, 79.5]}
+```
+
+
+## Conclusion
+
+
+In this chapter, we have learned that dataclass is feature introduced in Python to reduce boilerplate code in class definitions. We have seen how to create a dataclass, provide default values, handle mutable default values, etc. One thing to note is that dataclasses are available inPython 3.7and later versions. If you are using an earlier version of Python, you will need to use traditional class definitions without the dataclass decorator.
+

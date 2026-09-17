@@ -1,0 +1,244 @@
+---
+title: "SQL - EXCEPT Operator"
+description: "Learn SQL - EXCEPT Operator with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 600
+group: "SQL Operators and Clauses"
+seoTitle: "SQL - EXCEPT Operator — CodesCompiler SQL Guide"
+permalink: "sql-except-clause"
+---
+
+
+# SQL - EXCEPT
+
+
+Table of contentThe SQL EXCEPT OperatorEXCEPT with BETWEEN OperatorExcept with IN OperatorEXCEPT with LIKE Operator
+
+
+
+
+## The SQL EXCEPT Operator
+
+
+TheEXCEPToperator in SQL is used to retrieve all the unique records from the left operand (query), except the records that are present in the result set of the right operand (query).
+
+
+In other words, this operator compares the distinct values of the left query with the result set of the right query. If a value from the left query is found in the result set of the right query, it is excluded from the final result.
+
+
+For better understanding consider two tables with records as shown in the following image −
+
+
+If we perform the EXCEPT operator on the above two tables to retrieve the names, it will display the distinct records only from the first table which are not in common with the records of the second table.
+
+
+Here, "Dev" is common in both tables. So, the EXECPT operator will eliminate it and retrieves only "Sara" and "Jay" as output.
+
+
+MySQL database does not support the EXCEPT operator. Instead of this, we can use the DISTINCT keyword along with the LEFT JOIN clause to retrieve distinct values from the left table.
+
+
+### Syntax
+
+
+Following is the SQL syntax of the EXCEPT operator in Microsoft SQL server −
+
+
+```sql
+SELECT column1, column2,..., columnN
+FROM table1, table2,..., tableN
+[Conditions] //optional
+EXCEPT
+SELECT column1, column2,..., columnN
+FROM table1, table2,..., tableN
+[Conditions] //optional
+```
+
+
+The number and order of columns in both SELECT statements should be the same.
+
+
+### Example
+
+
+First of all, let us create a table namedSTUDENTSusing the following query −
+
+
+```sql
+CREATE TABLE STUDENTS(
+   ID INT NOT NULL, 
+   NAME VARCHAR(20) NOT NULL, 
+   SUBJECT VARCHAR(20) NOT NULL, 
+   AGE INT NOT NULL, 
+   HOBBY VARCHAR(20) NOT NULL, 
+   PRIMARY KEY(ID)
+);
+```
+
+
+Let's insert some values into the table using the following query −
+
+
+```sql
+INSERT INTO STUDENTS VALUES
+(1, 'Naina', 'Maths', 24, 'Cricket'),
+(2, 'Varun', 'Physics', 26, 'Football'),
+(3, 'Dev', 'Maths', 23, 'Cricket'),
+(4, 'Priya', 'Physics', 25, 'Cricket'),
+(5, 'Aditya', 'Chemistry', 21, 'Cricket'),
+(6, 'Kalyan', 'Maths', 30, 'Football'),
+(7, 'Aditya', 'Chemistry', 21, 'Cricket'),
+(8, 'Kalyan', 'Chemistry', 32, 'Cricket');
+```
+
+
+The table produced is as shown below −
+
+
+IDNAMESUBJECTAGEHOBBY1NainaMathematics24Cricket2VarunPhysics26Football3DevMathematics23Cricket4PriyaPhysics25Cricket5AdityaChemistry21Cricket6KalyanMathematics30Football7AdityaChemistry21Cricket8KalyanChemistry32Cricket
+
+
+Now, let us create another table namedSTUDENTS_HOBBYusing the following query −
+
+
+```sql
+CREATE TABLE STUDENTS_HOBBY(
+   ID INT NOT NULL, 
+   NAME VARCHAR(20) NOT NULL, 
+   HOBBY VARCHAR(20) NOT NULL, 
+   AGE INT NOT NULL, 
+   PRIMARY KEY(ID)
+);
+```
+
+
+Once the table is created, let us insert some values to the table using the query below −
+
+
+```sql
+INSERT INTO STUDENTS_HOBBY VALUES
+(1, 'Vijay', 'Cricket', 18),
+(2, 'Varun', 'Football', 26),
+(3, 'Surya', 'Cricket', 19),
+(4, 'Karthik', 'Cricket', 25),
+(5, 'Sunny', 'Football', 26),
+(6, 'Dev', 'Cricket', 23);
+```
+
+
+The table created is as follows −
+
+
+IDNAMEHOBBYAGE1VijayCricket182VarunFootball263SuryaCricket194KarthikCricket255SunnyFootball266DevCricket23
+
+
+Now, let us perform the except operation on the above two tables −
+
+
+```sql
+SELECT NAME, HOBBY, AGE FROM STUDENTS
+EXCEPT 	
+SELECT NAME, HOBBY, AGE FROM STUDENTS_HOBBY;
+```
+
+
+### Output
+
+
+Output of the above query is as shown below −
+
+
+NAMEHOBBYAGEAdityaCricket21KalyanCricket32KalyanFootball30NainaCricket24PriyaCricket25
+
+
+## EXCEPT with BETWEEN Operator
+
+
+We can use the EXCEPT operator with the BETWEEN operator in SQL to exclude records that fall within a specified range.
+
+
+### Example
+
+
+In the following SQL query, we are retrieving the records of students aged between 20 and 30 from the STUDENTS table, excluding those who are also aged between 20 and 30 from the STUDENTS_HOBBY table −
+
+
+```sql
+SELECT NAME, HOBBY, AGE
+FROM STUDENTS
+WHERE AGE BETWEEN 20 AND 30
+EXCEPT 
+SELECT NAME, HOBBY, AGE 
+FROM STUDENTS_HOBBY
+WHERE AGE BETWEEN 20 AND 30
+```
+
+
+### Output
+
+
+When we execute the program query, the output is obtained as follows −
+
+
+NAMEHOBBYAGEAdityaCricket21KalyanFootball30NainaCricket24PriyaCricket25
+
+
+## Except with IN Operator
+
+
+The IN operator is used to filter a result set based on a list of specified values. We can also use the EXCEPT operator with the IN operator in SQL to exclude records that matches values in the specified list.
+
+
+### Example
+
+
+Here, we are retrieving the records of students with Cricket as a hobby, from the STUDENTS table, excluding those who also have Cricket as hobby from the STUDENTS_HOBBY table −
+
+
+```sql
+SELECT NAME, HOBBY, AGE FROM STUDENTS
+WHERE HOBBY IN('Cricket')
+EXCEPT
+SELECT NAME, HOBBY, AGE FROM STUDENTS_HOBBY
+WHERE HOBBY IN('Cricket')
+```
+
+
+### Output
+
+
+Following is the output of the above query −
+
+
+NAMEHOBBYAGEAdityaCricket21KalyanCricket32NainaCricket24PriyaCricket25
+
+
+## EXCEPT with LIKE Operator
+
+
+The LIKE operator is used to perform pattern matching on a string. The EXCEPT operator can also be used with the LIKE operator in SQL to exclude rows that matches with the specified pattern.
+
+
+### Example
+
+
+In here, we are retrieving records from the STUDENTS table where the values in the HOBBY column starts with 'F', while excluding similar rows from the STUDENTS_HOBBY table −
+
+
+```sql
+SELECT ID, NAME, HOBBY, AGE FROM STUDENTS
+WHERE HOBBY LIKE 'F%'
+EXCEPT
+SELECT ID, NAME, HOBBY, AGE FROM STUDENTS_HOBBY
+WHERE HOBBY LIKE 'F%';
+```
+
+
+### Output
+
+
+The output for the above query is produced as given below −
+
+
+IDNAMEHOBBYAGE6KalyanFootball30
+

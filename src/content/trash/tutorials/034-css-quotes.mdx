@@ -1,0 +1,245 @@
+---
+title: "CSS - quotes"
+description: "Learn CSS - quotes with clear CSS layout principles, modern selectors, and practical examples."
+category: "css"
+order: 340
+group: "CSS Basics"
+seoTitle: "CSS - quotes — CodesCompiler CSS Guide"
+permalink: "css-quotes"
+---
+
+## CSS - quotes
+
+CSS quotes property allows browser to render quotation marks for the content.
+
+Quotes can be added to any element. They seek the benefit of pseudo-elements ::before and ::after to insert the quotation marks at the beginning and at the end of a quote. These pseudo-elements are defined by the content property.
+
+This CSS quotes specifies how the browser should render quotation marks that are added using the open-quote and close-quote values of the content property.
+
+## Possible Values
+
+- none − The open-quote and close-quote values of the content property produce no quotation marks.
+
+none − The open-quote and close-quote values of the content property produce no quotation marks.
+
+- string,string,+ − One or more pairs of string values for open-quote and close-quote . The first pair represents the outer level of quotation. The second pair is for the first nested level and next pair for third level and so on.
+
+string,string,+ − One or more pairs of string values for open-quote and close-quote . The first pair represents the outer level of quotation. The second pair is for the first nested level and next pair for third level and so on.
+
+- initial − Depends on user agent
+
+initial − Depends on user agent
+
+- auto − Appropriate quote marks will be used for whatever language value is set on the selected elements  (i.e. via the lang attribute).
+
+auto − Appropriate quote marks will be used for whatever language value is set on the selected elements  (i.e. via the lang attribute).
+
+## Applies to
+
+All elements.
+
+## Syntax
+
+### Keyword Value
+
+```css
+quotes: none;
+quotes: auto;
+```
+
+### `<string>` Value
+
+```css
+   quotes: "" ""; 
+   quotes: "" "" "" "";
+```
+
+Following table describes the various quotation mark characters:
+
+| Quotes | Description | Entity Number |
+| :--- | :--- | :--- |
+| " | double quotes | \0022 |
+| ' | single quote | \0027 |
+| < | single, left angle quote | \2039 |
+| > | single, right angle quote | \203A |
+| << | double, left angle quote | \00AB |
+| >> | double, right angle quote | \00BB |
+| >> | double, right angle quote | \00BB |
+|  | left quote (single high-6) | \2018 |
+|  | right quote (single high-9) | \2019 |
+|  | left quote (double high-6) | \201C |
+|  | right quote (double high-9) | \201D |
+|  | double quote (double low-9) | \201E |
+
+## CSS quotes - none Value
+
+The none value for the quotes property indicates that open-quote and close-quote values of the content property produce no quotation marks. Following example demonstartes this:
+
+```html
+<html>
+<head>
+<style>
+   p {
+      quotes: none;
+   }
+   p:before {
+      content: open-quote;
+   }
+   p:after {
+      content: close-quote;
+   }
+</style>
+</head>
+<body>
+   <p>Tutorialspoint CSS Quotes set to &lti&gtnone&lt/i&gt</p>
+</body>
+</html>
+```
+
+## CSS quotes - `<string>` Value
+
+Following example demonstartes specifies which quotation marks to use when string,string,+ value is used.
+
+The first value specifies the first level of quotation embedding, the next two values specifies the next level of quote embedding, and so on
+
+```html
+<html>
+<head>
+<style>
+   #quote1 {
+      quotes: '' '';
+   }
+   #quote2 {
+      quotes: '"' '"';
+   }
+   #quote3 {
+      quotes: '<' '>';
+   }
+   #quote4 {
+      quotes: '<<' '>>';
+   }
+   #quote5 {
+      quotes: "<<" ">>" "<" ">";
+   }
+   #quote6 {
+      quotes: '\2018' '\2019';
+   }
+   #quote7 {
+      quotes: '\'' 00AB' ' \00BB';
+   }
+   #quote8 {
+      quotes: '\2039' '\203A';
+   }
+   #quote9 {
+      quotes: '\00AB' '\00BB';
+   }
+   #quote10 {
+      quotes: '\201D' '\201E';
+   }
+</style>
+</head>
+<body>
+   <h3>Using quotes symbol:</h3>
+   <p><q id="quote1">Tutorialspoint CSS Quotes.</q></p>
+   <p><q id="quote2">Tutorialspoint CSS Quotes</q>.</q></p>
+   <p><q id="quote1">Tutorialspoint CSS <q id="quote2">Quotes</q>.</q></p>
+   <p>Tutorialspoint CSS <q id="quote3">Quotes</q>.</p>
+   <p><q id="quote4">Tutorialspoint CSS Quotes</q>.</q></p>
+   <p><q id="quote5">Tutorialspoint CSS<q id="quote5">Quotes</q>.</q></p>
+
+   <h3>Using entity number:</h3>
+   <p><q id="quote6">Tutorialspoint CSS Quotes.</q></p>
+   <p><q id="quote6">Tutorialspoint CSS<q id="quote6">Quotes</q>.</q></p>
+   <p><q id="quote7">Tutorialspoint CSS Quotes.</q></p>
+   <p>Tutorialspoint CSS <q id="quote8">Quotes</q>.</p>
+   <p><q id="quote9">Tutorialspoint CSS <q id="quote9">Quotes</q>.</q></p>
+   <p><q id="quot10">Tutorialspoint CSS Quotes.</q></p>
+</body>
+</html>
+```
+
+## CSS quotes - initial Value
+
+Followig example demonstrates use of the quotes: initial; property value. This values sets default values to quotes .
+
+```html
+<html>
+<head>
+<style>
+   q {
+      quotes: initial;
+   }
+</style>
+</head>
+<body>
+   <p><q>Tutorialspoint CSS Quotes.</q></p>
+</body>
+</html>
+```
+
+## CSS quotes - auto Value
+
+Sets the quotes property to the value auto that automatically determines the correct quotation marks based on the language - as demonstrated in the following example:
+
+```html
+<html>
+<head>
+<style>
+   q {
+      quotes: auto;
+   }
+</style>
+</head>
+<body>
+   <div lang="fr">
+      <q>Tutorialpoint est un site de cours d'anglais.</q>
+   </div>
+   <hr />
+   <div lang="ru">
+      <q>Tutorialpoint     .</q>
+   </div>
+   <hr />
+   <div lang="de">
+      <q>Tutorialpoint is een Engelse cursuswebsite</q>
+   </div>
+   <hr />
+   <div lang="en">
+      <q>Tutorialpoint is an english course website.</q>
+   </div>
+</body>
+</html>
+```
+
+## CSS quotes - Using :lang pseudo-class
+
+You can also use the :lang pseudo-class to define different styles for quotation marks based on the language
+attribute (lang) within the elements.
+
+- The :lang(en) rule defines styles for elements with the English language attribute.
+
+The :lang(en) rule defines styles for elements with the English language attribute.
+
+- The :lang(fr) rule defines styles for elements with the French language attribute.
+
+The :lang(fr) rule defines styles for elements with the French language attribute.
+
+Let us see an example −
+
+```html
+<html>
+<head>
+<style>
+   :lang(en) {
+     quotes: "#" "#" "<<" ">>";
+   }
+   :lang(fr) {
+     quotes: '\2039' '\203A';
+   }
+</style>
+</head>
+<body>
+   <p><q lang="en">Tutorialspoint CSS <q lang="en">Quotes</q>.</q></p>
+   <p>Tutorialspoint CSS <q lang="fr">Quotes</q>.</p>
+</body>
+</html>
+```

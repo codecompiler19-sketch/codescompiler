@@ -1,0 +1,220 @@
+---
+title: "JavaScript - Self-Invoking Functions"
+description: "Learn JavaScript - Self-Invoking Functions with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 510
+group: "JavaScript Functions"
+seoTitle: "JavaScript - Self-Invoking Functions — CodesCompiler JavaScript Guide"
+permalink: "javascript-self-invoking-functions"
+---
+
+
+# JavaScript - Self-Invoking Functions
+
+
+
+
+## Self-Invoking Functions
+
+
+The self-invoking functions are JavaScript functions that execute immediately as they are defined. To define a self-invoking function, you can enclose an anonymous function within parentheses followed by another set of parentheses. These are also called self-executing anonymous functions.
+
+
+The anonymous function inside the first pair of parentheses is basically a function defined with function expression. So a self-invoking function is also called immediately invoked function expression (IIFE).
+
+
+### Syntax
+
+
+The syntax to define the self-invoking functions in JavaScript is as follows −
+
+
+```javascript
+(function () {
+   // function body
+})();
+```
+
+
+The function definition is enclosed inside the pair of parentheses. The second pair of parentheses at the end executes the function.
+
+
+An alternative syntax is as follows −
+
+
+```javascript
+(function () {
+   // function body
+}());
+```
+
+
+The first syntax is more clear.
+
+
+### Example
+
+
+In the example below, we print the message in the output using the self-executing function.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      (function () {
+	     document.getElementById("output").innerHTML = 
+	     "Self-invoked function is executed!";
+      }());
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Self-invoked function is executed!
+```
+
+
+## Self-Invoking Functions with Parameters
+
+
+You can create a self-invoking function with parameters and pass arguments to it. It is common practice to pass references to global objects such as window, etc.
+
+
+```javascript
+(function (paras) {
+   // function body
+})(args);
+```
+
+
+The paras are the list of parameters in the definition of the anonymous function and the args are arguments passed.
+
+
+### Example
+
+
+In the below example, we created an anonymous function with a parameter name. We have passed an argument to it.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"></div>
+   <script>
+      const output = document.getElementById("demo");
+      (function (name) {
+         output.innerHTML = Welcome to ${name};
+      })("Tutorials Point !");
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Welcome to Tutorials Point !
+```
+
+
+## Private Scope of Self-Invoking Functions
+
+
+Whatever code is defined inside the self-executing function remains in the private scope and doesn't pollute the global scope. So, developers can make code clear and remove the errors like naming conflicts, etc. Also, the code of the self-invoking function remains hidden and can't be accessible by other parts of the code.
+
+
+### Example
+
+
+In the example below, we have defined the variable 'a' outside or inside the function. The variable defined outside is a global variable, and the variable defined inside the function is a private variable, limited to the self-executing function's scope.
+
+
+Also, we have printed the value of the variable from inside and outside of the function. Users can observe the variable's value in the output.
+
+
+In this way, we can avoid the naming conflicts.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      const output = document.getElementById("output");
+      let a = 10;
+         (function () {
+            output.innerHTML += "Entering to the function <br/>";
+            var a = 20;
+            output.innerHTML += "The value of a is " + a + "<br>";
+            output.innerHTML += "Exiting to the function <br/>";
+         }());
+         output.innerHTML += "The value of the outside the function is " + a;
+    </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Entering to the function
+The value of a is 20
+Exiting to the function
+The value of the outside the function is 10
+```
+
+
+### Example
+
+
+In some cases, it is required to access the variable of the self-executing function outside of the function. In this case, we can make that variable global using the 'window' object as shown below and access the variable in the global scope.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      (function () {
+         var string = "JavaScript";
+         window.string = string;
+      })();
+      document.getElementById("output").innerHTML =
+	  "The value of the string variable is: " + string;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The value of the string variable is: JavaScript
+```
+
+
+Private scope of a self-invoking function can be accessed by using the call() or apply() methods.
+
+
+## Benefits of Using the Self-Invoking Functions
+
+
+
+- Avoiding the global scope− Developers can avoid the global scope for variables and functions using the self-invoking function, helping to avoid naming conflict and making code more readable.
+- Initialization− The self-executing functions can be used for the initialization of variables.
+- Code privacy− Programmers can avoid accessing the code of the self-executing function by other parts of the code.
+
+

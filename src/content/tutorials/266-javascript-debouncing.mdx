@@ -1,0 +1,125 @@
+---
+title: "JavaScript - Debouncing"
+description: "Learn JavaScript - Debouncing with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2660
+group: "JavaScript Miscellaneous"
+seoTitle: "JavaScript - Debouncing — CodesCompiler JavaScript Guide"
+permalink: "javascript-debouncing"
+---
+
+
+# JavaScript - Debouncing
+
+
+
+
+While developing the applications, sometimes it is really important to limit the function calls to improve the web application performance. Debouncing is a programming technique that helps in limiting the function calls.
+
+
+Lets learn more about debouncing in JavaScript.
+
+
+## What is Debouncing?
+
+
+Debouncing is a simpler way to delay the execution of a particular function until a certain amount of time has passed since the last execution of the function. It is important to use debouncing when we want to avoid unnecessary repeated function calls. In short, it works as a rate-limiter.
+
+
+For example, when you press the button to call the elevator, it registers the event. After that, when you press the call button multiple times in a short period of time, it ignores the button press as the elevator cant come faster by pressing buttons multiple times.
+
+
+## How to implement debouncing in JavaScript?
+
+
+We can implement debouncing in JavaScript in different ways, but one way is using the setTimeOut() method. Whenever any event occurs, it should call a particular function that returns a new function, which executes the particular after a certain amount of delay.
+
+
+Lets understand it in more depth via the example below.
+
+
+### Example
+
+
+In the code below, when the user clicks the button, it calls the debounce() function.
+
+
+The debounce() function takes the function that we need to execute as a first parameter and time delay as a second parameter.
+
+
+In the debounce() function, we define the timeout variable to store the id of the timer and return the function. Inside the inner function, we get the context and arguments of the function execution call. After that, we clear the previous time out and set a new timer using the setTimeOut() method.
+
+
+We use the apply() method to call the function after a particular amount of the delay.
+
+
+```html
+<html>
+<body>
+   ##  JavaScript - Debouncing 
+   <div id = "output"> </div>
+   <button id = "btn"> Debounce </button>
+   <script>
+      var output = document.getElementById("output");
+      var btn = document.getElementById("btn");
+      // Add event listener to button
+      btn.addEventListener("click", debounce(function () {
+         output.innerHTML = "Hello " + new Date().toLocaleTimeString();
+      }, 2000));
+
+      // Debounce function
+      function debounce(func, wait) {
+         // Initialize timeout variable
+         var timeout;
+         // Return a function
+         return function () {
+            // Save the context and arguments of the function
+            var context = this,
+            args = arguments;
+            // Clear the timeout
+            clearTimeout(timeout);
+            // Set the timeout
+            timeout = setTimeout(function () {
+               // Call the function
+               func.apply(context, args);
+            }, wait);
+         };
+      }
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+In the above output, try to click the button multiple times within a period of 2 seconds. It will execute the function only once.
+
+
+## Benefits of Debouncing
+
+
+There are a lot of benefits of debouncing. Here, we have covered some of them.
+
+
+
+- Debouncing improves the performance of the web application by rate limiting.
+- It reduces the server load by making a limited number of requests in a certain period.
+- It enhances the user experience by improving the performance of the web application.
+- It prevents the unnecessary API calls, which reduces the cost.
+
+
+
+## Real-world Use cases of Debouncing
+
+
+Here, we have covered some real-world use cases of debouncing.
+
+
+
+- Debouncing can be used with the search box. It makes the request to the server only when a user pauses the typing and reduces the API requests.
+- It can be used with infinite scroll and lazy loading. Developers can know when users stopped scrolling, fetch only the required data, and load them.
+- Debouncing can also be used with gaming controls to filter out accidental double or triple clicks.
+
+

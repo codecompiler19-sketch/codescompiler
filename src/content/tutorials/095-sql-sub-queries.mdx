@@ -1,0 +1,286 @@
+---
+title: "SQL - Sub Queries"
+description: "Learn SQL - Sub Queries with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 950
+group: "Advanced SQL"
+seoTitle: "SQL - Sub Queries — CodesCompiler SQL Guide"
+permalink: "sql-sub-queries"
+---
+
+
+# SQL - Sub Queries
+
+
+
+
+
+
+## SQL Subqueries
+
+
+An SQLSubquery, is a SELECT query within another query. It is also known asInner queryorNested queryand the query containing it is the outer query.
+
+
+The outer query can contain the SELECT, INSERT, UPDATE, and DELETE statements. We can use the subquery as a column expression, as a condition in SQL clauses, and with operators like `=`, >, `<, >=`, `<=`, IN, BETWEEN, etc.
+
+
+## Rules to be followed
+
+
+Following are the rules to be followed while writing subqueries −
+
+
+
+- Subqueries must be enclosed within parentheses.
+- Subqueries can be nested within another subquery.
+- A subquery must contain the SELECT query and the FROM clause always.
+- A subquery consists of all the clauses an ordinary SELECT clause can contain: GROUP BY, WHERE, HAVING, DISTINCT, TOP/LIMIT, etc. However, an ORDER BY clause is only used when a TOP clause is specified. It can't include COMPUTE or FOR BROWSE clause.
+- A subquery can return a single value, a single row, a single column, or a whole table. They are called scalar subqueries.
+
+
+
+## Subqueries with the SELECT Statement
+
+
+Subqueries are most frequently used with the SELECT statement. The basic syntax is as follows −
+
+
+```sql
+SELECT column_name [, column_name ] 
+FROM table1 [, table2 ] 
+WHERE  column_name 
+OPERATOR (SELECT column_name [,column_name ] FROM table1 [, table2 ] [WHERE]);
+```
+
+
+### Example
+
+
+In the following query, we are creating a table namedCUSTOMERS−
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR(20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),
+   PRIMARY KEY (ID)
+);
+```
+
+
+Here, we are inserting records into the above-created table using INSERT INTO statement −
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00),
+(2, 'Khilan', 25, 'Delhi', 1500.00),
+(3, 'Kaushik', 23, 'Kota', 2000.00),
+(4, 'Chaitali', 25, 'Mumbai', 6500.00),
+(5, 'Hardik', 27, 'Bhopal', 8500.00),
+(6, 'Komal', 22, 'Hyderabad', 4500.00),
+(7, 'Muffy', 24, 'Indore', 10000.00);
+```
+
+
+The table is displayed as −
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+Now, let us check the following subquery with a SELECT statement.
+
+
+```sql
+SELECT * FROM CUSTOMERS 
+WHERE ID IN (SELECT ID FROM CUSTOMERS WHERE SALARY > 4500);
+```
+
+
+This would produce the following result −
+
+
+IDNAMEAGEADDRESSSALARY4Chaitali25Mumbai6500.005Hardik27Bhopal8500.007Muffy24Indore10000.00
+
+
+## Subqueries with the INSERT Statement
+
+
+We can also use the subqueries along with the INSERT statements. The data returned by the subquery is inserted into another table.
+
+
+The basic syntax is as follows −
+
+
+```sql
+INSERT INTO table_name [ (column1 [, column2 ]) ] 
+   SELECT [ *|column1 [, column2 ] FROM table1 [, table2 ] 
+   [ WHERE VALUE OPERATOR ]
+```
+
+
+### Example
+
+
+In the following example, we are creating another table CUSTOMERS_BKP with similar structure as CUSTOMERS table −
+
+
+```sql
+CREATE TABLE CUSTOMERS_BKP (
+   ID INT NOT NULL,
+   NAME VARCHAR(20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),
+   PRIMARY KEY (ID)
+);
+```
+
+
+Now to copy the complete records of CUSTOMERS table into the CUSTOMERS_BKP table, we can use the following query −
+
+
+```sql
+INSERT INTO CUSTOMERS_BKP 
+SELECT * FROM CUSTOMERS 
+WHERE ID IN (SELECT ID FROM CUSTOMERS);
+```
+
+
+The above query produces the following output −
+
+
+```sql
+Query OK, 7 rows affected (0.01 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+```
+
+
+### Verification
+
+
+Using the SELECT statement, we can verify whether the records from CUSTOMERS table have been inserted into CUSTOMERS_BKP table or not −
+
+
+```sql
+SELECT * FROM CUSTOMERS_BKP;
+```
+
+
+The table will be displayed as −
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## Subqueries with the UPDATE Statement
+
+
+A subquery can also be used with the UPDATE statement. You can update single or multiple columns in a table using a subquery.
+
+
+The basic syntax is as follows −
+
+
+```sql
+UPDATE table 
+SET column_name = new_value 
+[WHERE OPERATOR [VALUE](SELECT COLUMN_NAME FROM TABLE_NAME [WHERE]);
+```
+
+
+### Example
+
+
+We have the CUSTOMERS_BKP table available which is backup of CUSTOMERS table. The following example updates SALARY by 0.25 times in the CUSTOMERS table for all the customers whose AGE is greater than or equal to 27.
+
+
+```sql
+UPDATE CUSTOMERS 
+SET SALARY = SALARY * 0.25 
+WHERE AGE IN (SELECT AGE FROM CUSTOMERS_BKP WHERE AGE >= 27 );
+```
+
+
+Following is the output of the above query −
+
+
+```sql
+Query OK, 2 rows affected (0.01 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+```
+
+
+### Verification
+
+
+This would impact two rows and if you verify the contents of the CUSTOMERS using the SELECT statement as shown below.
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+The table will be displayed as −
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad500.002Khilan25Delhi1500.003kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal2125.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## Subqueries with the DELETE Statement
+
+
+The subquery can be used with the DELETE statement as well; like with any other statements mentioned above.
+
+
+The basic syntax is as follows −
+
+
+```sql
+DELETE FROM TABLE_NAME
+[WHERE OPERATOR [ VALUE ](SELECT COLUMN_NAME FROM TABLE_NAME)[WHERE)];
+```
+
+
+### Example
+
+
+We have a CUSTOMERS_BKP table available which is a backup of the CUSTOMERS table. The following example deletes the records from the CUSTOMERS table for all the customers whose AGE is greater than or equal to 27.
+
+
+```sql
+DELETE FROM CUSTOMERS 
+WHERE AGE IN (SELECT AGE FROM CUSTOMERS_BKP WHERE AGE >= 27 );
+```
+
+
+The above query generate the following output −
+
+
+```sql
+OK, 2 rows affected (0.01 sec)
+```
+
+
+### Verification
+
+
+If you  verify the contents of the CUSTOMERS table using the SELECT statement as shown below.
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+The table will be displayed as −
+
+
+IDNAMEAGEADDRESSSALARY2Khilan25Delhi1500.003kaushik23Kota2000.004Chaitali25Mumbai6500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+

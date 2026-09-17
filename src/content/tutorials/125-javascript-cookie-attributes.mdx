@@ -1,0 +1,347 @@
+---
+title: "JavaScript - Cookie Attributes"
+description: "Learn JavaScript - Cookie Attributes with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1250
+group: "JavaScript Cookies"
+seoTitle: "JavaScript - Cookie Attributes — CodesCompiler JavaScript Guide"
+permalink: "javascript-cookie-attributes"
+---
+
+
+# JavaScript - Cookie Attributes
+
+
+
+
+## Cookie Attributes
+
+
+The JavaScript cookie attributes are used to set additional information about a cookie such as path, domain, expiry date, etc. In JavaScript, you can specify the cookie attributes while setting up a new cookie or updating the cookie. For example, you can set the cookie's expiry date using the 'expires' attributes.
+
+
+In simple terms, cookie attributes are used to control the behavior of the cookies and how the cookie is used in the browser.
+
+
+Here, we have listed all cookie attributes in the table below with its description.
+
+
+AttributeDescriptionDefault ValueName/ValueIt is used to store the cookies in the browser.DomainTo specify the domain for whose cookie is valid.Website of domain. For example, tutorialspoint.comPathThe path to the directory or web page that sets the cookie./ (entire domain)ExpiresIt is used to specify the date and time when the cookie should expire.Current sessionMax-AgeIt is used to specify the time limit after that cookie should expire.Current sessionSecureIf this field contains the word "secure", then the cookie may only be retrieved with a secure server. If this field is blank, no such restriction exists.falseHttpOnlyIt prevents accessing the cookies via JavaScript to make cookies secure.falseSameSiteIt is used to specify how third-party cookies should be handled.LaxPriorityIt defines the priority of the cookies.1000Site/ServiceTo get information about the origin site of the cookie.SourcePortTo get the port of the source for the cookie.StoragePartitionIt defines which storage partition is used to store cookies.SizeIt represents the size of the cookies.The size depends on the text length.
+
+
+However, above all, attributes are optional.
+
+
+Also, you can't manipulate all attributes of the cookies. The browser sets some attributes.
+
+
+## Check the Attribute Value in the Browser
+
+
+You can set the attributes to the cookie, but you can't access the attributes. To check whether the attribute is set, you can use the browser console.
+
+
+Follow the steps below to check cookies in the browser console.
+
+
+Step 1− Right click in the browser. It will open the menu. You need to select the 'inspect' option. It will open the developer tool.
+
+
+Step 2− After that, you need to go to the Application/ Storage tab.
+
+
+Step 3− In the sidebar, select 'cookies.
+
+
+Step 4− Now, click on any cookies to check their name, value, and other attribute values.
+
+
+The above steps are only for the Chrome web browser. The step can differ according to what browser you are using.
+
+
+Here, you will learn each attribute one by one with examples.
+
+
+## Cookie's Name/Value Attribute
+
+
+The Name attribute is used to store the cookie data. It takes the data as a value. If you want to use the special characters in the value of the 'Name' attribute, you need to encode the text using the encodeURIComponent() method.
+
+
+### Syntax
+
+
+Follow the syntax below to set the Name attribute of the cookie.
+
+
+```javascript
+let value = encodeURIComponent(cookieValue);
+document.cookie = "name=" + value + ";";
+```
+
+
+In the above syntax, we have encoded the 'cookieValue' using the encodeURIComponent() method and used the encoded value as a name attribute value.
+
+
+### Example
+
+
+In the below code, we set the 'subscribed' cookie with a 'false' value. You can click the read cookies button to get the cookies.
+
+
+```html
+<html>
+<body>
+	p id = "output" 
+	<button onclick = "setCookies()"> Set Cookie </button> <br> <br>
+	<button onclick = "readCookies()"> Read Cookies </button>
+	<script>
+		let output = document.getElementById("output");
+		function setCookies() {
+			document.cookie = "subscribed=false"; // name-value pair
+			output.innerHTML = "Cookie setting successful!";
+		}
+		function readCookies() {
+			const allCookies = document.cookie.split("; ");
+			output.innerHTML = "The subscribed cookie is - <br>";
+			for (const cookie of allCookies) {
+				const [name, value] = cookie.split("=");
+				if (name == "subscribed") {
+					output.innerHTML += ${name} : ${decodeURIComponent(value)} <br>;
+				}
+			}
+		}
+	</script>
+  </body>
+</html>
+```
+
+
+## Cookie's Path Attribute
+
+
+The Path attribute is used to set the scope of the cookie. It defines where cookies should be accessible on the website. You may set the relative or absolute path as a Path attribute value.
+
+
+If you set the relative path, all the cookies can be accessible everywhere in the particular or sub-directory.
+
+
+### Syntax
+
+
+Follow the syntax below to set the Path attribute in the cookie.
+
+
+```javascript
+document.cookie = "name=value;path=pathStr";
+```
+
+
+In the above syntax, you need to replace the 'pathStr' with the actual path string.
+
+
+### Example
+
+
+In the below code, we set the path for the cookie. Here, we set the / (home route). So, cookies can be accessible on each webpage of the website. You may try to get the cookie on the different web pages of the website.
+
+
+```html
+<html>
+<body>
+	<button onclick = "setCookies()"> Set Cookie </button>
+	p id = "output" 
+	<button onclick = "readCookies()"> Read Cookies </button>
+	<script>
+		let output = document.getElementById("output");
+		function setCookies() {
+			document.cookie = "signIn=true; path=/";
+			output.innerHTML = "Cookie set successful!"; 
+		}
+		function readCookies() {
+			const allCookies = document.cookie.split("; ");
+			output.innerHTML = "The cookie is : <br>";
+			for (const cookie of allCookies) {
+				const [key, value] = cookie.split("=");
+				if (key == "signIn") {
+					output.innerHTML += ${key} : ${decodeURIComponent(value)} <br>;
+				}
+			}
+		}
+	</script>
+</body>
+</html>
+```
+
+
+## Cookie Expires Attribute
+
+
+The 'expires' attribute is used to set the expiry date for the cookie. It takes the date string as a value.
+
+
+If you set 0 or past date as a value of the 'expires, the browser will automatically delete the cookie.
+
+
+### Syntax
+
+
+Follow the syntax below to set the expires attribute in the cookie.
+
+
+```javascript
+document.cookie = "name=value;expires=dateStr";
+```
+
+
+In the above syntax, you need to replace the 'dateStr' with the date string.
+
+
+### Example
+
+
+In the code below, we set the product cookie. Also, we set the expiry date in 2050.
+
+
+You may try to set the past expiry date and try to access the cookie. You won't be able to find the cookie.
+
+
+```html
+<html>
+<body>
+	p id = "output" 
+	<button onclick = "setCookies()"> Set Cookie </button> <br> <br>
+	<button onclick = "readCookies()"> Read Cookies </button>
+	<script>
+		let output = document.getElementById("output");
+		function setCookies() {
+			document.cookie = "product=mobile;expires=12 Jan 2050 12:00:00 UTC";
+			output.innerHTML = "Cookie Set Successful!";
+		}
+		function readCookies() {
+			const allCookies = document.cookie.split("; ");
+			output.innerHTML = "The cookie is : <br>";
+			for (const cookie of allCookies) {
+				const [key, value] = cookie.split("=");
+				if (key == "product") {
+					output.innerHTML += ${key} : ${decodeURIComponent(value)} <br>;
+				}
+			}
+		}
+	</script>
+</body>
+</html>
+```
+
+
+## Cookie's maxAge Attribute
+
+
+The 'maxAge' attribute is an alternative to the 'expires' attribute. It is used to specify the lifetime of the cookie. It takes the seconds as a value.
+
+
+When the lifetime of the cookie is finished, it will automatically get deleted.
+
+
+### Syntax
+
+
+Follow the syntax below to pass the 'maxAge' attribute to the cookie.
+
+
+```javascript
+document.cookie = "name=value;max-ge=age;";
+```
+
+
+In the above syntax, you need to replace the 'age' with the number of seconds.
+
+
+### Example
+
+
+In the below code, we set the total number of seconds equal to 10 days as a value of the maxAge attribute. You can set the lifetime of 1 second for the cookie and try to access the cookie after 1 second.
+
+
+```html
+<html>
+<body>
+	<button onclick = "setCookies()"> Set Cookie </button>
+	<button onclick = "readCookies()"> Read Cookies </button>
+	p id = "output" 
+	<script>
+		const output = document.getElementById("output");
+		function setCookies() {
+			document.cookie = "token=1234wfijdn;max-age=864000";
+		}
+		function readCookies() {
+			const allCookies = document.cookie.split("; ");
+			output.innerHTML = "The cookie is : <br>";
+			for (const cookie of allCookies) {
+				const [key, value] = cookie.split("=");
+				if (key == "token") {
+					output.innerHTML += ${key} : ${decodeURIComponent(value)} <br>;
+				}
+			}
+		}
+	</script>
+</body>
+</html>
+```
+
+
+## Cookie Domain Attribute
+
+
+The domain attribute is used to specify the domain for which the cookie is valid. The default value of the domain from which you are making a request. You may set the domain attribute to set the subdomains.
+
+
+### Syntax
+
+
+Follow the syntax below to set the value of the domain attribute in the cookie.
+
+
+```javascript
+document.cookie = "name=value;domain:domain_name ";
+```
+
+
+In the above syntax, replace the 'domain_name' with the actual domain, like example.com.
+
+
+### Example
+
+
+In the below code, we set the 'tutorialspoint.com' domain for the cookie.
+
+
+```html
+<html>
+<body>
+	p id = "output" 
+	<button onclick = "setCookies()"> Set Cookie </button>
+	<button onclick = "readCookies()"> Read Cookies </button>
+	<script>
+		const output = document.getElementById("output");
+		function setCookies() {
+			document.cookie = "username=abcd;domain:tutorialspoint.com";
+		}
+		function readCookies() {
+			const allCookies = document.cookie.split("; ");
+			output.innerHTML = "The cookie is : <br>";
+			for (const cookie of allCookies) {
+				const [key, value] = cookie.split("=");
+				if (key == "username") {
+					output.innerHTML += ${key} : ${decodeURIComponent(value)} <br>;
+				}
+			}
+		}
+	</script>
+</body>
+</html>
+```
+
+
+Similarly, you can also update the attribute values. For example, you can extend the expiry time of the cookie.
+

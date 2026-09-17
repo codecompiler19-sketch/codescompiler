@@ -1,0 +1,383 @@
+---
+title: "JavaScript - Reactivity"
+description: "Learn JavaScript - Reactivity with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1950
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Reactivity — CodesCompiler JavaScript Guide"
+permalink: "javascript-reactivity"
+---
+
+
+# JavaScript - Reactivity
+
+
+
+
+In web development responsiveness refers to how a system responds to changes in data. This concept is important for creating modern, dynamic web applications in which user actions need speedy responses like updating a page without reloading it or dynamically changing what the user sees when data is updated.
+
+
+This chapter covers some powerful JavaScript patterns that can help you build reactive systems. These patterns are commonly used in frameworks likeReactandVuebut understanding them in simple JavaScript allows you to understand the fundamental concepts.
+
+
+## Why use Reactivity?
+
+
+Web apps today are highly interactive. When users click buttons, navigate pages or enter data so the application must reply quickly and change what shows on the screen. Addressing such updates manually can be difficult, but reactivity makes it easier by automatically responding to changes in data.
+
+
+## Key Reactivity Patterns in JavaScript
+
+
+Now we will explore some key reactivity patterns in JavaScript in this section. These patterns allow us to react rapidly to changes in data and how the page responds to user actions. They are used in many popular libraries and frameworks but we will show how to use them in simple JavaScript.
+
+
+### Pub/Sub: Simplified Data Flow Management
+
+
+The Pub/Sub (Publisher/Subscriber) pattern is a common approach to manage data flows. It differentiates between code that changes data (publisher) and code that responds to those updates (subscriber). This makes it easy to manage the various parts of an app separately.
+
+
+#### Example
+
+
+Following is the simple demonstration of this Reactivity Pattern −
+
+
+```javascript
+class PS {
+  constructor() {
+    this.t = {}; // Tracks events and subscribers
+  }
+
+  sub(tp, cb) {
+    if (!this.t[tp]) {
+      this.t[tp] = [];
+    }
+    this.t[tp].push(cb);
+  }
+
+  pub(tp, d) {
+    if (this.t[tp]) {
+      this.t[tp].forEach((cb) => cb(d));
+    }
+  }
+}
+
+const ps = new PS();
+ps.sub('n', (msg) => console.log(News: ${msg}));
+ps.pub('n', 'New update available!');
+```
+
+
+This method is used in systems like Redux in which components notice changes and update accordingly.
+
+
+Output
+
+
+This will generate the below result −
+
+
+```javascript
+News: New update available!
+```
+
+
+### Custom Events: Browser-Built Pub/Sub for Reactivity
+
+
+The browser provides an API for triggering and subscribing to custom events using the CustomEvent class and dispatchEvent method. The latter allows us to not only create an event, but also attach any needed data to it.
+
+
+#### Example
+
+
+Below is a simple example of this reactivity pattern −
+
+
+```javascript
+const evt = new CustomEvent('cEvt', {
+  detail: 'Event data',
+});
+
+const el = document.getElementById('target');
+el.addEventListener('cEvt', (e) => console.log(Event: ${e.detail}));
+el.dispatchEvent(evt);
+```
+
+
+This technique is appropriate for simple event triggering without the need of libraries.
+
+
+Output
+
+
+This will give the following outcome −
+
+
+```javascript
+Event: Event data
+```
+
+
+### Custom Event Targets
+
+
+If you do not wish to dispatch events globally on the window object, you can create your own event target.
+
+
+By modifying the native EventTarget class you can transmit events to a new instance. This makes sure your events are only triggered for the new class which prevents global propagation. Also you can connect handlers directly to this instance.
+
+
+#### Example
+
+
+The following code shows a simple use of this reactivity pattern −
+
+
+```javascript
+class CET extends EventTarget {
+  trig(evtName, evtData) {
+    const evt = new CustomEvent(evtName, { detail: evtData });
+    this.dispatchEvent(evt);
+  }
+}
+const ct = new CET();
+ct.addEventListener('cEvt', (e) => console.log(Event: ${e.detail}));
+ct.trig('cEvt', 'Hello from event!');
+```
+
+
+Output
+
+
+This will create the below outcome −
+
+
+```javascript
+Event: Hello from event!
+```
+
+
+### Observer Pattern: Flexible Updates for Decoupled Code
+
+
+The Observer pattern is very similar to PubSub. You can subscribe to the Subject, which informs its subscribers (Observers) of changes and allows them to reply accordingly. This method is important for designing a disconnected and flexible architecture.
+
+
+#### Example
+
+
+Here's a basic demonstration of how this reactivity pattern works −
+
+
+```javascript
+class Sub {
+  constructor() {
+    this.obs = [];
+  }
+  sub(o) {
+    this.obs.push(o);
+  }
+  notify(d) {
+    this.obs.forEach((o) => o.up(d));
+  }
+}
+class Obs {
+  constructor(n) {
+    this.n = n;
+  }
+  up(d) {
+    console.log(${this.n} got: ${d});
+  }
+}
+
+const s = new Sub();
+const o1 = new Obs('Obs 1');
+s.sub(o1);
+s.notify('New info!');
+```
+
+
+Output
+
+
+This will create the below outcome −
+
+
+```javascript
+Obs 1 got: New info!
+```
+
+
+### Reactive Properties with Proxy
+
+
+The Proxy object lets you intercept property access actions (get and set) within objects. This enables you to create reactivity and run code whenever a property's value is retrieved or updated.
+
+
+#### Example
+
+
+This is a simple example showing the reactivity pattern in action −
+
+
+```javascript
+let d = { n: 'Akash', a: 25 };
+
+let rData = new Proxy(d, {
+  get(t, p) {
+    console.log(Read: "${p}" = ${t[p]});
+    return t[p];
+  },
+  set(t, p, v) {
+    console.log(Changed: "${p}" from ${t[p]} to ${v});
+    t[p] = v;
+    return true;
+  }
+});
+
+rData.n = 'Vikas';
+```
+
+
+Output
+
+
+This will lead to the following outcome −
+
+
+```javascript
+Changed: "n" from Akash to Vikas
+```
+
+
+### Individual Property Reactivity
+
+
+If you don't need to keep track of all an object's fields you can use Object.defineProperty to select one or Object.defineProperties to group them together.
+
+
+#### Example
+
+
+The code below provides a clear demonstration of this reactivity pattern −
+
+
+```javascript
+let u = { _n: 'Akash' };
+
+Object.defineProperty(u, 'n', {
+  get() {
+    return this._n;
+  },
+  set(v) {
+    console.log(Name changed from ${this._n} to ${v});
+    this._n = v;
+  }
+});
+
+u.n = 'Vikas';
+```
+
+
+Output
+
+
+This will produce the following result −
+
+
+```javascript
+Name changed from Akash to Vikas
+```
+
+
+### Reactive HTML Attributes with MutationObserver
+
+
+MutationObserver is a JavaScript API that monitors changes to the DOM (Document Object Model) like attribute changes, element additions or deletions etc. It is particularly applicable for running code in response to DOM changes without having to actively monitor them.
+
+
+#### Example
+
+
+Here is a simple implementation of this particular reactivity pattern −
+
+
+```javascript
+const el = document.getElementById('obs-el');
+
+const obs = new MutationObserver((muts) => {
+  muts.forEach(m => {
+    if (m.attributeName === 'class') {
+      console.log('Class changed!');
+    }
+  });
+});
+
+obs.observe(el, { attributes: true });
+```
+
+
+Output
+
+
+This will generate the below result −
+
+
+```javascript
+Class changed!
+```
+
+
+### Reactive Scrolling with IntersectionObserver
+
+
+The IntersectionObserver API allows you to asynchronously monitor changes in the intersection of a target element with an ancestor element or the viewport of a top-level document. This means you can execute code anytime an element enters or quits the viewport or another specific element.
+
+
+This is particularly useful for lazy image loading, infinite scrolling, scroll position-based animations, and other features.
+
+
+#### Example
+
+
+Below is an example of this reactivity pattern −
+
+
+```javascript
+// Function to be called when the observed element is intersecting
+function onIntersect(entries, obs) {
+  entries.forEach(e => {
+    e.target.style.backgroundColor = e.isIntersecting ? 'lightgreen' : 'grey';
+  });
+}
+
+// Create an IntersectionObserver with the callback
+const obs = new IntersectionObserver(onIntersect);
+
+// Start observing an element
+const el = document.getElementById('spec-el');
+obs.observe(el);
+```
+
+
+Output
+
+
+Below is the output when the element enters the viewport −
+
+
+```javascript
+Element is now in view.
+```
+
+
+This will be the output when the element exits the viewport −
+
+
+```javascript
+Element is now out of view.
+```
+

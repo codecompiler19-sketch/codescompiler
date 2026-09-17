@@ -1,0 +1,308 @@
+---
+title: "PYTHON - Directories"
+description: "Learn PYTHON - Directories with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1250
+group: "Python File Handling"
+seoTitle: "PYTHON - Directories — CodesCompiler PYTHON Guide"
+permalink: "python-directories"
+---
+
+
+# Python - Directories
+
+
+
+
+## Directories in Python
+
+
+In Python, directories, commonly known as folders in operating systems, are locations on the filesystem used to store files and other directories. They serve as a way to group and manage files hierarchically.
+
+
+Python provides several modules, primarilyosandos.path, along with shutil, that allows you to perform various operations on directories.
+
+
+These operations include creating new directories, navigating through existing directories, listing directory contents, changing the current working directory, and removing directories.
+
+
+## Checking if a Directory Exists
+
+
+Before performing operations on a directory, you often need to check if it exists. We can check if a directory exists or not using theos.path.exists()function in Python.
+
+
+This function accepts a single argument, which is a string representing a path in the filesystem. This argument can be −
+
+
+
+- Relative path −A path relative to the current working directory.
+- Absolute path −A complete path starting from the root directory.
+
+
+
+### Example
+
+
+In this example, we check whether the given directory path exists using the os.path.exists() function −
+
+
+```python
+import os
+
+directory_path = "D:\\Test\\MyFolder\\"
+
+if os.path.exists(directory_path):
+   print(f"The directory '{directory_path}' exists.")
+else:
+   print(f"The directory '{directory_path}' does not exist.")
+```
+
+
+Following is the output of the above code −
+
+
+```python
+The directory 'D:\\Test\\MyFolder\\' exists.
+```
+
+
+## Creating a Directory
+
+
+You create a new directory in Python using theos.makedirs()function. This function creates intermediate directories if they do not exist.
+
+
+The os.makedirs() function accepts a "path" you want to create as an argument. It optionally accepts a "mode" argument that specifies the permissions o set for the newly created directories. It is an integer, represented in octal format (e.g., 0o755). If not specified, the default permissions are used based on your system's umask.
+
+
+### Example
+
+
+In the following example, we are creating a new directory using the os.makedirs() function −
+
+
+```python
+import os
+
+new_directory = "new_dir.txt"
+
+try:
+   os.makedirs(new_directory)
+   print(f"Directory '{new_directory}' created successfully.")
+except OSError as e:
+   print(f"Error: Failed to create directory '{new_directory}'. {e}")
+```
+
+
+After executing the above code, we get the following output −
+
+
+```python
+Directory 'new_dir.txt' created successfully.
+```
+
+
+### The mkdir() Method
+
+
+You can use themkdir() methodof the os module to create directories in the current directory. You need to supply an argument to this method, which contains the name of the directory to be created.
+
+
+Following is the syntax of themkdir()method in Python −
+
+
+```python
+os.mkdir("newdir")
+```
+
+
+### Example
+
+
+Following is an example to create a directory test in the current directory −
+
+
+```python
+import os
+
+# Create a directory "test"
+os.mkdir("test")
+print ("Directory created successfully")
+```
+
+
+The result obtained is as shown below −
+
+
+```python
+Directory created successfully
+```
+
+
+## Get Current Working Directory
+
+
+To retrieve the current working directory in Python, you can use theos.getcwd()function. This function returns a string representing the current working directory where the Python script is executing.
+
+
+### Syntax
+
+
+Following is the basic syntax of thegetcwd()function in Python −
+
+
+```python
+os.getcwd()
+```
+
+
+### Example
+
+
+Following is an example to display the current working directory using the getcwd() function −
+
+
+```python
+import os
+
+current_directory = os.getcwd()
+print(f"Current working directory: {current_directory}")
+```
+
+
+We get the output as follows −
+
+
+```python
+Current working directory: /home/cg/root/667ba7570a5b7
+```
+
+
+## Listing Files and Directories
+
+
+You can list the contents of a directory using the os.listdir() function. This function returns a list of all files and directories within the specified directory path.
+
+
+### Example
+
+
+In the example below, we are listing the contents of the specified directory path using thelistdir()function −
+
+
+```python
+import os
+
+directory_path = r"D:\MyFolder\Pictures"
+
+try:
+   contents = os.listdir(directory_path)
+   print(f"Contents of '{directory_path}':")
+   for item in contents:
+      print(item)
+except OSError as e:
+   print(f"Error: Failed to list contents of directory '{directory_path}'. {e}")
+```
+
+
+Output of the above code is as shown below −
+
+
+```python
+Contents of 'D:\MyFolder\Pictures':
+Camera Roll
+desktop.ini
+Saved Pictures
+Screenshots
+```
+
+
+## Changing the Current Working Directory
+
+
+You can change the current directory using thechdir()method. This method takes an argument, which is the name of the directory that you want to make the current directory.
+
+
+### Syntax
+
+
+Following is the syntax of the chdir() method in Python −
+
+
+```python
+os.chdir("newdir")
+```
+
+
+### Example
+
+
+Following is an example to change the current directory to Desktop using the chdir() method −
+
+
+```python
+import os
+
+new_directory = r"D:\MyFolder\Pictures"
+
+try:
+    os.chdir(new_directory)
+    print(f"Current working directory changed to '{new_directory}'.")
+except OSError as e:
+    print(f"Error: Failed to change working directory to '{new_directory}'. {e}")
+```
+
+
+We get the output as shown below −
+
+
+```python
+Current working directory changed to 'D:\MyFolder\Pictures'.
+```
+
+
+## Removing a Directory
+
+
+You can remove an empty directory in Python using theos.rmdir()method. If the directory contains files or other directories, you can useshutil.rmtree()method to delete it recursively.
+
+
+### Syntax
+
+
+Following is the basic syntax to delete a directory in Python −
+
+
+```python
+os.rmdir(directory_path)
+# or
+shutil.rmtree(directory_path)
+```
+
+
+### Example
+
+
+In the following example, we remove an empty directory using the os.rmdir() method −
+
+
+```python
+import os
+directory_path = r"D:\MyFolder\new_dir"
+
+try:
+   os.rmdir(directory_path)
+   print(f"Directory '{directory_path}' successfully removed.")
+except OSError as e:
+   print(f"Error: Failed to remove directory '{directory_path}'. {e}")
+```
+
+
+It will produce the following output −
+
+
+```python
+Directory 'D:\MyFolder\new_dir' successfully removed.
+```
+

@@ -1,0 +1,301 @@
+---
+title: "SQL - Select Query"
+description: "Learn SQL - Select Query with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 280
+group: "SQL Queries"
+seoTitle: "SQL - Select Query — CodesCompiler SQL Guide"
+permalink: "sql-select-query"
+---
+
+
+# SQL SELECT Statement
+
+
+
+
+
+
+## SQL SELECT Statement
+
+
+TheSELECTstatement in SQL is used to retrieve data from one or more tables in a database. It is one of the most commonly used commands, allowing you to view the records stored in your tables.
+
+
+With the SELECT statement, you can retrieve all columns or choose specific ones, depending on what you need. You can also apply conditions to filter the results, sort the data, group similar records, or limit how many rows are returned. It gives you full control over how data is displayed from the table.
+
+
+### Syntax
+
+
+Following is the basic syntax of the SELECT statement to retrieve all columns from a table:
+
+
+```sql
+SELECT * FROM table_name;
+```
+
+
+### Example
+
+
+Let us assume we have created a table namedCUSTOMERSin the MySQL database:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+
+   ID INT NOT NULL,
+
+   NAME VARCHAR(20) NOT NULL,
+
+   AGE INT NOT NULL,
+
+   ADDRESS CHAR(25),
+
+   SALARY DECIMAL(18, 2),
+
+   PRIMARY KEY (ID)
+
+);
+```
+
+
+Now, insert values into this table using the INSERT statement as follows:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+
+(2, 'Khilan', 25, 'Delhi', 1500.00 ),
+
+(3, 'Kaushik', 23, 'Kota', 2000.00 ),
+
+(4, 'Chaitali', 25, 'Mumbai', 6500.00 ),
+
+(5, 'Hardik', 27, 'Bhopal', 8500.00 ),
+
+(6, 'Komal', 22, 'Hyderabad', 4500.00 ),
+
+(7, 'Muffy', 24, 'Indore', 10000.00 );
+```
+
+
+Now, to select all the records from the CUSTOMERS table, use the following SQL statement:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+The query will display all rows and columns from the table as shown below:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## Select Specific Columns
+
+
+If you don't want all columns, you can retrieve specific columns by mentioning their names in the SELECT statement.
+
+
+### Syntax
+
+
+Following is the basic syntax to select specific columns from a table:
+
+
+```sql
+SELECT column1, column2, ...
+
+FROM table_name;
+```
+
+
+### Example
+
+
+Following is an example to get only the ID and NAME of each customer in the CUSTOMERS table:
+
+
+```sql
+SELECT ID, NAME FROM CUSTOMERS;
+```
+
+
+We get the following table as an output:
+
+
+IDNAME1Ramesh2Khilan3Kaushik4Chaitali5Hardik6Komal7Muffy
+
+
+## Using SELECT with WHERE Clause
+
+
+You can use the SELECT statement with theWHEREclause to filter records based on a condition. This allows you to retrieve only the rows that match your criteria.
+
+
+### Syntax
+
+
+Following is the syntax use the SELECT statement with the WHERE clause:
+
+
+```sql
+SELECT * FROM table_name
+
+WHERE condition;
+```
+
+
+### Example
+
+
+In this example, we get retrieve the data of all customers whose AGE is greater than 25:
+
+
+```sql
+SELECT * FROM CUSTOMERS
+
+WHERE AGE > 25;
+```
+
+
+We get the output as shown below:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.005Hardik27Bhopal8500.00
+
+
+## Using SELECT with ORDER BY Clause
+
+
+You can use theSELECTstatement with theORDER BYclause to sort the results based on one or more columns. By default, the sorting is done in ascending order. If you want to sort the data in descending order, you can add theDESCkeyword.
+
+
+### Syntax
+
+
+Following is the syntax to use the SELECT statement with the ORDER BY clause:
+
+
+```sql
+SELECT * FROM table_name
+
+ORDER BY column1 [ASC|DESC];
+```
+
+
+### Example
+
+
+In this example, we list all customers sorted by AGE in descending order:
+
+
+```sql
+SELECT * FROM CUSTOMERS
+
+ORDER BY AGE DESC;
+```
+
+
+Following is the output obtained:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.005Hardik27Bhopal8500.002Khilan25Delhi1500.004Chaitali25Mumbai6500.007Muffy24Indore10000.003Kaushik23Kota2000.006Komal22Hyderabad4500.00
+
+
+## Using SELECT with LIMIT Clause
+
+
+You can use theSELECTstatement with theLIMITclause to limit the number of rows returned in the result set. This is useful when you only want to see a specific number of records, especially in large tables. For example, you can limit the results to just the first 5 or 10 rows.
+
+
+### Syntax
+
+
+Following is the syntax to use the SELECT statement with the LIMIT clause:
+
+
+```sql
+SELECT * FROM table_name
+
+LIMIT number;
+```
+
+
+### Example
+
+
+In the following example, we retrieve the first 3 customers from the table:
+
+
+```sql
+SELECT * FROM CUSTOMERS
+
+LIMIT 3;
+```
+
+
+We get the output as shown below:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.00
+
+
+## Using Aliases with SELECT
+
+
+You can use aliases with theSELECTstatement to give temporary names to columns or tables in your query. Aliases are created using theASkeyword, but it is optional i.e. you can also use a space.
+
+
+Aliases are helpful when column names are long or when you are using functions or combining multiple tables.
+
+
+### Syntax
+
+
+Following is the syntax to use aliases with the SELECT statement:
+
+
+```sql
+SELECT column_name AS alias_name
+
+FROM table_name;
+```
+
+
+### Example
+
+
+In the following example, we use an alias to show the customer names as "CustomerName":
+
+
+```sql
+SELECT NAME AS CustomerName FROM CUSTOMERS;
+```
+
+
+We get the following output:
+
+
+CustomerNameRameshKhilanKaushikChaitaliHardikKomalMuffy
+
+
+## Important Points About SELECT Statement
+
+
+When using theSELECTstatement, you need to keep the following points in mind:
+
+
+
+- Use*to select all columns, or list specific column names to retrieve only the data you need.
+- Use theWHEREclause to filter records, andORDER BYto sort the results.
+- TheLIMITclause is useful for restricting the number of rows returned, especially helpful for pagination or previewing data.
+- UseASto create aliases for columns, making the output easier to read and understand.
+
+

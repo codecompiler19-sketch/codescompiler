@@ -1,0 +1,114 @@
+---
+title: "PYTHON - Abstraction"
+description: "Learn PYTHON - Abstraction with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1440
+group: "Object Oriented Programming"
+seoTitle: "PYTHON - Abstraction — CodesCompiler PYTHON Guide"
+permalink: "python-abstraction"
+---
+
+
+# Python - Abstraction
+
+
+
+
+Abstractionis one of the important principles ofobject-oriented programming. It refers to a programming approach by which only the relevant data about an object is exposed, hiding all the other details. This approach helps in reducing the complexity and increasing the efficiency of application development.
+
+
+## Types of Python Abstraction
+
+
+There are two types of abstraction. One isdata abstraction, wherein the original data entity is hidden via a data structure that can internally work through the hidden data entities. Another type is calledprocess abstraction. It refers to hiding the underlying implementation details of a process.
+
+
+## Python Abstract Class
+
+
+In object-oriented programming terminology, a class is said to be an abstract class if it cannot be instantiated, that is you can have an object of an abstract class. You can however use it as a base or parent class for constructing other classes.
+
+
+## Create an Abstract Class
+
+
+To create an abstract class in Python, it must inherit the ABC class that is defined in the ABC module. This module is available in Python's standard library. Moreover, the class must have at least one abstract method. Again, an abstract method is the one which cannot be called but can be overridden. You need to decorate it with@abstractmethoddecorator.
+
+
+### Example: Create an Absctract Class
+
+
+```python
+from abc import ABC, abstractmethod
+class demo(ABC):
+   @abstractmethod
+   def method1(self):
+      print ("abstract method")
+      return
+   def method2(self):
+      print ("concrete method")
+```
+
+
+Thedemoclass inherits ABC class. There is a method1() which is an abstract method. Note that the class may have other non-abstract (concrete) methods.
+
+
+If you try to declare an object of demo class, Python raises TypeError −
+
+
+```python
+obj = demo()
+         ^^^^^^
+TypeError: Can't instantiate abstract class demo with abstract method method1
+```
+
+
+Thedemoclass here may be used as parent for another class. However, the child class must override the abstract method in parent class. If not, Python throws this error −
+
+
+```python
+TypeError: Can't instantiate abstract class concreteclass with abstract method method1
+```
+
+
+## Abstract Method Overriding
+
+
+Hence, the child class with the abstractmethod overriddenis given in the followingexample−
+
+
+### Example
+
+
+```python
+from abc import ABC, abstractmethod
+class democlass(ABC):
+   @abstractmethod
+   def method1(self):
+      print ("abstract method")
+      return
+   def method2(self):
+      print ("concrete method")
+
+class concreteclass(democlass):
+   def method1(self):
+      super().method1()
+      return
+      
+obj = concreteclass()
+obj.method1()
+obj.method2()
+```
+
+
+### Output
+
+
+When you execute this code, it will produce the following output −
+
+
+```python
+abstract method
+concrete method
+```
+

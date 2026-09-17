@@ -1,0 +1,190 @@
+---
+title: "PYTHON - Generator Expressions"
+description: "Learn PYTHON - Generator Expressions with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1910
+group: "Python Miscellenous"
+seoTitle: "PYTHON - Generator Expressions — CodesCompiler PYTHON Guide"
+permalink: "python-generator-expressions"
+---
+
+
+# Python - Generator Expressions
+
+
+
+
+Python is the versatile language with many ways to handle the data efficiently. Among them one of the feature is thegenerator expressions, Which create the iterators easily in a memory-efficient way. In this tutorial we are going to explore about the generator expressions.
+
+
+## Generator Expression
+
+
+TheGenerator Expressionis a simple way to create a generator, an iterator that process items one by one instead of creating an entire collection in memory at once.
+
+
+### Syntax
+
+
+Following is the syntax for generator expression:
+
+
+```python
+(expression for item in iterable if condition)
+```
+
+
+Following are the parameters -
+
+
+
+- expression− It is the value to process for each item.
+- item− It indicates the loop variable.
+- iterable− It indicates the sequence or iterator we loop over.
+- if condition (optional)− It filters the items based on the condition.
+
+
+
+Generator expressions looks like a list comprehension, but it uses theparentheses ()instead of thesquare brackets []For example,
+
+
+### A List Comprehension
+
+
+```python
+a = [x * x for x in range(5)]
+
+print(a)
+```
+
+
+Theoutputof the above program is -
+
+
+```python
+[0, 1, 4, 9, 16]
+```
+
+
+### A Generator Expression
+
+
+```python
+a = (x * x for x in range(5))
+
+print(a)
+```
+
+
+Following is theoutputof the above program -
+
+
+```python
+<generator object <genexpr> at 0x7f007ac5d080>
+```
+
+
+When we try to print the generator, we can't see the data directly. Instead we can observe the generator object, because the values aren’t all produced at once. we need to iterate over it to retrieve them:
+
+
+```python
+a = (x * x for x in range(5))
+
+for value in a:
+
+    print(value)
+```
+
+
+Theoutputof the above program is -
+
+
+```python
+0
+
+1
+
+4
+
+9
+
+16
+```
+
+
+## Use of Generator Expressions
+
+
+The main reason of using the generator expressions is efficiency in terms of both memory and speed.
+
+
+
+- Memory Efficiency− It doesn’t build the whole result list in the memory. Instead, it produces values on demand. It is useful when working with the large datasets or infinite sequences.
+- Lazy Evaluation− The generator only produce the value when we ask for it. If we don’t use all the values, no extra computation is wasted.
+- Cleaner Code− It makes the code compact and readable, especially for simple data transformations.
+
+
+
+## Examples of Using Generator Expressions
+
+
+Let's explore some of the practical examples to understand more about the generator expressions.
+
+
+### Example 1
+
+
+Consider the following example, where we are going to count the even number in a range based on thecondition.
+
+
+```python
+a = sum(1 for x in range(100) if x % 2 == 0)
+
+print(a)
+```
+
+
+Theoutputof the above program is -
+
+
+```python
+50
+```
+
+
+### Example 2
+
+
+In the following example, we are going to combine the data from two lists without storing all combinations.
+
+
+```python
+a = ['Ravi', 'Ramu', 'Remo']
+
+b = ['BMW', 'Cruze']
+
+c = (f"{name}-{color}" for name in a for color in b)
+
+for pair in c:
+
+    print(pair)
+```
+
+
+Following is theoutputof the above program -
+
+
+```python
+Ravi-BMW
+
+Ravi-Cruze
+
+Ramu-BMW
+
+Ramu-Cruze
+
+Remo-BMW
+
+Remo-Cruze
+```
+

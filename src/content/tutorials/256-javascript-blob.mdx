@@ -1,0 +1,195 @@
+---
+title: "JavaScript - Blob"
+description: "Learn JavaScript - Blob with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2560
+group: "JavaScript Miscellaneous"
+seoTitle: "JavaScript - Blob — CodesCompiler JavaScript Guide"
+permalink: "javascript-blob"
+---
+
+
+# JavaScript - Blob
+
+
+
+
+## What is blob in JavaScript?
+
+
+In JavaScript, aBlobis an object that is a group of bytes representing the data stored in the file. We can easily easily read the content of the Blob object as an ArrayBuffer, so it is very useful to store the binary data. The Blob object is used to handle the raw binary data, which we can create from the plain text, file data, etc.
+
+
+### Syntax
+
+
+Users can follow the syntax below to use the Blob() constructor to create a blob object.
+
+
+```javascript
+new Blob(BlobContent, Options);
+```
+
+
+OR
+
+
+```javascript
+new Blob(BlobContent, {type: Type of the Blob content});
+```
+
+
+In the above syntax, Blob() constructor takes two parameters and returns an instance of the Blob object. Developers can set the values of the 'type' option based on the BlobContent.
+
+
+### Parameters
+
+
+The Blob() constructor takes two parameters, as given below.
+
+
+
+- BlobContent− It is a text, data, or file content.
+- Options− It is an optional object containing various options for BlobContent.
+
+
+
+The 'type' is an important property in the Options object. It contains the MIME-type of the BlobContent as a value. For example, to store plain text in the blob object, you can use 'text/plain' as a MIME type; for images, you can use 'image/jpg' or 'image/png', etc.
+
+
+### Example
+
+
+In the below example code, we have used the blob() constructor to create a blob object. We have passed the 'Hello World!' string as a first parameter and the 'text/plain' MIME type for the content as a second parameter of the blob() constructor.
+
+
+After that, we have created the instance of the FileReader() object and used the readAsText() method to read the content of the blob object. In the output, we can see that it prints the plain text, which is the content of the blob object.
+
+
+```html
+<html>
+<body>
+   ##  JavaScript - Blob Object 
+   <h3 id = "output"> </h3>
+   <script>
+      var data = "Hello World";
+      var blob = new Blob([data], {
+         type: 'text/plain'
+      });
+
+      // Using the fileReader object to read the blob
+      var reader = new FileReader();
+      reader.addEventListener("loadend", function (e) {
+         var text = reader.result;
+         document.getElementById("output").innerHTML = text;
+      });
+      // Start reading the blob as text
+      reader.readAsText(blob);
+   </script>
+</body>
+</html>
+```
+
+
+## Blob URLs
+
+
+In the above section, we have learned to use the blob object. Furthermore, we can also create the URL using the blob object. As any particular URL refers to the file in the local file system, the blob URL referes to the content of the blob object. Also, we can use the blob URL as an actual URL with the `<a>` or `<img>` tag.
+
+
+Let's take a look at the example below to create a URL from the blob object.
+
+
+### Example: Rendering text content using the Blob URL
+
+
+In the example below, we have created the instance of the blob object and passed text content as a parameter. After that, we used the createObjectURL() method to create a blob URL.
+
+
+Next, we have updated the value of the 'href' attribute of the '`<a>`' with the blob URL. In the output, when you click the URL, it shows you the content stored in the blob object.
+
+
+```html
+<html>
+<body>
+   ##  JavaScript - Blob URL 
+   <a href = "#" id = "download"> Download Text File </a>
+   <script>
+      // Creating file using Blob object
+      var data = "This file contains the content of the blob object.";
+      var blob = new Blob([data], {
+         type: 'text/plain'
+      });
+      // Creating URL from Blob object
+      var url = URL.createObjectURL(blob);
+      var a = document.getElementById("download");
+      // Updating the href attribute's value
+      a.href = url;
+   </script>
+</body>
+</html>
+```
+
+
+### Example: Rendering an Image Using the Blob URL
+
+
+In this example, we have used the file input to get the image as input. Whenever the user uploads the image, we create the blob object using the file content.
+
+
+After that, we create a URL from the blob object and use it as a value of the 'src' attribute of the '' tag to render the image on the web page.
+
+
+```html
+<html>
+<body>
+   ##  JavaScript  Blob URL 
+   ###  Upload image file 
+   <input type = "file" id = "fileInput" />
+   <div id = "output"> </div>
+   <script>
+      // Read the file and create a blob
+      document.getElementById('fileInput').addEventListener('change', function () {
+         var file = this.files[0];
+         var reader = new FileReader();
+         reader.onload = function () {
+            // Create a blob
+            var blob = new Blob([new Uint8Array(this.result)], { type: file.type });
+            // Create an object URL
+            var url = URL.createObjectURL(blob);
+            // Set the object URL as the source of an image
+            document.getElementById('output').innerHTML = '<img src="' + url + '" />';
+        };
+        reader.readAsArrayBuffer(file);
+    });
+</script>
+</body>
+</html>
+```
+
+
+## Blob Advantages & Disadvantages
+
+
+Here are some advantages and disadvantages of using the blob objects.
+
+
+### Advantages
+
+
+
+- Blob objects are ideal for handling large binary data files on the web.
+- Developers can fetch the data in chunks by using the blob objects, which improves the performance of the application.
+- Blob objects can be used with the File API to perform the file operations in the browser.
+
+
+
+### Disadvantages
+
+
+
+- Large blob objects can consume significant memory and resources, which can impact the overall application performance and use experience.
+- Handling the binary data using the blob object can introduce security concerns to the code.
+- Older browsers do not support blob.
+
+

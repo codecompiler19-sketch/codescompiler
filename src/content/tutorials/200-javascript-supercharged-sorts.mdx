@@ -1,0 +1,177 @@
+---
+title: "JavaScript - Supercharged Sorts"
+description: "Learn JavaScript - Supercharged Sorts with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2000
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Supercharged Sorts — CodesCompiler JavaScript Guide"
+permalink: "javascript-supercharged-sorts"
+---
+
+
+# JavaScript - Supercharged Sorts
+
+
+
+
+The Array.sort() method in JavaScript is an essential tool for any developer that works with data sets. While sorting a list of numbers or words is simple, sorting arrays of objects based on numerous criteria becomes more complicated. In this chapter, we will look at various ways for making full use of Array.sort() for creating complicated, multi-property sorts.
+
+
+## Basics of Sorting
+
+
+Before we go into advanced methods, we will go over the fundamentals of how Array.sort() operates. The sort() method accepts an optional callback function that specifies the sorting order. This comparator function accepts two parameters (a and b) and returns a numerical value −
+
+
+
+- If the returned value is negative, sort a before b.
+- If the returned value is positive, sort b before a.
+- If the returned result is 0, the order of a and b is unaltered.
+
+
+
+Below is a very simple JavaScript example code for sorting an array of numbers in the ascending order −
+
+
+```javascript
+const numbers = [12, 7, 19, 3, 8, 5, 10, 15];
+
+// Sorting the array in descending order
+numbers.sort((a, b) => b - a);
+
+// Printing the sorted array
+console.log(numbers);
+```
+
+
+### Output
+
+
+This will generate the below result −
+
+
+```javascript
+[ 19, 15, 12, 10, 8,  7,  5,  3 ]
+```
+
+
+The comparator (a, b) `=`> a - b returns a negative value when a < b, a positive value whenever a > b, and 0 when a `=`=`=` b, which fulfills the contract Array.sort() requires.
+
+
+## Chaining Multiple Sort Criteria
+
+
+Things become more interesting when we have to sort an array of objects based on multiple properties. Look at an array of items.
+
+
+```javascript
+const products = [
+   { name: 'Smartphone', price: 699.99, rating: 4.7 },
+   { name: 'Headphones', price: 129.99, rating: 4.3 },
+   { name: 'Tablet', price: 399.99, rating: 4.1 },
+   { name: 'Smartwatch', price: 199.99, rating: 4.5 },
+];
+```
+
+
+Assume we want to arrange these products by price in ascending order, followed by rating in descending order as a tiebreaker for items with identical prices. We can chain the comparators together using the boolean OR operator (||) −
+
+
+```javascript
+products.sort((a, b) => 
+   a.price - b.price || b.rating - a.rating
+);
+```
+
+
+Here's how it works −
+
+
+
+- The first comparator, a.price minus b.price, is evaluated. If the prices differ, it yields a non-zero value and the || short-circuits, resulting in price sorting.
+- If the prices are the same, a.price - b.price equals 0. The || then evaluates the second comparator, b.rating - a.rating, and sorts by descending rating.
+
+
+
+This pattern allows us to chain as many comparators as we need −
+
+
+```javascript
+products.sort((a, b) => 
+   a.price - b.price || 
+   b.rating - a.rating ||
+   a.name.localeCompare(b.name)
+);
+```
+
+
+Items with the same price and rating are now sorted alphabetically by name to determine the final tiebreaker.
+
+
+## Creating Reusable 'sortBy' Functions
+
+
+While the chained comparator approach is effective, it can result in difficult-to-read and code that is repetitive if we need to sort by the same criteria multiple times. We can make our code more modular by introducing generic "sortBy" functions for each property −
+
+
+```javascript
+const byPrice = (a, b) => a.price - b.price;
+const byRating = (a, b) => b.rating - a.rating;
+const byName = (a, b) => a.name.localeCompare(b.name);
+
+products.sort((a, b) => 
+  byPrice(a, b) || byRating(a, b) || byName(a, b)
+);
+```
+
+
+This improves the sort chain's readability and allows each comparator to be reused. But we are still writing some repetitive code for each property. Let's see if we can improve.
+
+
+## Higher-Order 'sortBy' Function
+
+
+To increase re-usability, we can define a higher-order 'sortBy' function that accepts a property name and returns a comparator function −
+
+
+```javascript
+function sortBy(prop) {
+  return (a, b) => 
+    a[prop] < b[prop] ? -1 :
+    a[prop] > b[prop] ? 1 :
+    0;
+}
+const byPrice = sortBy('price');
+const byRating = (a, b) => sortBy('rating')(b, a);
+const byName = sortBy('name');
+```
+
+
+The sortBy function is considered higher-order because it returns another function. It uses the closure method to capture the prop argument within the scope of the returning comparator.
+
+
+This approach allows us to simply develop comparators for any property. To sort in descending order, the byRating comparator reverses the usual (a, b) order.
+
+
+Here is the complete ES6 version with the help of arrow functions −
+
+
+```javascript
+const sortBy = (prop) => (a, b) =>
+  a[prop] < b[prop] ? -1 : 
+  a[prop] > b[prop] ? 1 :
+  0;
+
+products.sort(
+  (a, b) => sortBy('price')(a, b) ||
+    sortBy('rating')(b, a) || 
+    sortBy('name')(a, b)
+);
+```
+
+
+## Summary
+
+
+In this chapter, we went over numerous ways for improving your JavaScript sorting skills.Combining several sort criteria with boolean OR logic.Refactoring Comparators into Reusable "sortBy" Functions.Developing a higher-order "sortBy" function to maximize versatility.Understanding and following these patterns will allow you to efficiently sort arrays of objects based on many properties while writing clean and maintainable code.
+

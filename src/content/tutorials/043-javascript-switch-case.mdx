@@ -1,0 +1,246 @@
+---
+title: "JavaScript - Switch Case"
+description: "Learn JavaScript - Switch Case with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 430
+group: "JavaScript Control Flow"
+seoTitle: "JavaScript - Switch Case — CodesCompiler JavaScript Guide"
+permalink: "javascript-switch-case"
+---
+
+
+# JavaScript - Switch Case
+
+
+
+
+The JavaScriptswitch caseis a conditional statement is used to execute different blocks of code depending on the value of an expression. The expression is evaluated, and if it matches the value of one of thecaselabels, the code block associated with that case is executed.  If none of the case labels match the value of the expression, the code block associated with the default label is executed.
+
+
+You can use multipleif...elseifstatements, as in the previous chapter, to perform a multiway branch. However, this is not always the best solution, especially when all of the branches depend on the value of a single variable.
+
+
+Starting with JavaScript 1.2, you can use aswitchstatement which handles exactly this situation, and it does so more efficiently than repeatedif...else ifstatements.
+
+
+## Flow Chart
+
+
+The following flow chart explains a switch-case statement works.
+
+
+## Syntax
+
+
+The objective of aswitchstatement is to give an expression to evaluate and several different statements to execute based on the value of the expression. The interpreter checks eachcaseagainst the value of the expression until a match is found. If nothing matches, adefaultcondition will be used.
+
+
+```javascript
+switch (expression) {
+   case condition 1: statement(s)
+   break;
+   
+   case condition 2: statement(s)
+   break;
+   ...
+   
+   case condition n: statement(s)
+   break;
+   
+   default: statement(s)
+}
+```
+
+
+
+- break− The statement keyword indicates the end of a particular case. If the 'break' statement were omitted, the interpreter would continue executing each statement in each of the following cases.
+- default− The default keyword is used to define the default expression. When any case doesn't match the expression of the switch-case statement, it executes the default code block.
+
+
+
+## Examples
+
+
+Let's understand the switch case statement in details with the help of some examples.
+
+
+### Example
+
+
+In the example below, we have a grade variable and use it as an expression of the switch case statement. The switch case statement is used to execute the different code blocks according to the value of the grade variable.
+
+
+For the grade 'A', it prints the 'Good job' in the output and terminates the switch case statement as we use the break statement.
+
+
+```html
+<html>
+<head>
+   <title> JavaScript - Switch case statement </title>
+</head>
+<body>
+   p id = "output" 
+   <script>
+      const output = document.getElementById("output");
+	  let grade = 'A';
+      output.innerHTML += "Entering switch block <br />";
+      switch (grade) {
+         case 'A': output.innerHTML += "Good job <br />";
+            break;
+         case 'B': output.innerHTML += "Passed <br />";
+            break;
+         case 'C': output.innerHTML += "Failed <br />";
+            break;
+         default: output.innerHTML += "Unknown grade <br />";
+      }
+      output.innerHTML += "Exiting switch block";
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Entering switch block
+Good job
+Exiting switch block
+```
+
+
+Break statements play a major role in switch-case statements. Try the following example that uses switch-case statement without any break statement.
+
+
+### Example: Without break Statement
+
+
+When we don't use the 'break' statement with any case of the switch case statement, it continues executing the next case without terminating it.
+
+
+In the below code, we haven't used the break statement with the case 'A' and 'B'. So, for the grade 'A', it will execute the statement of cases A, B, and C, and then it will terminate the execution of the switch case statement.
+
+
+```html
+<html>
+<head>
+   <title> JavaScript - Switch case statement </title>
+</head>
+<body>
+   p id = "output" 
+   <script>
+      const output = document.getElementById("output");
+      let grade = 'A';
+      output.innerHTML += "Entering switch block<br />";
+      switch (grade) {
+         case 'A': output.innerHTML += "Good job <br />";
+         case 'B': output.innerHTML += "Passed <br />";
+         case 'C': output.innerHTML += "Failed <br />";
+         default: output.innerHTML += "Unknown grade <br />";
+      }
+      output.innerHTML += "Exiting switch block";
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Entering switch block
+Good job
+Passed
+Failed
+Unknown grade
+Exiting switch block
+```
+
+
+### Example: Common Code Blocks
+
+
+Sometimes, developers require to execute the common code block for the multiple values of the expression. It is very similar to the OR condition in the if-else statement.
+
+
+In the below code, we execute the same code block for cases A and B, and C and D. You may try to change the value of the grade variables and observe the output.
+
+
+```html
+<html>
+<head>
+   <title> JavaScript - Switch case statement </title>
+</head>
+<body>
+   p id = "output" 
+   <script>
+      let output = document.getElementById("output");
+      var grade = 'C';
+      output.innerHTML += "Entering switch block <br />";
+      switch (grade) {
+         case 'A':
+         case 'B': output.innerHTML += "Passed <br />";
+            break;
+         case 'C':
+         case 'D': output.innerHTML += "Failed! <br />";
+            break;
+         default: output.innerHTML += "Unknown grade <br />";
+      }
+      output.innerHTML += "Exiting switch block";
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Entering switch block
+Failed!
+Exiting switch block
+```
+
+
+### Example: Strict Comparison
+
+
+The switch case statement compares the expression value with the case value using the strict equality operator.
+
+
+The 'num' variable contains the integer value in the code below. In the switch case statement, all cases are in the string. So, the code executes the default statement.
+
+
+```html
+<html>
+<head>
+   <title> JavaScript - Switch case statement </title>
+</head>
+<body>
+   p id = "output" 
+   <script>
+      const output = document.getElementById("output");
+      let num = 10;
+      switch (num) {
+         case '10': output.innerHTML += "10 Marks!";
+            break;
+         case '11': output.innerHTML += "11 Marks!";
+            break;
+         default: output.innerHTML += "Input is not a string!";
+      }
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Input is not a string!
+```
+

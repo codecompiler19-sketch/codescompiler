@@ -1,0 +1,154 @@
+---
+title: "JavaScript - Bubble Sort Algorithm"
+description: "Learn JavaScript - Bubble Sort Algorithm with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1750
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Bubble Sort Algorithm — CodesCompiler JavaScript Guide"
+permalink: "javascript-bubble-sort-algorithm"
+---
+
+
+# JavaScript - Bubble Sort Algorithm
+
+
+
+
+The stages of Bubble Sort are covered in this chapter, which includes a JavaScript implementation. The word 'sort' refers to the process of rearranging the elements in ascending order.
+
+
+## Bubble Sort Algorithm
+
+
+Bubble sort is a great starting point for those who are new to sorting. Since its algorithm looks similar how our brains usually think about sorting by comparison it is among the most simple sorting techniques.
+
+
+When using Bubble Sort the adjacent elements in the array are compared and if the first element is greater than the second the places are switched. In this way the highest value "bubbles" will come at the top.
+
+
+At the end of each iteration, the parts nearest the right are frequently in the correct order. The process is repeated until each element is in the right place.
+
+
+Now let us see what exactly bubble sort does −
+
+
+
+- Starting with the first element in the array and compare it to the current element.
+- If the array's current element is bigger than the next element, switch them.
+- If the current element is less than it and just move on to the next one.
+- Continue from Step 1 again.
+
+
+
+### Demonstration of Bubble Sort
+
+
+Here are the iterations of the bubble sort −
+
+
+```javascript
+Iteration 1: [8,3,7,1,5] -> [3,8,7,1,5] -> [3,7,8,1,5] -> [3,7,1,8,5] -> [3,7,1,5,8]
+Iteration 2: [3,7,1,5,8] -> [3,7,1,5,8] -> [3,1,7,5,8] -> [3,1,5,7,8]
+Iteration 3: [3,1,5,7,8] -> [1,3,5,7,8] -> [1,3,5,7,8]
+Iteration 4: [1,3,5,7,8] -> [1,3,5,7,8]
+Final Sorted List: [1,3,5,7,8]
+```
+
+
+## Implementing Bubble Sort in JavaScript
+
+
+The input of the bubbleSort function is the array arr. It uses two loops. The outer loop iterates over each element up to n-1 times, where n is the array's length. The inner loop compares and switches adjacent elements if they are out of order.
+
+
+A swapped flag is used to optimize the sort. If the array is already sorted and no swaps are made during a pass so we can end the loop early.
+
+
+```javascript
+function bubbleSort(arr) {
+   let n = arr.length;
+   let swapped;
+    
+   for (let i = 0; i < n - 1; i++) {
+      swapped = false;
+        
+      for (let j = 0; j < n - 1 - i; j++) {
+         // Compare adjacent elements
+         if (arr[j] > arr[j + 1]) {
+            // Swap if they are in the wrong order
+            let temp = arr[j];
+            arr[j] = arr[j + 1];
+            arr[j + 1] = temp;
+                
+            swapped = true;
+         }
+      }        
+      // If no elements were swapped, the array is already sorted
+      if (!swapped) break;
+   }    
+   return arr;
+}
+// Example 
+let arr = [8, 3, 7, 1, 5];
+console.log("Sorted array:", bubbleSort(arr));
+```
+
+
+### Output
+
+
+This will generate the below result after sorting the elements −
+
+
+```javascript
+Sorted array: [ 1, 3, 5, 7, 8 ]
+```
+
+
+## Another Way to Implement Bubble Sort
+
+
+Here is another way to create Bubble Sort in JavaScript using a slightly different structure −
+
+
+```javascript
+function bubbleSort(arr) {
+   let n = arr.length;
+
+   for (let i = n - 1; i > 0; i--) {
+      for (let j = 0; j < i; j++) {
+         // Compare adjacent elements
+         if (arr[j] > arr[j + 1]) {
+            // Swap if they are in the wrong order
+            // Using destructuring for swapping
+            [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]]; 
+         }
+      }
+   }    
+   return arr;
+}
+// Example
+let arr = [8, 3, 7, 1, 5];
+console.log("Sorted array:", bubbleSort(arr));
+```
+
+
+### Output
+
+
+This will produce the following result −
+
+
+```javascript
+Sorted array: [ 1, 3, 5, 7, 8 ]
+```
+
+
+## Complexities
+
+
+In the worst case scenario and average case time complexity the array is in reverse order so in this situation it has O(n2) time complexity.
+
+
+And in the optimal time complexity and in the ideal situation the array's time complexity is O(n) and it is already sorted. The auxiliary space is O(1).
+

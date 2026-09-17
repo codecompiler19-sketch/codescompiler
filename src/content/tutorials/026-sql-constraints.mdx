@@ -1,0 +1,621 @@
+---
+title: "SQL - Constraints"
+description: "Learn SQL - Constraints with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 260
+group: "SQL Table"
+seoTitle: "SQL - Constraints — CodesCompiler SQL Guide"
+permalink: "sql-constraints"
+---
+
+
+# SQL Constraints
+
+
+Table of contentWhat Are SQL Constraints?Why Should We Use Constraints?Types of SQL ConstraintsSQL Create ConstraintsSQL NOT NULL ConstraintSQL UNIQUE ConstraintSQL PRIMARY KEY ConstraintSQL FOREIGN KEY ConstraintSQL CHECK ConstraintSQL DEFAULT ConstraintUsing Multiple Constraints TogetherAdding Constraints to an Existing Table Using ALTER TABLE
+
+
+
+
+## What Are SQL Constraints?
+
+
+SQLconstraintsare rules applied to columns or tables in a database to make sure that the data stored is correct and meaningful. These rules help to control what kind of data can be inserted, updated, or deleted.
+
+
+Constraints can be added at the time of table creation or modified later using theALTER TABLEcommand.
+
+
+## Why Should We Use Constraints?
+
+
+Using SQL constraints is important for keeping your database accurate and organized:
+
+
+
+- They ensure that only valid data is entered (e.g., preventing letters in a phone number).
+- They prevent saving incorrect or incomplete data, such as missing required fields or duplicate emails.
+- They maintain proper relationships between tables (e.g., orders must be linked to valid customers).
+- They help to eliminate missing or duplicate data entries.
+
+
+
+Overall, constraints reduce errors and make databases more easier to manage.
+
+
+## Types of SQL Constraints
+
+
+Following are the common types of SQL constraints:
+
+
+
+- NOT NULL:Ensures a column cannot have NULL values.
+- UNIQUE:Ensures all values in a column are different.
+- PRIMARY KEY:Uniquely identifies each record in a table.
+- FOREIGN KEY:Ensures referential integrity by linking to the primary key of another table.
+- CHECK:Ensures all values in a column satisfy a specific condition.
+- DEFAULT:Sets a default value for a column when no value is specified.
+
+
+
+## SQL Create Constraints
+
+
+You can define constraints while creating a table using theCREATE TABLEstatement. This ensures that validation rules are enforced from the beginning.
+
+
+If the table already exists, you can still add constraints later using theALTER TABLEstatement.
+
+
+### Syntax
+
+
+Following is the basic syntax to define constraints during table creation:
+
+
+```sql
+CREATE TABLE table_name (
+
+   column1 datatype constraint,
+
+   column2 datatype constraint,
+
+   ...
+
+   columnN datatype constraint,
+
+   table_constraint
+
+);
+```
+
+
+Constraints can be column-level (applied to a specific column) or table-level (applied across multiple columns, such asPRIMARY KEYorFOREIGN KEY).
+
+
+## SQL NOT NULL Constraint
+
+
+TheNOT NULLconstraint in SQL ensures that a column cannot haveNULLvalues. It makes sure that every row in the table includes a value for that column. This is useful for important fields like IDs, usernames, or emails where missing data is not allowed.
+
+
+### Example
+
+
+In the following example, we create aCUSTOMERStable where theIDandNAMEcolumns are marked asNOT NULL. This means every customer must have an ID and a Name:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+
+   ID INT NOT NULL,
+
+   NAME VARCHAR(50) NOT NULL
+
+);
+```
+
+
+We get the output as shown below:
+
+
+```sql
+Query OK, 0 rows affected (0.05 sec)
+```
+
+
+### Verification
+
+
+You can test the constraint by trying to insert a row with missing values:
+
+
+```sql
+INSERT INTO CUSTOMERS (ID) VALUES (101);
+```
+
+
+This will generate an error because theNAMEfield cannot beNULL:
+
+
+```sql
+ERROR 1364 (HY000): Field 'NAME' doesn't have a default value
+```
+
+
+## SQL UNIQUE Constraint
+
+
+TheUNIQUEconstraint in SQL ensures that values in a column are different. It prevents duplicate entries and is useful for fields like usernames, emails, or any data that must be unique for each record.
+
+
+### Example
+
+
+In the following example, we create aCUSTOMERStable where theEMAILcolumn is marked asUNIQUE. This means no two customers can have the same email address:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+
+   ID INT NOT NULL,
+
+   NAME VARCHAR(50) NOT NULL,
+
+   EMAIL VARCHAR(100) UNIQUE
+
+);
+```
+
+
+Following is the output obtained:
+
+
+```sql
+Query OK, 0 rows affected (0.07 sec)
+```
+
+
+### Verification
+
+
+You can test the constraint by inserting rows with the same email:
+
+
+```sql
+INSERT INTO CUSTOMERS (ID, NAME, EMAIL) VALUES (1, 'Khilan', 'khilan@example.com');
+
+INSERT INTO CUSTOMERS (ID, NAME, EMAIL) VALUES (2, 'Kaushik', 'khilan@example.com');
+```
+
+
+The second insert will generate an error because the email already exists in the table:
+
+
+```sql
+ERROR 1062 (23000): Duplicate entry 'khilan@example.com' for key 'customers.EMAIL'
+```
+
+
+## SQL PRIMARY KEY Constraint
+
+
+ThePRIMARY KEYconstraint in SQL uniquely identifies each record in a table. It ensures that the column (or combination of columns) hasuniquevalues and does not allowNULL. Every table should have a primary key to maintain data integrity.
+
+
+### Example
+
+
+In the following example, we create aCUSTOMERStable where theIDcolumn is defined as thePRIMARY KEY. This means each customer must have a unique ID, and it cannot be null:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+
+   ID INT PRIMARY KEY,
+
+   NAME VARCHAR(50),
+
+   EMAIL VARCHAR(100)
+
+);
+```
+
+
+This produces the following output:
+
+
+```sql
+Query OK, 0 rows affected (0.06 sec)
+```
+
+
+### Verification
+
+
+You can test the constraint by inserting two rows with the same ID value:
+
+
+```sql
+INSERT INTO CUSTOMERS (ID, NAME, EMAIL) VALUES (1, 'Khilan', 'khilan@example.com');
+
+INSERT INTO CUSTOMERS (ID, NAME, EMAIL) VALUES (1, 'Kaushik', 'kaushik@example.com');
+```
+
+
+The second insert will generate an error because theIDmust be unique as a primary key:
+
+
+```sql
+ERROR 1062 (23000): Duplicate entry '1' for key 'customers.PRIMARY'
+```
+
+
+## SQL FOREIGN KEY Constraint
+
+
+TheFOREIGN KEYconstraint in SQL is used to establish a relationship between two tables. It ensures that the value in a column (or set of columns) matches a value in the primary key of another table. This helps maintainreferential integritybetween related data.
+
+
+### Example
+
+
+In the following example, we first create aDEPARTMENTStable withDEPT_IDas its primary key. Then, we create aCUSTOMERStable whereDEPT_IDis a foreign key that references theDEPT_IDcolumn of theDEPARTMENTStable:
+
+
+```sql
+CREATE TABLE DEPARTMENTS (
+
+   DEPT_ID INT PRIMARY KEY,
+
+   DEPT_NAME VARCHAR(100)
+
+);
+
+
+
+CREATE TABLE CUSTOMERS (
+
+   ID INT PRIMARY KEY,
+
+   NAME VARCHAR(50),
+
+   DEPT_ID INT,
+
+   FOREIGN KEY (DEPT_ID) REFERENCES DEPARTMENTS(DEPT_ID)
+
+);
+```
+
+
+We get the output as shown below:
+
+
+```sql
+Query OK, 0 rows affected (0.04 sec)
+
+Query OK, 0 rows affected (0.05 sec)
+```
+
+
+### Verification
+
+
+You can test the foreign key constraint by trying to insert a record in theCUSTOMERStable with aDEPT_IDthat doesn't exist in theDEPARTMENTStable:
+
+
+```sql
+INSERT INTO CUSTOMERS (ID, NAME, DEPT_ID) VALUES (1, 'Khilan', 10);
+```
+
+
+This will generate an error because the value10is not present in theDEPARTMENTS.DEPT_IDcolumn:
+
+
+```sql
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`testdb`.`customers`, CONSTRAINT `customers_ibfk_1` FOREIGN KEY (`DEPT_ID`) REFERENCES `departments` (`DEPT_ID`))
+```
+
+
+## SQL CHECK Constraint
+
+
+TheCHECKconstraint in SQL is used to limit the range or format of values that can be entered into a column. It ensures that all values in a column satisfy a specific condition. This is helpful for maintaining data accuracy and validity, for example, restricting age to a minimum value.
+
+
+### Example
+
+
+In the following example, we create aCUSTOMERStable with aCHECKconstraint on theAGEcolumn to ensure only customers aged 18 or older are allowed:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+
+   ID INT PRIMARY KEY,
+
+   NAME VARCHAR(50),
+
+   AGE INT CHECK (AGE >= 18)
+
+);
+```
+
+
+The result produced is as follows:
+
+
+```sql
+Query OK, 0 rows affected (0.04 sec)
+```
+
+
+### Verification
+
+
+You can test the constraint by trying to insert a record with an age below 18:
+
+
+```sql
+INSERT INTO CUSTOMERS (ID, NAME, AGE) VALUES (1, 'Ramesh', 15);
+```
+
+
+This will generate an error because theAGEvalue violates the CHECK condition:
+
+
+```sql
+ERROR 3819 (HY000): Check constraint 'customers_chk_1' is violated.
+```
+
+
+## SQL DEFAULT Constraint
+
+
+TheDEFAULTconstraint in SQL is used to automatically assign a default value to a column if no value is specified during data insertion. This helps to ensure that a column is always filled with a meaningful value even when the user omits it in theINSERTstatement.
+
+
+### Example
+
+
+In the following example, we create aCUSTOMERStable where theSALARYcolumn has a default value of5000.00. If a user inserts a row without specifying the salary, this default value will be used:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+
+   ID INT PRIMARY KEY,
+
+   NAME VARCHAR(50),
+
+   SALARY DECIMAL(10,2) DEFAULT 5000.00
+
+);
+```
+
+
+We get the output as shown below:
+
+
+```sql
+Query OK, 0 rows affected (0.04 sec)
+```
+
+
+### Verification
+
+
+You can test the default value by inserting a row without providing a value forSALARY:
+
+
+```sql
+INSERT INTO CUSTOMERS (ID, NAME) VALUES (1, 'Komal');
+```
+
+
+Then, run aSELECTquery to see the result:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+You will get the following output where theSALARYis automatically set to5000.00:
+
+
+IDNAMESALARY1Neha5000.00
+
+
+## Using Multiple Constraints Together
+
+
+In SQL, you can apply multiple constraints to a single column or across multiple columns in a table.
+
+
+For example, a column can be defined asNOT NULL,UNIQUE, and also have aDEFAULTvalue. Additionally, table-level constraints likePRIMARY KEYandFOREIGN KEYcan also be combined for complete data validation.
+
+
+### Syntax
+
+
+Following is the basic syntax to apply multiple constraints in SQL:
+
+
+```sql
+CREATE TABLE table_name (
+
+   column1 datatype CONSTRAINT1 CONSTRAINT2 ...,
+
+   column2 datatype CONSTRAINT3 ...,
+
+   ...
+
+   [table_constraints]
+
+);
+```
+
+
+### Example
+
+
+In the example below, we create aCUSTOMERStable that uses multiple constraints. TheIDcolumn is aPRIMARY KEY(which also impliesNOT NULLandUNIQUE), theNAMEcolumn cannot beNULL, and theSALARYcolumn has a default value. ACHECKconstraint is applied onAGEto ensure only adults are added:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+
+   ID INT PRIMARY KEY,
+
+   NAME VARCHAR(50) NOT NULL,
+
+   EMAIL VARCHAR(100) UNIQUE,
+
+   AGE INT CHECK (AGE >= 18),
+
+   SALARY DECIMAL(10,2) DEFAULT 5000.00
+
+);
+```
+
+
+This table ensures data integrity by combining multiple constraints across different columns.
+
+
+```sql
+Query OK, 0 rows affected (0.11 sec)
+```
+
+
+### Verification
+
+
+You can verify this by inserting a valid and an invalid record as shown below:
+
+
+```sql
+-- Valid record
+
+INSERT INTO CUSTOMERS (ID, NAME, EMAIL, AGE) VALUES (1, 'Ravi', 'ravi@mail.com', 22);
+
+
+
+-- Invalid record (violates CHECK constraint on AGE)
+
+INSERT INTO CUSTOMERS (ID, NAME, EMAIL, AGE) VALUES (2, 'Ankit', 'ankit@mail.com', 16);
+```
+
+
+The second query will throw an error as shown below:
+
+
+```sql
+ERROR 3819 (HY000): Check constraint 'customers_chk_1' is violated.
+```
+
+
+## Adding Constraints to an Existing Table Using ALTER TABLE
+
+
+In SQL, you can modify an existing table to add constraints even after it has been created. This is useful when you want to enforce new rules without dropping and recreating the table. TheALTER TABLEstatement allows you to add, modify, or drop constraints as needed.
+
+
+### Syntax
+
+
+Following is the basic syntax for modifying an existing column to add NOT NULL constraint:
+
+
+```sql
+ALTER TABLE table_name 
+
+MODIFY column_name datatype NOT NULL;
+```
+
+
+Following is the another syntax for adding a new constraint like CHECK:
+
+
+```sql
+ALTER TABLE table_name 
+
+ADD CONSTRAINT constraint_name CHECK (condition);
+```
+
+
+### Example: Add NOT NULL Constraint
+
+
+Suppose theNAMEcolumn in theCUSTOMERStable was initially allowed to haveNULLvalues. You can now modify it to disallow NULLs:
+
+
+```sql
+ALTER TABLE CUSTOMERS 
+
+MODIFY NAME VARCHAR(100) NOT NULL;
+```
+
+
+Following is the output obtained:
+
+
+```sql
+Query OK, 0 rows affected (0.08 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+```
+
+
+### Example: Add CHECK Constraint
+
+
+If you want to ensure that theSALARYcolumn always contains positive values, you can add aCHECKconstraint:
+
+
+```sql
+ALTER TABLE CUSTOMERS 
+
+ADD CONSTRAINT chk_salary CHECK (SALARY > 0);
+```
+
+
+This produces the following output:
+
+
+```sql
+Query OK, 0 rows affected (0.06 sec)
+
+Records: 0  Duplicates: 0  Warnings: 0
+```
+
+
+### Verification
+
+
+You can verify these changes by inserting a record that violates the constraints:
+
+
+```sql
+-- This will fail because NAME cannot be NULL
+
+INSERT INTO CUSTOMERS (ID, SALARY) VALUES (101, 4500);
+
+
+
+-- This will fail due to the CHECK constraint on SALARY
+
+INSERT INTO CUSTOMERS (ID, NAME, SALARY) VALUES (102, 'Anita', -2000);
+```
+
+
+After executing the above code, we get the following output:
+
+
+```sql
+ERROR 1048 (23000): Column 'NAME' cannot be null
+
+ERROR 3819 (HY000): Check constraint 'chk_salary' is violated.
+```
+

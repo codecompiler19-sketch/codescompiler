@@ -1,0 +1,202 @@
+---
+title: "JavaScript - Ajax"
+description: "Learn JavaScript - Ajax with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2360
+group: "JavaScript Miscellaneous"
+seoTitle: "JavaScript - Ajax — CodesCompiler JavaScript Guide"
+permalink: "javascript-ajax"
+---
+
+
+# JavaScript - Ajax
+
+
+
+
+Asynchronous JavaScript and XML (Ajax) represents a web development technique: it enables dynamic, interactive communication between server and webpage without necessitating complete page reload. The descriptor "asynchronous" underlines that data exchanges can occur in the background, independent of user experience disruption. Rather than idly awaiting full-page refreshment; Ajax empowers real-time updates on specific sections of a webpage, thus yielding an interface that is more seamless and responsive.
+
+
+## How Ajax works?
+
+
+The central role in enabling dynamic updates, without the necessity of a full page reload, belongs to the XMLHttpRequest object within JavaScript's Ajax functionality. This particular process allows for asynchronous communication between server and web page. The server responds with data, usually in JSON or XML format when receiving a request sent by this object. Processing this data is the task of JavaScript; it updates specific portions of the webpage in real-time. The asynchronous nature which is a critical feature for modern web development ensures these operations occur unobtrusively in background, thereby enhancing interactivity by allowing data to be fetched and sent asynchronously.
+
+
+Here, we will to explore Ajax to get a deeper understanding of it.
+
+
+There are 4 approaches to make Ajax calls or to implement Ajax in JavaScript and they are:
+
+
+
+- XMLHttpRequest (Older Approach)
+- Fetch API (Modern Approach)
+- Axios (Library for HTTP Requests)
+- jQuery Ajax
+
+
+
+We will be using JSONPlaceholder in all the examples for understanding purposes.
+
+
+JSONPlaceholder is an open-source and simulated REST API provider which lets developers test their prototype applications. It returns fake/dummy data for various resources like users, posts, comments etc. The API endpoints of JSONPlaceholder can be made using HTTP requests and they will be mimicking the nature of real APIs without any need for authentication. Our goal here is to use these APIs/endpoints to under Javascript-Ajax.
+
+
+## Using XMLHttpRequest
+
+
+The Native JavaScript approach using XMLHttpRequest represents the oldest method for asynchronous requests. It relies on the XMLHttpRequest object to create and send HTTP requests. This method involves setting up callback functions to handle various states of the request, making it suitable for simpler scenarios. However, it has some limitations compared to more modern approaches.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<body>
+Native XMLHttpRequest Example
+<button onclick="nativeAjax()">Make Request</button>
+<pre id="result"></pre>
+<script>
+  function nativeAjax() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://jsonplaceholder.typicode.com/users/2', true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState == 4 && xhr.status == 200) {
+        var responseData = JSON.stringify(JSON.parse(xhr.responseText), null, 2);
+        document.getElementById('result').innerText = 'Native XMLHttpRequest:\n' + responseData;
+      }
+    };
+    xhr.send();
+  }
+</script>
+</body>
+</html>
+```
+
+
+## Using Fetch API
+
+
+Presenting a modern alternative to XMLHttpRequest, the Fetch API offers a more straightforward and powerful syntax; it returns Promises thus enhancing the intuitive handling of asynchronous operations. Supporting an extensive array of HTTP methods and headers: this provides developers with a cleaner, concise method for making asynchronous requests. Contemporary JavaScript applications often prefer it for its clarity and ease of use.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+<h1>Fetch API Example</h1>
+<button onclick="fetchApi()">Make Request</button>
+<pre id="result"></pre>
+<script>
+  function fetchApi() {
+    fetch('https://jsonplaceholder.typicode.com/users/3')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        var formattedData = JSON.stringify(data, null, 2);
+        document.getElementById('result').innerText = 'Fetch API:\n' + formattedData;
+      })
+      .catch(error => {
+        document.getElementById('result').innerText = 'Fetch API Error: ' + error.message;
+      });
+  }
+</script>
+</body>
+</html>
+```
+
+
+## Using Axios
+
+
+Designed for making HTTP requests, Axios emerges as a popular JavaScript library. Its popularity is largely due to its clean and concise syntax: built on Promises; furthermore, it boasts automatic JSON data transformation support features that set it apart from other libraries in the field. Offering more than just basic functionality, Axios presents advanced features such as request and response interceptors, a robust selection for managing AJAX operations within the context of modern web development environment.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<h1>Axios Example</h1>
+<button onclick="axiosExample()">Make Request</button>
+<pre id="result3"></pre>
+<script>
+  function axiosExample() {
+    axios.get('https://jsonplaceholder.typicode.com/users/5')
+      .then(response => {
+        var formattedData = JSON.stringify(response.data, null, 2);
+        document.getElementById('result3').innerText = 'Axios:\n' + formattedData;
+      })
+      .catch(error => {
+        document.getElementById('result3').innerText = 'Axios Error: ' + error.message;
+      });
+  }
+</script>
+</body>
+</html>
+```
+
+
+## Using Ajax jQuery
+
+
+The $.ajax method in jQuery simplifies the AJAX request process: a popular approach previously; however, its usage has waned alongside modern JavaScript's ascent. Offering an interface that is both consistent and cross-browser compatible, jQuery Ajax remains suitable for projects already using or needing specific features of jQuery due to these advantages it presents. However, for new projects, modern alternatives may be preferred.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+<h1>jQuery Ajax Example</h1>
+<button onclick="jqueryAjax()">Make Request</button>
+<pre id="result4"></pre>
+<script>
+  function jqueryAjax() {
+    $.ajax({
+      url: 'https://jsonplaceholder.typicode.com/users/7',
+      method: 'GET',
+      dataType: 'json',
+      success: function (data) {
+        var formattedData = JSON.stringify(data, null, 2);
+        document.getElementById('result4').innerText = 'jQuery Ajax:\n' + formattedData;
+      },
+      error: function (xhr, status, error) {
+        document.getElementById('result4').innerText = 'jQuery Ajax Error: ' + error;
+      }
+    });
+  }
+</script>
+</body>
+</html>
+```
+
+
+## Ajax Use Cases
+
+
+In real-world scenarios, developers commonly employ Ajax to create web applications that are both responsive and interactive. A pertinent example: a social media platform; here, users have the ability - thanks to Ajax, to add or load new comments in the background without needing an entire page refresh. Dynamic updating ensures a user experience that is smooth and uninterrupted, permitting individuals to engage with content and one another seamlessly. This process yields a platform more responsive and engaging; it amplifies user interaction thus enhancing satisfaction.
+
+
+Prominent companies utilizing Ajax for enhanced user experiences include Google (Gmail, Maps), Facebook, Twitter, Amazon, Netflix, GitHub, LinkedIn, YouTube, Microsoft Office Online, and Uber. Ajax is employed for real-time updates, dynamic content loading, and seamless interactions on their respective platforms.
+

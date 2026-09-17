@@ -1,0 +1,208 @@
+---
+title: "JavaScript - Validate URL"
+description: "Learn JavaScript - Validate URL with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2350
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Validate URL — CodesCompiler JavaScript Guide"
+permalink: "javascript-validate-url"
+---
+
+
+# JavaScript - Validate URLs
+
+
+
+
+In this chapter, we will learn how we can validate URLs in JavaScript. Before knowing how to validate URLs, let's understand what a URL is.
+
+
+## What is a URL?
+
+
+A URL or Uniform Resource Locator identifies web pages, images, and videos on the internet. URLs are website addresses that transfer files, send emails, and many more.
+
+
+URLs consist of a protocol, domain name, and so on. URL indicates how the browser gets the data and where to get the data.
+
+
+We use a URL in the anchor tags or buttons to navigate to another location. We must verify the URL's validity before using it.
+
+
+## Validating URLs in JavaScript
+
+
+There are ways to validate URLs in JavaScript. Let us understand the rule to validate URLs:
+
+
+### Rules to validate URLs
+
+
+Below are the rules to validate URLs:
+
+
+
+- URL must start with http://, https://, or www.
+- URL must contain a domain name.
+- URL must contain a top-level domain like .com, .org, .net, etc.
+- URL must not contain any spaces.
+
+
+
+## Using Regular Expression
+
+
+Regular expression are much useful in validating URLs. A regular expression describes a pattern of characters. We use these patterns to match some text.
+
+
+### Syntax
+
+
+Below you can see the regular expression syntax to validate URLs:
+
+
+```javascript
+string.match(regExp);
+
+var pattern = new RegExp(regExp);
+
+pattern.test(string);
+```
+
+
+The first syntax matches a regular expression. The second syntax tests for a URL pattern.
+
+
+### Example
+
+
+In the following example, we use a regular expression to validate URLs.
+
+
+```html
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>Validate URLs in JavaScript</title>
+
+</head>
+
+<body>
+
+## Validate URLs using Regular Expression
+
+<div id="output"></div>
+
+<script>
+
+let output = document.getElementById("output");
+
+var url = "https://www.tutorialspoint.com";
+
+var pattern = new RegExp("^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$");
+
+if (pattern.test(url)) {
+
+   output.innerHTML = "URL is valid";
+
+} else {
+
+   output.innerHTML = "URL is not valid";
+
+}
+
+</script>
+
+</body>
+
+</html>
+```
+
+
+## Using URL() Constructor
+
+
+The URL() constructor returns a newly created URL object. The constructor throws a TypeError if the base URL or resultant URL is invalid.
+
+
+### Syntax
+
+
+Below is the syntax to use the URL() constructor:
+
+
+```javascript
+var url = new URL(urlStr);
+
+new URL(url, base);
+
+return url.protocol === 'http:' || url.protocol === 'https:';
+```
+
+
+The first two syntaxes create a new URL, either with or without a base. The second syntax is to check the URL protocol validity.
+
+
+### Example
+
+
+In this program, the URL method validates the URLs and returns a type error in the case of invalid URLs.
+
+
+```html
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+   <title>Validate URLs in JavaScript</title>
+
+</head>
+
+<body>
+
+## Validate URLs using URL() Constructor
+
+<div id="output"></div>
+
+<script>
+
+let output = document.getElementById("output");
+
+try {
+
+   var url = new URL("https://www.tutorialspoint.com");
+
+   if (url.protocol === 'http:' || url.protocol === 'https:') {
+
+      output.innerHTML = "URL is valid";
+
+   } else {
+
+      output.innerHTML = "URL is not valid";
+
+   }
+
+} catch (e) {
+
+   output.innerHTML = "URL is not valid";
+
+}
+
+</script>
+
+</body>
+
+</html>
+```
+
+
+This chapter taught us two methods to validate a URL. The first method suggests using a regular expression match or a pattern test. The second method is the built-in URL method. The URL method is easy because we can avoid the test case missing in the case of regular expressions.
+
+
+Both methods are useful in validating URLs. We can use any of the methods based on our requirements.
+

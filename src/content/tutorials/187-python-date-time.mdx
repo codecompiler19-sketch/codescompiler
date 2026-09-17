@@ -1,0 +1,998 @@
+---
+title: "PYTHON - Date & Time"
+description: "Learn PYTHON - Date & Time with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1870
+group: "Python Miscellenous"
+seoTitle: "PYTHON - Date & Time — CodesCompiler PYTHON Guide"
+permalink: "python-date-time"
+---
+
+
+# Python - Date and Time
+
+
+
+
+A Python program can handle date and time in several ways. Converting between date formats is a common chore for computers. Following modules in Python's standard library handle date and time related processing −
+
+
+
+- DateTime module
+- Time module
+- Calendar module
+
+
+
+## What are Tick Intervals
+
+
+Time intervals are floating-point numbers in units of seconds. Particular instants in time are expressed in seconds since 12:00am, January 1, 1970(epoch).
+
+
+There is a populartimemodule available in Python, which provides functions for working with times, and for converting between representations. The functiontime.time()returns the current system time in ticks since 12:00am, January 1, 1970(epoch).
+
+
+### Example
+
+
+```python
+import time # This is required to include time module.
+ticks = time.time()
+print ("Number of ticks since 12:00am, January 1, 1970:", ticks)
+```
+
+
+This would produce a result something as follows −
+
+
+```python
+Number of ticks since 12:00am, January 1, 1970: 1681928297.5316436
+```
+
+
+Date arithmetic is easy to do with ticks. However, dates before the epoch cannot be represented in this form. Dates in the far future also cannot be represented this way - the cutoff point is sometime in 2038 for UNIX and Windows.
+
+
+## What is TimeTuple?
+
+
+Many of the Python's time functions handle time as a tuple of 9 numbers, as shown below −
+
+
+
+| Index | Field | Values |
+| --- | --- | --- |
+| 0 | 4-digit year | 2016 |
+| 1 | Month | 1 to 12 |
+| 2 | Day | 1 to 31 |
+| 3 | Hour | 0 to 23 |
+| 4 | Minute | 0 to 59 |
+| 5 | Second | 0 to 61 (60 or 61 are leap-seconds) |
+| 6 | Day of Week | 0 to 6 (0 is Monday) |
+| 7 | Day of year | 1 to 366 (Julian day) |
+| 8 | Daylight savings | -1, 0, 1, -1 means library determines DST |
+
+
+
+For example,
+
+
+```python
+>>>import time
+>>> print (time.localtime())
+```
+
+
+This would produce anoutputas follows −
+
+
+```python
+time.struct_time(tm_year=2023, tm_mon=4, tm_mday=19, tm_hour=23, 
+   tm_min=49, tm_sec=8, tm_wday=2, tm_yday=109, tm_isdst=0)
+```
+
+
+The above tuple is equivalent to struct_time structure. This structure has the following attributes −
+
+
+
+| Index | Attributes | Values |
+| --- | --- | --- |
+| 0 | tm_year | 2016 |
+| 1 | tm_mon | 1 to 12 |
+| 2 | tm_mday | 1 to 31 |
+| 3 | tm_hour | 0 to 23 |
+| 4 | tm_min | 0 to 59 |
+| 5 | tm_sec | 0 to 61 (60 or 61 are leap-seconds) |
+| 6 | tm_wday | 0 to 6 (0 is Monday) |
+| 7 | tm_yday | 1 to 366 (Julian day) |
+| 8 | tm_isdst | -1, 0, 1, -1 means library determines DST |
+
+
+
+## Getting the Current Time
+
+
+To translate a time instant fromsecondssince the epoch floating-point value into a time-tuple, pass the floating-point value to a function (e.g., localtime) that returns a time-tuple with all valid nine items.
+
+
+```python
+import time
+localtime = time.localtime(time.time())
+print ("Local current time :", localtime)
+```
+
+
+This would produce the following result, which could be formatted in any other presentable form −
+
+
+```python
+Local current time : time.struct_time(tm_year=2023, tm_mon=4, tm_mday=19,
+   tm_hour=23, tm_min=42, tm_sec=41, tm_wday=2, tm_yday=109, tm_isdst=0)
+```
+
+
+## Getting the Formatted Time
+
+
+You can format any time as per your requirement, but a simple method to get time in a readable format isasctime()−
+
+
+```python
+import time
+
+localtime = time.asctime( time.localtime(time.time()) )
+print ("Local current time :", localtime)
+```
+
+
+This would produce the followingoutput−
+
+
+```python
+Local current time : Wed Apr 19 23:45:27 2023
+```
+
+
+## Getting the Calendar for a Month
+
+
+The calendar module gives a wide range of methods to play with yearly and monthly calendars. Here, we print a calendar for a given month (Jan 2008).
+
+
+```python
+import calendar
+cal = calendar.month(2023, 4)
+print ("Here is the calendar:")
+print (cal)
+```
+
+
+This would produce the followingoutput−
+
+
+```python
+Here is the calendar:
+     April 2023
+Mo Tu We Th Fr Sa Su
+                1  2
+ 3  4  5  6  7  8  9
+10 11 12 13 14 15 16
+17 18 19 20 21 22 23
+24 25 26 27 28 29 30
+```
+
+
+## The time Module
+
+
+There is a populartimemodule available in Python, which provides functions for working with times and for converting between representations. Here is the list of all available methods.
+
+
+
+| Sr.No. | Function with Description |
+| --- | --- |
+| 1 | time.altzoneThe offset of the local DST timezone, in seconds west of UTC, if one is defined. This is negative if the local DST timezone is east of UTC (as in Western Europe, including the UK). Only use this if daylight is nonzero. |
+| 2 | time.asctime([tupletime])Accepts a time-tuple and returns a readable 24-character string such as 'Tue Dec 11 18:07:14 2008'. |
+| 3 | time.clock( )Returns the current CPU time as a floating-point number of seconds. To measure computational costs of different approaches, the value of time.clock is more useful than that of time.time(). |
+| 4 | time.ctime([secs])Like asctime(localtime(secs)) and without arguments is like asctime( ) |
+| 5 | time.gmtime([secs])Accepts an instant expressed in seconds since the epoch and returns a time-tuple t with the UTC time. Note : t.tm_isdst is always 0 |
+| 6 | time.localtime([secs])Accepts an instant expressed in seconds since the epoch and returns a time-tuple t with the local time (t.tm_isdst is 0 or 1, depending on whether DST applies to instant secs by local rules). |
+| 7 | time.mktime(tupletime)Accepts an instant expressed as a time-tuple in local time and returns a floating-point value with the instant expressed in seconds since the epoch. |
+| 8 | time.sleep(secs)Suspends the calling thread for secs seconds. |
+| 9 | time.strftime(fmt[,tupletime])Accepts an instant expressed as a time-tuple in local time and returns a string representing the instant as specified by string fmt. |
+| 10 | time.strptime(str,fmt`=`'%a %b %d %H:%M:%S %Y')Parses str according to format string fmt and returns the instant in time-tuple format. |
+| 11 | time.time( )Returns the current time instant, a floating-point number of seconds since the epoch. |
+| 12 | time.tzset()Resets the time conversion rules used by the library routines. The environment variable TZ specifies how this is done. |
+
+
+
+Let us go through the functions briefly.
+
+
+There are two important attributes available with time module. They are −
+
+
+
+| Sr.No. | Attribute with Description |
+| --- | --- |
+| 1 | time.timezoneAttribute time.timezone is the offset in seconds of the local time zone (without DST) from UTC (>0 in the Americas; `<=`0 in most of Europe, Asia, Africa). |
+| 2 | time.tznameAttribute time.tzname is a pair of locale-dependent strings, which are the names of the local time zone without and with DST, respectively. |
+
+
+
+## The calendar Module
+
+
+The calendar module supplies calendar-related functions, including functions to print a text calendar for a given month or year.
+
+
+By default, calendar takes Monday as the first day of the week and Sunday as the last one. To change this, call thecalendar.setfirstweekday()function.
+
+
+Here is a list of functions available with thecalendarmodule −
+
+
+
+| Sr.No. | Function with Description |
+| --- | --- |
+| 1 | calendar.calendar()Returns a multi-line string with a calendar for year year formatted into three columns separated by c spaces. w is the width in characters of each date; each line has length 21*w+18+2*c. l is the number of lines for each week. |
+| 2 | calendar.firstweekday()Returns the current setting for the weekday that starts each week. By default, when calendar is first imported, this is 0, meaning Monday. |
+| 3 | calendar.isleap()Returns True if year is a leap year; otherwise, False. |
+| 4 | calendar.leapdays()Returns the total number of leap days in the years within range(y1,y2). |
+| 5 | calendar.month()Returns a multi-line string with a calendar for month month of year year, one line per week plus two header lines. w is the width in characters of each date; each line has length 7*w+6. l is the number of lines for each week. |
+| 6 | calendar.monthcalendar()Returns a list of lists of ints. Each sublist denotes a week. Days outside month month of year year are set to 0; days within the month are set to their day-of-month, 1 and up. |
+| 7 | calendar.monthrange()Returns two integers. The first one is the code of the weekday for the first day of the month month in year year; the second one is the number of days in the month. Weekday codes are 0 (Monday) to 6 (Sunday); month numbers are 1 to 12. |
+| 8 | calendar.prcal()Like print calendar.calendar(year,w,l,c). |
+| 9 | calendar.prmonth()Like print calendar.month(year,month,w,l). |
+| 10 | calendar.setfirstweekday()Sets the first day of each week to weekday code weekday. Weekday codes are 0 (Monday) to 6 (Sunday). |
+| 11 | calendar.timegm()The inverse of time.gmtime: accepts a time instant in time-tuple form and returns the same instant as a floating-point number of seconds since the epoch. |
+| 12 | calendar.weekday()Returns the weekday code for the given date. Weekday codes are 0 (Monday) to 6 (Sunday); month numbers are 1 (January) to 12 (December). |
+
+
+
+## Python datetime Module
+
+
+Python's datetime module is included in the standard library. It consists of classes that help manipulate data and time data and perform date time arithmetic.
+
+
+Objects of datetime classes are either aware or nave. If the object includes timezone information it is aware, and if not it is classified as nave. An object of date class is nave, whereas time and datetime objects are aware.
+
+
+## Python date Object
+
+
+A date object represents a date with year, month, and day. The current Gregorian calendar is indefinitely extended in both directions.
+
+
+### Syntax
+
+
+```python
+datetime.date(year, month, day)
+```
+
+
+Arguments must be integers, in the following ranges −
+
+
+
+- year− MINYEAR `<=` year `<=` MAXYEAR
+- month− 1 `<=` month `<=` 12
+- day− 1 `<=` day `<=` number of days in the given month and year
+
+
+
+If the value of any argument outside those ranges is given, ValueError is raised.
+
+
+### Example
+
+
+```python
+from datetime import date
+date1 = date(2023, 4, 19)
+print("Date:", date1)
+date2 = date(2023, 4, 31)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Date: 2023-04-19
+Traceback (most recent call last):
+ File "C:\Python311\hello.py", line 8, in <module>
+  date2 = date(2023, 4, 31)
+ValueError: day is out of range for month
+```
+
+
+### date class attributes
+
+
+
+- date.min− The earliest representable date, date(MINYEAR, 1, 1).
+- date.max− The latest representable date, date(MAXYEAR, 12, 31).
+- date.resolution− The smallest possible difference between non-equal date objects.
+- date.year− Between MINYEAR and MAXYEAR inclusive.
+- date.month− Between 1 and 12 inclusive.
+- date.day− Between 1 and the number of days in the given month of the given year.
+
+
+
+### Example
+
+
+```python
+from datetime import date
+
+# Getting min date
+mindate = date.min
+print("Minimum Date:", mindate)
+
+# Getting max date
+maxdate = date.max
+print("Maximum Date:", maxdate)
+
+Date1 = date(2023, 4, 20)
+print("Year:", Date1.year)
+print("Month:", Date1.month)
+print("Day:", Date1.day)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Minimum Date: 0001-01-01
+Maximum Date: 9999-12-31
+Year: 2023
+Month: 4
+Day: 20
+```
+
+
+### Class Methods in Date Class
+
+
+
+- today()− Return the current local date.
+- fromtimestamp(timestamp)− Return the local date corresponding to the POSIX timestamp, such as is returned by time.time().
+- fromordinal(ordinal)− Return the date corresponding to the proleptic Gregorian ordinal, where January 1 of year 1 has ordinal 1.
+- fromisoformat(date_string)− Return a date corresponding to a date_string given in any valid ISO 8601 format, except ordinal dates
+
+
+
+### Example
+
+
+```python
+from datetime import date
+
+print (date.today())
+d1=date.fromisoformat('2023-04-20')
+print (d1)
+d2=date.fromisoformat('20230420')
+print (d2)
+d3=date.fromisoformat('2023-W16-4')
+print (d3)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+2023-04-20
+2023-04-20
+2023-04-20
+2023-04-20
+```
+
+
+### Instance Methods in Date Class
+
+
+
+- replace()− Return a date by replacing specified attributes with new values by keyword arguments are specified.
+- timetuple()− Return a time.struct_time such as returned by time.localtime().
+- toordinal()− Return the proleptic Gregorian ordinal of the date, where January 1 of year 1 has ordinal 1. For any date object d, date.fromordinal(d.toordinal()) `=`=` d.
+- weekday()− Return the day of the week as an integer, where Monday is 0 and Sunday is 6.
+- isoweekday()− Return the day of the week as an integer, where Monday is 1 and Sunday is 7.
+- isocalendar()− Return a named tuple object with three components: year, week and weekday.
+- isoformat()− Return a string representing the date in ISO 8601 format, YYYY-MM-DD:
+- __str__()− For a date d, str(d) is equivalent to d.isoformat()
+- ctime()− Return a string representing the date:
+- strftime(format)− Return a string representing the date, controlled by an explicit format string.
+- __format__(format)− Same as date.strftime().
+
+
+
+### Example
+
+
+```python
+from datetime import date
+d = date.fromordinal(738630) # 738630th day after 1. 1. 0001
+print (d)
+print (d.timetuple())
+# Methods related to formatting string output
+print (d.isoformat())
+print (d.strftime("%d/%m/%y"))
+print (d.strftime("%A %d. %B %Y"))
+print (d.ctime())
+
+print ('The {1} is {0:%d}, the {2} is {0:%B}.'.format(d, "day", "month"))
+
+# Methods for to extracting 'components' under different calendars
+t = d.timetuple()
+for i in t:
+   print(i)
+   
+ic = d.isocalendar()
+for i in ic:
+   print(i)
+   
+# A date object is immutable; all operations produce a new object
+print (d.replace(month=5))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+2023-04-20
+time.struct_time(tm_year=2023, tm_mon=4, tm_mday=20, tm_hour=0, 
+   tm_min=0, tm_sec=0, tm_wday=3, tm_yday=110, tm_isdst=-1)
+2023-04-20
+20/04/23
+Thursday 20. April 2023
+Thu Apr 20 00:00:00 2023
+The day is 20, the month is April.
+2023
+4
+20
+0
+0
+0
+3
+110
+-1
+2023
+16
+4
+2023-05-20
+```
+
+
+## Python time Module
+
+
+An object time class represents the local time of the day. It is independent of any particular day. It the object contains the tzinfo details, it is the aware object. If it is None then the time object is the naive object.
+
+
+### Syntax
+
+
+```python
+datetime.time(hour=0, minute=0, second=0, microsecond=0, tzinfo=None)
+```
+
+
+All arguments are optional. tzinfo may be None, or an instance of a tzinfo subclass. The remaining arguments must be integers in the following ranges −
+
+
+
+- hour− 0 `<=` hour `<` 24,
+- minute− 0 `<=` minute `<` 60,
+- second− 0 `<=` second `<` 60,
+- microsecond− 0 `<=` microsecond `<` 1000000
+
+
+
+If any of the arguments are outside those ranges is given, ValueError is raised.
+
+
+### Example
+
+
+```python
+from datetime import time
+
+time1 = time(8, 14, 36)
+print("Time:", time1)
+
+time2 = time(minute = 12)
+print("time", time2)
+
+time3 = time()
+print("time", time3)
+
+time4 = time(hour = 26)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Time: 08:14:36
+time 00:12:00
+time 00:00:00
+Traceback (most recent call last):
+  File "/home/cg/root/64b912f27faef/main.py", line 12, in 
+    time4 = time(hour = 26)
+ValueError: hour must be in 0..23
+```
+
+
+### Class attributes
+
+
+
+- time.min− The earliest representable time, time(0, 0, 0, 0).
+- time.max− The latest representable time, time(23, 59, 59, 999999).
+- time.resolution− The smallest possible difference between non-equal time objects.
+
+
+
+### Example
+
+
+```python
+from datetime import time
+print(time.min)
+print(time.max)
+print (time.resolution)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+00:00:00
+23:59:59.999999
+0:00:00.000001
+```
+
+
+### Instance attributes
+
+
+
+- time.hour− In range(24)
+- time.minute− In range(60)
+- time.second− In range(60)
+- time.microsecond− In range(1000000)
+- time.tzinfo− the tzinfo argument to the time constructor, or None.
+
+
+
+### Example
+
+
+```python
+from datetime import time
+t = time(8,23,45,5000)
+print(t.hour)
+print(t.minute)
+print (t.second)
+print (t.microsecond)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+8
+23
+455000
+```
+
+
+### Instance Methods of time Object
+
+
+
+- replace()− Return a time with the same value, except for those attributes given new values by whichever keyword arguments are specified.
+- isoformat()− Return a string representing the time in ISO 8601 format
+- __str__()− For a time t, str(t) is equivalent to t.isoformat().
+- strftime(format)− Return a string representing the time, controlled by an explicit format string.
+- __format__(format)− Same as time.strftime().
+- utcoffset()− If tzinfo is None, returns None, else returns self.tzinfo.utcoffset(None),
+- dst()− If tzinfo is None, returns None, else returns self.tzinfo.dst(None),
+- tzname()− If tzinfo is None, returns None, else returns self.tzinfo.tzname(None), or raises an exception
+
+
+
+## Python datetime object
+
+
+An object of datetime class contains the information of date and time together. It assumes the current Gregorian calendar extended in both directions; like a time object, and there are exactly 3600*24 seconds in every day.
+
+
+### Syntax
+
+
+```python
+datetime.datetime(year, month, day, hour=0, minute=0, second=0, microsecond=0, tzinfo=None, *, fold=0)
+```
+
+
+The year, month and day arguments are required.
+
+
+
+- year− MINYEAR `<=` year `<=` MAXYEAR,
+- month− 1 `<=` month `<=` 12,
+- day− 1 `<=` day `<=` number of days in the given month and year,
+- hour− 0 `<=` hour `<` 24,
+- minute− 0 `<=` minute `<` 60,
+- second−0 `<=` second `<` 60,
+- microsecond− 0 `<=` microsecond `<` 1000000,
+- fold− in [0, 1].
+
+
+
+If any argument in outside ranges is given, ValueError is raised.
+
+
+### Example
+
+
+```python
+from datetime import datetime
+dt = datetime(2023, 4, 20)
+print(dt)
+
+dt = datetime(2023, 4, 20, 11, 6, 32, 5000)
+print(dt)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+2023-04-20 00:00:00
+2023-04-20 11:06:32.005000
+```
+
+
+### Class attributes
+
+
+
+- datetime.min− The earliest representable datetime, datetime(MINYEAR, 1, 1, tzinfo`=` None).
+- datetime.max− The latest representable datetime, datetime(MAXYEAR, 12, 31, 23, 59, 59, 999999, tzinfo`=` None).
+- datetime.resolution− The smallest possible difference between non-equal datetime objects, timedelta(microseconds`=`1).
+
+
+
+### Example
+
+
+```python
+from datetime import datetime
+min = datetime.min
+print("Min DateTime ", min)
+
+max = datetime.max
+print("Max DateTime ", max)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Min DateTime 0001-01-01 00:00:00
+Max DateTime 9999-12-31 23:59:59.999999
+```
+
+
+### Instance Attributes of datetime Object
+
+
+
+- datetime.year− Between MINYEAR and MAXYEAR inclusive.
+- datetime.month− Between 1 and 12 inclusive.
+- datetime.day− Between 1 and the number of days in the given month of the given year.
+- datetime.hour− In range(24)
+- datetime.minute− In range(60)
+- datetime.second− In range(60)
+- datetime.microsecond− In range(1000000).
+- datetime.tzinfo− The object passed as the tzinfo argument to the datetime constructor, or None if none was passed.
+- datetime.fold− In [0, 1]. Used to disambiguate wall times during a repeated interval.
+
+
+
+### Example
+
+
+```python
+from datetime import datetime
+dt = datetime.now()
+
+print("Day: ", dt.day)
+print("Month: ", dt.month)
+print("Year: ", dt.year)
+print("Hour: ", dt.hour)
+print("Minute: ", dt.minute)
+print("Second: ", dt.second)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Day: 20
+Month: 4
+Year: 2023
+Hour: 15
+Minute: 5
+Second: 52
+```
+
+
+### Class Methods of datetime Object
+
+
+
+- today()− Return the current local datetime, with tzinfo None.
+- now(tz`=` None)− Return the current local date and time.
+- utcnow()− Return the current UTC date and time, with tzinfo None.
+- utcfromtimestamp(timestamp)− Return the UTC datetime corresponding to the POSIX timestamp, with tzinfo None
+- fromtimestamp(timestamp, timezone.utc)− On the POSIX compliant platforms, it is equivalent todatetime(1970, 1, 1, tzinfo`=`timezone.utc) + timedelta(seconds`=`timestamp)
+- fromordinal(ordinal)− Return the datetime corresponding to the proleptic Gregorian ordinal, where January 1 of year 1 has ordinal 1.
+- fromisoformat(date_string)− Return a datetime corresponding to a date_string in any valid ISO 8601 format.
+
+
+
+### Instance Methods of datetime Object
+
+
+
+- date()− Return date object with same year, month and day.
+- time()− Return time object with same hour, minute, second, microsecond and fold.
+- timetz()− Return time object with same hour, minute, second, microsecond, fold, and tzinfo attributes. See also method time().
+- replace()− Return a datetime with the same attributes, except for those attributes given new values by whichever keyword arguments are specified.
+- astimezone(tz`=` None)− Return a datetime object with new tzinfo attribute tz
+- utcoffset()− If tzinfo is None, returns None, else returns self.tzinfo.utcoffset(self)
+- dst()− If tzinfo is None, returns None, else returns self.tzinfo.dst(self)
+- tzname()− If tzinfo is None, returns None, else returns self.tzinfo.tzname(self)
+- timetuple()− Return a time.struct_time such as returned by time.localtime().
+- atetime.toordinal()− Return the proleptic Gregorian ordinal of the date.
+- timestamp()− Return POSIX timestamp corresponding to the datetime instance.
+- isoweekday()− Return day of the week as an integer, where Monday is 1, Sunday is 7.
+- isocalendar()− Return a named tuple with three components: year, week and weekday.
+- isoformat(sep`=`'T', timespec`=`'auto')− Return a string representing the date and time in ISO 8601 format
+- __str__()− For a datetime instance d, str(d) is equivalent to d.isoformat(' ').
+- ctime()− Return a string representing the date and time:
+- strftime(format)− Return a string representing the date and time, controlled by an explicit format string.
+- __format__(format)− Same as strftime().
+
+
+
+### Example
+
+
+```python
+from datetime import datetime, date, time, timezone
+
+# Using datetime.combine()
+d = date(2022, 4, 20)
+t = time(12, 30)
+datetime.combine(d, t)
+
+# Using datetime.now()
+d = datetime.now()
+print (d)
+
+# Using datetime.strptime()
+dt = datetime.strptime("23/04/20 16:30", "%d/%m/%y %H:%M")
+
+# Using datetime.timetuple() to get tuple of all attributes
+tt = dt.timetuple()
+for it in tt:
+   print(it)
+
+# Date in ISO format
+ic = dt.isocalendar()
+for it in ic:
+   print(it)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+2023-04-20 15:12:49.816343
+2020
+4
+23
+16
+30
+0
+3
+114
+-1
+2020
+17
+4
+```
+
+
+## Python timedelta Object
+
+
+The timedelta object represents the duration between two dates or two time objects.
+
+
+### Syntax
+
+
+```python
+datetime.timedelta(days=0, seconds=0, microseconds=0, milliseconds=0, minutes=0, hours=0, weeks=0)
+```
+
+
+Internally, the attributes are stored in days, seconds and microseconds. Other arguments are converted to those units −
+
+
+
+- A millisecond is converted to 1000 microseconds.
+- A minute is converted to 60 seconds.
+- An hour is converted to 3600 seconds.
+- A week is converted to 7 days.
+
+
+
+While days, seconds and microseconds are then normalized so that the representation is unique.
+
+
+### Example
+
+
+The following example shows that Python internally stores days, seconds and microseconds only.
+
+
+```python
+from datetime import timedelta
+delta = timedelta(
+   days=100,
+   seconds=27,
+   microseconds=10,
+   milliseconds=29000,
+   minutes=5,
+   hours=12,
+   weeks=2
+)
+# Only days, seconds, and microseconds remain
+print (delta)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+114 days, 12:05:56.000010
+```
+
+
+### Example
+
+
+The following example shows how to add timedelta object to a datetime object.
+
+
+```python
+from datetime import datetime, timedelta
+
+date1 = datetime.now()
+
+date2= date1+timedelta(days = 4)
+print("Date after 4 days:", date2)
+
+date3 = date1-timedelta(15)
+print("Date before 15 days:", date3)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Date after 4 days: 2023-04-24 18:05:39.509905
+Date before 15 days: 2023-04-05 18:05:39.509905
+```
+
+
+### Class Attributes of timedelta Object
+
+
+
+- timedelta.min− The most negative timedelta object, timedelta(-999999999).
+- timedelta.max− The most positive timedelta object, timedelta(days`=`999999999, hours=23, minutes`=`59, seconds=59, microseconds`=`999999).
+- timedelta.resolution− The smallest possible difference between non-equal timedelta objects, timedelta(microseconds`=`1)
+
+
+
+### Example
+
+
+```python
+from datetime import timedelta
+
+# Getting minimum value
+min = timedelta.min
+print("Minimum value:", min)
+
+max = timedelta.max
+print("Maximum value", max)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Minimum value: -999999999 days, 0:00:00
+Maximum value 999999999 days, 23:59:59.999999
+```
+
+
+### Instance Attributes of timedelta Object
+
+
+Since only day, second and microseconds are stored internally, those are the only instance attributes for atimedeltaobject.
+
+
+
+- days− Between -999999999 and 999999999 inclusive
+- seconds− Between 0 and 86399 inclusive
+- microseconds− Between 0 and 999999 inclusive
+
+
+
+### Instance Methods of timedelta Object
+
+
+timedelta.total_seconds()− Return the total number of seconds contained in the duration.
+
+
+### Example
+
+
+```python
+from datetime import timedelta
+year = timedelta(days=365)
+years = 5 * year
+print (years)
+print (years.days // 365)
+646
+year_1 = years // 5
+print(year_1.days)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+1825 days, 0:00:00
+5
+365
+```
+

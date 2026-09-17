@@ -1,0 +1,268 @@
+---
+title: "JavaScript - Kaboom.js"
+description: "Learn JavaScript - Kaboom.js with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1860
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Kaboom.js — CodesCompiler JavaScript Guide"
+permalink: "javascript-kaboom-js"
+---
+
+
+# JavaScript - Kaboom.js
+
+
+
+
+Kaboom.jsmakes it easy to create JavaScript games. You can add physics, detect collisions and make sprites in addition to controlling different scenes. By using Kaboom.js, you can focus on making an engaging and creative game instead of writing complex code. Think about adding other features like backgrounds, power-ups or scoring to further enhance your game!
+
+
+## Getting Started with Kaboom
+
+
+To start your Kaboom application you need to call Kaboom to initialize the Kaboom contexts −
+
+
+```javascript
+kaboom({
+   global: true,
+});
+```
+
+
+If you build your application in your code editor, be careful to import both your JS file and the Kaboom.JS library into your HTML file.
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Kaboom Game</title>
+    <script src="https://kaboomjs.com/lib/0.5.0/kaboom.js"></script>
+</head>
+<body>
+    <script src="example.js"></script>
+</body>
+</html>
+```
+
+
+## Create your Scene
+
+
+In Kaboom, everything is a component of a scenario. The scenario is essentially how the game will look, behave, and play out.
+
+
+```javascript
+kaboom({
+   global: true,
+});
+
+scene("main", () => {
+   //...
+   }   
+]);
+```
+
+
+In the example above, the scene method is activated for our "main" scene, and the other game elements are given inside the function. Lastly, we need to call the scene by using start at the end.
+
+
+## Load your Sprites and Create Player
+
+
+Now we will have to start "drawing" our sprites onto our game UI. A sprite is a two-dimensional bitmap contained in a larger scene, usually in a 2D video game. For this chapter, we will use a Yeti sprite grabbed from Imgur.
+
+
+To load our sprites and build our players, we will use the load sprite method, enter our sprite image information and then create the player in the scene.In the previous example, we call the scene method for our "main" scene and pass the remaining game pieces to the function. Finally, we must use "start at the end" to refer to the scenario.
+
+
+```javascript
+kaboom({
+  global: true,
+});
+
+loadRoot('https://i.imgur.com/');
+loadSprite('yeti', 'OqVwAm6.png');
+
+scene('main', () => {
+  const yeti = add([
+   sprite('yeti'),
+   pos(80, 80),
+   color(255, 188, 0),  
+  ]);
+});
+
+start('main');
+```
+
+
+If your code is accurate, you should see a yeti sprite on screen. Right-click your index.html file, copy the path, and paste it into a new browser page.
+
+
+### Output
+
+
+This will generate the below result −
+
+
+We'll begin by adding the body component to your initialized sprite. This method effectively forces your sprite to follow the "rules of gravity". Once this method is run, your sprite will begin to slide off the screen, therefore we will have to create a temporary platform as well.
+
+
+```javascript
+kaboom({
+  global: true,
+});
+
+loadRoot('https://i.imgur.com/');
+loadSprite('yeti', 'OqVwAm6.png');
+
+scene('main', () => {
+  const yeti = add([
+   sprite('yeti'),
+   pos(80, 80),
+   color(255, 188, 0),  
+   body(),
+  ]);
+
+  // Add the ground
+  add([
+    rect(width(), 12),
+    pos(0, 280),
+    origin('topleft'),
+    solid(),
+  ]);
+});
+
+start('main');
+```
+
+
+### Output
+
+
+This will produce the following result −
+
+
+## Kaboom Key Events
+
+
+The body method allows your sprite to use methods likeand. We can use these methods alongside with key events to provide additional interesting behavior to our sprite. Let us give our Yeti the capacity to move left and right and jump. Add the following lines of code in your main scene function.
+
+
+```javascript
+kaboom({
+  global: true,
+});
+
+loadRoot('https://i.imgur.com/');
+loadSprite('yeti', 'OqVwAm6.png');
+
+scene('main', () => {
+  const yeti = add([
+    sprite('yeti'),
+    pos(80, 80),
+    color(255, 188, 0),  
+    body(),
+  ]);
+
+  // Add the ground
+  add([
+    rect(width(), 12),
+    pos(0, 280),
+    origin('topleft'),
+    solid(),
+  ]);
+
+  // Add controls for jump and move
+  const JUMP_FORCE = 320;
+  const MOVE_SPEED = 120;
+
+  keyPress("space", () => {
+    yeti.jump(JUMP_FORCE);
+  });
+
+  keyDown("left", () => {
+    yeti.move(-MOVE_SPEED, 0);
+  });
+
+  keyDown("right", () => {
+    yeti.move(MOVE_SPEED, 0);
+  });
+});
+
+start('main');
+```
+
+
+### Output
+
+
+This will generate the following outcome −
+
+
+## Add a Background Image
+
+
+To conclude this chapter of Kaboom, we will add a background image to our UI and resize it to fit.
+
+
+```javascript
+kaboom({
+   global: true,
+});
+
+loadSprite("yeti", "https://i.imgur.com/OqVwAm6.png");
+loadSprite("bg", "/Users/abc/Downloads/image.jpg");
+
+scene("main", () => {
+   // Add background sprite
+   add([
+      sprite("bg"),
+      scale(width() / 240, height() / 240), // Adjust the size of the background
+      origin("topleft"),
+   ]);
+   
+   const yeti = add([
+      sprite("yeti"),
+      pos(80, 80),
+      color(255, 188, 0), 
+      body(),
+   ]);
+   
+   // Add the ground
+   add([
+      rect(width(), 12),
+      pos(0, 280),
+      origin("topleft"),
+      solid(),
+   ]);
+   
+   // Controls for jump and movement
+   const JUMP_FORCE = 320;
+   const MOVE_SPEED = 120;
+   
+   keyPress("space", () => {
+      yeti.jump(JUMP_FORCE);
+   });
+   
+   keyDown("left", () => {
+      yeti.move(-MOVE_SPEED, 0);
+   });
+   
+   keyDown("right", () => {
+      yeti.move(MOVE_SPEED, 0);
+   });
+});
+
+start("main");
+```
+
+
+### Output
+
+
+This will lead to the following outcome −
+

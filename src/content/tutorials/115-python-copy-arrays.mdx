@@ -1,0 +1,142 @@
+---
+title: "PYTHON - Copy Arrays"
+description: "Learn PYTHON - Copy Arrays with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1150
+group: "Python Arrays"
+seoTitle: "PYTHON - Copy Arrays — CodesCompiler PYTHON Guide"
+permalink: "python-copy-arrays"
+---
+
+
+# Python - Copy Arrays
+
+
+
+
+In Python, copying an array refers to the process of creating a new array that contains all the elements of the original array. This operation can be done using assignment operator (`=`) and deepcopy() method. In this chapter, we discuss how tocopy an array object to another. But, before getting into the details let's breifly discuss arrays.
+
+
+Python's built-in sequence types i.e.list,tuple, andstringare indexed collection of items. However, unlike arrays in C/C++, Java etc. they are not homogenous, in the sense the elements in these types of collection may be of different types. Python's array module helps you to create object similar to Java like arrays.
+
+
+Python arrayscan be of string, integer or float type. The array class constructor is used as follows −
+
+
+```python
+import array
+obj = array.array(typecode[, initializer])
+```
+
+
+Where, the typecode may be a character constant representing the data type.
+
+
+## Copy Arrays Using Assignment Operator
+
+
+We can assign an array to another by using the assignment operator (`=`). However, such assignment doesn't create a new array in the memory. Instead, it creates a new reference to the same array.
+
+
+### Example
+
+
+In the following example, we are using assignment operator to copy array in Python.
+
+
+```python
+import array as arr
+a = arr.array('i', [110, 220, 330, 440, 550])
+b = a
+print("Copied array:",b)
+print (id(a), id(b))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Copied array: array('i', [110, 220, 330, 440, 550])
+134485392383792 134485392383792
+```
+
+
+Check the id() of both a and b. Same value of id confirms that simple assignment doesn't create a copy. Since "a" and "b" refer to the same array object, any change in the array "a" will reflect in "b" too −
+
+
+```python
+a[2] = 10
+print (a,b)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+array('i', [110, 220, 10, 440, 550]) array('i', [110, 220, 10, 440, 550])
+```
+
+
+## Copy Arrays Using Deep Copy
+
+
+To create another physical copy of an array, we use another module in Python library, namedcopyand usedeepcopy()function in the module. A deep copy constructs a new compound object and then, recursively inserts copies into it of the objects found in the original.
+
+
+### Example
+
+
+The following example demonstrates how to copy array in Python −
+
+
+```python
+import array as arr
+import copy
+a = arr.array('i', [110, 220, 330, 440, 550])
+b = copy.deepcopy(a)
+print("Copied array:",b)
+```
+
+
+On executing, it will produce the followingoutput−
+
+
+```python
+Copied array: array('i', [110, 220, 330, 440, 550])
+```
+
+
+Now check the id() of both "a" and "b". You will find the ids are different.
+
+
+```python
+print (id(a), id(b))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+2771967069936 2771967068976
+```
+
+
+This proves that a new object "b" is created which is an actual copy of "a". If we change an element in "a", it is not reflected in "b".
+
+
+```python
+a[2]=10
+print (a,b)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+array('i', [110, 220, 10, 440, 550]) array('i', [110, 220, 330, 440, 550])
+```
+

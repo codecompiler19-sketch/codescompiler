@@ -1,0 +1,299 @@
+---
+title: "JavaScript - Default Parameters"
+description: "Learn JavaScript - Default Parameters with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 480
+group: "JavaScript Functions"
+seoTitle: "JavaScript - Default Parameters — CodesCompiler JavaScript Guide"
+permalink: "javascript-default-parameters"
+---
+
+
+# JavaScript - Default Parameters
+
+
+
+
+Thedefault parametersin JavaScript are a feature that allows you to specify a default value for a function parameter. The concept of the default parameters was introduced in the ES6. We can initialize the parameters with the default values. So, if the function is called with missing argument or argument with an undefined value, it uses the default value of the parameter in the function.
+
+
+The default value of a function parameter is "undefined" in JavaScript. When a function is called with missing arguments the parameters are set to 'undefined'. The undefined parameter values are acceptable but can generate unusual outcomes.
+
+
+Before the ES6 version of JavaScript, we needed to check whether the parameter value was "undefined" inside the function body. If yes, they need to initialize the parameter with the proper value.
+
+
+Let's understand it via the example below.
+
+
+```javascript
+function sum(p, q) {
+    return p + q;
+}
+sum(10, 20); // 30
+sum(10); // NaN
+sum(); // NaN
+```
+
+
+In this example, we observe the following −
+
+
+
+- sum(10, 20) returns the sum of the two arguments, i.e., 30. Here both arguments are passed.
+- sum(10) returns NaN. Here only one argument is passed. The second parameter q is set to undefined. Mathematical operation on undefined returns NaN.
+- sum() also returns NaN. Here both arguments are missing. So they are set to undefined.
+
+
+
+When we call the function with missing argument values, it returns NaN which is unusual.
+
+
+To overcome this problem, we can use default parameter values to be used if function is called with missing argument values.
+
+
+## Default Parameters Syntax
+
+
+The syntax to use the function default parameters in JavaScript is as follows
+
+
+```javascript
+function functName(param1 = defaultValue1, param2 = DefaultValue2, ..) {
+    // Use parameters here
+}
+```
+
+
+In the above syntax, the default value of the param1 is set to defaultValue1, and the default value of the param2 is set to defaultValue2.
+
+
+Let's look at the example below −
+
+
+### Example (Default parameters)
+
+
+In the below code, parameter p and q contains the 30 and 40 default values, respectively.
+
+
+In the output, unlike the first example, you can see that it returns the sum of the default parameter values when any argument is missing.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      let output = document.getElementById("output");
+      function sum(p = 30, q = 40) {
+         return p + q;
+      }
+      output.innerHTML += "sum(10, 20)  ->  " + sum(10, 20) + "<br>"; // 10 + 20 = 30
+      output.innerHTML += "sum(10)  ->  " + sum(10) + "<br>"; // 10 + 40 = 50
+      output.innerHTML += "sum()  ->  " + sum() + "<br>"; // 30 + 40 = 70
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+sum(10, 20) -> 30
+sum(10) -> 50
+sum() -> 70
+```
+
+
+## Passing an expression as a default parameter value
+
+
+We can pass an expression as a default parameter value to a JavaScript function. The expression can also contain the values of the previous parameters.
+
+
+### Example
+
+
+We pass the expression as a default parameter value in the code below. The expression contains the value of the previous parameters.
+
+
+In the output of the second function call, you can observe that the value of the r is 100, which is equal to (p `=` 5) * (q `=` 10) * 2. We haven't passed any argument in the third function call, so all parameters take the default value.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      let output = document.getElementById("output");
+      function sum(p = 2, q = p * 2, r = p * q * 2) {
+         return p + q + r;
+      }
+      output.innerHTML += "sum(5, 10, 15)  ->  " + sum(5, 10, 15) + "<br>"; 
+      // 5 + 10 + 15 = 30
+      output.innerHTML += "sum(5, 10)  ->  " + sum(5, 10) + "<br>"; 
+      // 5 + 10 + (5 * 10 * 2) = 115
+      output.innerHTML += "sum()  ->  " + sum() + "<br>"; 
+      // 2 + 4 + 16 = 22
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+sum(5, 10, 15) -> 30
+sum(5, 10) -> 115
+sum() -> 22
+```
+
+
+You can't use the uninitialized parameter in the expression. Otherwise, the code will raise a reference error.
+
+
+## Passing Undefined Argument
+
+
+When you pass the undefined argument to the function call, the JavaScript function definition uses the default parameter values to avoid unnecessary errors.
+
+
+```html
+<html>
+<body>
+   p id="output" 
+   <script>
+      let output = document.getElementById("output");
+      function sum(p = 24, q = 26) {
+         return p + q;
+      }
+
+      output.innerHTML += "sum(5, undefined)  ->  " +sum(5, undefined)+"<br>"; 
+      // 5 + 26 = 31 
+      output.innerHTML += "sum(undefined)  ->  " + sum(undefined) + "<br>"; 
+      // 24 + 26 = 50
+    </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+sum(5, undefined) -> 31
+sum(undefined) -> 50
+```
+
+
+## Function expression as a default parameter
+
+
+The JavaScript function expression can also be paased as a fucntion default parameter.
+
+
+In the example below, the getNum() function returns 5. We used the function expression as a default value of parameter q.
+
+
+The output shows that when the second argument is missing, the parameter uses the value returned from the getNum() function.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      let output = document.getElementById("output");
+      function getNum() {
+         return 5;
+      }
+      function mul(p = 5, q = getNum()) {
+         return p * q;
+      }
+
+      output.innerHTML += "mul(10)  -> " + mul(10) + "<br/>";
+      output.innerHTML += "mul() -> " + mul() + "<br/>";
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+mul(10) -> 50
+mul() -> 25
+```
+
+
+## Function Optional Parameters
+
+
+The function default parameters are also called the optional parameters, as the function will give output without any error even if we don't pass the arguments for the optional parameter.
+
+
+You should pass all required parameters at the start and optional parameters at the function end.
+
+
+```javascript
+function sum(p, q=10){
+   return p+q;
+}
+```
+
+
+In the above JavaScript code snippet, we put the optional parameter q at the end of the parameter list.
+
+
+### Example
+
+
+The JavaScript code below shows that the first parameter is required, and the second parameter is optional.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      let output = document.getElementById("output");
+      function func(p, q=10) {
+         return p + q;
+      }
+      output.innerHTML += "func(10, 20) -> " + func(10, 20);
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+func(10, 20) -> 30
+```
+
+
+If we put the optional parameter at beginning, we may encounter error while calling the function with undefined value.
+
+
+```javascript
+function sum(p=10, q){
+   return p+q;
+}
+sum(,10) // Error
+sum(10) // NaN
+```
+
+
+So, if you pass only a single argument, it replaces the default value of the first parameter, and the second parameter remains undefined.
+

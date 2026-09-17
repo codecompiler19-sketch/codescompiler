@@ -1,0 +1,135 @@
+---
+title: "JavaScript - Modules"
+description: "Learn JavaScript - Modules with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2530
+group: "JavaScript Miscellaneous"
+seoTitle: "JavaScript - Modules — CodesCompiler JavaScript Guide"
+permalink: "javascript-modules"
+---
+
+
+# JavaScript - Modules
+
+
+
+
+## What is a Module?
+
+
+Amodulein JavaScript is a single file containing a JavaScript code or script. Rather than adding the code for the whole application in a single file, we can break down the code and create separate files for the code having the same functionalities.
+
+
+In short, the module contains the code to perform the specific task. It can contain variables, functions, classes, etc.
+
+
+When the size of the application grows, number of lines in the code also grows. Even real-time applications contain millions of lines of code. Now, think about if developers have only a single file containing millions of lines of code. Are they able to manage it properly? The simple answer is no. Here, using the module comes into the picture.
+
+
+### Syntax
+
+
+Users can follow the syntax below to export and import the modules.
+
+
+```javascript
+export function func_name(parameters) {
+// function code
+}
+
+import {func_name} from filename
+```
+
+
+In the above syntax, theexportkeyword is used to export the function from the module, and theimportkeyword is used to import the function from the module.
+
+
+### Example
+
+
+Filename: mul.js
+
+
+In the code below, we defined the 'mul() function in the 'mul.js' file, which takes two integers as a parameter and returns the multiplication of them. Also, we used the 'export' keyword before the 'function' keyword to export the function from the module.
+
+
+```javascript
+//  exporting mul() function
+export function mul(a, b) {
+    return a * b;
+}
+```
+
+
+Filename: test.html
+
+
+`<html>`
+   `<body>`
+   `<div>` JavaScript - Modules `</div>`
+   `<div id = "output">` `</div>`
+   `<script type="module">`
+      import &#123; mul &#125; from './mul.js';
+      document.getElementById('output').innerHTML `=` 
+		"The multiplication of 2 and 3 is " + mul(2, 3);
+   `</script>`
+`</body>`
+`</html>`OutputJavaScript - Modules
+The multiplication of 2 and 3 is 6In the above code, we have imported the module in an HTML file. However, we can also import the module in another JavaScript file.Export Multiple Objects from a Single ModuleYou can also export multiple variables, functions, etc., from a single module. Let's understand it via the example below.ExampleFileName: math.jsIn the code below, we have exported the mul() and sum() functions. Also, we have exported the variable containing the value of PI. In short, we are exporting the multiple objects from the single module.// exporting mul() function
+export function mul(a, b) &#123;
+    return a * b;
+&#125;
+// exporting sum() function
+export function sum(a, b) &#123;
+    return a + b;
+&#125;
+// export value of PI
+export let PI `=` Math.PI;FileName: test.htmlIn the code below, we import multiple objects from a single module and use them to perform the mathematical operations.`<html>`
+   `<body>`
+   `<div>` Exporting Multiple Objects from a Single Module `</div>`
+   `<div id = "output">` `</div>`
+   `<script type="module">`
+      import &#123; mul, sum, PI &#125; from './math.js';
+      document.getElementById('output').innerHTML `=` 
+		"The multiplication of 2 and 3 is " + mul(2, 3 + 
+      "`<br>` The addition of 2 and 3 is " + sum(2, 3) + 
+      "`<br>` The value of PI is " + PI;
+   `</script>`
+`</body>`
+`</html>`OutputExporting Multiple Objects from a Single Module
+The multiplication of 2 and 3 is 6
+The addition of 2 and 3 is 5
+The value of PI is 3.141592653589793Default ExportsYou can use the 'default' keyword to define the default export in the module. After that, whenever you try to import the object that is not defined in the module, it returns the object that is exported by default. The default export helps in avoiding the import error.SyntaxUsers can follow the syntax below to use the default exports in the module.export default function func_name(params) &#123;
+// function body
+&#125;
+import random_name from filename;In the above syntax, the 'default' keyword is used after the export keyword to export the 'func_name' function by default.ExampleFileName: test.jsIn the code below, we export the 'v1' variable by default, and we also export the 'v2' variable.const v1 `=` "Version 1";
+// default export
+export default v1;
+// other modules
+export const v2 `=` "Version 2";FileName: test.htmlIn the code below, we have imported the 'v3' and 'v2' from the test.js file. As 'v3' is not exported from the test.js file, it imports the default object, which is 'v1.`<html>`
+`<body>`
+   `<div>` Default Export `</div>`
+   `<div id = "output">` `</div>`
+   `<script type="module">`
+      // V3 is not defined in the module, so it returns V1.
+      import v3, &#123; v2 &#125; from './test.js';
+
+      document.getElementById('output').innerHTML `=` 
+		"The value of v3 is : " + v3 + "`<br>`" +
+      "The value of v2 is : " + v2;
+   `</script>`
+`</body>`
+`</html>`OutputDefault Export
+The value of v3 is : Version 1
+"The value of v2 is : Version 2Rename Import and ExportSometimes, it happens that the code file and module file contain the same name of the object. In such cases, if the developer imports the module in the code file, it can raise conflicts and errors. To resolve this issue, we can change the name of the module either while exporting or importing.Syntax to Rename ExportsUsers can follow the syntax below to rename the exports.export &#123;
+    func1 as N1,
+    func2 as N2
+&#125;;
+// import in the code file
+import &#123; N1, N2 &#125; from './module.js';In the above syntax, we have changed the name of func1 to N1 and func2 to N2 at the time of exporting from the module. We used the 'as' keyword to change the name of the function.Syntax to Rename ImportsUsers can follow the syntax below to rename the imports.export &#123;
+    func1,
+    func2
+&#125;;
+// import in the code file
+import &#123; func1 as N1, func1 as N2 &#125; from './module.js';In the above syntax, we change the function name while importing it.
+

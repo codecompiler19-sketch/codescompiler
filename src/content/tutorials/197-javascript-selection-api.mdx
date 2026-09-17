@@ -1,0 +1,359 @@
+---
+title: "JavaScript - Selection API"
+description: "Learn JavaScript - Selection API with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1970
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Selection API — CodesCompiler JavaScript Guide"
+permalink: "javascript-selection-api"
+---
+
+
+# JavaScript - Selection API
+
+
+
+
+JavaScript Selection API allows us to access and change or modify the portion of a web page which is selected by the user.This includes selecting which text or elements to highlight and providing options for connecting with the selected item. But it should be noticed that the Selection API is not available in Web Workers so it can only be used in a web-page's main thread.
+
+
+The JavaScript Selection API provides a variety of essential APIs that allow developers to access and modify certain portions of a document. These interfaces contain the Selection and Range objects, as well as a number of helpful events that occur all over the selection process.
+
+
+## Selection Interface
+
+
+A Selection object shows the user-selected region of text or the cursor's current position. Each document is given a unique selection object, which can be retrieved via document.getSelection(), or Window.getSelection() can then be examined and modified.
+
+
+A user can choose between left to right and right to left. The anchor is where the user began the selection, whereas the focus is where the user ends it. When you make a selection with a desktop mouse, the anchor is set where you pressed the mouse button and the focus is placed where you let go.
+
+
+#### Instance Properties
+
+
+Here is the table provided of instance properties you can use for you reference −
+
+
+PropertyDescriptionSelection.anchorNodeThis shows the part of the document where the selection starts. It will be empty if nothing was selected.Selection.anchorOffsetThis tells how far the starting point of the selection is from the beginning. If the selection starts in a piece of text, it shows the number of characters before it. If it starts in an element (like a paragraph or list), it shows the number of other elements before it.Selection.directionThis shows if the selection was made from left to right, or right to left.Selection.focusNodeThis shows the part of the document where the selection ends. It can also be empty if nothing was selected.Selection.focusOffsetSimilar to anchorOffset, this shows how far the ending point of the selection is from the beginning in the focusNode.Selection.isCollapsedThis is true if the selection has no length (meaning the start and end are the same point), and false if there is a range of selected text.Selection.rangeCountThis tells you how many separate selections are made.Selection.typeThis gives the type of selection. It can be "None" (no selection), "Caret" (a single point), or "Range" (a highlighted area).
+
+
+#### Instance Methods
+
+
+Here is the table below in which we have provided the list of instance methods of Selection Interface with its description.
+
+
+MethodsContentSelection.addRange()A Range object that will be added to the selection.Selection.collapse()Collapses the current selection to a single point.Selection.collapseToEnd()Collapses the selection to the end of the last range in the selection.Selection.collapseToStart()Collapses the selection to the start of the first range in the selection.Selection.containsNode()Indicates if a certain node is part of the selection.Selection.deleteFromDocument()Deletes the selection's content from the document.Selection.empty()Removes all ranges from the selection, leaving the anchorNode and focusNode properties equal to null and nothing selected.Selection.extend()Moves the focus of the selection to a specified point.Selection.getComposedRanges() ExperimentalReturns an array of StaticRange objects, each that represents a selection that might cross shadow DOM boundaries.Selection.getRangeAt()Returns a Range object representing one of the ranges currently selected.Selection.modify()Changes the current selection.Selection.removeRange()Removes a range from the selection.Selection.removeAllRanges()Removes all ranges from the selection.Selection.selectAllChildren()Adds all the children of the specified node to the selection.Selection.setBaseAndExtent()Sets the selection to be a range including all or parts of two specified DOM nodes, and any content located between them.Selection.setPosition()Collapses the current selection to a single point.Selection.toString()Returns a string currently being represented by the selection object, i.e., the currently selected text.
+
+
+## Document.getSelection()
+
+
+The getSelection() method of the Document interface returns the Selection object for this document which represents the user-selected text range or the caret's current position. And it acts like the window.getSelection().
+
+
+### Syntax
+
+
+Below is the syntax of theDocument.getSelection()−
+
+
+```javascript
+document.getSelection()
+```
+
+
+### Parameters
+
+
+This method works without the need for any parameters.
+
+
+### Return value
+
+
+This method basically returns a Selection object, or null if there is no browsing context (e.g., unattached `<iframe>`).
+
+
+### Example
+
+
+Following is the example for showing the usage of Document.getSelection() object −
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Document.getSelection Example</title>
+</head>
+<body>
+   pSelect some text in this paragraph and check the console.
+   <button onclick="getSelectedText()">Get Selected Text</button>
+   
+   <script>
+      function getSelectedText() {
+         let selection = document.getSelection();
+         if (selection.rangeCount > 0) {
+            document.write("Selected text: " + selection.toString());
+         } else {
+            document.write("No text selected.");
+         }
+      }
+   </script>
+</body>
+</html>
+```
+
+
+Output
+
+
+To view the messages use the browser's developer tools (usually by pressing F12) and select the "Console" tab.
+
+
+Check the below message on the console after running the above code in browser −
+
+
+```javascript
+Selected text: paragraph and check
+```
+
+
+## Window.getSelection()
+
+
+The getSelection() method of the Window interface returns the Selection object connected with the window's document which represents the range of text selected by the user or the caret's current position.
+
+
+### Syntax
+
+
+Below is the syntax of theWindow.getSelection()−
+
+
+```javascript
+window.getSelection()
+```
+
+
+### Parameters
+
+
+This method does not require any parameters.
+
+
+### Return value
+
+
+This method returns a Selection object or null if the connected document has browsing context (e.g. if the window is an unattached `<iframe>`).
+
+
+Firefox gives null when a `<iframe>` is not displayed (e.g., display: none), whereas other browsers provide a Selection object with Selection.type set to None.
+
+
+### Example
+
+
+Here is the example for showing the usage of Window.getSelection() object −
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Window.getSelection Example</title>
+</head>
+<body>
+   pSelect some text in this paragraph and check the console.
+   <button onclick="getSelectedText()">Get Selected Text</button>
+
+   <script>
+      function getSelectedText() {
+         let selection = window.getSelection();
+         if (selection.rangeCount > 0) {
+            document.write("Selected text: " + selection.toString());
+         } else {
+            document.write("No text selected.");
+         }
+      }
+   </script>
+</body>
+</html>
+```
+
+
+Output
+
+
+So when to run the above HTML code in your browser. There will be a text will be appear with a button "Get Selected Text". So when you select some text and press the button then after inspecting the element you can see the below message on the console −
+
+
+```javascript
+Selected text: this paragraph
+```
+
+
+## Document: selectionchange event
+
+
+The Selection API's selectionchange event is triggered when a Document's current Selection is changed. This event cannot be canceled and will not bubble.
+
+
+The event can be handled by registering an event listener for selectionchange or by using the onselectionchange event handler.
+
+
+### Syntax
+
+
+Use the event name in methods like addEventListener() or to set an event handler property.
+
+
+```javascript
+addEventListener("selectionchange", (event) => {});
+onselectionchange = (event) => {};
+```
+
+
+### Event type
+
+
+It is a generic Event.
+
+
+### Example
+
+
+Here is the example of selectionchange event −
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Selection Change Example</title>
+</head>
+<body>
+   <h1>Text Selection Example</h1>
+   pSelect some text in this paragraph to see the console messages about selection changes.
+   pTry selecting different parts of this text to see how it updates!
+
+   <script>
+      // Using addEventListener to track selection changes
+      document.addEventListener("selectionchange", () => {
+         document.write("Selection has changed:", document.getSelection().toString());
+      });
+        
+      // Using onselectionchange to handle selection changes
+      document.onselectionchange = () => {
+         document.write("Updated selection:", document.getSelection().toString());
+      };
+   </script>
+</body>
+</html>
+```
+
+
+Output
+
+
+When you select any text in these paragraphs it will send messages to the console telling you that your selection has changed and displays the currently selected material.
+
+
+```javascript
+[Log] Selection has changed: - "" (example.html, line 16)
+[Log] Updated selection: - "" (example.html, line 21)
+[Log] Selection has changed: - "" (example.html, line 16)
+[Log] Updated selection: - "" (example.html, line 21)
+[Log] Selection has changed: - "" (example.html, line 16)
+[Log] Updated selection: - "" (example.html, line 21)
+[Log] Selection has changed: - "Selection" (example.html, line 16)
+[Log] Updated selection: - "Selection" (example.html, line 21)
+```
+
+
+## Node: selectstart event
+
+
+This event occurs when the user starts making a new selection. For example, they can click and drag to highlight text. Suppose the event has been canceled so the selection is not changed.
+
+
+### Syntax
+
+
+Use the event name in methods such as addEventListener() or set an event handler property.
+
+
+```javascript
+addEventListener("selectstart", (event) => {});
+onselectstart = (event) => {};
+```
+
+
+### Event type
+
+
+It is also a generic Event.
+
+
+### Example
+
+
+Here is the example of selectstart event −
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Select Start Example</title>
+</head>
+<body>
+   <h1>Text Selection Example</h1>
+   pChoose some text in this paragraph to check the console messages.
+   pTry different parts of this text!
+
+    <script>
+      // Using addEventListener to track when text selection starts
+      document.addEventListener("selectstart", () => {
+         document.write("Selection started");
+      });
+      
+      // Using onselectstart to handle when text selection starts
+      document.onselectstart = () => {
+         document.write("Selection started.");
+      };
+   </script>
+</body>
+</html>
+```
+
+
+Output
+
+
+When you choose any text in these paragraphs, it will display "Selection started" and "Selection started." on the terminal.
+
+
+```javascript
+[Log] Selection started (example.html, line 16)
+[Log] Selection started. (example.html, line 21)
+[Log] Selection started (example.html, line 16)
+[Log] Selection started. (example.html, line 21)
+[Log] Selection started (example.html, line 16)
+[Log] Selection started. (example.html, line 21)
+[Log] Selection started (example.html, line 16)
+[Log] Selection started. (example.html, line 21)
+[Log] Selection started (example.html, line 16)
+[Log] Selection started. (example.html, line 21)
+```
+

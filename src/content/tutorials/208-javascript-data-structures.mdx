@@ -1,0 +1,621 @@
+---
+title: "JavaScript - Data Structures"
+description: "Learn JavaScript - Data Structures with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2080
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Data Structures — CodesCompiler JavaScript Guide"
+permalink: "javascript-data-structures"
+---
+
+
+# JavaScript - Data Structures
+
+
+
+
+Data Structures are the programming constructs which are used to store and organize data. We can write effective efficient programs using these, while performing data operations. JavaScript provides various data structures for different operations. In this tutorial, we will learn about the different data structures in JavaScript.
+
+
+## Data Structures in JavaScript
+
+
+We have the following data structures in JavaScript.
+
+
+
+- Arrays
+- Object
+- Map
+- Set
+- WeakMap
+- WeakSet
+- Stack
+- Queue
+- Linked List
+
+
+
+## Arrays
+
+
+The array is the most common data structure in every other programming language. In JavaScript, array is a collection of elements. It is not necessary that all elements in the array should be of the same type. We can store different types of data in the array. We can store the number, string, boolean, object, and even another array in the array.
+
+
+### Example
+
+
+Below is the example code given, that shows how to create an array in JavaScript.
+
+
+```html
+<html>
+
+<body>
+
+   p id="output"
+
+   <script>
+
+      var arr = [1, 'John', true, {name: 'John', age: 25}, [1, 2, 3]];
+
+      document.getElementById('output').innerHTML = arr;
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+### Output
+
+
+```javascript
+1,John,true,[object Object],1,2,3
+```
+
+
+## Object
+
+
+Object is another data structure in JavaScript. It is a pair of two things, key and its value. We can store the data in the form of key-value pairs. We can store the number, string, boolean, object, and even another object in the object.
+
+
+### Example
+
+
+Below is the example code given, that shows how to create an object in JavaScript.
+
+
+```html
+<html>
+
+<body>
+
+   <script>
+
+      var obj = {name: 'John', age: 25, isMarried: true, address: {city: 'New York', country: 'USA'}};
+
+      document.write(JSON.stringify(obj));
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+### Output
+
+
+```javascript
+{"name":"John","age":25,"isMarried":true,"address":{"city":"New York","country":"USA"}}
+```
+
+
+## Map
+
+
+Map is a collection of elements and each element is stored as a key-value pair. The key can be of any type, and the value can be of any type. We can store the number, string, boolean, object, and even another map in the map.
+
+
+The only difference between map and object in JavaScript is that a map doesn't support the JSON format, keys in objects have only one type which is string but map supports any type as a key or value, while map maintains order, where as object doesn't follow any order.
+
+
+### Example
+
+
+Below is the example code given, that shows how to create a map in JavaScript.
+
+
+```html
+<html>
+
+<body>
+
+   p id="output"
+
+   <script>
+
+      var map = new Map();
+
+      map.set('name', 'John');
+
+      map.set('age', 25);
+
+      map.set('isMarried', true);
+
+      map.set('address', {city: 'New York', country: 'USA'});
+
+      let content = '';
+
+      map.forEach((value, key) =>{
+
+         if(typeof value === 'object') {
+
+            content += key + ' : ' + JSON.stringify(value) + '<br>';
+
+         } else {
+
+            content += key + ' : ' + value + '<br>';
+
+         }
+
+      });
+
+      document.getElementById('output').innerHTML = content;
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+### Output
+
+
+```javascript
+name : John
+
+age : 25
+
+isMarried : true
+
+address : {"city":"New York","country":"USA"}
+```
+
+
+## Set
+
+
+Set is a collection of elements where each element should be different than other (every element should be unique). We can store the number, string, boolean, object, and even another set in the set.
+
+
+### Example
+
+
+Below is the example code given, that shows us how to create a set in JavaScript.
+
+
+```html
+<html>
+
+<body>
+
+   p id="output"
+
+   <script>
+
+      var set = new Set();
+
+      set.add(1);
+
+      set.add('John');
+
+      set.add(true);
+
+      let content = '';
+
+      set.forEach(value => content += value + '<br>');
+
+      document.getElementById('output').innerHTML = content;
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+### Output
+
+
+```javascript
+1
+
+John
+
+true
+```
+
+
+## WeakMap
+
+
+WeakMap is a collection of elements where each element is stored as a key-value pair. The key can be of any type, and the value can be of any type. We can store the number, string, boolean, object, and even another weak map in the weak map. The main difference between the map and weak map is that the key of the weak map is weakly held. It means that if the key is not used anywhere else, it will be collected by the garbage collector.
+
+
+### Example
+
+
+Below is the example code given, that shows how to create a weak map in JavaScript.
+
+
+```html
+<html>
+
+<body>
+
+   p id="output"
+
+   <script>
+
+   var object = [];
+
+   var weakMap = new WeakMap();
+
+   var key = {name: 'John'};
+
+   weakMap.set(key, 25);
+
+   object.push(key);
+
+   let content = '';
+
+   object.forEach(value => content += value.name +" "+ weakMap.get(value));
+
+   document.getElementById('output').innerHTML = content;
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+### Output
+
+
+```javascript
+John 25
+```
+
+
+## WeakSet
+
+
+WeakSet is a collection of elements similar to Set, where each element is unique. We can store the number, string, boolean, object, and even another weak set in the weak set. The main difference between the set and weak set is that the elements of the weak set are weakly held. It means that if the element is not used anywhere else, it will be even collected by the garbage collector.
+
+
+### Example
+
+
+Below is the example code given, that shows how to create a weak set in JavaScript.
+
+
+```html
+<html>
+
+<body>
+
+   p id="output"
+
+   <script>
+
+   var object = [];
+
+   var weakSet = new WeakSet();
+
+   var obj = {name: 'John'};
+
+   weakSet.add(obj);
+
+   object.push(obj);
+
+   let content = '';
+
+   object.forEach(value => content += value.name + '');
+
+   document.getElementById('output').innerHTML = content;
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+### Output
+
+
+```javascript
+John
+```
+
+
+## Stack
+
+
+Stack is a collection of elements where the elements are stored in the order and that order is LIFO(last in first out). We can store the number, string, boolean, object, and even another stack in the stack.
+
+
+### Example
+
+
+Below is the example code given, that shows how to create a stack in JavaScript.
+
+
+```html
+<html>
+
+<body>
+
+   <script>
+
+      class Stack {
+
+         constructor() {
+
+            this.items = [];
+
+         }
+
+         push(element) {
+
+            this.items.push(element);
+
+         }
+
+         pop() {
+
+            if(this.items.length === 0) {
+
+               return 'Underflow';
+
+            }
+
+            return this.items.pop();
+
+         }
+
+      }
+
+      var stack = new Stack();
+
+      stack.push(1);
+
+      stack.push(2);
+
+      stack.push(3);
+
+      document.write(stack.pop()); 
+
+      document.write(stack.pop());
+
+      document.write(stack.pop());
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+### Output
+
+
+```javascript
+321
+```
+
+
+## Queue
+
+
+Queue is a collection of elements where the elements are stored in the First In First Out (FIFO) order. We can store the number, string, boolean, object, and even another queue in the queue.
+
+
+### Example
+
+
+Below is the example code given, that shows how to create a queue in JavaScript.
+
+
+```html
+<html>
+
+<body>
+
+   <script>
+
+      class Queue {
+
+         constructor() {
+
+            this.items = [];
+
+         }
+
+         enqueue(element) {
+
+            this.items.push(element);
+
+         }
+
+         dequeue() {
+
+            if(this.items.length === 0) {
+
+               return 'Underflow';
+
+            }
+
+            return this.items.shift();
+
+         }
+
+      }
+
+      var queue = new Queue();
+
+      queue.enqueue(1);
+
+      queue.enqueue(2);
+
+      queue.enqueue(3);
+
+      document.write(queue.dequeue());
+
+      document.write(queue.dequeue());
+
+      document.write(queue.dequeue());
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+### Output
+
+
+```javascript
+123
+```
+
+
+## Linked List
+
+
+Linked List is a collection of elements where each element is stored as a node. Each node has the data and the reference to the next node. We can store the number, string, boolean, object, and even another linked list in the linked list.
+
+
+### Example
+
+
+Below is the example code given, that shows how to create a linked list in JavaScript.
+
+
+```html
+<html>
+
+<body>
+
+   <script>
+
+      class Node {
+
+         constructor(element) {
+
+            this.element = element;
+
+            this.next = null;
+
+         }
+
+      }
+
+      class LinkedList {
+
+         constructor() {
+
+            this.head = null;
+
+            this.size = 0;
+
+         }
+
+         add(element) {
+
+            var node = new Node(element);
+
+            var current;
+
+            if (this.head === null) {
+
+               this.head = node;
+
+            } else {
+
+               current = this.head;
+
+               while (current.next) {
+
+                  current = current.next;
+
+               }
+
+               current.next = node;
+
+            }
+
+            this.size++;
+
+         }
+
+         printList() {
+
+            var current = this.head;
+
+            var str = '';
+
+            while (current) {
+
+               str += current.element + ' ';
+
+               current = current.next;
+
+            }
+
+            document.write(str);
+
+         }
+
+      }
+
+      var linkedList = new LinkedList();
+
+      linkedList.add(1);
+
+      linkedList.add(2);
+
+      linkedList.add(3);
+
+      linkedList.printList();
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+### Output
+
+
+```javascript
+1 2 3
+```
+

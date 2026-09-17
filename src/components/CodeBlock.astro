@@ -1,0 +1,329 @@
+---
+import Editor from './Editor.astro';
+import SqlEditor from './SqlEditor.astro';
+import PythonEditor from './PythonEditor.astro';
+
+const props = Astro.props;
+const htmlContent = await Astro.slots.render('default');
+const pathname = Astro.url ? Astro.url.pathname : '';
+
+// Helper to unescape HTML entities in code block text
+function unescapeHtml(str: string): string {
+  return str
+    .replace(/<pre[^>]*>/gi, '')
+    .replace(/<\/pre>/gi, '')
+    .replace(/<code[^>]*>/gi, '')
+    .replace(/<\/code>/gi, '')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&#x27;/g, "'")
+    .replace(/&#x2F;/g, '/')
+    .replace(/<span[^>]*>/gi, '')
+    .replace(/<\/span>/gi, '')
+    .trim();
+}
+
+const rawCode = unescapeHtml(htmlContent);
+
+// Accurate Language Detection from props, code class, heuristics, or pathname
+function detectLanguage(props: Record<string, any>, htmlContent: string, rawCode: string, pathname: string): string {
+  const propClass = (props.class || props['data-language'] || props.lang || props.language || '').toLowerCase();
+  
+  const codeClassMatch = htmlContent.match(/<code[^>]*class=["']([^"']+)["']/i) || htmlContent.match(/class=["']([^"']*lang[^"']*)["']/i);
+  const codeClass = codeClassMatch ? codeClassMatch[1].toLowerCase() : '';
+  const preClassMatch = htmlContent.match(/<pre[^>]*class=["']([^"']+)["']/i);
+  const preClass = preClassMatch ? preClassMatch[1].toLowerCase() : '';
+
+  const dataLangMatch = htmlContent.match(/data-language=["']([^"']+)["']/i);
+  const dataLang = dataLangMatch ? dataLangMatch[1].toLowerCase() : '';
+  
+  const combined = `${propClass} ${codeClass} ${preClass} ${dataLang} ${htmlContent.slice(0, 300)}`.toLowerCase();
+
+  // 1. Explicit Language Matches
+  if (/\b(python|py)\b|language-python|lang-python/i.test(combined)) return 'python';
+  if (/\b(sql|mysql|postgresql)\b|language-sql|lang-sql/i.test(combined)) return 'sql';
+  if (/\b(javascript|js|jsx|typescript|ts)\b|language-js|lang-js|language-javascript/i.test(combined)) return 'javascript';
+  if (/\bcss\b|language-css|lang-css/i.test(combined)) return 'css';
+  if (/\bjson\b|language-json|lang-json/i.test(combined)) return 'json';
+  if (/\b(bash|sh|shell)\b|language-bash|lang-bash/i.test(combined)) return 'bash';
+  if (/\b(html|xml|htm)\b|language-html|lang-html/i.test(combined)) return 'html';
+
+  // 2. Code Content Heuristics
+  const trimmed = rawCode.trim();
+  if (/#.*python|def\s+|import\s+|from\s+.*import|print\s*\(|if\s+__name__|#!\/usr\/bin/i.test(trimmed)) return 'python';
+  if (/\b(SELECT|INSERT\s+INTO|UPDATE|DELETE\s+FROM|CREATE\s+TABLE|ALTER\s+TABLE)\b/i.test(trimmed)) return 'sql';
+  if (/<[a-z1-6][^>]*>/i.test(trimmed) && (trimmed.includes('</') || trimmed.includes('/>'))) return 'html';
+  if (/([\.#]?[a-zA-Z0-9_-]+\s*\{|[a-zA-Z-]+\s*:\s*[^;]+;)/.test(trimmed)) return 'css';
+  if (/\b(const|let|var|function|console\.log)\b/.test(trimmed)) return 'javascript';
+
+  // 3. Fallback to page category from Astro.url.pathname
+  const path = pathname.toLowerCase();
+  if (path.includes('/python-') || path.includes('/python')) return 'python';
+  if (path.includes('/sql-') || path.includes('/sql')) return 'sql';
+  if (path.includes('/javascript-') || path.includes('/js-') || path.includes('/javascript')) return 'javascript';
+  if (path.includes('/css-') || path.includes('/css')) return 'css';
+  if (path.includes('/html-') || path.includes('/html')) return 'html';
+
+  return 'html';
+}
+
+const lang = detectLanguage(props, htmlContent, rawCode, pathname);
+
+const langLabelMap: Record<string, string> = {
+  python: 'PYTHON',
+  sql: 'SQL',
+  javascript: 'JAVASCRIPT',
+  css: 'CSS',
+  json: 'JSON',
+  bash: 'BASH',
+  html: 'HTML'
+};
+const langLabel = langLabelMap[lang] || lang.toUpperCase();
+
+function checkRunnableHtml(code: string, langClass: string): boolean {
+  if (/language-text|lang-text|language-syntax|lang-syntax|language-bash|lang-bash/i.test(langClass)) {
+    return false;
+  }
+
+  const trimmed = code.trim();
+  const lower = trimmed.toLowerCase();
+
+  const placeholderPatterns = [
+    /action=["']url["']/i,
+    /method=["']method_type["']/i,
+    /target=["']target_value["']/i,
+    /enctype=["']enctype_value["']/i,
+    /src=["']image_path["']/i,
+    /src=["']url["']/i,
+    /href=["']url["']/i,
+    /attr=["']value["']/i,
+    /\[attribute_name\]/i,
+    /<!--\s*form elements\s*-->/i,
+    /<!--\s*content\s*-->/i,
+    /<!--\s*your code\s*-->/i,
+    /<!--\s*comment\s*-->/i
+  ];
+
+  if (placeholderPatterns.some(pattern => pattern.test(trimmed))) {
+    return false;
+  }
+
+  const lines = trimmed.split('\n').filter(l => l.trim() !== '');
+  if (lines.length <= 4 && !lower.includes('<!doctype') && !lower.includes('<html')) {
+    if (lines.length <= 2 && (lower.startsWith('<form') || lower.startsWith('<img') || lower.startsWith('<input') || lower.startsWith('<a'))) {
+      return false;
+    }
+  }
+
+  if (lower.includes('<!doctype html') || lower.includes('<html') || lower.includes('<body')) {
+    return true;
+  }
+
+  const renderableTags = /<(?:h[1-6]|p|button|input|select|textarea|table|form|ul|ol|div|span|canvas|svg)\b/i;
+  if (renderableTags.test(trimmed) && lines.length >= 3) {
+    return true;
+  }
+
+  return false;
+}
+
+const propClassStr = (props.class || props['data-language'] || props.lang || '').toLowerCase();
+const isRunnable = (lang === 'html' && checkRunnableHtml(rawCode, propClassStr)) || propClassStr.includes('runnable') || propClassStr.includes('interactive');
+const isSqlEditor = propClassStr.includes('sql-editor') || propClassStr.includes('sql-runnable');
+const isPythonEditor = propClassStr.includes('python-editor') || propClassStr.includes('py-runnable');
+
+// 100% Uniform OneDark Theme Syntax Tokenizer (Matching CodeMirror Editor Theme)
+function highlightSyntax(code: string, lang: string): string {
+  const escaped = code
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
+  if (lang === 'python') {
+    const pyKeywords = new Set([
+      'and','as','assert','async','await','break','class','continue','def','del','elif','else',
+      'except','finally','for','from','global','if','import','in','is','lambda','nonlocal','not',
+      'or','pass','raise','return','try','while','with','yield','True','False','None'
+    ]);
+    const pyBuiltins = new Set([
+      'print','len','range','int','str','float','list','dict','set','tuple','open','type','input',
+      'sum','min','max','abs','enumerate','zip','map','filter','super','isinstance','id','format'
+    ]);
+
+    return escaped.replace(
+      /(#.*$)|("""[\s\S]*?"""|'''[\s\S]*?'''|r?f?"(?:\\.|[^"\\])*"|r?f?'(?:\\.|[^'\\])*')|(\b\d+(?:\.\d+)?\b)|(\b[a-zA-Z_]\w*\b)(\s*\()?/gm,
+      (match, comment, str, num, word, paren) => {
+        const p = paren || '';
+        if (comment) return `<span style="color: #5c6370; font-style: italic;">${comment}</span>`;
+        if (str) return `<span style="color: #98c379;">${str}</span>`;
+        if (num) return `<span style="color: #d19a66;">${num}</span>`;
+        if (word) {
+          if (pyKeywords.has(word)) return `<span style="color: #c678dd; font-weight: 600;">${word}</span>${p}`;
+          if (pyBuiltins.has(word)) return `<span style="color: #56b6c2;">${word}</span>${p}`;
+          if (p) return `<span style="color: #61afef;">${word}</span>${p}`;
+          return `<span style="color: #abb2bf;">${word}</span>`;
+        }
+        return match;
+      }
+    );
+  }
+
+  if (lang === 'sql') {
+    const sqlKeywords = new Set([
+      'SELECT','FROM','WHERE','JOIN','LEFT','RIGHT','INNER','OUTER','FULL','CROSS','ON',
+      'GROUP','BY','ORDER','HAVING','LIMIT','OFFSET','INSERT','INTO','VALUES','UPDATE',
+      'SET','DELETE','CREATE','TABLE','ALTER','DROP','DATABASE','INDEX','PRIMARY','KEY',
+      'FOREIGN','REFERENCES','NOT','NULL','AND','OR','IN','IS','LIKE','BETWEEN','AS',
+      'UNION','ALL','DISTINCT','CASE','WHEN','THEN','ELSE','END','EXISTS','DEFAULT','CHECK',
+      'ASC','DESC','ADD','COLUMN','CONSTRAINT','IF'
+    ]);
+    const sqlFunctions = new Set([
+      'COUNT','SUM','AVG','MIN','MAX','CONCAT','COALESCE','NOW','DATE','LOWER','UPPER','SUBSTRING','ROUND'
+    ]);
+
+    return escaped.replace(
+      /(--.*$|\/\*[\s\S]*?\*\/)|("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')|(\b\d+(?:\.\d+)?\b)|(\b[a-zA-Z_]\w*\b)/gm,
+      (match, comment, str, num, word) => {
+        if (comment) return `<span style="color: #5c6370; font-style: italic;">${comment}</span>`;
+        if (str) return `<span style="color: #98c379;">${str}</span>`;
+        if (num) return `<span style="color: #d19a66;">${num}</span>`;
+        if (word) {
+          const upper = word.toUpperCase();
+          if (sqlKeywords.has(upper)) return `<span style="color: #c678dd; font-weight: 600;">${word}</span>`;
+          if (sqlFunctions.has(upper)) return `<span style="color: #61afef;">${word}</span>`;
+          return `<span style="color: #abb2bf;">${word}</span>`;
+        }
+        return match;
+      }
+    );
+  }
+
+  if (lang === 'javascript' || lang === 'js') {
+    const jsKeywords = new Set([
+      'const','let','var','function','return','if','else','for','while','do','switch','case',
+      'break','continue','default','import','export','from','class','extends','super','this',
+      'new','try','catch','finally','throw','async','await','typeof','instanceof','void',
+      'delete','in','of','yield','true','false','null','undefined','NaN'
+    ]);
+    const jsBuiltins = new Set([
+      'console','log','document','window','Math','Array','Object','String','Number','Boolean',
+      'Promise','JSON','Set','Map','Error','parse','stringify','push','pop','shift','unshift',
+      'slice','splice','forEach','map','filter','reduce','includes','indexOf','addEventListener'
+    ]);
+
+    return escaped.replace(
+      /(\/\/.*$|\/\*[\s\S]*?\*\/)|("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`)|(\b\d+(?:\.\d+)?\b)|(\b[a-zA-Z_$][\w$]*\b)(\s*\()?/gm,
+      (match, comment, str, num, word, paren) => {
+        const p = paren || '';
+        if (comment) return `<span style="color: #5c6370; font-style: italic;">${comment}</span>`;
+        if (str) return `<span style="color: #98c379;">${str}</span>`;
+        if (num) return `<span style="color: #d19a66;">${num}</span>`;
+        if (word) {
+          if (jsKeywords.has(word)) return `<span style="color: #c678dd; font-weight: 600;">${word}</span>${p}`;
+          if (jsBuiltins.has(word)) return `<span style="color: #56b6c2;">${word}</span>${p}`;
+          if (p) return `<span style="color: #61afef;">${word}</span>${p}`;
+          return `<span style="color: #abb2bf;">${word}</span>`;
+        }
+        return match;
+      }
+    );
+  }
+
+  if (lang === 'css') {
+    return escaped.replace(
+      /(\/\*[\s\S]*?\*\/)|("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')|((?:^|\s|\{|\})[\.#]?[a-zA-Z0-9_-]+(?=\s*\{))|([a-zA-Z0-9_-]+(?=\s*:))|(#(?:[0-9a-fA-F]{3,8})\b|\b\d+(?:px|em|rem|%|vh|vw|s|ms|pt)?\b)/gm,
+      (match, comment, str, selector, prop, val) => {
+        if (comment) return `<span style="color: #5c6370; font-style: italic;">${comment}</span>`;
+        if (str) return `<span style="color: #98c379;">${str}</span>`;
+        if (selector) return `<span style="color: #d19a66; font-weight: 600;">${selector}</span>`;
+        if (prop) return `<span style="color: #56b6c2;">${prop}</span>`;
+        if (val) return `<span style="color: #d19a66;">${val}</span>`;
+        return match;
+      }
+    );
+  }
+
+  if (lang === 'json') {
+    return escaped.replace(
+      /("(?:\\.|[^"\\])*")(\s*:)?|(\b\d+(?:\.\d+)?\b)|(\btrue\b|\bfalse\b|\bnull\b)/g,
+      (match, str, isKey, num, bool) => {
+        if (str && isKey) return `<span style="color: #e06c75;">${str}</span>${isKey}`;
+        if (str) return `<span style="color: #98c379;">${str}</span>`;
+        if (num) return `<span style="color: #d19a66;">${num}</span>`;
+        if (bool) return `<span style="color: #c678dd;">${bool}</span>`;
+        return match;
+      }
+    );
+  }
+
+  if (lang === 'bash') {
+    return escaped.replace(
+      /(#.*$)|("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')|(\B-[a-zA-Z0-9-]+|\B--[a-zA-Z0-9-]+)|(^(?:PS [C-Z]:\\>|\$|>>>))\s*/gm,
+      (match, comment, str, opt, prompt) => {
+        if (comment) return `<span style="color: #5c6370; font-style: italic;">${comment}</span>`;
+        if (str) return `<span style="color: #98c379;">${str}</span>`;
+        if (opt) return `<span style="color: #d19a66;">${opt}</span>`;
+        if (prompt) return `<span style="color: #61afef; font-weight: bold;">${prompt} </span>`;
+        return match;
+      }
+    );
+  }
+
+  // HTML / XML fallback
+  return escaped.replace(
+    /(&lt;!--[\s\S]*?--&gt;)|(&lt;\/?)([a-zA-Z0-9-]+)|(\b[a-zA-Z0-9-]+)=|("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')|(&gt;|\/&gt;)/g,
+    (match, comment, tagBracket, tagName, attrName, strVal, tagClose) => {
+      if (comment) {
+        return `<span style="color: #5c6370; font-style: italic;">${comment}</span>`;
+      }
+      if (tagBracket && tagName) {
+        return `<span style="color: #abb2bf;">${tagBracket}</span><span style="color: #e06c75; font-weight: 500;">${tagName}</span>`;
+      }
+      if (attrName) {
+        return `<span style="color: #d19a66;">${attrName}</span><span style="color: #abb2bf;">=</span>`;
+      }
+      if (strVal) {
+        return `<span style="color: #98c379;">${strVal}</span>`;
+      }
+      if (tagClose) {
+        return `<span style="color: #abb2bf;">${tagClose}</span>`;
+      }
+      return match;
+    }
+  );
+}
+
+const highlightedCode = highlightSyntax(rawCode, lang);
+---
+
+{isRunnable ? (
+  <Editor initialHtml={rawCode} height="480px" />
+) : isSqlEditor ? (
+  <SqlEditor initialCode={rawCode} />
+) : isPythonEditor ? (
+  <PythonEditor initialCode={rawCode} />
+) : (
+  <div class="not-prose tiy-syntax-block my-6 rounded-xl overflow-hidden border border-white/10 bg-[#1e1e2e] shadow-lg">
+    <!-- Uniform Header matching Editor.astro -->
+    <div class="flex items-center justify-between px-4 py-2 bg-[#181825] border-b border-white/10 text-xs font-mono">
+      <div class="flex items-center gap-1.5">
+        <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+        <span class="w-3 h-3 rounded-full bg-yellow-400/80"></span>
+        <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
+        <span class="ml-3 font-bold text-gray-400 uppercase tracking-wider">{langLabel} SYNTAX</span>
+      </div>
+      <button 
+        type="button"
+        onclick="navigator.clipboard.writeText(this.parentElement.nextElementSibling.innerText); this.innerText='Copied!'; setTimeout(()=>this.innerText='Copy', 2000);" 
+        class="px-3 py-1 rounded bg-[#04AA6D] hover:bg-[#038a58] text-white font-sans text-xs font-bold transition-colors cursor-pointer"
+      >
+        Copy
+      </button>
+    </div>
+    <!-- Uniform Pre Code Container matching OneDark 14px / leading-relaxed font -->
+    <pre class="p-4 overflow-x-auto text-[14px] font-mono text-[#abb2bf] leading-[1.6] bg-[#1e1e2e]"><code set:html={highlightedCode} /></pre>
+  </div>
+)}

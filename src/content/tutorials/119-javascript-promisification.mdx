@@ -1,0 +1,209 @@
+---
+title: "JavaScript - Promisification"
+description: "Learn JavaScript - Promisification with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1190
+group: "JavaScript Asynchronous"
+seoTitle: "JavaScript - Promisification — CodesCompiler JavaScript Guide"
+permalink: "javascript-promisification"
+---
+
+
+# JavaScript - Promisification
+
+
+
+
+## Promisification in JavaScript
+
+
+Promisification in JavaScript is a concept to convert the callback functions into a regular function, returning the promise.
+
+
+The reason to convert the callback functions into promises is that when you need to write the nested callback functions, it increases the complexity of the code. So, you can write a function returning the promise.
+
+
+In JavaScript, you can pass the function as an argument of another function called the callback function. The callback functions are used to handle the asynchronous task.
+
+
+Let's first write an example of the callback function.
+
+
+## Callback Function
+
+
+### Example
+
+
+In the below code, we have passed the callback function as a last argument of the getSum() function. The getSum() function calls the callback function after passing the error and resultant sum value as an argument.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output">The sum of 5 and 10 is: </div>
+
+   <script>
+
+      function getSum(p, q, callback) {   
+
+         let sum = p + q;
+
+         setTimeout(() => callback(null, sum), 100);
+
+      }
+
+      getSum(5, 10, (err, sum) => { // callback function
+
+         document.getElementById("output").innerHTML += sum;
+
+      });
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The sum of 5 and 10 is: 15
+```
+
+
+Lets perform the promisification of the callback functions discussed in the above example.
+
+
+## Promisification of Callback Fucntion
+
+
+### Example
+
+
+Lets understand the below code step by step.
+
+
+Step 1− First, we have created the findSum() function. It takes the p1, p2, and callback function as a parameter.
+
+
+Step 2− Next, the findSum() function checks whether the p1 and p2 are valid. If not, it calls the callback function by passing the error as an argument.
+
+
+Step 3− In other cases, it calls the callback function by passing the sum and message as arguments.
+
+
+Step 4− Next, we have defined the promisifyFunc() function, which takes the function as an argument that is needed to promisify.
+
+
+Step 5− The promisifyFunc() function returns the function, and that function returns the promise.
+
+
+Step 6− In the promise, we have defined the callbackFunc() function, which resolves or rejects the promise based on the argument it receives.
+
+
+Step 7− Next, we insert the callbackFunc() function into the args array and use the call() method to call the func function, which we received as a parameter of the promisifyFunc() function.
+
+
+Step 8− After that, we call the promisifyFunc() function and store the returned function in the getSUmPromise() function.
+
+
+Step 9− When you execute the getSumPromise() function, it returns the promise, which you can consume the then() and catch() method.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output"> </div>
+
+   <script> 
+
+      let output = document.getElementById("output");
+
+      const findSum = (p1, p2, callback) => {
+
+         if (!p1 || !p2) {
+
+            return callback(new Error("Missing dependencies"), null);
+
+         }
+
+         const sum = p1 + p2;
+
+         const msg = 'The sum of numbers is ' + sum;
+
+         return callback(null, sum, msg); // We call the callback function
+
+      }
+
+      function promisifyFunc(func) {
+
+         return (...args) => { // Returning a function
+
+            return new Promise((resolve, reject) => { // Returning a promise
+
+               // Defining a custom callback for the function
+
+               function callbackFunc(err, ...data) {
+
+                  if (err) {
+
+                     return reject(err)
+
+                  }
+
+                  return resolve(data)
+
+               }
+
+               args.push(callbackFunc); // Adding callback function into argument
+
+               func.call(this, ...args); // Calling the findSum() function
+
+            })
+
+         }
+
+      }
+
+      const getSumPromise = promisifyFunc(findSum)
+
+      getSumPromise(5, 10)
+
+      .then((message) => {
+
+         output.innerHTML = message;
+
+      })
+
+      .catch((err) => {
+
+         output.innerHTML = err;
+
+      })
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+15,The sum of numbers is 15
+```
+
+
+The above code looks complex, but if you use it to handle the nested callback functions, it becomes easy to manage them. Here, you can pass custom callback functions to the particular function inside the promise.
+

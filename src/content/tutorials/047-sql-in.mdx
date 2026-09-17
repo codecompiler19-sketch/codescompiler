@@ -1,0 +1,360 @@
+---
+title: "SQL - IN Operator"
+description: "Learn SQL - IN Operator with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 470
+group: "SQL Operators and Clauses"
+seoTitle: "SQL - IN Operator — CodesCompiler SQL Guide"
+permalink: "sql-in"
+---
+
+
+# SQL - IN Operator
+
+
+Table of contentThe SQL IN OperatorIN Operator with SELECT StatementIN Operator with UPDATE StatementSQL NOT IN OperatorIN Operator with Column NameSubquery with IN OperatorSQL NOT IN Operator with SubquerySQL IN Operator: Use Cases, Performance & LimitationsCommon Mistakes with SQL IN and How to Avoid Them
+
+
+
+
+## The SQL IN Operator
+
+
+The SQLIN operatoris used in theWHEREclause to specify multiple values or a subquery. It returns all rows where the specified column matches any value in the list. The list can be a set of values enclosed in parentheses, likeIN (Value1, Value2, Value3, ...), or the result of a subquery, such asIN (SELECT ...).
+
+
+Instead of writing multipleORconditions inSELECT,DELETE,UPDATE, orINSERTstatements, you can use the IN operator to simplify the query. TheINoperator works with any data type and is used to filter rows based on a set of specified values.
+
+
+TheINoperator is useful when you want to select all rows that match one of a specific set of values. While theORoperator is useful when you want to select all rows that match any one of multiple conditions.
+
+
+### Syntax
+
+
+The basic syntax of the SQL IN operator is as follows:
+
+
+```sql
+WHERE column_name IN (value1, value2, value3, ...);
+```
+
+
+Where,
+
+
+
+- value1, value2, value3, ...are the values in the list to be tested against the expression. TheINoperator returnsTRUEif any of these values is found in the list, andFALSEif it is not.
+
+
+
+## IN Operator with SELECT Statement
+
+
+We can use the SQLINoperator within aSELECTstatement to specify multiple values in a WHERE clause, retrieving rows that match any of the specified values.
+
+
+### Example
+
+
+Consider the CUSTOMERS table which contains the personal details of customers including their name, age, address and salary etc. as shown below:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),       
+   PRIMARY KEY (ID)
+);
+```
+
+
+Now, insert values into this table using the INSERT statement as follows:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00),
+(2, 'Khilan', 25, 'Delhi', 1500.00),
+(3, 'Kaushik', 23, 'Kota', 2000.00),
+(4, 'Chaitali', 25, 'Mumbai', 6500.00),
+(5, 'Hardik', 27, 'Bhopal', 8500.00),
+(6, 'Komal', 22, 'Hyderabad', 4500.00),
+(7, 'Muffy', 24, 'Indore', 10000.00);
+```
+
+
+The table will be created as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+Suppose based on the above table we want to display records with NAME equal to 'Khilan', 'Hardik' and 'Muffy'(string values). This can be achieved usingINoperator as follows:
+
+
+```sql
+SELECT * FROM CUSTOMERS 
+WHERE NAME IN ('Khilan', 'Hardik', 'Muffy');
+```
+
+
+The result obtained is as follows:
+
+
+IDNAMEAGEADDRESSSALARY2Khilan25Delhi1500.005Hardik27Bhopal8500.007Muffy24Indore10000.00
+
+
+Alternatively, this can be done using theORoperator as shown below:
+
+
+```sql
+SELECT * FROM CUSTOMERS 
+WHERE NAME = 'Khilan' OR NAME = 'Hardik' OR NAME = 'Muffy';
+```
+
+
+It produces the same result:
+
+
+IDNAMEAGEADDRESSSALARY2Khilan25Delhi1500.005Hardik27Bhopal8500.007Muffy24Indore10000.00
+
+
+## IN Operator with UPDATE Statement
+
+
+We can also use theSQL INoperator in an UPDATE statement to update rows that match any value in the specified list.
+
+
+The UPDATE statement is used to modify existing data in a database table.
+
+
+### Example
+
+
+Using the CUSTOMERS table created above, let us update the AGE to 30 for all customers whose current age is either '25' or '27':
+
+
+```sql
+UPDATE CUSTOMERS SET AGE = 30 WHERE AGE IN (25, 27);
+```
+
+
+We get the following result. We can observe that the age of 3 customers has been modified:
+
+
+```sql
+Query OK, 3 rows affected (0.01 sec)
+Rows matched: 3  Changed: 3  Warnings: 0
+```
+
+
+### Verification
+
+
+We can verify whether the changes are reflected in a table by retrieving its contents using the SELECT statement as shown below:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+The table is displayed as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan30Delhi1500.003Kaushik23Kota2000.004Chaitali30Mumbai6500.005Hardik30Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+As we can see in the above table, the AGE of 'Khilan', 'Chaitali' and 'Hardik' has been updated to '30'.
+
+
+## SQL NOT IN Operator
+
+
+TheNOToperator can be combined withINto exclude specific values in aWHEREclause.
+
+
+### Syntax
+
+
+Following is the basic syntax of NOT IN operator in SQL:
+
+
+```sql
+WHERE column_name NOT IN (value1, value2, ...);
+```
+
+
+### Example
+
+
+Now, we are displaying all the records from the CUSTOMERS table, where the AGE is NOT equal to '25', '23' and '22':
+
+
+```sql
+SELECT * FROM CUSTOMERS WHERE AGE NOT IN (25, 23, 22);
+```
+
+
+We obtain the result as given below:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.005Hardik27Bhopal8500.007Muffy24Indore10000.00
+
+
+## IN Operator with Column Name
+
+
+We can also use the SQL IN operator with a column name to compare the values of one column to another. It is used to select the rows in which a specific value exists for the given column.
+
+
+### Example
+
+
+In the below query, we are selecting the rows with the value '2000' in the SALARY column:
+
+
+```sql
+SELECT * FROM CUSTOMERS WHERE 2000 IN (SALARY);
+```
+
+
+This would produce the following result:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.003Kaushik23Kota2000.00
+
+
+## Subquery with IN Operator
+
+
+We can use the subquery inside theINoperator to filter rows based on values returned by another query. The subquery must return a single column.
+
+
+### Syntax
+
+
+The basic syntax of the IN operator to specify a subquery is as follows:
+
+
+```sql
+WHERE column_name IN (subquery);
+```
+
+
+Where,
+
+
+
+- Subqueryis the SELECT statement that has a result set to be tested against the expression. The IN condition evaluates to true if any of these values match the expression.
+
+
+
+### Example
+
+
+In the query given below, we are displaying all the records from the CUSTOMERS table where the NAME of the customer is obtained with SALARY greater than 2000:
+
+
+```sql
+SELECT * FROM CUSTOMERS 
+WHERE NAME IN (SELECT NAME FROM CUSTOMERS WHERE SALARY > 2000);
+```
+
+
+This will produce the following result:
+
+
+IDNAMEAGEADDRESSSALARY4Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## SQL NOT IN Operator with Subquery
+
+
+TheNOT INoperator can also be combined with subqueries to exclude rows based on the result of another query.
+
+
+### Syntax
+
+
+The basic syntax of the NOT IN operator to specify a subquery is as follows:
+
+
+```sql
+WHERE column_name NOT IN (subquery);
+```
+
+
+### Example
+
+
+In this example, we find customers whose NAME is NOT among those with SALARY greater than 2000:
+
+
+```sql
+SELECT * FROM CUSTOMERS
+WHERE NAME NOT IN (
+  SELECT NAME FROM CUSTOMERS WHERE SALARY > 2000
+);
+```
+
+
+We get the output as shown below:
+
+
+IDNAMEAGEADDRESSSALARY2Khilan30Delhi1500.003Kaushik23Kota2000.00
+
+
+## SQL IN Operator: Use Cases, Performance & Limitations
+
+
+This section explains when to use the SQL IN operator, how it performs, and some of its common limitations.
+
+
+When to Use SQL IN:
+
+
+
+- To filter records where a column matches any value in a specific list.
+- To filter data using dynamic lists returned from subqueries.
+- To replace multiple OR conditions with shorter queries.
+
+
+
+Performance Tips for SQL IN:
+
+
+
+- IN vs OR:Both work similarly for small lists, but IN is easier to read and can be faster with longer lists.
+- IN vs EXISTS:EXISTS is often faster with correlated subqueries because it stops searching after the first match; IN evaluates all values.
+- Indexing:Index the column used with IN to improve query execution speed.
+- Handling NULL values:Watch out for NULL values in IN lists or subqueries, especially with NOT IN, as they can cause unexpected results.
+
+
+
+Limitations of SQL IN Operator:
+
+
+
+- Some databases limit the number of values allowed in an IN list.
+- IN does not support subqueries returning multiple columns unless your database supports row constructors.
+
+
+
+## Common Mistakes with SQL IN and How to Avoid Them
+
+
+Following are some of the common mistakes you should avoid when using IN operator in SQL:
+
+
+
+- Avoid using NOT IN with subqueries that can return NULL values; it may cause no rows to be returned. PreferNOT EXISTSin these cases.
+- Do not confuse IN with equality; usingWHERE column `=` (list)is invalid syntax.
+- Make sure data types match between the column and the IN list or subquery results to prevent errors.
+- Do not use IN with very large lists; instead, consider JOINs or temporary tables for better performance.
+
+

@@ -1,0 +1,225 @@
+---
+title: "SQL - Auto Increment"
+description: "Learn SQL - Auto Increment with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 980
+group: "Advanced SQL"
+seoTitle: "SQL - Auto Increment — CodesCompiler SQL Guide"
+permalink: "sql-auto-increment"
+---
+
+
+# SQL - Auto Increment
+
+
+Table of contentAuto Increment in MySQLAuto Increment in SQL Server
+
+
+
+
+The SQL Auto Increment is used to automatically add unique sequential values into a column of a table.
+
+
+We usually define the Auto Increment on a column while creating a table. And when we insert new records into the table, the unique values are added to them.
+
+
+When we use Auto Increment on a table column, there is no need to insert NOT NULL values to that column. If we provide such values, they will overwrite the unique identities and the increment will be continued (only) on the NULL values (if any); causing ambiguity on the data.
+
+
+Different RDBMS support the Auto Increment feature in different ways.
+
+
+## Auto Increment in MySQL
+
+
+In MySQL, you can add the auto-increment feature to a column of a table using the attribute namedAUTO_INCREMENT.
+
+
+By default, when we define the AUTO_INCREMENT attribute on a column, the unique values are generated from "1"; and for each new record we enter into the table, the values in the column will increment by 1. Thus, the first record inserted will have a value of 1, the second record will have a value of 2, and so on.
+
+
+### Syntax
+
+
+Following is the syntax to add AUTO_INCREMENT attribute to a column of a table in MySQL −
+
+
+```sql
+CREATE TABLE table_name(
+   column1 datatype AUTO_INCREMENT,
+   column2 datatype,
+   column3 datatype,
+   .....
+   columnN datatype
+);
+```
+
+
+### Example
+
+
+In the query to we are creating a table named CUSTOMERS and adding the AUTO_INCREMENT to the column named ID −
+
+
+```sql
+CREATE TABLE CUSTOMERS(
+   ID INT PRIMARY KEY AUTO_INCREMENT,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2)
+);
+```
+
+
+Now, let us insert values into the CUSTOMERS table using the INSERT statement −
+
+
+```sql
+INSERT INTO CUSTOMERS (NAME, AGE, ADDRESS, SALARY) VALUES
+("Ramesh", 32, "Ahmedabad", 2000.00),
+("Khilan", 25, "Delhi", 1500.00),
+("Kaushik", 23, "Kota", 2000.00),
+("Chaitali", 25, "Mumbai", 6500.00);
+```
+
+
+### Verification
+
+
+To verify this, you need to retrieve the contents of the CUSTOMERS using the SELECT query as −
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+### Output
+
+
+Following is the output of the above query, here you can observe that the ID values are generated automatically −
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.00
+
+
+### AUTO_INCREMENT on Existing Columns
+
+
+MySQL also allows you to implement the AUTO_INCREMENT attribute on an existing table, using the ALTER TABLE statement.
+
+
+Following query starts incrementing the ID values from 5 in the CUSTOMERS table CUSTOMERS −
+
+
+```sql
+ALTER TABLE CUSTOMERS AUTO_INCREMENT = 100;
+```
+
+
+Now, let us insert more records to see if the ID values are auto incremented.
+
+
+```sql
+INSERT INTO CUSTOMERS(NAME, AGE, ADDRESS, SALARY) VALUES
+("Hardik", 27, "Bhopal", 8500.00),
+("Komal", 22, "MP", 4500.00),
+("Muffy", 24, "Indore", 10000.00);
+```
+
+
+To view the above table data, we use the following SELECT query −
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+### Output
+
+
+The output of the above query is shown below. It shows the auto increment in action. We are getting the ID values of the newly inserted records begins at 100.
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.00100Hardik27Bhopal8500.00101Komal22Hyderabad4500.00102Muffy24Indore10000.00
+
+
+## Auto Increment in SQL Server
+
+
+In SQL Server, there is no direct command/query to perform Auto Increment. Instead, we use theIDENTITY()property. This property works similar to the AUTO_INCREMENT attribute in MySQL. It generates unique, sequential numbers automatically and it is mostly used on the PRIMARY KEY constraint.
+
+
+### Syntax
+
+
+Following is the basic syntax of IDENTITY() property in SQL Server −
+
+
+```sql
+CREATE TABLE table_name (
+   column1 datatype IDENTITY [(seed, increment)],
+   column2 datatype,
+   column3 datatype,
+   .....
+   columnN datatype
+);
+```
+
+
+This property accepts two parameters. The same are described below:
+
+
+
+- seed:It sets the starting value for the auto-incrementing column.
+- increment:It specifies how much the value increases by for each new row.
+
+
+
+### Example
+
+
+In the following example, we are using the IDENTITY() property on the ID column of table named CUSTOMERS −
+
+
+```sql
+CREATE TABLE CUSTOMERS(
+   ID INT PRIMARY KEY IDENTITY(1,1),
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2)
+);
+```
+
+
+After creating the table, we are inserting some records using the following query −
+
+
+```sql
+INSERT INTO CUSTOMERS(NAME, AGE, ADDRESS, SALARY) VALUES
+('Ramesh', 32, 'Ahmedabad', 2000.00),
+('Khilan', 25, 'Delhi', 1500.00),
+('Kaushik', 23, 'Kota', 2000.00),
+('Chaitali', 25, 'Mumbai', 6500.00);
+```
+
+
+To view the table data, we use the following SELECT query −
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+### Output
+
+
+Following is an output of the above query, where ID values are generated automatically −
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.00
+

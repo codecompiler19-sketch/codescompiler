@@ -1,0 +1,393 @@
+---
+title: "SQL - Create Views"
+description: "Learn SQL - Create Views with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 340
+group: "SQL Views"
+seoTitle: "SQL - Create Views — CodesCompiler SQL Guide"
+permalink: "sql-create-view"
+---
+
+
+# SQL CREATE VIEW Statement
+
+
+
+
+
+
+## SQL CREATE VIEW Statement
+
+
+TheCREATE VIEWstatement in SQL is used to create a virtual table based on the result of a SELECT query. A view does not store data physically but acts like a table that can be queried like any regular table.
+
+
+
+- A view is a named SQL query stored in the database.
+- Views can include joins, filtering conditions, grouping, and aggregation.
+- You can select data from a view just like a table usingSELECTstatement.
+- Views do not store data, they display data from the underlying base tables.
+
+
+
+### Syntax
+
+
+Following is the basic syntax of theCREATE VIEWstatement in SQL:
+
+
+```sql
+CREATE VIEW view_name AS
+
+SELECT column1, column2, ...
+
+FROM table_name
+
+WHERE condition;
+```
+
+
+### Example: Create a Simple View
+
+
+Assume we have created a table named CUSTOMERS using the CREATE TABLE statement using the following query:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+
+   ID INT NOT NULL,
+
+   NAME VARCHAR (20) NOT NULL,
+
+   AGE INT NOT NULL,
+
+   ADDRESS CHAR (25),
+
+   SALARY DECIMAL (18, 2),
+
+   PRIMARY KEY (ID)
+
+);
+```
+
+
+Now, let us insert few records into this table using the INSERT statement as follows:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+
+(2, 'Khilan', 25, 'Delhi', 1500.00 ),
+
+(3, 'Kaushik', 23, 'Kota', 2000.00 ),
+
+(4, 'Chaitali', 25, 'Mumbai', 6500.00 ),
+
+(5, 'Hardik', 27, 'Bhopal', 8500.00 ),
+
+(6, 'Komal', 22, 'Hyderabad', 4500.00 ),
+
+(7, 'Muffy', 24, 'Indore', 10000.00 );
+```
+
+
+The table will be created as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+Now, we create a view that displays only theID,NAME, andSALARYof customers from theCUSTOMERStable:
+
+
+```sql
+CREATE VIEW CUSTOMER_SALARY_VIEW AS
+
+SELECT ID, NAME, SALARY
+
+FROM CUSTOMERS;
+```
+
+
+We get the following output:
+
+
+```sql
+Query OK, 0 rows affected (0.05 sec)
+```
+
+
+### Verification
+
+
+You can retrieve data from the view using the following SELECT query:
+
+
+```sql
+SELECT * FROM CUSTOMER_SALARY_VIEW;
+```
+
+
+Following is the table produced:
+
+
+IDNAMESALARY1Ramesh2000.002Khilan1500.003Kaushik2000.004Chaitali6500.005Hardik8500.006Komal4500.007Muffy10000.00
+
+
+## SQL View with WHERE Clause
+
+
+You can also create SQL views that include aWHEREclause to filter the data shown through the view. This allows you to present only a subset of rows from the base table(s), based on specific conditions.
+
+
+### Syntax
+
+
+Following is the basic syntax to create views using the WHERE clause in SQL:
+
+
+```sql
+CREATE VIEW view_name AS
+
+SELECT column1, column2, ...
+
+FROM table_name
+
+WHERE condition;
+```
+
+
+### Example
+
+
+In this example, we create a view that only shows customers with a salary greater than 2000:
+
+
+```sql
+CREATE VIEW HIGH_EARNERS AS
+
+SELECT ID, NAME, SALARY
+
+FROM CUSTOMERS
+
+WHERE SALARY > 2000;
+```
+
+
+We get the following output:
+
+
+```sql
+Query OK, 0 rows affected (0.05 sec)
+```
+
+
+### Verification
+
+
+You can use the following SELECT query to check the view:
+
+
+```sql
+SELECT * FROM HIGH_EARNERS;
+```
+
+
+The table produced is as shown below:
+
+
+IDNAMESALARY4Chaitali6500.005Hardik8500.006Komal4500.007Muffy10000.00
+
+
+## Using Joins in Views
+
+
+You can create views usingJOINoperations to combine and present data from multiple related tables as a single virtual table.
+
+
+The view can include selected columns from each table and can even apply filters using aWHEREclause.
+
+
+### Example
+
+
+Assume you have another table namedORDERShaving the following structure:
+
+
+ORDER_IDCUSTOMER_IDAMOUNTORDER_DATE10112502025-07-0110223002025-07-0310311502025-07-05
+
+
+Now, we have two tables:ORDERSandCUSTOMERS. We can create a view to show customer names along with their order IDs:
+
+
+```sql
+CREATE VIEW CUSTOMER_ORDERS_VIEW AS
+
+SELECT C.ID, C.NAME, O.ORDER_ID
+
+FROM CUSTOMERS C
+
+JOIN ORDERS O ON C.ID = O.CUSTOMER_ID;
+```
+
+
+We get the following output:
+
+
+```sql
+Query OK, 0 rows affected (0.05 sec)
+```
+
+
+### Verification
+
+
+We can view the CUSTOMER_ORDERS_VIEW table using the following SELECT query:
+
+
+```sql
+SELECT * FROM CUSTOMER_ORDERS_VIEW;
+```
+
+
+Following is the table produced:
+
+
+IDNAMEORDER_ID1Ramesh1012Khilan1021Ramesh103
+
+
+## Modifying Views in SQL
+
+
+You can change the definition of an existing view using theCREATE OR REPLACE VIEWstatement. This is useful when you want to update the columns or logic in the view without dropping and recreating it manually.
+
+
+### Syntax
+
+
+Following is the basic syntax to modify a view in SQL:
+
+
+```sql
+CREATE OR REPLACE VIEW view_name AS
+
+SELECT column1, column2, ...
+
+FROM table_name
+
+WHERE condition;
+```
+
+
+### Example
+
+
+Let us modify the existing viewCUSTOMER_SALARY_VIEWto include only specific columns from theCUSTOMERStable:
+
+
+```sql
+CREATE OR REPLACE VIEW CUSTOMER_SALARY_VIEW AS
+
+SELECT ID, NAME, AGE, SALARY
+
+FROM CUSTOMERS;
+```
+
+
+Following is the output obtained:
+
+
+```sql
+Query OK, 0 rows affected (0.04 sec)
+```
+
+
+### Verification
+
+
+To verify that the view has been updated, you can query it like a regular table:
+
+
+```sql
+SELECT * FROM CUSTOMER_SALARY_VIEW;
+```
+
+
+Following is the table obtained:
+
+
+IDNAMEAGESALARY1Ramesh322000.002Khilan251500.003Kaushik232000.004Chaitali256500.005Hardik278500.006Komal224500.007Muffy2410000.00
+
+
+## Dropping a View in SQL
+
+
+If a view is no longer needed, you can remove it using theDROP VIEWstatement.
+
+
+### Syntax
+
+
+Following is the basic syntax to drop a view in SQL:
+
+
+```sql
+DROP VIEW view_name;
+```
+
+
+### Example
+
+
+In the example below, we drop a view namedCUSTOMER_SALARY_VIEW:
+
+
+```sql
+DROP VIEW CUSTOMER_SALARY_VIEW;
+```
+
+
+Following is the output obtained:
+
+
+```sql
+Query OK, 0 rows affected (0.04 sec)
+```
+
+
+### Verification
+
+
+After dropping the view, trying to query it will result in an error:
+
+
+```sql
+SELECT * FROM CUSTOMER_SALARY_VIEW;
+```
+
+
+It will show the following error:
+
+
+```sql
+ERROR 1146 (42S02): Table 'testdb.customer_salary_view' doesn't exist
+```
+
+
+## Important Points About CREATE VIEW
+
+
+Following are the important points to remember when creating views in SQL:
+
+
+
+- Views do not store data, they display data from underlying tables in real-time.
+- You can query, filter, and join views just like normal tables.
+- UseCREATE OR REPLACE VIEWto update a view.
+- To remove a view, useDROP VIEW.
+- Views are supported in most relational database systems including MySQL, PostgreSQL, Oracle, and SQL Server.
+
+

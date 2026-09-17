@@ -1,0 +1,306 @@
+---
+title: "JavaScript - RegExp"
+description: "Learn JavaScript - RegExp with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 690
+group: "JavaScript Objects"
+seoTitle: "JavaScript - RegExp — CodesCompiler JavaScript Guide"
+permalink: "javascript-regexp-object"
+---
+
+
+# Regular Expressions and RegExp Object
+
+
+
+
+Aregular expression(RegExp) in JavaScript is an object that describes a pattern of characters. It can contain the alphabetical, numeric, and special characters. Also, the regular expression pattern can have single or multiple characters.
+
+
+The JavaScriptRegExpclass represents regular expressions, and both String andRegExpdefine methods that use regular expressions to perform powerful pattern-matching and search-and-replace functions on text.
+
+
+The regular expression is used to search for the particular pattern in the string or replace the pattern with a new string.
+
+
+There are two ways to construct the regular expression in JavaScript.
+
+
+
+- Using the RegExp() constructor.
+- Using the regular expression literal.
+
+
+
+### Syntax
+
+
+A regular expression could be defined with theRegExp ()constructor, as follows −
+
+
+```javascript
+var pattern = new RegExp(pattern, attributes);
+or simply
+var pattern = /pattern/attributes;
+```
+
+
+### Parameters
+
+
+Here is the description of the parameters −
+
+
+
+- pattern− A string that specifies the pattern of the regular expression or another regular expression.
+- attributes− An optional string containing any of the "g", "i", and "m" attributes that specify global, case-insensitive, and multi-line matches, respectively.
+
+
+
+Before we learn examples of regular expression, let's learn about regular expression modifiers, Quantifiers, literal characters, etc.
+
+
+## Modifiers
+
+
+Several modifiers are available that can simplify the way you work withregexps,like case sensitivity, searching in multiple lines, etc.
+
+
+Sr.No.Modifier & Description1iPerform case-insensitive matching.2mSpecifies that if the string has newline or carriage return characters, the ^ and $ operators will now match against a newline boundary, instead of a string boundary3gPerforms a global matchthat is, find all matches rather than stopping after the first match.
+
+
+## Brackets
+
+
+Brackets ([]) have a special meaning when used in the context of regular expressions. They are used to find a range of characters.
+
+
+Sr.No.Expression & Description1[...]Any one character between the brackets.2[^...]Any one character not between the brackets.3[0-9]It matches any decimal digit from 0 through 9.4[a-z]It matches any character from lowercaseathrough lowercasez.5[A-Z]It matches any character from uppercaseAthrough uppercaseZ.6[a-Z]It matches any character from lowercaseathrough uppercaseZ.
+
+
+The ranges shown above are general; you could also use the range [0-3] to match any decimal digit ranging from 0 through 3, or the range [b-v] to match any lowercase character ranging frombthroughv.
+
+
+## Quantifiers
+
+
+The frequency or position of bracketed character sequences and single characters can be denoted by a special character. Each special character has a specific connotation. The +, *, ?, and $ flags all follow a character sequence.
+
+
+Sr.No.Expression & Description1p+It matches any string containing one or more p's.2p*It matches any string containing zero or more p's.3p?It matches any string containing at most one p.4p&#123;N&#125;It matches any string containing a sequence ofNp's5p&#123;2,3&#125;It matches any string containing a sequence of two or three p's.6p&#123;2, &#125;It matches any string containing a sequence of at least two p's.7p$It  matches any string with p at the end of it.8^pIt matches any string with p at the beginning of it.9?!pIt matches any string which is not followed by a string p.
+
+
+### Examples
+
+
+Following examples explain more about matching characters.
+
+
+Sr.No.Expression & Description1[^a-zA-Z]It matches any string not containing any of the characters ranging fromathroughzandAthrough Z.2p.pIt matches any string containingp,followed by any character, in turn followed by anotherp.3^.&#123;2&#125;$It matches any string containing exactly two characters.4**(.*)**It matches any string enclosed within ** and **.5p(hp)*It matches any string containing apfollowed by zero or more instances of the sequencehp.
+
+
+## Literal characters
+
+
+The literal characters can be used with a backslash (\) in the regular expression. They are used to insert special characters, such as tab, null, Unicode, etc., in the regular expression.
+
+
+Sr.No.Character & Description1AlphanumericItself2\0The NUL character (\u0000)3\tTab (\u00094\nNewline (\u000A)5\vVertical tab (\u000B)6\fForm feed (\u000C)7\rCarriage return (\u000D)8\xnnThe Latin character specified by the hexadecimal number nn; for example, \x0A is the same as \n9\uxxxxThe Unicode character specified by the hexadecimal number xxxx; for example, \u0009 is the same as \t10\cXThe control character ^X; for example, \cJ is equivalent to the newline character \n
+
+
+## Metacharacters
+
+
+A metacharacter is simply an alphabetical character preceded by a backslash that acts to give the combination a special meaning.
+
+
+For instance, you can search for a large sum of money using the '\d' metacharacter:/([\d]+)000/, Here\dwill search for any string of numerical character.
+
+
+The following table lists a set of metacharacters which can be used in PERL Style Regular Expressions.
+
+
+Sr.No.Character & Description1.a single character2\sa whitespace character (space, tab, newline)3\Snon-whitespace character4\da digit (0-9)5\Da non-digit6\wa word character (a-z, A-Z, 0-9, _)7\Wa non-word character8[\b]a literal backspace (special case).9[aeiou]matches a single character in the given set10[^aeiou]matches a single character outside the given set11(foo|bar|baz)matches any of the alternatives specified
+
+
+Let's learn to create regular expressions below.
+
+
+```javascript
+let exp = /tutorialspoint/i
+```
+
+
+
+- /tutorialspoint/  It finds a match for the 'tutorialspoint' string.
+- i  It ignores the case of the characters while matching the pattern with the string. So, it matches with 'TutoiralsPoint', or 'TUTORIALSpoint', etc.
+
+
+
+```javascript
+let exp = /\d+/
+```
+
+
+
+- \d  It matches 0 to 9 digits.
+- +  It matches one or more numeric digits.
+
+
+
+```javascript
+let exp = /^Hi/
+```
+
+
+
+- ^ - It matches the start of the text.
+- Hi  It checks whether the text contains 'Hi' at the start.
+
+
+
+```javascript
+Let exp = /^[a-zA-Z0-9]+@[a-zA-Z]+\.[a-zA-Z]{2,3}$/
+```
+
+
+The above regular expression validates the email. It looks complex, but it is very easy to understand.
+
+
+
+- ^ - Start of the email address.
+- [a-zA-Z0-9]  It should contain the alphanumeric characters in the start.
+- + - It should contain at least one alphanumeric character.
+- @ - It must have the '@' character after the alphanumeric characters.
+- [a-zA-Z]+ - After the '@' character, it must contain at least 1 alphanumeric character.
+- \.  It must contain a dot after that.
+- [a-zA-Z]  After the dot, the email should contain alphabetical characters.
+- &#123;2, 3&#125;  After the dot, it should contain only 2 or 3 alphabetical characters. It specifies the length.
+- $ - It represents the end of the pattern.
+
+
+
+Now, the question is whether we can use the search() or replace() method to search or replace text in the string by passing the string as an argument; then what is the need for the regular expression?
+
+
+The question is obvious. Let's understand it via the example below.
+
+
+### Example
+
+
+In the below example, we used the regular expression literal to define the regular expression. The pattern matches the 'tutorialspoint' string without comparing the case of characters.
+
+
+In the first case, the string search() method searches for the 'tutorialspoint' string, which performs the case-sensitive match. So, it returns -1.
+
+
+In the second case, we passed the regular expression as an argument of the search() method. It performs the case-insensitive match. So, it returns 11, the index of the required pattern.
+
+
+```html
+<html>
+<head>
+   <title> JavaScript - Regular Expression </title>
+</head>
+<body>
+   p id = "output" 
+   <script>
+      const output = document.getElementById("output");
+      let pattern = /tutorialspoint/i;
+      let str = "Welcome to TuTorialsPoint! It is a good website!";
+      let res = str.search('tutorialspoint');
+      output.innerHTML += "Searching using the string : " + res + "<br>";
+      res = str.search(pattern);
+      output.innerHTML += "Searching using the regular expression : " + res;
+   </script>
+</body>
+</html>
+```
+
+
+Execute the program to see the desired results.
+
+
+### Example
+
+
+In the example below, we used the replace() method to match the pattern and replace it with the '100' string.
+
+
+Here, the pattern matches the pair of digits. The output shows that each number is replaced with '100' in the string. You may also add alphabetical characters in the string.
+
+
+```html
+<html>
+<head>
+   <title> JavaScript - Regular expression </title>
+</head>
+<body>
+   p id = "output" 
+   <script>
+      let pattern = /\d+/g; // Matches pair of digits
+      let str = "10, 20, 30, 40, 50";
+
+      let res = str.replace(pattern, "100");
+      document.getElementById("output").innerHTML = 
+		"String after replacement : " + res;
+   </script>
+</body>
+</html>
+```
+
+
+Execute the program to see the desired results.
+
+
+### Example (Email validation)
+
+
+In the example below, we used the RegExp() constructor function with a 'new' keyword to create a regular expression. Also, we have passed the pattern in the string format as an argument of the constructor.
+
+
+Here, we validate the email using the regular expression. In the first case, email is valid. In the second case, the email doesn't contain the @ character, so the test() method returns false.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      const pattern = new RegExp('^[a-zA-Z0-9]+@[a-zA-Z]+\.[a-zA-Z]{2,3}$');
+      document.getElementById("output").innerHTML = 
+		"abcd@gmail.com is valid? : " + pattern.test('abcd@gmail.com') + "<br>" +
+      "abcdgmail.com is valid? : " + pattern.test('abcdgmail.com');
+</script>
+</body>
+</html>
+```
+
+
+So, the regular expression can be used to find a particular pattern in the text and perform operations like replace.
+
+
+## RegExp Properties
+
+
+Here is a list of the properties associated with RegExp and their description.
+
+
+Sr.No.Property & Description1constructorSpecifies the function that creates an object's prototype.2globalSpecifies if the "g" modifier is set.3ignoreCaseSpecifies if the "i" modifier is set.4lastIndexThe index at which to start the next match.5multilineSpecifies if the "m" modifier is set.6sourceThe text of the pattern.
+
+
+In the following sections, we will have a few examples to demonstrate the usage of RegExp properties.
+
+
+## RegExp Methods
+
+
+Here is a list of the methods associated with RegExp along with their description.
+
+
+Sr.No.Method & Description1exec()Executes a search for a match in its string parameter.2test()Tests for a match in its string parameter.3toSource()Returns an object literal representing the specified object; you can use this value to create a new object.4toString()Returns a string representing the specified object.
+
+
+In the following sections, we will have a few examples to demonstrate the usage of RegExp methods.
+

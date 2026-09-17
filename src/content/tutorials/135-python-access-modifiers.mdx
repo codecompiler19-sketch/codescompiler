@@ -1,0 +1,301 @@
+---
+title: "PYTHON - Access Modifiers"
+description: "Learn PYTHON - Access Modifiers with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1350
+group: "Object Oriented Programming"
+seoTitle: "PYTHON - Access Modifiers — CodesCompiler PYTHON Guide"
+permalink: "python-access-modifiers"
+---
+
+
+# Python - Access Modifiers
+
+
+
+
+ThePython access modifiersare used to restrict access to class members (i.e., variables and methods) from outside the class. There are three types of access modifiers namely public, protected, and private.
+
+
+
+- Public members− A class member is said to be public if it can be accessed from anywhere in the program.
+- Protected members− They are accessible from within the class as well as by classes derived from that class.
+- Private members− They can be accessed from within the class only.
+
+
+
+Usually, methods are defined as public and instance variable are private. This arrangement of private instance variables and public methods ensures implementation of principle of encapsulation.
+
+
+## Access Modifiers in Python
+
+
+Unlike C++ and Java, Python does not use the Public, Protected and Private keywords to specify the type of access modifiers. By default, all the variables and methods in a Python class are public.
+
+
+### Example
+
+
+Here, we have Employee class with instance variables name and age. An object of this class has these two attributes. They can be directly accessed from outside the class, because they are public.
+
+
+```python
+class Employee:
+   'Common base class for all employees'
+   def __init__(self, name="Bhavana", age=24):
+      self.name = name
+      self.age = age
+
+e1 = Employee()
+e2 = Employee("Bharat", 25)
+
+print ("Name: {}".format(e1.name))
+print ("age: {}".format(e1.age))
+print ("Name: {}".format(e2.name))
+print ("age: {}".format(e2.age))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Name: Bhavana
+age: 24
+Name: Bharat
+age: 25
+```
+
+
+Python doesn't enforce restrictions on accessing any instance variable or method. However, Python prescribes a convention of prefixing name of variable/method with single or double underscore to emulate behavior of protected and private access modifiers.
+
+
+
+- To indicate that an instance variable isprivate, prefix it with double underscore (such as "__age").
+- To imply that a certain instance variable isprotected, prefix it with single underscore (such as "_salary").
+
+
+
+### Another Example
+
+
+Let us modify the Employee class. Add another instance variable salary. Makeageprivate andsalaryas protected by prefixing double and single underscores respectively.
+
+
+```python
+class Employee:
+   def __init__(self, name, age, salary):
+      self.name = name # public variable
+      self.__age = age # private variable
+      self._salary = salary # protected variable
+   def displayEmployee(self):
+      print ("Name : ", self.name, ", age: ", self.__age, ", salary: ", self._salary)
+
+e1=Employee("Bhavana", 24, 10000)
+
+print (e1.name)
+print (e1._salary)
+print (e1.__age)
+```
+
+
+When you run this code, it will produce the followingoutput−
+
+
+```python
+Bhavana
+10000
+Traceback (most recent call last):
+ File "C:\Users\user\example.py", line 14, in <module>
+  print (e1.__age)
+        ^^^^^^^^
+AttributeError: 'Employee' object has no attribute '__age'
+```
+
+
+Python displays AttributeError because __age is private, and not available for use outside the class.
+
+
+## Name Mangling
+
+
+Python doesn't block access to private data, it just leaves for the wisdom of the programmer, not to write any code that access it from outside the class. You can still access the private members by Python's name mangling technique.
+
+
+Name manglingis the process of changing name of a member with double underscore to the formobject._class__variable. If so required, it can still be accessed from outside the class, but the practice should be refrained.
+
+
+In our example, the private instance variable "__name" is mangled by changing it to the format −
+
+
+```python
+obj._class__privatevar
+```
+
+
+So, to access the value of "__age" instance variable of "e1" object, change it to "e1._Employee__age".
+
+
+Change the print() statement in the above program to −
+
+
+```python
+print (e1._Employee__age)
+```
+
+
+It now prints 24, the age ofe1.
+
+
+## Python Property Object
+
+
+Python's standard library has a built-in property() function. It returns a property object. It acts as an interface to the instance variables of a Python class.
+
+
+The encapsulation principle of object-oriented programming requires that the instance variables should have a restricted private access. Python doesn't have efficient mechanism for the purpose. The property() function provides an alternative.
+
+
+The property() function uses the getter, setter and delete methods defined in a class to define a property object for the class.
+
+
+### Syntax
+
+
+```python
+property(fget=None, fset=None, fdel=None, doc=None)
+```
+
+
+### Parameters
+
+
+
+- fget− an instance method that retrieves value of an instance variable.
+- fset− an instance method that assigns value to an instance variable.
+- fdel− an instance method that removes an instance variable
+- fdoc− Documentation string for the property.
+
+
+
+The function uses getter and setter methods to return the property object.
+
+
+## Getters and Setter Methods
+
+
+A getter method retrieves the value of an instance variable, usually named as get_varname, whereas the setter method assigns value to an instance variable − named as set_varname.
+
+
+### Example
+
+
+Let us define getter methods get_name() and get_age(), and setters set_name() and set_age() in the Employee class.
+
+
+```python
+class Employee:
+   def __init__(self, name, age):
+      self.__name = name
+      self.__age = age
+
+   def get_name(self):
+      return self.__name
+   def get_age(self):
+      return self.__age
+   def set_name(self, name):
+      self.__name = name
+      return
+   def set_age(self, age):
+      self.__age=age
+
+e1=Employee("Bhavana", 24)
+print ("Name:", e1.get_name(), "age:", e1.get_age())
+e1.set_name("Archana")
+e1.set_age(21)
+print ("Name:", e1.get_name(), "age:", e1.get_age())
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Name: Bhavana age: 24
+Name: Archana age: 21
+```
+
+
+The getter and setter methods can retrieve or assign value to instance variables. The property() function uses them to add property objects as class attributes.
+
+
+The name property is defined as −
+
+
+```python
+name = property(get_name, set_name, "name")
+```
+
+
+Similarly, you can add theageproperty −
+
+
+```python
+age = property(get_age, set_age, "age")
+```
+
+
+The advantage of the property object is that you can use to retrieve the value of its associated instance variable, as well as assign value.
+
+
+For example,
+
+
+```python
+print (e1.name) displays value of e1.__name
+e1.name = "Archana" assigns value to e1.__age
+```
+
+
+### Example
+
+
+The complete program with property objects and their use is given below −
+
+
+```python
+class Employee:
+   def __init__(self, name, age):
+      self.__name = name
+      self.__age = age
+
+   def get_name(self):
+      return self.__name
+   def get_age(self):
+      return self.__age
+   def set_name(self, name):
+      self.__name = name
+      return
+   def set_age(self, age):
+      self.__age=age
+      return
+   name = property(get_name, set_name, "name")
+   age = property(get_age, set_age, "age")
+
+e1=Employee("Bhavana", 24)
+print ("Name:", e1.name, "age:", e1.age)
+
+e1.name = "Archana"
+e1.age = 23
+print ("Name:", e1.name, "age:", e1.age)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Name: Bhavana age: 24
+Name: Archana age: 23
+```
+

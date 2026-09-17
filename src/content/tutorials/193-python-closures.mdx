@@ -1,0 +1,202 @@
+---
+title: "PYTHON - Closures"
+description: "Learn PYTHON - Closures with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1930
+group: "Python Miscellenous"
+seoTitle: "PYTHON - Closures — CodesCompiler PYTHON Guide"
+permalink: "python-closures"
+---
+
+
+# Python - Closures
+
+
+
+
+## What is a Closure?
+
+
+A Python closure is a nested function which has access to a variable from an enclosing function that has finished its execution. Such a variable is not bound in the local scope. To use immutable variables (number or string), we have to use the non-local keyword.
+
+
+The main advantage of Python closures is that we can help avoid the using global values and provide some form of data hiding. They are used in Python decorators.
+
+
+Closures are closely related to nested functions and allow inner functions to capture and retain the enclosing function's local state, even after the outer function has finished execution. Understanding closures requires familiarity with nested functions, variable scope and how Python handles function objects.
+
+
+
+- Nested Functions:In Python functions can be defined inside other functions. These are called nested functions or inner functions.
+- Accessing Enclosing Scope:Inner functions can access variables from the enclosing i.e. outer scope. This is where closures come into play.
+- Retention of State:When an inner function i.e. closure captures and retains variables from its enclosing scope, even if the outer function has completed execution or the scope is no longer available.
+
+
+
+## Nested Functions
+
+
+Nested functions in Python refer to the practice of defining one function inside another function. This concept allows us to organize code more effectively, encapsulate functionality and manage variable scope.
+
+
+Following is the example of nested functions where functionB is defined inside functionA. Inner function is then called from inside the outer function's scope.
+
+
+### Example
+
+
+```python
+def functionA():
+   print ("Outer function")
+   def functionB():
+      print ("Inner function")
+   functionB()
+
+functionA()
+```
+
+
+### Output
+
+
+```python
+Outer function
+Inner function
+```
+
+
+If the outer function receives any argument, it can be passed to the inner function as in the below example.
+
+
+```python
+def functionA(name):
+   print ("Outer function")
+   def functionB():
+      print ("Inner function")
+      print ("Hi {}".format(name))
+   functionB()
+   
+functionA("Python")
+```
+
+
+### Output
+
+
+```python
+Outer function
+Inner function
+Hi Python
+```
+
+
+## Variable Scope
+
+
+When a closure is created i.e. an inner function that captures variables from its enclosing scope, it retains access to those variables even after the outer function has finished executing. This behavior allows closures to "remember" and manipulate the values of variables from the enclosing scope.
+
+
+### Example
+
+
+Following is the example of the closure with the variable scope −
+
+
+```python
+def outer_function(x):
+    y = 10
+    
+    def inner_function(z):
+        return x + y + z  # x and y are captured from the enclosing scope
+    
+    return inner_function
+
+closure = outer_function(5)
+result = closure(3)
+print(result)
+```
+
+
+### Output
+
+
+```python
+18
+```
+
+
+## Creating a closure
+
+
+Creating a closure in Python involves defining a nested function within an outer function and returning the inner function. Closures are useful for capturing and retaining the state of variables from the enclosing scope.
+
+
+### Example
+
+
+In the below example, we have afunctionAfunction which creates and returns another functionfunctionB. The nestedfunctionBfunction is the closure.
+
+
+The outerfunctionAfunction returns afunctionBfunction and assigns it to the myfunction variable. Even if it has finished its execution. However, the printer closure still has access to the name variable.
+
+
+Following is the example of creating the closure in python −
+
+
+```python
+def functionA(name):
+   name ="New name"
+   def functionB():
+      print (name)
+   return functionB
+   
+myfunction = functionA("My name")
+myfunction()
+```
+
+
+### Output
+
+
+```python
+New name
+```
+
+
+## nonlocal Keyword
+
+
+In Python, nonlocal keyword allows a variable outside the local scope to be accessed. This is used in a closure to modify an immutable variable present in the scope of outer variable. Here is the example of the closure with the nonlocal keyword.
+
+
+```python
+def functionA():
+   counter =0
+   def functionB():
+      nonlocal counter
+      counter+=1
+      return counter
+   return functionB
+
+myfunction = functionA()
+
+retval = myfunction()
+print ("Counter:", retval)
+
+retval = myfunction()
+print ("Counter:", retval)
+
+retval = myfunction()
+print ("Counter:", retval)
+```
+
+
+### Output
+
+
+```python
+Counter: 1
+Counter: 2
+Counter: 3
+```
+

@@ -1,0 +1,501 @@
+---
+title: "JavaScript - this Keyword"
+description: "Learn JavaScript - this Keyword with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1580
+group: "JavaScript Important Keywords"
+seoTitle: "JavaScript - this Keyword — CodesCompiler JavaScript Guide"
+permalink: "javascript-this-keyword"
+---
+
+
+# JavaScript - this Keyword
+
+
+
+
+## What is 'this' keyword?
+
+
+In JavaScript, the 'this' keyword contains the reference to the object. It represents the context of the function or current code. It is used to access the properties and methods of the current object.
+
+
+When this keyword is used inside a function, the this will refer to the object that the function is called with.
+
+
+In JavaScript, functions are also objects. So, you can use the 'this' keyword with functions also.
+
+
+## Which object does the 'this' refer to?
+
+
+The object referred by the 'this' keyword depends on how you have used the 'this' keyword.
+
+
+For example,
+
+
+
+- The 'this' keyword refers to the window object in the global scope.
+- When you use the 'this' keyword inside the function, it also represents the 'window' object.
+- The 'this' keyword refers to an undefined in the strict mode in the function.
+- The 'this' keyword refers to the object when you use it in the object method.
+- In the event handler, the 'this' keyword refers to the element on which the event is executed.
+- The 'this' keyword in methods like call(), apply(), and bind() can refer to different objects.
+
+
+
+## Syntax
+
+
+Follow the syntax below to use the 'this' keyword in JavaScript &minus
+
+
+```javascript
+this.property
+OR
+this.method();
+```
+
+
+You can access the properties and execute the object's methods using the 'this' keyword.
+
+
+## JavaScript 'this' in the Global Scope
+
+
+When you use the 'this' keyword in the global scope, it represents the global (window) object. You can access the global variables using the 'this' keyword in the global scope.
+
+
+### Example
+
+
+In the below code, we have defined the 'num' variable and printNum() function in the global scope. After that, we used the 'this' keyword to access the global variable and functions.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+      const output = document.getElementById('demo');
+      var num = 10;
+      function printNum() {
+         output.innerHTML += "Inside the function: " + num + "<br>";
+      }
+      this.printNum();
+      output.innerHTML += "Outside the function: " + this.num + "<br>";
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Inside the function: 10
+Outside the function: 10
+```
+
+
+## JavaScript 'this' in a Function
+
+
+When you use the 'this' keyword in the function, it represents the global scope or 'window' object.
+
+
+### Example
+
+
+In the below code, we use the 'this' keyword inside the function. You can observe that we access the global variables using the 'this' keyword inside the function.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+      const output = document.getElementById('demo');
+      var message = "Hello World!";
+      function printMessage() {
+         var message = "Hi! How are you?";
+         output.innerHTML = "The messsage is: " + this.message;
+      }
+      printMessage();
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The messsage is: Hello World!
+```
+
+
+## 'this' in a Function in Strict Mode
+
+
+When you use the 'this' keyword inside the function in the strict mode, it doesn't refer to any object. The value of the 'this' keyword becomes undefined.
+
+
+### Example
+
+
+In the below code, we use the 'this' keyword inside the function in the strict mode. It prints undefined.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+      let output = document.getElementById('demo');
+      var message = "Hello World!";
+      function test() {
+         "use strict";
+         output.innerHTML = "The value of this in the strict mode is: " + this;
+      }
+      test();
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The value of this in the strict mode is: undefined
+```
+
+
+## 'this' in a Constructor Function
+
+
+When you use the function as a constructor function to create an object, the 'this' keyword refers to the object.
+
+
+### Example
+
+
+We have defined the Animal() constructor function in the code below. We used the 'this' keyword inside the constructor function to initialize the properties of the object.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+      const output = document.getElementById('demo');
+      function Animal() {
+         this.name = 'Lion';
+         this.age = 3;
+         this.color = 'Brown';
+      }
+      const newAnimal = new Animal();
+      output.innerHTML = "Animal Name: " + newAnimal.name + "<br>";
+      output.innerHTML += "Animal Age: " + newAnimal.age + "<br>";
+      output.innerHTML += "Animal Color: " + newAnimal.color; 
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Animal Name: Lion
+Animal Age: 3
+Animal Color: Brown
+```
+
+
+## 'this' in an Arrow Function
+
+
+When you use the 'this' keyword in the arrow function, it refers to the scope of its parent object.
+
+
+For example, when you define the arrow function inside the object method and use the 'this' keyword inside that, it presents the object. The 'this' keyword refers to the global object if you define the arrow function inside another function.
+
+
+### Example
+
+
+In the below code, we have defined the arrow function inside the getDetails() method of the object. When we print the value of the 'this' keyword, it prints the object.
+
+
+```html
+<html>
+<body>
+   <div id = "output1">Value of 'this' inside the getDetails() method: </div>
+   <div id = "output2">Value of 'this' inside the getInnerDetails() method: </div>
+   <script>
+      const wall = {
+		 size: "10",
+		 color: "blue",
+		 getDetails() {
+		    document.getElementById('output1').innerHTML += JSON.stringify(this);
+			const getInnerDetails = () => {
+			   document.getElementById('output2').innerHTML += JSON.stringify(this);
+			}
+			getInnerDetails();
+	     }
+      }
+      wall.getDetails();
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Value of 'this' inside the getDetails() method: {"size":"10","color":"blue"}
+Value of 'this' inside the getInnerDetails() method: {"size":"10","color":"blue"}
+```
+
+
+## 'this' in the Object Method
+
+
+When you use the 'this' keyword inside the object method, it represents the object itself.
+
+
+### Example
+
+
+In the below code, we have defined the 'fruit; object. The object contains the printFruitDetails() method, and in the method, we used the 'this' keyword to access the properties of the object.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+      const output = document.getElementById('demo');
+      const fruit = {
+         name: "Apple",
+         color: "red",
+         printFruitDetails() {
+            output.innerHTML += "Furit Name = " + this.name + "<br>";
+            output.innerHTML += "Fruit Color = " + this.color;
+         }
+      }
+      fruit.printFruitDetails();
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Furit Name = Apple
+Fruit Color = red
+```
+
+
+## 'this' in a Child Function of an Object Method
+
+
+When you define the function inside the object method and use the 'this' keyword inside the function, it represents the global object rather than an object.
+
+
+### Example:
+
+
+In the below code, we have defined the person object. The person object contains the printDetails() method. In the printDetails() method, we have defined the printThis() function.
+
+
+In the printThis() function, we print the value of the 'this' keyword, and it prints the global object.
+
+
+```html
+<html>
+<body>
+<div id = "output">Inside the printThis() function, Value of 'this' =  </div>
+<script>
+   const person = {
+      name: "Salman",
+      isBusinessman: false,
+      printDetails() {
+         function printThis() {
+            document.getElementById('output').innerHTML += this;
+         }
+         printThis();
+      }
+   }
+   person.printDetails();
+</script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Inside the printThis() function, Value of 'this' = [object Window]
+```
+
+
+## JavaScript 'this' in Event Handlers
+
+
+Using the 'this' keyword with event handlers refers to the HTML element on which the event is executed.
+
+
+### Example
+
+
+In the below code, we have added the onClick event handler into the `<div>` element. When users click the div element, we hide the div element using the 'display' property.
+
+
+```html
+<html>
+  <head>
+    <style>
+      div {
+        height: 200px;
+        width: 700px;
+        background-color: red;
+      }
+    </style>
+  </head>
+  <body>
+    pClick the DIV below to remove it. 
+    <div onclick = "this.style.display = 'none'"> </div>
+  </body>
+</html>
+```
+
+
+## Explicit Function Binding in JavaScript
+
+
+In JavaScript, call(), apply(), or bind() methods are used for the explicit binding.
+
+
+The explicit binding allows you to borrow the method of the particular object. Using these methods, you can explicitly define the context of the 'this' keyword.
+
+
+Let's understand explicit binding using the examples below.
+
+
+### Example: Using the call() method
+
+
+In the below code, the lion object contains the color and age property. It also contains the printDetails() method and prints the details using the 'this' keyword.
+
+
+The tiger object contains only color and age properties. We used the call() method to call the printDetails() method of the lion object with the context of the tiger object. So, the method prints the details of the tiger in the output.
+
+
+```html
+<html>
+<body>
+<div id = "demo"> </div>
+<script>
+  const output = document.getElementById('demo');
+  const lion = {
+    color: "Yellow",
+    age: 10,
+    printDetails() {
+      output.innerHTML += pColor: ${this.color};
+      output.innerHTML += pAge: ${this.age};
+    }
+  }
+  const tiger = {
+    color: "Orange",
+    age: 15,
+  }
+  lion.printDetails.call(tiger);
+</script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Color: Orange
+
+Age: 15
+```
+
+
+### Example: Using the bind() method
+
+
+The below code also contains the lion and tiger objects. After that, we used the bind() method to bind the printDetails() method of the lion object into the tiger object.
+
+
+After that, we use the tigerDetails() method to print the details of the tiger object.
+
+
+```html
+<html>
+<body>
+<div id = "demo"> </div>
+<script>
+  const output = document.getElementById('demo');
+  const lion = {
+    color: "Yellow",
+    age: 10,
+    printDetails() {
+      output.innerHTML += pColor: ${this.color};
+      output.innerHTML += pAge: ${this.age};
+    }
+  }
+  const tiger = {
+    color: "Orange",
+    age: 15,
+  }
+  const tigerDetails = lion.printDetails.bind(tiger);
+  tigerDetails();
+</script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Color: Orange
+
+Age: 15
+```
+
+
+## JavaScript 'this' Precedence
+
+
+You should use the below precedence order to determine the context of the 'this' keyword.
+
+
+
+- 1. bind() method
+- 2. call and apply() methods
+- 3. Object method
+- 4. Global scope
+
+

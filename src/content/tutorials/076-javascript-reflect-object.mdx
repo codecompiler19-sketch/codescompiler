@@ -1,0 +1,177 @@
+---
+title: "JavaScript - Reflect"
+description: "Learn JavaScript - Reflect with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 760
+group: "JavaScript Objects"
+seoTitle: "JavaScript - Reflect — CodesCompiler JavaScript Guide"
+permalink: "javascript-reflect-object"
+---
+
+
+# JavaScript - The Reflect Object
+
+
+
+
+## JavaScript Reflect
+
+
+In JavaScript,Reflectis a global object and was introduced in ECMAScript 6 (ES6). It contains static methods, providing a better way to interact with the object at runtime.
+
+
+Unlike most global objects, Reflect is not a constructor. You cannot use it with the new operator or invoke the Reflect object as a function. All methods of Reflect are static just like the Math object.
+
+
+It contains various methods to access, update, delete, etc. properties from the object at run time.
+
+
+### Key Features of the Reflect Object
+
+
+
+- Object construction− The Reflect API allows to create objects at run time using the Reflect.construct() method.
+- Function invocation− The apply() method of the Reflect API is used to invoke a function or object method by passing the context and argument.
+- Object property manipulation− A Reflect API has different methods to set, update, or delete the object properties. Also, it can handle the extension of the object by preventing it.
+
+
+
+### Syntax
+
+
+Following is the syntax to use the method of the Reflect API −
+
+
+```javascript
+Reflect.method();
+```
+
+
+In the above syntax, the 'method' is the generalization. It can be any method of the Reflect API, such as get, set, apply, construct, has, etc.
+
+
+## Reflect Methods
+
+
+In the following table, we have listed all the methods of Reflect −
+
+
+Sr.No.Name & Description1apply()To invoke a function.2construct()Allows to specify the different prototypes.3defineProperty()Allows to insert or edit object property.4deleteProperty()Allows to delete the object property.5get()To get a value of the property.6getOwnPropertyDescriptor()Allows to get the descriptor of the object.7getPrototypeOf()To get the prototype of the object.8has()To check whether the property exists in the object.9isExtensible()Allows to check whether the object is extensible.10ownKeys()Returns the own keys of the targeted object and ignores the inherited keys.11preventExtensions()To prevent the extension of the object.12set()To set the value to the object property.13setPrototypeOf()Allows to set the prototype of the object as null or another object.
+
+
+## Examples
+
+
+### Example 1
+
+
+In the example below, we have defined a car object. The 'prop' variable contains the property name in the string format.
+
+
+We use the get() method of the Reflect object to access the 'model' property from the car object. We passed the object name as a first parameter of the get() method and the property name as a second parameter.
+
+
+In the output, you can see the value of the 'model' property.
+
+
+```html
+<html>
+   <body>
+      <div id="output">The model of the car is: </div>
+      <script>
+         const car = {
+            name: "Audi",
+            model: "Q6",
+            price: 7000000,
+         }
+         let prop = "model";
+         let model = Reflect.get(car, prop);
+         document.getElementById("output").innerHTML += model;
+      </script>
+   </body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The model of the car is: Q6
+```
+
+
+### Example 2
+
+
+In the example below, we used the set() method to set the property into the object. The set() method takes an object, property name, and value as a parameter.
+
+
+The output shows the 'doors' property value. In this way, you can set the property into the object at run time using the set() method of the Reflect API.
+
+
+```html
+<html>
+   <body>
+      <div id="output">The total doors in the Audi Q6 is: </div>
+      <script>
+         const car = {
+            name: "Audi",
+            model: "Q6",
+            price: 7000000,
+         }
+         const model = Reflect.set(car, "doors", 4);
+         document.getElementById("output").innerHTML += car.doors;
+      </script>
+   </body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The total doors in the Audi Q6 is: 4
+```
+
+
+On executing the above script, the output window will pop up, displaying the text on the webpage.
+
+
+### Example 3
+
+
+In the example below, we used the has() method to check whether the particular property exists in the object dynamically.
+
+
+Both symbols look similar but are different, which you can see in the output.
+
+
+```html
+<html>
+   <body>
+      p id="output"
+      <script>
+         const car = {
+            name: "Audi",
+            model: "Q6",
+            price: 7000000,
+         }
+         const isName = Reflect.has(car, "name");
+         if (isName) {
+            document.getElementById("output").innerHTML = "The Car object contains the name.";
+         }
+      </script>
+   </body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The Car object contains the name.
+```
+

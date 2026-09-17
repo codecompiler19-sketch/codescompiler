@@ -1,0 +1,102 @@
+---
+title: "JavaScript - Lazy Loading"
+description: "Learn JavaScript - Lazy Loading with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2170
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Lazy Loading — CodesCompiler JavaScript Guide"
+permalink: "javascript-lazy-loading"
+---
+
+
+# JavaScript - Lazy Loading
+
+
+
+
+In JavaScript, there is way to make website faster. Means, we can only load what we need first like images, videos,etc. The file or data which is not needed at the moment that can be loaded later when it needed this is called lazy loading.
+
+
+For example, When you open the Instagram app, It only loads the images and videos you are able to see on current screen frame. But when you scroll down, you will see more images and videos are loading. Instagram uses lazy loading for making better user experience and faster loading of the app.
+
+
+## Why do we need Lazy Loading
+
+
+Following are the uses of lazy loading:
+
+
+
+- Lazy loading is useful when you have a lot of images and files on your website.
+- Lazy loading is also useful for improving the performance of the website.
+- Lazy loading is also used for improving the user experience.
+- Lazy loading is also used for reducing the loading time of the website.
+
+
+
+## Example of Lazy Loading
+
+
+Following is the code snippet for lazy loading in JavaScript:
+
+
+```javascript
+const images = document.querySelectorAll("[data-src]");
+
+function preloadImage(img) {
+
+   const src = img.getAttribute("data-src");
+
+   if (!src) {
+
+       return;
+
+   }
+
+   img.src = src;
+
+   img.removeAttribute("data-src");
+
+}
+
+const imgOptions = {
+
+   threshold: 0,
+
+   rootMargin: "0px 0px 300px 0px"
+
+};
+
+const imgObserver = new IntersectionObserver((entries, imgObserver) => {
+
+   entries.forEach(entry => {
+
+      if (!entry.isIntersecting) {
+
+         return;
+
+      } else {
+
+         preloadImage(entry.target);
+
+         imgObserver.unobserve(entry.target);
+
+      }
+
+   });
+
+}, imgOptions);
+
+images.forEach(image => {
+
+    imgObserver.observe(image);
+
+});
+```
+
+
+This code snippet is all about making images load when they are in the viewport. It finds images with the attribute data-src (it is like a placeholder) and it sets up a "watcher" for each image.
+
+
+The watcher(IntersectionObserver) will check if the image is in the viewport and if it found that it is, it will load the actual image and remove the data-src attribute. Then it will stop watching that image so it doesn't laod again. This way page dosen't load everything at once.
+

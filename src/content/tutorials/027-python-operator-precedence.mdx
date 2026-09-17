@@ -1,0 +1,94 @@
+---
+title: "PYTHON - Operator Precedence"
+description: "Learn PYTHON - Operator Precedence with clear explanation, code examples, and practical guide."
+category: "python"
+order: 270
+group: "PYTHON Basics"
+seoTitle: "PYTHON - Operator Precedence — CodesCompiler PYTHON Guide"
+permalink: "python-operator-precedence"
+---
+
+
+# Python Operator Precedence
+
+
+
+In Python, an expression contains one or [variables](/python/python_variables.htm), [literals](/python/python_literals.htm), and [operators](/python/python_operators.htm) ([arithmetic](/python/python_arithmetic_operators.htm), [logical](/python/python_logical_operators.htm), bitwise, etc.). [Python interpreter](/python/python_interpreter.htm) evaluates the expression and the result is either assigned to a variable or used in another statement. Interpreter performs various operations according to the precedence of operators.
+
+## Python Operator Precedence
+
+
+An expression may have multiple operators to be evaluated. The operator precedence defines the order in which operators are evaluated. In other words, the order of operator evaluation is determined by the operator precedence.
+
+
+If a certain expression contains multiple operators, their order of evaluation is determined by the order of precedence. For example, consider the following expression
+
+
+```python
+>>> a = 2+3*5
+```
+
+
+Here, what will be the value ofa? - yes it will be 17 (multiply 3 by 5 first and then add 2) or 25 (adding 2 and 3 and then multiply with 5)? Pythons operator precedence rule comes into picture here.
+
+
+If we consider only the arithmetic operators in Python, the traditionalBODMASrule is also employed by Python interpreter, where thebracketsare evaluated first, thedivisionandmultiplicationoperators next, followed byadditionandsubtractionoperators. Hence, a will become 17 in the above expression.
+
+
+In addition to the operator precedence, the associativity of operators is also important. If an expression consists of operators with same level of precedence, the associativity determines the order. Most of the operators have left to right associativity. It means, the operator on the left is evaluated before the one on the right.
+
+
+Let us consider another expression:
+
+
+```python
+>>> b = 10/5*4
+```
+
+
+In this case, both * (multiplication) and / (division) operators have same level of precedence. However, the left to right associativity rule performs the division first (10/5 `=` 2) and then the multiplication (2*4 `=` 8).
+
+
+## Python Operator Precedence Table
+
+
+The following table lists all the operators in Python in their decreasing order of precedence. Operators in the same cell under the Operators column have the same precedence.
+
+
+Sr.No.Operator & Description1(),[], &#123;&#125;Parentheses and braces2[index], [index:index]Subscription, slicing,3await xAwait expression4**Exponentiation5+x, -x, ~xPositive, negative, bitwise NOT6*, @, /, //, %Multiplication, matrix multiplication, division, floor division, remainder7+, -Addition and subtraction8`<<, >>` Left Shifts, Right Shifts9&Bitwise AND10^Bitwise XOR11|Bitwise OR12in, not in, is, is not, `<, <=, `>, `>=`, !=, =`=` Comparisons, including membership tests and identity tests13not xBoolean NOT14andBoolean AND15orBoolean OR16if  elseConditional expression17lambdaLambda expression18:`=` Walrus operator
+
+
+## Python Operator Precedence Example
+
+
+```python
+a = 20
+b = 10
+c = 15
+d = 5
+e = 0
+
+e = (a + b) * c / d       #( 30 * 15 ) / 5
+print ("Value of (a + b) * c / d is ",  e)
+
+e = ((a + b) * c) / d     # (30 * 15 ) / 5
+print ("Value of ((a + b) * c) / d is ",  e)
+
+e = (a + b) * (c / d);    # (30) * (15/5)
+print ("Value of (a + b) * (c / d) is ",  e)
+
+e = a + (b * c) / d;      #  20 + (150/5)
+print ("Value of a + (b * c) / d is ",  e)
+```
+
+
+When you execute the above program, it produces the following result −
+
+
+```python
+Value of (a + b) * c / d is  90.0
+Value of ((a + b) * c) / d is  90.0
+Value of (a + b) * (c / d) is  90.0
+Value of a + (b * c) / d is  50.0
+```
+

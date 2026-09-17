@@ -1,0 +1,133 @@
+---
+title: "PYTHON - Starting a Thread"
+description: "Learn PYTHON - Starting a Thread with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1710
+group: "Python Multithreading"
+seoTitle: "PYTHON - Starting a Thread — CodesCompiler PYTHON Guide"
+permalink: "python-starting-thread"
+---
+
+
+# Python - Starting a Thread
+
+
+
+
+In Python, starting a thread involves using thestart()method provided by the Thread class in thethreadingmodule. This method initiates the thread's activity and automatically calls itsrun()method in a separate thread of execution. Meaning that, when you call start() on each thread object (for example., thread1, thread2, thread3) to initiate their execution.
+
+
+Python to launch separate threads that concurrently execute the run() method defined in each Thread instance. And the main thread continues its execution after starting the child threads.
+
+
+In this tutorial, you will see a detailed explanation and example of how to use the start() method effectively in multi-threaded programming to understand its behavior in multi-thread applications.
+
+
+## Starting a Thread in Python
+
+
+Thestart()method is fundamental for beginning the execution of a thread. It sets up the thread's environment and schedules it to run. Importantly, it should only be called once per Thread object. If this method is called more than once on the same Thread object, it will raise a RuntimeError.
+
+
+Here is the syntax for using the start() method on a Thread object −
+
+
+```python
+threading.thread.start()
+```
+
+
+### Example
+
+
+let's see the below example, that demonstrates how to start a new thread in Python using thestart()method.
+
+
+```python
+from threading import Thread
+from time import sleep
+
+def my_function(arg):
+   for i in range(arg):
+      print("child Thread running", i)
+      sleep(0.5)
+thread = Thread(target = my_function, args = (10, ))
+thread.start()
+print("thread finished...exiting")
+```
+
+
+When the above code is executed, it produces the following result
+
+
+```python
+child Thread running 0
+thread finished...exiting
+child Thread running 1
+child Thread running 2
+child Thread running 3
+child Thread running 4
+child Thread running 5
+child Thread running 6
+child Thread running 7
+child Thread running 8
+child Thread running 9
+```
+
+
+### Example
+
+
+Here is another example demonstrating the working of thestart()method. You can observe that, by not calling the start() method on thread2, it remains inactive and does not begin execution.
+
+
+```python
+import threading
+import time
+
+class MyThread(threading.Thread):
+   def __init__(self, threadID, name, counter):
+      threading.Thread.__init__(self)
+      self.threadID = threadID
+      self.name = name
+      self.counter = counter
+
+   def run(self):
+      print("Starting " + self.name)
+      print_time(self.name, self.counter)
+      print("Exiting " + self.name)
+
+def print_time(threadName, counter):
+   while counter:
+      time.sleep(1)
+      print("%s: %s" % (threadName, time.ctime(time.time())))
+      counter -= 1
+
+# Create new threads
+thread1 = MyThread(1, "Thread-1", 1)
+thread2 = MyThread(2, "Thread-2", 2)
+thread3 = MyThread(3, "Thread-3", 3)
+
+# Start new Threads
+thread1.start()
+thread3.start()
+
+print("Exiting Main Thread")
+```
+
+
+The above code will produce the following output −
+
+
+```python
+Starting Thread-1
+Starting Thread-3
+Exiting Main Thread
+Thread-1: Mon Jun 24 18:24:59 2024
+Exiting Thread-1
+Thread-3: Mon Jun 24 18:24:59 2024
+Thread-3: Mon Jun 24 18:25:00 2024
+Thread-3: Mon Jun 24 18:25:01 2024
+Exiting Thread-3
+```
+

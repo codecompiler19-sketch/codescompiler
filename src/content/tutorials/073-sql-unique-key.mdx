@@ -1,0 +1,309 @@
+---
+title: "SQL - Unique Key"
+description: "Learn SQL - Unique Key with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 730
+group: "SQL Keys"
+seoTitle: "SQL - Unique Key — CodesCompiler SQL Guide"
+permalink: "sql-unique-key"
+---
+
+
+# SQL - Unique Key
+
+
+Table of contentThe SQL Unique KeyCreating SQL Unique KeyMultiple Unique KeysUnique Key on an Existing ColumnDropping an SQL Unique Key
+
+
+
+
+## The SQL Unique Key
+
+
+TheSQL Unique Key(or, Unique constraint) does not allow duplicate values in a column of a table. It prevents two records from having same values in a column.
+
+
+Unique Key is just an alternative to the Primary Key; as both Unique and Primary Key constraints ensure uniqueness in a column of the table.
+
+
+Suppose we have a table named CUSTOMERS to store the customer records in a Bank and if one of the column names is MOBILE_NO then, we can create a UNIQUE constraint on this column to prevent the entry of multiple records with the same mobile number.
+
+
+### Features of Unique Keys
+
+
+Following is the list of some key features of the Unique Key in an SQL database −
+
+
+
+- The unique key is similar to the primary key in a table, but it can accept NULL values, whereas the primary key does not.
+- It accepts only one NULL value.
+- It cannot have duplicate values.
+- It can also be used as a foreign key in another table.
+- A table can have more than one Unique column.
+
+
+
+## Creating SQL Unique Key
+
+
+You can create a Unique Key on a database table using theUNIQUEkeyword in SQL. While creating a database table, specify this SQL keyword along with the column (where this key needs to be defined on).
+
+
+### Syntax
+
+
+Following is the syntax to create a UNIQUE key constraint on a column in a table −
+
+
+```sql
+CREATE TABLE table_name(
+   column1 datatype UNIQUE KEY,
+   column2 datatype,
+   .....
+   .....
+   columnN datatype
+);
+```
+
+
+### Example
+
+
+Using the following SQL query, we are creating a table named CUSTOMERS with five fields ID, NAME, AGE, ADDRESS, and SALARY in it. Here, we are creating a Unique Key on the ID column.
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL UNIQUE KEY,
+   NAME VARCHAR(20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2)
+);
+```
+
+
+### Output
+
+
+Following is the output of the above SQL statement −
+
+
+```sql
+Query OK, 0 rows affected (0.03 sec)
+```
+
+
+### Verification
+
+
+Since we have created a UNIQUE constraint on the column named ID, we cannot insert duplicate values in it. Let us verify by inserting the following records with duplicate ID values into the CUSTOMERS table −
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+(1, 'Khilan', 25, 'Delhi', 1500.00 );
+```
+
+
+On execution, following error is displayed proving that the UNIQUE constraint is indeed defined on the ID column −
+
+
+```sql
+ERROR 1062 (23000): Duplicate entry '1' for key 'customers.ID'
+```
+
+
+## Multiple Unique Keys
+
+
+We can create one or more Unique Keys on one or more columns in an SQL table.
+
+
+### Syntax
+
+
+Following is the syntax to create unique key constraints on multiple columns in a table −
+
+
+```sql
+CREATE TABLE table_name(
+   column1 datatype UNIQUE KEY,
+   column2 datatype UNIQUE KEY,
+   .....
+   .....
+   columnN datatype
+);
+```
+
+
+### Example
+
+
+Assume we have created a table with the name CUSTOMERS in the SQL database using CREATE TABLE statement. A Unique key is defined on columns ID and NAME using the UNIQUE keyword as shown below −
+
+
+```sql
+CREATE TABLE BUYERS (
+   ID INT NOT NULL UNIQUE KEY,
+   NAME VARCHAR(20) NOT NULL UNIQUE KEY,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2)
+);
+```
+
+
+### Output
+
+
+Following is the output of the above SQL statement −
+
+
+```sql
+Query OK, 0 rows affected (0.03 sec)
+```
+
+
+### Verification
+
+
+Since we have created a UNIQUE constraint on the column named ID and NAME, we cannot insert duplicate values in it. Let us verify by inserting duplicate records into the BUYERS table using the following INSERT statement −
+
+
+```sql
+INSERT INTO BUYERS VALUES 
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+(1, 'Rajesh', 25, 'Delhi', 1500.00 );
+```
+
+
+Following error is displayed −
+
+
+```sql
+ERROR 1062 (23000): Duplicate entry '1' for key 'customers.ID'
+```
+
+
+In the same way if you try to insert the another record with duplicate value for the column NAME as −
+
+
+```sql
+INSERT INTO BUYERS VALUES (2, 'Ramesh', 36, 'Chennai', 1700.00 );
+```
+
+
+Following error is generated −
+
+
+```sql
+ERROR 1062 (23000): Duplicate entry 'Ramesh' for key 'buyers.NAME'
+```
+
+
+## Unique Key on an Existing Column
+
+
+Until now, we have only seen how to define a Unique Key on a column while creating a new table. But, we can also add a unique key on an existing column of a table. This is done using the ALTER TABLE... ADD CONSTRAINT statement.
+
+
+### Syntax
+
+
+Following is the syntax to create a unique constraint on existing columns of a table −
+
+
+```sql
+ALTER TABLE table_name ADD CONSTRAINT 
+UNIQUE_KEY_NAME UNIQUE (column_name);
+```
+
+
+Note− Here the UNIQUE_KEY_NAME is just the name of the UNIQUE KEY. It is optional to specify and is used to drop the constraint from the column in a table.
+
+
+### Example
+
+
+In this example, we add a Unique Key on the ADDRESS column of the existing CUSTOMERS table −
+
+
+```sql
+ALTER TABLE CUSTOMERS ADD CONSTRAINT 
+UNIQUE_ADDRESS UNIQUE(ADDRESS);
+```
+
+
+### Output
+
+
+Following is the output of the above statement −
+
+
+```sql
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+```
+
+
+## Dropping an SQL Unique Key
+
+
+If you have already created a unique key on a column, you can drop it whenever it is not needed. To drop the Unique Key from the column of a table, you need to use the ALTER TABLE statement.
+
+
+### Syntax
+
+
+Following is the SQL query to drop the UNIQUE constraint from the column of a table −
+
+
+```sql
+ALTER TABLE table_name DROP CONSTRAINT UNIQUE_KEY_NAME;
+```
+
+
+### Example
+
+
+Consider the CUSTOMERS table created above, we have created the UNIQUE constraints on three columns named ID, NAME and ADDRESS; drop the UNIQUE constraints from the column ADDRESS by executing the following SQL query −
+
+
+```sql
+ALTER TABLE CUSTOMERS DROP CONSTRAINT UNIQUE_ADDRESS;
+```
+
+
+### Output
+
+
+Following is the output of the above statement −
+
+
+```sql
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+```
+
+
+### Verification
+
+
+Now, let us insert two duplicate records of column ADDRESS −
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+(2, 'Khilan', 25, 'Ahmedabad', 1500.00 );
+```
+
+
+If you verify the contents of the table, you can observe that both the records have the same ADDRESS as shown below −
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Ahmedabad1500.00
+

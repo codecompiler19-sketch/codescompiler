@@ -1,0 +1,128 @@
+---
+title: "PYTHON - Interrupting a Thread"
+description: "Learn PYTHON - Interrupting a Thread with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1820
+group: "Python Synchronization"
+seoTitle: "PYTHON - Interrupting a Thread — CodesCompiler PYTHON Guide"
+permalink: "python-interrupting-thread"
+---
+
+
+# Python - Interrupting a Thread
+
+
+
+
+Interrupting a thread in Python is a common requirement in multi-threaded programming, where a thread's execution needs to be terminated under certain conditions. In a multi-threaded program, a task in a new thread, may be required to be stopped. This may be for many reasons, such as − task completion, application shutdown, or other external conditions.
+
+
+In Python, interrupting threads can be achieved usingthreading.Eventor by setting a termination flag within the thread itself. These methods allow you to interrupt the threads effectively, ensuring that resources are properly released and threads exit cleanly.
+
+
+## Thread Interruption using Event Object
+
+
+One of the straightforward ways to interrupt a thread is by using thethreading.Eventclass. This class allows one thread to signal to another that a particular event has occurred. Here's how you can implement thread interruption using threading.Event
+
+
+### Example
+
+
+In this example, we have a MyThread class. Its object starts executing the run() method. The main thread sleeps for a certain period and then sets an event. Till the event is detected, loop in the run() method continues. As soon as the event is detected, the loop terminates.
+
+
+```python
+from time import sleep
+from threading import Thread
+from threading import Event
+
+class MyThread(Thread):
+   def __init__(self, event):
+      super(MyThread, self).__init__()
+      self.event = event
+
+   def run(self):
+      i=0
+      while True:
+         i+=1
+         print ('Child thread running...',i)
+         sleep(0.5)
+         if self.event.is_set():
+            break
+         print()
+      print('Child Thread Interrupted')
+
+event = Event()
+thread1 = MyThread(event)
+thread1.start()
+
+sleep(3)
+print('Main thread stopping child thread')
+event.set()
+thread1.join()
+```
+
+
+When you execute this code, it will produce the followingoutput−
+
+
+```python
+Child thread running... 1
+Child thread running... 2
+Child thread running... 3
+Child thread running... 4
+Child thread running... 5
+Child thread running... 6
+Main thread stopping child thread
+Child Thread Interrupted
+```
+
+
+## Thread Interruption using a Flag
+
+
+Another approach to interrupting threads is by using aflagthat the thread checks at regular intervals. This method involves setting a flag attribute in the thread object and regularly checking its value in the thread's execution loop.
+
+
+### Example
+
+
+This example demonstrates how to use a flag to control and stop a running thread in Python multithreaded program.
+
+
+```python
+import threading
+import time
+
+def foo():
+    t = threading.current_thread()
+    while getattr(t, "do_run", True):
+        print("working on a task")
+        time.sleep(1)
+    print("Stopping the Thread after some time.")
+
+# Create a thread
+t = threading.Thread(target=foo)
+t.start()
+
+# Allow the thread to run for 5 seconds
+time.sleep(5)
+
+# Set the termination flag to stop the thread
+t.do_run = False
+```
+
+
+When you execute this code, it will produce the followingoutput−
+
+
+```python
+working on a task
+working on a task
+working on a task
+working on a task
+working on a task
+Stopping the Thread after some time.
+```
+

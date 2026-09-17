@@ -1,0 +1,130 @@
+---
+title: "PYTHON - Assertions"
+description: "Learn PYTHON - Assertions with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1640
+group: "Python Errors & Exceptions"
+seoTitle: "PYTHON - Assertions — CodesCompiler PYTHON Guide"
+permalink: "python-assertions"
+---
+
+
+# Python - Assertions
+
+
+
+
+## Assertions in Python
+
+
+Assertions in Python are statements that assert or assume a condition to be true. If the condition turns out to be false, Python raises anAssertionErrorexception. They are used to detect programming errors that should never occur if the code is correct.
+
+
+
+- The easiest way to think of an assertion is to liken it to a raise-if statement (or to be more accurate, a raise-if-not statement). An expression is tested, and if the result comes up false, an exception is raised.
+- Assertions are carried out by the assert statement, the newest keyword to Python, introduced in version 1.5.
+- Programmers often place assertions at the start of a function to check for valid input, and after a function call to check for valid output.
+
+
+
+## The assert Statement
+
+
+In Python, assertions use the assert keyword followed by an expression. If the expression evaluates to False, an AssertionError is raised. Following is the syntax of assertion −
+
+
+```python
+assert condition, message
+```
+
+
+Where,
+
+
+
+- condition −A boolean expression that should be true.
+- message (optional) −An optional message to be displayed if the assertion fails.
+
+
+
+## Using Assertions
+
+
+Assertions are generally used during development and testing phases to check conditions that should always hold true.
+
+
+### Example
+
+
+In the following example, we are using assertions to ensure that the variable "num" falls within the valid range of "0" to "100". If the assertion fails, Python raises an "AssertionError", preventing further execution of the subsequent print statement −
+
+
+```python
+print('Enter marks out of 100:')
+num = 75
+assert num >= 0 and num <= 100
+print('Marks obtained:', num)
+
+num = 125
+assert num >= 0 and num <= 100
+print('Marks obtained:', num)  # This line won't be reached if assertion fails
+```
+
+
+Following is the output of the above code −
+
+
+```python
+Enter marks out of 100:
+Marks obtained: 75
+Traceback (most recent call last):
+  File "/home/cg/root/66723bd115007/main.py", line 7, in <module>
+    assert num >= 0 and num <= 100
+AssertionError
+```
+
+
+## Custom Error Messages
+
+
+To display a custom error message when an assertion fails, include a string after the expression in the assert statement −
+
+
+```python
+assert num >= 0 and num <= 100, "Only numbers in the range 0-100 are accepted"
+```
+
+
+## Handling AssertionError
+
+
+Assertions can be caught and handled like any other exception using a try-except block. If they are not handled, they will terminate the program and produce a traceback −
+
+
+```python
+try:
+   num = int(input('Enter a number: '))
+   assert num >= 0, "Only non-negative numbers are accepted"
+   print(num)
+except AssertionError as msg:
+   print(msg)
+```
+
+
+It will produce the following output −
+
+
+```python
+Enter a number: -87
+Only non-negative numbers are accepted
+```
+
+
+## Assertions vs. Exceptions
+
+
+Assertions are used to check internal state and invariants that should always be true. Whereas, exceptions helps in handling runtime errors and exceptional conditions that may occur during normal execution.
+
+
+Assertions are disabled by default in Python's optimized mode (-O or python -Oscript.py). Therefore, they should not be used to enforce constraints that are required for the correct functioning of the program in production environments.
+

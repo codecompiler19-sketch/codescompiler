@@ -1,0 +1,321 @@
+---
+title: "JavaScript - For...in"
+description: "Learn JavaScript - For...in with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 380
+group: "JavaScript Control Flow"
+seoTitle: "JavaScript - For...in — CodesCompiler JavaScript Guide"
+permalink: "javascript-forin-loop"
+---
+
+
+# JavaScript - For...in Loop
+
+
+
+
+## The for...in Loop
+
+
+Thefor...inloop in JavaScript is used to loop through an object's properties. The JavaScriptfor...inloop is a variant of the for loop. Theforloop can't be used to traverse through the object properties. So, thefor...inloop is introduced to traverse through all object properties.
+
+
+As we have not discussed Objects yet, you may not feel comfortable with this loop. But once you understand how objects behave in JavaScript, you will find this loop very useful.
+
+
+Thefor...inloop in JavaScript can also be used to iterate through the elements of an array. However, it is not recommended to do this as this is less efficient than using afor...ofloop.
+
+
+## Syntax
+
+
+The syntax offor...inloop in JavaScript is as follows −
+
+
+```javascript
+for (variableName in object) {
+   statement or block to execute
+}
+```
+
+
+### Parameters
+
+
+
+- variableName− It is a property name (key) of the object.
+- in− It is an 'in' operator in JavaScript.
+- object− It is the object to traverse.
+
+
+
+In each iteration, one property fromobjectis assigned tovariableNameand this loop continues till all the properties of the object are exhausted.
+
+
+## Examples
+
+
+Try the following examples to implement 'for-in' loop.
+
+
+### Example: Iterate through object properties
+
+
+In the example below, the car object contains various properties. We used the forin loop to traverse through each key of the object.
+
+
+In the output, we can see that it prints the key and its value. We use the '[]' (member of) operator to access the value of the key from the object.
+
+
+```html
+<html>
+<head>
+   <title> JavaScript - for...in loop </title>
+</head>
+<body>
+   p id = "output" 
+   <script>
+      let output = document.getElementById("output");
+      let car = {
+         brand: "OD",
+         model: "Q7",
+         color: "Black",
+      }
+      for (key in car) {
+         output.innerHTML += key + " -> " + car[key] + "<br>";
+      }
+    </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+brand -> OD
+model -> Q7
+color -> Black
+```
+
+
+### Example: Iterating over a string
+
+
+In JavaScript, the string is an object. So, we can use the forin loop to traverse through each character of the string. The index of the character is the key, and the character is a value.
+
+
+The code prints the index and character in the output.
+
+
+```html
+<html>
+<head>
+   <title> JavaScript - for...in loop </title>
+</head>
+<body>
+   p id = "output" 
+   <script>
+      let output = document.getElementById("output");
+      let str = "Hello";
+      for (key in str) {
+         output.innerHTML += key + " -> " + str[key] + "<br>";
+      }
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+0 -> H
+1 -> e
+2 -> l
+3 -> l
+4 -> o
+```
+
+
+### Exampl: Iterating over an array
+
+
+In JavaScript, the array is also an object. So, the forin loop can be used to traverse through array elements. Like a string, the index is a key, and the array element is a value for the key.
+
+
+The below code prints the array index and its value in the output.
+
+
+```html
+<html>
+<head>
+   <title> JavaScript - for...in loop </title>
+</head>
+<body>
+   p id = "output" 
+   <script>
+      let output = document.getElementById("output");
+      let array = ["Hi", "Hello", 900, 23, true, "JavaScript"];
+      for (key in array) {
+         output.innerHTML += key + " -> " + array[key] + "<br>";
+      }
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+0 -> Hi
+1 -> Hello
+2 -> 900
+3 -> 23
+4 -> true
+5 -> JavaScript
+```
+
+
+### Example: Update value of each property of an object
+
+
+In the example below, we traverse each key of the object and update its value to null. In the output, the code prints the object keys with null values.
+
+
+So, the forin loop can also be used to update all or particular property values of the object.
+
+
+```html
+<html>
+<head>
+    <title> JavaScript - for...in loop </title>
+</head>
+<body>
+    p id = "output" 
+    <script>
+        let output = document.getElementById("output");
+        let car = {
+            brand: "OD",
+            model: "Q7",
+            color: "Black",
+        }
+        for (key in car) {
+            car[key] = null;
+        }
+        output.innerHTML += "The updated object is - " + JSON.stringify(car);
+    </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The updated object is - {"brand":null,"model":null,"color":null}
+```
+
+
+### Example: Iterating the Browser's Navigator Object
+
+
+Try the following example to implement 'for-in' loop. It prints the web browsers Navigator object.
+
+
+```html
+<html>
+<body>
+  <div id = "demo"> </div>
+  <script>
+    const output = document.getElementById("demo");
+    var aProperty;
+    output.innerHTML = "Navigator Object Properties<br> ";        
+    for (aProperty in navigator) {
+      output.innerHTML += aProperty;
+      output.innerHTML += "<br>";
+    }
+    output.innerHTML += "Exiting from the loop!";
+  </script>      
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Navigator Object Properties
+vendorSub
+productSub
+vendor
+maxTouchPoints
+userActivation
+doNotTrack
+geolocation
+connection
+plugins
+mimeTypes
+pdfViewerEnabled
+webkitTemporaryStorage
+webkitPersistentStorage
+hardwareConcurrency
+cookieEnabled
+appCodeName
+appName
+appVersion
+platform
+product
+userAgent
+language
+languages
+onLine
+webdriver
+getBattery
+getGamepads
+javaEnabled
+sendBeacon
+vibrate
+scheduling
+bluetooth
+clipboard
+credentials
+keyboard
+managed
+mediaDevices
+storage
+serviceWorker
+wakeLock
+deviceMemory
+ink
+hid
+locks
+mediaCapabilities
+mediaSession
+permissions
+presentation
+serial
+virtualKeyboard
+usb
+xr
+userAgentData
+canShare
+share
+clearAppBadge
+setAppBadge
+getInstalledRelatedApps
+getUserMedia
+requestMIDIAccess
+requestMediaKeySystemAccess
+webkitGetUserMedia
+registerProtocolHandler
+unregisterProtocolHandler
+Exiting from the loop!
+```
+

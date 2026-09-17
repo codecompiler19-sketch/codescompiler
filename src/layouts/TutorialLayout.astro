@@ -17,36 +17,64 @@ const { title, description, category, categoryLabel, headings = [], currentSlug:
 
 // Get all tutorials for the current category to build the sidebar
 const tutorials = await getCollection('tutorials');
+const normCat = (category || '').toLowerCase().trim();
 const categoryTutorials = tutorials
-  .filter(t => t.data.category === category)
-  .sort((a, b) => a.data.order - b.data.order);
+  .filter(t => {
+    const c = (t.data.category || '').toLowerCase().trim();
+    return c === normCat || (normCat === 'css' && (c === 'css' || c === 'html & css'));
+  })
+  .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
 
 const currentSlug = propCurrentSlug || Astro.url.pathname.replace(/\/$/, '').split('/').pop();
 
-// Build grouped sidebar structure
-type TutorialEntry = (typeof categoryTutorials)[number];
-const sidebarGroups: { label: string | null; items: TutorialEntry[] }[] = [];
+// Build grouped sidebar structure (TutorialsPoint Style)
+const groupedMap = new Map<string, typeof categoryTutorials>();
 for (const t of categoryTutorials) {
-  const g = t.data.group ?? null;
-  const last = sidebarGroups[sidebarGroups.length - 1];
-  if (!last || last.label !== g) {
-    sidebarGroups.push({ label: g, items: [t] });
-  } else {
-    last.items.push(t);
+  let groupName = t.data.group?.trim();
+  if (!groupName) {
+    groupName = `${categoryLabel} Basics`;
   }
+  if (!groupedMap.has(groupName)) {
+    groupedMap.set(groupName, []);
+  }
+  groupedMap.get(groupName)!.push(t);
 }
+
+const sidebarGroups = Array.from(groupedMap.entries()).map(([label, items]) => ({
+  label,
+  items
+}));
 
 // UI colors for categories
 const CATEGORY_COLORS: Record<string, { bg: string; text: string }> = {
   html: { bg: 'bg-orange-100', text: 'text-orange-700' },
   css: { bg: 'bg-blue-100', text: 'text-blue-700' },
-  javascript: { bg: 'bg-yellow-100', text: 'text-yellow-700' },
-  seo: { bg: 'bg-green-100', text: 'text-green-700' },
-  python: { bg: 'bg-blue-100', text: 'text-blue-800' },
-  sql: { bg: 'bg-[#dbeafe]', text: 'text-[#336791]' },
-  php: { bg: 'bg-indigo-100', text: 'text-indigo-800' },
+  javascript: { bg: 'bg-yellow-100', text: 'text-yellow-800' },
+  seo: { bg: 'bg-emerald-100', text: 'text-emerald-700' },
+  python: { bg: 'bg-sky-100', text: 'text-sky-800' },
+  sql: { bg: 'bg-indigo-100', text: 'text-indigo-800' },
+  php: { bg: 'bg-purple-100', text: 'text-purple-800' },
+  c: { bg: 'bg-gray-200', text: 'text-gray-800' },
+  cpp: { bg: 'bg-blue-100', text: 'text-blue-900' },
+  java: { bg: 'bg-red-100', text: 'text-red-800' },
 };
-const catColor = CATEGORY_COLORS[category] ?? { bg: 'bg-gray-100', text: 'text-gray-700' };
+const catColor = CATEGORY_COLORS[normCat] ?? { bg: 'bg-gray-100', text: 'text-gray-700' };
+
+// Subtitles for tutorial categories (TutorialsPoint style)
+const CATEGORY_SUBTITLES: Record<string, string> = {
+  html: 'HyperText Markup Language',
+  css: 'Cascading Style Sheets',
+  javascript: 'JavaScript Programming',
+  js: 'JavaScript Programming',
+  seo: 'Search Engine Optimization',
+  python: 'Python Programming',
+  sql: 'Structured Query Language',
+  php: 'PHP Scripting Language',
+  c: 'C Programming Language',
+  cpp: 'C++ Programming Language',
+  java: 'Java Programming Language',
+};
+const categorySubtitle = CATEGORY_SUBTITLES[normCat] || `${categoryLabel} Tutorial`;
 
 // Table of Contents (H2 and H3 only)
 const toc = headings.filter(h => h.depth === 2 || h.depth === 3);
@@ -110,37 +138,72 @@ const schemaData = [tutorialSchema, breadcrumbSchema];
 
   <div class="w-full" style="max-width: 1600px; margin: 0 auto;">
   <div class="flex-1 flex overflow-hidden" style="min-height: 0;">
-    <!-- Sidebar -->
+    <!-- Sidebar (TutorialsPoint Style) -->
     <aside
       id="page-sidebar"
-      class="fixed top-[150px] bottom-0 left-0 z-50 md:z-0 w-64 bg-white border-r border-gray-100 transform -translate-x-full transition-transform duration-200 ease-in-out md:relative md:top-0 md:translate-x-0 overflow-y-auto"
+      class="fixed top-[150px] bottom-0 left-0 z-50 md:z-0 w-64 bg-white border-r border-slate-200 transform -translate-x-full transition-transform duration-200 ease-in-out md:relative md:top-0 md:translate-x-0 overflow-y-auto shadow-sm"
     >
-      <!-- Category badge -->
-      <div class="px-3 py-3 border-b border-gray-200 bg-gray-50 sticky top-0">
-        <span class={`inline-block text-xs font-bold uppercase tracking-widest px-2 py-1 rounded ${catColor.bg} ${catColor.text}`}>
-          {categoryLabel} Tutorial
-        </span>
+      <!-- Dark Header Banner (TutorialsPoint Style) -->
+      <div class="bg-[#0d1e32] text-white p-3.5 flex items-center gap-3 border-b border-slate-800">
+        <!-- Logo / Image Placeholder -->
+        <div class="w-11 h-11 rounded bg-white/10 border border-white/20 flex items-center justify-center flex-shrink-0 overflow-hidden relative group">
+          <img
+            src={`/images/courses/${normCat}-banner.png`}
+            onerror="this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='flex'"
+            class="w-full h-full object-cover"
+            alt={`${categoryLabel} Banner`}
+          />
+          <div class="flex flex-col items-center justify-center w-full h-full text-white text-[11px] font-extrabold tracking-wider uppercase">
+            {normCat.substring(0, 3)}
+          </div>
+        </div>
+        <div class="min-w-0 flex-1">
+          <h2 class="text-sm font-extrabold tracking-wide uppercase text-white leading-snug truncate">
+            {categoryLabel}
+          </h2>
+          <p class="text-[11px] text-slate-300 font-normal leading-tight mt-0.5 truncate">
+            {categorySubtitle}
+          </p>
+        </div>
       </div>
 
-      <!-- Chapter links -->
-      <nav class="py-2 flex flex-col" aria-label={`${categoryLabel} chapters`}>
-        {categoryTutorials.map((tutorial) => {
-          const tutorialSlug = tutorial.data.permalink || tutorial.slug;
-          const isActive = tutorialSlug === currentSlug;
-          return (
-            <a
-              href={`/tutorial/${tutorialSlug}`}
-              aria-current={isActive ? 'page' : undefined}
-              class={`block px-4 py-1.5 text-[0.82rem] font-medium border-l-4 transition-colors ${
-                isActive
-                  ? 'border-[#04AA6D] bg-[#04AA6D] text-white'
-                  : 'border-transparent text-gray-600 hover:bg-gray-50 hover:text-[#04AA6D]'
-              }`}
-            >
-              {tutorial.data.title}
-            </a>
-          );
-        })}
+      <!-- Chapter links grouped by section with dotted line borders (TutorialsPoint Style) -->
+      <nav class="pb-6 flex flex-col" aria-label={`${categoryLabel} chapters`}>
+        {sidebarGroups.map((group) => (
+          <div class="flex flex-col">
+            {group.label && (
+              <div class="px-3.5 pt-3 pb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 bg-slate-100 border-b border-slate-200 flex items-center gap-1.5 sticky top-0 z-10">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#04AA6D]"></span>
+                <span>{group.label}</span>
+              </div>
+            )}
+            {group.items.map((tutorial) => {
+              const tutorialSlug = tutorial.data.permalink || tutorial.slug;
+              const isActive = tutorialSlug === currentSlug;
+              return (
+                <a
+                  href={`/tutorial/${tutorialSlug}`}
+                  aria-current={isActive ? 'page' : undefined}
+                  class={`group flex items-center justify-between px-3.5 py-2 text-[13px] border-b border-dotted border-slate-200 transition-colors duration-150 ${
+                    isActive
+                      ? 'bg-[#e6f4ea] text-slate-900 font-bold'
+                      : 'text-slate-700 hover:bg-slate-50 hover:text-[#04AA6D]'
+                  }`}
+                >
+                  <div class="flex items-center min-w-0 pr-2">
+                    <span class={`w-1.5 h-1.5 rounded-full mr-2.5 flex-shrink-0 ${isActive ? 'bg-[#04AA6D]' : 'bg-slate-300 group-hover:bg-[#04AA6D]'}`}></span>
+                    <span class="truncate">{tutorial.data.title}</span>
+                  </div>
+                  {isActive && (
+                    <svg class="w-3.5 h-3.5 text-slate-600 flex-shrink-0 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  )}
+                </a>
+              );
+            })}
+          </div>
+        ))}
       </nav>
     </aside>
 
@@ -179,7 +242,7 @@ const schemaData = [tutorialSchema, breadcrumbSchema];
 
         <!-- Prev / Next -->
         {(() => {
-          const idx = categoryTutorials.findIndex(t => t.slug === currentSlug);
+          const idx = categoryTutorials.findIndex(t => (t.data.permalink || t.slug) === currentSlug);
           const prev = idx > 0 ? categoryTutorials[idx - 1] : null;
           const next = idx < categoryTutorials.length - 1 ? categoryTutorials[idx + 1] : null;
 

@@ -1,0 +1,156 @@
+---
+title: "JavaScript - Operator Precedence"
+description: "Learn JavaScript - Operator Precedence with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 340
+group: "JavaScript Operators"
+seoTitle: "JavaScript - Operator Precedence — CodesCompiler JavaScript Guide"
+permalink: "javascript-operator-precedence"
+---
+
+
+# JavaScript - Operator Precedence
+
+
+
+
+In JavaScript,operator precedenceensures the priority of the operators to be executed when a single expression contains multiple operators. So, whatever expressions have higher priority, the compiler executes it first over other operators and then executes the operators with the lower precedence.
+
+
+Whenever you write any JavaScript expression with only 1 or 2 operators, you can easily understand the output of the expression. But when the expression contains multiple operators, you should know the concept of operator precedence to evaluate the expression correctly.
+
+
+The best example of operator precedence is that in traditional mathematics, the multiplication operator has higher precedence over the addition or subtraction operator. So, if any mathematical expression contains the multiplication and addition of both operators, you need to perform the multiplication first.
+
+
+## Associativity
+
+
+The term associativity refers to the direction compiler should follow while evaluating the expression. In many situations, operators have the same precedence. In such cases, ambiguity occurs that which operation the compiler should perform first. So, the compiler takes the help of associativity. It can be from left to right or right to left.
+
+
+For example, we need to execute the below expression.
+
+
+```javascript
+let res = 50/5*2;
+```
+
+
+
+- Considering the above expression as (50/5) * 2 gives 20 as an output.
+- Evaluating the expression like 50/ (5*2) gives the 5 as a resultant value.
+
+
+
+To resolve the above ambiguity, the compiler uses the associativity rule. The associativity for the division and multiplication operator is from left to right. So, it evaluates the expression as (50 / 5) * 2.
+
+
+The assignment operator has right-to-left associativity. Consider the below assignment expression.
+
+
+```javascript
+P = q = 90;
+```
+
+
+In the above expression, 90 is assigned to the q, and the value of the q variable is assigned to the p.
+
+
+In short, the JavaScript compiler evaluates the expression based on the operator precedence, and when multiple operators have the same precedence, it uses the associativity rule.
+
+
+## Operator Precedence Table
+
+
+The below table contains the operator, its description, associativity direction, and a short example.
+
+
+Operator PrecedenceOperatorDescriptionAssociativityExample1()GroupingL -> R(expression)2.Member of objectL -> RObject_name.property2()Function callL -> RDemo()2newTo create objectsR -> LNew test()2[]Member of objectL -> RObject["property"]3--Postfix decrement-p--;3++Postfix increment-p++4--Prefix decrementR -> L--p;4++Prefix incrementR -> L++p;4typeofTo get the variable typeR -> Ltypeof a;4!Logical notR -> L!a;4~Bitwise notR -> L~p4-Unary minusR -> L-p4+Unary plusR -> L+p4deleteTo delete object propertyR -> LDelete arr[0]4voidEvaluates voidR -> LVoid(1)5**Exponentiation operatorR -> Lp ** q6*MultiplicationL -> Rp * q6/DivisionL -> Rp / q6%moduloL -> Rp % q7+Addition or plus operatorL -> Rp + q7-Subtraction operatorL -> Rp - q8<`<Left shiftL ->` Rp <<` 28`>> Signed right shiftL -> Rp >> 28>>`>` Unsigned right shiftL -> Rp >>> 29inProperty in objectL -> Rx in y9instanceofInstance of objectL -> Rp instanceof Object9`<Less thanL ->` Rp < q9`<=`Less than or equal toL -> Rp <= q9`>` Greater thanL -> Rp > q9>= Greater than or equal toL -> Rp `>=` q10== EqualityL -> Rp `=`= q10`!=` InequalityL -> Rp != q10`=`== Strict equalityL -> Rp `=`=`=` q10!== Strict inequalityL -> Rp `!=`= q11&Bitwise ANDL -> Rp & q12^Bitwise XORL -> Rp ^ q13|Bitwise ORL -> Rp | q14&&Logical ANDL -> Rp && q15||Logical ORL -> Rp || q16??Nullish CoalescingR -> Lp ?? q17`=` AssignmentR -> Lp = q17:Colon assignmentR -> Lp : q17+`=` Addition assignmentR -> Lp += q17-`=` Subtraction assignmentR -> Lp -= q17*`=` Multiplication assignmentR -> Lp *= q17/`=` Division assignmentR -> Lp /= q17%`=` Modulo assignmentR -> Lp %= q17**`=` Exponentiation assignmentR -> Lp **= q17`<`<=Left shift assignementR -> Lp `<`<= q17>`>=` Right shift assignmentR -> Lp >>= q17>>`>=` Unsigned right shift assignmentR -> Lp >>>= q17&`=` Bitwise AND assignmentR -> Lp &= q17^`=` Bitwise XOR assignmentR -> Lp ^= q17|`=` Bitwise OR assignmentR -> Lp |= q17&&`=` Logical AND assignmentR -> Lp &&= q17||`=` Logical OR assignementR -> Lp ||= q17=`>` Arrow operator-(a, b )`=`> &#123; // function code&#125;17Spread operator-[ arr]18yieldPause / ResumeR -> Lyield p;19,Comma operatorL -> R(10, 20, 30)
+
+
+## Examples
+
+
+Let's understand the operator precedence via simple examples.
+
+
+### Example
+
+
+In the example below, the first expression contains the division, modulo, and multiplication operators with the same precedence. So, the compiler will use the associativity rule, which is left to right for multiplication, division, and modulo operator.
+
+
+So, it divides the 30 by 15, takes modulo of (30/15) with 3, and multiples the ((30/15)%3) with 2.
+
+
+In the second expression, the exponentiation operator has right-to-left associativity. So, it evaluates the expression same as (2 *8 (3 ** 2)).
+
+
+```html
+<html>
+   <body>
+      <div id = "output"></div>
+      <script>
+         const first = 30 / 15 % 3 * 2;
+         const second = 2 ** 3 ** 2;
+         document.getElementById("output").innerHTML =
+            "The value of first expression is : " + first + "<br>" + 
+            "The value of second expression is : " + second;
+      </script>
+   </body>
+</html>
+```
+
+
+### Output
+
+
+It will produce the following result −
+
+
+```javascript
+The value of first expression is : 4
+The value of second expression is : 512
+```
+
+
+### Example
+
+
+This code demonstrates that you can use the grouping operator () to change the operator precedence. In the below code, we have taken the same expressions which we have taken in the above code, but we change the operator precedence.
+
+
+In the first expression, first, we take modulo and multiply the resultant value with 2. So, we get 0 and divide 30 by 0, returning infinity.
+
+
+In the second expression, the first expression evaluates the (2 ** 3) and (8 ** 2), which is equal to 64.
+
+
+```html
+<html>
+   <body>
+      <div id = "output"></div>
+      <script>
+         const first = 30 / ((15 % 3) * 2);
+         const second = (2 ** 3) ** 2;
+         document.getElementById("output").innerHTML =
+            "The value of first expression is : " + first + "<br>" + 
+            "The value of second expression is : " + second;
+      </script>
+   </body>
+</html>
+```
+
+
+### Output
+
+
+```javascript
+The value of first expression is : Infinity
+The value of second expression is : 64
+```
+
+
+The grouping operator can change operator precedence for any operator as it has the highest operator precedence.
+

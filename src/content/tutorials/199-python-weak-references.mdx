@@ -1,0 +1,276 @@
+---
+title: "PYTHON - Weak References"
+description: "Learn PYTHON - Weak References with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1990
+group: "Python Miscellenous"
+seoTitle: "PYTHON - Weak References — CodesCompiler PYTHON Guide"
+permalink: "python-weak-references"
+---
+
+
+# Python - Weak References
+
+
+PreviousNext
+
+
+Python uses reference counting mechanism while implementing garbage collection policy. Whenever an object in the memory is referred, the count is incremented by one. On the other hand, when the reference is removed, the count is decremented by 1. If the garbage collector running in the background finds any object with count as 0, it is removed and the memory occupied is reclaimed.
+
+
+Weak reference is a reference that does not protect the object from getting garbage collected. It proves important when you need to implement caches for large objects, as well as in a situation where reduction of Pain from circular references is desired.
+
+
+To create weak references, Python has provided us with a module named weakref.
+
+
+The ref class in this module manages the weak reference to an object. When called, it retrieves the original object.
+
+
+To create a weak reference −
+
+
+```python
+weakref.ref(class())
+```
+
+
+### Example
+
+
+```python
+import weakref
+class Myclass:
+   def __del__(self):
+      print('(Deleting {})'.format(self))
+obj = Myclass()
+r = weakref.ref(obj)
+
+print('object:', obj)
+print('reference:', r)
+print('call r():', r())
+
+print('deleting obj')
+del obj
+print('r():', r())
+```
+
+
+Calling the reference object after deleting the referent returns None.
+
+
+It will produce the followingoutput−
+
+
+```python
+object: <__main__.Myclass object at 0x00000209D7173290>
+reference: <weakref at 0x00000209D7175940; to 'Myclass' at
+0x00000209D7173290>
+call r(): <__main__.Myclass object at 0x00000209D7173290>
+deleting obj
+(Deleting <__main__.Myclass object at 0x00000209D7173290>)
+r(): None
+```
+
+
+## The callback Function
+
+
+The constructor of ref class has an optional parameter called callback function, which gets called when the referred object is deleted.
+
+
+```python
+import weakref
+class Myclass:
+   def __del__(self):
+      print('(Deleting {})'.format(self))
+def mycallback(rfr):
+   """called when referenced object is deleted"""
+   print('calling ({})'.format(rfr))
+obj = Myclass()
+r = weakref.ref(obj, mycallback)
+
+print('object:', obj)
+print('reference:', r)
+print('call r():', r())
+
+print('deleting obj')
+del obj
+print('r():', r())
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+object: <__main__.Myclass object at 0x000002A0499D3590>
+reference: <weakref at 0x000002A0499D59E0; to 'Myclass' at
+0x000002A0499D3590>
+call r(): <__main__.Myclass object at 0x000002A0499D3590>
+deleting obj
+(Deleting <__main__.Myclass object at 0x000002A0499D3590>)
+calling (<weakref at 0x000002A0499D59E0; dead>)
+r(): None
+```
+
+
+## Finalizing Objects
+
+
+Theweakrefmodule provides finalize class. Its object is called when the garbage collector collects the object. The object survives until the reference object is called.
+
+
+```python
+import weakref
+class Myclass:
+   def __del__(self):
+      print('(Deleting {})'.format(self))
+
+def finalizer(*args):
+   print('Finalizer{!r})'.format(args))
+
+obj = Myclass()
+r = weakref.finalize(obj, finalizer, "Call to finalizer")
+
+print('object:', obj)
+print('reference:', r)
+print('call r():', r())
+
+print('deleting obj')
+del obj
+print('r():', r())
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+object: <__main__.Myclass object at 0x0000021015103590>
+reference: <finalize object at 0x21014eabe80; for 'Myclass' at
+0x21015103590>
+Finalizer('Call to finalizer',))
+call r(): None
+deleting obj
+(Deleting <__main__.Myclass object at 0x0000021015103590>)
+r(): None
+```
+
+
+The weakref module provides WeakKeyDictionary and WeakValueDictionary classes. They don't keep the objects alive as they appear in the mapping objects. They are more appropriate for creating a cache of several objects.
+
+
+## WeakKeyDictionary
+
+
+Mapping class that references keys weakly. Entries in the dictionary will be discarded when there is no longer a strong reference to the key.
+
+
+An instance of WeakKeyDictionary class is created with an existing dictionary or without any argumentThe functionality is the same as a normal dictionary to add and remove mapping entries to it.
+
+
+In the code given below three Person instances are created. It then creates an instance of WeakKeyDictionary with a dictionary where the key is the Person instance and the value is the Person's name.
+
+
+We call the keyrefs() method to retrieve weak references. When the reference to Peron1 is deleted, dictionary keys are printed again. A new Person instance is added to a dictionary with weakly referenced keys. At last, we are printing keys of dictionary again.
+
+
+### Example
+
+
+```python
+import weakref
+
+class Person:
+   def __init__(self, person_id, name, age):
+      self.emp_id = person_id
+      self.name = name
+      self.age = age
+
+   def __repr__(self):
+      return "{} : {} : {}".format(self.person_id, self.name, self.age)
+Person1 = Person(101, "Jeevan", 30)
+Person2 = Person(102, "Ramanna", 35)
+Person3 = Person(103, "Simran", 28)
+weak_dict = weakref.WeakKeyDictionary({Person1: Person1.name, Person2: Person2.name, Person3: Person3.name})
+print("Weak Key Dictionary : {}\n".format(weak_dict.data))
+print("Dictionary Keys : {}\n".format([key().name for key in weak_dict.keyrefs()]))
+del Person1
+print("Dictionary Keys : {}\n".format([key().name for key in weak_dict.keyrefs()]))
+Person4 = Person(104, "Partho", 32)
+weak_dict.update({Person4: Person4.name})
+
+print("Dictionary Keys : {}\n".format([key().name for key in weak_dict.keyrefs()]))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Weak Key Dictionary : {<weakref at 0x7f542b6d4180; to 'Person' at 0x7f542b8bbfd0>: 'Jeevan', <weakref at 0x7f542b6d5530; to 'Person' at 0x7f542b8bbeb0>: 'Ramanna', <weakref at 0x7f542b6d55d0; to 'Person' at 0x7f542b8bb7c0>: 'Simran'}
+
+Dictionary Keys : ['Jeevan', 'Ramanna', 'Simran']
+
+Dictionary Keys : ['Ramanna', 'Simran']
+
+Dictionary Keys : ['Ramanna', 'Simran', 'Partho']
+```
+
+
+## WeakValueDictionary
+
+
+Mapping class that references values weakly. Entries in the dictionary will be discarded when no strong reference to the value exists any more.
+
+
+We shall demonstrate how to create a dictionary with weakly referenced values using WeakValueDictionary.
+
+
+The code is similar to previous example but this time we are using Person name as key and Person instance as values. We are using valuerefs() method to retrieve weakly referenced values of the dictionary.
+
+
+### Example
+
+
+```python
+import weakref
+
+class Person:
+   def __init__(self, person_id, name, age):
+      self.emp_id = person_id
+      self.name = name
+      self.age = age
+   
+   def __repr__(self):
+      return "{} : {} : {}".format(self.person_id, self.name, self.age)
+
+Person1 = Person(101, "Jeevan", 30)
+Person2 = Person(102, "Ramanna", 35)
+Person3 = Person(103, "Simran", 28)
+
+weak_dict = weakref.WeakValueDictionary({Person1.name:Person1, Person2.name:Person2, Person3.name:Person3})
+print("Weak Value Dictionary : {}\n".format(weak_dict.data))
+print("Dictionary Values : {}\n".format([value().name for value in weak_dict.valuerefs()]))
+del Person1
+print("Dictionary Values : {}\n".format([value().name for value in weak_dict.valuerefs()]))
+Person4 = Person(104, "Partho", 32)
+weak_dict.update({Person4.name: Person4})
+print("Dictionary Values : {}\n".format([value().name for value in weak_dict.valuerefs()]))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Weak Value Dictionary : {'Jeevan': <weakref at 0x7f3af9fe4180; to 'Person' at 0x7f3afa1c7fd0>, 'Ramanna': <weakref at 0x7f3af9fe5530; to 'Person' at 0x7f3afa1c7eb0>, 'Simran': <weakref at 0x7f3af9fe55d0; to 'Person' at 0x7f3afa1c77c0>}
+
+Dictionary Values : ['Jeevan', 'Ramanna', 'Simran']
+
+Dictionary Values : ['Ramanna', 'Simran']
+
+Dictionary Values : ['Ramanna', 'Simran', 'Partho']
+```
+

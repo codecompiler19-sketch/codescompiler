@@ -1,0 +1,332 @@
+---
+title: "SQL - IS NULL"
+description: "Learn SQL - IS NULL with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 530
+group: "SQL Operators and Clauses"
+seoTitle: "SQL - IS NULL — CodesCompiler SQL Guide"
+permalink: "sql-is-null"
+---
+
+
+# SQL - IS NULL Operator
+
+
+Table of contentThe SQL IS NULL OperatorSQL IS NULL with COUNT() FunctionSQL IS NULL with UPDATE StatementSQL IS NULL with DELETE StatementSQL IS NULL Operator on Multiple ColumnsDifference Between NULL, Zero, and Empty StringIS NULL Behavior Across SQL DatabasesImportant Points About SQL IS NULL
+
+
+
+
+## The SQL IS NULL Operator
+
+
+The SQLIS NULLoperator is used to check if a column contains aNULLvalue. In SQL,NULLis a special marker that represents missing, undefined, or unknown data. It is not the same as zero, an empty string, or a space.
+
+
+SinceNULLrepresents the absence of a value rather than an actual value, you cannot compare it using regular operators like`=`or`<>`. Instead,IS NULLis the correct way to test forNULL. Any direct comparison with NULL using these operators will always returnUNKNOWNinstead ofTRUEorFALSE.
+
+
+### Syntax
+
+
+Following is the syntax of the SQL IS NULL operator:
+
+
+```sql
+SELECT column1, column2, ...
+FROM table_name
+WHERE column_name IS NULL;
+```
+
+
+### Example
+
+
+Firstly, let us create a table namedCUSTOMERSusing the following query:
+
+
+```sql
+CREATE TABLE CUSTOMERS(
+ ID INT NOT NULL, 
+ NAME VARCHAR(20), 
+ AGE INT, 
+ ADDRESS CHAR(25), 
+ SALARY DECIMAL(18, 2), 
+ PRIMARY KEY(ID)
+);
+```
+
+
+Now, insert values into this table using the INSERT statement as follows:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+(1, 'Ramesh', 32, 'Ahmedabad', NULL ),
+(2, 'Khilan', 25, NULL, 1500.00 ),
+(3, 'Kaushik', NULL, 'Kota', 2000.00 ),
+(4, 'Chaitali', 25, 'Mumbai', NULL ),
+(5, 'Hardik', 27, 'Bhopal', 8500.00 ),
+(6, 'Komal', NULL, 'Hyderabad', 4500.00 ),
+(7, 'Muffy', 24, NULL, 10000.00 );
+```
+
+
+The table will be created as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32AhmedabadNULL2Khilan25NULL1500.003KaushikNULLKota2000.004Chaitali25MumbaiNULL5Hardik27Bhopal8500.006KomalNULLHyderabad4500.007Muffy24NULL10000.00
+
+
+In the following query, we are retrieving all the records from the CUSTOMERS table where the ADDRESS is null:
+
+
+```sql
+SELECT * FROM CUSTOMERS WHERE ADDRESS IS NULL;
+```
+
+
+On executing the above query, it will generate the output as shown below:
+
+
+IDNAMEAGEADDRESSSALARY2Khilan25NULL1500.007Muffy24NULL10000.00
+
+
+## SQL IS NULL with COUNT() Function
+
+
+TheIS NULLoperator can be used with theCOUNT()function to find how many rows in a table haveNULLvalues in a specific column. SinceCOUNT(column_name)ignoresNULLvalues by default, you need to explicitly useIS NULLin theWHEREclause to count them.
+
+
+### Syntax
+
+
+Following is the syntax of IS NULL operator with the COUNT() function:
+
+
+```sql
+SELECT COUNT(*)
+FROM table_name
+WHERE column_name IS NULL;
+```
+
+
+### Example
+
+
+The following query returns the count of records have a blank field (NULL) in SALARY column of the CUSTOMERS table:
+
+
+```sql
+SELECT COUNT(*) FROM CUSTOMERS WHERE SALARY IS NULL;
+```
+
+
+The output produced is as shown below:
+
+
+COUNT(*)2
+
+
+## IS NULL with UPDATE Statement
+
+
+TheIS NULL operatorcan be used in anUPDATEstatement to modify rows where a column contains aNULLvalue. This is useful for replacing missing or undefined data with a default value.
+
+
+### Syntax
+
+
+Following is the syntax of the IS NULL operator with the UPDATE statement in SQL:
+
+
+```sql
+UPDATE table_name
+SET column_name = new_value
+WHERE column_name IS NULL;
+```
+
+
+### Example
+
+
+In the following query, we are updating the blank (NULL) records of the AGE column to a value of 48:
+
+
+```sql
+UPDATE CUSTOMERS SET AGE = 48 WHERE AGE IS NULL;
+```
+
+
+When we execute the program above, the output is obtained as follows:
+
+
+```sql
+Query OK, 2 rows affected (0.01 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+```
+
+
+### Verification
+
+
+To check whether the table has been updated or not, execute the SELECT query below:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+The table is displayed as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32AhmedabadNULL2Khilan25NULL1500.003Kaushik48Kota2000.004Chaitali25MumbaiNULL5Hardik27Bhopal8500.006Komal48Hyderabad4500.007Muffy24NULL10000.00
+
+
+## SQL IS NULL with DELETE Statement
+
+
+TheIS NULLoperator can be used in aDELETEstatement to remove rows where a column contains aNULLvalue. This is helpful when you want to delete records with missing or incomplete data.
+
+
+### Syntax
+
+
+Following is the syntax of the IS NULL operator with the DELETE statement in SQL:
+
+
+```sql
+DELETE FROM table_name
+WHERE column_name IS NULL;
+```
+
+
+### Example
+
+
+In the following query, we are deleting the blank (NULL) records present in the SALARY column of CUSTOMERS table:
+
+
+```sql
+DELETE FROM CUSTOMERS WHERE SALARY IS NULL;
+```
+
+
+We get the following result:
+
+
+```sql
+Query OK, 2 rows affected (0.01 sec)
+```
+
+
+### Verification
+
+
+Execute the SELECT query given below to check whether the table has been changed or not:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+If we compile and run the program, the result is produced as follows:
+
+
+IDNAMEAGEADDRESSSALARY2Khilan25NULL1500.003KaushikNULLKota2000.005Hardik27Bhopal8500.006KomalNULLHyderabad4500.007Muffy24NULL10000.00
+
+
+## SQL IS NULL Operator on Multiple Columns
+
+
+You can use theIS NULLoperator on multiple columns to check if more than one column containsNULLvalues. By combining multiple conditions withANDorORoperators, you can refine the filter criteria.
+
+
+### Syntax
+
+
+Following is the syntax for checking NULL on multiple columns:
+
+
+```sql
+SELECT column1, column2, ...
+FROM table_name
+WHERE column1 IS NULL
+  AND column2 IS NULL;
+```
+
+
+### Example
+
+
+The following query retrieves all customers whose AGE and ADDRESS are bothNULL:
+
+
+```sql
+SELECT * FROM CUSTOMERS WHERE AGE IS NULL AND ADDRESS IS NULL;
+```
+
+
+We get an empty set as there are no customers whose AGE and ADDRESS are both NULL:
+
+
+```sql
+Empty set (0.00 sec)
+```
+
+
+## Difference Between NULL, Zero, and Empty String
+
+
+It is important to understand the difference betweenNULL,0(zero), and an empty string''in SQL because they represent different concepts:
+
+
+
+- NULL:Represents missing, undefined, or unknown data. It is not a value.
+- Zero (0):A numeric value that means nothing more than "zero". It is a defined, actual value.
+- Empty String (''):A string with no characters. It is a value of length zero but not the same as NULL.
+
+
+
+For example,
+
+
+```sql
+SELECT * FROM CUSTOMERS WHERE SALARY IS NULL;   -- Finds missing salary data
+SELECT * FROM CUSTOMERS WHERE SALARY = 0;       -- Finds salary exactly equal to zero
+SELECT * FROM CUSTOMERS WHERE ADDRESS = '';     -- Finds rows with address stored as an empty string
+```
+
+
+## IS NULL Behavior Across SQL Databases
+
+
+TheIS NULLoperator works similarly across most SQL databases, but there are slight variations:
+
+
+
+- MySQL:Supports IS NULL and IS NOT NULL in all clauses.
+- PostgreSQL:Works the same as MySQL but also supports theNULLS FIRSTandNULLS LASToptions in ORDER BY.
+- SQL Server:IS NULL behaves similarly, but special settings likeSET ANSI_NULLScan affect equality comparisons with NULL.
+- Oracle:Treats empty strings as NULL in most cases, which is different from MySQL and SQL Server.
+
+
+
+## Important Points About SQL IS NULL
+
+
+Following are some of the important points you should know about the SQL IS NULL operator:
+
+
+
+- TheIS NULLoperator is used exclusively to test for missing or undefined values in a column.
+- NULL cannot be compared using`=`,`!=`, or other standard operators, use IS NULL or IS NOT NULL instead.
+- NULL is not the same as zero or an empty string.
+- Aggregations like COUNT(column) ignore NULLs unless explicitly filtered.
+- When performing arithmetic with NULL, the result is always NULL unless handled with functions likeCOALESCE()orIFNULL().
+- Some databases (e.g., Oracle) treat empty strings as NULL, which may affect query results.
+- Always handle NULLs carefully in conditions to avoid unexpected results in queries.
+
+

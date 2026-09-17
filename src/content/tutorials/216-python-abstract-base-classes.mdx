@@ -1,0 +1,208 @@
+---
+title: "PYTHON - Abstract Base Classes"
+description: "Learn PYTHON - Abstract Base Classes with clear explanation, code examples, and practical guide."
+category: "python"
+order: 2160
+group: "Python Advanced Concepts"
+seoTitle: "PYTHON - Abstract Base Classes — CodesCompiler PYTHON Guide"
+permalink: "python-abstract-base-classes"
+---
+
+
+# Python - Abstract Base Classes
+
+
+
+
+AnAbstract Base Class (ABC)in Python is a class that cannot be instantiated directly and is intended to be subclassed. ABCs serve as blueprints for other classes by providing a common interface that all subclasses must implement.
+
+
+They are a fundamental part ofobject-oriented programming in Pythonwhich enables the developers to define and enforce a consistent API for a group of related classes.
+
+
+## Purpose of Abstract Base Classes
+
+
+Heres an in-depth look at the purpose and functionality of theAbstract Base Classes of Python−
+
+
+### Defining a Standard Interface
+
+
+Abstract Base Class (ABC)allow us to define a blueprint for other classes. This blueprint ensures that any class deriving from theAbstract Base Class (ABC)implements certain methods by providing a consistent interface.
+
+
+Following is the example code of defining the standard Interface of the Abstract Base Class in Python −
+
+
+```python
+from abc import ABC, abstractmethod
+
+class Shape(ABC):
+   @abstractmethod
+   def area(self):
+      pass
+
+   @abstractmethod
+   def perimeter(self):
+      pass
+```
+
+
+### Enforcing Implementation
+
+
+When a class inherits from anAbstract Base Class (ABC)it must implement allabstract methods. If it doesn't then Python will raise a TypeError. Here is the example of enforcing implementation of the Abstract Base Class in Python −
+
+
+```python
+class Rectangle(Shape):
+   def __init__(self, width, height):
+      self.width = width
+      self.height = height
+
+   def area(self):
+      return self.width * self.height
+
+   def perimeter(self):
+      return 2 * (self.width + self.height)
+
+# This will work
+rect = Rectangle(5, 10)
+
+# This will raise TypeError
+class IncompleteShape(Shape):
+   pass
+```
+
+
+### Providing a Template for Future Development
+
+
+Abstract Base Class (ABC)is useful in large projects where multiple developers might work on different parts of the codebase. They provide a clear template for developers to follow which ensure consistency and reducing errors.
+
+
+### Facilitating Polymorphism
+
+
+Abstract Base Class (ABC)make polymorphism possible by enabling the development of code that can operate with objects from diverse classes as long as they conform to a specific interface. This capability streamlines the extension and upkeep of code.
+
+
+Below is the example of Facilitating Polymorphism in Abstract Base Class of Python −
+
+
+```python
+def print_shape_info(shape: Shape):
+   print(f"Area: {shape.area()}")
+   print(f"Perimeter: {shape.perimeter()}")
+
+square = Rectangle(4, 4)
+print_shape_info(square)
+```
+
+
+Note:To execute the above mentioned example codes, it is necessary to define the standard interface and Enforcing Implementation.
+
+
+## Components of Abstract Base Classes
+
+
+Abstract Base Classes (ABCs)in Python consist of several key components that enable them to define and enforce interfaces for subclasses.
+
+
+These components include the ABC class, the abstractmethod decorator and several others that help in creating and managing abstract base classes. Here are the key components of Abstract Base Classes −
+
+
+
+- ABC Class:This class from Python'sAbstract Base Classes (ABCs)module serves as the foundation for creating abstract base classes. Any class derived from ABC is considered an abstract base class.
+- 'abstractmethod' Decorator:This decorator from the abc module is used to declare methods as abstract. These methods do not have implementations in the ABC and must be overridden in derived classes.
+- 'ABCMeta' Metaclass:This is the metaclass used by ABC. It is responsible for keeping track of which methods are abstract and ensuring that instances of the abstract base class cannot be created if any abstract methods are not implemented.
+- Concrete Methods in ABCs:Abstract base classes can also define concrete methods that provide a default implementation. These methods can be used or overridden by subclasses.
+- Instantiation Restrictions:A key feature of ABCs is that they cannot be instantiated directly if they have any abstract methods. Attempting to instantiate an ABC with unimplemented abstract methods will raise a 'TypeError'.
+- Subclass Verification: Abstract Base Classes (ABCs)can verify if a given class is a subclass using the issubclass function and can check instances with the isinstance function.
+
+
+
+## Example of Abstract Base Classes in Python
+
+
+Following example shows how ABCs enforce method implementation, supportpolymorphismand provide a clear and consistent interface for related classes −
+
+
+```python
+from abc import ABC, abstractmethod
+
+class Shape(ABC):
+   @abstractmethod
+   def area(self):
+      pass
+
+   @abstractmethod
+   def perimeter(self):
+      pass
+
+   def description(self):
+      return "I am a shape."
+
+class Rectangle(Shape):
+   def __init__(self, width, height):
+      self.width = width
+      self.height = height
+
+   def area(self):
+      return self.width * self.height
+
+   def perimeter(self):
+      return 2 * (self.width + self.height)
+
+class Circle(Shape):
+   def __init__(self, radius):
+      self.radius = radius
+
+   def area(self):
+      import math
+      return math.pi * self.radius ** 2
+
+   def perimeter(self):
+      import math
+      return 2 * math.pi * self.radius
+
+def print_shape_info(shape):
+   print(shape.description())
+   print(f"Area: {shape.area()}")
+   print(f"Perimeter: {shape.perimeter()}")
+
+shapes = [Rectangle(5, 10), Circle(7)]
+
+for shape in shapes:
+   print_shape_info(shape)
+   print("-" * 20)
+
+class IncompleteShape(Shape):
+   pass
+
+try:
+   incomplete_shape = IncompleteShape()
+except TypeError as e:
+   print(e)
+```
+
+
+### Output
+
+
+On executing the above code we will get the following output −
+
+
+```python
+I am a shape.
+Area: 50
+Perimeter: 30
+--------------------
+I am a shape.
+Area: 153.93804002589985
+Perimeter: 43.982297150257104
+--------------------
+Can't instantiate abstract class IncompleteShape with abstract methods area, perimeter
+```
+

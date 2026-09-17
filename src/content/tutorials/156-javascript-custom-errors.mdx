@@ -1,0 +1,229 @@
+---
+title: "JavaScript - Custom Errors"
+description: "Learn JavaScript - Custom Errors with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1560
+group: "JavaScript Error Handling"
+seoTitle: "JavaScript - Custom Errors — CodesCompiler JavaScript Guide"
+permalink: "javascript-custom-errors"
+---
+
+
+# JavaScript - Custom Errors
+
+
+
+
+Custom errorsare a way to create user-defined error types in JavaScript. This can be useful for handling specific types of errors, such as database errors or HTTP errors.
+
+
+JavaScript contains multiple built-in objects for the errors. Whenever any error occurs in the JavaScript code, it throws an instance of the Error class. However, you can also throw the instance of the Error class with a custom message using the 'throw' statement.
+
+
+In some conditions, developers need to create custom errors. For example, you are taking the user's age in the input. If the user's age is not above 18, you can throw a custom error like 'ageNotValid' for more clarification.
+
+
+Let's understand the syntax of the Error class first, and then you will learn to create custom errors.
+
+
+## The Error Class
+
+
+In JavaScript, Error is a generic class for the errors. You can create an instance of the Error class and pass the custom message as an argument.
+
+
+The Error class contains three properties: name, message, and stack.
+
+
+So, you can assume the syntax of the Error class as shown below.
+
+
+```javascript
+class Error {
+   constructor(message) {
+      this.message = message;
+      this.name = "Error"; 
+      this.stack = <call stack>;
+   }
+}
+```
+
+
+The 'stack' property is a non-standard property in the above syntax. It is supported by the Firefox browser only.
+
+
+## Creating Custom Errors Using the Instance of the Error Class
+
+
+The easiest way to create a custom error is to create an instance of the Error class and change its properties.
+
+
+### Syntax
+
+
+You can follow the syntax below to create custom errors by changing the properties of the instance Error class.
+
+
+```javascript
+const customError = new Error(message);
+customError.name = "CustomError";
+```
+
+
+Here, we have created the 'Error' class instance and passed the 'message' as an argument. Also, we have changed the value of the 'name' property. Similarly, you can change the value of the 'message' property if you don't want to pass it as an Error() constructor argument.
+
+
+### Parameter
+
+
+
+- message− It is a text message to represent the error.
+
+
+
+### Example
+
+
+In the code below, we have created the instance of the Error class and stored it in the 'customError' variable. After that, we changed the value of the 'name' property to the 'CustomError'.
+
+
+In the try&#123;&#125; block, we have used the 'throw' statement to throw the custom error, and in the catch&#123;&#125; block, we print the error name and message.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      const customError = new Error("This is a custom error");
+      customError.name = "CustomError";
+      try {
+         throw customError;
+      } catch (err) {
+         document.getElementById("output").innerHTML = err;
+      }
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+CustomError: This is a custom error
+```
+
+
+## Creating the Custom Errors Using the Function Constructor
+
+
+You can use the function constructor to create the template for the object. The function constructor should contain the 'name' and 'message' properties.
+
+
+Next, you can change the prototype of the function constructor with the prototype of the Error class.
+
+
+### Syntax
+
+
+You can follow the syntax below to create custom errors using the constructor of the function class.
+
+
+```javascript
+function validationError(messag, name) {
+   this.message = messag;
+   this.name = name;
+}
+validationError.prototype = Error.prototype;
+```
+
+
+In the above syntax, we have defined the validationError() function, taking the message and name as a parameter. After that, we initialize the message and name properties of the function with parametric values.
+
+
+Next, we change the prototype of the function with the prototype of the Error class.
+
+
+### Example
+
+
+In the code below, we have defined the validationError() function constructor and inherited it using the prototype of the Error class.
+
+
+In the try&#123;&#125; block, we have defined the 'str' variable and initialized it with the numeric value. After that, we validate the type of the 'str' variable using the typeof operator. If it is not a string, we throw 'validationError' by passing the message and name as an argument.
+
+
+In the catch&#123;&#125; block, we print the message on the web page. You can run the code, and observe the error in the output.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+      const output = document.getElementById("demo");
+      function validationError(message = "", name = "validationError") {
+         this.message = message;
+         this.name = name;
+      }
+      validationError.prototype = Error.prototype;
+
+      try {
+         let str = 10;
+         if (typeof str != "string") {
+            throw new validationError("Not a string", "NotStringError");
+         } else {
+            output.innerHTML = "String is valid";
+         }
+      } catch (e) {
+         output.innerHTML = e.name + ": " + e.message;
+      }
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+NotStringError: Not a string
+```
+
+
+## Creating Custom Errors by Extending the Error Class
+
+
+The best way to create custom errors is by creating a new class and extending it using the 'extends' keyword. It uses the concept of inheritance, and the custom error class inherits the properties of the Error class.
+
+
+In the constructor() function, you can initialize the properties of the custom error class.
+
+
+### Syntax
+
+
+You can follow the syntax below to create custom errors by extending the Error class.
+
+
+```javascript
+class CustomError extends Error {
+   constructor(message) {
+      super(message)
+      // Initialize properties
+   }
+}
+```
+
+
+In the above code, we call the parent class constructor using the super() method.
+
+
+You can also initialize the properties of the CustomError class in the constructor function.
+
+
+You can use any of the above approaches to create custom errors according to your requirements.
+

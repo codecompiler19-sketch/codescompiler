@@ -1,0 +1,365 @@
+---
+title: "SQL - Delete Query"
+description: "Learn SQL - Delete Query with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 320
+group: "SQL Queries"
+seoTitle: "SQL - Delete Query — CodesCompiler SQL Guide"
+permalink: "sql-delete-query"
+---
+
+
+# SQL DELETE Statement
+
+
+
+
+
+
+## SQL DELETE Statement
+
+
+TheDELETEstatement in SQL is used to remove one or more existing records from a table.
+
+
+
+- You can delete specific rows using aWHEREclause.
+- You can remove all rows without deleting the table itself by omiting the WHERE clause.
+- The DELETE operation is permanent and cannot be undone unless you use transactions.
+
+
+
+### Syntax
+
+
+The basic syntax of theDELETEstatement is:
+
+
+```sql
+DELETE FROM table_name
+
+WHERE condition;
+```
+
+
+## Delete a Specific Row in SQL
+
+
+You can use theDELETEstatement to remove a single row by specifying a condition using the WHERE clause.
+
+
+### Example
+
+
+Assume we have created a table namedCUSTOMERSwhich contains the personal details of customers including their name, age, address and salary etc. as shown below:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+
+   ID INT NOT NULL,
+
+   NAME VARCHAR (20) NOT NULL,
+
+   AGE INT NOT NULL,
+
+   ADDRESS CHAR (25),
+
+   SALARY DECIMAL (18, 2),
+
+   PRIMARY KEY (ID)
+
+);
+```
+
+
+Now, let us insert few records into this table using the INSERT statement as follows:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+
+(2, 'Khilan', 25, 'Delhi', 1500.00 ),
+
+(3, 'Kaushik', 23, 'Kota', 2000.00 ),
+
+(4, 'Chaitali', 25, 'Mumbai', 6500.00 ),
+
+(5, 'Hardik', 27, 'Bhopal', 8500.00 ),
+
+(6, 'Komal', 22, 'Hyderabad', 4500.00 ),
+
+(7, 'Muffy', 24, 'Indore', 10000.00 );
+```
+
+
+The table will be created as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+Now, let us delete the record of a customer with ID `=` 2:
+
+
+```sql
+DELETE FROM CUSTOMERS
+
+WHERE ID = 2;
+```
+
+
+We get the output as shown below:
+
+
+```sql
+Query OK, 1 row affected (0.01 sec)
+```
+
+
+### Verification
+
+
+To verify whether the row with ID `=` 2 is deleted, use the following select query:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+After deletion, the table will look like this:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## Delete Multiple Rows in SQL
+
+
+You can delete multiple rows by using theDELETEstatement along with aWHEREclause that matches more than one record.
+
+
+This is useful when you want to remove all records that meet a specific condition, such as users from a certain city, or customers below a certain age.
+
+
+### Example
+
+
+The following query deletes all customers whose salary is less than 3000:
+
+
+```sql
+DELETE FROM CUSTOMERS
+
+WHERE SALARY < 3000;
+```
+
+
+Following is the output obtained:
+
+
+```sql
+Query OK, 3 rows affected (0.02 sec)
+```
+
+
+### Verification
+
+
+To verify the deletion, use the following select query:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+Following is the table produced:
+
+
+IDNAMEAGEADDRESSSALARY4Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## Delete All Rows from a Table
+
+
+If you want to removeall rowsfrom a table, you can use theDELETEstatement without aWHEREclause.
+
+
+This operation clears all the data in the table but keeps the table structure (columns, data types, indexes, etc.) intact, so you can still insert new data later without recreating the table.
+
+
+Be cautious when using this approach, especially in production environments, as itcannot be undoneunless you have a backup or are using a transaction that you can roll back.
+
+
+### Syntax
+
+
+Following is the basic syntax to delete all rows from a table in SQL:
+
+
+```sql
+DELETE FROM table_name;
+```
+
+
+### Example
+
+
+The following command deletes all records from theCUSTOMERStable:
+
+
+```sql
+DELETE FROM CUSTOMERS;
+```
+
+
+Following is the output of the above code:
+
+
+```sql
+Query OK, 7 rows affected (0.02 sec)
+```
+
+
+### Verification
+
+
+To verify the deletion of entire records of the customers table, use the following select query:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+You get the following output:
+
+
+```sql
+Empty set (0.00 sec)
+```
+
+
+## Rolling Back DELETE Operations
+
+
+In SQL, if you are working within a transaction, you canroll backaDELETEoperation to undo it before it is permanently saved to the database.
+
+
+To use rollback, your database must support transactions (such as PostgreSQL, SQL Server, Oracle, etc.), and you must explicitly start a transaction before issuing theDELETEstatement.
+
+
+### Syntax
+
+
+Following is the basic syntax to roll back delete operations:
+
+
+```sql
+BEGIN TRANSACTION;
+
+
+
+DELETE FROM table_name
+
+WHERE condition;
+
+
+
+-- If needed, undo the deletion
+
+ROLLBACK;
+
+
+
+-- Or, to make changes permanent
+
+COMMIT;
+```
+
+
+### Example
+
+
+In this example, the deletion of the customer with ID `=` 3 is undone because of theROLLBACKcommand. The row remains in the table:
+
+
+```sql
+BEGIN TRANSACTION;
+
+
+
+DELETE FROM CUSTOMERS
+
+WHERE ID = 3;
+
+
+
+-- Oops! That was a mistake
+
+ROLLBACK;
+```
+
+
+We get the output as shown below:
+
+
+```sql
+Query OK, 0 rows affected (0.00 sec)
+```
+
+
+If you had usedCOMMITinstead ofROLLBACK, the deletion would have been permanent.
+
+
+### Verification
+
+
+To verify that the record in the table is not deleted, use the following select query:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+You get the following output table:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## DELETE vs TRUNCATE
+
+
+While bothDELETEandTRUNCATEremove data from a table, but there are some major differences between them:
+
+
+
+| Feature | DELETE | TRUNCATE |
+| --- | --- | --- |
+| Row Selection | Can delete specific rows using aWHEREclause | Removes all rows; does not supportWHERE |
+| Transaction Support | Can be rolled back when used withBEGIN TRANSACTION | Cannot be rolled back in most databases |
+| Performance | Slower due to row-by-row deletion and logging | Faster as it deallocates entire data pages |
+| Triggers | ActivatesON DELETEtriggers | Does not activateON DELETEtriggers |
+| Auto-Increment Reset | Doesnotreset identity (auto-increment) counters | Resets identity counters in some databases |
+
+
+
+## Important Points About DELETE Statement
+
+
+Following are some important points to remember when using the DELETE statement in SQL:
+
+
+
+- Always use aWHEREclause to prevent accidental data loss.
+- UseDELETEfor selective deletion andTRUNCATEfor full data clearance.
+- TheDELETEstatement can be used with subqueries to remove rows based on related data.
+- You can useJOINin some databases to delete data from multiple related tables.
+
+

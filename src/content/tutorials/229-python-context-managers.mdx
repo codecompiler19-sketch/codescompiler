@@ -1,0 +1,269 @@
+---
+title: "PYTHON - Context Managers"
+description: "Learn PYTHON - Context Managers with clear explanation, code examples, and practical guide."
+category: "python"
+order: 2290
+group: "Python Advanced Concepts"
+seoTitle: "PYTHON - Context Managers — CodesCompiler PYTHON Guide"
+permalink: "python-context-managers"
+---
+
+
+# Python - Context Managers
+
+
+
+
+Context managersin Python provide a powerful way to manage resources efficiently and safely. Acontext managerin Python is an object that defines a runtime context for use with thewithstatement. It ensures that setup and cleanup operations are performed automatically.
+
+
+For instance, when working with file operations, context managers handle the opening and closing of files, ensuring that resources are managed correctly.
+
+
+## How Context Managers Work?
+
+
+Python context managers work by implementing the__enter__()and__exit__()methods (or their asynchronous equivalents for async operations). These methods ensure that resources are correctly acquired and released. Also, Python'scontextlibmodule further simplifies the creation of custom context managers.
+
+
+### Example
+
+
+Here's a simple example demonstrating how a context manager works with file operations in Python.
+
+
+```python
+with open('example.txt', 'w') as file:
+    file.write('Hello, Tutorialspoint!')
+```
+
+
+In this example, a file is opened in the write mode, and then automatically closed when the block inside thewithstatement is exited.
+
+
+## Python Context Manager Types
+
+
+Python supports both synchronous and asynchronous context managers. Each type has specific methods that need to be implemented to manage the life cycle of the context.
+
+
+### Synchronous Context Managers
+
+
+A synchronous context managers are implemented using the__enter__()and__exit__()methods.
+
+
+#### 1. The __enter__() Method
+
+
+The__enter__(self)method is called when execution enters the context of the with statement. This method should return the resource to be used within the with block.
+
+
+Example
+
+
+Here is a simple example of creating our own context manager using the__enter__()and__exit__()methods.
+
+
+```python
+class MyContextManager:
+   def __enter__(self):
+      print("Entering the context")
+      return self
+
+   def __exit__(self, exc_type, exc_value, traceback):
+      print("Exiting the context")
+        
+with MyContextManager():
+   print("body")
+```
+
+
+On executing the above code you will get the followingoutput−
+
+
+```python
+Entering the context
+body
+Exiting the context
+```
+
+
+#### 2. The __exit__() Method
+
+
+The__exit__(self, exc_type, exc_value, traceback)method is called when execution leaves the context of the with statement. It can handle exceptions if any occur, and it returns a Boolean flag indicating if the exception should be suppressed.
+
+
+This example demonstrates creating the our own context manager and how the__exit__()methods handle exceptions.
+
+
+```python
+class MyContextManager:
+   def __enter__(self):
+      print("Entering the context")
+      return self
+
+   def __exit__(self, exc_type, exc_value, traceback):
+      print("Exiting the context")
+      if exc_type:
+         print("An exception occurred")
+      return True  # Suppress exception
+
+with MyContextManager():
+   print("body")
+   name =  "Python"/3 #to raise an exception
+```
+
+
+While executing the above code you will get the followingoutput−
+
+
+```python
+Entering the context
+body
+Exiting the context
+An exception occurred
+```
+
+
+### Asynchronous Context Managers
+
+
+Similar to the synchronous context managers, Asynchronous context managers are also implemented using the two methods which are__aenter__()and__aexit__(). These are used withinasync withstatements.
+
+
+The __aenter__(self) Method− It must return an awaitable that will be awaited when entering the context.
+
+
+__aexit__(self, exc_type, exc_value, traceback) Method− It must return an awaitable that will be awaited when exiting the context.
+
+
+Example
+
+
+Following is the example of creating an asynchronous context manager class −
+
+
+```python
+import asyncio
+class AsyncContextManager:
+   async def __aenter__(self):
+      print("Entering the async context class")
+      return self
+
+   async def __aexit__(self, exc_type, exc_value, traceback):
+      print("Exiting the async context class")
+      if exc_type:
+         print("Exception occurred")
+      return True
+
+async def main():
+   async with AsyncContextManager():
+      print("Inside the async context")
+      name =  "Python"/3 #to raise an exception
+
+asyncio.run(main())
+```
+
+
+On executing the above code you will get the following output −
+
+
+```python
+Entering the async context class
+Inside the async context
+Exiting the async context class
+Exception occurred
+```
+
+
+## Creating Custom Context Managers
+
+
+Thecontextlibmodule from the Python standard library provides the utilities to create context managers more easily.
+
+
+### Using the contextlib.contextmanager() Function
+
+
+Thecontextlib.contextmanager()function is a decorator allows you to create factory functions for with statement context managers. It eliminates the need to define a separate class or implement the__enter__()and__exit__()methods individually.
+
+
+Example
+
+
+Here's an example using thecontextlib.contextmanagerto create a context manager function.
+
+
+```python
+from contextlib import contextmanager
+
+@contextmanager
+def my_context_manager():
+   print("Entering the context manager method")
+   try:
+      yield
+   finally:
+      print("Exiting the context manager method")
+
+with my_context_manager():
+   print("Inside the context")
+```
+
+
+On executing the above code you will get the following output −
+
+
+```python
+Entering the context manager method
+Inside the context
+Exiting the context manager method
+```
+
+
+### Using the contextlib.asynccontextmanager() Function
+
+
+Thecontextlibmodule also provides asynccontextmanager, specifically designed for creating asynchronous context managers. It is similar to contextmanager and eliminates the need to define a separate class or implement the__aenter__()and__aexit__()methods individually.
+
+
+Example
+
+
+Here's an example demonstrating the usage ofcontextlib.asynccontextmanager()to create an asynchronous context manager function.
+
+
+```python
+import asyncio
+from contextlib import asynccontextmanager
+
+@asynccontextmanager
+async def async_context_manager():
+   try:
+      print("Entering the async context")
+      # Perform async setup tasks if needed
+      yield
+   finally:
+      # Perform async cleanup tasks if needed
+      print("Exiting the async context")
+
+async def main():
+   async with async_context_manager():  
+      print("Inside the async context")
+      await asyncio.sleep(1)  # Simulating an async operation
+
+# Run the asyncio event loop
+asyncio.run(main())
+```
+
+
+On executing the above code you will get the following output −
+
+
+```python
+Entering the async context
+Inside the async context
+Exiting the async context
+```
+

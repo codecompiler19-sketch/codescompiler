@@ -1,0 +1,194 @@
+---
+title: "JavaScript - Performance"
+description: "Learn JavaScript - Performance with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2670
+group: "JavaScript Miscellaneous"
+seoTitle: "JavaScript - Performance — CodesCompiler JavaScript Guide"
+permalink: "javascript-performance"
+---
+
+
+# JavaScript - Performance
+
+
+
+
+JavaScript is very important in every website today. If JavaScript fails, our website wouldn't work properly. It is important to focus on the performance on JavaScript as it has impacts on delivering a positive user experience, retaining engagement, and ensuring business success. An optimized JavaScript would ensure the pages load faster and responsive interactions contribute to users satisfaction and hence higher conversion rates as well as higher search engine rankings (as the SEO would be better).
+
+
+In a competitive digital landscape, optimized JavaScript code not only attracts and retains users but also enhances resource efficiency, reducing server costs and providing a competitive advantage. With the increasing prevalence of mobile devices and the emphasis on Progressive Web Apps, performance optimization is not only a user expectation but a strategic necessity for businesses aiming to stand out and thrive in the online space.
+
+
+## Optimizing DOM Manipulation
+
+
+DOM manipulation is where each element is represented as a node in the tree and accessed or modified via their ids, class names etc. These DOM manipulation operations should be minimized as much as possible and would have a significant impact on the speed of our application. Let us consider the below example where we are dynamically creating a list of 1000 items.
+
+
+### Example
+
+
+Naive Code
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+   <ul id="itemList"></ul>
+   <script>
+      const itemList = document.getElementById('itemList');
+      // Inefficient DOM manipulation
+      for (let i = 0; i < 1000; i++) {
+         itemList.innerHTML += <li>Item ${i}</li>;
+      }
+   </script>
+</body>
+</html>
+```
+
+
+Optimized Code
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+   <ul id="itemList"></ul>
+   <script>
+      // Efficient DOM manipulation using document fragment
+      const itemList = document.getElementById('itemList');
+      const fragment = document.createDocumentFragment();
+      for (let i = 0; i < 1000; i++) {
+         const listItem = document.createElement('li');
+         listItem.textContent = Item ${i};
+         fragment.appendChild(listItem);
+      }
+      itemList.appendChild(fragment);
+   </script>
+</body>
+</html>
+```
+
+
+## Asynchronous Operations with Promises
+
+
+To prevent the main thread from blocking, we must prioritize asynchronous programming. Consider this example: data retrieval from an API using Promises; in such instances, a Promise proves indispensable for managing asynchronous data fetching. Preventing the UI from freezing during operation; enhancing the overall user experience: these are the benefits.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+   <h2>Asynchronous Operations with Promises</h1>
+   <div id="dataContainer"></div>
+   <script>
+      // Fetch data asynchronously
+      function fetchData() {
+         return new Promise((resolve, reject) => {
+            // Simulating an API call with a delay
+            setTimeout(() => {
+               const data = { message: 'Hello, world!' };
+               resolve(data);
+            }, 1000);
+         });
+      }
+
+      // Usage of the fetchData function
+      fetchData()
+         .then(data => {
+            document.getElementById('dataContainer').textContent = data.message;
+         })
+         .catch(error => {
+            alert('Error fetching data:', error);
+         });
+   </script>
+</body>
+</html>
+```
+
+
+## Deferred JavaScript Loading
+
+
+JavaScript is normally loaded when the page is opened, however by delaying the loading of JavaScript we can optimize page load performance especially when dealing with non-essential scripts. When browsers come across the `<script>` tag, they normally block the rendering until the script has finished downloading and executing. However, by using the defer attribute in the script tag, we can instruct the browser to continue downloading the script in the background while it continues to parse & render the HTML. The script is then executed after the HTML is completely parsed.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+   pDeferred JavaScript Loading
+   <script defer src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+   <div id="loadingMessage">JavaScript is loading...</div>
+   <script>
+      // Add an event listener to indicate when the JavaScript is fully loaded
+      document.addEventListener('DOMContentLoaded', function() {
+         document.getElementById('loadingMessage').textContent = 'JavaScript has finished loading!';
+      });
+   </script>
+</body>
+</html>
+```
+
+
+Another option to the above code is to use the async attribute. While similar to defer, async loads the script asynchronously, but it doesn't guarantee the order of execution. The script that finishes loading first will be executed first.
+
+
+## Avoiding Global Variables
+
+
+Global variables are those which are visible throughout the code, or have a big scope. It is import to understand if our code actually requires the scope of variables to be global or can it be managed efficiently by code encapsulation. The below examples demonstrates the usage of encapsulation to avoid global variables hence leading to better performance of the script.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+   ## Avoiding Global Variables
+   <div id="result"></div>
+   <script>
+      var resultElement = document.getElementById('result');
+      // Inefficient use of global variables
+      var globalVar = 10;
+
+      function addNumbers(x, y) {
+         return globalVar + x + y;
+      }
+
+      resultElement.innerHTML += "Using global variable, the sum is " + addNumbers(51, 7) + "<br>";
+            
+      // Improved encapsulation
+      (function () {
+         var localVar = 10;
+         function addNumbers(x, y) {
+            return localVar + x + y;
+         }
+         resultElement.innerHTML += "Using encapsulation, the sum is " + addNumbers(51, 7);
+      })();
+   </script>
+</body>
+</html>
+```
+
+
+While we have discussed performance optimization in this tutorial from a JavaScript point of view, it is important to note that certain optimizations remain constant irrespective of the language. This includes scenarios like using switch case instead of length if else if, memory management, concurrency, etc.
+
+
+The performance optimization of JavaScript has impacts across industries & applications. In ecommerce, a high speed page load has proven to enhance user engagement and boost conversation rates, while in social media JavaScript has helped in providing seamless interactions. News and media related websites benefit as the content gets updated quickly and only learning platforms (edtech industry) requires JavaScript for interactive educational components.
+
+
+On the other hand, financial applications, collaboration tools, gaming websites, and healthcare apps all demand optimized JavaScript to ensure their interfaces are responsive and process data in a timely manner.
+

@@ -1,0 +1,184 @@
+---
+title: "PYTHON - Match-Case Statement"
+description: "Learn PYTHON - Match-Case Statement with clear explanation, code examples, and practical guide."
+category: "python"
+order: 390
+group: "PYTHON Basics"
+seoTitle: "PYTHON - Match-Case Statement — CodesCompiler PYTHON Guide"
+permalink: "python-matchcase-statement"
+---
+
+
+# Python - Match-Case Statement
+
+
+
+
+## Python match-case Statement
+
+
+A Pythonmatch-casestatement takes an expression and compares its value to successive patterns given as one or more case blocks. Only the first pattern that matches gets executed. It is also possible to extract components (sequence elements or object attributes) from the value intovariables.
+
+
+With the release of Python 3.10, a pattern matching technique calledmatch-casehas been introduced, which is similar to theswitch-caseconstruct available in C/C++/Java etc. Its basic use is to compare a variable against one or more values. It is more similar to pattern matching in languages like Rust or Haskell than a switch statement in C or C++.
+
+
+### Syntax
+
+
+The following is the syntax of match-case statement in Python -
+
+
+```python
+match variable_name:
+   case 'pattern 1' : statement 1
+   case 'pattern 2' : statement 2
+   ...
+   case 'pattern n' : statement n
+```
+
+
+### Example
+
+
+The following code has a function named weekday(). It receives an integer argument, matches it with all possible weekday number values, and returns the corresponding name of day.
+
+
+```python
+def weekday(n):
+   match n:
+      case 0: return "Monday"
+      case 1: return "Tuesday"
+      case 2: return "Wednesday"
+      case 3: return "Thursday"
+      case 4: return "Friday"
+      case 5: return "Saturday"
+      case 6: return "Sunday"
+      case _: return "Invalid day number"
+print (weekday(3))
+print (weekday(6))
+print (weekday(7))
+```
+
+
+On executing, this code will produce the following output −
+
+
+```python
+Thursday
+Sunday
+Invalid day number
+```
+
+
+The last case statement in the function has "_" as the value to compare. It serves as the
+wildcard case, and will be executed if all other cases are not true.
+
+
+## Combined Cases in Match Statement
+
+
+Sometimes, there may be a situation where for more than one cases, a similar action has to be taken. For this, you can combine cases with the OR operator represented by "|" symbol.
+
+
+### Example
+
+
+The code below shows how to combine cases in match statement. It defines a function named access() and has one string argument, representing the name of the user. For admin or manager user, the system grants full access; for Guest, the access is limited; and for the rest, there's no access.
+
+
+```python
+def access(user):
+   match user:
+      case "admin" | "manager": return "Full access"
+      case "Guest": return "Limited access"
+      case _: return "No access"
+print (access("manager"))
+print (access("Guest"))
+print (access("Ravi"))
+```
+
+
+On running the above code, it will show the following result −
+
+
+```python
+Full access
+Limited access
+No access
+```
+
+
+## List as the Argument in Match Case Statement
+
+
+Since Python can match the expression against anyliteral, you can use alistas a case value. Moreover, for variable number of items in the list, they can be parsed to a sequence with "*" operator.
+
+
+### Example
+
+
+In this code, we use list as argument in match case statement.
+
+
+```python
+def greeting(details):
+   match details:
+      case [time, name]:
+         return f'Good {time} {name}!'
+      case [time, *names]:
+         msg=''
+         for name in names:
+            msg+=f'Good {time} {name}!\n'
+         return msg
+
+print (greeting(["Morning", "Ravi"]))
+print (greeting(["Afternoon","Guest"]))
+print (greeting(["Evening", "Kajal", "Praveen", "Lata"]))
+```
+
+
+On executing, this code will produce the following output −
+
+
+```python
+Good Morning Ravi!
+Good Afternoon Guest!
+Good Evening Kajal!
+Good Evening Praveen!
+Good Evening Lata!
+```
+
+
+## Using "if" in "Case" Clause
+
+
+Normally Python matches an expression against literal cases. However, it allows you to includeif statementin the case clause for conditional computation of match variable.
+
+
+### Example
+
+
+In the following example, the function argument is a list of amount and duration, and the intereset is to be calculated for amount less than or more than 10000. The condition is included in thecaseclause.
+
+
+```python
+def intr(details):
+   match details:
+      case [amt, duration] if amt<10000:
+         return amt*10*duration/100
+      case [amt, duration] if amt>=10000:
+         return amt*15*duration/100
+print ("Interest = ", intr([5000,5]))
+print ("Interest = ", intr([15000,3]))
+```
+
+
+On executing, this code will produce the following output −
+
+
+```python
+Interest = 2500.0
+Interest = 6750.0
+```
+

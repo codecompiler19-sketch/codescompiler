@@ -1,0 +1,232 @@
+---
+title: "SQL - Rename Database"
+description: "Learn SQL - Rename Database with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 140
+group: "SQL Database"
+seoTitle: "SQL - Rename Database — CodesCompiler SQL Guide"
+permalink: "sql-rename-database"
+---
+
+
+# SQL - Rename Database
+
+
+Table of contentThe SQL RENAME DATABASE StatementRenaming a Database in MySQLRenaming a Database in SQL ServerRenaming a Database in PostgreSQL
+
+
+
+
+## The SQL RENAME DATABASE Statement
+
+
+TheRENAME DATABASEstatement in SQL is used to change the name of an existing database. This is useful when you want to rename a project, fix a spelling mistake, or update your naming conventions.
+
+
+However, it is important to know that most database systems, including MySQL,do not supportthis command directly. Instead of renaming, you usually have to create a new database with the desired name and manually copy the data from the old one.
+
+
+### Is RENAME DATABASE Supported in SQL?
+
+
+No, theRENAME DATABASEstatement is not supported in most modern SQL database systems, including MySQL. However, different systems handle database renaming in their own ways:
+
+
+
+- MySQL: Does not support direct renaming anymore.
+- SQL Server: Allows renaming usingALTER DATABASE ... MODIFY NAMEcommand.
+- PostgreSQL: Supports renaming withALTER DATABASE ... RENAME TOcommand.
+
+
+
+In earlier versions of MySQL, theRENAME DATABASEstatement was allowed. But now it has been removed because it could cause data loss or corruption.
+
+
+You might still find this old syntax in outdated tutorials or documentation:
+
+
+```sql
+RENAME DATABASE old_db_name TO new_db_name;
+```
+
+
+Using this command in MySQL will now result in an error.
+
+
+## Renaming a Database in MySQL
+
+
+Since direct renaming is not supported in MySQL, you can safely rename a database by following these simple steps:
+
+
+
+- Create a new database with the desired name.
+- Export all data from your current (old) database. You can use a tool likemysqldumpto generate a backup file containing all your tables and data.
+- Import the data into the new database. This will copy everything from the old database into the new one.
+- Delete the old database, but only after you have confirmed that everything works correctly in the new one. Make sure all data has been successfully moved and tested.
+
+
+
+### Example Using MySQL
+
+
+Let us say you want to rename a database fromoldDBtonewDB. Since you can't rename it directly, here is how to do it step by step:
+
+
+Step 1: Export the old database
+
+
+```sql
+mysqldump -u root -p oldDB > oldDB_backup.sql
+```
+
+
+This command creates a backup of theoldDBdatabase. Here is what each part means:
+
+
+
+- mysqldump: The tool used to export databases.
+- -u root: Logs in as the MySQL userroot.
+- -p: Prompts you to enter the MySQL root password.
+- oldDB: The name of the database you are exporting.
+- > oldDB_backup.sql: Redirects the output to a file calledoldDB_backup.sql, which contains the exported data and structure.
+
+
+
+Step 2: Create the new database
+
+
+```sql
+CREATE DATABASE newDB;
+```
+
+
+This SQL statement creates a new, empty database namednewDB. You will import your old data into this new database in the next step.
+
+
+Step 3: Import data into the new database
+
+
+```sql
+mysql -u root -p newDB < oldDB_backup.sql
+```
+
+
+This command imports the data you backed up earlier intonewDB. Here is what it does:
+
+
+
+- mysql: The MySQL command-line tool is used to run SQL commands.
+- -u root: Logs in as therootuser.
+- -p: Prompts for your password.
+- newDB: The database where the backup will be restored.
+- `<` oldDB_backup.sql: Tells MySQL to read and execute the SQL statements from the backup file.
+
+
+
+Step 4: Drop the old database (only if everything works)
+
+
+```sql
+DROP DATABASE oldDB;
+```
+
+
+This command deletes the originaloldDBdatabase from your MySQL server. Only run this after you have confirmed thatnewDBhas all your data and is working correctly.
+
+
+By following these steps, you can rename your database without losing any data.
+
+
+## Renaming a Database in SQL Server
+
+
+TheALTER DATABASE ... MODIFY NAMEsyntax is used specifically for renaming databases inMicrosoft SQL Server. It is not supported in MySQL or PostgreSQL.
+
+
+### SQL Server Syntax
+
+
+Following is the correct syntax to rename a database in SQL Server:
+
+
+```sql
+ALTER DATABASE current_database_name
+
+MODIFY NAME = new_database_name;
+```
+
+
+### Example
+
+
+In this example, we reame the databasetestDBtotutorialsDBin SQL Server:
+
+
+```sql
+ALTER DATABASE testDB
+
+MODIFY NAME = tutorialsDB;
+```
+
+
+We get the output as shown below:
+
+
+```sql
+The database name 'tutorialsDB' has been set.
+```
+
+
+### Important Points to Remember:
+
+
+Before renaming a database in SQL Server, consider the following precautions to avoid issues during execution:
+
+
+
+- You can't rename a database while you are actively using it. So, before running the rename command, switch your connection to another database (like master) in SQL Server.
+- If other users are currently connected to the database, SQL Server won't allow you to rename it. You need to make sure everyone is logged out or disconnected before you can perform the operation.
+- Renaming a database using ALTER DATABASE ... MODIFY NAME updates only the name that SQL Server uses internally.
+
+
+
+## Renaming a Database in PostgreSQL
+
+
+TheALTER DATABASE ... RENAME TOcommand is used to rename a database inPostgreSQL. This syntax is specific to PostgreSQL and does not work in MySQL or SQL Server.
+
+
+### PostgreSQL Syntax
+
+
+Following is the correct syntax to rename a database in PostgreSQL:
+
+
+```sql
+ALTER DATABASE old_database_name RENAME TO new_database_name;
+```
+
+
+### Example
+
+
+In this example, we rename the databasetestDBtotutorialsDBin PostgreSQL:
+
+
+```sql
+ALTER DATABASE testDB RENAME TO tutorialsDB;
+```
+
+
+### Important Notes for Renaming a Database in PostgreSQL
+
+
+Before using theALTER DATABASE ... RENAME TOcommand, make sure to consider the following:
+
+
+
+- You cannot be connected to the database you're trying to rename. Switch to a different database first (e.g.,postgres).
+- Ensure there are no active connections to the database you want to rename. You may need to disconnect users or force disconnection.
+
+

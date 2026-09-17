@@ -1,0 +1,145 @@
+---
+title: "PYTHON - Method Overriding"
+description: "Learn PYTHON - Method Overriding with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1400
+group: "Object Oriented Programming"
+seoTitle: "PYTHON - Method Overriding — CodesCompiler PYTHON Guide"
+permalink: "python-method-overriding"
+---
+
+
+# Python - Method Overriding
+
+
+
+
+## Method Overriding in Python
+
+
+The Pythonmethod overridingrefers to defining a method in a subclass with the same name as a method in its superclass. In this case, the Python interpreter determines which method to call at runtime based on the actual object being referred to.
+
+
+You can always override your parent class methods. One reason for overriding parent's methods is that you may want special or different functionality in your subclass.
+
+
+### Example
+
+
+In the code below, we are overriding a method namedmyMethodof Parent class.
+
+
+```python
+# define parent class
+class Parent: 
+   def myMethod(self):
+      print ('Calling parent method')
+
+# define child class
+class Child(Parent): 
+   def myMethod(self):
+      print ('Calling child method')
+
+# instance of child
+c = Child() 
+# child calls overridden method
+c.myMethod()
+```
+
+
+When the above code is executed, it produces the followingoutput−
+
+
+```python
+Calling child method
+```
+
+
+To understand Method Overriding in Python, let us take another example. We use following Employee class as parent class −
+
+
+```python
+class Employee:
+   def __init__(self,nm, sal):
+      self.name=nm
+      self.salary=sal
+   def getName(self):
+      return self.name
+   def getSalary(self):
+      return self.salary
+```
+
+
+Next, we define a SalesOfficer class that uses Employee as parent class. It inherits the instance variables name and salary from the parent. Additionally, the child class has one more instance variable incentive.
+
+
+We shall use built-in function super() that returns reference of the parent class and call the parent constructor within the child constructor __init__() method.
+
+
+```python
+class SalesOfficer(Employee):
+   def __init__(self,nm, sal, inc):
+      super().__init__(nm,sal)
+      self.incnt=inc
+   def getSalary(self):
+      return self.salary+self.incnt
+```
+
+
+The getSalary() method is overridden to add the incentive to salary.
+
+
+### Example
+
+
+Declare the object of parent and child classes and see the effect of overriding. Complete code is below −
+
+
+```python
+class Employee:
+   def __init__(self,nm, sal):
+      self.name=nm
+      self.salary=sal
+   def getName(self):
+      return self.name
+   def getSalary(self):
+      return self.salary
+
+class SalesOfficer(Employee):
+   def __init__(self,nm, sal, inc):
+      super().__init__(nm,sal)
+      self.incnt=inc
+   def getSalary(self):
+      return self.salary+self.incnt
+
+e1=Employee("Rajesh", 9000)
+print ("Total salary for {} is Rs {}".format(e1.getName(),e1.getSalary()))
+s1=SalesOfficer('Kiran', 10000, 1000)
+print ("Total salary for {} is Rs {}".format(s1.getName(),s1.getSalary()))
+```
+
+
+When you execute this code, it will produce the followingoutput−
+
+
+```python
+Total salary for Rajesh is Rs 9000
+Total salary for Kiran is Rs 11000
+```
+
+
+## Base Overridable Methods
+
+
+The following table lists some generic functionality of the object class, which is the parent class for all Python classes. You can override these methods in your own class −
+
+
+
+| Sr.No | Method, Description & Sample Call |
+| --- | --- |
+| 1 | __init__ ( self [,args...] )Constructor (with any optional arguments)Sample Call :obj `=` className(args) |
+| 2 | __del__( self )Destructor, deletes an objectSample Call :del obj |
+| 3 | __repr__( self )Evaluatable string representationSample Call :repr(obj) |
+| 4 | __str__( self )Printable string representationSample Call :str(obj) |
+
+

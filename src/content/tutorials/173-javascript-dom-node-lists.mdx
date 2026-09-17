@@ -1,0 +1,196 @@
+---
+title: "JavaScript - DOM NodeList"
+description: "Learn JavaScript - DOM NodeList with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1730
+group: "JavaScript HTML DOM"
+seoTitle: "JavaScript - DOM NodeList — CodesCompiler JavaScript Guide"
+permalink: "javascript-dom-node-lists"
+---
+
+
+# JavaScript - DOM NodeList
+
+
+
+
+## DOM NodeList
+
+
+TheNodeListsare similar to an array orHTMLCollectioncontaining the HTML elements. However, it is not the same as the array or HTML collection.
+
+
+All modern browsers return the node list when you usequerySelectorAll()method and childNodes properties. You can traverse theNodeListas an array but can't use other array methods likemap(),filter(), etc, with node lists.
+
+
+The following diagram clearly explains the JavaScript NodeList interface. As you can see, an HTML code snippet contains all types of nodes:
+
+
+## JavaScript DOM NodeList Methods
+
+
+Following is a list of methods provided by the JavaScriptNodeList−
+
+
+Sr.NoMethod & Description1entries()This method retrieves an iterator, that allows us to iterate through all the key/value pairs in the object.2forEach()This method calls the callback function mentioned in the parameter once for each value pair in the list in the order of their insertion.3item()This method retrieves a node from the NodeList specified by the index in the parameter.4keys()This method retrieves an iterator that allows us to go through all the keys contained in the NodeList.
+
+
+## JavaScript DOM NodeList Properties
+
+
+Following is a list of properties provided by the JavaScriptNodeList−
+
+
+Sr.NoProperties & Description1lengthThis method returns the number of items in the NodeList.
+
+
+### Example 1: Retrieving a specific element from a NodeList.
+
+
+The following example demonstrates the usage of the JavaScript DOMNodeList−
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>JavaScript DOM NodeList</title>
+</head>
+<body>
+    <div>
+        pThis is first paragraph.
+        pThis is second paragraph.
+        pThis is third paragraph.
+        pThis is fourth paragraph.
+    </div>
+    <script>
+        let myNodeList = document.querySelectorAll('p');
+        //you can access the node list by index
+        //access the third node list
+        alert("This is third P: " + myNodeList[2].innerHTML);
+    </script>
+</body>
+</html>
+```
+
+
+The program uses "querySelectorAll()" to select all "p" elements as a NodeList. By passing the index value as "2", it alerts the third "p" element in the document −
+
+
+### Example 2: Adding Style to NodeList (`<div>`) element.
+
+
+In this example, we use the "getElementsByTagName('div')" method to select all "`<div>`" elements and return them as a NodeList. Now, we can apply styles to these elements −
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>JavaScript DOM NodeList</title>
+    <style>
+        button{
+            padding: 8px 20px;
+            margin: 20px 0px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    pClick the button below to add style to all "div" elements.
+   <div>Div 1</div>
+   <div>Div 2</div>
+   <div>Div 3</div>
+   <div>Div 4</div>
+   <div>Div 5</div>
+   <button id="btn">Add style</button>
+   <script>
+   document.getElementById('btn').addEventListener("click", ()=>{
+      //using getElementsByTagName() method
+      let myNodeList = document.getElementsByTagName('div');
+      //using length property
+      for(let i = 0; i<myNodeList.length; i++){
+          myNodeList[i].style.color = 'white';
+          myNodeList[i].style.padding = "10px";
+          myNodeList[i].style.margin = "5px";
+          myNodeList[i].style.border = "1px solid black";
+          myNodeList[i].style.backgroundColor = "green";
+      }
+   });
+    </script>
+</body>
+</html>
+```
+
+
+On executing the above program, a button is displayed. When clicked, it applies a new style to all "div" elements −
+
+
+### Example 3: Using the forEach() method to traverse the NodeList elements.
+
+
+In this example, we have four `p` elements. We use "querySelectorAll('.lang')" to select all elements with the class "lang" and traverse the NodeList using "forEach()" method −
+
+
+```html
+<DOCTYPE html>
+<html>
+<body>
+   p class = "lang" English 
+   p class = "lang" German 
+   p class = "lang" Arabic 
+   p class = "lang" Hindi  <br>
+   <div id = "output"> </div>
+   <script>
+      const output = document.getElementById('output');
+      output.innerHTML += "All languages are: <br>";
+      const langs = document.querySelectorAll('.lang');
+      langs.forEach((language) => {
+         output.innerHTML += language.innerHTML + '<br>';
+      })
+   </script>
+</body>
+</html>
+```
+
+
+After execution, the above program displays all "p" elements having the the class name equal to "lang" −
+
+
+### Example 4: Retrieving the length of the NodeList.
+
+
+In the below code, we have used the 'length' property of the NodeList to count the number of nodes in the NodeList.
+
+
+```html
+<DOCTYPE html>
+<html>
+<body>
+   <div class = "fruit"> Apple </div>
+   <div class = "fruit"> Orange </div>
+   <div class = "fruit"> Banana </div>
+   <div class = "fruit"> Mango </div>
+   <div id = "output">Total number of fruits are : </div>
+   <script>
+      const fruits = document.querySelectorAll('.fruit');
+      document.getElementById('output').innerHTML += fruits.length;
+   </script>
+</body>
+</html>
+```
+
+
+The above program returns the length of NodeList −
+
+
+## Difference between HTMLCollection and NodeList
+
+
+The HTMLCollection and NodeList look similar, but there is a minor difference between them, which we have explained in the table below −
+
+
+FeatureHTMLCollectionNodeListReturn byGenerally, getElementByClassName(), getElementByTagName methods, and children properties return the HTML collection.Generally, the querySelectorAll() method and childNodes property return the Node list.Array methodsIt supports limited array methods.It also supports limited array methods like forEach().Live collectionSome browser supports live collection with HTML collection.It updates if you update the DOM element.
+

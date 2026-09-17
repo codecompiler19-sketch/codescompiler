@@ -1,0 +1,258 @@
+---
+title: "JavaScript - ECMAScript 2022"
+description: "Learn JavaScript - ECMAScript 2022 with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1130
+group: "JavaScript Versions"
+seoTitle: "JavaScript - ECMAScript 2022 — CodesCompiler JavaScript Guide"
+permalink: "javascript-ecmascript-2022"
+---
+
+
+# JavaScript - ECMAScript 2022
+
+
+
+
+TheECMAScript 2022standard was released in 2022. Important features added to this update includeprivate methods and fields,Array at()andString at()methods etc. This chapter discuss all the newly added features in ECMAScript 2022.
+
+
+## New Features Added in ECMAScript 2022
+
+
+Here are the new methods, features, etc., added to the ECMAScript 2022 version of JavaScript.
+
+
+
+- Array at() Method
+- String at() Method
+- Private methods and fields
+- Object.hasOwn()
+- error.cause
+- await import
+
+
+
+Here, we have explained each feature in detail.
+
+
+## Array at() Method
+
+
+ECMAScript 2022 (ES2022) introduced Array at() method to arrays. In JavaScript, array at() method used to access the array element from the particular index. You can't use the negative index in the arr[index] representation, but with the array.at() method, you can also use the negative index to access array elements.
+
+
+When you use the negative index, it returns the array from the last.
+
+
+### Example
+
+
+In the below code, we access the last and third-last elements from the array using the negative indexes and array.at() method.
+
+
+```html
+<body>
+   <div id = "demo1">The last array element is:  </div>
+   <div id = "demo2">The third last array element is:  </div>
+   <script>
+      const arr = [10, 20, 60, 72, 6, 12, 23];
+      document.getElementById("demo1").innerHTML += arr.at(-1);
+      document.getElementById("demo2").innerHTML += arr.at(-3);
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The last array element is: 23
+The third last array element is: 6
+```
+
+
+## String at() Method
+
+
+ECMAScript introduced String at() method to strings. In JavaScript, the String at() method is used to access the characters from the particular string index. It also accepts the negative index as an argument.
+
+
+### Example
+
+
+In the code below, we access the last and fourth last characters from the string using the negative indexes and string.at() method.
+
+
+```html
+<html>
+<body>
+   <div id = "demo1">The last string character is:  </div>
+   <div id = "demo2">The fourth last string character is:  </div>
+   <script>
+      let str = "Hello world";
+      document.getElementById("demo1").innerHTML += str.at(-1);
+      document.getElementById("demo2").innerHTML += str.at(-4);
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The last string character is: d
+The fourth last string character is: o
+```
+
+
+## Private Methods and Fields
+
+
+ECMAScript 2022 introduced the way to write private methods and fields. In JavaScritp, you can write the field name or method name followed by the hash sign ('#') to make them private. You can't access the private fields and methods using the class instance. However, you can access them inside the class.
+
+
+### Example
+
+
+In the below code, the car class contains the 'brand' private field and the 'carBrand' private method. The getBrand() method is public.
+
+
+We have created the instance of the car class and invoked the getBrand() method using it. The getBrand() method calls the carBrand() method.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      class car {
+         #brand;
+         constructor(brand) {
+            this.#brand = brand;
+         }
+         getBrand() {
+            return this.#carBrand();
+         }
+         #carBrand() {
+            return "The car brand is " + this.#brand;
+         }
+      }
+      const BMW = new car("BMW");
+      document.getElementById("output").innerHTML = BMW.getBrand();
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The car brand is BMW
+```
+
+
+## Object hasOwn() Method
+
+
+The Object.hasOwn() method is a replacement for the Object.hasOwnProperty() method. It is used to check whether the object contains a particular property.
+
+
+### Example
+
+
+In the code below, we use the hasOwn() method to check whether the obj object contains the name property.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      const obj = {
+         name: "sam",
+         age: 50,
+      }
+      document.getElementById("output").innerHTML = 
+	  "Does obj contain name property? " + obj.hasOwnProperty("name");
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Does obj contain name property? true
+```
+
+
+## The error.cause Property
+
+
+The 'cause' is a property of the JavaScript object. It represents the reason for the error. It is introduced in ECMAScript 2022.
+
+
+### Example
+
+
+In the below code, we throw a new error from the 'try' block. Also, we specify the reason for the error using the cause property.
+
+
+We access the 'cause' property value in the catch block to know the reason.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+      let output = document.getElementById("demo");
+      try {
+         output.innerHTML += "Inside the try block <br>";
+         throw new Error("New error", { cause: "Testing with error." })
+      } catch (error) {
+         output.innerHTML += "The reason for the error is: " + error.cause + "<br>";
+      }
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Inside the try block
+The reason for the error is: Testing with error.
+```
+
+
+## The Await Import
+
+
+You can use the asynchronous import to import the dynamic modules. You need to use the 'await' keyword for the asynchronous import.
+
+
+For example, the below code contains the self-invoking asynchronous function. Also, the 'await' keyword is used inside the function to await the import.
+
+
+```javascript
+(async function () {
+   await (await import('./math.js')).default();
+   await (await import('./operations.js')).default();
+})();
+```
+
+
+Warning  Some of the above features are not supported by some browsers. So, you can use the polyfill to avoid errors.
+

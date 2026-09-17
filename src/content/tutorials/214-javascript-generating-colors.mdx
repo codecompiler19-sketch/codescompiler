@@ -1,0 +1,324 @@
+---
+title: "JavaScript - Generating Colors"
+description: "Learn JavaScript - Generating Colors with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2140
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Generating Colors — CodesCompiler JavaScript Guide"
+permalink: "javascript-generating-colors"
+---
+
+
+# JavaScript - Generate Colors
+
+
+
+
+Generating colors are quite handy while working on web development projects. For beautiful UI, we need to use different colors. In this chapter, we will learn how to generate colors in JavaScript.
+
+
+## Generating Random Hex Color
+
+
+The Hex (Hexadecimal) code is a six-digit code and a three-byte hexadecimal number that is used to represent the colors.
+
+
+These three bytes represent RGB which means the amount of red, green, and blue in a particular shade of a color. Each byte will represent a number in the range 00 to FF (Hexadecimal notation) or 0 to 255 in decimal notation. This indicates the intensity of each of the color components from 0 to 255.
+
+
+The following are the functions to be used for generating random hex codes
+
+
+### Math.random()
+
+
+This function is used to get the number randomly in the range 0 to less than 1 including the decimal.
+
+
+```javascript
+function random_num(maximum) {
+
+   return Math.floor(Math.random() * maximum);
+
+}
+
+document.write(random_num(5));
+
+// output: 0, 1 or 2
+```
+
+
+In the above snippet, we gave input as 5 as maximum value. Whenever we try to execute the program, it will print the output in between 0 to 4.
+
+
+```javascript
+document.write(random_num());
+
+// output: 0 to 1
+```
+
+
+In this case, as we didnt have any input value as the maximum value, it prints a random number between 0 to 1 whenever we run the program. So, this is how theMath.random()function works.
+
+
+### Math.floor()
+
+
+This is a function that will round off the number downwards to the nearest integer.
+
+
+```javascript
+document.write(Math.floor(1.95));
+
+// output: 1
+```
+
+
+Here, we can see the output is printed as 5. So, the value is rounded downwards to the nearest integer.
+
+
+```javascript
+document.write(Math.floor(1));
+
+// output: 1
+```
+
+
+If the value passed is a perfect integer without any floating (decimal) points, it will be rounded off.
+
+
+Now, lets combine these functions to generate the random hex numbers.
+
+
+We usemath.random()to generate a random number and multiply it with 16777215 as this number is the decimal representation of fffff (Highest in the hex code).
+
+
+```javascript
+Math.random()*16777215
+```
+
+
+This will return a random number like 12421420.464841081 with decimals, Now we use math.floor() to remove the decimals and return a whole number.
+
+
+```javascript
+Math.floor(Math.random()*16777215)
+```
+
+
+Now, we include toString() method to convert the number into a string. We have passed 16 as a parameter because Base 16 is hexadecimal. The value of 16 will return hex-code (with numbers and letters).
+
+
+```javascript
+Math.floor(Math.random()*16777215).toString(16);
+```
+
+
+### Example
+
+
+Now, its time to generate the random hex color code. We will use the above code snippet to generate the random hex color code.
+
+
+```html
+<!DOCTYPE html>
+
+<html>
+
+   <title>Generating random hex color</title>
+
+<head>
+
+   <h3>
+
+      <div id="demo">Mouse-over on this box to get new random color</div>
+
+      p id="color"
+
+   </h3>
+
+   <style>
+
+      body {
+
+         height: 100vh;
+
+         padding: 1rem;
+
+         display: grid;
+
+         place-items: center;
+
+         font-family: verdana;
+
+      }
+
+      h3 {
+
+         background: white;
+
+         padding: 1rem 1rem;
+
+         text-align: center;
+
+         border-radius: 5px 20px 5px;
+
+      }
+
+      p {
+
+         display: block;
+
+         padding: 1px;
+
+         font-size: 20px;
+
+         font-weight: lighter;
+
+         font-family: verdana;
+
+      }
+
+   </style>
+
+
+
+</head>
+
+<body>
+
+   <script>
+
+      function hex() {
+
+         const RanHexColor = '#' + Math.floor(Math.random()*16777215).toString(16);
+
+         document.body.style.backgroundColor = RanHexColor;
+
+         color.innerHTML = RanHexColor;
+
+      }
+
+      demo.addEventListener("mouseover", hex);
+
+      hex();
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+In the output, whenever you mouse over the box which is in middle it will generate the random hex colors on the background.
+
+
+## Generating random RGB color
+
+
+For generating random RGB color in JavaScript, we use same trick as we used for hex color. We will generate random numbers for red, green, and blue and then combine them to get the RGB color.
+
+
+### Example
+
+
+Below is the code snippet for generating random RGB color:
+
+
+```html
+<!DOCTYPE html>
+
+<html>
+
+   <title>Generating random RGB color</title>
+
+<head>
+
+   <h3>
+
+      <div id="demo">Mouse-over on this box to get new random color</div>
+
+      p id="color"
+
+   </h3>
+
+   <style>
+
+      body {
+
+         height: 100vh;
+
+         padding: 1rem;
+
+         display: grid;
+
+         place-items: center;
+
+         font-family: verdana;
+
+      }
+
+      h3 {
+
+         background: white;
+
+         padding: 1rem 1rem;
+
+         text-align: center;
+
+         border-radius: 5px 20px 5px;
+
+      }
+
+      p {
+
+         display: block;
+
+         padding: 1px;
+
+         font-size: 20px;
+
+         font-weight: lighter;
+
+         font-family: verdana;
+
+      }
+
+   </style>
+
+
+
+</head>
+
+<body>
+
+   <script>
+
+      function rgb() {
+
+         const RanRGBColor = 'rgb(' + Math.floor(Math.random()*256) + ',' + Math.floor(Math.random()*256) + ',' + Math.floor(Math.random()*256) + ')';
+
+         document.body.style.backgroundColor = RanRGBColor;
+
+         color.innerHTML = RanRGBColor;
+
+      }
+
+      demo.addEventListener("mouseover", rgb);
+
+      rgb();
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+### Output
+
+
+In the output, whenever you mouse over the box which is in middle it will generate the random RGB colors on the background.
+

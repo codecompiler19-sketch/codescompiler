@@ -1,0 +1,395 @@
+---
+title: "PYTHON - Descriptors"
+description: "Learn PYTHON - Descriptors with clear explanation, code examples, and practical guide."
+category: "python"
+order: 2310
+group: "Python Advanced Concepts"
+seoTitle: "PYTHON - Descriptors — CodesCompiler PYTHON Guide"
+permalink: "python-descriptors"
+---
+
+
+# Python - Descriptors
+
+
+
+
+## Python Descriptors
+
+
+Python Descriptorsare a way to customize the access, assignment and deletion of object attributes. They provide a powerful mechanism for managing the behavior of attributes by defining methods that get, set and delete their values. Descriptors are often used to implement properties, methods and attribute validation.
+
+
+Adescriptoris any object that implements at least one of the methods such as __get__, __set__ and __delete__. These methods control how an attribute's value is accessed and modified.
+
+
+## How Python Descriptors Work?
+
+
+When an attribute is accessed on an instance then Python looks up the attribute in the instance's class. If the attribute is found and it is a descriptor then Python invokes the appropriate descriptor method instead of simply returning the attribute's value. This allows the descriptor to control what happens during attribute access.
+
+
+The descriptor protocol is a low-level mechanism that is used by many high-level features in Python such as properties, methods, static methods and class methods. Descriptors can be used to implement patterns like lazy loading, type checking and computed properties.
+
+
+## Descriptor Methods
+
+
+Python Descriptorsinvolve three main methods namely __get__(), __set__() and __delete__(). As we already discussed above these methods control the behavior of attribute access, assignment and deletion, respectively.
+
+
+### 1. The __get__() Method
+
+
+The__get__() methodin descriptors is a key part of the descriptor protocol in Python. It is called to retrieve the value of an attribute from an instance or from the class. Understanding how the__get__() methodworks is crucial for creating custom descriptors that can manage attribute access in sophisticated ways.
+
+
+#### Syntax
+
+
+The following is the syntax ofPython Descriptor __get__ method−
+
+
+```python
+def __get__(self, instance, owner):
+   """
+   instance: the instance that the attribute is accessed through, or None when accessed through the owner class.
+   owner: the owner class where the descriptor is defined.
+   """
+```
+
+
+#### Parameters
+
+
+Below are the parameters of this method −
+
+
+
+- self:The descriptor instance.
+- instance:The instance of the class where the attribute is accessed. It is None when the attribute is accessed through the class rather than an instance.
+- owner:The class that owns the descriptor.
+
+
+
+#### Example
+
+
+Following is the basic example of __get__() method in which it returns the stored value_valuewhenobj.attris accessed −
+
+
+```python
+class Descriptor:
+   def __get__(self, instance, owner):
+      if instance is None:return self
+      return instance._value
+
+class MyClass:
+   attr = Descriptor()
+
+   def __init__(self, value):
+      self._value = value
+
+obj = MyClass(42)
+print(obj.attr)
+```
+
+
+Output
+
+
+```python
+42
+```
+
+
+### 2. The __set__() Method
+
+
+The__set__() methodis part of the descriptor protocol in Python and is used to control the behavior of setting an attribute's value. When an attribute managed by a descriptor is assigned a new value then the__set__() methodis called by allowing the user to customize or enforce rules for the assignment.
+
+
+#### Syntax
+
+
+The following is the syntax ofPython Descriptor __set__() method−
+
+
+```python
+def __set__(self, instance, value):
+    """
+    instance: the instance of the class where the attribute is being set.
+    value: the value to assign to the attribute.
+    """
+```
+
+
+#### Parameters
+
+
+Below are the parameters of this method −
+
+
+
+- self:The descriptor instance.
+- instance:The instance of the class where the attribute is being set.
+- value:The value being assigned to the attribute.
+
+
+
+#### Example
+
+
+Following is the basic example of __set__() method in which ensures that the value assigned to attr is an integer −
+
+
+```python
+class Descriptor:
+    def __set__(self, instance, value):
+        if not isinstance(value, int):
+            raise TypeError("Value must be an integer")
+        instance._value = value
+
+class MyClass:
+    attr = Descriptor()
+
+    def __init__(self, value):
+        self.attr = value
+
+obj = MyClass(42)
+print(obj.attr)  
+obj.attr = 100
+print(obj.attr)
+```
+
+
+Output
+
+
+```python
+<__main__.Descriptor object at 0x000001E5423ED3D0>
+<__main__.Descriptor object at 0x000001E5423ED3D0>
+```
+
+
+### 3. The __delete__() Method
+
+
+The__delete__() methodin the descriptor protocol allows us to control what happens when an attribute is deleted from an instance. This can be useful for managing resources, cleaning up or enforcing constraints when an attribute is removed.
+
+
+#### Syntax
+
+
+The following is the syntax ofPython Descriptor __delete__() method−
+
+
+```python
+def __delete__(self, instance):
+    """
+    instance: the instance of the class from which the attribute is being deleted.
+    """
+```
+
+
+#### Parameters
+
+
+Below are the parameters of this method −
+
+
+
+- self:The descriptor instance.
+- instance:The instance of the class where the attribute is being deleted.
+
+
+
+#### Example
+
+
+Following is the basic example of __set__() method in which ensures that the value assigned to attr is an integer −
+
+
+```python
+class LoggedDescriptor:
+   def __init__(self, name):
+      self.name = name
+
+   def __get__(self, instance, owner):
+      return instance.__dict__.get(self.name)
+
+   def __set__(self, instance, value):
+      instance.__dict__[self.name] = value
+
+   def __delete__(self, instance):
+      if self.name in instance.__dict__:
+         print(f"Deleting {self.name} from {instance}")
+         del instance.__dict__[self.name]
+      else:
+         raise AttributeError(f"{self.name} not found")
+
+class Person:
+   name = LoggedDescriptor("name")
+   age = LoggedDescriptor("age")
+
+   def __init__(self, name, age):
+      self.name = name
+      self.age = age
+
+# Example usage
+p = Person("Tutorialspoint", 30)
+print(p.name)  
+print(p.age)   
+
+del p.name    
+print(p.name) 
+
+del p.age    
+print(p.age)
+```
+
+
+Output
+
+
+```python
+Tutorialspoint
+30
+Deleting name from <__main__.Person object at 0x0000021A1A67E2D0>
+None
+Deleting age from <__main__.Person object at 0x0000021A1A67E2D0>
+None
+```
+
+
+## Types of Python Descriptors
+
+
+In Pythondescriptorscan be broadly categorized into two types based on the methods they implement. They are −
+
+
+
+- Data Descriptors
+- Non-data Descriptors
+
+
+
+Let's see about the two types of python descriptors in detail for our better understanding.
+
+
+### 1. Data Descriptors
+
+
+Data descriptorsare a type of descriptor in Python that define both__get__()and__set__()methods. These descriptors have precedence over instance attributes which meand that the descriptors__get__()and__set__()methods are always called, even if an instance attribute with the same name exists.
+
+
+#### Example
+
+
+Below is the example of a data descriptor that ensures an attribute is always an integer and logs access and modification operations −
+
+
+```python
+class Integer:
+   def __get__(self, instance, owner):
+      print("Getting value")
+      return instance._value
+
+   def __set__(self, instance, value):
+      print("Setting value")
+      if not isinstance(value, int):
+         raise TypeError("Value must be an integer")
+      instance._value = value
+
+   def __delete__(self, instance):
+      print("Deleting value")
+      del instance._value
+
+class MyClass:
+   attr = Integer()
+
+# Usage
+obj = MyClass()
+obj.attr = 42  
+print(obj.attr)  
+obj.attr = 100  
+print(obj.attr)  
+del obj.attr
+```
+
+
+Output
+
+
+```python
+Setting value
+Getting value
+42
+Setting value
+Getting value
+100
+Deleting value
+```
+
+
+### 2. Non-data Descriptors
+
+
+Non-data descriptorsare a type of descriptor in Python that define only the__get__()method. Unlike data descriptors, non-data descriptors can be overridden by instance attributes. This means that if an instance attribute with the same name exists then it will take precedence over the non-data descriptor.
+
+
+#### Example
+
+
+Following is an example of a non-data descriptor that provides a default value if the attribute is not set on the instance −
+
+
+```python
+class Default:
+   def __init__(self, default):
+      self.default = default
+
+   def __get__(self, instance, owner):
+      return getattr(instance, '_value', self.default)
+
+class MyClass:
+   attr = Default("default_value")
+
+# Usage
+obj = MyClass()
+print(obj.attr)  
+obj._value = "Tutorialspoint"
+print(obj.attr)
+```
+
+
+Output
+
+
+```python
+default_value
+Tutorialspoint
+```
+
+
+## Data Descriptors Vs. Non-data Descriptors
+
+
+Understanding the differences betweenData DescriptorsandNon-data Descriptorsof python Descriptors is crucial for leveraging their capabilities effectively.
+
+
+
+| Criteria | Data Descriptors | Non-Data Descriptors |
+| --- | --- | --- |
+| Definition | Implements both __get__(), __set__() methods, and the __delete__() method optionally. | Implements only __get__() method. |
+| Methods | __get__(self, instance, owner)__set__(self, instance, value)__delete__(self, instance) (optional) | __get__(self, instance, owner) |
+| Precedence | Takes precedence over instance attributes. | Overridden by instance attributes. |
+| Use Cases | Attribute validation and enforcement,Managed attributes (e.g., properties),Logging attribute access and modification,Enforcing read-only attributes. | Method binding,Caching and,Providing default values.. |
+
+
+
+Finally we can sayDescriptorsin Python provide a powerful mechanism for managing attribute access and modification. Understanding the differences between data descriptors and non-data descriptors as well as their appropriate use cases is essential for creating robust and maintainable Python code.
+
+
+By leveraging the descriptor protocol developers can implement advanced behaviors such as type checking, caching and read-only properties.
+

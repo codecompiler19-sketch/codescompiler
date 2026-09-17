@@ -1,0 +1,243 @@
+---
+title: "SQL - Create Database"
+description: "Learn SQL - Create Database with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 110
+group: "SQL Database"
+seoTitle: "SQL - Create Database — CodesCompiler SQL Guide"
+permalink: "sql-create-database"
+---
+
+
+# SQL CREATE DATABASE Statement
+
+
+Table of contentThe SQL CREATE DATABASE StatementHow to Verify the Database Was CreatedHow to Select and Use a DatabaseRemoving a Created DatabaseSQL CREATE DATABASE with IF NOT EXISTS ClauseRules for Naming a Database
+
+
+
+
+A database is like a container that stores all the important elements of your project suh as tables, data, views, stored procedures, etc. This is usually the first step when you start with a new project or application that needs organised data storage.
+
+
+For example, if you are developing a website or mobile app that manages user accounts, orders, messages, or any kind of information, you need a dedicated space to store and organize that data. That space is the database.
+
+
+## The SQL CREATE DATABASE Statement
+
+
+TheCREATE DATABASEstatement in SQL is used to create a new database in your database management system (DBMS).
+
+
+It is part of SQL's Data Definition Language (DDL), which is used to define and manage database objects like tables, databases, indexes, and more.
+
+
+### Syntax
+
+
+Following is the syntax to create a database in SQL:
+
+
+```sql
+CREATE DATABASE database_name;
+```
+
+
+Here:
+
+
+
+- CREATE DATABASE:It is the SQL command to create a new database.
+- database_name:It is the name you want to give to your database. It should follow proper naming rules.
+
+
+
+### Example
+
+
+Following is an example to create a databasetestDBusingSQL CREATE DATABASEstatement:
+
+
+```sql
+CREATE DATABASE testDB;
+```
+
+
+After executing the above command inMySQL database, we get the following output:
+
+
+```sql
+Query OK, 1 row affected (0.02 sec)
+```
+
+
+## How to Verify the Database Was Created
+
+
+You can check if the database was created by listing all existing databases using theSHOW DATABASEScommand as shown below:
+
+
+```sql
+SHOW DATABASES;
+```
+
+
+After executing the above command on MySQL server, if you seetestDBin the list, then your database has been created successfully:
+
+
+Databaseinformation_schemalibrarymysqlperformance_schemasystestdb
+
+
+Sincetestdbis listed, it confirms that the database has been successfully created.
+
+
+## How to Select and Use a Database
+
+
+Before you can create tables or insert data into a database, you must tell the system which database to use. This is important because a database server (like MySQL or SQL Server) can host multiple databases at once. If you don't select a specific one, your commands may not know where to apply changes
+
+
+### Syntax
+
+
+Following is the basic syntax to select and use a database:
+
+
+```sql
+USE database_name;
+```
+
+
+### Example
+
+
+In the following command, we select the database namedtestDBand set it as the active database for the current session:
+
+
+```sql
+USE testDB;
+```
+
+
+We get to see the output as shown below:
+
+
+```sql
+Database changed
+```
+
+
+## Removing a Created Database
+
+
+You may need to delete (remove) a database if you created it by mistake, don't need it anymore, or want to make a new one from the beginning. To do this, you can use theDROP DATABASEstatement, which permanently deletes the database and all its contents.
+
+
+### Syntax
+
+
+Following is the basic syntax to remove a database that was accidentally created:
+
+
+```sql
+DROP DATABASE database_name;
+```
+
+
+### Example
+
+
+In the following command, we delete the database namedtestDB:
+
+
+```sql
+DROP DATABASE testDB;
+```
+
+
+Following is the output obtained:
+
+
+```sql
+Query OK, 0 rows affected (0.04 sec)
+```
+
+
+## SQL CREATE DATABASE with IF NOT EXISTS Clause
+
+
+If you try to create a database that already exists, SQL will return an error. To avoid this, you can use theIF NOT EXISTSclause with theCREATE DATABASEstatement.
+
+
+This clause tells SQL to create the database only if it doesn't already exist, helping you avoid errors during execution.
+
+
+### Syntax
+
+
+Following is the syntax to create a database only if it does not already exist, using theIF NOT EXISTSclause in SQL:
+
+
+```sql
+CREATE DATABASE IF NOT EXISTS database_name;
+```
+
+
+### Example
+
+
+The following command creates a database namedtestDBonly if it doesn't already exist:
+
+
+```sql
+CREATE DATABASE IF NOT EXISTS testDB;
+```
+
+
+Following is the output of the above code:
+
+
+```sql
+Query OK, 1 row affected, 1 warning (0.00 sec)
+```
+
+
+## Rules for Naming a Database
+
+
+When naming your database in SQL, it is important to follow standard rules to avoid errors:
+
+
+
+- Use only letters, numbers, and underscores (_).
+- Don't use spaces or special characters like@,#,%, etc.
+- Stick to lowercase or snake_case format (e.g.,school_system).
+- Make sure the database name is unique in your system.
+
+
+
+### Example: Valid Database Names
+
+
+Following are some examples of names that follow the proper rules:
+
+
+
+- CustomerDB
+- employee_data
+- inventory2025
+
+
+
+### Example: Invalid Database Names
+
+
+Following are some examples of names that break the naming rules and should be avoided:
+
+
+
+- 123database(starts with a number)
+- user data(contains a space)
+- db@info(contains a special character)
+
+

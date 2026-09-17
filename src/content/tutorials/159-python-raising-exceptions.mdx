@@ -1,0 +1,194 @@
+---
+title: "PYTHON - Raising Exceptions"
+description: "Learn PYTHON - Raising Exceptions with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1590
+group: "Python Errors & Exceptions"
+seoTitle: "PYTHON - Raising Exceptions — CodesCompiler PYTHON Guide"
+permalink: "python-raising-exceptions"
+---
+
+
+# Python - Raising Exceptions
+
+
+
+
+## Raising Exceptions in Python
+
+
+In Python, you can raise exceptions explicitly using theraisestatement. Raising exceptions allows you to indicate that an error has occurred and to control the flow of your program by handling these exceptions appropriately.
+
+
+Raising an exception refers to explicitly trigger an error condition in your program. This can be useful for handling situations where the normal flow of your program cannot continue due to an error or an unexpected condition.
+
+
+In Python, you can raise built-in exceptions like ValueError or TypeError to indicate common error conditions. Additionally, you can create and raise custom exceptions.
+
+
+## Raising Built-in Exceptions
+
+
+You can raise any built-in exception by creating an instance of the exception class and using the raise statement. Following is the syntax −
+
+
+```python
+raise Exception("This is a general exception")
+```
+
+
+### Example
+
+
+Here is an example where we raise a ValueError when a function receives an invalid argument −
+
+
+```python
+def divide(a, b):
+   if b == 0:
+      raise ValueError("Cannot divide by zero")
+   return a / b
+
+try:
+   result = divide(10, 0)
+except ValueError as e:
+   print(e)
+```
+
+
+Following is the output of the above code −
+
+
+```python
+Cannot divide by zero
+```
+
+
+## Raising Custom Exceptions
+
+
+In addition to built-in exceptions, you can define and raise your own custom exceptions by creating a new exception class that inherits from the base Exception class or any of its subclasses −
+
+
+```python
+class MyCustomError(Exception):
+   pass
+
+def risky_function():
+   raise MyCustomError("Something went wrong in risky_function")
+
+try:
+   risky_function()
+except MyCustomError as e:
+   print(e)
+```
+
+
+Output of the above code is as shown below −
+
+
+```python
+Something went wrong in risky_function
+```
+
+
+## Creating Custom Exceptions
+
+
+Custom exceptions is useful for handling specific error conditions that are unique to your application, providing more precise error reporting and control.
+
+
+To create a custom exception in Python, you define a new class that inherits from the built-in Exception class or any other appropriate built-in exception class. This custom exception class can have additional attributes and methods to provide more detailed context about the error condition.
+
+
+### Example
+
+
+In this example −
+
+
+
+- We define a custom exception class "InvalidAgeError" that inherits from "Exception".
+- The__init__()method initializes the exception with the invalid age and a default error message.
+- Theset_age()function raises "InvalidAgeError" if the provided age is outside the valid range.
+
+
+
+```python
+class InvalidAgeError(Exception):
+   def __init__(self, age, message="Age must be between 18 and 100"):
+      self.age = age
+      self.message = message
+      super().__init__(self.message)
+
+def set_age(age):
+   if age < 18 or age > 100:
+      raise InvalidAgeError(age)
+   print(f"Age is set to {age}")
+
+try:
+   set_age(150)
+except InvalidAgeError as e:
+   print(f"Invalid age: {e.age}. {e.message}")
+```
+
+
+The result obtained is as shown below −
+
+
+```python
+Invalid age: 150. Age must be between 18 and 100
+```
+
+
+## Re-Raising Exceptions
+
+
+Sometimes, you may need to catch an exception, perform specific actions (such as logging, cleanup, or providing additional context), and then re-raise the same exception to be handled further up the call stack
+
+
+This is useful when you want to ensure certain actions are taken when an exception occurs, but still allow the exception to propagate for higher-level handling.
+
+
+To re-raise an exception in Python, you use the "raise" statement without specifying an exception, which will re-raise the last exception that was active in the current scope.
+
+
+### Example
+
+
+In the following example −
+
+
+
+- Theprocess_file()function attempts to open and read a file.
+- If the file is not found, it prints an error message and re-raises the "FileNotFoundError" exception.
+- The exception is then caught and handled at a higher level in the call stack.
+
+
+
+```python
+def process_file(filename):
+   try:
+      with open(filename, "r") as file:
+         data = file.read()
+         # Process data
+   except FileNotFoundError as e:
+      print(f"File not found: {filename}")
+    	# Re-raise the exception
+      raise  
+
+try:
+   process_file("nonexistentfile.txt")
+except FileNotFoundError as e:
+   print("Handling the exception at a higher level")
+```
+
+
+After executing the above code, we get the following output −
+
+
+```python
+File not found: nonexistentfile.txt
+Handling the exception at a higher level
+```
+

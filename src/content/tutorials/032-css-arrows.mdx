@@ -1,0 +1,275 @@
+---
+title: "CSS - Arrows"
+description: "Learn CSS - Arrows with clear CSS layout principles, modern selectors, and practical examples."
+category: "css"
+order: 320
+group: "CSS Basics"
+seoTitle: "CSS - Arrows — CodesCompiler CSS Guide"
+permalink: "css-arrows"
+---
+
+## CSS - Arrows
+
+CSS arrows are graphical symbols created using CSS properties, used to point the viewers attention in a specific direction. Arrows in CSS created using techniques like borders, clip paths, or icons. In this tutorial we will explore all the ways to create and style arrows in CSS.
+
+## Table of Contents
+
+## How to Create Arrows in CSS?
+
+Arrows can be created using CSS properties as listed below:
+
+- Using CSS Border: You can create an arrow in CSS by defining a square element and setting two of it's adjacent borders as transparent and other two borders visible.
+
+- Using Icons: You can use predefined arrow icons defined in libraries like Font Awesome, Material Icons, and Google Icons. They often come with ready-to-use classes or utility classes.
+
+- Using Clip Path: The clip-path property in CSS is used to define polygon of any shape, with this you can also define arrows of any shape.
+
+- Using Unicode Characters: For creating simple arrows, you can specify unicode characters inside containers like div, For example the code '&amp;#9654;' will make a right-pointing arrow.
+
+## CSS Arrow Using Border
+
+The borders is the most common way to create arrows. With borders we can create two types of arrows,
+
+- For solid arrow , Set height and width of container element to zero. Then pick any border (for example, border-bottom) set a solid color and thickness as per size of arrow. Now give same thickness and but a transparent color to two adjacent borders of it ( In this case border-left and border-right). This will create a arrow pointing upwards.
+
+- For line arrow , Set a height and width for element depending upon size of arrow needed. Now set thickness and color for any two adjacent borders (for example border-left and border-top). Rotate element to required direction using transform property.
+
+### Example
+
+```html
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        .arrow-up {
+            width: 0; 
+            height: 0; 
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 10px solid black;
+        }
+
+        .arrow-down{
+            width: 10px;
+            height: 10px;
+            border-left: 2px solid;
+            border-top: 2px solid;
+            transform: rotate(225deg) skew(10deg, 10deg);
+        }
+        
+        .arrow-diagonal{
+            width: 10px;
+            height: 10px;
+            border-left: 2px solid;
+            border-top: 2px solid;
+            transform: rotate(90deg) skew(10deg, 10deg);
+        }
+    </style>
+</head>
+
+<body>
+ ### Arrow Type 1   
+    <div class="arrow-up"></div>
+
+ ### Arrow Type 2
+    <div class="arrow-down"></div>
+    
+ ### Arrow Rotated
+    <div class="arrow-diagonal"></div>
+</body>
+
+</html>
+```
+
+## CSS Arrows Using Icons
+
+We can also create arrows using predefined icon libraries like Font Awesome, Material Icons, and Google Icons. Following example uses google icons to display arrows.
+
+### Example
+
+```html
+<!DOCTYPE html> 
+<html>
+
+<head>
+   <link rel="stylesheet" 
+         href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+
+<body>
+    <h1> Google Fonts Icon </h1>
+
+    <span class="material-icons" style="font-size:40px;">
+        arrow_forward
+    </span>
+     <span class="material-icons" style="font-size:40px;">
+        arrow_backward
+    </span>
+</body>
+
+</html>    
+```
+
+## Arrows Using Clip Path Property
+
+We can create arrows of any shape using clip-path property in CSS.
+
+```css
+clip-path: polygon(x1 y1, x2 y2, x3 y3, ...);
+```
+
+- x1 y1, x2 y2, ... are pairs of coordinates that define the vertices of the polygon. The coordinates are given as percentages or absolute units (e.g., px).
+
+- The origin (0, 0) is the top-left corner of the element, and (100%, 100%) is the bottom-right corner.
+
+### Example
+
+```html
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        .arrow-right {
+            width: 0;
+            height: 0;
+            margin: 29px;
+            border-style: solid;
+            border-width: 10px 0 10px 20px;
+            clip-path: polygon(100% 50%, 0 100%, 0 0);
+        }
+    </style>
+</head>
+
+<body>
+    ###  Arrow Using Clip Path 
+    <div class="arrow-right" ></div>
+</body>
+
+</html>
+```
+
+## CSS Arrows Styling
+
+The following example shows how to style an arrow in css by setting properties like color , transform-rotate , shadow and animations.
+
+### Example
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        .arrow {
+            width: 0;
+            height: 0;
+            margin: 20px;
+        }
+
+        .arrow-color {
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 10px solid red;
+        }
+
+        .arrow-shadow {
+            width: 20px;
+            height: 20px;
+            border-left: 2px solid;
+            border-top: 2px solid;
+            transform: rotate(135deg) skew(10deg, 10deg);
+            box-shadow: -5px -5px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .arrow-rotated {
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 10px solid black;
+            transform: rotate(45deg);
+        }
+
+        .arrow-animate {
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 10px solid aqua;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .arrow-animate:hover {
+            transform: translateY(-10px);
+        }
+    </style>
+</head>
+
+<body>
+    ### Colored Arrow
+    <div class="arrow arrow-color"></div>
+
+    ###  Arrow with shadow 
+    <div class="arrow arrow-shadow"></div>
+
+    ###  Rotated arrow 
+    <div class="arrow arrow-rotated"></div>
+
+    ###  Animated arrow 
+    <div class="arrow arrow-animate"></div>
+</body>
+
+</html>
+```
+
+## CSS Tooltip Arrow
+
+We can create a tooltip with an upward-pointing triangular arrow using CSS borders and transform property. We have used hover pseudo-class to make tooltip visible when user hovered over content.
+
+### Example
+
+```html
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+        .tooltipContent {
+            display: none;
+            position: absolute;
+            background-color: grey;
+            color: #fff;
+            padding: 8px;
+            border-radius: 4px;
+            z-index: 1;
+            font-size: 14px;
+            white-space: nowrap;
+        }
+        .tooltip:hover .tooltipContent {
+            display: block;
+        }
+        .tooltipContent::before {
+            content: "";
+            position: absolute;
+            border-width: 6px;
+            border-style: solid;
+            border-color: transparent transparent grey transparent;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    </style>
+</head>
+
+<body>
+    <h3 class="tooltip">
+        Hover Me!!!
+        <span class="tooltipContent">CSS - Arrow</span>
+    </h3>
+</body>
+
+</html>
+```

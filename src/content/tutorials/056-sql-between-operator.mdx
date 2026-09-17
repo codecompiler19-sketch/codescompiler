@@ -1,0 +1,436 @@
+---
+title: "SQL - BETWEEN Operator"
+description: "Learn SQL - BETWEEN Operator with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 560
+group: "SQL Operators and Clauses"
+seoTitle: "SQL - BETWEEN Operator — CodesCompiler SQL Guide"
+permalink: "sql-between-operator"
+---
+
+
+# SQL - BETWEEN Operator
+
+
+Table of contentThe SQL BETWEEN OperatorSQL BETWEEN with Numeric ValuesSQL BETWEEN with Text ValuesSQL BETWEEN with Date ValuesSQL BETWEEN with IN OperatorSQL BETWEEN with UPDATE StatementSQL BETWEEN with DELETE StatementSQL NOT BETWEEN OperatorSQL NOT BETWEEN with Text ValuesSQL NOT BETWEEN with IN Operator
+
+
+
+
+## The SQL BETWEEN Operator
+
+
+TheBETWEENoperator in SQL is used to filter data within a specific range of values. It can be applied to numeric, date, or text columns. The range specified with BETWEEN is inclusive, meaning it includes both the start and end values.
+
+
+UsingBETWEENcan simplify queries by replacing a combination of`>=`(greater than or equal to) and`<=`(less than or equal to) conditions.
+
+
+### Syntax
+
+
+Following is the syntax of theBETWEENoperator in SQL:
+
+
+```sql
+SELECT column1, column2
+FROM table_name
+WHERE column_name BETWEEN value1 AND value2;
+```
+
+
+Here,
+
+
+
+- value1is the beginning value of the range (inclusive).
+- value2is the ending value of the range (inclusive).
+
+
+
+## SQL BETWEEN with Numeric Values
+
+
+TheBETWEENoperator can be used to filter rows based on a range of numeric values. It is inclusive, meaning the start and end values are included in the results.
+
+
+### Example
+
+
+First of all, let us create a table namedCUSTOMERSusing the following query:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),       
+   PRIMARY KEY (ID)
+);
+```
+
+
+Once the table is created, let us insert some values into the table using the following INSERT query:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+(2, 'Khilan', 25, 'Delhi', 1500.00 ),
+(3, 'Kaushik', 23, 'Kota', 2000.00 ),
+(4, 'Chaitali', 25, 'Mumbai', 6500.00 ),
+(5, 'Hardik', 27, 'Bhopal', 8500.00 ),
+(6, 'Komal', 22, 'Hyderabad', 4500.00 ),
+(7, 'Muffy', 24, 'Indore', 10000.00 );
+```
+
+
+The table created is as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+Now, we are using the BETWEEN operator to retrieve the details of the CUSTOMERS whose AGE (numeric data) is between 20 and 25:
+
+
+```sql
+SELECT * FROM CUSTOMERS WHERE AGE BETWEEN 20 AND 25;
+```
+
+
+When we execute the above query, the output is obtained as follows:
+
+
+IDNAMEAGEADDRESSSALARY2Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## SQL BETWEEN with Text Values
+
+
+TheBETWEENoperator can also be used with text (string) values to filter rows based on alphabetical ranges. The comparison follows the database's collation rules, usually in ascending order.
+
+
+### Example
+
+
+Here, we are using the BETWEEN operator withcharacters. Let us retrieve the details of the customers whose names starts in between the alphabets "A" and "L" using the following query:
+
+
+```sql
+SELECT * FROM CUSTOMERS WHERE NAME BETWEEN 'A' AND 'L';
+```
+
+
+Following is the output of the above query:
+
+
+IDNAMEAGEADDRESSSALARY2Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.00
+
+
+## SQL BETWEEN with Date Values
+
+
+TheBETWEENoperator can also be used to filter rows based on a range ofdate values. It is inclusive, meaning it includes both the start and end dates in the results.
+
+
+### Example
+
+
+Suppose we have a table namedORDERSwith a columnORDER_DATE. First, we create the table:
+
+
+```sql
+CREATE TABLE ORDERS (
+   ORDER_ID INT NOT NULL,
+   CUSTOMER_NAME VARCHAR(20) NOT NULL,
+   ORDER_DATE DATE NOT NULL,
+   AMOUNT DECIMAL(10, 2),
+   PRIMARY KEY (ORDER_ID)
+);
+```
+
+
+Next, we insert some sample data into the table:
+
+
+```sql
+INSERT INTO ORDERS VALUES
+(1, 'Ramesh', '2025-01-05', 200.00),
+(2, 'Khilan', '2025-03-12', 150.00),
+(3, 'Kaushik', '2025-05-20', 300.00),
+(4, 'Chaitali', '2025-07-15', 650.00),
+(5, 'Hardik', '2025-09-10', 850.00),
+(6, 'Komal', '2025-11-25', 450.00);
+```
+
+
+Now, let us use theBETWEENoperator to retrieve all orders placed between'2025-03-01'and'2025-08-01':
+
+
+```sql
+SELECT * FROM ORDERS WHERE ORDER_DATE BETWEEN '2025-03-01' AND '2025-08-01';
+```
+
+
+The output of the above query will be:
+
+
+ORDER_IDCUSTOMER_NAMEORDER_DATEAMOUNT2Khilan2025-03-12150.003Kaushik2025-05-20300.004Chaitali2025-07-15650.00
+
+
+As you can see, only the orders whoseORDER_DATEfalls between the specified range are returned.
+
+
+## SQL BETWEEN with IN Operator
+
+
+TheBETWEENoperator can be combined with theINoperator to filter rows that fall within a range for multiple columns or values. This allows checking several columns or values against specified ranges in a single query.
+
+
+### Syntax
+
+
+Following is the syntax to use the SQL BETWEEN operator with the IN operator:
+
+
+```sql
+SELECT column1, column2
+FROM table_name
+WHERE column1 IN (value1, value2, value3) 
+  AND column2 BETWEEN start_value AND end_value;
+```
+
+
+### Example
+
+
+In the following query, we are retrieving the details of all the customers whose salary is between 4000 and 10000. In addition, we are only retrieving the customers who lives in Hyderabad and Bhopal using theINoperator in SQL:
+
+
+```sql
+SELECT * FROM CUSTOMERS
+WHERE SALARY BETWEEN 4000 AND 10000
+  AND ADDRESS IN ('Hyderabad', 'Bhopal');
+```
+
+
+On executing the above query, the output is displayed as follows:
+
+
+IDNAMEAGEADDRESSSALARY5Hardik27Bhopal8500.006Komal22Hyderabad4500.00
+
+
+## SQL BETWEEN with UPDATE Statement
+
+
+TheBETWEENoperator can be used in anUPDATEstatement to modify rows that fall within a specific range. It helps to apply conditional updates based on numeric, date, or text ranges.
+
+
+### Syntax
+
+
+Following is the syntax to use the SQL BETWEEN operator with the UPDATE statement:
+
+
+```sql
+UPDATE table_name
+SET column_to_update = new_value
+WHERE column_to_check BETWEEN start_value AND end_value;
+```
+
+
+### Example
+
+
+Let us update the salaries of the customers whose age lies between 25 to 30 using the following query:
+
+
+```sql
+UPDATE CUSTOMERS SET SALARY = 10000 
+WHERE AGE BETWEEN 25 AND 30;
+```
+
+
+The output for the above query is as given below:
+
+
+```sql
+Query OK, 3 rows affected (0.02 sec)
+Rows matched: 3  Changed: 3  Warnings: 0
+```
+
+
+### Verification
+
+
+Let us verify whether the salaries are updated or not using the following query:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+The table for the above query produced as given below:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi10000.003Kaushik23Kota2000.004Chaitali25Mumbai10000.005Hardik27Bhopal10000.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## SQL BETWEEN with DELETE Statement
+
+
+TheBETWEENoperator can be used in aDELETEstatement to remove rows that fall within a specific range. It allows conditional deletion based on numeric, date, or text ranges.
+
+
+### Syntax
+
+
+Following is the syntax to use the SQL BETWEEN operator with the DELETE statement:
+
+
+```sql
+DELETE FROM table_name
+WHERE column_name BETWEEN start_value AND end_value;
+```
+
+
+### Example
+
+
+Now, let us delete the customers whose age is between 20 and 24 using the DELETE statement:
+
+
+```sql
+DELETE FROM CUSTOMERS 
+WHERE AGE BETWEEN 20 AND 24;
+```
+
+
+If we compile and run the above query, the result is produced as follows:
+
+
+```sql
+Query OK, 3 rows affected (0.02 sec)
+```
+
+
+### Verification
+
+
+Let us verify whether the records with the specified age values are deleted or not, using the following query:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+The table for the above query produced is as given below:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.00
+
+
+## SQL NOT BETWEEN Operator
+
+
+TheNOT BETWEENoperator in SQL is used to filter rows that fall outside a specified range. It works with numeric, date, or text values, returning all records that are not within the given start and end values.
+
+
+### Syntax
+
+
+Following is the syntax of theNOT BETWEENoperator in SQL:
+
+
+```sql
+SELECT column1, column2, ...
+FROM table_name
+WHERE column_name NOT BETWEEN start_value AND end_value;
+```
+
+
+### Example
+
+
+Consider the previously created CUSTOMERS table and let us retrieve the details of customers whose age is not greater than or equal to 25 and less than or equal to 30 (numeric data) using the following query:
+
+
+```sql
+SELECT * FROM CUSTOMERS 
+WHERE AGE NOT BETWEEN 25 AND 30;
+```
+
+
+When we execute the above query, the output is obtained as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.003Kaushik23Kota2000.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## SQL NOT BETWEEN with Text Values
+
+
+TheNOT BETWEENoperator can be used with text (string) values to exclude rows where a column's value falls within a specific alphabetical range. It is the opposite ofBETWEENand is inclusive of the boundary values. Text comparison is based on the collation and character order of the database.
+
+
+### Example
+
+
+Suppose we want to retrieve customers whose names do not fall alphabetically between 'A' and 'L':
+
+
+```sql
+SELECT * FROM CUSTOMERS
+WHERE NAME NOT BETWEEN 'A' AND 'L';
+```
+
+
+We get the output as shown below:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.007Muffy24Indore10000.00
+
+
+## SQL NOT BETWEEN with IN Operator
+
+
+You can combine theNOT BETWEENoperator with theINoperator to filter rows where a column does not fall within a specific range for multiple specified values. This allows more precise conditional filtering across a set of columns or values.
+
+
+### Syntax
+
+
+Following is the syntax of the SQLNOT BETWEENoperator with theINoperator:
+
+
+```sql
+SELECT column1, column2, ...
+FROM table_name
+WHERE column_name IN (value1, value2, ...)
+  AND column_name NOT BETWEEN start_value AND end_value;
+```
+
+
+### Example
+
+
+In the following query, we are selecting the customers whose salary isnotbetween 1000 and 5000. In addition we are not retrieving the customers who are living in Bhopal using theINoperator in SQL:
+
+
+```sql
+SELECT * FROM CUSTOMERS 
+WHERE SALARY NOT BETWEEN 1000 AND 5000 
+  AND ADDRESS NOT IN ('Bhopal');
+```
+
+
+On executing the above query, the output is displayed as follows:
+
+
+IDNAMEAGEADDRESSSALARY4Chaitali25Mumbai6500.007Muffy24Indore10000.00
+

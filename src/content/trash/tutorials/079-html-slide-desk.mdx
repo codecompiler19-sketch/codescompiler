@@ -1,0 +1,102 @@
+---
+title: "HTML - Web Slide Desk"
+description: "Learn HTML - Web Slide Desk with clear HTML concepts, practical examples, and maintainable markup."
+category: "html"
+order: 790
+group: "HTML Demo"
+seoTitle: "HTML - Web Slide Desk — CodesCompiler HTML Guide"
+permalink: "html-slide-desk"
+---
+
+## HTML - Web Slide Desk
+
+A slide is a single page of a presentation. Collectively, a group of slides may be known as a slide desk.
+
+## Example
+
+Let's look at the following example, where we are going to create an HTML web slide desk.
+
+```html
+<!DOCTYPE html>
+<html>
+   <style>
+      body {
+         font-family: verdana;
+         background-color: #F4ECF7;
+         color: #DE3163;
+      }
+
+      .x {
+         display: none;
+         text-align: center;
+         padding: 123px;
+      }
+
+      .x.active {
+         display: block;
+      }
+
+      .prev,
+      .next {
+         position: absolute;
+         top: 40%;
+         background-color: #EAFAF1;
+         color: #DE3163;
+         padding: 10px 20px;
+         cursor: pointer;
+         border: none;
+         transition: background-color 0.2s;
+      }
+
+      .prev:hover,
+      .next:hover {
+         background-color: #DFFF00;
+      }
+
+      .prev {
+         left: 10px;
+      }
+
+      .next {
+         right: 10px;
+      }
+   </style>
+<body>
+   <div class="x active">
+      <h1>SLIDE 1</h1>
+      <p>HELLO</p>
+   </div>
+   <div class="x">
+      <h1>SLIDE 2</h1>
+      <p>WELCOME</p>
+   </div>
+   <div class="x">
+      <h1>SLIDE 3</h1>
+      <p>THANK YOU.!</p>
+   </div>
+   <button class="prev" onclick="prevSlide()">Previous</button>
+   <button class="next" onclick="nextSlide()">Next</button>
+   <script>
+      let a = 0;
+      const slides = document.querySelectorAll('.x');
+
+      function showSlide(n) {
+         slides[a].classList.remove('active');
+         a = (n + slides.length) % slides.length;
+         slides[a].classList.add('active');
+      }
+
+      function prevSlide() {
+         showSlide(a - 1);
+      }
+
+      function nextSlide() {
+         showSlide(a + 1);
+      }
+      showSlide(a);
+   </script>
+</body>
+</html>
+```
+
+When we run the above code, it will generate an output consisting of the button along with a slide containing the text in it displayed on the webpage.

@@ -1,0 +1,208 @@
+---
+title: "JavaScript - Smart Function Parameters"
+description: "Learn JavaScript - Smart Function Parameters with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 600
+group: "JavaScript Functions"
+seoTitle: "JavaScript - Smart Function Parameters — CodesCompiler JavaScript Guide"
+permalink: "javascript-smart-function-parameters"
+---
+
+
+# JavaScript - Smart Function Parameters
+
+
+
+
+The concept ofsmart function parametersin JavaScript is a way to make a function adaptable to different use cases. It allows the function to handle the different kinds of arguments passed to it while invoking it.
+
+
+In JavaScript, the function is an important concept for reusing the code. In many situations, we need to ensure the function is flexible to handle different use cases.
+
+
+Here are different ways to define a function with smart parameters.
+
+
+## Default Function Parameters
+
+
+In JavaScript, the use of default function parameters is a way to handle the undefined argument values or arguments that haven't passed to the function during invocation of the function.
+
+
+In the below code snippet, we set default values of the parameters, a and b to 100 and 50.
+
+
+```javascript
+function division (a = 100, b = 50) {
+   // Function body
+}
+```
+
+
+### Example
+
+
+In the below code, the division() function returns the division of the parameters a and b. The default value of parameter a is 100, and parameter b is 50 whenever you want to pass any argument or pass an undefined argument, parameters with initialized with their default value which you can observe from the values printed in the output.
+
+
+```html
+<html>
+<head>
+   <title> JavaScript - Default parameters </title>
+</head>
+<body>
+   p id = "output" 
+   <script>
+      function division(a = 100, b = 50) {
+         return a / b;
+      }
+      document.getElementById("output").innerHTML = 
+	  division(10, 2) + "<br>" +
+      division(10, undefined) + "<br>" +
+      division();
+    </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+5
+0.2
+2
+```
+
+
+## JavaScript Rest Parameter
+
+
+When the number of arguments that need to pass to the function is not fixed, you can use the rest parameters. The JavaScript rest parameters allow us to collect all the reaming (rest) arguments in a single array. The rest parameter is represented with three dots (...) followed by a parameter. Here this parameter works as the array inside the function.
+
+
+### Syntax
+
+
+Follow the below syntax to use the rest parameters in the function declaration.
+
+
+```javascript
+function funcName(p1, p2, ...args) { 
+    // Function Body;
+}
+```
+
+In the above syntax, 'args' is rest parameter, and all remaining arguments will be stored in the array named args.
+
+### Example
+
+
+In the example below, the sum() function returns the sum of all values passed as an argument. We can pass an unknown number of arguments to the sum() function. The function definition will collect all arguments in the 'nums' array. After that, we can traverse the 'nums' array in the function body and calculate the sum of all argument values.
+
+
+The sum() function will also handle the 0 arguments also.
+
+
+```html
+<html>
+<head>
+   <title> JavaScript - Rest parameters </title>
+</head>
+<body>
+   p id = "demo" 
+   <script>
+      function sum(...nums) {
+         let totalSum = 0;
+         for (let p = 0; p < nums.length; p++) {
+            totalSum += nums[p];
+         }
+         return totalSum;
+      }
+      document.getElementById("demo").innerHTML = 
+	  sum(1, 5, 8, 20, 23, 45) + "<br>" +
+      sum(10, 20, 30) + "<br>" +
+      sum() + "<br>";
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+102
+60
+0
+```
+
+
+Note  You should always use the rest parameter as a last parameter.
+
+
+## JavaScript Destructuring or Named parameters
+
+
+You can pass the single object as a function argument and destructuring the object in the function definition to get only the required values from the object. It is also called the named parameters, as we get parameters based on the named properties of the object.
+
+
+### Syntax
+
+
+Follow the below syntax to use the destructuring parameters with the function.
+
+
+```javascript
+function funcName({ prop1, prop2, ... }) { }
+```
+
+
+In the above syntax, prop1 and prop2 are properties of the object passed as an argument of the function funcName.
+
+
+### Example
+
+
+In the example below, we have defined the 'watch' object containing three properties and passed it to the printWatch() function.
+
+
+The printWatch() function destructuring the object passed as an argument and takes the 'brand' and 'price' properties as a parameter. In this way, you can ignore the arguments in the function parameter which are not necessary.
+
+
+```html
+<html>
+<head>
+   <title> JavaScript - Parameter Destructuring </title>
+</head>
+<body>
+   p id = "output" 
+   <script>
+      function printWatch({ brand, price }) {
+         return "The price of the " + brand + "\'s watch is " + price;
+      }
+
+      const watch = {
+	     brand: "Titan",
+         price: 10000,
+         currency: "INR",
+      }
+      document.getElementById("output").innerHTML = printWatch(watch);
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The price of the Titan's watch is 10000
+```
+
+
+The above three concepts give us flexibility to pass the function arguments.
+

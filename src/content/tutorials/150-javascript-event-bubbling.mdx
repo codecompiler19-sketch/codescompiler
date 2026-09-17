@@ -1,0 +1,200 @@
+---
+title: "JavaScript - Event Bubbling"
+description: "Learn JavaScript - Event Bubbling with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1500
+group: "JavaScript Events"
+seoTitle: "JavaScript - Event Bubbling — CodesCompiler JavaScript Guide"
+permalink: "javascript-event-bubbling"
+---
+
+
+# JavaScript - Event Bubbling
+
+
+
+
+## Event Bubbling
+
+
+Event bubbling is a concept in JavaScript that refers to the order in which events are handled as they propagate through the DOM (Document Object Model) hierarchy. When an event occurs on a particular element, such as a click or a keypress, it can trigger handlers not only on that specific element but also on its ancestors in the DOM tree.
+
+
+## Event Bubbling Steps
+
+
+Here's a step-by-step explanation of event bubbling −
+
+
+### Event Triggering
+
+
+
+- An event is triggered on a specific DOM element, like a button being clicked or a key being pressed.
+- This is the starting point of the event propagation.
+
+
+
+### Capturing Phase (optional)
+
+
+
+- The event can optionally go through the capturing phase. This phase starts from the root of the DOM tree and moves towards the target element.
+- During this phase, event handlers registered with the addEventListener method using the third parameter true will be executed.
+
+
+
+### Target Phase
+
+
+
+- The event reaches the target element, the one on which the event originally occurred.
+
+
+
+### Bubbling Phase
+
+
+
+- After the target phase, the event starts to bubble up from the target element towards the root of the DOM tree.
+- During this phase, event handlers registered without the third parameter or with the third parameter set to false will be executed.
+
+
+
+## Event Bubbling using 2 Nested DIVs
+
+
+In this example of nested `<div>` elements, event bubbling is evident as the click event on the child `<div>` propagates up through the DOM hierarchy to trigger the click event listener on the parent `<div>`. Despite being clicked on the child, both the child and parent event listeners respond to the click event sequentially.
+
+
+This behaviour showcases the default event bubbling mechanism in the DOM, where events traverse from the target element up to its ancestors, allowing multiple elements to respond to the same event. In the console, upon clicking the child `<div>`, the log messages for both the child and parent event listeners are displayed, illustrating the event bubbling process.
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<style>
+		.parent {
+			width: 600px;
+			height: 200px;
+			background-color: #eee;
+			position: relative;
+			cursor: pointer;
+			}
+
+		.child {
+			width: 400px;
+			height: 100px;
+			background-color: #66c2ff;
+			position: absolute;
+			top: 50px;
+			left: 50px;
+		}
+		#message {
+			margin-top: 10px;
+			font-weight: bold;
+		}
+    
+	</style>
+</head>
+<body>
+	## Nested Divs
+	<div class="parent" id="parentDiv">
+		<div class="child" id="childDiv">Click me!</div>
+	</div>
+	<div id="message"></div>
+	<script>
+		let messageElement = document.getElementById('message');
+
+		document.getElementById('parentDiv').addEventListener('click', function () {
+			messageElement.innerHTML+='Parent div clicked<br>';
+		});
+
+		document.getElementById('childDiv').addEventListener('click', function () {
+			messageElement.innerHTML+='Child div clicked<br>';
+		});
+	</script>
+</body>
+</html>
+```
+
+
+The grey box is the parent div and blue box is the child div.
+
+
+## Event Bubbling using 3 Nested Levels
+
+
+In this example with three nested levels of `<div>` elements, event bubbling is demonstrated as a click on the innermost Level 3 `<div>` triggers successive click event listeners on the parent Level 2 and Level 1 `<div>` elements. Styled with distinctive background colours, each level visually represents its hierarchy.
+
+
+Upon clicking the Level 3 `<div>`, the event propagates up, invoking event listeners for higher-level elements. Console logs reveal messages indicating the clicked level and its background colour, showcasing the streamlined event bubbling mechanism for handling nested structures in the DOM.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+		.level1 {
+			background-color: #ff9999;
+			padding: 20px;
+			text-align: center;
+			max-width: 80%;
+			cursor: pointer;
+		}
+
+		.level2 {
+			background-color: #99ff99;
+			padding: 15px;
+		}
+
+		.level3 {
+			background-color: #9999ff;
+			padding: 10px;
+			cursor: pointer;
+		}
+		#message {
+			margin-top: 10px;
+			font-weight: lighter;
+			border: 1px solid #ddd;
+			padding: 10px;
+			max-width: 80%;
+			background-color: #f9f9f9;
+			border-radius: 5px;
+			font-family: 'Arial', sans-serif;
+			font-size: 14px;
+			color: #333;
+		}  
+	</style>
+</head>
+<body>
+	<div class="level1" id="div1">
+		Level 1
+		<div class="level2" id="div2">
+			Level 2
+			<div class="level3" id="div3">
+				Level 3 (Click me!)
+			</div>
+		</div>
+	</div>
+	<div id="message"></div>
+	<script>
+		const messageElement = document.getElementById("message");
+		document.getElementById('div1').addEventListener("click", function (event) {
+			messageElement.innerHTML += "Clicked on Level 1, Background Color:" + getComputedStyle(event.target).backgroundColor + "<br>";
+		});
+
+		document.getElementById('div2').addEventListener("click", function (event) {
+			messageElement.innerHTML += "Clicked on Level 2, Background Color:" + getComputedStyle(event.target).backgroundColor + "<br>";
+		});
+
+		document.getElementById('div3').addEventListener('click', function (event) {
+			messageElement.innerHTML +="Clicked on Level 3, Background Color:" + getComputedStyle(event.target).backgroundColor + "<br>";
+		});
+	</script>
+</body>
+</html>
+```
+

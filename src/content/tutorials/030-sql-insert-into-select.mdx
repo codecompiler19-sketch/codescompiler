@@ -1,0 +1,396 @@
+---
+title: "SQL - Insert Into Select"
+description: "Learn SQL - Insert Into Select with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 300
+group: "SQL Queries"
+seoTitle: "SQL - Insert Into Select — CodesCompiler SQL Guide"
+permalink: "sql-insert-into-select"
+---
+
+
+# SQL INSERT INTO SELECT Statement
+
+
+
+
+
+
+## SQL INSERT INTO SELECT Statement
+
+
+TheINSERT INTO SELECTstatement in SQL is used to copy data from one table and insert it into another existing table. UnlikeSELECT INTO, this statement requires that the target table already exists.
+
+
+Following are some important things to remember when using this statement:
+
+
+
+- The structure of the source and destination tables must match in terms of the number and data types of columns.
+- You can copy all columns or only selected columns from one table to another.
+- You can filter which rows to copy using theWHEREclause.
+
+
+
+### Syntax
+
+
+Following is the basic syntax toinsert all columnsin a table using INSERT INTO SELECT statement:
+
+
+```sql
+INSERT INTO target_table
+
+SELECT * FROM source_table;
+```
+
+
+Following is the syntax toinsert specific columnsin a table using INSERT INTO SELECT statement:
+
+
+```sql
+INSERT INTO target_table (column1, column2, ...)
+
+SELECT column1, column2, ...
+
+FROM source_table;
+```
+
+
+### Example: Insert all Columns
+
+
+Assume we have created a table named CUSTOMERS which contains the personal details of customers including their name, age, address and salary etc., as shown below:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+
+   ID INT NOT NULL,
+
+   NAME VARCHAR (20) NOT NULL,
+
+   AGE INT NOT NULL,
+
+   ADDRESS CHAR (25),
+
+   SALARY DECIMAL (18, 2),
+
+   PRIMARY KEY (ID)
+
+);
+```
+
+
+Now, let us insert few records into this table using the INSERT statement as follows:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+
+(2, 'Khilan', 25, 'Delhi', 1500.00 ),
+
+(3, 'Kaushik', 23, 'Kota', 2000.00 ),
+
+(4, 'Chaitali', 25, 'Mumbai', 6500.00 ),
+
+(5, 'Hardik', 27, 'Bhopal', 8500.00 ),
+
+(6, 'Komal', 22, 'Hyderabad', 4500.00 ),
+
+(7, 'Muffy', 24, 'Indore', 10000.00 );
+```
+
+
+The table will be created as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+Now, create another table named BUYERS with same structure as the CUSTOMERS table:
+
+
+```sql
+CREATE TABLE BUYERS (
+
+   ID INT NOT NULL,
+
+   NAME VARCHAR (20) NOT NULL,
+
+   AGE INT NOT NULL,
+
+   ADDRESS CHAR (25),
+
+   SALARY DECIMAL (18, 2),
+
+   PRIMARY KEY (ID)
+
+);
+```
+
+
+Now, following query copies all the records fromCUSTOMERSintoBUYERS:
+
+
+```sql
+INSERT INTO BUYERS
+
+SELECT * FROM CUSTOMERS;
+```
+
+
+We get the following output:
+
+
+```sql
+Query OK, 7 rows affected (0.03 sec)
+
+Records: 7  Duplicates: 0  Warnings: 0
+```
+
+
+### Verification
+
+
+To verify that the data has been inserted successfully, run the following SELECT query:
+
+
+```sql
+SELECT * FROM BUYERS;
+```
+
+
+We get the following table:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## Insert Specific Columns Using INSERT INTO SELECT
+
+
+You can also insert only selected columns from one table to another existing table using the INSERT INTO SELECT statement in SQL. To do so, the columns must match in number and data type in both the source and target tables.
+
+
+### Example
+
+
+Let us create a table namedBUYERS_PARTIALwith the same structure as the CUSTOMER table:
+
+
+```sql
+CREATE TABLE BUYERS_PARTIAL (
+
+   ID INT NOT NULL,
+
+   NAME VARCHAR (20) NOT NULL,
+
+   AGE INT NOT NULL,
+
+   PRIMARY KEY (ID)
+
+);
+```
+
+
+Now, we insert only theID,NAME, andAGEcolumns fromCUSTOMERSinto another table namedBUYERS_PARTIAL:
+
+
+```sql
+INSERT INTO BUYERS_PARTIAL (ID, NAME, AGE)
+
+SELECT ID, NAME, AGE FROM CUSTOMERS;
+```
+
+
+Following is the output obtained:
+
+
+```sql
+Query OK, 7 rows affected (0.03 sec)
+
+Records: 7  Duplicates: 0  Warnings: 0
+```
+
+
+### Verification
+
+
+We can verify whether the columns have been inserted succesfully using the following SELECT query:
+
+
+```sql
+SELECT * FROM BUYERS_PARTIAL;
+```
+
+
+Following is the table obtained:
+
+
+IDNAMEAGE1Ramesh322Khilan253Kaushik234Chaitali255Hardik276Komal227Muffy24
+
+
+## INSERT INTO SELECT with WHERE Clause
+
+
+You can add aWHEREclause to theINSERT INTO SELECTstatement to insert only those rows that meet specific condition (criteria).
+
+
+This allows you to selectively transfer data between tables based on conditions such as age, salary, or any other column filter.
+
+
+### Syntax
+
+
+Following is the basic syntax to use the WHERE clause with the INSERT INTO SELECT statement:
+
+
+```sql
+INSERT INTO target_table 
+
+SELECT * FROM source_table
+
+WHERE condition;
+```
+
+
+### Example
+
+
+In this example, we insert only customers whose AGE is greater than 25 into the BUYERS table created above:
+
+
+```sql
+INSERT INTO BUYERS
+
+SELECT * FROM CUSTOMERS
+
+WHERE AGE > 25;
+```
+
+
+Following is the output obtained:
+
+
+```sql
+Query OK, 2 rows affected (0.01 sec)
+
+Records: 2  Duplicates: 0  Warnings: 0
+```
+
+
+### Verification
+
+
+To verify whether the data has been inserted successfully, use the following query:
+
+
+```sql
+SELECT * FROM BUYERS;
+```
+
+
+Following is the table obtained:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.005Hardik27Bhopal8500.00
+
+
+## INSERT INTO SELECT with NOT EXISTS
+
+
+You can use theINSERT INTO SELECTstatement along with theNOT EXISTSclause to prevent inserting duplicate records into the target table.
+
+
+This is useful for transferring data based on a condition and making sure that no duplicate rows are inserted, particularly when using a unique column such asID.
+
+
+### Syntax
+
+
+Following is the basic syntax to use the NOT EXISTS clause with the INSERT INTO SELECT statement:
+
+
+```sql
+INSERT INTO target_table (column1, column2, ...)
+
+SELECT column1, column2, ...
+
+FROM source_table AS src
+
+WHERE NOT EXISTS (
+
+  SELECT 1 FROM target_table AS tgt
+
+  WHERE tgt.unique_column = src.unique_column
+
+);
+```
+
+
+### Example
+
+
+In the following example, we insert customers fromCUSTOMERSintoBUYERSonly if their ID does not already exist in BUYERS:
+
+
+```sql
+INSERT INTO BUYERS (ID, NAME, AGE, ADDRESS, SALARY)
+
+SELECT ID, NAME, AGE, ADDRESS, SALARY
+
+FROM CUSTOMERS AS C
+
+WHERE NOT EXISTS (
+
+  SELECT 1 FROM BUYERS AS B
+
+  WHERE B.ID = C.ID
+
+);
+```
+
+
+We get the output as shown below:
+
+
+```sql
+Query OK, 0 rows affected (0.03 sec)
+
+Records: 7  Duplicates: 0  Warnings: 0
+```
+
+
+### Verification
+
+
+To verify that no duplicates were inserted, query the BUYERS table as follows:
+
+
+```sql
+SELECT * FROM BUYERS;
+```
+
+
+The table produced is as shown below:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## Important Points About INSERT INTO SELECT
+
+
+Following are the important points to remember when using the INSERT INTO SELECT statement in SQL:
+
+
+
+- The destination table must already exist.
+- The source and target column lists must match in count and data types.
+- You can filter the source data usingWHEREand avoid duplicates usingNOT EXISTSorNOT INclause.
+- It is supported by most relational database systems including MySQL, SQL Server, PostgreSQL, and Oracle.
+
+

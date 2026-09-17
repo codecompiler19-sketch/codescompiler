@@ -1,0 +1,211 @@
+---
+title: "PYTHON - Inner Classes"
+description: "Learn PYTHON - Inner Classes with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1480
+group: "Object Oriented Programming"
+seoTitle: "PYTHON - Inner Classes — CodesCompiler PYTHON Guide"
+permalink: "python-inner-classes"
+---
+
+
+# Python - Inner Classes
+
+
+
+
+## Inner Class in Python
+
+
+A class defined inside another class is known as aninner classin Python. Sometimes inner class is also called nested class. If the inner class is instantiated, the object of inner class can also be used by the parent class. Object of inner class becomes one of the attributes of the outer class. Inner class automatically inherits the attributes of the outer class without formally establishing inheritance.
+
+
+### Syntax
+
+
+```python
+class outer:
+   def __init__(self):
+      pass
+   class inner:
+      def __init__(self):
+         pass
+```
+
+
+An inner class lets you group classes. One of the advantages of nesting classes is that it becomes easy to understand which classes are related. The inner class has a local scope. It acts as one of the attributes of the outer class.
+
+
+### Example
+
+
+In the following code, we have student as the outer class and subjects as the inner class. The __init__() constructor of student initializes name attribute and an instance of subjects class. On the other hand, the constructor of inner subjects class initializes two instance variables sub1, sub2.
+
+
+A show() method of outer class calls the method of inner class with the object that has been instantiated.
+
+
+```python
+class student:
+   def __init__(self):
+      self.name = "Ashish"
+      self.subs = self.subjects()
+      return
+   def show(self):
+      print ("Name:", self.name)
+      self.subs.display()
+   class subjects:
+      def __init__(self):
+         self.sub1 = "Phy"
+         self.sub2 = "Che"
+         return
+      def display(self):
+         print ("Subjects:",self.sub1, self.sub2)
+         
+s1 = student()
+s1.show()
+```
+
+
+When you execute this code, it will produce the followingoutput−
+
+
+```python
+Name: Ashish
+Subjects: Phy Che
+```
+
+
+It is quite possible to declare an object of outer class independently, and make it call its own display() method.
+
+
+```python
+sub = student().subjects().display()
+```
+
+
+It will list out the subjects.
+
+
+## Types of Inner Class
+
+
+In Python, inner classes are of two types −
+
+
+
+- Multiple Inner Class
+- Multilevel Inner Class
+
+
+
+## Multiple Inner Class
+
+
+Inmultiple inner class, a single outer class contains more than one inner class. Each inner class works independently but it can interact with the members of outer class.
+
+
+### Example
+
+
+In the below example, we have created an outer class namedOrganizationand two inner classes.
+
+
+```python
+class Organization:
+   def __init__(self):
+      self.inner1 = self.Department1()
+      self.inner2 = self.Department2()
+        
+   def showName(self):
+      print("Organization Name: Tutorials Point")
+
+   class Department1:
+      def displayDepartment1(self):
+         print("In Department 1")
+            
+   class Department2:
+      def displayDepartment2(self):
+         print("In Department 2")
+
+# instance of OuterClass
+outer = Organization() 
+# Calling show method
+outer.showName()  
+# InnerClass instance 1
+inner1 = outer.inner1 
+# Calling display method
+inner1.displayDepartment1() 
+# InnerClass instance 2
+inner2 = outer.inner2 
+# Calling display method
+inner2.displayDepartment2()
+```
+
+
+On executing, this code will produce the followingoutput−
+
+
+```python
+Organization Name: Tutorials Point
+In Department 1
+In Department 2
+```
+
+
+## Multilevel Inner Class
+
+
+It refers to an inner class that itself contains another inner class. It creates multiple levels of nested classes.
+
+
+### Example
+
+
+The following code explains the working of Multilevel Inner Class in Python −
+
+
+```python
+class Organization:
+   def __init__(self):
+      self.inner = self.Department()
+
+   def showName(self):
+      print("Organization Name: Tutorials Point")
+
+   class Department:
+      def __init__(self):
+         self.innerTeam = self.Team1()
+
+      def displayDep(self):
+         print("In Department")
+
+      class Team1:
+         def displayTeam(self):
+            print("Team 1 of the department")
+
+# instance of outer class                
+outer = Organization()  
+# call the method of outer class
+outer.showName()  
+
+# Inner Class instance
+inner = outer.inner  
+inner.displayDep()  
+
+# Access Team1 instance
+innerTeam = inner.innerTeam  
+# Calling display method
+innerTeam.displayTeam()
+```
+
+
+When you run the above code, it will produce the belowoutput−
+
+
+```python
+Organization Name: Tutorials Point
+In Department
+Team 1 of the department
+```
+

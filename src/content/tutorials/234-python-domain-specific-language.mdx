@@ -1,0 +1,204 @@
+---
+title: "PYTHON - Domain Specific Language (DSL)"
+description: "Learn PYTHON - Domain Specific Language (DSL) with clear explanation, code examples, and practical guide."
+category: "python"
+order: 2340
+group: "Python Advanced Concepts"
+seoTitle: "PYTHON - Domain Specific Language (DSL) — CodesCompiler PYTHON Guide"
+permalink: "python-domain-specific-language"
+---
+
+
+# Python - Domain Specific Language (DSL)
+
+
+
+
+When we write the program, we find that the problems we solve belong to the specific areas, also called asdomains, such as:
+
+
+
+- A banking system needs to describe transactions, interest rates.
+- A web application needs to define the routes, templates and responses.
+
+
+
+By using theGeneralPurposeLanguage (GPL) like Python or Java, we can solve these problems, but the code becomes too detailed and repetitive. Hence, we will use theDSL(Domain Specific Language.
+
+
+## DSL - Domain Specific Language
+
+
+TheDomainSpecificLanguage is a programming or specification language dedicated to the particular domain. It is different from the general purpose language (GPL like Python, C++ or Java). They are of two types:
+
+
+
+- External DSL− It is completely a new language with its own syntax and compiler
+- Internal DSL (Embedded DSL)− A DSL built inside ther host language, using its syntax and constructs.
+
+
+
+### External DSL
+
+
+For working with the databases, we use the SQL, instead of writing loops to scan data manually, we simply write:
+
+
+```python
+SELECT name FROM users WHERE age > 10;
+```
+
+
+For designing the webpages, we use the HTML, Instead of managing the strings of text anf positions manually, we simply declare:
+
+
+```python
+<h1>Welcome To Tutorialspoint</h1>
+```
+
+
+### Internal DSL
+
+
+In Python, the domain specific language is built on the top of the Python syntax. Frameworks like flask or Pandas are the examples of DSL- like libraries that helps to express the problems clearly.
+
+
+```python
+@app.route('/home')
+
+def home():
+
+    return "Hello...!"
+```
+
+
+## Why DSLs in Python
+
+
+Python is the best choice for the DSL because:
+
+
+
+- Its syntax is simple and expressive.
+- It allows the functions and classes to be used as building blocks.
+
+
+
+For example, the testing frameworks like pytest or web frameworks like Flask are DSL-like. Instead of writing the low-level logic, they let to write the expressive commands.
+
+
+Let's dive into the example, to learn more abou the domain specific language.
+
+
+### Example 1
+
+
+Let's look at the following example, where we are going to the abstract the language of the math into the named functions.
+
+
+```python
+def add(x, y):
+
+    return x + y
+
+def multiply(x, y):
+
+    return x * y
+
+print(add(multiply(1, 3), multiply(2, 4)))
+```
+
+
+Following is theoutputof the above program -
+
+
+```python
+11
+```
+
+
+### Example 2
+
+
+Consider the following example, where we are going to use the DSL in the configuration files.
+
+
+```python
+class demo:
+
+    def __init__(self):
+
+        self.settings = {}
+
+    def set(self, key, value):
+
+        self.settings[key] = value
+
+        return self
+
+    def get(self, key):
+
+        return self.settings.get(key)
+
+result = demo()
+
+result.set("host", "Welcome").set("port", 1231)
+
+print(result.get("host"))
+```
+
+
+Theoutputof the above program is -
+
+
+```python
+Welcome
+```
+
+
+### Example 3
+
+
+In the following example, we are going to observe the DSL for querying data using the SQL syntax inside the Python.
+
+
+```python
+class demo:
+
+    def __init__(x, dataset):
+
+        x.dataset = dataset
+
+    def where(x, condition):
+
+        x.dataset = [item for item in x.dataset if condition(item)]
+
+        return x
+
+    def select(x, selector):
+
+        return [selector(item) for item in x.dataset]
+
+users = [
+
+    {"name": "Ram", "age": 10},
+
+    {"name": "Ravi", "age": 24},
+
+    {"name": "Rahul", "age": 19},
+
+]
+
+result = demo(users).where(lambda u: u["age"] > 18).select(lambda u: u["name"])
+
+print(result)
+```
+
+
+Following is theoutputof the above program -
+
+
+```python
+['Ravi', 'Rahul']
+```
+

@@ -33,7 +33,7 @@ const DEFAULT_SIDEBAR = {
 const DEFAULT_NAV = [
   { label: 'HTML', href: '/tutorial/html-introduction', color: '#E34F26' },
   { label: 'CSS', href: '/tutorial/css-introduction', color: '#264DE4' },
-  { label: 'JavaScript', href: '/tutorial/js-introduction', color: '#F7DF1E' },
+  { label: 'JavaScript', href: '/tutorial/javascript-introduction', color: '#F7DF1E' },
   { label: 'About', href: '/about', color: '#9CA3AF' },
   { label: 'Contact', href: '/contact', color: '#9CA3AF' },
 ];

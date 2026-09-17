@@ -1,0 +1,328 @@
+---
+title: "SQL - Left Join"
+description: "Learn SQL - Left Join with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 640
+group: "SQL Joins"
+seoTitle: "SQL - Left Join — CodesCompiler SQL Guide"
+permalink: "sql-left-joins"
+---
+
+
+# SQL - Left Join
+
+
+Table of contentThe SQL Left JoinJoining Multiple Tables with Left JoinLeft Join with WHERE ClauseUsing Aliases with LEFT JOINImportant Points About SQL LEFT JOIN
+
+
+
+
+## The SQL Left Join
+
+
+ALEFT JOIN(orLEFT OUTER JOIN) in SQL combines rows from two or more tables, returning all rows from the left table and the matching rows from the right table.
+
+
+If there is no match in the right table, the result will still include the left table's row, but withNULLvalues for the right table's columns.
+
+
+### Venn Diagram of a SQL LEFT JOIN
+
+
+The following Venn diagram illustrates the relationship between two tables in a SQL LEFT JOIN:
+
+
+If the number of rows in first table is less than the number of rows in second table, the rows in second table that do not have any counterparts in the first table will be discarded from the result.
+
+
+### Syntax
+
+
+Following is the basic syntax of Left Join in SQL:
+
+
+```sql
+SELECT column_name(s)
+FROM table1
+LEFT JOIN table2
+ON table1.column_name = table2.column_name;
+```
+
+
+### Example
+
+
+To understand this query better, let us create some tables in an existing database and join them using Left Join or Left Outer Join.
+
+
+Assume we have created a table namedCUSTOMERS, which contains the personal details of customers including their name, age, address and salary, using the following query.
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),       
+   PRIMARY KEY (ID)
+);
+```
+
+
+Now insert values into this table using the INSERT statement as follows:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+(2, 'Khilan', 25, 'Delhi', 1500.00 ),
+(3, 'Kaushik', 23, 'Kota', 2000.00 ),
+(4, 'Chaitali', 25, 'Mumbai', 6500.00 ),
+(5, 'Hardik', 27, 'Bhopal', 8500.00 ),
+(6, 'Komal', 22, 'Hyderabad', 4500.00 ),
+(7, 'Muffy', 24, 'Indore', 10000.00 );
+```
+
+
+The table will be created as:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+Let us create another tableORDERS, containing the details of orders made and the date they are made on.
+
+
+```sql
+CREATE TABLE ORDERS (
+   OID INT NOT NULL,
+   DATE VARCHAR (20) NOT NULL,
+   CUSTOMER_ID INT NOT NULL,
+   AMOUNT DECIMAL (18, 2)
+);
+```
+
+
+Using the INSERT statement, insert values into this table as follows:
+
+
+```sql
+INSERT INTO ORDERS VALUES 
+(102, '2009-10-08 00:00:00', 3, 3000.00),
+(100, '2009-10-08 00:00:00', 3, 1500.00),
+(101, '2009-11-20 00:00:00', 2, 1560.00),
+(103, '2008-05-20 00:00:00', 4, 2060.00);
+```
+
+
+The table is displayed as follows:
+
+
+OIDDATECUSTOMER_IDAMOUNT1022009-10-08 00:00:0033000.001002009-10-08 00:00:0031500.001012009-11-20 00:00:0021560.001032008-05-20 00:00:0042060.00
+
+
+Followingleft join query, retrieves the details of customers who made an order at the specified date and who did not. If there is no match found, the query below will return NULL in that record.
+
+
+```sql
+SELECT ID, NAME, AMOUNT, DATE
+FROM CUSTOMERS
+LEFT JOIN ORDERS
+ON CUSTOMERS.ID = ORDERS.CUSTOMER_ID;
+```
+
+
+The resultant table is obtained as:
+
+
+IDNAMEAMOUNTDATE1RameshNULLNULL2Khilan1560.002009-11-20 00:00:003Kaushik1500.002009-10-08 00:00:003Kaushik3000.002009-10-08 00:00:004Chaitali2060.002008-05-20 00:00:005HardikNULLNULL6KomalNULLNULL7MuffyNULLNULL
+
+
+As we can see in the table above, only Khilan, Kaushik and Chaitali made purchases on the mentioned dates in ORDERS table; hence, the records are matched. The other customers in CUSTOMERS table did not make purchases on the specified dates, so the records are returned as NULL.
+
+
+## Joining Multiple Tables with Left Join
+
+
+Similar toINNER JOIN, aLEFT JOINcan also be used to join multiple tables. The first (leftmost) table's rows are returned as it is, while the remaining tables are matched with the rows in the first table. If no matching rows exist in the other tables,NULLvalues are returned for their columns.
+
+
+### Syntax
+
+
+The syntax to join multiple tables using Left Join is given below:
+
+
+```sql
+SELECT 
+    left_table.column1,
+    left_table.column2,
+    right_table.column1,
+    right_table.column2
+FROM left_table
+LEFT JOIN right_table
+ON 
+left_table.common_column = right_table.common_column;
+```
+
+
+### Example
+
+
+To demonstrate Left Join with multiple tables, let us consider the previously created tables CUSTOMERS and ORDERS. In addition to these we will create the EMPLOYEE table using the following query:
+
+
+```sql
+CREATE TABLE EMPLOYEE (
+   EID INT NOT NULL,
+   EMPLOYEE_NAME VARCHAR (30) NOT NULL,
+   SALES_MADE DECIMAL (20)
+);
+```
+
+
+Now, we can insert values into this empty tables using the INSERT statement as follows:
+
+
+```sql
+INSERT INTO EMPLOYEE VALUES
+(102, 'SARIKA', 4500),
+(100, 'ALEKHYA', 3623),
+(101, 'REVATHI', 1291),
+(103, 'VIVEK', 3426);
+```
+
+
+TheEMPLOYEEtable consists of the details of employees in an organization and sales made by them.
+
+
+EIDEMPLOYEE_NAMESALES_MADE102SARIKA4500100ALEKHYA3623101REVATHI1291103VIVEK3426
+
+
+Following query joins the CUSTOMERS, ORDERS and EMPLOYEE tables using the left join:
+
+
+```sql
+SELECT CUSTOMERS.ID, CUSTOMERS.NAME, 
+ORDERS.DATE, EMPLOYEE.EMPLOYEE_NAME
+FROM CUSTOMERS
+LEFT JOIN ORDERS
+ON CUSTOMERS.ID = ORDERS.CUSTOMER_ID
+LEFT JOIN EMPLOYEE
+ON ORDERS.OID = EMPLOYEE.EID;
+```
+
+
+Through this query, we will display the id, name of the customer along with the date on which the orders are made and the name of the employee who sold the item.
+
+
+The resultant table is obtained as follows:
+
+
+IDNAMEDATEEMPLOYEE_NAME1RameshNULLNULL2Khilan2009-11-20 00:00:00REVATHI3Kaushik2009-10-08 00:00:00ALEKHYA3Kaushik2009-10-08 00:00:00SARIKA4Chaitali2008-05-20 00:00:00VIVEK5HardikNULLNULL6KomalNULLNULL7MuffyNULLNULL
+
+
+As we can see in the table above, the customer Kaushik made three orders, in which two are sold by employee Alekhya and one is sold by Sarika. Khilan and Chaitali made one order each, that are sold by Revathi and Vivek respectively. The dates on which these orders are made will also be displayed. If the orders are not made on the specific dates, NULL is returned.
+
+
+## Left Join with WHERE Clause
+
+
+You can use aWHEREclause with aLEFT JOINto filter the results after the join. The LEFT JOIN ensures all rows from the left table are returned, and the WHERE clause can apply additional conditions on either the left or the right table.
+
+
+Be careful because filtering on the right table in the WHERE clause can turn a LEFT JOIN into an INNER JOIN if you only check for non-NULL values.
+
+
+### Syntax
+
+
+The syntax of Left Join when used with WHERE clause is given below:
+
+
+```sql
+SELECT column_name(s)
+FROM table1
+LEFT JOIN table2
+ON table1.column_name = table2.column_name
+WHERE condition;
+```
+
+
+### Example
+
+
+Consider the previous two tables CUSTOMERS and ORDERS; and join them using the left join query by applying some constraints using the WHERE clause.
+
+
+```sql
+SELECT ID, NAME, DATE, AMOUNT FROM CUSTOMERS
+LEFT JOIN ORDERS
+ON CUSTOMERS.ID = ORDERS.CUSTOMER_ID
+WHERE ORDERS.AMOUNT > 2000.00;
+```
+
+
+The resultant table after applying the where clause with left join contains the rows that has amount values greater than 2000.00:
+
+
+IDNAMEDATEAMOUNT3Kaushik2009-10-08 00:00:003000.004Chaitali2008-05-20 00:00:002060.00
+
+
+## Using Aliases with LEFT JOIN
+
+
+SQL allows you to assignaliasesto tables in a LEFT JOIN query. Aliases are temporary names that make your query easier to read and write, especially when dealing with multiple tables or long table names.
+
+
+### Syntax
+
+
+Following is the syntax to use aliases with left join in SQL:
+
+
+```sql
+SELECT c.NAME, o.AMOUNT, o.DATE
+FROM CUSTOMERS AS c
+LEFT JOIN ORDERS AS o
+ON c.ID = o.CUSTOMER_ID;
+```
+
+
+### Example
+
+
+In this example, we are using aliasescfor CUSTOMERS andofor ORDERS and retrieve the customer name along with the order amount and date:
+
+
+```sql
+SELECT c.NAME, o.AMOUNT, o.DATE
+FROM CUSTOMERS AS c
+LEFT JOIN ORDERS AS o
+ON c.ID = o.CUSTOMER_ID;
+```
+
+
+The resultant table is the same as using the full table names, but the query is easier to read when multiple joins are involved:
+
+
+NAMEAMOUNTDATERameshNULLNULLKhilan15602009-11-20 00:00:00Kaushik15002009-10-08 00:00:00Kaushik30002009-10-08 00:00:00Chaitali20602008-05-20 00:00:00HardikNULLNULLKomalNULLNULLMuffyNULLNULL
+
+
+## Important Points About SQL LEFT JOIN
+
+
+Following are some important points you should know for using LEFT JOIN in SQL:
+
+
+
+- All rows from the left table are returned:Even if there is no matching row in the right table, the left table's data will appear.
+- Right table columns may contain NULL:If no matching row is found in the right table, the corresponding columns will showNULL.
+- Left Join can be chained:You can join multiple tables using multiple LEFT JOINs in a single query.
+- Aliases simplify queries:Using aliases for table names makes complex queries shorter and easier to read.
+- Filtering with WHERE:Using a WHERE clause on the right table can inadvertently turn a LEFT JOIN into an INNER JOIN if you filter for non-NULL values.
+- Order of tables matters:The table listed first is always the “left” table; switching the order will change the results.
+- LEFT JOIN vs INNER JOIN:Unlike INNER JOIN, LEFT JOIN keeps unmatched rows from the left table, which makes it useful for finding missing or optional data.
+
+

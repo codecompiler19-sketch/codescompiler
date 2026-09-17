@@ -1,0 +1,253 @@
+---
+title: "PYTHON - Class Methods"
+description: "Learn PYTHON - Class Methods with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1320
+group: "Object Oriented Programming"
+seoTitle: "PYTHON - Class Methods — CodesCompiler PYTHON Guide"
+permalink: "python-class-methods"
+---
+
+
+# Python - Class Methods
+
+
+
+
+Methodsbelongs to an object of a class and used to perform specific operations. We can divide Python methods in three different categories, which are class method, instance method and static method.
+
+
+A Pythonclass methodis a method that is bound to the class and not to the instance of the class. It can be called on the class itself, rather than on an instance of the class.
+
+
+Most of us often get class methods confused with static methods. Always remember, while both are called on the class,static methodsdo not have access to the "cls" parameter and therefore it cannot modify the class state.
+
+
+Unlike class method, theinstance methodcan access the instancevariablesof the an object. It can also access the class variable as it is common to all the objects.
+
+
+## Creating Class Methods in Python
+
+
+There are two ways to create class methods in Python −
+
+
+
+- Using classmethod() Function
+- Using @classmethod Decorator
+
+
+
+## Using classmethod() Function
+
+
+Pythonhas a built-in functionclassmethod()which transforms an instance method to aclass methodwhich can be called with the reference to the class only and not the object.
+
+
+### Syntax
+
+
+```python
+classmethod(instance_method)
+```
+
+
+### Example
+
+
+In the Employee class, define a showcount() instance method with the "self" argument (reference to calling object). It prints the value of empCount. Next, transform the method to class method counter() that can be accessed through the class reference.
+
+
+```python
+class Employee:
+   empCount = 0
+   def __init__(self, name, age):
+      self.__name = name
+      self.__age = age
+      Employee.empCount += 1
+   def showcount(self):
+      print (self.empCount)
+      
+   counter = classmethod(showcount)
+
+e1 = Employee("Bhavana", 24)
+e2 = Employee("Rajesh", 26)
+e3 = Employee("John", 27)
+
+e1.showcount()
+Employee.counter()
+```
+
+
+### Output
+
+
+Call showcount() with object and call count() with class, both show the value of employee count.
+
+
+```python
+3
+3
+```
+
+
+## Using @classmethod Decorator
+
+
+Use of@classmethod()decorator is the prescribed way to define a class method as it is more convenient than first declaring an instance method and then transforming it into a class method.
+
+
+### Syntax
+
+
+```python
+@classmethod
+def method_name():
+   # your code
+```
+
+
+### Example
+
+
+The class method acts as an alternate constructor. Define anewemployee()class method with arguments required to construct a new object. It returns the constructed object, something that the__init__()method does.
+
+
+```python
+class Employee:
+    empCount = 0
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+        Employee.empCount += 1
+
+    @classmethod
+    def showcount(cls):
+        print (cls.empCount)
+
+    @classmethod
+    def newemployee(cls, name, age):
+        return cls(name, age)
+
+e1 = Employee("Bhavana", 24)
+e2 = Employee("Rajesh", 26)
+e3 = Employee("John", 27)
+e4 = Employee.newemployee("Anil", 21)
+
+Employee.showcount()
+```
+
+
+There are four Employee objects now. If we run the above program, it will show the count of Employee object −
+
+
+```python
+4
+```
+
+
+## Access Class Attributes in Class Method
+
+
+Class attributesare those variables that belong to a class and whose value is shared among all the instances of that class.
+
+
+To access class attributes within a class method, use thecls parameterfollowed by dot (.) notation and name of the attribute.
+
+
+### Example
+
+
+In this example, we are accessing a class attribute in class method.
+
+
+```python
+class Cloth:
+   # Class attribute
+   price = 4000
+
+   @classmethod
+   def showPrice(cls):
+      return cls.price
+
+# Accessing class attribute
+print(Cloth.showPrice())
+```
+
+
+On running the above code, it will show the following output −
+
+
+```python
+4000
+```
+
+
+## Dynamically Add Class Method to a Class
+
+
+The Pythonsetattr()function is used to set an attribute dynamically. If you want to add a class method to a class, pass the method name as a parameter value to setattr() function.
+
+
+### Example
+
+
+The following example shows how to add a class method dynamically to a Python class.
+
+
+```python
+class Cloth:
+   pass
+
+# class method
+@classmethod
+def brandName(cls):
+   print("Name of the brand is Raymond")
+
+# adding dynamically
+setattr(Cloth, "brand_name", brandName)
+newObj = Cloth()
+newObj.brand_name()
+```
+
+
+When we execute the above code, it will show the following output −
+
+
+```python
+Name of the brand is Raymond
+```
+
+
+## Dynamically Delete Class Methods
+
+
+The Pythondeloperator is used to delete a class method dynamically. If you try to access the deleted method, the code will raise AttributeError.
+
+
+### Example
+
+
+In the below example, we are deleting the class method named "brandName" using del operator.
+
+
+```python
+class Cloth:
+   # class method
+   @classmethod
+   def brandName(cls):
+      print("Name of the brand is Raymond")
+
+# deleting dynamically
+del Cloth.brandName
+print("Method deleted")
+```
+
+
+On executing the above code, it will show the following output −
+
+
+```python
+Method deleted
+```
+

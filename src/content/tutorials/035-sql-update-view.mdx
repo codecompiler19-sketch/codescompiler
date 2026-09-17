@@ -1,0 +1,251 @@
+---
+title: "SQL - Update Views"
+description: "Learn SQL - Update Views with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 350
+group: "SQL Views"
+seoTitle: "SQL - Update Views — CodesCompiler SQL Guide"
+permalink: "sql-update-view"
+---
+
+
+# SQL - UPDATE View
+
+
+
+
+
+
+## SQL UPDATE View Statement
+
+
+A view is a database object that can contain rows (all or selected) from an existing table. It can be created from one or many tables which depends on the provided SQL query to create a view.
+
+
+UnlikeCREATE VIEWandDROP VIEWthere is no direct statement to update the records of an existing view. We can use the SQLUPDATEStatement to modify the existing records in a table or a view.
+
+
+### Syntax
+
+
+The basic syntax of the UPDATE query with a WHERE clause is as follows −
+
+
+```sql
+UPDATE view_name
+SET column1 = value1, column2 = value2...., columnN = valueN
+WHERE [condition];
+```
+
+
+You can combine N number of conditions using the AND or the OR operators.
+
+
+### Example
+
+
+Assume we have created a table named CUSTOMERS using theCREATE TABLEstatement using the following query −
+
+
+```sql
+CREATE TABLE CUSTOMERS(
+   ID   INT              NOT NULL,
+   NAME VARCHAR (20)     NOT NULL,
+   AGE  INT              NOT NULL,
+   ADDRESS  CHAR (25) ,
+   SALARY   DECIMAL (18, 2),
+   PRIMARY KEY (ID)
+);
+```
+
+
+Now, insert values into this table using the INSERT statement as follows −
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+(2, 'Khilan', 25, 'Delhi', 1500.00 ),
+(3, 'Kaushik', 23, 'Kota', 2000.00 ),
+(4, 'Chaitali', 25, 'Mumbai', 6500.00 ),
+(5, 'Hardik', 27, 'Bhopal', 8500.00 ),
+(6, 'Komal', 22, 'Hyderabad', 4500.00 ),
+(7, 'Muffy', 24, 'Indore', 10000.00 );
+```
+
+
+Following query creates a view based on the above created table −
+
+
+```sql
+CREATE VIEW CUSTOMERS_VIEW AS SELECT * FROM CUSTOMERS;
+```
+
+
+You can verify the contents of a view using the SELECT query as shown below −
+
+
+```sql
+SELECT * FROM CUSTOMERS_VIEW;
+```
+
+
+The view will be displayed as follows −
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+Following query updates the age of Ramesh to 35 in the above created CUSTOMERS_VIEW −
+
+
+```sql
+UPDATE CUSTOMERS_VIEW 
+SET AGE = 35 WHERE name = 'Ramesh';
+```
+
+
+### Verification
+
+
+You can verify the contents of the CUSTOMERS_VIEW using the SELECT statement as follows −
+
+
+```sql
+SELECT * FROM CUSTOMERS_VIEW WHERE NAME ='Ramesh';
+```
+
+
+The resultant view would have the following record(s) −
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh35Ahmedabad2000.00
+
+
+### Example
+
+
+The following query will update the ADDRESS of a customer whose ID is 6 in the CUSTOMERS_VIEW.
+
+
+```sql
+UPDATE CUSTOMERS_VIEW SET ADDRESS = 'Pune' WHERE ID = 6;
+```
+
+
+### Output
+
+
+The query produces the following output −
+
+
+```sql
+Query OK, 1 row affected (0.21 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+```
+
+
+### Verification
+
+
+If you retrieve the record with ID value 6 using the SELECT statement as −
+
+
+```sql
+SELECT * FROM CUSTOMERS_VIEW WHERE ID=6;
+```
+
+
+The record returned would be −
+
+
+IDNAMEAGEADDRESSSALARY6Komal22Hyderabad4500.00
+
+
+## Updating Multiple Rows and Columns
+
+
+Using UPDATE statement, multiple rows and columns in a view/table can also be updated. While updating multiple rows, specify the condition in a WHERE clause such that only required rows would satisfy it.
+
+
+### Example
+
+
+Following query updates the NAME and AGE column values in the CUSTOMERS_VIEW of the record with ID value 3.
+
+
+```sql
+UPDATE CUSTOMERS_VIEW
+SET NAME = 'Kaushik Ramanujan', AGE = 24
+WHERE ID = 3;
+```
+
+
+### Output
+
+
+The query produces the following output −
+
+
+```sql
+Query OK, 1 row affected (0.07 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+```
+
+
+### Verification
+
+
+You can verify whether the record is updated or not, using the following query −
+
+
+```sql
+SELECT * FROM CUSTOMERS_VIEW WHERE ID = 3;
+```
+
+
+The record returned would be −
+
+
+IDNAMEAGEADDRESSSALARY3Kaushik Ramanujan24Kota2000.00
+
+
+### Example
+
+
+But if you want to modify/update the age values of all the records in the CUSTOMERS_VIEW, there is no need to use the WHERE clause.
+
+
+```sql
+UPDATE CUSTOMERS_VIEW SET AGE = AGE+6;
+```
+
+
+### Output
+
+
+This query produces the following output −
+
+
+```sql
+Query OK, 7 rows affected (0.10 sec)
+Rows matched: 7  Changed: 7  Warnings: 0
+```
+
+
+### Verification
+
+
+To verify whether the records of the CUSTOMERS_VIEW are modified or not, use the following SELECT query −
+
+
+```sql
+SELECT * FROM CUSTOMERS_VIEW;
+```
+
+
+The resultant CUSTOMERS_VIEW would have the following records −
+
+
+IDNAMEAGE1Ramesh412Khilan313Kaushik Ramanujan304Chaitali315Hardik336Komal287Muffy30
+

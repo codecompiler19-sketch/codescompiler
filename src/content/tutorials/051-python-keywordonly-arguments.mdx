@@ -1,0 +1,121 @@
+---
+title: "PYTHON - Keyword-Only Arguments"
+description: "Learn PYTHON - Keyword-Only Arguments with clear explanation, code examples, and practical guide."
+category: "python"
+order: 510
+group: "Python Functions & Modules"
+seoTitle: "PYTHON - Keyword-Only Arguments — CodesCompiler PYTHON Guide"
+permalink: "python-keywordonly-arguments"
+---
+
+
+# Python - Keyword-Only Arguments
+
+
+
+
+## Keyword-Only Arguments
+
+
+You can use thevariablesin formal argument list as keywords to pass value. Use ofkeyword argumentsis optional. But, you can force the function to accept arguments by keyword only. You should put an astreisk (*) before the keyword-only arguments list.
+
+
+Let us say we have a function with three arguments, out of which we want second and third arguments to be keyword-only. For that, put * after the first argument.
+
+
+## Example of Keyword-Only Arguments
+
+
+Thebuilt-in print() functionis an example of keyword-only arguments. You can give list of expressions to be printed in the parentheses. The printed values are separated by a white space by default. You can specify any other separation character instead using"sep"argument.
+
+
+```python
+print ("Hello", "World", sep="-")
+```
+
+
+It will print −
+
+
+```python
+Hello-World
+```
+
+
+## Example: Using "sep" as non-keyword Argument
+
+
+Thesepargument of theprint()function is keyword-only. Try using it as non-keyword argument.
+
+
+```python
+print ("Hello", "World", "-")
+```
+
+
+You'll get different output, not as desired −
+
+
+```python
+Hello World -
+```
+
+
+## Using Keyword-Only argument in User-Defined Method
+
+
+To make an argument keyword-only, put the astreisk (*) before it while creating the user-defined function.
+
+
+Those Python functions that are defined by us within a given class to perform certain actions are called as user-defined function. They are not predefined by Python.
+
+
+### Example
+
+
+In the following user defined function"intr()"the"rate"argument is keyword-only. To call this function, the value forratemust be passed by keyword.
+
+
+```python
+def intr(amt,*, rate):
+   val = amt*rate/100
+   return val
+   
+interest = intr(1000, rate=10)
+print(interest)
+```
+
+
+```python
+100.0
+```
+
+
+However, if you try to use the default positional way of calling the above function, you will encounter an error.
+
+
+### Example
+
+
+The code below shows it is not possible to use positional arguments when keyword-only arguments are required.
+
+
+```python
+def intr(amt, *, rate):
+   val = amt * rate / 100
+   return val
+   
+interest = intr(1000, 10)
+print(interest)
+```
+
+
+On executing, this code will show the following result −
+
+
+```python
+interest = intr(1000, 10)
+               ^^^^^^^^^^^^^^
+TypeError: intr() takes 1 positional argument but 2 were given
+```
+

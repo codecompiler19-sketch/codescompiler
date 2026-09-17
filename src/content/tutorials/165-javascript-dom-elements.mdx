@@ -1,0 +1,393 @@
+---
+title: "JavaScript - DOM Elements"
+description: "Learn JavaScript - DOM Elements with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1650
+group: "JavaScript HTML DOM"
+seoTitle: "JavaScript - DOM Elements — CodesCompiler JavaScript Guide"
+permalink: "javascript-dom-elements"
+---
+
+
+# JavaScript - DOM Elements
+
+
+
+
+## The DOM Elements
+
+
+The HTMLDOM elementsis the acronym for the Document Object Model elements. With JavaScript, we can manipulate the HTM elements. We can access the HTML elements using id, attribute, tag name, class name, etc.
+
+
+When a web page loads in the browser, it creates aDOM treerepresenting the web page's structure. The web page contains variousHTML elements, which you can manipulate using the properties and methods in JavaScript. Here we will discuss to access, modify, or replace, etc. DOM elements.
+
+
+## Accessing DOM elements
+
+
+You can use different methods to access HTML elements, as given below.
+
+
+### Get HTML Element using its "id"
+
+
+In the web page, each HTML element can have a unique id value. You can use the getElementById() method to access the HTML element using the id.
+
+
+#### Syntax
+
+
+Follow the syntax below to use the getElemenetById() method to access the HTML element using its id.
+
+
+```javascript
+document.getElementById('id')
+```
+
+
+In the above syntax, you need to replace the 'id' with the actual id of the element.
+
+
+#### Example
+
+
+In the below code, we access the div element using id and change its inner HTML using the 'innerHTML' property.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      document.getElementById('output').innerHTML = 
+		"The element is accessed using the id.";
+   </script>
+</body>
+</html>
+```
+
+
+Output
+
+
+```javascript
+The element is accessed using the id.
+```
+
+
+### Get an HTML element using the "name"
+
+
+An HTML can have a 'name' attribute. You can use the getElementByName() method to access the HTML element using the 'name' attribute's value.
+
+
+#### Syntax
+
+
+Follow the syntax below to use the getElementByName() method.
+
+
+```javascript
+document.getElementsByName('name')
+```
+
+
+Here, you need to replace the 'name' with a value of the element's name attribute.
+
+
+#### Example
+
+
+In the below code, we access the div element using the name. It returns the array of nodes with the name passed as an argument.
+
+
+```html
+<html>
+<body>
+   <div name = "text"> Hello World! </div>
+   <div id = "output">The content of the div elment is:  </div>
+   <script>
+      const divEle = document.getElementsByName('text');
+      document.getElementById("output").innerHTML += divEle[0].innerHTML;
+   </script>
+</body>
+</html>
+```
+
+
+Output
+
+
+```javascript
+Hello World!
+The content of the div elment is: Hello World!
+```
+
+
+### Get HTML element using the "className"
+
+
+The class attribute of the HTML contains the string value. A single HTML element can also have multiple classes. You can use the getElementByClassName() method to access the HTML element using any single class name among multiples.
+
+
+#### Syntax
+
+
+Follow the syntax below to use the getElementByClassName() method.
+
+
+```javascript
+document.getElementsByClassName('className');
+```
+
+
+In the above syntax, replace the 'className' with the value of the elment's 'class' attribute.
+
+
+#### Example
+
+
+In the below code, we access the div element using the class name.
+
+
+```html
+<html>
+<body>
+   <div class = "fruit"> Apple </div>
+   <div id = "output">The name of the fruit is: </div>
+   <script>
+      const divEle = document.getElementsByClassName('fruit');
+      document.getElementById("output").innerHTML += divEle[0].innerHTML;
+   </script>
+</body>
+</html>
+```
+
+
+Output
+
+
+```javascript
+Apple
+The name of the fruit is: Apple
+```
+
+
+### Get an HTML element using the "tag" name
+
+
+Each HTML element is defined using the HTML tag. You can use the tag getElementByTagName() method to access the HTML elements using the tag name.
+
+
+#### Syntax
+
+
+Follow the syntax below to use the getElementByTagName() method.
+
+
+```javascript
+document.getElementsByTagName('tag');
+```
+
+
+In the above syntax, replace the 'tag' with the HTML tag like 'p', 'a', 'img', etc.
+
+
+#### Example
+
+
+In the below code, we access the `p` elements using the getElementTagName() method.
+
+
+It returns the Nodelist of `p` elements.
+
+
+```html
+<html>
+<body>
+This is the first paragraph.
+This is the second paragrraph.
+<div id = "output"> </div>
+<script>
+   const numbers = document.getElementsByTagName('p');
+   document.getElementById("output").innerHTML = 
+   "The first 'p' element is: " + numbers[0].innerHTML + "<br>" + 
+   "The second 'p' element is: " + numbers[1].innerHTML;
+</script>
+</body>
+</html>
+```
+
+
+Output
+
+
+```javascript
+This is the first paragraph.
+
+This is the second paragrraph.
+
+The first 'p' element is: This is the first paragraph.
+The second 'p' element is: This is the second paragrraph.
+```
+
+
+## Modifying the DOM Elements
+
+
+JavaScript allows you to modify and replace the HTML DOM elements.
+
+
+In this section, we will cover modifying DOM elements' content and replacing child elements.
+
+
+### Modify the Content of the DOM Element
+
+
+You can use the 'textContent' property of the element to modify the text of the HTML element. However, you can use other properties like innerHTML, outerHTML, outerText, etc., to modify the HTML element's content.
+
+
+#### Syntax
+
+
+Follow the syntax below to use the textContent property to modify the text content of the HTML element.
+
+
+```javascript
+element.textContent = newText;
+```
+
+
+In the above syntax, we have assigned the 'newText' dynamic value to the 'textContent' property to update the content of the 'element'.
+
+
+#### Example
+
+
+In the output, when you click the button, it will invoke the updateText() function and uses the textContent property to change the text of the div element.
+
+
+```html
+<html>
+<body>
+   <button onclick = "updateText()"> Update Text </button>
+   p id = "text" Hello World! 
+   <script>
+      function updateText() {
+         document.getElementById("text").textContent = "This is updaetd text!";
+      }
+   </script>
+</body>
+</html>
+```
+
+
+### Replace the Child Element
+
+
+In JavaScript, you can use the replaceChild() method to replace the child element of the particular HTML element.
+
+
+#### Syntax
+
+
+Follow the syntax below to use the replaceChild() method in JavaScript.
+
+
+```javascript
+textDiv.replaceChild(newNode,replacableNode);
+```
+
+
+The replaceChild() method takes a new node as a first parameter and a node that needs to be replaced as a second parameter.
+
+
+#### Example
+
+
+In the below code, we used the replaceChild() method to replace the second child of the div element with a new node. Here, we have also used the createTextNode() to create a new node with a 'Hello World!' text.
+
+
+```html
+<html>
+<body>
+   <button onclick = "replaceText()"> Replace Child </button>
+   <div id = "text">
+      p Hi Users! 
+   </div>
+   <script>
+      function replaceText() {
+         let textDiv = document.getElementById("text");
+         let newText = document.createTextNode("Hello World");
+         textDiv.replaceChild(newText, textDiv.childNodes[1]);
+      }
+   </script>
+</body>
+</html>
+```
+
+
+## Adding Events to the DOM Elements
+
+
+You can use addEventListner() method to add events to the DOM elements to interact with the HTML elements.
+
+
+### Syntax
+
+
+Follow the syntax below to use the addEventListner() method.
+
+
+```javascript
+element.addEventListener(eventName, callback);
+```
+
+
+The addEventListner() method takes an event name as the first parameter and a callback function as a second parameter.
+
+
+### Example
+
+
+We added the click event on the div element in the code below. The div element will print a message on the web page whenever you click it.
+
+
+```html
+<html>
+<body>
+   <div id = "text" style = "background-color: red;color:white">
+      p Some text 
+      p Some other text 
+   </div>
+   <div id = "output"> </div>
+   <script>
+      let text = document.getElementById("text");
+      text.addEventListener("click", function () {
+         document.getElementById("output").innerHTML = 
+			"You clicked on the div element";
+      });
+   </script>
+</body>
+</html>
+```
+
+
+## List of JavaScript DOM Element Methods
+
+
+The following table shows a list of JavaScript DOM element methods −
+
+
+Sr.NoMethod & Description1.toString()It is used to convert an HTML element into a string format.2.setAttribute()This method allows you to define attributes for a particular element.3.setAttributeNode()This method allows you to define a particular attribute node on a particular element.4.scrollIntoView()It ensures that a particular element on a web page of scrollable container becomes visible by adjusting the scroll position.5.querySelector()It is used to select and access the first HTML element that matches a given CSS selector(s) within the document.6.querySelectorAll()This method allows you to select and access all HTML element that matches a given CSS selector(s) within the document.7.remove()This method can delete an element completely from the web page.8.removeAttribute()This method is used to delete any attribute that has been set on an HTML element within the DOM structure.9.removeAttributeNode()It allows you to delete a specific attribute node from an element.10.removeChild()It is used to delete the selected child element from its parent element.11.removeEventListener()This method allows you to delete an event listener that was previously assigned to an element.12.replaceChild()This method enable us to replace one child element with another in a parent element.13.hasAttribute()It is used to check whether an attribute exists within an HTML element.14.hasAttributes()This method checks whether an element in HTML DOM has attributes.15.hasChildNodes()It is used to check if an HTML element has any child element inside it.16.getAttribute()It returns the value of a specified attribute that belongs to an HTML element.17.getBoundingClientRect()This method is used to get the size of an element and its position relative to the viewport.18.closest()This method returns the closest ancestor of the current element (or the current element itself) that matches a given CSS selector. If no such ancestor exists, it returns null.19.contains()You can check if a DOM Element contains another element within its subtree using this method.20.click()The click() method activates a mouse click on an element.21.normalize()It is used to combine adjacent text nodes within an HTML element by removing any empty text nodes.22.isDefaultNamespace()It is used to check if a specific namespace URI is the default namespace for elements within a document or element.23.isEqualNode()This method checks if two nodes are equal by comparing their attributes, types, and child nodes.24.isSameNode()It checks whether two node references point to the same node object within an HTML document.25.isSupported()This method is used to check if a web browser can supports or handle a particular feature or functionality on a web page.26.insertAdjacentElement()This method allows you to insert a new HTML element exactly where you need it relative to another element on a webpage.27.insertBefore()This method allows you to add a new child element inside a parent element, specifying its position relative to another child element.28.blur()This method allows you to dynamically remove focus from an element in the HTML DOM.29.matches()This method checks if an element matches a given CSS selectors.30.insertAdjacentHTML()It helps you to insert a specified HTML code at a specific position relative to the element that calls this method.31.addEventListener()It is used to register event handlers to elements.32.cloneNode()It duplicates a node, including it's attributes and child nodes.33.appendChild()This method is used to add a new child node(element) as the last child node of the specified parent node.34.compareDocumentPosition()It enables understanding of document structure by comparing the positions of two DOM elements(nodes) and returns a bitmask(numeric value).35.focus()This method sets focus to specific webpage elements.36.getAttributeNode()It is used to get the attribute node object.37.getBoundingClientRect()This method is used to get the size of an element and its position relative to the viewport.38.getElementsByClassName()This method retrieves a live HTMLCollection of elements that match a specified class name within a document or a specific element.39.getElementsByTagName()It retrieves a live HTMLCollection of elements that match a specified tag name.40.insertAdjacentText()It allows you to insert a text content at a specific position relative to the element that calls this method.
+
+
+## List of JavaScript DOM Element Properties
+
+
+The table given below contains a list of JavaScript DOM element properties −
+
+
+Sr.NoProperties & Description1.titleIt helps us to access and update the value stored in an element's title attribute.2.textContentThis property is used to access and update the text content of an HTML element and all its child elements as a single string.3.tagNameIt gives you the name of the HTML tag in uppercase that defines an element on a webpage.4.styleUsing this property, you can get the CSS styles that are directly set for a particular element.5.tabIndexIt is used to access and update the value of the tabIndex attribute for an element.6.scrollLeftThis property is used to access and update how far an element's content is scrolled horizontally.7.scrollTopIt is used to access and update how far an element's content is scrolled vertically.8.scrollWidthThis property gives you the total horizontal width of an element's content in pixels.9.scrollHeightYou can get the total vertical height of an element's content in pixels using this property.10.idThe id property is used for setting and retrieving the value of the element's id attribute.11.innerTextIt allows us to retrieve or change the visible text content directly within an HTML element on a web page.12.isContentEditableIt is used to check if a webpage element can be edited by users directly.13.langThe lang property is an attribute of an HTML element that specifies the language code.14.lastChildThe lastChild property returns a node that points to the last child node of a specific parent element.15.lastElementChildIt returns a node that holds the last child element of a parent element.16.namespaceURIThe namespaceURI property of an element provides the namespace URI assigned to the element.17.nextElementSiblingUsing this property, you can get the immediate next node in the sequence of a particular element.18.nextSiblingIt is used to access the immediate next node in sequence from the current node within the DOM tree.19.nodeNameThis property is used to identify a node's type and name based on its content.20.nodeTypeThe nodeType Property returns an integer value representing the type of a node.21.nodeValueIt is used for accessing and updating the value of a node.22.offsetHeightThis property is used to get the complete visible height of that element on the webpage, including both its vertical padding and borders, measured in pixels.23.offsetLeftIt returns the pixel based measurement of the distance from the element's left boundary to its nearest positioned parent's left boundary.24.offsetParentIt is used to find the closest ancestor element that affects the positioning of another element.25.offsetWidthThe offsetWidth property of an element gives you the total visible width of that element on the webpage.26.outerHTMLThe outerHTML property fetches the entire HTML code of an element.27.outerTextThis property can access or update the text content of an HTML element, including all its nested text and elements.28.ownerDocumentIt gives you the object for the document node that contains a specific element.29.parentElementIt allows you to access the immediate parent element of a particular element within the HTML element.30.parentNodeThis property is used to access the immediate parent node of a particular node within the HTML element.31.classListIt acts as an active container that holds a collection of CSS classes assigned to an element's class attribute.32.childNodesIt is used to retrieve all child nodes of an element, including elements, text nodes, and comments.33.classNameYou can access or modify the value of the class attribute of an element using this property.34.clientTopIt is used to get the accurate element positioning and size calculation in webpage layouts.35.firstElementChildIt provides the first child element within a given parent element.36.offsetTopUsing this property, you can get the pixel-based vertical distance from the element's top edge of its nearest positioned ancestor's top edge.37.attributesIt returns 'NameNodeMap' containing the collection of attributes of an HTML element38.accesskeyThis property allows you to assign a keyboard shortcut to an element on a webpage.39.firstChildIt helps you to access the very first child node of a given parent element in the HTML DOM.40.innerHTMLThis property allows us to read the existing HTML content of an element and update it with new HTML content.41.dirIt provides access for setting and retrieving the value of dir attributes of any element in HTML.42.contentEditableYou can make text content inside the HTML elements editable using this property.43.clientWidthIt returns the width of an element, including padding but excluding margin, border, or scrollbar width.44.clientLeftThis property is used to get the width of an element's left border, excluding left padding or margin.45.clientHeightIt is used to get the inner height of an element, including padding but not margin, border, or scrollbar width.46.childrenThis property returns a collection of child elements.47.childElementCountIt returns the count of direct child elements of a specified element.
+

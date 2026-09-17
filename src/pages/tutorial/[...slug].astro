@@ -4,8 +4,10 @@ import TutorialLayout from '../../layouts/TutorialLayout.astro';
 import Editor from '../../components/Editor.astro';
 import SqlEditor from '../../components/SqlEditor.astro';
 import PythonEditor from '../../components/PythonEditor.astro';
+import CodeBlock from '../../components/CodeBlock.astro';
 
 export async function getStaticPaths() {
+  // Reload tutorials collection with PHP permalinks
   const tutorials = await getCollection('tutorials');
   return tutorials.map(tutorial => ({
     params: { slug: tutorial.data.permalink || tutorial.slug },
@@ -28,6 +30,7 @@ const categoryLabel = {
   seo: 'SEO',
   python: 'Python',
   sql: 'SQL',
+  php: 'PHP',
 }[tutorial.data.category] ?? tutorial.data.category;
 ---
 
@@ -40,5 +43,5 @@ const categoryLabel = {
   headings={headings}
   currentSlug={currentSlug}
 >
-  <Content components={{ Editor, SqlEditor, PythonEditor }} />
+  <Content components={{ Editor, SqlEditor, PythonEditor, pre: CodeBlock }} />
 </TutorialLayout>

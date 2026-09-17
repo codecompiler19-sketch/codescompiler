@@ -1,0 +1,439 @@
+---
+title: "JavaScript - Nested Destructuring"
+description: "Learn JavaScript - Nested Destructuring with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 980
+group: "Object Oriented JavaScript"
+seoTitle: "JavaScript - Nested Destructuring — CodesCompiler JavaScript Guide"
+permalink: "javascript-nested-destructuring"
+---
+
+
+# JavaScript - Nested Destructuring
+
+
+
+
+## Nested Destructuring
+
+
+TheNested Destructuringin JavaScript allows us to extract data fromnestedobjects and arrays. An object (or array) can contain another object (or array) inside itself, known as a nested object (or array). Unpacking the nested objects or arrays is called nested destructuring. We can extract all or some data from the objects or arrays using destructuring.
+
+
+We can assign the extracted data from nested array or object to the variables. This is referred asnested destructuring assignment. When using nested destructuring to get some values from a nested array or object, you have to follow the structure of the array or object.
+
+
+## Nested Object Destructuring
+
+
+This section will demonstrate nested object destructuring in JavaScript.
+
+
+### Syntax
+
+
+The syntax of nested object destruction in JavaScript is as follows −
+
+
+```javascript
+const {prop1, prop2: {nestedprop1, nestedprop2}} = obj;
+```
+
+
+In the above syntax,prop1is a property of the object, and theprop2property contains the nested object, havingnestedprop1andnestedprop2properties.
+
+
+### Example
+
+
+In the example below, the car object contains the brand, model, and info properties. The info property contains the nested object containing the price and color properties.
+
+
+We have destructured the nested object and printed the values of the variables in the output.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      const car = {
+         brand: "Hyundai",
+         model: "Verna",
+         info: {
+            price: 1200000, // Nested properties
+            color: "white",
+         }
+      }
+      const { brand, model, info: { price, color } } = car; // Destructuring
+      document.getElementById("output").innerHTML = 
+	   `Brand: ${brand} <br> Model: ${model} <br> Price: ${price} <br> Color: ${color}`;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Brand: Hyundai
+Model: Verna
+Price: 1200000
+Color: white
+```
+
+
+### Example: Nested object destructuring and renaming variables
+
+
+The below code demonstrates that you can rename the variables while unpacking the nested object properties.
+
+
+We have renamed the brand, model, price, and color variables to company, name, cost, and carColor.
+
+
+```html
+<html>
+<body>
+p id = "output" 
+<script>
+
+   const car = {
+      brand: "Hyundai",
+      model: "Verna",
+      info: {
+         price: 1200000, // Nested properties
+         color: "white",
+      }
+   }
+   // Destructuring
+   const {brand: company, model: name, info: {price: cost, color: carColor }} = car;
+
+   document.getElementById("output").innerHTML = 
+   `Company: ${company}, Name: ${name}, Cost: ${cost}, Color: ${carColor}`;
+</script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Company: Hyundai, Name: Verna, Cost: 1200000, Color: white
+```
+
+
+### Example: Nested object destructuring and default values
+
+
+You can use the assignment operator to assign the default values to the variables. Whenever particular property of the object is undefined, it initializes the variable with the default value.
+
+
+Here, we have renamed each variable and assigned default values. The 'science' property is not defined in the grades (nested object) object. So, the code prints its default value in the output.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      const student = {
+         firstName: "Sam",
+         lastName: "Raina",
+         grades: {
+            English: 75,
+         }
+      };
+    
+      const { firstName: name = "Jay", 
+         lastName: surname = "Shah", 
+         grades: { English: eng = 0, Science: sci = 0 } 
+      } = student;
+      
+      document.getElementById("output").innerHTML = 
+      `Name: ${name} <br> Surname: ${surname} <br> English: ${eng} <br> Science: ${sci}`;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Name: Sam
+Surname: Raina
+English: 75
+Science: 0
+```
+
+
+### Example: Nested object destructuring and rest operator
+
+
+The rest operator allows you to collect the remaining properties into a single object.
+
+
+In the below code, the grades object contains 4 different properties. We have stored the value of the Maths property in the Maths variables and other properties in the 'allGrades' variable using the rest operator. The 'allGrades' is an object containing 3 properties.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      const student = {
+         firstName: "Kunal",
+         lastName: "Karma",
+         grades: {
+            English: 75,
+            Maths: 87,
+            SocialScience: 90,
+            Science: 80,
+         }
+      };
+      const { firstName, lastName, grades: { Maths, ...allGrades } } = student;
+      document.getElementById("output").innerHTML = 
+		`firstName: ${firstName} <br>
+		 lastName: ${lastName} <br>
+		 Maths: ${Maths} <br>
+		 allGrades: ${JSON.stringify(allGrades)} <br>
+		 `;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+firstName: Kunal
+lastName: Karma
+Maths: 87
+allGrades: {"English":75,"SocialScience":90,"Science":80}
+```
+
+
+## Nested Array Destructuring
+
+
+This section will demonstrate nested array destructuring in JavaScript.
+
+
+### Syntax
+
+
+The syntax to unpack nested array elements (nested array destructuring) in JavaScript is as follows −
+
+
+```javascript
+const [a, [b, c], d] = arr;
+```
+
+
+In the above syntax, we store the nested array elements in the b and c variables.
+
+
+### Example
+
+
+In the below code, the arr array contains the nested array. We unpack the nested array elements into the variables b and c. In the output, you can observe the values of the b and c variables.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      const arr = [10, [15, 20], 30];
+      const [a, [b, c], d] = arr;
+      document.getElementById("output").innerHTML = 
+      "a = " + a + ", b = " + b + ", c = " + c + ", d = " + d; 
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+a = 10, b = 15, c = 20, d = 30
+```
+
+
+### Example: Skipping elements of the nested array
+
+
+Assignment destructuring allows you to skip the elements of the nested array. Here, the arr array contains two nested arrays. We skip the first element of each nested array while destructuring the nested array.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      const arr = [2, [3, 4], [9, 10]];
+      const [a, [, b], [, c]] = arr;
+      document.getElementById("output").innerHTML = 
+      "a = " + a + ", b = " + b + ", c = " + c; 
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+a = 2, b = 4, c = 10
+```
+
+
+### Example: Nested array destructuring and default values
+
+
+You can assign default values to the variables like objects while destructuring the nested arrays.
+
+
+Here, the first nested array of arr [3, 4] contains two elements. While destructuring, we skipped the first two elements and used the variable p to get the third element, but the nested array contains only two elements. So, the value of the variable p is a 29 default value.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      const arr = [2, [3, 4], [9, 10]];
+      const [, [, , p = 29], [, q]] = arr;
+      document.getElementById("output").innerHTML =
+      "p = " + p + ", q = " + q; 
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+p = 29, q = 10
+```
+
+
+### Example: Nested array destructuring and rest operator
+
+
+You can use the rest operator with nested array destructuring. Here, variable b stores the remaining elements of the first nested array, and variable c stores the remaining elements of the parent array, which includes the second nested array and last array element.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      const arr = [[6, 7, 8, 9], [10, 11, 12, 13], 14];
+      const [[a, ...b], ...c] = arr
+      document.getElementById("output").innerHTML = 
+      "a = " + a + "<br> b = " + b + "<br> c = " + c; 
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+a = 6
+b = 7,8,9
+c = 10,11,12,13,14
+```
+
+
+## Array Within Object  Nested Destructuring
+
+
+Sometimes, we need to destructure the object containing the array. Let's understand it via the example below.
+
+
+### Example
+
+
+In the example below, the num2 property of the numbers object contains the array. We destructure the object properties and print the values in the output.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      const numbers = {
+         num1: 10,
+         num2: [40, 6, 5],
+      }
+      const {num1, num2: [a, b, c]} = numbers;
+      document.getElementById("output").innerHTML = 
+      "num1 = " + num1 + ", a = " + a + ", b = " + b + ", c = " + c; 
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+num1 = 10, a = 40, b = 6, c = 5
+```
+
+
+## Object Within Array  Nested Destructuring
+
+
+In some cases, an array can also contain the object, and you need to destructure the object from the array.
+
+
+### Example
+
+
+In the below code, the numbers array contains the object containing the p and q properties.
+
+
+After that, we destructure the array and unpack the object properties.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      const numbers = [10, { p: 20, q: 30 }]
+      const [a, { p, q }] = numbers;
+      document.getElementById("output").innerHTML = 
+      "a = " + a + ", p = " + p + ", q = " + q; 
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+a = 10, p = 20, q = 30
+```
+

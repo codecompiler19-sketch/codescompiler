@@ -1,0 +1,343 @@
+---
+title: "SQL - Group By Clause"
+description: "Learn SQL - Group By Clause with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 420
+group: "SQL Operators and Clauses"
+seoTitle: "SQL - Group By Clause — CodesCompiler SQL Guide"
+permalink: "sql-group-by"
+---
+
+
+# SQL - Group By Clause
+
+
+Table of contentThe SQL GROUP BY ClauseGROUP BY Clause with Aggregate FunctionsGROUP BY Clause on Single ColumnsGROUP BY Clause with Multiple ColumnsGROUP BY with ORDER BY ClauseGROUP BY with HAVING ClauseGROUP BY with JOINS
+
+
+
+
+## The SQL GROUP BY Clause
+
+
+TheSQL GROUP BYclause is used to group (organize) rows that have the same values in specified columns into summary rows. It is used with aggregate functions likeCOUNT(),SUM(),AVG(),MAX(), andMIN()to perform calculations on each group of data.
+
+
+It is useful when you want to summarize data and get totals or averages for each category or group.  TheGROUP BYclause appears after theWHEREclause (if used), and before theHAVINGandORDER BYclauses in a SQL query.
+
+
+### Syntax
+
+
+Following is the basic syntax of the SQL GROUP BY clause:
+
+
+```sql
+SELECT column_name(s)
+FROM table_name
+GROUP BY column_name(s);
+```
+
+
+Where,column_name(s)refers to the name of one or more columns in the table that we want to group the data by and thetable_namerefers to the name of the table that we want to retrieve data from.
+
+
+## GROUP BY Clause with Aggregate Functions
+
+
+TheGROUP BYclause is commonly used in combination with aggregate functions likeSUM(),AVG(),MIN(),MAX(), andCOUNT()to perform calculations on grouped data.
+
+
+This allows you to generate meaningful summaries, such as totals, averages, or counts, for each group of records based on one or more columns.
+
+
+### Example
+
+
+Assume we have created a table named CUSTOMERS, which contains the personal details of customers including their name, age, address and salary, using the following query:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),
+   PRIMARY KEY (ID)
+);
+```
+
+
+Now insert values into this table using the INSERT statement as follows:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00),
+(2, 'Khilan', 25, 'Delhi', 1500.00),
+(3, 'Kaushik', 23, 'Kota', 2000.00),
+(4, 'Chaitali', 25, 'Mumbai', 6500.00),
+(5, 'Hardik', 27, 'Bhopal', 8500.00),
+(6, 'Komal', 22, 'Hyderabad', 4500.00),
+(7, 'Muffy', 24, 'Indore', 10000.00);
+```
+
+
+The table created is as shown below:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+The following SQL query groups the CUSTOMERS table based on AGE and counts the number of records in each group:
+
+
+```sql
+SELECT AGE, COUNT(Name) FROM CUSTOMERS GROUP BY AGE;
+```
+
+
+Following is the result produced:
+
+
+AGECOUNT(Name)321252231271221241
+
+
+### Example
+
+
+In the following query, we are finding the highest salary for each age:
+
+
+```sql
+SELECT AGE, MAX(salary) AS MAX_SALARY 
+FROM CUSTOMERS GROUP BY AGE;
+```
+
+
+Following is the output of the above query:
+
+
+AGEMAX_SALARY322000.00256500.00232000.00278500.00224500.002410000.00
+
+
+Similarly we can group the records of the CUSTOMERS table based on the AGE column and calculate the maximum salary, average and sum of the SALARY values in each group using the MIN(), AVG() and SUM() functions respectively.
+
+
+## GROUP BY Clause on Single Columns
+
+
+When we use the GROUP BY clause with a single column, all the rows in the table that have the same value in that particular column will be merged into a single record.
+
+
+### Example
+
+
+In the following example we are grouping the above created CUSTOMERS table by the ADDRESS column and calculating the average salary of the customer from each city:
+
+
+```sql
+SELECT ADDRESS, AVG(SALARY) as AVG_SALARY 
+FROM CUSTOMERS GROUP BY ADDRESS;
+```
+
+
+This would produce the following result:
+
+
+ADDRESSAVG_SALARYAhmedabad2000.000000Delhi1500.000000Kota2000.000000Mumbai6500.000000Bhopal8500.000000Hyderabad4500.000000Indore10000.000000
+
+
+## GROUP BY Clause with Multiple Columns
+
+
+When we use the GROUP BY clause with multiple columns, all the rows in the table that have the same values in all of the specified columns will be merged into a single group.
+
+
+### Example
+
+
+In the following query we are grouping the records of the CUSTOMERS table based on the columns ADDRESS and AGE:
+
+
+```sql
+SELECT ADDRESS, AGE, SUM(SALARY) AS TOTAL_SALARY 
+FROM CUSTOMERS GROUP BY ADDRESS, AGE;
+```
+
+
+This would produce the following result:
+
+
+ADDRESSAGETOTAL_SALARYAhmedabad322000.00Delhi251500.00Kota232000.00Mumbai256500.00Bhopal278500.00Hyderabad224500.00Indore2410000.00
+
+
+## GROUP BY with ORDER BY Clause
+
+
+We can use the ORDER BY clause with GROUP BY in SQL to sort the grouped data by one or more columns.
+
+
+### Syntax
+
+
+Following is the syntax for using ORDER BY clause with GROUP BY clause in SQL:
+
+
+```sql
+SELECT column1, column2, ..., aggregate_function(columnX) AS alias
+FROM table
+GROUP BY column1, column2, ...
+ORDER BY column1 [ASC | DESC], column2 [ASC | DESC], ...;
+```
+
+
+### Example
+
+
+In here, we are finding the highest salary for each age, sorted by high to low:
+
+
+```sql
+SELECT AGE, MIN(SALARY) AS MIN_SALARY 
+FROM CUSTOMERS 
+GROUP BY AGE ORDER BY MIN_SALARY DESC;
+```
+
+
+Following is the result produced:
+
+
+AGEMIN_SALARY2410000.00278500.00224500.00322000.00232000.00251500.00
+
+
+## GROUP BY with HAVING Clause
+
+
+We can also use the GROUP BY clause with the HAVING clause filter the grouped data in a table based on specific criteria.
+
+
+### Syntax
+
+
+Following is the syntax for using ORDER BY clause with HAVING clause in SQL:
+
+
+```sql
+SELECT column1, column2, aggregate_function(column)
+FROM table_name
+GROUP BY column1, column2
+HAVING condition;
+```
+
+
+### Example
+
+
+In the following query, we are grouping the customers by their age and calculating the minimum salary for each group. Using the HAVING clause we are filtering the groups where the age is greater than 24:
+
+
+```sql
+SELECT ADDRESS, AGE, MIN(SALARY) AS MIN_SUM 
+FROM CUSTOMERS 
+GROUP BY ADDRESS, AGE HAVING AGE>24;
+```
+
+
+The result produced is as follows:
+
+
+ADDRESSAGEMIN_SUMAhmedabad322000.00Delhi251500.00Mumbai256500.00Bhopal278500.00
+
+
+## GROUP BY with JOINS
+
+
+We can also use theGROUP BYclause in SQL queries withJOINoperations. This is useful when we need to summarize or aggregate data from multiple related tables.
+
+
+When usingGROUP BYwithJOINS, we typically:
+
+
+
+- Join two or more tables using an appropriate join type (INNER JOIN, LEFT JOIN, etc.)
+- Select the columns we want to group by from either or both tables
+- Apply aggregate functions to summarize the data for each group
+
+
+
+### Syntax
+
+
+The general syntax for using GROUP BY with JOINs is as follows:
+
+
+```sql
+SELECT table1.column1, table2.column2, aggregate_function(columnX) AS alias
+FROM table1
+JOIN table2 ON table1.common_column = table2.common_column
+GROUP BY table1.column1, table2.column2;
+```
+
+
+### Example
+
+
+Suppose we have another table calledORDERS, which contains information about customer orders, and it is defined as follows:
+
+
+```sql
+CREATE TABLE ORDERS (
+   ORDER_ID INT NOT NULL,
+   CUSTOMER_ID INT,
+   AMOUNT DECIMAL(10,2),
+   PRIMARY KEY (ORDER_ID)
+);
+```
+
+
+Let us insert some sample data into theORDERStable:
+
+
+```sql
+INSERT INTO ORDERS VALUES
+(101, 1, 300.00),
+(102, 2, 150.00),
+(103, 1, 200.00),
+(104, 3, 400.00),
+(105, 5, 250.00),
+(106, 4, 600.00),
+(107, 1, 500.00);
+```
+
+
+Now let us write a query to find the total order amount per customer name using a JOIN betweenCUSTOMERSandORDERS:
+
+
+```sql
+SELECT C.NAME, SUM(O.AMOUNT) AS TOTAL_ORDER_AMOUNT
+FROM CUSTOMERS C
+JOIN ORDERS O ON C.ID = O.CUSTOMER_ID
+GROUP BY C.NAME;
+```
+
+
+Following is the result produced:
+
+
+NAMETOTAL_ORDER_AMOUNTRamesh1000.00Khilan150.00Kaushik400.00Hardik250.00Chaitali600.00
+
+
+In the above example:
+
+
+
+- We joinedCUSTOMERSandORDERSusingC.ID `=` O.CUSTOMER_ID
+- Then grouped the data by customerNAME
+- Calculated the total orderAMOUNTper customer usingSUM(O.AMOUNT)
+
+
+
+This allows us to analyze total sales or purchases made by each customer across the system.
+

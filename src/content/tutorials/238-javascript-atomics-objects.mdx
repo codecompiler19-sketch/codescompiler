@@ -1,0 +1,319 @@
+---
+title: "JavaScript - Atomics Objects"
+description: "Learn JavaScript - Atomics Objects with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2380
+group: "JavaScript Miscellaneous"
+seoTitle: "JavaScript - Atomics Objects — CodesCompiler JavaScript Guide"
+permalink: "javascript-atomics-objects"
+---
+
+
+# JavaScript - Atomics Objects
+
+
+
+
+The Atomics object in JavaScript provides a set of static methods for performing atomic operations on SharedArrayBuffer objects. Atomic operations are operations that are guaranteed to be completed in a single step, without being interrupted by other threads. This makes them useful for implementing concurrent data structures and algorithms.
+
+
+The Atomics object in JavaScript, as part of the ECMAScript standard, serves as a crucial tool for managing shared memory in a multi-threaded environment. Let's understand the basic concept of atomic operations in more detail:
+
+
+## Atomics Object
+
+
+The Atomics object is a built-in JavaScript object that provides atomic operations on shared memory. It is designed to be used in a multi-threaded environment, where multiple threads or Web Workers may be concurrently accessing and modifying shared data.
+
+
+## The Essence of "Atomic"
+
+
+In the context of the Atomics object, "atomic" signifies a crucial characteristic: it performs operations that are inherently indivisible. When we declare an operation as atomic; we imply its execution occurs continuously and uninterruptedly like a single unit. This quality is indispensable in preventing race conditions; these arise when concurrent operations' outcomes depend on their timing and sequence of execution.
+
+
+## Atomic Operations
+
+
+Atomic operations are low-level operations on shared memory that are guaranteed to be executed as a single, uninterruptible unit. These operations include additions, subtractions, bitwise operations, exchanges, and more.
+
+
+The Atomics object provides methods like add, sub, and, or, xor, load, store, exchange, and others, each corresponding to a specific atomic operation.
+
+
+Sr.No.Method & Description1Atomics.add()Adds a specified value to the element at the specified index in the typed array. Returns the original value atomically.2Atomics.sub()Subtracts a specified value from the element at the specified index in the typed array. Returns the original value atomically.3Atomics.and()Performs an atomic bitwise AND operation on the element at the specified index in the typed array with the given value. Returns the original value atomically.4Atomics.or()Performs an atomic bitwise OR operation on the element at the specified index in the typed array with the given value. Returns the original value atomically.5Atomics.xor()Performs an atomic bitwise XOR operation on the element at the specified index in the typed array with the given value. Returns the original value atomically.6Atomics.load()Retrieves the value at the specified index in the typed array atomically.7Atomics.store()Stores the given value at the specified index in the typed array atomically.8Atomics.exchange()Swaps the value at the specified index in the typed array with a specified value. Returns the original value atomically.9Atomics. compareExchange()Compares the value at the specified index in the typed array with a provided expected value, and if they match, updates the value with a new value. Returns the original value atomically.10Atomics.wait()Atomically waits for a value at the specified index in the typed array to be a specific value and then returns. Allows for efficient coordination between threads.11Atomics.notify()Atomically notifies the wait queue associated with the specified index in the typed array.
+
+
+## Examples
+
+
+### Example 1: Basic Usage of Atomics Operations
+
+
+In this example, the Atomics object is demonstrated for its fundamental atomic operations on shared memory. These operations include addition, subtraction, bitwise AND, OR, XOR, loading, storing, exchanging, and compare-exchanging values. Each operation ensures the indivisibility of the executed unit, crucial for preventing race conditions in a multi-threaded environment.
+
+
+Atomics.add()
+
+
+```javascript
+// Shared memory setup
+const sharedBuffer = new SharedArrayBuffer(4);
+const sharedArray = new Int32Array(sharedBuffer);
+// Atomics.add()
+const originalAddValue = Atomics.add(sharedArray, 0, 10);
+console.log(Atomics.add: Original value: ${originalAddValue}, New value: ${sharedArray[0]});
+```
+
+
+#### Output
+
+
+```javascript
+Atomics.add: Original value: 0, New value: 10
+```
+
+
+Atomics.add()
+
+
+```javascript
+// Shared memory setup
+const sharedBuffer = new SharedArrayBuffer(4);
+const sharedArray = new Int32Array(sharedBuffer);
+// Atomics.sub()
+const originalSubValue = Atomics.sub(sharedArray, 0, 5);
+console.log(Atomics.sub: Original value: ${originalSubValue}, New value: ${sharedArray[0]});
+```
+
+
+#### Output
+
+
+```javascript
+Atomics.sub: Original value: 10, New value: 5
+```
+
+
+Atomics.add()
+
+
+```javascript
+// Shared memory setup
+const sharedBuffer = new SharedArrayBuffer(4);
+const sharedArray = new Int32Array(sharedBuffer);
+// Atomics.and()
+const originalAndValue = Atomics.and(sharedArray, 0, 0b1010);
+console.log(Atomics.and: Original value: ${originalAndValue}, New value: ${sharedArray[0].toString(2)});
+```
+
+
+#### Output
+
+
+```javascript
+Atomics.and: Original value: 5, New value: 0
+```
+
+
+Atomics.or()
+
+
+```javascript
+// Shared memory setup
+const sharedBuffer = new SharedArrayBuffer(4);
+const sharedArray = new Int32Array(sharedBuffer);
+// Atomics.or()
+const originalOrValue = Atomics.or(sharedArray, 0, 0b1100);
+console.log(Atomics.or: Original value: ${originalOrValue}, New value: ${sharedArray[0].toString(2)});
+```
+
+
+#### Output
+
+
+```javascript
+Atomics.or: Original value: 0, New value: 1100
+```
+
+
+Atomics.xor()
+
+
+```javascript
+// Shared memory setup
+const sharedBuffer = new SharedArrayBuffer(4);
+const sharedArray = new Int32Array(sharedBuffer);
+// Atomics.xor()
+const originalXorValue = Atomics.xor(sharedArray, 0, 0b0110);
+console.log(Atomics.xor: Original value: ${originalXorValue}, New value: ${sharedArray[0].toString(2)});
+```
+
+
+#### Output
+
+
+```javascript
+Atomics.xor: Original value: 12, New value: 1010
+```
+
+
+Atomics.load()
+
+
+```javascript
+// Shared memory setup
+const sharedBuffer = new SharedArrayBuffer(4);
+const sharedArray = new Int32Array(sharedBuffer);
+// Atomics.load()
+const loadedValue = Atomics.load(sharedArray, 0);
+console.log(Atomics.load: Loaded value: ${loadedValue});
+```
+
+
+#### Output
+
+
+```javascript
+Atomics.load: Loaded value: 10
+```
+
+
+Atomics.store()
+
+
+```javascript
+// Shared memory setup
+const sharedBuffer = new SharedArrayBuffer(4);
+const sharedArray = new Int32Array(sharedBuffer);
+// Atomics.store()
+Atomics.store(sharedArray, 0, 42);
+console.log(Atomics.store: New value: ${sharedArray[0]});
+```
+
+
+#### Output
+
+
+```javascript
+Atomics.store: New value: 42
+```
+
+
+Atomics.exchange()
+
+
+```javascript
+// Shared memory setup
+const sharedBuffer = new SharedArrayBuffer(4);
+const sharedArray = new Int32Array(sharedBuffer);
+// Atomics.exchange()
+const originalExchangeValue = Atomics.exchange(sharedArray, 0, 99);
+console.log(Atomics.exchange: Original value: ${originalExchangeValue}, New value: ${sharedArray[0]});
+```
+
+
+#### Output
+
+
+```javascript
+Atomics.exchange: Original value: 42, New value: 99
+```
+
+
+Atomics.compareExchange()
+
+
+```javascript
+// Shared memory setup
+const sharedBuffer = new SharedArrayBuffer(4);
+const sharedArray = new Int32Array(sharedBuffer);
+// Atomics.compareExchange()
+const expectedValue = 99;
+const newValue = 55;
+const successfulCompareExchange = Atomics.compareExchange(sharedArray, 0, expectedValue, newValue);
+console.log(Atomics.compareExchange: Operation was${successfulCompareExchange ? ' ' : ' not '}successful. New value: ${sharedArray[0]});
+```
+
+
+#### Output
+
+
+```javascript
+Atomics.compareExchange: Operation was successful. New value: 55
+```
+
+
+Atomics.wait()
+
+
+```javascript
+// Shared memory setup
+const sharedBuffer = new SharedArrayBuffer(4);
+const sharedArray = new Int32Array(sharedBuffer);
+// Atomics.wait()
+const valueToWaitFor = 55;
+Atomics.store(sharedArray, 0, valueToWaitFor);
+setTimeout(() => {
+    Atomics.notify(sharedArray, 0);
+}, 2000);
+const waitResult = Atomics.wait(sharedArray, 0, valueToWaitFor, 5000);
+console.log(Atomics.wait: Wait result: ${waitResult});
+```
+
+
+#### Output
+
+
+```javascript
+Atomics.wait: Wait result: timed-out
+```
+
+
+### Example 2: Real-World Use Case - Synchronized Counter
+
+
+In this real-world scenario, we employ the Atomics object to construct a synchronized counter; multiple threads increment this counter through the use of the Atomics.add() operation, thus guaranteeing atomicity in our update process. The functionality and necessity for effective thread coordination become evident with such an application: it offers practical data management solutions within a multi-threaded environment.
+
+
+```javascript
+const sharedBuffer = new SharedArrayBuffer(4);
+const sharedArray = new Int32Array(sharedBuffer);
+
+// Synchronized counter
+function incrementCounter() {
+  const incrementValue = 1;
+  const originalValue = Atomics.add(sharedArray, 0, incrementValue);
+  console.log(Incremented counter by ${incrementValue}. New value: ${sharedArray[0]});
+}
+
+// Multiple threads incrementing the counter
+setInterval(() => {
+  incrementCounter();
+}, 1000);
+
+// Simulate other activities in the main thread
+setInterval(() => {
+  console.log('Main thread doing other work.');
+}, 3000);
+```
+
+
+#### Output
+
+
+```javascript
+Incremented counter by 1. New value: 1
+Incremented counter by 1. New value: 2
+Main thread doing other work.
+Incremented counter by 1. New value: 3
+Incremented counter by 1. New value: 4
+Incremented counter by 1. New value: 5
+Main thread doing other work.
+Incremented counter by 1. New value: 6
+Incremented counter by 1. New value: 7
+Incremented counter by 1. New value: 8
+Main thread doing other work.
+...
+```
+

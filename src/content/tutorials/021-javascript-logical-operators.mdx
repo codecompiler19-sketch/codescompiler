@@ -1,0 +1,328 @@
+---
+title: "JavaScript - Logical Operators"
+description: "Learn JavaScript - Logical Operators with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 210
+group: "JavaScript Operators"
+seoTitle: "JavaScript - Logical Operators — CodesCompiler JavaScript Guide"
+permalink: "javascript-logical-operators"
+---
+
+
+# JavaScript - Logical Operators
+
+
+
+
+## JavaScript Logical Operators
+
+
+Thelogicaloperators in JavaScript are generally used with Boolean operands and return a boolean value. There are mainly three types on logical operators in JavaScript - && (AND), || (OR), and ! (NOT).  These operators are used to control the flow the program.
+
+
+Although thelogicaloperators are typically used with Boolean values, they can be used with any type. For each non-boolean value, the operator converts to a boolean. Thefalsyvalues are converted to false andtruthyvalues to true.
+
+
+There are sixfalsyvalues in JavaScript: false, null, undefined, 0 (zero), "" (empty string), NaN. The value other thanfalsyvalues are treated astruthyvalues. So non zero numbers, non-empty strings, etc., aretruthyvalues.
+
+
+The&&and||operators return the value of one of the operands based on condition. So if the operands are non-boolean, they return a non-boolean value. The!operator always returns a Boolean value.
+
+
+The operands may be literals, variables or expressions. These are first evaluated to boolean equivalent before performing the logical operation.
+
+
+In the below table, we have given the logical operators with its description and example. Lets assume: x `=` true, y `=` false.
+
+
+OperatorDescriptionExample&&Logical AND(x && y) is false.||Logical OR(x || y) is true.!Logical NOT!(x) is false.
+
+
+## JavaScript Logical AND (&&) Operator
+
+
+Thelogical AND(&&) operator evaluates the operands from left to right. If the first operand can be converted to false, it will return the value of first operand, otherwise it will return the value of the second operand.
+
+
+```javascript
+x && y
+```
+
+
+In the above expression if x is a falsy value then it will return the value of x otherwise it will return the value of y.
+
+
+The above rule is followed for all types of operands, whether they are Boolean values, numbers or strings, etc.
+
+
+Let's first discuss with Boolean operands. In general, for a set of Boolean operands, it will return true if both operands are true else it returns false.
+
+
+```javascript
+true && true; // returns true
+true && false;// returns false
+false && true; // returns false
+false && false; // returns false
+```
+
+
+For number operands, the && operator will return the first operand if it is flasy values (0, -0, and 0n), otherwise second operand.
+
+
+```javascript
+0 && 10; // returns 0
+10 && 20; // returns 20 
+20 && 0; // returns 0
+```
+
+
+For string values, empty string is converted to false and non-empty string to true. Look at the below example.
+
+
+```javascript
+let str1 = '';
+let str2 = 'Hello';
+let str3 = 'World';  
+console.log(str1 && str2); // returns '' empty string
+console.log(str2 && str3); // returns World
+```
+
+
+Let's look how && operator works for null and undefined −
+
+
+```javascript
+null && true // return null
+undefined && true // returns undefined
+```
+
+
+For all above examples, you have noticed that if the first operand can be converted to false then it returns the value of first operand otherwise the value of second operand.
+
+
+### Example
+
+
+Now let's look at an example of a logical expression.
+
+
+```html
+<html>
+<body>
+<div id="output"></div>
+<script>
+  const x = 3;
+  const y = -2;
+  document.getElementById("output").innerHTML = x > 0 && y > 2;
+</script>
+</body>
+</html>
+```
+
+
+Herex > 0is evaluated totrueandy > 2is evaluated tofalse.  And the final expression becomes true && false which is evaluated asfalse.
+
+
+### Multiple && Operators
+
+
+If we have multiple && operators in an expression, the && operator evaluates the expression from left to right and it converts each operand to a boolean value. If the result is false, then it returns the value of that operand and terminates the execution. If all the operands are truthy then it returns the value of the last operand.
+
+
+```javascript
+10 && null && false; // returns null
+true && 10 && 20; // returns 20
+```
+
+
+## JavaScript Logical OR (||) Operator
+
+
+Thelogical OR(||) operator also evaluates the operands from left to right. If the first operand can be converted to true, it will return the value of first operand, otherwise it will return the value of the second operand.
+
+
+```javascript
+x || y
+```
+
+
+In the above expression if x is a truthy value then it will return the value of x otherwise it will return the value of y.
+
+
+As || is a logical operator but it can be applied to any type of operand not only boolean.
+
+
+Let's first discuss with Boolean operands. In general, for a set of Boolean operands, it will return flase if both operands arefalseelse it returnstrue.
+
+
+```javascript
+true || true; // returns true
+true || false; // returns true
+false || true; // returns true
+false || false; // returns false
+```
+
+
+For number operands, the || operator will return the first operand if it is truthy values (other than 0, -0, and 0n), otherwise second operand.
+
+
+```javascript
+0 || 10; // returns 10
+10 || 20; // returns 10
+20 || 0; // returns 20
+```
+
+
+For string values, empty string is converted to false and non-empty string to true. Look at the below example.
+
+
+### Example
+
+
+```html
+<html>
+<body>
+<div id="output"></div>
+<script>
+  let str1 = '';
+  let str2 = 'Hello';
+  let str3 = 'World';  
+  document.getElementById("output").innerHTML = 
+  str1 || str2 + "<br>" +
+  str2 || str3;
+</script>
+</body>
+</html>
+```
+
+
+Let's look how && operator works for null and undefined −
+
+
+```javascript
+null || true; // returns true
+undefined || true; // returns true
+```
+
+
+For all above examples, you have noticed that if the first operand can be converted to true then it returns the value of first operand otherwise the value of second operand.
+
+
+### Example
+
+
+Now let's look at an example with expression −
+
+
+```html
+<html>
+<body>
+<div id="output"></div>
+<script>
+  const x = 3;
+  const y = -2;
+  document.getElementById("output").innerHTML = x > 0 || y > 2;
+</script>
+</body>
+</html>
+```
+
+
+### Multiple || Operators
+
+
+We may have multiple || operators in an expression. The || operator evaluates the expression from left to right and it converts each operand to a boolean value. If the result is true, then it returns the value of that operand and terminates the execution. If all the operands are falsy then it returns the value of the last operand.
+
+
+```javascript
+null || 10 || false // returns 10
+false || null || undefined // returns undefined
+```
+
+
+## JavaScript Logical NOT (!) Operator
+
+
+The logical NOT (!) Operator is a unary operator. It returns false if the operand can be converted to true, otherwise it returns true.
+
+
+```javascript
+!x
+```
+
+
+If x is truthy, the NOT (!) operator returns false. If the x is falsy then it returns true.
+
+
+Same as Logical AND, and OR operators, this logical NOT operator can also be used with non-boolean operands. But it will always return a Boolean value.
+
+
+### Example
+
+
+```html
+<html>
+<body>
+<div id="output"></div>
+<script>
+  document.getElementById("output").innerHTML = 
+  !true   + "<br>" +
+  !false  + "<br>" +
+  !0      + "<br>" +
+  !20     + "<br>" +
+  !('Hello World')
+</script>
+</body>
+</html>
+```
+
+
+## Logical Operators Precedence
+
+
+An expression may have more than one logical operators in JavaScript. In such situation, the operators are evaluated on the basis of their precedence. The NOT (!) operator has the highest precedence. Then AND (&&) operator has the higher precedence than OR (||) operator.
+
+
+
+- Logical NOT (!)
+- Logical AND (&&)
+- Logical OR (||)
+
+
+
+### Example
+
+
+Let's check the following example −
+
+
+```html
+<html>
+<body>
+<div id="output"></div>
+<script>
+  document.getElementById("output").innerHTML = 
+  (false || true && !false) // returns true
+</script>
+</body>
+</html>
+```
+
+
+The logical NOT (!) operator has the highest precedence so !false is evaluated to true. Hence the expression now looks like "false || true && true". The && has higher precedence than || so next "true && true" will be evaluated. Now the expression looks like "false || true". Finally "false || true" will be evaluated to true.
+
+
+## Short Circuit Evaluation
+
+
+Logical expressions are evaluated from left to right. These are tested for short-circuit evaluation. Following is the rule of short circuit evaluation −
+
+
+
+- false && any_valuereturns false
+- true || any_valueretuns true
+
+
+
+Theany_valuepart is not evaluated so it doesn't have any effect on final result.
+

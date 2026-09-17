@@ -1,0 +1,168 @@
+---
+title: "JavaScript - Lexical Scope"
+description: "Learn JavaScript - Lexical Scope with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1870
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Lexical Scope — CodesCompiler JavaScript Guide"
+permalink: "javascript-lexical-scope"
+---
+
+
+# JavaScript - Lexical Scope
+
+
+
+
+## What is Lexical Scope?
+
+
+Lexical scope refers to an expression's definition area. In other words, an item's lexical scope is the context in which it was generated.
+
+
+Lexical scope is sometimes known as static scope. The lexical scope of an item is not always determined by where it was invoked (or called). The lexical scope of an object serves as its definition space.
+
+
+So you may know that variables and methods have different levels of scope −
+
+
+
+- Global Scope:Variables defined outside of any function or block yet accessible throughout the program.
+- Local Scope:Variables defined within a function or block that can only be accessed within that function or block are considered local scope.
+- Nested Scope:Inner functions can access variables in their parent functions.
+- Block Scope:Variables defined with let and const are only valid in the block where they are declared, such as loops or conditionals.
+
+
+
+Now let us see some examples of lexical scope in JavaScript in the below section.
+
+
+### Example 1
+
+
+Let us see the example code below −
+
+
+```javascript
+// Define a variable in the global scope
+const myName = "Shwetaa";
+
+// Call myName variable from a function
+function getName() {
+   return myName;
+}
+```
+
+
+In the above sample code, we defined the myName variable in the global scope and used it in the getName() function.
+
+
+So here question arises, Which of the two spaces covers myName's lexical scope? Is it the global or local scope of the getName() function?
+
+
+So you have to remember that lexical scope refers to definition space, not invocation space. As a result of our definition of myName in the global environment, its lexical scope is global.
+
+
+### Example 2
+
+
+Let us see another example of lexical scope in JavaScript −
+
+
+```javascript
+function getName() {
+   const myName = "Swati";
+   return myName;
+}
+```
+
+
+So here question arises, Where is myName's lexical scope?
+
+
+And the answer is, Notice how we defined and invoked myName within getName(). As a result, myName's lexical scope is the local environment of getName(), which is myName's definition space.
+
+
+## How Does Lexical Scope Work?
+
+
+The code that can access a JavaScript expression is determined by the environment in which it was defined.
+
+
+In other words, only code in an item's lexical scope has access to it. For example, take the following code −
+
+
+```javascript
+// Define a function
+function myLastName() {
+   const lastName = "Sharma";
+   return lastName;
+}
+// Define another function
+function showFullName() {
+   const fullName = "Swati " + lastName;
+   return fullName;
+}
+// Invoke showFullName():
+console.log(showFullName());
+```
+
+
+### Output
+
+
+The calling above will return −
+
+
+```javascript
+Uncaught ReferenceError: lastName is not defined
+```
+
+
+Notice that the previous snippet's call to showFullName() resulted in an Uncaught ReferenceError. The error was returned because the item can only be accessed by code within its lexical scope.
+
+
+As a result, the showFullName() function and its internal code cannot access the lastName variable because it was defined in a different scope. In other words, lastName's lexical scope differs from that of showFullName().
+
+
+LastName's definition space is showLastName(), whereas showFullName()'s lexical scope is the global environment.
+
+
+Now, see this below code −
+
+
+```javascript
+function showLastName() {
+   const lastName = "Sharma";
+   return lastName;
+}
+// Define another function:
+function displayFullName() {
+   const fullName = "Swati " + showLastName();
+   return fullName;
+}
+// Invoke displayFullName():
+console.log(displayFullName());
+displayFullName;
+```
+
+
+This will generate the below result −
+
+
+```javascript
+Swati Sharma
+```
+
+
+Because showFullName() and showLastName() are in the same lexical scope, they both returned "Swati Sharma" in the example above.
+
+
+In other words, because the two procedures are written in the same global scope, showFullName() might call showLastName().
+
+
+## Summary
+
+
+Understanding lexical scope in JavaScript is important for creating clean, maintainable code. By properly scoping variables and functionsyou canminimize naming conflicts, improve code readability, and prevent undesirable effects. Understanding lexical scope leads to more ordered and efficient programs.
+

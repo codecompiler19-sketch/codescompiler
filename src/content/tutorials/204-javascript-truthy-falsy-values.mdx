@@ -1,0 +1,215 @@
+---
+title: "JavaScript - Truthy and Falsy Values"
+description: "Learn JavaScript - Truthy and Falsy Values with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2040
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Truthy and Falsy Values — CodesCompiler JavaScript Guide"
+permalink: "javascript-truthy-falsy-values"
+---
+
+
+# JavaScript - Truthy/Falsy Values
+
+
+
+
+## Truthy & Falsy Values
+
+
+In JavaScript, true and false values are related to boolean evaluation. Every value in JavaScript has an inherent boolean "truthiness" or "falsiness," which means it can be determined as true or false in boolean contexts like conditional expressions and logical operators.
+
+
+
+- Truthy Values:When a value is converted to a boolean it returns true. Truthy values are non-empty strings, non-zero numbers, arrays, objects and functions.
+- False values:These are defined as those that are not true. For example, 0, null, undefined, NaN, false (a boolean value) and a blank string ("").
+
+
+
+### Example
+
+
+Let us use a scenario and a simple JavaScript method to see if a user has a valid subscription. We assume that only new users have the subscriptionDays field. This field is not available to old users, but it can be set to 0 by new users to indicate that their subscription has expired.
+
+
+Here is the code −
+
+
+```javascript
+// old user without subscriptionDays
+const userOld = {
+   name: "Alisha",
+   email: "alisha@example.com"
+}; 
+ 
+// new user with active subscription
+const userNewWithSubscription = {
+   name: "Shital",
+   email: "shital@example.com",
+   subscriptionDays: 30
+}; 
+ 
+// new user with expired subscription
+const userNewWithoutSubscription = {
+   name: "Chetan",
+   email: "chetan@example.com",
+   subscriptionDays: 0
+}; 
+ 
+function displaySubscriptionStatus(user) {
+   // Explicitly check if subscriptionDays is not undefined
+   if (user.subscriptionDays !== undefined) {
+      if (user.subscriptionDays > 0) {
+         console.log(User has ${user.subscriptionDays} days of subscription left.);
+      } else {
+      console.log("User's subscription has expired.");
+      }
+   } else {
+      console.log("User does not have a subscription.");
+   }
+} 
+displaySubscriptionStatus(userOld);
+displaySubscriptionStatus(userNewWithSubscription); 
+displaySubscriptionStatus(userNewWithoutSubscription);
+```
+
+
+Output
+
+
+This will generate the below result −
+
+
+```javascript
+User does not have a subscription.
+User has 30 days of subscription left.
+User's subscription has expired.
+```
+
+
+## Truthy vs Falsy Values in JavaScript
+
+
+In addition to a type each value has an underlying Boolean value, which is generally classified as true or false. Some of the rules defining how non-Boolean values are translated to true or false values are unusual. Knowing the principles and their impact on comparison is helpful while debugging JavaScript applications.
+
+
+Below are the values that are always falsy −
+
+
+
+- false
+- 0 (zero)
+- -0 (minus zero)
+- 0n (BigInt zero)
+- '', "",  (empty string)
+- null
+- undefined
+- NaN
+
+
+
+And everything else is truthy. Which includes −
+
+
+
+- '0' (a string containing a single zero)
+- 'false' (a string containing the text false)
+- [] (an empty array)
+- &#123;&#125; (an empty object)
+- function()&#123;&#125; (an empty function)
+
+
+
+As a result only one value can be used within the conditions. For example −
+
+
+```javascript
+if (value) {
+  // value is truthy
+}
+else {
+  // value is falsy
+  // it can be false, 0, '', null, undefined or NaN
+}
+```
+
+
+## Dealing with Truthy or Falsy Values
+
+
+Even for experienced programmers, it can be difficult to figure out what is true or false in code. It will be very challenging for beginners and those switching from another programming language! But you can find the most difficult errors while working with true and false numbers by following three simple steps. Let's discuss each step separately in the below section −
+
+
+### Avoid Direct Comparisons
+
+
+Comparing two truthy and falsy values is rarely required because one value is always equivalent to true or false −
+
+
+```javascript
+// instead of
+if (a == false)
+// runs if x is false, 0, '', or []
+
+// use the below code
+if (!x) // ...
+// runs if x is false, 0, '', NaN, null or undefined
+```
+
+
+### Use `=`=`=` Strict Equality
+
+
+When comparing values you can use the `=`=`=` strict equality (or!=`=` strict inequality) comparison to prevent type conversion problems −
+
+
+```javascript
+// instead of
+if (a == b) 
+// runs if x and y are both truthy or both falsy
+// e.g. x = null and y = undefined
+
+// use
+if (a === b) 
+// runs if x and y are identical...
+// except when both are NaN
+```
+
+
+### Converting to Actual Boolean Values
+
+
+In JavaScript, you can use a double-negative!! or the Boolean constructor to change any value into an actual Boolean value. This allows you to be positive that only false, 0, "", null, undefined, and NaN will produce a false −
+
+
+```javascript
+// instead of
+if (x === y) 
+// This will run if x and y are same...
+// except when both are NaN
+
+// use
+if (Boolean(x) === Boolean(y)) 
+// or
+if (!!x === !!y) 
+// This will run if x and y are same...
+// including when either or both are NaN
+```
+
+
+When a truthy value is given to the Boolean constructor, it returns true; when a falsy value is passed, it returns false. When paired with an iteration method, this can be helpful. For example −
+
+
+```javascript
+const truthy_values = [false,0,,'',"",null,undefined,NaN,'0','false',[],{},function() {}].filter(Boolean);
+
+// Filter out falsy values and log remaining truthy values
+console.log(truthy_values);
+```
+
+
+## Summary
+
+
+Truthy and falsy values allow you to write ternary operators and simple JavaScript conditions. But never forget about the edge cases. A single empty array or NaN variable could lead to many hours of troubleshooting!
+

@@ -1,0 +1,142 @@
+---
+title: "SQL - Date & Time"
+description: "Learn SQL - Date & Time with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 990
+group: "Advanced SQL"
+seoTitle: "SQL - Date & Time — CodesCompiler SQL Guide"
+permalink: "sql-date-and-time"
+---
+
+
+# SQL - Date & Time
+
+
+Table of contentDate & Time Datatypes in SQLDate & Time Functions in SQL
+
+
+
+
+SQL provides multiple datatypes and functions to handleDate and Timevalues in a database. This is because Date and Time values are represented in various formats. For instance, there are two common ways to represent a date value:DD/MM/YYYYandMM/DD/YYYY. Similarly, there is more than a single way to represent time values.
+
+
+For a database to recognize such data given in any format, we make use of multiple datatypes and functions.
+
+
+The only tricky part about storing the Date and Time data in a database is making sure that the values are inserted in the tables with the same format as the datatype.
+
+
+Different database systems use different datatypes and functions to store and handle the Date and Time data.
+
+
+## Date & Time Datatypes in SQL
+
+
+Date and time datatypes are used in SQL to store date and time values in various formats. The datatypes available in SQL are listed below.
+
+
+S.No.Datatype & DescriptionStorage1datetimeIt stores date and time both from January 1, 1753 to December 31, 9999 with an accuracy of 3.33 milliseconds; with the format: YYYY-MM-DD HH:MI:SS.8 bytes2datetime2It stores date and time both from January 1, 0001 to December 31, 9999 with an accuracy of 100 nanoseconds.6 - 8 bytes3smalldatetimeIt stores date and time both from January 1, 1900 to June 6, 2079 with an accuracy of 1 minute. It is stored in the format of YYYY-MM-DD HH:MI:SS.4 bytes4dateIt stores date only from January 1, 0001 to December 31 9999, in the format: YYYY-MM-DD.3 bytes5timeIt store time only to an accuracy of 100 nanoseconds.3 - 5 bytes6datetimeoffsetIt is the same of the datetime2 with the addition of the time zone offset.8 - 10 bytes7timestampIt stores the unique number that gets updated every time a row gets created or modified. It does not correspond to real time and is based on internal time. Each table may have only one timestamp variable.
+
+
+### Example
+
+
+In the following example, let us create a table named SALES_DETAILS which accepts only date and time values in different formats.
+
+
+```sql
+CREATE TABLE SALES_DETAILS(
+   orderDate DATE, 
+   shippingDate DATETIME, 
+   deliveredDate TIMESTAMP, 
+   time TIME
+);
+```
+
+
+To insert values into this table, use the following query −
+
+
+```sql
+INSERT INTO SALES_DETAILS VALUES
+('2023-02-01', '2023-02-01 :10:00','2023-02-03 :18:00', '18:00');
+```
+
+
+### Output
+
+
+The table will be created as follows −
+
+
+orderDateshippingDatedeliveredDatetime2023-02-012023-02-01 :10:002023-02-03 :18:0018:00
+
+
+## Date & Time Functions in SQL
+
+
+SQL also provides multiple functions to handle date and time values.
+
+
+For instance, there are different functions to retrieve the current timestamp in different formats. Let us see some of such functions below −
+
+
+### CURDATE() Function
+
+
+To get the current date, we use the CURDATE() function in MySQL. The format of the resultant date will be 'YYYY-MM-DD' (string) or YYYYMMMDD (numeric).
+
+
+```sql
+SELECT CURDATE();
+```
+
+
+### Output
+
+
+When we execute the above query, we get the current days date −
+
+
+CURDATE()2023-08-22
+
+
+### NOW() Function
+
+
+The MySQL NOW() function will retrieve the current date and time value as a timestamp based on the context and, the value returned will be in either of the two formats: 'YYYY-MM-DD hh:mm:ss' and 'YYYYMMDDhhmmss'.
+
+
+```sql
+SELECT NOW();
+```
+
+
+### Output
+
+
+When we execute the above SQL query, we get the current date with time as follow −
+
+
+NOW()2023-08-22 15:30:25
+
+
+### CURRENT_TIMESTAMP() Function
+
+
+The MySQL CURRENT_TIMESTAMP() function is used to get the current timestamp. The value returned will be in 'YYYY-MM-DD hh:mm:ss' (string) or YYYYMMDDhhmmss (numeric) format. This function is a synonym for NOW().
+
+
+```sql
+SELECT CURRENT_TIMESTAMP();
+```
+
+
+### Output
+
+
+When we run the above SQL query, we get the following output −
+
+
+CURRENT_TIMESTAMP()2023-08-22 15:31:32
+

@@ -1,0 +1,180 @@
+---
+title: "SQL - Clustered Index"
+description: "Learn SQL - Clustered Index with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 830
+group: "SQL Indexes"
+seoTitle: "SQL - Clustered Index — CodesCompiler SQL Guide"
+permalink: "sql-clustered-index"
+---
+
+
+# SQL - Clustered Index
+
+
+
+
+PreviousNext
+
+
+Anindexin a database is a data structure that helps to improve the speed of retrieving specific data from tables and views.
+
+
+Data in a table is stored in the form of an unordered data structure called a "Heap", where rows are placed without any specific order. Thus, when retrieving data from a table, the query optimizer must scan the entire table to locate the requested rows. This process can be time-consuming, especially when we are dealing with large tables. To speed up the data retrieval, SQL provides a data object called index that stores and organizes table data in a specific way, allowing faster data access.
+
+
+## SQL Clustered Indexes
+
+
+Aclustered indexin SQL is a type of index that determines the physical order in which the data values will be stored in a table.
+
+
+When a clustered index is defined on a specific column, during the creation of a new table, the data is inserted into that column in a sorted order. This helps in faster retrieval of data since it is stored in a specific order.
+
+
+
+- It is recommended to have only one clustered index on a table. If we create multiple clustered indexes on the same table, the table will have to store the same data in multiple orders which is not possible.
+- When we try to create a primary key constraint on a table, a unique clustered index is automatically created on the table. However, the clustered index is not the same as a primary key. A primary key is a constraint that imposes uniqueness on a column or set of columns, while a clustered index determines the physical order of the data in the table.
+
+
+
+MySQL database does not have a separate provisions for Clustered and Non-Clustered indexes. Clustered indexes are automatically created when PRIMARY KEY is defined on a table. And when the PRIMARY KEY is not defined, the first UNIQUE NOT NULL key is treated as a Clustered index.
+
+
+### Syntax
+
+
+Following is the syntax to create a clustered index with SQL Server:
+
+
+```sql
+CREATE INDEX index_name ON table_name(column_name [asc|desc])
+```
+
+
+Where,
+
+
+
+- index_name: specifies the name you want to give to the index being created.
+- column_name: specifies the column(s) that will be indexed in the order specified.
+- asc|desc: specifies the order (asc - ascending, desc - descending) in which the data should be sorted. The default sorting order is ascending order.
+
+
+
+### Example
+
+
+In this example, let us create a clustered index on a table in SQL Server. For that, we need to first create a table namedCUSTOMERSusing the following query:
+
+
+```sql
+CREATE TABLE CUSTOMERS( 
+   ID INT NOT NULL, 
+   NAME VARCHAR (20) NOT NULL, 
+   AGE  INT NOT NULL, 
+   ADDRESS CHAR (25), 
+   SALARY DECIMAL (20, 2)
+);
+```
+
+
+Now, insert some values into the CUSTOMERS table using the following query:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES
+(7, 'Muffy', '24', 'Indore', 5500),
+(1, 'Ramesh', '32', 'Ahmedabad', 2000),
+(6, 'Komal', '22', 'Hyderabad', 9000),
+(2, 'Khilan', '25', 'Delhi', 1500),
+(4, 'Chaitali', '25', 'Mumbai', 6500),
+(5, 'Hardik','27', 'Bhopal', 8500),
+(3, 'Kaushik', '23', 'Kota', 2000);
+```
+
+
+The table is successfully created in the SQL Server database.
+
+
+IDNAMEAGEADDRESSSALARY7Muffy24Indore5500.001Ramesh32Ahmedabad2000.006Komal22Hyderabad9000.002Khilan25Delhi1500.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.003Kaushik23Kota2500.00
+
+
+Now, let us create a clustered index on the column namedIDusing the following query:
+
+
+```sql
+CREATE CLUSTERED INDEX CLU_ID ON CUSTOMERS(ID ASC);
+```
+
+
+### Output
+
+
+On executing the above query, the output is displayed as follows:
+
+
+```sql
+Commands Completed Successfully.
+```
+
+
+### Verification
+
+
+To verify if the clustered index is defined on ID column, check whether the records of CUSTOMERS table are sorted by retrieving them using the following query:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+The records of the table are sorted in ascending order based on values in the column named ID.
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2500.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad9000.007Muffy24Indore5500.00
+
+
+## Creating Clustered Index on Multiple Columns
+
+
+With the following example, let us understand how clustered index works when it is created on multiple columns of a table.
+
+
+Instead of creating a new table, consider the previously created CUSTOMERS table and define a clustered index on multiple columns of this table, such as AGE and SALARY, using the following query:
+
+
+```sql
+CREATE CLUSTERED INDEX MUL_CLUS_ID 
+ON CUSTOMERS (AGE, SALARY ASC);
+```
+
+
+### Output
+
+
+When we execute the above query, the output is obtained as follows:
+
+
+```sql
+Commands Completed Successfully.
+```
+
+
+### Verification
+
+
+Now, let us verify whether the values in the columnsAGEandSALARYis sorted or not:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+As we can observe in the table below, the records are sorted only based on the values in AGE column and not with the values in SALARY column. So, it is recommended to have only one clustered index on a table.
+
+
+IDNAMEAGEADDRESSSALARY6Komal22Hyderabad9000.003Kaushik23Kota2500.007Muffy24Indore5500.002Khilan25Delhi1500.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.001Ramesh32Ahmedabad2000.00
+

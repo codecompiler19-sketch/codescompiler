@@ -1,0 +1,243 @@
+---
+title: "SQL - Cursors"
+description: "Learn SQL - Cursors with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 1000
+group: "Advanced SQL"
+seoTitle: "SQL - Cursors — CodesCompiler SQL Guide"
+permalink: "sql-cursors"
+---
+
+
+# SQL - Cursors
+
+
+Table of contentCursors in SQLProperties of CursorsLife Cycle of the CursorDeclare Cursor StatementOpen Cursor StatementFetch Cursor StatementClose Cursor Statement
+
+
+
+
+A database cursor solves the problem of impedance mismatch. It acts as a filter between the result of a SQL query and the statements that process this result.
+
+
+## Cursors in SQL
+
+
+ACursoris a temporary memory that is allocated by the database server at the time of performing theDataManipulationLanguage operations on a table, such as INSERT, UPDATE and DELETE etc. It is used to retrieve and manipulate data stored in the SQL table.
+
+
+In MySQL, you cannot declare a cursor directly outside of a stored procedure or function. Cursors are generally declared within stored procedures, functions, or blocks of SQL code in MySQL database.
+
+
+Using cursors, we can perform multiple operations on each row of a result set, with or without returning the original data.
+
+
+## Properties of Cursors
+
+
+Following are the properties of MySQL Cursors −
+
+
+
+- READ ONLY −We cannot update or modify any records in the table using the  MySQL cursors. We can just fetch and process data from a table.
+- Non-Scrollable −We can retrieve records from a table in a single direction, i.e. from the first record or the last. We cannot move backward or jump to a specific position within the result set.
+- Asensitive Cursor −An asensitive cursor operates directly on the actual data in the database, it does not create a copy of the data. If any change is made to the data by other connections, it can affect the data that the cursor is working with.
+
+
+
+In addition to the Asensitive cursor there is another type known asInsensitive Cursor. An insensitive cursor uses a temporary copy of the data. Therefore, these cursors are insensitive (not affected) to the changes that are made in the table.
+
+
+## Life Cycle of the Cursor
+
+
+There are four steps to manage these cursors. Following diagram illustrates the lifecycle of an SQL cursor −
+
+
+Now, let us discuss the phases of life cycle of the cursor one-by-one.
+
+
+## Declare Cursor Statement
+
+
+In MySQL we can declare a cursor using theDECLAREstatement and associate it with a SELECT statement to retrieve records from a database table.
+
+
+However, this SELECT statement associated with a cursor does not use the INTO clause, as it's purpose is to fetch and process rows rather than assigning values to variables.
+
+
+### Syntax
+
+
+Following is the syntax to declare a cursor in MySQL database −
+
+
+```sql
+DECLARE cursor_name CURSOR FOR select_statement;
+```
+
+
+## Open Cursor Statement
+
+
+After declaring a cursor in MySQL, the next step is to open the cursor using the OPEN statement. It initializes the result-set, allowing us to fetch and process rows from the associated SELECT statement in the cursor.
+
+
+### Syntax
+
+
+Following is the syntax to open a cursor in MySQL database −
+
+
+```sql
+OPEN cursor_name;
+```
+
+
+## Fetch Cursor Statement
+
+
+Then, we can use the FETCH statement to retrieve the current row pointed by the cursor, and with each FETCH, the cursor moves to the next row in the result set. This allows us to process each row one by one.
+
+
+### Syntax
+
+
+Following is the syntax to fetch a cursor in MySQL database −
+
+
+```sql
+FETCH cursor_name INTO variable_list;
+```
+
+
+## Close Cursor Statement
+
+
+Once all the rows are fetched, we must close the cursor to release the memory associated with it. We can do this using the CLOSE statement.
+
+
+### Syntax
+
+
+Following is the syntax to close a cursor in MySQL database −
+
+
+```sql
+CLOSE cursor_name;
+```
+
+
+### Example
+
+
+In this example, let us see how to manage a cursor in a stored procedure.
+
+
+Assume we have created a table with the nameCUSTOMERSusing theCREATE TABLEstatement as follows −
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),       
+   PRIMARY KEY (ID)
+);
+```
+
+
+Now, let us insert some records into theCUSTOMERStable using theINSERTstatement as follows −
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+(2, 'Khilan', 25, 'Delhi', 1500.00 ),
+(3, 'Kaushik', 23, 'Kota', 2000.00 ),
+(4, 'Chaitali', 25, 'Mumbai', 6500.00 );
+```
+
+
+Now, we will create a backup table named 'CUSTOMERS_BACKUP' to store customer data −
+
+
+```sql
+CREATE TABLE CUSTOMERS_BACKUP (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   PRIMARY KEY (ID)
+);
+```
+
+
+Here, we are creating a stored procedure namedFetchCustomersto fetch customer names from theCUSTOMERStable and inserting them one by one into theBACKUPtable. We are using a cursor to iterate through the rows and a handler to detect the end of the result-set, ensuring all names are processed −
+
+
+```sql
+DELIMITER //
+CREATE PROCEDURE FetchCustomers()
+BEGIN
+   DECLARE done INT DEFAULT FALSE;
+   DECLARE customer_id INT;
+   DECLARE customer_name VARCHAR(255);
+   DECLARE auto_id INT; 
+
+   -- Declare cursor
+   DECLARE MY_CURSOR CURSOR FOR
+   SELECT id, name FROM CUSTOMERS;
+
+   -- Declare exit handler
+   DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+   -- Open cursor
+   OPEN MY_CURSOR;
+
+   -- Fetch and insert rows
+   read_loop: LOOP
+      FETCH MY_CURSOR INTO customer_id, customer_name;
+      IF done = 1 THEN
+         LEAVE read_loop;
+      END IF;
+
+      -- Insert the fetched data into the backup table
+      INSERT INTO customers_backup VALUES (customer_id, customer_name);
+		        
+      -- Get the last auto-generated ID used in the insertion
+      SET auto_id = LAST_INSERT_ID();
+
+   END LOOP;
+	
+    -- Close cursor
+    CLOSE MY_CURSOR;
+END //
+DELIMITER ;
+```
+
+
+Once we create the procedure successfully, we can execute it using the CALL statement as shown below −
+
+
+```sql
+CALL FetchCustomers();
+```
+
+
+### Verification
+
+
+You can verify the contents of the CUSTOMERS_BACKUP table using the SELECT statement as shown below −
+
+
+```sql
+SELECT * FROM CUSTOMERS_BACKUP;
+```
+
+
+The contents of the table would be −
+
+
+IDNAME1Ramesh2Khilan3Kaushik4Chaitali
+

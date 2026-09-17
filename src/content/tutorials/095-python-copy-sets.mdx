@@ -1,0 +1,172 @@
+---
+title: "PYTHON - Copy Sets"
+description: "Learn PYTHON - Copy Sets with clear explanation, code examples, and practical guide."
+category: "python"
+order: 950
+group: "Python Sets"
+seoTitle: "PYTHON - Copy Sets — CodesCompiler PYTHON Guide"
+permalink: "python-copy-sets"
+---
+
+
+# Python - Copy Sets
+
+
+
+
+## Python Copy Sets
+
+
+Copying sets in Python refers to creating a newsetthat contains the same elements as an existing set. Unlike simple variable assignment, which creates a reference to the original set, copying ensures that changes made to the copied set do not affect the original set, and vice versa.
+
+
+There are different methods for copying a set in Python, including using the copy() method, the set() function or set comprehension.
+
+
+## Copy Sets Using the copy() Method
+
+
+The copy() method in set class is used to create a shallow copy of a set object.
+
+
+A shallow copy means that the method creates a new collection object, but does not create copies of the objects contained within the original collection. Instead, it copies the references to these objects.
+
+
+Therefore, if the original collection contains mutable objects (like lists, dictionaries, or other sets), modifications to these objects will be reflected in both the original and the copied collections.
+
+
+### Syntax
+
+
+Following is the syntax of the copy() method −
+
+
+```python
+set.copy()
+```
+
+
+### Return Value
+
+
+The copy() method returns a new set which is a shallow copy of existing set.
+
+
+### Example
+
+
+In the following example, we are creating a copy of the set "lang1" and storing it in "lang2", then retrieving both sets and their memory addresses using id().
+
+
+After adding an element to "lang1", we retrieve both sets and their memory addresses again to show that "lang1" and "lang2" are independent copies −
+
+
+```python
+lang1 = {"C", "C++", "Java", "Python"}
+print ("lang1: ", lang1, "id(lang1): ", id(lang1))
+lang2 = lang1.copy()
+print ("lang2: ", lang2, "id(lang2): ", id(lang2))
+lang1.add("PHP")
+print ("After updating lang1")
+print ("lang1: ", lang1, "id(lang1): ", id(lang1))
+print ("lang2: ", lang2, "id(lang2): ", id(lang2))
+```
+
+
+Output
+
+
+This will produce the following output −
+
+
+```python
+lang1: {'Python', 'Java', 'C', 'C++'} id(lang1): 2451578196864
+lang2: {'Python', 'Java', 'C', 'C++'} id(lang2): 2451578197312
+After updating lang1
+lang1: {'Python', 'C', 'C++', 'PHP', 'Java'} id(lang1): 2451578196864
+lang2: {'Python', 'Java', 'C', 'C++'} id(lang2): 2451578197312
+```
+
+
+## Copy Sets Using the set() Function
+
+
+The Python set() function is used to create a new set object. It takes an iterable as an argument and convert it into a set, removing any duplicate elements in the process. If no argument is provided, it creates an empty set.
+
+
+We can copy set using the set() function by passing the original set as an argument to the set() constructor. This creates a new set that contains all the elements of the original set, ensuring that any modifications to the new set do not affect the original set.
+
+
+### Example
+
+
+In this example, we are creating a copy of "original_set" using the set() function and storing it in "copied_set" −
+
+
+```python
+# Original set
+original_set = {1, 2, 3, 4}
+# Copying the set using the set() function
+copied_set = set(original_set)
+print("copied set:", copied_set) 
+
+# Demonstrating that the sets are independent
+copied_set.add(5)
+print("copied set:",copied_set)      
+print("original set:",original_set)
+```
+
+
+Output
+
+
+Following is the output of the above code −
+
+
+```python
+copied set: {1, 2, 3, 4}
+copied set: {1, 2, 3, 4, 5}
+original set: {1, 2, 3, 4}
+```
+
+
+## Copy Sets Using Set Comprehension
+
+
+Set comprehension is a concise way to create sets in Python. It is used to generate a new set by iterating over an iterable and optionally applying conditions to filter elements. The syntax is similar to list comprehension but with curly braces &#123;&#125; instead of square brackets [] −
+
+
+```python
+{expression for item in iterable if condition}
+```
+
+
+We can copy sets using set comprehension by iterating over the elements of the original set and directly creating a new set with those elements.
+
+
+### Example
+
+
+In the example below, we create an original set named "original_set", then copy it using set comprehension into "copied_set" −
+
+
+```python
+# Original set
+original_set = {1, 2, 3, 4, 5}
+
+# Copying the set using set comprehension
+copied_set = {x for x in original_set}
+print("Copied set:", copied_set)
+```
+
+
+Output
+
+
+Output of the above code is as shown below −
+
+
+```python
+Copied set: {1, 2, 3, 4, 5}
+```
+

@@ -1,0 +1,296 @@
+---
+title: "JavaScript - Rest Parameter"
+description: "Learn JavaScript - Rest Parameter with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2390
+group: "JavaScript Miscellaneous"
+seoTitle: "JavaScript - Rest Parameter — CodesCompiler JavaScript Guide"
+permalink: "javascript-rest-parameter"
+---
+
+
+# JavaScript - Rest Parameter
+
+
+
+
+## Rest Parameter
+
+
+Therest parameterin JavaScript allows a function to accept a variable number of arguments as an array. When the number of arguments that need to pass to the function is not fixed, you can use the rest parameters.
+
+
+The JavaScript rest parameters allow you to collect all the remaining arguments in a single array. The rest parameter is represented with three dots (...) followed by a parameter name. This parameter name is the array that contains all the remaining arguments.
+
+
+### Rest Parameter Syntax
+
+
+The rest parameter in JavaScript involves using three dots (...) followed by a parameter name in the function declaration.
+
+
+```javascript
+function functionName(para1, para2, ...theArgs){
+   // function body;
+}
+```
+
+
+Herepara1, andpara2are ordinary parameters whiletheArgsis a rest parameter. The rest parameter collects the rest of arguments (here, arguments other than the corresponding to the parameterspara1andpara1) and assigns to an array namedtheArgs.
+
+
+We can write the rest parameter in function expression also same as in the function declaration.
+
+
+Therest parametershould always be the last parameter in the function definition.
+
+
+```javascript
+function funcName(...para1, para2, para2){}
+// SyntaxError: Invalid or unexpected token
+```
+
+
+The function definition can have only one rest parameter.
+
+
+```javascript
+function funcName(para1, ...para2, ...para3){}
+//SyntaxError: Rest parameter must be last formal parameter
+```
+
+
+### Example: Variable Length Parameter List
+
+
+The rest parameters are very useful when you want to define a function that can handle a variable number of arguments. Lets take the following example −
+
+
+```html
+<html>
+<body>
+  <div> Rest parameter allows function to accept nay number of arguments.</div>
+  <div id = "demo"> </div>
+  <script>
+    function sum(...nums) {
+      let totalSum = 0;
+      for (let num of nums) {
+        totalSum += num;
+      }
+      return totalSum;
+    }
+    document.getElementById("demo").innerHTML = 
+	 sum(10, 20, 30, 40) + "<br>" +
+    sum(10, 20) + "<br>" +
+    sum();
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Rest parameter allows function to accept nay number of arguments.
+100
+30
+0
+```
+
+
+Here, the rest parameter nums allows the function to accept any number of number arguments.
+
+
+### Example: Finding the Maximum Number
+
+
+JavaScript rest parameter simplifies the process of finding the max number among a set of given numbers.
+
+
+In this example, we use rest parameter to numbers to collect all arguments passed to the function. The spread operator is used to pass the individual values to the Math.max() function.
+
+
+```html
+<html>
+<body>
+   <div> Finding the maximum number</div>
+   <div id = "demo"> </div>
+   <script>
+      function getMax(...args){ 
+         return Math.max(...args); 
+      } 
+      document.getElementById("demo").innerHTML = 
+		getMax(10,20,30,40) + "<br>" +
+      getMax(10,20,30);
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Finding the maximum number
+40
+30
+```
+
+
+Here the rest parameter args allows the function getMax to accept any number of arguments.
+
+
+## Spread Operator and Rest Parameters
+
+
+The spread operator (...) is closely related to rest parameters and is often used in conjunction with them. While the rest parameter collects function arguments into an array, the spread operator performs the opposite operation, spreading the elements of an array into individual arguments.
+
+
+In the above example of finding the maximum number, we used both rest parameter and spread operator.
+
+
+```javascript
+function getMax(...args){ // here ...args as rest parameter
+    return Math.max(...args); // here ... works as spread operator
+}
+```
+
+
+### Example
+
+
+In this example, the spread operator ... is used to pass the elements of the numbers array as individual arguments to the multiply function.
+
+
+```html
+<html>
+<body>
+   <div> Spread operator in JavaScript<div>
+   <div id="demo"></div>
+   <script>
+      function multiply(a, b, c) {
+         return a * b * c;
+      }
+      const numbers = [2, 3, 4];
+      document.getElementById("demo").innerHTML = multiply(...numbers);
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Spread operator in JavaScript
+24
+```
+
+
+## Rest Parameter vs. Arguments Object
+
+
+The introduction of rest parameters has implications for how we handle variable-length parameter lists compared to using the arguments object. Let's compare the two approaches:
+
+
+### Rest Parameters
+
+
+```html
+<html>
+<body>
+  <div> Sum using rest parameter in JavaScript:</div>
+  <div id = "demo"> </div>
+  <script>
+    function sum(...numbers) {
+      return numbers.reduce((total, num) => total + num, 0);
+    }
+    document.getElementById("demo").innerHTML = sum(1, 2, 3, 4, 5);
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Sum using rest parameter in JavaScript:
+15
+```
+
+
+### Arguments Object
+
+
+```html
+<html>
+<body>
+  <div> Sum using arguments object in JavaScript:</div>
+  <div id = "demo"> </div>
+  <script>
+    function sum() {
+      const argsArray = Array.from(arguments);
+      return argsArray.reduce((total, num) => total + num, 0);
+    }
+    document.getElementById("demo").innerHTML = sum(1, 2, 3, 4, 5);
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Sum using arguments object in JavaScript:
+15
+```
+
+
+While both approaches achieve the same result, the rest parameter syntax is more concise and readable. It also behaves more consistently with other modern JavaScript features.
+
+
+## Destructuring with Rest Parameter
+
+
+The destructuring assignment is introduced in ES6. It allows us to access the individual values of the array without using array indexing.  We can use the destructuring assignment to extract the values from the array created by rest parameter.
+
+
+### Example
+
+
+In the example below, the destructuring assignment extracts the first two elements from the numbers array.
+
+
+```html
+<html>
+<body>
+  <div> Destructuring assignment with rest parameter</div>
+  <div id = "demo"> </div>
+  <script>
+    function getFirstTwo(...numbers) {
+      const [first, second] = numbers;
+      return First: ${first}, Second: ${second};
+    } 
+    document.getElementById("demo").innerHTML = getFirstTwo(1, 2, 3, 4, 5);
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Destructuring assignment with rest parameter
+First: 1, Second: 2
+```
+

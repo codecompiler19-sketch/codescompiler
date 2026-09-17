@@ -1,0 +1,282 @@
+---
+title: "PYTHON - Thread Priority"
+description: "Learn PYTHON - Thread Priority with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1770
+group: "Python Multithreading"
+seoTitle: "PYTHON - Thread Priority — CodesCompiler PYTHON Guide"
+permalink: "python-thread-priority"
+---
+
+
+# Python - Thread Priority
+
+
+
+
+In Python, currently thread priority is not directly supported by thethreadingmodule. unlike Java, Python does not support thread priorities, thread groups, or certain thread control mechanisms like destroying, stopping, suspending, resuming, or interrupting threads.
+
+
+Even thought Python threads are designed simple and is loosely based onJava's threadingmodel. This is because of Python's Global Interpreter Lock (GIL), which manages Python threads.
+
+
+However, you can simulate priority-based behavior using techniques such as sleep durations, custom scheduling logic within threads or using the additional module which manages task priorities.
+
+
+## Setting the Thread Priority Using Sleep()
+
+
+You can simulate thread priority by introducing delays or using other mechanisms to control the execution order of threads. One common approach to simulate thread priority is by adjusting the sleep duration of your threads.
+
+
+Threads with a lower priority sleep longer, and threads with a high priority sleep shorter.
+
+
+### Example
+
+
+Here's a simple example to demonstrate how to customize the thread priorities using the delays in Python threads. In this example, Thread-2 completes before Thread-1 because it has a lower priority value, resulting in a shorter sleep time.
+
+
+```python
+import threading
+import time
+
+class DummyThread(threading.Thread):
+   def __init__(self, name, priority):
+      threading.Thread.__init__(self)
+      self.name = name
+      self.priority = priority
+
+   def run(self):
+      name = self.name
+      time.sleep(1.0 * self.priority)
+      print(f"{name} thread with priority {self.priority} is running")
+
+# Creating threads with different priorities
+t1 = DummyThread(name='Thread-1', priority=4)
+t2 = DummyThread(name='Thread-2', priority=1)
+
+# Starting the threads
+t1.start()
+t2.start()
+
+# Waiting for both threads to complete
+t1.join()
+t2.join()
+
+print('All Threads are executed')
+```
+
+
+Output
+
+
+On executing the above program, you will get the following results −
+
+
+```python
+Thread-2 thread with priority 1 is running
+Thread-1 thread with priority 4 is running
+All Threads are executed
+```
+
+
+## Adjusting Python Thread Priority on Windows
+
+
+On Windows Operating system you can manipulate the thread priority using thectypesmodule, This is one of the Pythons standard module used for interacting with the Windows API.
+
+
+### Example
+
+
+This example demonstrates how to manually set the priority of threads in Python on a Windows system using thectypesmodule.
+
+
+```python
+import threading
+import ctypes
+import time
+
+# Constants for Windows API
+w32 = ctypes.windll.kernel32
+SET_THREAD = 0x20
+PRIORITIZE_THE_THREAD = 1
+
+class MyThread(threading.Thread):
+   def __init__(self, start_event, name, iterations):
+      super().__init__()
+      self.start_event = start_event
+      self.thread_id = None
+      self.iterations = iterations
+      self.name = name
+
+   def set_priority(self, priority):
+      if not self.is_alive():
+         print('Cannot set priority for a non-active thread')
+         return
+
+      thread_handle = w32.OpenThread(SET_THREAD, False, self.thread_id)
+      success = w32.SetThreadPriority(thread_handle, priority)
+      w32.CloseHandle(thread_handle)
+      if not success:
+         print('Failed to set thread priority:', w32.GetLastError())
+
+   def run(self):
+      self.thread_id = w32.GetCurrentThreadId()
+      self.start_event.wait()
+      while self.iterations:
+         print(f"{self.name} running")
+         start_time = time.time()
+         while time.time() - start_time < 1:
+            pass
+         self.iterations -= 1
+
+# Create an event to synchronize thread start
+start_event = threading.Event()
+
+# Create threads
+thread_normal = MyThread(start_event, name='normal', iterations=4)
+thread_high = MyThread(start_event, name='high', iterations=4)
+
+# Start the threads
+thread_normal.start()
+thread_high.start()
+
+# Adjusting priority of 'high' thread
+thread_high.set_priority(PRIORITIZE_THE_THREAD)
+
+# Trigger thread execution
+start_event.set()
+```
+
+
+Output
+
+
+While executing this code in your Python interpreter, you will get the following results −
+
+
+```python
+high running
+normal running
+high running
+normal running
+high running
+normal running
+high running
+normal running
+```
+
+
+## Prioritizing Python Threads Using the Queue Module
+
+
+Thequeuemodule in Python's standard library is useful in threaded programming when information must be exchanged safely between multiple threads. The Priority Queue class in this module implements all the required locking semantics.
+
+
+With a priority queue, the entries are kept sorted (using theheapqmodule) and the lowest valued entry is retrieved first.
+
+
+The Queue objects have following methods to control the Queue −
+
+
+
+- get()− The get() removes and returns an item from the queue.
+- put()− The put adds item to a queue.
+- qsize()− The qsize() returns the number of items that are currently in the queue.
+- empty()− The empty( ) returns True if queue is empty; otherwise, False.
+- full()− the full() returns True if queue is full; otherwise, False.
+
+
+
+```python
+queue.PriorityQueue(maxsize=0)
+```
+
+
+This is the Constructor for a priority queue. maxsize is an integer that sets the upper limit on the number of items that can be placed in the queue. If maxsize is less than or equal to zero, the queue size is infinite.
+
+
+The lowest valued entries are retrieved first (the lowest valued entry is the one that would be returned by min(entries)). A typical pattern for entries is a tuple in the form −
+
+
+```python
+(priority_number, data)
+```
+
+
+### Example
+
+
+This example demonstrates the use of thePriorityQueueclass in thequeuemodule to manage task priorities between the two threads.
+
+
+```python
+from time import sleep
+from random import random, randint
+from threading import Thread
+from queue import PriorityQueue
+
+queue = PriorityQueue()
+
+def producer(queue):
+   print('Producer: Running')
+   for i in range(5):
+
+      # create item with priority
+      value = random()
+      priority = randint(0, 5)
+      item = (priority, value)
+      queue.put(item)
+   # wait for all items to be processed
+   queue.join()
+
+   queue.put(None)
+   print('Producer: Done')
+
+def consumer(queue):
+   print('Consumer: Running')
+
+   while True:
+
+      # get a unit of work
+      item = queue.get()
+      if item is None:
+         break
+
+      sleep(item[1])
+      print(item)
+      queue.task_done()
+   print('Consumer: Done')
+
+producer = Thread(target=producer, args=(queue,))
+producer.start()
+
+consumer = Thread(target=consumer, args=(queue,))
+consumer.start()
+
+producer.join()
+consumer.join()
+```
+
+
+Output
+
+
+On execution, It will produce the following output −
+
+
+```python
+Producer: Running
+Consumer: Running
+(0, 0.15332707626852804)
+(2, 0.4730737391435892)
+(2, 0.8679231358257962)
+(3, 0.051924220435665025)
+(4, 0.23945882716108446)
+Producer: Done
+Consumer: Done
+```
+

@@ -1,0 +1,339 @@
+---
+title: "JavaScript - Object Destructuring"
+description: "Learn JavaScript - Object Destructuring with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 960
+group: "Object Oriented JavaScript"
+seoTitle: "JavaScript - Object Destructuring — CodesCompiler JavaScript Guide"
+permalink: "javascript-object-destructuring"
+---
+
+
+# JavaScript - Object Destructuring
+
+
+
+
+## Object Destructuring
+
+
+The object destructuring assignments are JavaScript expressions that allow you to unpack and assign object properties into individual variables. The name of the individual variables can be the same as the object properties or different.
+
+
+The object destructuring is a very useful feature when you have an object with a lot of properties and you only need a few of them.
+
+
+### Syntax
+
+
+The syntax of Object Destructing assignment in JavaScript is as follows
+
+
+```javascript
+const { prop1, popr2 } = obj;
+        OR
+const { prop1: p1, prop12: p2 } = obj; // Renaming variables
+        OR
+const { prop1 = default_vaule } = obj; // With Default values
+        OR
+const { prop1, ...prop2 } = obj; // With rest parameter
+```
+
+
+In the above syntax, 'obj' is an object. The prop1 and prop2 are object properties. It covers the different use cases of object destructuring.
+
+
+### Example: Basic Object Destructuring
+
+
+In the example below, the watch object contains the brand and price properties.
+
+
+We store the values of the object properties into the individual variables using object destructuring. You can see the brand's value and price variable in the output, which is the same as object property values.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      const watch = {
+         brand: "Titan",
+         price: 6000,
+      }
+      const {brand, price} = watch;
+      document.getElementById("output").innerHTML += 
+      "The brand of the watch is " + brand + " and the price is " + price;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The brand of the watch is Titan and the price is 6000
+```
+
+
+### Example: Destructuring with less properties
+
+
+The code below demonstrates that you can unpack only required object properties and keep others as it is. Here, the Object contains total 4 properties. But we have unpacked only brand and price properties.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      const watch = {
+         brand: "Titan",
+         price: 6000,
+         color: "Pink",
+         dial: "Round",
+      }
+      const { brand, price } = watch;
+      document.getElementById("output").innerHTML = 
+      "The brand of the watch is " + brand + " and the price is " + price;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The brand of the watch is Titan and the price is 6000
+```
+
+
+## Object Destructuring and Renaming Variables
+
+
+In JavaScript object destructuring, it is not necessary to store the object property values in the variables with the same name as object properties.
+
+
+You can write a new variable name followed by a colon followed by an object property name. In this way, you can rename the object properties while destructuring the object.
+
+
+### Example
+
+
+In the example below, we have stored the value of the brand property in the 'bd' variable, the color property in the 'cr' variable, and the dial property in the 'dl' variable.
+
+
+The values of the new variables are the same as the object properties.
+
+
+```html
+<html>
+<body>
+   p id = "output1"brand: 
+   p id = "output2"color:  
+   p id = "output3"dial: 
+   <script>
+      const watch = {
+         brand: "Titan",
+         color: "Pink",
+         dial: "Round",
+      }
+      const { brand: bd, color: cr, dial: dl } = watch;
+       
+      document.getElementById("output1").innerHTML += bd;
+      document.getElementById("output2").innerHTML += cr;
+      document.getElementById("output3").innerHTML += dl;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+brand: Titan
+
+color: Pink
+
+dial: Round
+```
+
+
+## Object Destructuring and Default Values
+
+
+In many situations, an object property may contain an undefined value, or particular property doesn't exist in the object. If the property is undefined, JavaScript destructuring assignment allows you to initialize the variables with default values.
+
+
+### Example
+
+
+In the below code, the animal object contains the name and age properties.
+
+
+We destructure the object and try to get the name and color property values from the object. Here, the color property doesn't exist in the object, but we have initialized it with the default value.
+
+
+The output shows 'yellow' as the color variable's value, which is the default value.
+
+
+```html
+<html>
+<body>
+   p id = "output1"Animal Name: 
+   p id = "output2"Animal Color: 
+   <script>
+      const animal = {
+         name: "Lion",
+         age: 10,
+      }
+      const { name = "Tiger", color = "Yellow" } = animal;
+      document.getElementById("output1").innerHTML += name;
+      document.getElementById("output2").innerHTML += color;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Animal Name: Lion
+
+Animal Color: Yellow
+```
+
+
+### Example
+
+
+In the below code, we have renamed the variables and assigned the default values to the variables. We used the colon to change the variable name and the assignment operator to assign the default values.
+
+
+```html
+<html>
+<body>
+   p id = "output1"Animal Name: 
+   p id = "output2"Animal Color: 
+   <script>
+      const animal = {
+         name: "Lion",
+         age: 10,
+      }
+      const { name: animalName = "Tiger", color: animalColor = "Yellow" } = animal;
+      document.getElementById("output1").innerHTML += animalName;
+      document.getElementById("output2").innerHTML += animalColor;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Animal Name: Lion
+
+Animal Color: Yellow
+```
+
+
+## Object Destructuring and Rest Operator
+
+
+The syntax of the JavaScript Rest parameter is three dots (...). It allows you to collect the remaining object properties into a single variable in the object format. Let's understand it via the example below.
+
+
+### Example
+
+
+In the below code, the nums object contains the 4 properties. While destructuring, the object value of the num1 property is stored in the num1 variable. Other remaining properties are stored in the 'numbers' variable using the rest operator.
+
+
+In the output, you can see that 'numbers' contains the object containing the remaining properties of the nums object.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      let output = document.getElementById("output");
+      const nums = {
+         num1: 10,
+         num2: 20,
+         num3: 30,
+         num4: 40,
+      }
+      const {num1, ...numbers} = nums;
+      output.innerHTML += "num1: " + num1 + "<br>";
+      output.innerHTML += "numbers: " + JSON.stringify(numbers);
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+num1: 10
+numbers: {"num2":20,"num3":30,"num4":40}
+```
+
+
+## Object Destructuring and Function Parameter
+
+
+You can pass the JavaScript object as a function argument. After that, you can destructure the object in the parameter of the function definition.
+
+
+### Example
+
+
+In the below code, the nums object contains multiple properties, and we have passed it as an argument of the sum() function.
+
+
+In the function parameter, we destructure the object and use that variable inside the function body. The function body returns the sum of object properties.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      function sum({ num1, num2, num3, num4 }) {
+         return num1 + num2 + num3 + num4;
+      }
+      const nums = {
+         num1: 5,
+         num2: 7,
+         num3: 10,
+         num4: 12,
+      }
+      const res = sum(nums);
+      document.getElementById("output").innerHTML += "The sum of numbers is: " + res;
+
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The sum of numbers is: 34
+```
+

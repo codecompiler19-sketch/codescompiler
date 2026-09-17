@@ -1,0 +1,689 @@
+---
+title: "JavaScript - Design Patterns"
+description: "Learn JavaScript - Design Patterns with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1810
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Design Patterns — CodesCompiler JavaScript Guide"
+permalink: "javascript-design-patterns"
+---
+
+
+# JavaScript - Design Patterns
+
+
+
+
+In JavaScript, design patterns are classes and communicating objects that are designed to deal with a general design problem in a specific setting. Generic, reusable solutions to typical issues that come up throughout software design and development are known as software design patterns.
+
+
+They give developers a forum to discuss successful design concepts and function as best practices for resolving particular kinds of problems.
+
+
+## What are Design Patterns?
+
+
+A design pattern in software engineering is a generic, replicable fix for a typical problem in program design. The design is not complete enough to be coded right away. It is a description or model for problem-solving that can be used in various contexts.
+
+
+## Types of Software Design Patterns
+
+
+In JavaScript, there are primarily three categories of design patterns namely −
+
+
+
+- Creational Design Patterns
+- Structural Design Patterns
+- Behavioral Design Patterns
+
+
+
+Let's discuss them one by one −
+
+
+## Creational Design Patterns in JavaScript
+
+
+In software development, creational design patterns are a subset of design patterns. They work on the object generation process, trying to make it more flexible and efficient. It maintains the independence of the system and the composition, representation, and creation of its objects.
+
+
+### Singleton Pattern
+
+
+The singleton design pattern makes sure a class has only one immutable instance. In simple terms, the singleton pattern is an object that cannot be changed or replicated. It is often useful when we want an immutable single point of truth for our application.
+
+
+Suppose that we want to have a single object that has all of our application's configuration. We also want to make it prohibit to copy or modify that object.
+
+
+Two ways to implement this pattern are using classes and object literals −
+
+
+```javascript
+const Settings = {
+  initialize: () => console.log('Application is now running'),
+  refresh: () => console.log('Application data has been refreshed'),
+}
+
+// Freeze the object to prevent modifications
+Object.freeze(Settings)
+
+// "Application is now running"
+Settings.initialize() 
+
+// "Application data has been refreshed"
+Settings.refresh() 
+
+// Trying to add a new key
+Settings.version = "1.0" 
+console.log(Settings)
+```
+
+
+This will generate the below result −
+
+
+```javascript
+Application is now running
+Application data has been refreshed
+{ initialize: [Function: initialize], refresh: [Function: refresh] }
+```
+
+
+```javascript
+class Settings {
+   constructor() {}
+   launch() { console.log('Application is now running') }  
+   refresh() { console.log('Application data has been refreshed') }
+}
+const appInstance = new Settings()
+Object.freeze(appInstance)
+
+// "Application is now running"
+appInstance.launch() 
+
+// "Application data has been refreshed"
+appInstance.refresh()
+```
+
+
+Output
+
+
+Here is the outcome of the above code −
+
+
+```javascript
+Application is now running
+Application data has been refreshed
+```
+
+
+### Factory Method Pattern
+
+
+The Factory method pattern provides an interface for creating objects that can be modified after they are generated. By combining the logic for building our objects in a single place, this reduces and enhances the organization of our code.
+
+
+This often used pattern can be implemented in two ways: by using classes or factory functions, which are methods that return an object.
+
+
+```javascript
+class Creature {
+   constructor(name, message) {
+      this.name = name
+      this.message = message
+      this.type = "creature"
+   }
+   fly = () => console.log("Whoooosh!!")
+   speak = () => console.log(this.message)
+}
+const creature1 = new Creature("Zee", "Hello! I'm Zee from outer space!")
+console.log(creature1.name) // output: "Zee"
+```
+
+
+This will produce the below output −
+
+
+```javascript
+Zee
+```
+
+
+### Abstract Factory Pattern
+
+
+Without knowing the precise types of linked objects, we can use the Abstract Factory design to generate groups of them. This is useful when we need to build unique objects that share only a few characteristics.
+
+
+It works like this: a primary abstract factory connects with the client, or user. This abstract factory then uses some logic to invoke a specific factory to generate the actual object. As a result, it acts as an overlay over the typical factory layout, allowing us to produce a large range of items in a single primary factory.
+
+
+For example, we are able to develop a system for an automobile manufacturer that includes trucks, motorcycles, and cars. The Abstract Factory pattern, which handles several object types with a single primary factory, makes this easy for us to do.
+
+
+```javascript
+// Each class represents a specific type of vehicle
+class Car {
+   constructor () {
+      this.type = "Car"
+      this.wheels = 4
+   }
+   startEngine = () => console.log("Vroom Vroom!")
+}
+class Truck {
+   constructor () {
+      this.type = "Truck"
+      this.wheels = 8
+   }
+   startEngine = () => console.log("Rumble Rumble!")
+}
+class Motorcycle {
+   constructor () {
+      this.type = "Motorcycle"
+      this.wheels = 2
+   }
+   startEngine = () => console.log("Zoom Zoom!")
+}
+const vehicleFactory = {
+   createVehicle: function (vehicleType) {
+      switch (vehicleType) {
+         case "car":
+            return new Car()
+         case "truck":
+            return new Truck()
+         case "motorcycle":
+            return new Motorcycle()
+         default:
+            return null
+      }
+   }
+}
+
+const car = vehicleFactory.createVehicle("car") 
+const truck = vehicleFactory.createVehicle("truck") 
+const motorcycle = vehicleFactory.createVehicle("motorcycle") 
+
+console.log(car.type)
+car.startEngine()
+
+console.log(truck.type) 
+truck.startEngine() 
+
+console.log(motorcycle.type)
+motorcycle.startEngine()
+```
+
+
+Output
+
+
+This will generate the below result −
+
+
+```javascript
+Car
+Vroom Vroom!
+Truck
+Rumble Rumble!
+Motorcycle
+Zoom Zoom!
+```
+
+
+### Builder Pattern
+
+
+The Builder pattern is used to generate objects in "steps". Functions or methods that add particular attributes or methods are typically included in our object.
+
+
+Because it separates the development of methods and attributes into separate entities, this design is cool.
+
+
+The object we create will always contain every property and method defined by a class or factory function. Using the builder pattern, which enables us to construct an object and apply only the "steps" that are required, provides a more flexible approach.
+
+
+```javascript
+// Define our creatures
+const creature1 = {
+   name: "Buzz Lightwing",
+   message: "You'll never debug me!"
+}
+const creature2 = {
+   name: "Sneaky Bugsworth",
+   message: "Can't catch me! Ha ha!"
+}
+// These functions add abilities to an object
+const enableFlying = obj => {
+   obj.fly = () => console.log(${obj.name} has taken flight!)
+}
+const enableSpeaking = obj => {
+   obj.speak = () => console.log(${obj.name} says: "${obj.message}")
+}
+// Add abilities to the creatures
+enableFlying(creature1)
+creature1.fly() 
+
+enableSpeaking(creature2)
+creature2.speak()
+```
+
+
+Output
+
+
+This will give the following result −
+
+
+```javascript
+Buzz Lightwing has taken flight!
+Sneaky Bugsworth says: "Can't catch me! Ha ha!"
+```
+
+
+### Prototype Pattern
+
+
+By using another object as a blueprint and inheriting its properties and methods, you can create an object using the prototype pattern.
+
+
+Prototypal inheritance and how JavaScript handles it are likely familiar to you if you have been using JavaScript for a time.
+
+
+As methods and properties can be shared between objects without depend on the same class, the final result is much more flexible than what we obtain when we use classes.
+
+
+```javascript
+// Define a prototype object
+const creatureAbilities = {
+   attack: () => console.log("Zap! Zap!"),
+   escape: () => console.log("Soaring through the sky!")
+}
+// Create a new creature 
+const creature1 = {
+   name: "Winged Buzz",
+   message: "You can't debug me!"
+}
+// Set the prototype
+Object.setPrototypeOf(creature1, creatureAbilities)
+
+// Confirm that the prototype is set successfully
+console.log(Object.getPrototypeOf(creature1)) 
+
+console.log(creature1.message) 
+console.log(creature1.attack()) 
+console.log(creature1.escape())
+```
+
+
+Output
+
+
+This will produce the following outcome −
+
+
+```javascript
+{ attack: [Function: attack], escape: [Function: escape] }
+You can't debug me!
+Zap! Zap!
+undefined
+Soaring through the sky!
+undefined
+```
+
+
+## Structural Design Patterns in JavaScript
+
+
+In software development, structural design patterns are a subset of design patterns that focus on how classes or objects are put together to create complex, larger structures. In order to increase a software system's flexibility, re-usability, and maintainability, they help in the organization and management of relationships between objects.
+
+
+### Adapter Pattern
+
+
+The Adapter Method is a structural design pattern which helps you to connect the gap between two incompatible interfaces and make them operate together.
+
+
+Let us see an example below −
+
+
+```javascript
+// Array of cities with population in millions
+const citiesPopulationInMillions = [
+   { city: "Mumbai", population: 12.5 },
+   { city: "Delhi", population: 19.0 },
+   { city: "Bangalore", population: 8.4 },
+   { city: "Kolkata", population: 4.5 },
+]
+
+// The new city we want to add
+const Chennai = {
+   city: "Chennai",
+   population: 7000000
+}
+
+const toMillionsAdapter = city => { city.population = parseFloat((city.population / 1000000).toFixed(1)) }
+
+toMillionsAdapter(Chennai)
+
+// We add the new city to the array
+citiesPopulationInMillions.push(Chennai)
+
+// This function returns the largest population number 
+const CityWithMostPopulation = () => {
+   return Math.max(...citiesPopulationInMillions.map(city => city.population))
+}
+
+console.log(CityWithMostPopulation())
+```
+
+
+Output
+
+
+This will generate the below result −
+
+
+```javascript
+19
+```
+
+
+### Decorator Pattern
+
+
+The decorator method is a structural design pattern that enables the addition of static or dynamic functionality to particular objects without changing how other objects of the same class behave.
+
+
+Following is the simple demonstration of this Reactivity Pattern −
+
+
+```javascript
+// Base class for a Car
+class Car {
+   constructor() {
+     this.description = "Basic Car";
+   }
+
+   getDescription() {
+     return this.description;
+   }
+
+   cost() {
+     // Base price  
+     return 10000; 
+   }
+}
+
+// Decorator to add air conditioning
+class AirConditioningDecorator {
+   constructor(car) {
+     this.car = car;
+   }
+
+   getDescription() {
+     return this.car.getDescription() + " + Air Conditioning";
+   }
+
+   cost() {
+    // Adds cost for air conditioning  
+    return this.car.cost() + 1500; 
+   }
+}
+
+// Decorator to add a sunroof
+class SunroofDecorator {
+   constructor(car) {
+     this.car = car;
+   }
+
+   getDescription() {
+     return this.car.getDescription() + " + Sunroof";
+   }
+
+   cost() {
+     return this.car.cost() + 2000; 
+   }
+}
+
+// Create a basic car
+const myCar = new Car();
+console.log(myCar.getDescription()); 
+console.log(Cost: $${myCar.cost()}); 
+
+// Add air conditioning feature
+const myCarWithAC = new AirConditioningDecorator(myCar);
+console.log(myCarWithAC.getDescription()); 
+console.log(Cost: $${myCarWithAC.cost()}); 
+
+// Add sunroof feature to the car 
+const myCarWithACAndSunroof = new SunroofDecorator(myCarWithAC);
+console.log(myCarWithACAndSunroof.getDescription()); 
+console.log(Cost: $${myCarWithACAndSunroof.cost()});
+```
+
+
+Output
+
+
+This will generate the below result −
+
+
+```javascript
+Basic Car
+Cost: $10000
+Basic Car + Air Conditioning
+Cost: $11500
+Basic Car + Air Conditioning + Sunroof
+Cost: $13500
+```
+
+
+### Facade Pattern
+
+
+The Facade Method is a structural design pattern that improves client interaction with a subsystem by offering a higher-level, simplified interface to a group of interfaces within that subsystem.
+
+
+To make it simpler to interface with a subsystem containing multiple complex parts in an automobile, we want to create a CarFacade class. The client should only use the CarFacade class; it should not use the individual components.
+
+
+```javascript
+// Subsystem classes
+class Engine {
+   start() {
+     console.log("Engine started!");
+   }
+
+   stop() {
+     console.log("Engine stopped!");
+   }
+}
+class Transmission {
+   shiftGear() {
+     console.log("Transmission shifted!");
+   }
+}
+class AirConditioning {
+   turnOn() {
+     console.log("Air conditioning is ON.");
+   }
+
+   turnOff() {
+     console.log("Air conditioning is OFF.");
+   }
+}
+// Facade class
+class CarFacade {
+   constructor() {
+     this.engine = new Engine();
+     this.transmission = new Transmission();
+     this.airConditioning = new AirConditioning();
+   }
+   startCar() {
+     console.log("Starting the car...");
+     this.engine.start();
+     this.transmission.shiftGear();
+     this.airConditioning.turnOn();
+   }
+   stopCar() {
+     console.log("Stopping the car...");
+     this.airConditioning.turnOff();
+     this.transmission.shiftGear();
+     this.engine.stop();
+   }
+}
+// Client code using the Facade pattern
+const myCar = new CarFacade();
+
+// Starting the car
+myCar.startCar();
+
+// Stopping the car 
+myCar.stopCar();
+```
+
+
+Output
+
+
+This will generate the below result −
+
+
+```javascript
+Starting the car...
+Engine started!
+Transmission shifted!
+Air conditioning is ON.
+Stopping the car...
+Air conditioning is OFF.
+Transmission shifted!
+Engine stopped!
+```
+
+
+### Proxy Pattern
+
+
+The Proxy Method is a structural design pattern that allows you to create an object substitute that can control access to the real object or serve as an intermediate.
+
+
+```javascript
+// Real object
+class RealImage {
+   constructor(filename) {
+     this.filename = filename;
+     this.load();
+   }
+   load() {
+     console.log(Loading image: ${this.filename});
+   }
+   display() {
+     console.log(Displaying image: ${this.filename});
+   }
+}
+// Proxy class
+class ProxyImage {
+   constructor(filename) {
+     this.filename = filename;
+     // Real image is only loaded when needed
+     this.realImage = null;  
+   }
+   load() {
+     if (!this.realImage) {
+       // Lazy load   
+       this.realImage = new RealImage(this.filename);  
+     }
+   }
+   display() {
+     // Ensure the real image is loaded before displaying it  
+     this.load();  
+     this.realImage.display();
+   }
+}
+// Client code
+const image1 = new ProxyImage("image1.jpg");
+const image2 = new ProxyImage("image2.jpg");
+
+// Image is not loaded yet
+image1.display(); 
+
+// Image is already loaded
+image1.display(); 
+
+// A different image is loaded
+image2.display();
+```
+
+
+Output
+
+
+This will lead to the below result −
+
+
+```javascript
+Loading image: image1.jpg
+Displaying image: image1.jpg
+Displaying image: image1.jpg
+Loading image: image2.jpg
+Displaying image: image2.jpg
+```
+
+
+## Behavioral Design Patterns in JavaScript
+
+
+Behavioral design patterns are a subset of software development design patterns that focus on the interactions and communication between classes and objects. They focus on how classes and objects work together and communicate in order to fulfill responsibilities.
+
+
+### Chain of Responsibility Pattern
+
+
+The Chain of Responsibility is used to route requests via a number of handlers. Each handler decides whether to process the request or pass it on to the next handler in the chain.
+
+
+We could use the same example as before for this pattern because middlewares in Express are handlers that either execute a request or forward it to the next handler.
+
+
+### Iterator Pattern
+
+
+The iterator can be used to navigate over the elements of a collection. This can appear unimportant in today's computer languages, but it used to be that way.
+
+
+Any of the built-in JavaScript functions that let us iterate across data structures (for, forEach, for...of, for...in, map, reduce, filter, and so on) can use the iterator pattern.
+
+
+As with any traversal technique, we write code to iterate through data with advanced structures such as trees or graphs.
+
+
+### Observer Pattern
+
+
+The observer pattern allows you to create a subscription mechanism that notifies multiple items about any changes to the item being observed. Basically, the rule is like having an event listener on a specific object, and when that object does the action we are looking for, we do something.
+
+
+React's useEffect hook could be an excellent example here. UseEffect executes a provided function at the time it is declared.
+
+
+The hook is separated into two parts: the executable function and an array of dependents. If the array is empty, like in the example below, the function is called every time the component is shown.
+
+
+```javascript
+useEffect(() => { console.log('The component has  been rendered') }, [])
+```
+
+
+If we declare any variables in the dependency array, the function will only run when they change.
+
+
+```javascript
+useEffect(() => { console.log('var1 has been changed') }, [var1])
+```
+
+
+Even simple JavaScript event listeners can be considered as observers. This approach is also illustrated by reactive programming and tools like RxJS, which manage asynchronous information and events across systems.
+

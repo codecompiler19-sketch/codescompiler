@@ -1,0 +1,348 @@
+---
+title: "SQL - Data Types"
+description: "Learn SQL - Data Types with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 70
+group: "SQL Basics"
+seoTitle: "SQL - Data Types — CodesCompiler SQL Guide"
+permalink: "sql-data-types"
+---
+
+
+# SQL - Data Types
+
+
+Table of contentWhat are SQL Data Types?Defining a Data TypeTypes of SQL Data TypesData Types in MySQL, SQL Server, Oracle and MS Access DatabasesMySQL Data TypesMS SQL Server Data TypesOracle Data TypesMS Access Data Types
+
+
+
+
+## What are SQL Data types?
+
+
+An SQL data type refers to the type of data which can be stored in a column of a database table. In a column, the user can store numeric, string, binary, etc by defining data types. For example integer data, character data, monetary data, date and time data, binary strings, and so on.
+
+
+While creating adatabase tablein a database, we need to specify following two attributes to define a table column:
+
+
+
+- Name of the column
+- Data type of the column
+
+
+
+A database table's column defines the data, whereas database table rows populate data into the table.
+
+
+For example, if you want to store student name in a column then you should give column name something likestudent_nameand it's data type will bechar(50)which means it can store a string of characters up to 50 characters.
+
+
+The data type provide guidelines forSQLto understand what type of data is expected inside each column, and hence, prevents the user from entering any unexpected or invalid data in a column. For example, if we want a column to store only integer values, we can specify its data types as INT. SQL will show an error if any other value apart from an integer is inserted into that particular column.
+
+
+Different RDBMS supports different type of data types to define their tables. ThisSQL Data types tutorialwill list down different data types available in MySQL, Oracle, MS SQL Server, and MS Access databases.
+
+
+## Defining a Data Type
+
+
+SQL Data types are defined during the creation of a table in a database. While creating a table, it is required to specify its respective data type and size along with the name of the column.
+
+
+Following is the syntax to specify a data type in MySQL −
+
+
+```sql
+CREATE TABLE table_name(column1 datatype, column2 datatype....)
+```
+
+
+Let us look at an example query below to understand better.
+
+
+```sql
+CREATE TABLE Customers (Name VARCHAR (25), Age INT);
+```
+
+
+In the above SQL query, we are creating a table Customers. And since the Name column only stores string values, we are specifying its data type as "VARCHAR". The VARCHAR data type represents string values in SQL. Similarly, we define the Age column with the integer data type, "INT".
+
+
+When we assign the appropriate data type to a column, we can make efficient use of memory by allocating only the amount of system memory required for the data in the relevant column.
+
+
+## Types of SQL Data Types
+
+
+There are three main types of SQL data types available in any RDBMS. They are listed below −
+
+
+
+- String
+- Numeric
+- Date and Time
+
+
+
+## Data Types in MySQL, SQL Server, Oracle, and MS Access Databases
+
+
+Let's discuss the data types in MySQL, SQL Server, Oracle (PL/SQL) and MS Access Databases in detail. All the three main types (String, Numeric, Date and Time) of SQL data types explained below-
+
+
+### MySQL Data Types
+
+
+There are three main data types available inMySQLDatabase: string, numeric, and date and time. Following section lists down all the data types available in MySQL Version 8.0
+
+
+#### MySQL - String Data Types
+
+
+Data typeDescriptionCHAR(size)A fixed length string which can have letters, numbers, and special characters. Thesizeparameter specifies the column length in characters which can vary from
+      from 0 to 255. Default size is 1VARCHAR(size)A variable length string which can contain letters, numbers, and special
+      characters. Thesizeparameter specifies the maximum string
+      length in characters which can vary from 0 to 65535.BINARY(size)This is equal to CHAR(), but stores binary byte strings. Thesizeparameter specifies the column length in bytes. Default size is 1VARBINARY(size)This is equal to VARCHAR(), but stores binary byte strings. Thesizeparameter specifies the maximum column length in bytes.TINYTEXTThis holds a string with a maximum length of 255 charactersTEXT(size)This holds a string with a maximum length of 65,535 bytesLONGTEXTThis holds a string with a maximum length of 4,294,967,295 charactersTINYBLOBThis represents a small BLOBs (Binary Large Objects). Max length is 255 bytesBLOB(size)This represents a BLOBs (Binary Large Objects). Holds up to 65,535 bytes of dataMEDIUMTEXTThis holds a string with a maximum length of 16,777,215 charactersMEDIUMBLOBThis represents a medium BLOBs (Binary Large Objects). Holds up to 16,777,215 bytes of dataLONGBLOBThis represents a large BLOBs (Binary Large Objects). Holds up to 4,294,967,295 bytes of dataENUM(val1, val2, val3, ...)A string object that can contain only one value, chosen from a list of possible values. You can list up to 65535 values in an ENUM list. If a value is inserted that is not in the list, a   blank value will be inserted.
+      The values are sorted in the order you enter themSET(val1, val2, val3, ...)A string object that can have 0 or more values, chosen from a list of
+      possible values. You can list up to 64 values in a SET list
+
+
+#### MySQL - Numeric Data Types
+
+
+Data typeDescriptionINTA normal-sized integer that can be signed or unsigned. If signed, the allowable range is from -2147483648 to 2147483647. If unsigned, the allowable range is from 0 to 4294967295. You can specify a width of up to 11 digits.TINYINTA very small integer that can be signed or unsigned. If signed, the allowable range is from -128 to 127. If unsigned, the allowable range is from 0 to 255. You can specify a width of up to 4 digits.SMALLINTA small integer that can be signed or unsigned. If signed, the allowable range is from -32768 to 32767. If unsigned, the allowable range is from 0 to 65535. You can specify a width of up to 5 digits.MEDIUMINTA medium-sized integer that can be signed or unsigned. If signed, the allowable range is from -8388608 to 8388607. If unsigned, the allowable range is from 0 to 16777215. You can specify a width of up to 9 digits.BIGINTA large integer that can be signed or unsigned. If signed, the allowable range is from -9223372036854775808 to 9223372036854775807. If unsigned, the allowable range is from 0 to 18446744073709551615. You can specify a width of up to 20 digits.FLOAT(M,D)A floating-point number that cannot be unsigned. You can define the display length (M) and the number of decimals (D). This is not required and will default to 10,2, where 2 is the number of decimals and 10 is the total number of digits (including decimals). Decimal precision can go to 24 places for a FLOAT.DOUBLE(M,D)A double precision floating-point number that cannot be unsigned. You can define the display length (M) and the number of decimals (D). This is not required and will default to 16,4, where 4 is the number of decimals. Decimal precision can go to 53 places for a DOUBLE. REAL is a synonym for DOUBLE.DECIMAL(M,D)An unpacked floating-point number that cannot be unsigned. In the unpacked decimals, each decimal corresponds to one byte. Defining the display length (M) and the number of decimals (D) is required. NUMERIC is a synonym for DECIMAL.
+
+
+#### MySQL - Date and Time Data Types
+
+
+Data typeDescriptionDATEA date in YYYY-MM-DD format, between 1000-01-01 and 9999-12-31. For example, December 30th, 1973 would be stored as 1973-12-30.DATETIMEA date and time combination in YYYY-MM-DD HH:MM:SS format, between 1000-01-01 00:00:00 and 9999-12-31 23:59:59. For example, 3:30 in the afternoon on December 30th, 1973 would be stored as 1973-12-30 15:30:00.TIMESTAMPA timestamp between midnight, January 1st, 1970 and sometime in 2037. This looks like the previous DATETIME format, only without the hyphens between numbers; 3:30 in the afternoon on December 30th, 1973 would be stored as 19731230153000 ( YYYYMMDDHHMMSS ).TIMEStores the time in a HH:MM:SS format.YEAR(M)Stores a year in a 2-digit or a 4-digit format. If the length is specified as 2 (for example YEAR(2)), YEAR can be between 1970 to 2069 (70 to 69). If the length is specified as 4, then YEAR can be 1901 to 2155. The default length is 4.
+
+
+### MS SQL Server Data Types
+
+
+As we have previously discussed in this chapter, there are three main data types in MS SQL server. They are: string, numeric, and date and time.
+
+
+#### MS SQL Server - String Data Types
+
+
+String data types in SQL allow us to store a group of characters, enclosed in single quotes, in a record of a table column. These characters can be of any type:numerals,letters,symbolsetc.
+
+
+Users can either store a fixed number of characters or a variable number of characters, depending on their preferences.
+
+
+Following is the list of the data types that are included under the string data types in SQL.
+
+
+Data typeDescriptionchar(n)It holds the character string with the fixed width. Maximum size of this data type is 8000 characters.varchar(n)It holds the character string with the variable width. Maximum size of this data type is also 8000 characters.varchar(max)It holds the character string with the variable width. Maximum size of this data type is 1073741824 characters.textIt holds the character string with the variable width. This data type can store up to maximum of 2GB text data.ncharIt holds the Unicode string with the fixed width. Maximum size of this data type is also 4000 characters.nvarcharIt holds the Unicode string with the variable width. Maximum size of this data type is also 4000 characters.ntextIt holds the Unicode string with the variable width. This data type can store up to maximum of 2GB text data.binary(n)It holds the binary string with the fixed width.varbinaryIt holds the binary string with variable width. Maximum size of this data type is also 8000 bytes.varbinary(max)It holds the binary string of max length of variable width. Maximum size of this data type is 2 GB.imageIt holds the variable length of the data type that can store binary data. Maximum size of this data type is 2 GB.Nvarchar(max)It holds the Unicode string of max length of variable width. Maximum size of this data type is 536870912 characters.
+
+
+#### Example
+
+
+In the following example, we are creating a table "students" with only string data types values: varchar and char.
+
+
+```sql
+CREATE TABLE students (
+  name varchar(20) NOT NULL,
+  gender char(6) NOT NULL,
+  city text NOT NULL
+);
+```
+
+
+#### Output
+
+
+On executing the query, the output will be displayed as −
+
+
+```sql
+(0 rows affected)
+```
+
+
+#### Verification
+
+
+On the execution of the SQL queries "EXEC sp_help 'dbo.students';" we get the details of the table and the data types of each column.
+
+
+Column_nameTypeComputedLengthPrecScaleNullablenamevarcharno20nogendercharno6nocitytextno16no
+
+
+### MS SQL Server - Numeric Data Types
+
+
+Numeric data types are one of the most widely used data types in SQL. They are used to store numeric values only.
+
+
+Following is the list of data types that are included under the numeric data types in SQL.
+
+
+Data typeDescriptionbitIt holds the integer that can be 0, 1 or NULL.tinyintIt allow to holds the whole number from 0 to 255.smallintIt allow to holds the number between -32,768 and 32,767.intIt allow to holds the whole number between -2,147,483,648 and 2,147,483,647.bigintIt allow to holds the whole number between -9,223,372,036,854,775,808 and 9,223,372,036,854,775,807decimal(p, s)It is fixed precision and scale numbers. That allow numbers from -10^38 + 1 to 10^38-1.The p parameter indicates the maximum total number of digits that can be stored on both sides of the decimal point, left and right. It must have a value from 1 to 38. By default, it is 18.The s parameter indicates the maximum number of the digit to the right of the decimal point. S must be a value from 0 to p. The value is set to 0 by default.numeric(p, s)It is fixed precision and scale numbers. That allow numbers from -10^38 + 1 to 10^38-1.The p parameter indicates the maximum total number of digits that can be stored on both sides of the decimal point, left and right. It must have a value from 1 to 38. By default, it is 18.The s parameter indicates the maximum number of the digit to the right of the decimal point. S must be a value from 0 to p. The value is set to 0 by default.smallmoneyIt holds the monetary data from -214,748.3648 to 214,748.3647.MoneyIt holds the monetary data from -922,337,203,685,477.5808 to 922,337,203,685,477.5807.Float(n)It holds or store the floating precession number data from -1.79E + 308 to 1.79E + 308.The n parameter indicates whether the field should hold 4 or 8 bytes. Float(24) contains a 4-byte field, while Float(53) contains an 8-byte field. The default value of n is 53.realIt holds the floating precision number data from -3.40E + 38 to 3.40E + 38.
+
+
+#### Example
+
+
+In the following example, we are creating a table named employees with only numeric data type values.
+
+
+```sql
+CREATE TABLE employees (
+  ID int NOT NULL,
+  myBoolean bit NOT NULL,
+  Fee money,
+  celsius float NOT NULL
+);
+```
+
+
+#### Output
+
+
+On executing the query, the output will be displayed as −
+
+
+```sql
+(0 rows affected)
+```
+
+
+#### Verification
+
+
+On the execution of the SQL queries "EXEC sp_help 'dbo.employees;" we get the details of the table and the data types of each column.
+
+
+Column_nameTypeComputedLengthPrecScaleNullableIDintno4100nomyBooleanbitno1noFeemoneyno18194yesCelsiusfloatno853NULLno
+
+
+### MS SQL Server - Date and Time Data Types
+
+
+datetimedata types are used in SQL for values that contain both dates and times.datetimeandtimevalues are defined in the formats:yyyy-mm-dd,hh:mm:ss.nnnnnnn(n is dependent on the column definition) respectively.
+
+
+Following is the list of data types that are included under the date and times data types in SQL.
+
+
+Data typeDescriptiondatetimeIt stores date and time both from January 1, 1753 to December 31, 9999 with an accuracy of 3.33 milliseconds.datetime2It stores date and time both from January 1, 0001 to December 31, 9999 with an accuracy of 100 nanoseconds.smalldatetimeIt stores date and time both from January 1, 1900 to June 6, 2079 with an accuracy of 1 minute.dateIt stores date only from January 1, 0001 to December 31 9999.timeIt store time only to an accuracy of 100 nanoseconds.datetimeoffsetIt is the same of the datetime2 with the addition of the time zone offset.timestampIt stores the unique number that gets updated every time a row gets created or modified. It does not correspond to real time and is based on internal time. Each table may have only one timestamp variable.
+
+
+Note− Here, datetime has 3.33 milliseconds accuracy where as smalldatetime has 1 minute accuracy.
+
+
+#### Example
+
+
+In the following example, we are creating a table named Cust_details with only date and time data types values.
+
+
+```sql
+CREATE TABLE Cust_details (
+  HolidayDate DATE NOT NULL,
+  OrderDateTime DATETIME,
+  ScheduleFrom TIME NOT NULL,
+  ShippingDateTime DATETIME2
+);
+```
+
+
+#### Output
+
+
+On executing the query, the output will be displayed as −
+
+
+```sql
+(0 rows affected)
+```
+
+
+#### Verification
+
+
+On the execution of the SQL queries "EXEC sp_help 'dbo.Cust_details;" we get the details of the table and the data types of each column.
+
+
+Column_nameTypeComputedLengthPrecScaleNullableHolidayDatedateno3100noOrderDateTimedatetimeno8yesScheduleFromtimeno5167noShippingDateTimedatetime2no8277yes
+
+
+Note:
+
+
+
+- If you are using the MySQL workbench to run the SQL data types and their queries, then there are some SQL data types and formats for date and time that won't work; like "money", "datetime2", "yyyy/mm/dd" and "time AM". All these data types specified are compatible only with the SQL server.
+- The size of these data types may change in the future updates keep checking the SQL documentation.
+
+
+
+### Oracle Data Types
+
+
+There are four main types of data types available inOracle Database: string, numeric, date & time and large object data types. Following section lists down all the data types available in Oracle Database.
+
+
+#### Oracle - String Data Types
+
+
+Data typeDescriptionCHAR(size)It is used to store character data within the predefined length. It can be stored up to 2000 bytes.NCHAR(size)It is used to store national character data within the predefined length. It can be stored up to 2000 bytes.VARCHAR2(size)It is used to store variable string data within the predefined length. It can be stored up to 4000 byte.VARCHAR(SIZE)It is the same as VARCHAR2(size). You can also use VARCHAR(size), but it is suggested to use VARCHAR2(size)NVARCHAR2(size)It is used to store Unicode string data within the predefined length. We have to must specify the size of NVARCHAR2 data type. It can be stored up to 4000 bytes.
+
+
+#### Oracle - Numeric Data Types
+
+
+Data typeDescriptionNUMBER(p, s)It contains precision p and scale s. The precision p can range from 1 to 38, and the scale s can range from -84 to 127.FLOAT(p)It is a subtype of the NUMBER data type. The precision p can range from 1 to 126.BINARY_FLOATIt is used for binary precision( 32-bit). It requires 5 bytes, including length byte.BINARY_DOUBLEIt is used for double binary precision (64-bit). It requires 9 bytes, including length byte.
+
+
+#### Oracle - Date and Time Data Types
+
+
+Data typeDescriptionDATEIt is used to store a valid date-time format with a fixed length. Its range varies from January 1, 4712 BC to December 31, 9999 AD.TIMESTAMPIt is used to store the valid date in YYYY-MM-DD with time hh:mm:ss format.
+
+
+#### Oracle - Large Object Data Types (LOB Types)
+
+
+Data typeDescriptionBLOBIt is used to specify unstructured binary data. Its range goes up to 232-1 bytes or 4 GB.BFILEIt is used to store binary data in an external file. Its range goes up to 232-1 bytes or 4 GB.CLOBIt is used for single-byte character data. Its range goes up to 232-1 bytes or 4 GB.NCLOBIt is used to specify single byte or fixed length multibyte national character set (NCHAR) data. Its range is up to 232-1 bytes or 4 GB.RAW(size)It is used to specify variable length raw binary data. Its range is up to 2000 bytes per row. Its maximum size must be specified.LONG RAWIt is used to specify variable length raw binary data. Its range up to 231-1 bytes or 2 GB, per row.
+
+
+### MS Access Data Types
+
+
+The MS Access database also offers four categories of data types: String, Numeric, Date and Time, and other specialized data types.
+
+
+Following are all data types that are provided by MS Access 2013 version and later.
+
+
+#### MS Access - String Data Types
+
+
+Data typeDescriptionShort Text (formerly "Text")It is a string data type that holds Alphanumeric data, like, names, titles, etc. It can hold up to 255 characters.Long Text (formerly "Memo")It is also a string data type which holds Large Alphanumeric data, like paragraphs, etc. It can hold up to 1GB or 64,000 characters.
+
+
+#### MS Access - Numeric Data Types
+
+
+Data typeDescriptionNumberIt only holds Numeric data. The size can range from 1 to 16 bytes.Large NumberIt also holds numeric data. The maximum size of this data type is 8 bytes.
+
+
+#### MS Access - Date and Time Data Types
+
+
+Data typeDescriptionDate/TimeIt holds date and time data. The maximum size of this data type is 8 bytes.Date/Time ExtendedIt also holds date and time data. The maximum size of this data type is Encoded string of 42 bytes.
+
+
+#### MS Access - Specialized Data Types
+
+
+Data typeDescriptionCurrencyThis data type stores Monetary data, with up to 4 decimal places of precision. The size of this data type is 8 bytes.AutoNumberThis stored a unique value that is generated by MS Access for each new record. The size of this data type is 4 bytes.Yes/NoIt holds Boolean data in the form of 0 and 1. '0' for false and '-1' for true. The maximum size is 1 byte.OLE ObjectIt stores pictures, graphs or other ActiveX object from another Window-based application. The size can be stored up to 2GB.HyperlinkIt stores a link address to a document or file on the Internet, on an intranet, on a local area network (LAN), or on your local computer. The size can go up to 8,192 characters.AttachmentThe attachment data type in MS Access allows the user to attach such as pictures, documents, spreadsheets, or charts. It can have unlimited number of attachments per record; but only up to the storage limit of the size of a database file.CalculatedWith this data type, you can create an expression that uses data from one or more fields. Then, from this expression, a result data type can also be created. However, this data type isn't available in MDB file formats. The size of this data type can vary depending on the result type.Lookup WizardThe Lookup Wizard is not technically a data type. But when this entry is chosen, a wizard starts to help the user define a lookup field. The size of this data type depends on the size of the lookup field.
+

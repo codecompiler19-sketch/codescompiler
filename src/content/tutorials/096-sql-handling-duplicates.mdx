@@ -1,0 +1,179 @@
+---
+title: "SQL - Handling Duplicates"
+description: "Learn SQL - Handling Duplicates with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 960
+group: "Advanced SQL"
+seoTitle: "SQL - Handling Duplicates — CodesCompiler SQL Guide"
+permalink: "sql-handling-duplicates"
+---
+
+
+# SQL - Handling Duplicates
+
+
+Table of contentWhy is Handling Duplicates in SQL Necessary?Preventing Duplicate EntriesCounting and Identifying DuplicatesEliminating Duplicates from a Table
+
+
+
+
+Sometimes, tables or result sets contain duplicate records. While in most cases, duplicates are allowed, there are situations where it is necessary to prevent duplicate records and remove them from a database table.
+
+
+## Why is Handling Duplicates in SQL Necessary?
+
+
+Handling duplicates in an SQL database becomes necessary to prevent the following consequences −
+
+
+
+- The existence of duplicates in an organizational database will lead to logical errors.
+- Duplicate data occupies space in the storage, which leads to decrease in usage efficiency of a database.
+- Due to the increased use of resources, the overall cost of the handling resources rises.
+- With increase in logical errors due to the presence of duplicates, the conclusions derived from data analysis in a database will also be erroneous.
+
+
+
+This chapter will describe how to prevent the occurrence of duplicate records in a table and how to remove the already existing duplicate records.
+
+
+## Preventing Duplicate Entries
+
+
+To prevent the entry of duplicate records into a table, we can define a PRIMARY KEY or a UNIQUE Index on the relevant fields. These database constraints ensure that each entry in the specified column or set of columns is unique.
+
+
+### Example
+
+
+Let us create a CUSTOMERS table using the following query −
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   FIRST_NAME CHAR(20),
+   LAST_NAME CHAR(20),
+   SEX CHAR(10)
+);
+```
+
+
+As we have not defined any constraints on the table, duplicate records can be inserted into it. To prevent such cases, add a PRIMARY KEY constraint on relevant fields (say LAST_NAME and FIRST_NAME together) −
+
+
+```sql
+ALTER TABLE CUSTOMERS 
+ADD PRIMARY KEY (LAST_NAME, FIRST_NAME);
+```
+
+
+Using INSERT IGNORE Query:
+
+
+Alternatively, we can use the INSERT IGNORE statement to insert records without generating an error for duplicates as shown below −
+
+
+```sql
+INSERT IGNORE INTO CUSTOMERS (LAST_NAME, FIRST_NAME) VALUES
+( 'Jay', 'Thomas'),
+( 'Jay', 'Thomas');
+```
+
+
+As you can see below, the table will only consist of a single record (ignoring the duplicate value).
+
+
+FIRST_NAMELAST_NAMESEXThomasJayNULL
+
+
+Using REPLACE Query:
+
+
+Or, use the REPLACE statement to replace duplicates as shown in the following query −
+
+
+```sql
+REPLACE INTO CUSTOMERS (LAST_NAME, FIRST_NAME) VALUES
+( 'Ajay', 'Kumar'),
+( 'Ajay', 'Kumar');
+```
+
+
+The table will contain the following records −
+
+
+FIRST_NAMELAST_NAMESEXKumarAjayNULLThomasJayNULL
+
+
+The choice between the INSERT IGNORE and REPLACE statements should be made based on the desired duplicate-handling behaviour. The INSERT IGNORE statement retains the first set of duplicate records and discards any subsequent duplicates. Conversely, the REPLACE statement preserves the last set of duplicates and erases any earlier ones.
+
+
+Using UNIQUE Constraint:
+
+
+Another way to enforce uniqueness in a table is by adding a UNIQUE constraint rather than a PRIMARY KEY  constraint −
+
+
+```sql
+CREATE TABLE BUYERS (
+   FIRST_NAME CHAR(20) NOT NULL,
+   LAST_NAME CHAR(20) NOT NULL,
+   SEX CHAR(10),
+   UNIQUE (LAST_NAME, FIRST_NAME)
+);
+```
+
+
+## Counting and Identifying Duplicates
+
+
+To count and identify duplicate records based on specific columns, we can use the COUNT function and GROUP BY clause.
+
+
+### Example
+
+
+Following is the query to count duplicate records with FIRST_NAME and LAST_NAME in the BUYERS −
+
+
+```sql
+SELECT COUNT(*) as repetitions, LAST_NAME, FIRST_NAME
+FROM BUYERS
+GROUP BY LAST_NAME, FIRST_NAME
+HAVING repetitions > 1;
+```
+
+
+This query will return a list of all the duplicate records in the PERSON_TABLE table. To identify sets of values that are duplicated, follow the steps given below −
+
+
+
+- Determine which columns contain the values that may be duplicated.
+- List those columns in the column selection list, along with the COUNT(*).
+- List the columns in the GROUP BY clause as well.
+- Add a HAVING clause that eliminates the unique values by requiring the group counts to be greater than one.
+
+
+
+## Eliminating Duplicates from a Table
+
+
+We can use the DISTINCT keyword along with the SELECT statement to retrieve unique records from a table.
+
+
+```sql
+SELECT DISTINCT LAST_NAME, FIRST_NAME
+FROM BUYERS
+ORDER BY LAST_NAME;
+```
+
+
+Alternatively, you can include a GROUP BY clause specifying the columns you are selecting to eliminate duplicates −
+
+
+```sql
+SELECT LAST_NAME, FIRST_NAME
+FROM BUYERS
+GROUP BY LAST_NAME, FIRST_NAME;
+```
+

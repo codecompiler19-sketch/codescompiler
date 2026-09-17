@@ -1,0 +1,118 @@
+---
+title: "SQL - Left Join vs Right Join"
+description: "Learn SQL - Left Join vs Right Join with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 710
+group: "SQL Joins"
+seoTitle: "SQL - Left Join vs Right Join — CodesCompiler SQL Guide"
+permalink: "sql-leftjoin-vs-rightjoin"
+---
+
+
+# Left Join vs Right Join
+
+
+Table of contentWhat is Left Join in SQL?What is Right Join in SQL?Difference Between Left Join and Right Join in SQLConclusion
+
+
+
+
+Both LEFT JOIN and RIGHT JOIN are types of outer joins in SQL. They are used to combine rows from two tables based on a related column, but they differ in which table's rows are preserved when there is no match.
+
+
+
+- LEFT JOIN keeps all unmatched rows from the left table.
+- RIGHT JOIN keeps all unmatched rows from the right table.
+
+
+
+## What is Left Join in SQL?
+
+
+ALEFT JOIN(also calledLEFT OUTER JOIN) in SQL is used to combine rows from two or more tables based on a related column between them.
+
+
+
+- It returnsall rows from the left table(the first table in the query), even if there are no matching rows in the right table.
+- If a row in the left table doesnothave a corresponding match in the right table, the query will still include that row in the result, but the columns from the right table will containNULLvalues.
+- If there is a match, the query includes the combined row with values from both tables.
+
+
+
+### Syntax
+
+
+Following is the basic syntax of Left Join in SQL:
+
+
+```sql
+SELECT table1.column1, table2.column2...
+FROM table1
+LEFT JOIN table2
+ON table1.column_name = table2.column_name;
+```
+
+
+### Example
+
+
+The following example demonstrates a Left Join operation between two related tables. The first table stores salary information, while the second table stores marital status details.
+
+
+Since Alex's marital status is not recorded in the second table, it appears asNULLin the result.
+
+
+## What is Right Join in SQL?
+
+
+ARIGHT JOIN(also calledRIGHT OUTER JOIN) in SQL is used to combine rows from two or more tables based on a related column.
+
+
+
+- It returnsall rows from the right table(the second table in the query), even if there are no matching rows in the left table.
+- If a row in the right table doesnothave a corresponding match in the left table, the query will still include that row in the result, but the columns from the left table will containNULLvalues.
+- If there is a match, the query includes the combined row with values from both tables.
+
+
+
+### Syntax
+
+
+Following is the basic syntax of a Right Join in SQL:
+
+
+```sql
+SELECT table1.column1, table2.column2...
+FROM table1
+RIGHT JOIN table2
+ON table1.column_name = table2.column_name;
+```
+
+
+### Example
+
+
+In this example, the Right Join operation is performed on the same tables. Since the join begins with the right table, any row in the left table without a matching record in the right table, such as Alex's row, is excluded from the final result.
+
+
+The final table only consists of two rows as the right table consists of two rows only.
+
+
+## Difference Between Left Join and Right Join in SQL
+
+
+Let us summarize all the differences between the Left Join and Right Join in the table below:
+
+
+FeatureLeft JoinRight JoinDefinitionReturns all records from the left table and matched records from the right table. If no match, NULL appears in the right table columns.Returns all records from the right table and matched records from the left table. If no match, NULL appears in the left table columns.Other NameAlso called Left Outer JoinAlso called Right Outer JoinUnmatched RowsUnmatched rows from the left table are included; unmatched rows from the right table are discarded.Unmatched rows from the right table are included; unmatched rows from the left table are discarded.SQL SyntaxSELECT * FROM TableA LEFT JOIN TableB ON TableA.id `=` TableB.id;SELECT * FROM TableA RIGHT JOIN TableB ON TableA.id = TableB.id;Transact-SQL Equivalent*`=`can be used instead of LEFT JOIN`=`*can be used instead of RIGHT JOINUse CaseUsed when we want all data from the left table, whether or not matching data exists in the right table.Used when we want all data from the right table, whether or not matching data exists in the left table.Focus / PriorityFocuses on the left table; ensures left table rows are not lost.Focuses on the right table; ensures right table rows are not lost.Practical ExampleList all employees and their department details, even if some employees are not assigned to any department.List all departments and their employee details, even if some departments have no employees.
+
+
+## Conclusion
+
+
+LEFT JOIN and RIGHT JOIN are both types of outer joins in SQL used to combine data from two tables. 
+The main difference lies in which table's rows are fully preserved when there is no matching record in the other table. LEFT JOIN preserves all rows from the left table, while RIGHT JOIN preserves all rows from the right table.
+
+
+Choosing between them depends on the specific requirement of the query and which table's data you want to retain completely.
+

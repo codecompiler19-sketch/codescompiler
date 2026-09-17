@@ -1,0 +1,347 @@
+---
+title: "PYTHON - Immutable Data Structures"
+description: "Learn PYTHON - Immutable Data Structures with clear explanation, code examples, and practical guide."
+category: "python"
+order: 2330
+group: "Python Advanced Concepts"
+seoTitle: "PYTHON - Immutable Data Structures — CodesCompiler PYTHON Guide"
+permalink: "python-immutable-data-structures"
+---
+
+
+# Python - Immutable Data Structures
+
+
+
+
+The PythonImmutable data structuresare the data structures that once created, cannot be changed. This means that any attempt to modify the data structure will result in a new instance being created rather than altering the original. Immutable data structures are useful for ensuring that data remains constant throughout the execution of a program which can help prevent bugs and make code easier to understand and maintain.
+
+
+Before proceeding deep into this topic let's have a quick recall ofwhat is datastructure?The Data structures are specialized formats for organizing, processing, retrieving and storing data. They define how data is arranged in memory and how operations such as accessing, inserting, deleting and updating can be performed efficiently.
+
+
+## Different Immutable Data Structures in Python
+
+
+Immutable data structures are essential in Python for their stability, thread-safety and ease of use. Here are the different immutable data structures in Python −
+
+
+
+- Tuples: These are the ordered collections of items that cannot be changed after their creation. They can contain mixed data types and are useful for representing fixed collections of related items.
+- Strings: These Data structures are sequences of characters and are immutable. Any operation that modifies a string will create a new string.
+- Frozensets:These are immutable versions of sets. Unlike regular sets, frozensets do not allow modification after creation.
+- Named Tuples:These are a subclass of tuples with named fields which provide more readable and self-documenting code. They are immutable like regular tuples.
+
+
+
+Now, let's proceed about the each Immutable data structures in detail.
+
+
+## Tuples
+
+
+Tuples in Python are immutable sequences of elements which means once created, they cannot be modified. They are defined using parentheses '()' and can hold a collection of items such as numbers, strings and even other tuples.
+
+
+### Creating Tuples
+
+
+Tuples are created using parentheses '()' and elements separated by commas ','. Even tuples with a single element require a trailing comma to distinguish them from grouped expressions.
+
+
+Following is the example of creating a tuple by assigning parentheses '()' to a variable −
+
+
+```python
+empty_tuple = ()
+single_element_tuple = (5,)  # Note the comma after the single element
+print("Single element tuple:", single_element_tuple)
+multi_element_tuple = (1, 2, 'Tutorialspoint', 3.14)
+print("Multi elements tuple:", multi_element_tuple)
+nested_tuple = (1, (2, 3), 'Learning')
+print("Nested tuple:", nested_tuple)
+```
+
+
+On executing the above code we will get the followingoutput−
+
+
+```python
+Single element tuple: (5,)
+Multi elements tuple: (1, 2, 'Tutorialspoint', 3.14)
+Nested tuple: (1, (2, 3), 'Learning')
+```
+
+
+### Understanding Tuple Immutability in Python
+
+
+Here we are going understand the immutability of the tuples in python. Below is the example −
+
+
+```python
+# Define a tuple
+my_tuple = (1, 2, 3, 'hello')
+# Attempt to modify an element (which is not possible with tuples)
+# This will raise a TypeError
+try:
+   my_tuple[0] = 10
+except TypeError as e:
+   print(f"Error: {e}")
+# Even trying to append or extend a tuple will result in an error
+try:
+   my_tuple.append(4)
+except AttributeError as e:
+   print(f"Error: {e}")
+# Trying to reassign the entire tuple to a new value is also not allowed
+try:
+   my_tuple = (4, 5, 6)
+except TypeError as e:
+   print(f"Error: {e}")
+print("Original tuple:", my_tuple)
+```
+
+
+On executing the above code we will get the followingoutput−
+
+
+```python
+Error: 'tuple' object does not support item assignment
+Error: 'tuple' object has no attribute 'append'
+Original tuple: (4, 5, 6)
+```
+
+
+## Strings
+
+
+Strings in Python are sequences of characters which are used to represent and manipulate textual data. They are enclosed within either single quotes'or double quotes"with the option to use triple quotes"""for multi-line strings.
+
+
+Key characteristics include immutability which means once created those strings cannot be changed, ordered indexing where characters are accessed by position and support for various operations such as concatenation, slicing and iteration.
+
+
+Strings are fundamental in Python for tasks such as text processing, input/output operations and data representation in applications offering a versatile toolset with built-in methods for efficient manipulation and formatting of textual information.
+
+
+### Creating Strings
+
+
+Each type of string creation method i.e. ', ", """ has its own use case depending on whether we need to include quotes within the string, handle multi-line text or other specific formatting requirements in our Python code.
+
+
+Following is the example of creating the string with the help od three types of quotes ', ", """ −
+
+
+```python
+# Single line string
+single_quoted_string = 'Hello, Welcome to Tutorialspoint'
+
+# Double quoted string
+double_quoted_string = "Python Programming"
+
+# Triple quoted string for multi-line strings
+multi_line_string = """This is a 
+multi-line 
+string"""
+
+print(single_quoted_string)
+print(double_quoted_string)
+print(multi_line_string)
+```
+
+
+On executing the above code we will get the followingoutput−
+
+
+```python
+Hello, Welcome to Tutorialspoint
+Python Programming
+This is a
+multi-line
+string
+```
+
+
+### Understanding String Immutability in Python
+
+
+With the help of following example we are going to understand the immutability of the strings in python.
+
+
+```python
+# Example demonstrating string immutability
+my_string = "Hello"
+
+# Attempting to modify a string will create a new string instead of modifying the original
+modified_string = my_string + " Learners"
+print(modified_string)  # Output: Hello Learners
+
+# Original string remains unchanged
+print(my_string)  # Output: Hello
+
+# Trying to modify the string directly will raise an error
+try:
+   my_string[0] = 'h'  # TypeError: 'str' object does not support item assignment
+except TypeError as e:
+   print(f"Error: {e}")
+```
+
+
+On executing the above code we will get the followingoutput−
+
+
+```python
+Hello Learners
+Hello
+Error: 'str' object does not support item assignment
+```
+
+
+## Frozen Sets
+
+
+A frozen set in Python is an immutable version of a set. Once created its elements cannot be changed, added or removed. Frozen sets are particularly useful in situations where we need a set that remains constant throughout the execution of a program especially when we want to use it as a key in a dictionary or as an element in another set.
+
+
+### Creating Frozen Sets
+
+
+We can create a frozen set using thefrozenset()constructor by passing an iterable such as a list or another set as an argument. Following is the example of creating the Frozen set −
+
+
+```python
+# Creating a frozen set
+fset = frozenset([1, 2, 3, 4])
+
+# Printing the frozen set
+print(fset)
+```
+
+
+On executing the above code we will get the followingoutput−
+
+
+```python
+frozenset({1, 2, 3, 4})
+```
+
+
+### Understanding Frozen Sets Immutability in Python
+
+
+Here's an example shows how frozensets being immutable and do not allow modifications after creation.
+
+
+```python
+# Creating a frozenset
+frozen_set = frozenset([1, 2, 3, 4])
+
+# Attempting to add an element to the frozenset will raise an error
+try:
+   frozen_set.add(5)
+except AttributeError as e:
+   print(f"Error: {e}")
+
+# Attempting to remove an element from the frozenset will also raise an error
+try:
+   frozen_set.remove(2)
+except AttributeError as e:
+   print(f"Error: {e}")
+
+# The original frozenset remains unchanged
+print("Original frozenset:", frozen_set)
+```
+
+
+On executing the above code we will get the followingoutput−
+
+
+```python
+Error: 'frozenset' object has no attribute 'add'
+Error: 'frozenset' object has no attribute 'remove'
+Original frozenset: frozenset({1, 2, 3, 4})
+```
+
+
+## Named Tuples
+
+
+A Named tuple in Python is a lightweight data structure available in the collections module that behaves same as a tuple but allows us to access its elements using named attributes as well as indices.
+
+
+It combines the advantages of tuples such as immutable, memory-efficient with the ability to refer to elements by name, enhancing readability and maintainability of code.
+
+
+### Creating Named Tuples
+
+
+we can define a named tuple using thenamedtuple()factory function from the collections module. It takes two arguments such as a name for the named tuple type and a sequence i.e. string of field names or iterable of strings which specifies the names of its fields.
+
+
+```python
+from collections import namedtuple
+
+# Define a named tuple type 'Point' with fields 'x' and 'y'
+Point = namedtuple('Point', ['x', 'y'])
+
+# Create an instance of Point
+p1 = Point(1, 2)
+
+# Access elements by index (like a tuple)
+print(p1[0])  
+
+# Access elements by name
+print(p1.x)   
+print(p1.y)
+```
+
+
+On executing the above code we will get the followingoutput−
+
+
+```python
+1
+1
+2
+```
+
+
+### Understanding Named Tuples Immutability in Python
+
+
+The Named tuples in Python are provided by thecollections.namedtuplefactory functions are indeed immutable. They behave similarly to regular tuples but have named fields by making them more readable and self-documenting.
+
+
+```python
+from collections import namedtuple
+
+# Define a named tuple called Point with fields 'x' and 'y'
+Point = namedtuple('Point', ['x', 'y'])
+
+# Create an instance of Point
+p = Point(x=1, y=2)
+print(p)  
+# Attempt to modify the named tuple
+# This will raise an AttributeError since named tuples are immutable
+try:
+   p.x = 10
+except AttributeError as e:
+   print(f"Error occurred: {e}")  
+
+# Accessing elements in a named tuple is similar to accessing elements in a regular tuple
+print(p.x) 
+print(p.y)
+```
+
+
+On executing the above code we will get the followingoutput−
+
+
+```python
+Point(x=1, y=2)
+Error occurred: can't set attribute
+1
+2
+```
+

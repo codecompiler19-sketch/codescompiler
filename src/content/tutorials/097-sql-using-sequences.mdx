@@ -1,0 +1,282 @@
+---
+title: "SQL - Using Sequences"
+description: "Learn SQL - Using Sequences with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 970
+group: "Advanced SQL"
+seoTitle: "SQL - Using Sequences — CodesCompiler SQL Guide"
+permalink: "sql-using-sequences"
+---
+
+
+# SQL - Using Sequences
+
+
+Table of contentSequences in MySQLStarting a Sequence at a Particular Value in MySQLSequences in SQL Server
+
+
+
+
+Sequencesin SQL are database objects that generate a sequence of unique integer values. They are frequently used in databases because many applications require that each row in a table must contain unique values and sequences provide an easy way to generate them.
+
+
+Sequences are a feature of many SQL database management systems, such as Oracle, PostgreSQL, SQL server, and IBM DB2.
+
+
+MySQL does not support the CREATE SEQUENCE statement to create sequences for table rows or columns. Instead, we can use AUTO_INCREMENT attribute.
+
+
+## Sequences in MySQL
+
+
+In MySQL, we use theAUTO_INCREMENTattribute to generate unique integer values (sequences) for a column. By default, the sequence starts with an initial value of 1 and increments by 1 for each new row.
+
+
+### Syntax
+
+
+Following is the syntax of AUTO_INCREMENT attribute in MySQL −
+
+
+```sql
+CREATE TABLE table_name (
+	column1 datatype AUTO_INCREMENT,
+	column2 datatype,
+	column3 datatype,
+	...
+	columnN datatype
+);
+```
+
+
+### Example
+
+
+In the following example, we are creating a table named CUSTOMERS. In addition to that, we are defining AUTO_INCREMENT on ID column of the table.
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT AUTO_INCREMENT,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),
+   PRIMARY KEY (ID)
+);
+```
+
+
+Here, we are adding some records into the above created table −
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+(NULL, 'Ramesh', 32, 'Ahmedabad', 2000.00),
+(NULL, 'Khilan', 25, 'Delhi', 1500.00),
+(NULL, 'Kaushik', 23, 'Kota', 2000.00),
+(NULL, 'Chaitali', 25, 'Mumbai', 6500.00),
+(NULL, 'Hardik', 27, 'Bhopal', 8500.00),
+(NULL, 'Komal', 22, 'Hyderabad', 4500.00),
+(NULL, 'Muffy', 24, 'Indore', 10000.00);
+```
+
+
+The table will be created as follows −
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+As we can see in the above table, the values in the ID column are auto incremented.
+
+
+## Starting a Sequence at a Particular Value in MySQL
+
+
+By default, MySQL sequences start from 1. To start a sequence with a different value, we use the AUTO_INCREMENT in combination with theALTERstatement.
+
+
+### Syntax
+
+
+Following is the syntax to start the sequence with different value −
+
+
+```sql
+ALTER TABLE table_name AUTO_INCREMENT = value;
+```
+
+
+In the following query, we are creating a table named BUYERS with AUTO_INCREMENT defined on the ID column.
+
+
+```sql
+CREATE TABLE BUYERS (
+   ID INT AUTO_INCREMENT,
+   NAME VARCHAR(20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),
+   PRIMARY KEY (ID)
+);
+```
+
+
+Here, we are making the sequence start with 100 using the ALTER Statement as shown below −
+
+
+```sql
+ALTER TABLE BUYERS AUTO_INCREMENT=100;
+```
+
+
+Now, we are adding records into the BUYERS table using the INSERT INTO statement −
+
+
+```sql
+INSERT INTO BUYERS (NAME, AGE, ADDRESS, SALARY) VALUES
+('Ramesh', 32, 'Ahmedabad', 2000.00),
+('Khilan', 25, 'Delhi', 1500.00),
+('Kaushik', 23, 'Kota', 2000.00),
+('Chaitali', 25, 'Mumbai', 6500.00),
+('Hardik', 27, 'Bhopal', 8500.00),
+('Komal', 22, 'Hyderabad', 4500.00),
+('Muffy', 24, 'Indore', 10000.00);
+```
+
+
+The table will be created as −
+
+
+IDNAMEAGEADDRESSSALARY100Ramesh32Ahmedabad2000.00101Khilan25Delhi1500.00102Kaushik23Kota2000.00103Chaitali25Mumbai6500.00104Hardik27Bhopal8500.00105Komal22Hyderabad4500.00106Muffy24Indore10000.00
+
+
+As observed in the table above, the values in the "ID" column begin with 100 instead of 1.
+
+
+## Sequences in SQL Server
+
+
+In SQL server, a sequence can be created using theCREATE SEQUENCEstatement. The statement specifies the name of the sequence, the starting value, the increment, and other properties of the sequence.
+
+
+### Syntax
+
+
+Following is the syntax to create a sequence in SQL −
+
+
+```sql
+CREATE SEQUENCE Sequence_Name
+START WITH Initial_Value
+INCREMENT BY Increment_Value
+MINVALUE Minimum_Value
+MAXVALUE Maximum_Value
+CYCLE|NOCYCLE;
+```
+
+
+Here,
+
+
+
+- Sequence_Name− This specifies the name of the sequence.
+- Initial_Value− This specifies the starting value from where the sequence should start.
+- Increment_Value− This specifies the value by which the sequence will increment by itself. This can be valued positively or negatively.
+- Minimum_Value− This specifies the minimum value of the sequence.
+- Maximum_Value− This specifies the maximum value of the sequence.
+- Cycle− When the sequence reaches its Maximum_Value, it starts again from the beginning.
+- Nocycle− An exception will be thrown if the sequence exceeds the Maximum_Value.
+
+
+
+### Example
+
+
+First of all, let us create a table  named CUSTOMERS using the following query −
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),
+);
+```
+
+
+We are inserting some records in the above-created table using INSERT INTO statement as shown in the query below −
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+(NULL, 'Ramesh', 32, 'Ahmedabad', 2000.00),
+(NULL, 'Khilan', 25, 'Delhi', 1500.00),
+(NULL, 'Kaushik', 23, 'Kota', 2000.00),
+(NULL, 'Chaitali', 25, 'Mumbai', 6500.00),
+(NULL, 'Hardik', 27, 'Bhopal', 8500.00),
+(NULL, 'Komal', 22, 'Hyderabad', 4500.00),
+(NULL, 'Muffy', 24, 'Indore', 10000.00 );
+```
+
+
+The table is successfully created in the SQL database.
+
+
+IDNAMEAGEADDRESSSALARYNULLRamesh32Ahmedabad2000.00NULLKhilan25Delhi1500.00NULLKaushik23Kota2000.00NULLChaitali25Mumbai6500.00NULLHardik27Bhopal8500.00NULLKomal22Hyderabad4500.00NULLMuffy24Indore10000.00
+
+
+Now, create a sequence using the following query −
+
+
+```sql
+CREATE SEQUENCE My_Sequence AS INT
+START WITH 1
+INCREMENT BY 1
+MINVALUE 1
+MAXVALUE 7
+CYCLE;
+```
+
+
+In the above query, the sequence is namedMy_Sequenceand it starts with the value 1 and increments by 1 each time a value is generated. The sequence has a maximum value of 5 and cycles back to the starting value when it reaches the maximum value.
+
+
+Once the sequence is created, it can be used to generate unique integer values. Now, let us update the data in theIDcolumn of the CUSTOMERS table using the following query −
+
+
+```sql
+UPDATE CUSTOMERS SET ID = NEXT VALUE FOR my_Sequence;
+```
+
+
+### Output
+
+
+When you execute the above query, the output is obtained as follows −
+
+
+```sql
+(7 rows affected)
+```
+
+
+### Verification
+
+
+Let us verify whether is sequence is updated in the ID column of the table or not using the following query −
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+The table will be displayed as −
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+

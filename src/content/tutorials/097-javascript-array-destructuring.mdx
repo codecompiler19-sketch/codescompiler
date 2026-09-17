@@ -1,0 +1,317 @@
+---
+title: "JavaScript - Array Destructuring"
+description: "Learn JavaScript - Array Destructuring with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 970
+group: "Object Oriented JavaScript"
+seoTitle: "JavaScript - Array Destructuring — CodesCompiler JavaScript Guide"
+permalink: "javascript-array-destructuring"
+---
+
+
+# JavaScript - Array Destructuring
+
+
+
+
+## Array Destructuring
+
+
+JavaScript Array destructuring allows us to unpack the values from array and assign them to the variables. After that, you can use the variables to access their value and use them in the code. We can perform the array structuring using the destructuring assignment. The destructuring assignment is a basically a JavaScript expression.
+
+
+### Syntax
+
+
+The syntax of array destructuring assignment in JavaScript is as follows
+
+
+```javascript
+const array = [10, 20];
+const [var1, var2] = array;
+```
+
+
+In the above syntax, the "array" is the original array containing 10 and 20. When you unpack the array elements, var1 contains the 10, and var2 contains the 20.
+
+
+### Example: Basic Array Destructuring
+
+
+In the example below, the arr array contains 3 numeric values. After that, we used the array destructuring to unpack array elements and store them in the num1, num2, and num3 variables.
+
+
+```html
+<html>
+<body>
+   <div id = "output1"> </div>
+   <div id = "output2"> </div>
+   <div id = "output3"> </div>
+   <script>
+  
+      const arr = [100, 500, 1000];
+    
+      const [num1, num2, num3] = arr;
+    
+      document.getElementById("output1").innerHTML = "num1: " + num1;
+      document.getElementById("output2").innerHTML = "num2: " + num2;
+      document.getElementById("output3").innerHTML = "num3: " + num3;
+    
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+num1: 100
+num2: 500
+num3: 1000
+```
+
+
+### Example: Unpacking with initial N elements of the array
+
+
+While destructuring the array, if the left operand has fewer variables than array elements, first, N array elements get stored in the variables.
+
+
+The array contains 6 elements in the below code, but 2 variables exist on the left side. So, the first 2 elements of the array will be stored in the variables, and others will be ignored.
+
+
+```html
+<html>
+<body>
+   <div id = "output1"> </div>
+   <div id = "output2"> </div>
+   <script>
+      const arr = [1, 2, 3, 4, 5, 6];
+      const [num1, num2] = arr;
+       
+      document.getElementById("output1").innerHTML = "num1: " + num1;
+      document.getElementById("output2").innerHTML = "num2: " + num2;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+num1: 1
+num2: 2
+```
+
+
+## Skipping Array Elements While Destructuring an Array
+
+
+While JavaScript array destructuring, you can skip a particular array element without assigning it to a variable.
+
+
+### Example
+
+
+In the below code, the arr array contains 6 numbers. We have skipped the 2ndand 4thelements. In the output, num3 is 3, and num5 is 5, as the 2ndand 4thelements are skipped.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      const arr = [1, 2, 3, 4, 5, 6];
+      const [num1, , num3, , num5] = arr;
+      document.getElementById("output").innerHTML = 
+		"num1: " + num1 + "<br>" +
+      "num3: " + num3 + "<br>" +
+      "num5: " + num5;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+num1: 1
+num3: 3
+num5: 5
+```
+
+
+## Array Destructuring and Rest Operator
+
+
+If the left operand of the destructuring assignment operator contains fewer variables than the array elements, JavaScript ignores the last remaining array elements.
+
+
+To solve the problem, you can use the rest operator. You can write the last variable with a rest operator in the left operand. So, the remaining array elements will be stored in the operand of the rest operator in the array format.
+
+
+### Example
+
+
+In the code below, the array's first and second elements are stored in the num1 and num2 variables. We used the rest operator with the num3 variable. So, the remaining array elements will be stored in num3 in the array format.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+      const arr = [1, 2, 3, 4, 5, 6];
+      const [num1, num2, ...nums] = arr;
+      document.getElementById("demo").innerHTML = 
+      "num1: " + num1 + "<br>" + 
+      "num2: " + num2 + "<br>" +
+      "nums: " + nums;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+num1: 1
+num2: 2
+nums: 3,4,5,6
+```
+
+
+If you use the rest operator in the middle, all remaining array elements will be stored in the operand of the rest operator, and variables used after the rest operator will be ignored.
+
+
+## Array Destructuring and Default Values
+
+
+Sometimes, an array can contain undefined values or fewer elements than the variables. In such cases, while destructuring JavaScript arrays, the variables can be initialized with the default values.
+
+
+### Example
+
+
+In the below code, num1, num2, and num3 contain 10, 20, and 30 default values, respectively. The array contains only a single element.
+
+
+So, when we unpack the array, the num1 variable will contain the array element, num2 and num3 will contain the default values.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+      const arr = [1];
+      const [num1 = 10, num2 = 20, num3 = 30] = arr;
+      document.getElementById("demo").innerHTML = 
+      "num1: " + num1 + "<br>" +
+      "num2:  " + num2 + "<br>" +
+      "num3: " + num3;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+num1: 1
+num2: 20
+num3: 30
+```
+
+
+## Swapping Variables Using Array Destructuring
+
+
+You can also swap two variables values using the JavaScript Array Destructuring.
+
+
+### Example
+
+
+In the below code, variables a and b are initialized with 50 and 100, respectively. After that, we added variables a and b in a different order in the left and right operands. In the output, you can see the swapped values of the a and b.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      let a = 50, b = 100;
+      document.getElementById("output").innerHTML = 
+      "Before Swapping: a = " + a + ", b = " + b + "<br>";
+      [b, a] = [a, b]
+      document.getElementById("output").innerHTML += 
+      "After Swapping: a = " + a + ", b = " + b;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Before Swapping: a = 50, b = 100
+After Swapping: a = 100, b = 50
+```
+
+
+## Destructuring the Returned Array from the Function
+
+
+In real-time development, dynamic arrays are returned from the function. So, you can also destructure the returned array from the function.
+
+
+### Example
+
+
+In the example below, getNums() function returns the array of numbers.
+
+
+We execute the getNums() function and unpack array elements in the individual variables.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      function getNums() {
+         return [99, 80, 70];
+      }
+      const [num1, num2, num3] = getNums();
+      document.getElementById("output").innerHTML = 
+      "num1: " + num1 + "<br>" +
+      "num2: " + num2 + "<br>" +
+      "num3: " + num3;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+num1: 99
+num2: 80
+num3: 70
+```
+

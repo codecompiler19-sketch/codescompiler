@@ -1,0 +1,266 @@
+---
+title: "SQL - Distinct Clause"
+description: "Learn SQL - Distinct Clause with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 400
+group: "SQL Operators and Clauses"
+seoTitle: "SQL - Distinct Clause — CodesCompiler SQL Guide"
+permalink: "sql-distinct-keyword"
+---
+
+
+# SQL - DISTINCT Keyword
+
+
+Table of contentThe SQL DISTINCT KeywordDISTINCT Keyword on Single ColumnsDISTINCT Keyword on Multiple ColumnsDISTINCT Keyword with ORDER BY ClauseDISTINCT Keyword with COUNT() FunctionDISTINCT Keyword with NULL ValuesImportant Points About DISTINCT Keyword
+
+
+
+
+## The SQL DISTINCT Keyword
+
+
+The SQLDISTINCTkeyword is used in conjunction with the SELECT statement to return only unique records (different values) from a table. It eliminates duplicate rows from the result set. You can you this keyword to retrieve unique records from one or more columns.
+
+
+This is useful when working with large datasets where duplicate values are common, and you want to filter out repetitions from your query results.
+
+
+### Syntax
+
+
+The basic syntax of SQL DISTINCT keyword is as follows:
+
+
+```sql
+SELECT DISTINCT column1, column2,.....columnN 
+FROM table_name;
+```
+
+
+Where,column1, column2,etc. are the columns we want to retrieve the unique or distinct values from; andtable_namerepresents the name of the table containing the data.
+
+
+## DISTINCT Keyword on Single Columns
+
+
+We can use the DISTINCT keyword on a single column to retrieve all unique values in that column, i.e. with duplicates removed. This is often used to get a summary of the distinct values in a particular column or to eliminate redundant data.
+
+
+### Example
+
+
+Assume we have created a table with name CUSTOMERS in MySQL database using CREATE TABLE statement as shown below:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),
+   PRIMARY KEY (ID)
+);
+```
+
+
+Following query inserts values into this table using the INSERT statement:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00),
+(2, 'Khilan', 25, 'Delhi', 1500.00),
+(3, 'Kaushik', 23, 'Kota', 2000.00),
+(4, 'Chaitali', 25, 'Mumbai', 6500.00),
+(5, 'Hardik', 27, 'Bhopal', 8500.00),
+(6, 'Komal', 22, 'Hyderabad', 4500.00),
+(7, 'Muffy', 24, 'Indore', 10000.00);
+```
+
+
+The table obtained is as shown below:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+First, let us retrieve the SALARY values from the CUSTOMERS table using the SELECT query:
+
+
+```sql
+SELECT SALARY FROM CUSTOMERS ORDER BY SALARY;
+```
+
+
+This would produce the following result. Here, you can observe that the salary value2000is appearing twice:
+
+
+SALARY1500.002000.002000.004500.006500.008500.0010000.00
+
+
+Now, let us use theDISTINCTkeyword with the above SELECT query and then see the result:
+
+
+```sql
+SELECT DISTINCT SALARY FROM CUSTOMERS ORDER BY SALARY;
+```
+
+
+This would produce the following result where we do not have any duplicate entry:
+
+
+SALARY1500.002000.004500.006500.008500.0010000.00
+
+
+## DISTINCT Keyword on Multiple Columns
+
+
+We can also use the DISTINCT keyword on multiple columns to retrieve all unique combinations of values across those columns. This is often used to get a summary of distinct values in multiple columns, or to eliminate redundant data.
+
+
+### Example
+
+
+In the following query, we are retrieving a list of all unique combinations of customer's age and salary using the DISTINCT keyword:
+
+
+```sql
+SELECT DISTINCT AGE, SALARY FROM CUSTOMERS ORDER BY AGE;
+```
+
+
+Though the AGE column have the value "25" in two records, each combination of "25" with it's specific 'salary' is unique, so both rows are included in the result set:
+
+
+AGESALARY224500.00232000.002410000.00251500.00256500.00278500.00322000.00
+
+
+## DISTINCT Keyword with ORDER BY Clause
+
+
+TheDISTINCTkeyword can be used in conjunction with theORDER BYclause to retrieve unique records and sort them in a specific order. WhileDISTINCTfilters out duplicates,ORDER BYarranges the resulting data in ascending (default) or descending order.
+
+
+### Syntax
+
+
+Following is the syntax to use the DISTINCT keyword with the ORDER BY clause:
+
+
+```sql
+SELECT DISTINCT column1, column2, ... 
+FROM table_name 
+ORDER BY column1 [ASC|DESC], column2 [ASC|DESC], ...;
+```
+
+
+### Example
+
+
+In the following query, we are retrieving distinct salary values of customers and sorting them in descending order:
+
+
+```sql
+SELECT DISTINCT SALARY FROM CUSTOMERS 
+ORDER BY SALARY DESC;
+```
+
+
+We get the output as shown below:
+
+
+SALARY10000.008500.006500.004500.002000.001500.00
+
+
+## DISTINCT Keyword with COUNT() Function
+
+
+TheCOUNT()function is used to get the number of records retuned by the SELECT query. We need to pass an expression to this function so that the SELECT query returns the number of records that satisfy the specified expression.
+
+
+If we pass the DISTINCT keyword to the COUNT() function as an expression, it returns the number of unique values in a column of a table.
+
+
+### Syntax
+
+
+Following is the syntax for using the DISTINCT keyword with COUNT() function:
+
+
+```sql
+SELECT COUNT(DISTINCT column_name) 
+FROM table_name WHERE condition;
+```
+
+
+Where,column_nameis the name of the column for which we want to count the unique values; andtable_nameis the name of the table that contains the data.
+
+
+### Example
+
+
+In the following query, we are retrieving the count of distinct age of the customers:
+
+
+```sql
+SELECT COUNT(DISTINCT AGE) as UniqueAge FROM CUSTOMERS;
+```
+
+
+Following is the result produced:
+
+
+UniqueAge6
+
+
+## DISTINCT Keyword with NULL Values
+
+
+In SQL, when there are NULL values in the column, DISTINCT treats them as unique values and includes them in the result set.
+
+
+### Example
+
+
+First of all let us update two records of the CUSTOMERS table and modify their salary values toNULL
+
+
+```sql
+UPDATE CUSTOMERS SET SALARY = NULL WHERE ID IN(6,4);
+```
+
+
+The resultant CUSTOMERS table would be:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25MumbaiNULL5Hardik27Bhopal8500.006Komal22HyderabadNULL7Muffy24Indore10000.00
+
+
+Now, we are retrieving the distinct salary of the customers using the following query:
+
+
+```sql
+SELECT DISTINCT SALARY FROM CUSTOMERS ORDER BY SALARY;
+```
+
+
+Following is the output of the above query:
+
+
+SALARYNULL1500.002000.008500.0010000.00
+
+
+## Important Points About DISTINCT Keyword
+
+
+TheDISTINCTkeyword ensures uniqueness in the result set, but it is important to understand how it behaves, especially when working with multiple columns or large datasets.
+
+
+
+- DISTINCTapplies to all columns specified in the SELECT statement, not just the first one.
+- It removes duplicate rows based on the full combination of selected columns, not individual column values unless only one column is selected.
+- On large datasets, usingDISTINCTcan impact performance due to the need for sorting and comparisons.
+
+

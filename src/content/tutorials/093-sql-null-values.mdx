@@ -1,0 +1,220 @@
+---
+title: "SQL - NULL Values"
+description: "Learn SQL - NULL Values with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 930
+group: "Advanced SQL"
+seoTitle: "SQL - NULL Values — CodesCompiler SQL Guide"
+permalink: "sql-null-values"
+---
+
+
+# SQL - NULL Values
+
+
+Table of contentCreating a Table without NULL ValuesUpdating NULL Values in a TableDeleting Records with NULL Values
+
+
+
+
+SQL uses the termNULLto represent a non-existent data value in the database. These values are not the same as an empty string or a zero. They don't hold any space in the database and are used to signify the absence of a value or the unknown value in a data field.
+
+
+Some common reasons why a value may be NULL −
+
+
+
+- The value may not be provided during the data entry.
+- The value is not yet known.
+
+
+
+Since the NULL values are basically non-existent, you cannot use comparison operators such as`=`,`<, or`>with them. However, you can check if a value is NULL using the IS NULL, "NOT NULL" or IS NOT NULL operators.
+
+
+## Creating a Table without NULL Values
+
+
+NULL values can be inserted in any column of a table as they are not associated with any specific data type. However, when a column is defined with the "NOT NULL" keyword, an error is raised whenever you try to insert NULL values into that specific column.
+
+
+### Syntax
+
+
+The basic syntax ofNOT NULLwhile creating a table is as follows −
+
+
+```sql
+CREATE TABLE table-name (
+   column1 datatype NOT NULL,
+   column2 datatype NOT NULL,
+   ...
+   columnN datatype
+);
+```
+
+
+Here, NOT NULL signifies that column should always accept an explicit value of the given data type. You can insert NULL values into the columns where we did not use NOT NULL.
+
+
+### Example
+
+
+Let us create a table with the nameCUSTOMERSin the SQL database using the CREATE statement as shown in the query below −
+
+
+```sql
+CREATE TABLE CUSTOMERS(
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25) ,
+   SALARY DECIMAL (18, 2),
+   PRIMARY KEY (ID)
+);
+```
+
+
+Let us insert some values into the above created table using the following query −
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00),
+(2, 'Khilan', 25, 'Delhi', 1500.00),
+(3, 'Kaushik', 23, 'Kota', 2000.00),
+(4, 'Chaitali', 25, 'Mumbai', 6500.00),
+(5, 'Hardik', 27, 'Bhopal', 8500.00),
+(6, 'Komal', 22, 'Hyderabad', NULL),
+(7, 'Muffy', 24, 'Indore', NULL);
+```
+
+
+The table is successfully created in the database.
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22HyderabadNULL7Muffy24IndoreNULL
+
+
+Now, let us retrieve the records present in the table that are not null using theIS NOT NULLoperator −
+
+
+```sql
+SELECT ID, NAME, AGE, ADDRESS, SALARY 
+FROM CUSTOMERS 
+WHERE SALARY IS NOT NULL;
+```
+
+
+The above query would produce the following result −
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.00
+
+
+You can also retrieve the NULL records present in the table usingIS NULLoperator in the SELECT query as shown below −
+
+
+```sql
+SELECT ID, NAME, AGE, ADDRESS, SALARY 
+FROM CUSTOMERS 
+WHERE SALARY IS NULL;
+```
+
+
+The above query would produce the following result −
+
+
+IDNAMEAGEADDRESSSALARY6Komal22HyderabadNULL7Muffy24IndoreNULL
+
+
+## Updating NULL Values in a Table
+
+
+You can update the NULL values present in a table using theUPDATEstatement in SQL. To do so, you can use the IS NULL operator in your WHERE clause to filter the rows containing NULL values and then set the new value using the SET keyword.
+
+
+### Example
+
+
+Consider the previously created table and update the NULL value(s) present in the table using theUPDATEstatement as shown below −
+
+
+```sql
+UPDATE CUSTOMERS SET SALARY = 9000 WHERE SALARY IS NULL;
+```
+
+
+### Output
+
+
+When you execute the above query, the output is obtained as follows −
+
+
+```sql
+Query OK, 2 rows affected (0.01 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+```
+
+
+### Verification
+
+
+Let us verify whether the specified record(s) in the table is updated or not using the following query −
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+On executing the above query, the output is displayed as follows −
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad9000.007Muffy24Indore9000.00
+
+
+## Deleting Records with NULL Values
+
+
+You can delete records containing NULL values from a table using the DELETE FROM statement. You first check whether the table consists of NULL values using the IS NULL operator in WHERE clause and delete the records that are filtered.
+
+
+### Example
+
+
+Consider the previously created CUSTOMERS table and delete the NULL value(s) present in the table using theDELETEstatement as shown below −
+
+
+```sql
+DELETE FROM CUSTOMERS WHERE SALARY IS NULL;
+```
+
+
+### Output
+
+
+When you execute the above query, the output is obtained as follows −
+
+
+```sql
+Query OK, 2 rows affected (0.01 sec)
+```
+
+
+### Verification
+
+
+Let us verify whether the filtered record(s) in the table is deleted or not, by displaying the table using a SELECT statement.
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+The table will be displayed as −
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.00
+

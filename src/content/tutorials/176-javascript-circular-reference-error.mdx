@@ -1,0 +1,161 @@
+---
+title: "JavaScript - Circular Reference Error"
+description: "Learn JavaScript - Circular Reference Error with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1760
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Circular Reference Error — CodesCompiler JavaScript Guide"
+permalink: "javascript-circular-reference-error"
+---
+
+
+# JavaScript - Circular Reference Error
+
+
+
+
+When an object creates a direct or indirect reference to itself, it is known as circular referencing. It makes the loop closed. JavaScript has the same circular referencing issue as other programming languages. A few errors of JavaScript circular referencing modes will be discussed in this chapter.
+
+
+## What is a Circular Reference in JS?
+
+
+In JavaScript, a circular reference happens when two or more objects make reference to one another in a way that starts a loop. You have a circular reference, for example- if object A refers to object B and object B in turn refers back to object A.
+
+
+### Example
+
+
+Here is the basic example of circular reference in JavaScript −
+
+
+```javascript
+let person = {};
+let friend = {};
+
+// Making a circular reference
+person.bestFriend = friend;
+friend.bestFriend = person;
+```
+
+
+This creates a loop in which person refers a friend, who in turn mentions the person.
+
+
+## Problems With Circular References
+
+
+It is preferable to organize data without cross-references between objects in order to prevent circular references.
+
+
+
+- Memory leaks:These happen when JavaScript's garbage collection refuses to remove objects with circular references resulting in memory that is not released.
+- Stringify errors in JSON:Errors happen when circular references are tried to be converted to JSON, for example, by using JSON.stringify(). Because this method cannot support circular structures, an error will be produced.
+
+
+
+```javascript
+let obj = {};
+obj.self = obj;
+
+// Throws "TypeError: Converting circular structure to JSON"
+JSON.stringify(obj);
+```
+
+
+## How to Fix Circular References
+
+
+A few standard methods can be used to correct circular references. These include using particular libraries that can handle circular structures, removing references prior to converting to JSON and rearranging data to prevent loops.
+
+
+### Remove Circular References
+
+
+Find the location of the circular reference and remove it if it is not needed.
+
+
+```javascript
+let obj1 = {};
+// Avoid circular reference by not pointing obj1 back to obj2
+let obj2 = { obj1: obj1 };
+
+console.log(JSON.stringify(obj2));
+```
+
+
+Output
+
+
+This will generate the below result −
+
+
+```javascript
+{"obj1":{}}
+```
+
+
+### Use a Custom toJSON Method
+
+
+If you want to stringify an object with circular references you can create a custom toJSON function to ignore them.
+
+
+```javascript
+let obj = {};
+obj.self = obj;
+
+obj.toJSON = function() {
+   let copy = { ...this };
+   
+   // Remove circular reference
+   delete copy.self; 
+   return copy;
+};
+
+// This will now work without errors
+console.log(JSON.stringify(obj));
+```
+
+
+Output
+
+
+This will lead to the below output −
+
+
+```javascript
+{}
+```
+
+
+### Use a Library
+
+
+Some libraries like flatted or circular-json can handle circular references automatically. Use the package instead of JSON.stringify() after installing it.
+
+
+```javascript
+// Using circular-json 
+const CircularJSON = require('circular-json');
+
+let obj = {};
+obj.self = obj;
+
+let jsonString = CircularJSON.stringify(obj);
+
+// Converts circular structure to JSON without error
+console.log(jsonString);
+```
+
+
+Output
+
+
+This will produce the following outcome −
+
+
+```javascript
+{"self":"~"}
+```
+

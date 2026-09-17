@@ -1,0 +1,337 @@
+---
+title: "SQL - Drop Index"
+description: "Learn SQL - Drop Index with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 800
+group: "SQL Indexes"
+seoTitle: "SQL - Drop Index — CodesCompiler SQL Guide"
+permalink: "sql-drop-index"
+---
+
+
+# SQL - Drop Index
+
+
+Table of contentDropping an SQL IndexDROP INDEX with IF EXISTSRemoving indexes created by PRIMARY KEY or UNIQUE
+
+
+PreviousNext
+
+
+TheDROPstatement in SQL is used to remove or delete an existing database object such as a table, index, view, or procedure. Whenever we use DROP statement with any of the database objects, it will remove them permanently along with their associated data.
+
+
+And when that database object is an index, theDROP INDEXstatement in SQL is used.
+
+
+## Dropping an SQL Index
+
+
+An SQL Index can be dropped from a database table using the DROP INDEX statement.
+
+
+It is important to understand that dropping an index can have a significant impact on the performance of your database queries. Therefore, only try to remove an index if you are sure that it is no longer required.
+
+
+Note− We cannot delete the indexes created by PRIMARY KEY or UNIQUE constraints. In order to delete them, you need to drop the constraints entirely using ALTER TABLE statement.
+
+
+### Syntax
+
+
+Following is the syntax of theDROP INDEXcommand in SQL −
+
+
+```sql
+DROP INDEX index_name ON table_name;
+```
+
+
+Here,
+
+
+
+- index_nameis the name of the index that you want to drop.
+- table_nameis the name of the table that the index is associated with.
+
+
+
+### Example
+
+
+In this example, we will learn how to drop an index on a table namedCUSTOMERS, which can be created using the following query −
+
+
+```sql
+CREATE TABLE CUSTOMERS(
+   ID INT NOT NULL,
+   NAME VARCHAR(15) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS VARCHAR(25),
+   SALARY DECIMAL(10, 4),
+   PRIMARY KEY(ID));
+);
+```
+
+
+Now, insert some values into the above created table using the following query −
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+(1, 'Ramesh', '32', 'Ahmedabad', 2000),
+(2, 'Khilan', '25', 'Delhi', 1500),
+(3, 'Kaushik', '23', 'Kota', 2000),
+(4, 'Chaitali', '25', 'Mumbai', 6500),
+(5, 'Hardik','27', 'Bhopal', 8500),
+(6, 'Komal', '22', 'Hyderabad', 9000),
+(7, 'Muffy', '24', 'Indore', 5500);
+```
+
+
+Once the table is created, create an index on the columnNAMEin the CUSTOMERS table using the following query −
+
+
+```sql
+CREATE INDEX INDEX_NAME on CUSTOMERS(NAME);
+```
+
+
+Now, verify if the index is created on the CUSTOMERS table using the following SHOW INDEX query −
+
+
+```sql
+SHOW INDEX FROM CUSTOMERS;
+```
+
+
+On executing the above query, the index list is displayed as follows −
+
+
+TableNon_uniqueKey_nameSeq_in_indexColumn_namecustomers0PRIMARY1IDcustomers1index_name1NAME
+
+
+Then, drop the same index INDEX_NAME in the CUSTOMERS table using the followingDROP INDEXstatement −
+
+
+```sql
+DROP INDEX INDEX_NAME ON CUSTOMERS;
+```
+
+
+### Output
+
+
+If we compile and run the above query, the result is produced as follows −
+
+
+```sql
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+```
+
+
+### Verification
+
+
+Verify if the index for the column NAME is dropped using the following query −
+
+
+```sql
+SHOW INDEX FROM CUSTOMERS;
+```
+
+
+In the following list of indexes, you can observe that name of the columnNameis missing.
+
+
+TableNon_uniqueKey_nameSeq_in_indexColumn_namecustomers0PRIMARY1ID
+
+
+## DROP INDEX with IF EXISTS
+
+
+TheDROP INDEX IF EXISTSstatement in SQL is used to drop an index only if it exists in the table. This statement is specifically useful when you want to drop an index, but you are not sure if the index exists. This clause isnotsupported by MySQL.
+
+
+TheIF EXISTSclause ensures that the statement only removes the index if it exists. If the index does not exist, it simply terminates the execution.
+
+
+### Syntax
+
+
+Following is the syntax of the DROP INDEX IF EXISTS in SQL −
+
+
+```sql
+DROP INDEX IF EXISTS index_name
+ON table_name;
+```
+
+
+Here,
+
+
+
+- index_nameis the name of the index that you want to drop.
+- table_nameis the name of the table that the index is associated with.
+
+
+
+### Example
+
+
+In this example, let us try to drop an index in the SQL Server database.
+
+
+Let us consider the previously created table CUSTOMERS and let us create an index for the NAME column in the table using the following query −
+
+
+```sql
+CREATE INDEX INDEX_NAME on CUSTOMERS(NAME);
+```
+
+
+Then, let us drop it using the following query −
+
+
+```sql
+DROP INDEX IF EXISTS INDEX_NAME ON CUSTOMERS;
+```
+
+
+### Output
+
+
+When we execute the above query, the output is obtained as follows −
+
+
+```sql
+Commands completed successfully.
+```
+
+
+### Verification
+
+
+Let's verify whether the index for the NAME is dropped or not using the following query −
+
+
+```sql
+EXEC sys.sp_helpindex @objname = N'CUSTOMERS';
+```
+
+
+As you observe, the column NAME is deleted from the list of indexes.
+
+
+index_nameindex_descriptionindex_keysPK__CUSTOMER__3214EC27CB063BB7clustered, unique, primary key locatedPRIMARY on PRIMARYID
+
+
+### Example
+
+
+Now, let us delete an indexthat doesn't existin the CUSTOMERS table using the following query −
+
+
+```sql
+DROP INDEX IF EXISTS INDEX_NAME ON CUSTOMERS;
+```
+
+
+### Output
+
+
+Since no indexes with the specified name exist in the database, so the above query simply terminates the execution without giving any error.
+
+
+```sql
+Commands completed successfully.
+```
+
+
+## Removing indexes created by PRIMARY KEY or UNIQUE
+
+
+The DROP INDEX statement does not drop indexes created by PRIMARY KEY or UNIQUE constraints. To drop indexes associated with them, we need to drop these constraints entirely. And it is done using theALTER TABLE... DROP CONSTRAINTstatement.
+
+
+### Syntax
+
+
+Following is the syntax of the ALTER TABLE... DROP CONSTRAINT statement in SQL −
+
+
+```sql
+ALTER TABLE table_name
+DROP CONSTRAINT constraint_name;
+```
+
+
+Here,
+
+
+
+- table_nameis the name of the table that contains the PRIMARY KEY constraint.
+- constraint_nameis the name of the PRIMARY KEY constraint that you want to drop.
+
+
+
+### Example
+
+
+Assume the previously created table (CUSTOMERS) and let us first list all the indexes that are created on the table using the following query −
+
+
+```sql
+EXEC sys.sp_helpindex @objname = N'CUSTOMERS';
+```
+
+
+The list is displayed as follows −
+
+
+index_nameindex_descriptionindex_keysPK__CUSTOMER__3214EC27CB063BB7nonclustered located on PRIMARYIDID
+
+
+Here, thePK__CUSTOMER__3214EC27CB063BB7is the name of thePRIMARY KEYconstraint that was created on theIDcolumn of theCUSTOMERStable.
+
+
+Now, let us drop the index created by the PRIMARY KEY constraint.
+
+
+```sql
+ALTER TABLE customers
+DROP CONSTRAINT PK__CUSTOMER__3214EC27CB063BB7;
+```
+
+
+### Output
+
+
+When we execute the above query, the output is obtained as follows −
+
+
+```sql
+Commands completed successfully.
+```
+
+
+### Verification
+
+
+Verify whether it is dropped or not by listing the existing indexes using the following query −
+
+
+```sql
+EXEC sys.sp_helpindex @objname = N'CUSTOMERS';
+```
+
+
+The following error is displayed because the list of indexes is empty.
+
+
+```sql
+The object 'CUSTOMERS' does not have any indexes, or you do not have permissions.
+```
+

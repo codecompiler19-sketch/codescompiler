@@ -1,0 +1,345 @@
+---
+title: "PYTHON - Warnings"
+description: "Learn PYTHON - Warnings with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1650
+group: "Python Errors & Exceptions"
+seoTitle: "PYTHON - Warnings — CodesCompiler PYTHON Guide"
+permalink: "python-warnings"
+---
+
+
+# Python - Warnings
+
+
+
+
+In Python, awarningis a message that indicates that something unexpected happened while running your code. Unlike an error, a warning will not stop the program from running. Warnings are used to alert the user aboutpotential issuesordeprecated featuresin the code.
+
+
+For example, if you are using adeprecated modulein your code, you will get a warning message saying that the module is deprecated and will be removed in future versions of Python. But your code may still work as expected.
+
+
+## Display a Warning Message
+
+
+To display a warning message in Python, you can use thewarn()function from thewarningsmodule. Here is an example −
+
+
+```python
+import warnings
+
+
+
+# Normal message
+
+print("TutorialsPoint")
+
+
+
+# Warning message
+
+warnings.warn("You got a warning!")
+```
+
+
+The output of the above code will be:
+
+
+```python
+TutorialsPoint
+
+
+
+Warnings/Errors:
+
+/home/cg/root/d732ac89/main.py:7: UserWarning: You got a warning!
+
+  warnings.warn("You got a warning!")
+```
+
+
+## Types of Warnings Classes
+
+
+The warning in python is handled by a set of classes based upon the exception handling mechanism. The most common types of warnings are −
+
+
+### 1. UserWarning Class
+
+
+The UserWarning is the default warning class in Python. If you have any warning that does not fall into any of the other categories, it will be classified as a UserWarning. To specify a UserWarning, useUserWarningas the second argument to thewarn()function. Here is an example −
+
+
+```python
+import warnings
+
+
+
+# Warning message
+
+warnings.warn("You got a warning!", UserWarning)
+```
+
+
+### 2. DeprecationWarning Class
+
+
+The DeprecationWarning is used to indicate that a feature or module is deprecated and will be removed in future versions of Python. To specify a DeprecationWarning, useDeprecationWarningas the second argument to thewarn()function. Here is an example −
+
+
+```python
+import warnings
+
+
+
+# Warning message
+
+warnings.warn("This feature is deprecated!", DeprecationWarning)
+```
+
+
+### 3. SyntaxWarning Class
+
+
+The SyntaxWarning is used to indicate that there is a syntax-related issue in the code, but it is not severe enough to raise a SyntaxError. To specify a SyntaxWarning, useSyntaxWarningas the second argument to thewarn()function. Here is an example −
+
+
+```python
+import warnings
+
+
+
+# Warning message
+
+warnings.warn("This is a syntax warning!", SyntaxWarning)
+
+
+
+# Function with potential syntax issue
+
+def func(x):
+
+    return x is 10  # using "is" instead of "=="
+```
+
+
+### 4. RuntimeWarning Class
+
+
+The RuntimeWarning is a base class used to indicate that there is a doubtful issue related to runtime. To specify a RuntimeWarning, useRuntimeWarningas the second argument to thewarn()function. Here is an example −
+
+
+```python
+import warnings
+
+
+
+# Warning message
+
+warnings.warn("This is a runtime warning!", RuntimeWarning)
+```
+
+
+### 5. ImportWarning Class
+
+
+The ImportWarning is used to indicate that there is an issue related to the import of a module. To specify an ImportWarning, useImportWarningas the second argument to thewarn()function. Here is an example −
+
+
+```python
+import warnings
+
+
+
+# Warning message
+
+warnings.warn("This is an import warning!", ImportWarning)
+```
+
+
+## Warning Filters
+
+
+Warning filters are used to control the behavior of warning messages in Python. For example, if you feel that a warning is severe, you can convert it into an error so that program will stop running. Or, if you feel that a warning is not important, you can ignore it.
+
+
+Thefilterwarnings()function from thewarningsmodule can be used to specify warning filters. It can take following parameters:
+
+
+
+- default− This is the default behavior. It displays the first occurrence of each warning for each location where the warning is issued.
+- always− This option will always display the warning message, even if it has been displayed before.
+- ignore− This option is used to prevent the display of warning messages.
+- error− This option converts the warning into an exception, which will stop the program from running.
+- module− This option will print the first occurrence of matching warnings for each module where the warning is issued.
+- once− This option will print the first occurrence of matching warnings, regardless of the location.
+
+
+
+### Example: Turn Warning to an Error
+
+
+Here is a simple python code that shows how to turn warnings into errors −
+
+
+```python
+import warnings
+
+
+
+# Turn warning into an error
+
+warnings.filterwarnings("error", category=UserWarning)
+
+try:
+
+    warnings.warn("This is a warning!", UserWarning)
+
+except UserWarning as e:
+
+    print("Caught as error:", e)
+```
+
+
+The output of the above code will be −
+
+
+```python
+Caught as error: This is a warning!
+```
+
+
+### Example: Ignore Warnings
+
+
+Here is a simple python code that shows how to ignore warnings −
+
+
+```python
+import warnings
+
+
+
+# Ignore all warnings
+
+warnings.filterwarnings("ignore")
+
+
+
+print("Warning message: ")
+
+warnings.warn("This warning will be ignored!")
+```
+
+
+The output of the above code will be:
+
+
+```python
+Warning message:
+```
+
+
+## Function Available in Warning Module
+
+
+Thewarningsmodule has couple of functions that you can use to manage warnings in your Python code. Here are some of the most commonly used functions −
+
+
+### 1. warnings.warn()
+
+
+This function is used to issue a warning message. You can specify the warning message and the category of the warning. The syntax of the function is −
+
+
+```python
+warnings.warn(message, category=None, stacklevel=1, 
+
+              source=None, *, skip_file_prefixes=())
+```
+
+
+Here,messageis the warning message you want to display, andcategoryis the type of warning (e.g., UserWarning, DeprecationWarning, etc.).
+
+
+Thestacklevelargument can be used by wrapper functions written in Python to adjust the stack level of the warning. Theskip_file_prefixeskeyword argument can be used to indicate which stack frames are ignored when counting stack levels.
+
+
+### 2. warnings.showwarning()
+
+
+Theshowwarning()function is used to write warning messages to a file. Here is the syntax of the function:
+
+
+```python
+warnings.showwarning(message, category, filename, lineno, file=None, line=None)
+```
+
+
+Here,messageis the warning message,categoryis the type of warning,filenameis the name of the file where the warning should be saved,linenois the line number where the warning occurred.
+
+
+### 3. warnings.warn_explicit()
+
+
+Thewarn_explicit()function is used to send a warning message with more control over the warning's context. It can be used to explicitly pass the message, category, filename and line number, and optionally the module name and the registry. Here is the syntax of the function −
+
+
+```python
+warnings.warn_explicit(message, category, filename, lineno, module=None, 
+
+                        registry=None, module_globals=None, source=None)
+```
+
+
+The parameters have same meaning as in the previous functions.
+
+
+### 4. warnings.filterwarnings()
+
+
+Thefilterwarnings()function is used to set the warning filters. we have already disscussed how to use this function to ignore, always display, or convert warnings into errors. Here is the proper syntax of the function −
+
+
+```python
+warnings.filterwarnings(action, message='', category=Warning, module='', lineno=0, append=False)
+```
+
+
+The parameter "action" can take any of the following values: "default", "always", "ignore", "error", "module", or "once". The other parameters are optional.
+
+
+### 5. warnings.simplefilter()
+
+
+Thesimplefilter()function is a simpler interface to thefilterwarnings()function. It is used to set a filter for a specific category of warnings. Here is the syntax of the function −
+
+
+```python
+warnings.simplefilter(action, category=Warning, lineno=0, append=False)
+```
+
+
+The parameters have same meaning as in the previous functions.
+
+
+### 6. warnings.resetwarnings()
+
+
+Theresetwarnings()function is used to reset the warning filters to their default state. This can be useful if you want to clear any custom warning filters you have set. Here is the syntax of the function −
+
+
+```python
+warnings.resetwarnings()
+```
+
+
+This function does not take any parameters.
+
+
+## Conclusion
+
+
+In this chapter, we learned about warnings in Python. Warnings are different from errors because they will not stop the program from running. It is just used to alert the programmer about potential issues in the code. Thewarningsmodule provides a way to issue warning messages and control their behavior.
+

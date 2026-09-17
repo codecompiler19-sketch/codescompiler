@@ -1,0 +1,231 @@
+---
+title: "JavaScript - Symbol"
+description: "Learn JavaScript - Symbol with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 700
+group: "JavaScript Objects"
+seoTitle: "JavaScript - Symbol — CodesCompiler JavaScript Guide"
+permalink: "javascript-symbol-object"
+---
+
+
+# JavaScript - The Symbol Object
+
+
+
+
+## JavaScript Symbol
+
+
+In JavaScript,Symbolis a primitive data type and it was introduced in ECMAScript 6 (ES6). It can be created using the 'Symbol' constructor.
+
+
+Symbols are immutable and unique, unlike to other primitive data types like strings or numbers. They are especially helpful in situations where a unique identifier is required since they offer a way to create private object properties and avoid naming conflicts. Here, we have listed the properties and methods related to the symbol.
+
+
+The points given below you should keep in mind while using the symbol.
+
+
+
+- Each symbol contains unique values.
+- The symbol is immutable. It means you can't update the value of the symbol.
+- Symbols are used to define unique object properties.
+- The type of the symbol can't be changed.
+
+
+
+## Syntax
+
+
+You can follow the syntax below to create a new symbol using the Symbol() function. −
+
+
+```javascript
+const sym = Symbol([description]);
+```
+
+
+Heredescriptionis an optional parameter. It specifies the symbol description, which you can access using the 'description' property.
+
+
+## Symbol Properties
+
+
+In the following table, we have listed all the properties of Symbol −
+
+
+Sr.No.Name & Description1descriptionTo get an optional description of the symbol object.2asyncIteratorIt changes the object to async iterable.3hasInstanceTo check whether the constructor object counts the object as its instance.4isConcatSpreadableIt determines that while using the array.concat() method array should be concatenated as an object or flattened array.5iteratorReturns an iterator of the symbol.6matchMatches the regular expression with the string.7matchAllReturns all matches of the regular expression with the string.8replaceTo replace a substring.9searchTo get an index of the matches value.10speciesTo create a derived object.11splitIt specifies the method that splits string from the indices where regular expression matches.12toStringTagTo create a default string description for the object.
+
+
+## Symbol Methods
+
+
+In the following table, we have listed all the methods of Symbol −
+
+
+Sr.No.Name & Description1for()To search for a given symbol.2keyFor()To retrieve a key from the global symbol registry.3toString()To convert the symbol into the string.4valueOf()To get the primitive value of the symbol object.
+
+
+## Examples
+
+
+### Example: Creating a Symbol
+
+
+In the example below, We used the Symbol() function to create a new symbol. Also, we have passed the string argument while defining the sym2 symbol.
+
+
+You can observe the type of the 'sym1', which is 'symbol', a primitive value.
+
+
+```html
+<html>
+   <body>
+      p id="output"
+      <script>
+         const sym1 = Symbol();
+         document.getElementById("output").innerHTML = 
+			"The sym1 is: " + sym1.toString() + "<br>" +
+         "The type of sym1 is: " + typeof sym1 + "<br>";
+         const sym2 = Symbol("description");
+         document.getElementById("output").innerHTML += "The sym2 is: " + sym2.toString();
+      </script>
+   </body>
+</html>
+```
+
+
+#### Output
+
+
+When we execute the above script, it will generate an output consisting of the text displayed on the webpage.
+
+
+```javascript
+The sym1 is: Symbol()
+The type of sym1 is: symbol
+The sym2 is: Symbol(description)
+```
+
+
+### Example: Accessing Symbol Description
+
+
+Let's look at the following example, where we are going to use the .description to get the description of the symbol.
+
+
+```html
+<html>
+   <body>
+      p id="output"
+      <script>
+         const sym = Symbol("Welcome to Tutorials Point...");
+         document.getElementById("output").innerHTML = 
+			"The sym description of the symbol is : " + sym.description;
+      </script>
+   </body>
+</html>
+```
+
+
+#### Output
+
+
+On executing the above script, the output window will pop up, displaying the text on the webpage.
+
+
+```javascript
+The sym description of the symbol is : Welcome to Tutorials Point...
+```
+
+
+### Example: Each Symbol is Unique
+
+
+In the example below, we have defined the sym1 and sym2 symbols. After that, we compare both variables and print the message accordingly.
+
+
+Both symbols look similar but are different, which you can see in the output.
+
+
+```html
+<html>
+   <body>
+      p id="output"
+      <script>
+         const sym1 = Symbol();
+         const sym2 = Symbol();
+         
+         if (sym1 == sym2) {
+            document.getElementById("output").innerHTML += "Sym1 and Sym2 are equal.";
+         } else {
+            document.getElementById("output").innerHTML += "Sym1 and Sym2 are not equal.";
+         }
+      </script>
+   </body>
+</html>
+```
+
+
+#### Output
+
+
+After executing, it returns a text indicating that the both the symbols are not equal.
+
+
+```javascript
+Sym1 and Sym2 are not equal.
+```
+
+
+### Example: Using Symbol as an Object Key
+
+
+The main purpose of the symbol is to use it as an object key. Here, we have used the 'objId' symbol as a key.
+
+
+When we print the object by converting it to string or traversing the object properties, it won't print the symbol. So, the symbol can help developers to make object properties private.
+
+
+```html
+<html>
+   <body>
+      p id="output"The object is: 
+      <script>
+         const objId = Symbol();
+         const person = {
+            name: "John Doe",
+            age: 30,
+            [objId]: "abcd123",
+         }
+         document.getElementById("output").innerHTML += JSON.stringify(person);
+      </script>
+   </body>
+</html>
+```
+
+
+#### Output
+
+
+If we execute the above program, it will generate an output consisting of the text displayed on the webpage.
+
+
+```javascript
+The object is: {"name":"John Doe","age":30}
+```
+
+
+## Benefits of using Symbols
+
+
+Here, we have explained the benefits of using symbols in real-time development.
+
+
+
+- Unique property keys− Each symbol is unique, even if its description is different. So, you can use the symbol as a key to avoid accidental collision between the keys with the same name. Mainly, it is useful when you need to use the same instance of the object in two different code snippets and need to insert the same properties.
+- Non-iterable properties− When you add the symbol as a key in JavaScript and traverse the object properties using the for...in loop, the loop doesn't traverse through the symbol keys.
+- Private Members− You can use the symbol to define the private properties in JavaScript classes.
+- Avoid overWriting− The symbol is unique, so it avoids overwriting similar properties.
+
+

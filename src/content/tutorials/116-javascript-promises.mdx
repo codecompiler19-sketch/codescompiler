@@ -1,0 +1,573 @@
+---
+title: "JavaScript - Promises"
+description: "Learn JavaScript - Promises with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1160
+group: "JavaScript Asynchronous"
+seoTitle: "JavaScript - Promises — CodesCompiler JavaScript Guide"
+permalink: "javascript-promises"
+---
+
+
+# JavaScript - Promises
+
+
+
+
+## What is Promise in JavaScript?
+
+
+A JavaScript promise is an object that represents the completion or failure of  an asynchronous operation. It employs callback functions to manage asynchronous operations, offering a easier syntax for handling such operations more easily.
+
+
+A promise object can created using the Promise() constructor. The promise constructor takes a callback function as an argument. The callback function accepts two functions, resolve() and reject(), as arguments. The resolve function is called if the promise returns successfully. The reject function is called when taks fails and returns the reason.
+
+
+Lets understand how to create promises in JavaScript.
+
+
+## Producing the Promise Code
+
+
+### Syntax
+
+
+Follow the syntax below to create a promise using the Promise() constructor.
+
+
+```javascript
+let promise = new Promise(Callback); // Producing the code
+
+OR
+
+let promise = new Promise(function(resolve, reject){
+
+   // Callback function body
+
+});
+```
+
+
+The Promise() constructor takes the callback function as a parameter. Creating the promise is also called code producing. Sometimes, you get promises returned by methods like fetch().
+
+
+### Parameters
+
+
+The Promise() constructor takes only a single argument.
+
+
+
+- Callback− It is a callback function to fulfill the promise.
+
+
+
+The callback function takes two parameters.
+
+
+
+- Resolve− You can use the resolve() function to return the successful response from the promise.
+- Reject− You can use the reject() function to reject the promise and return the error from the promise.
+
+
+
+### States of the Promise
+
+
+There are 4 states of the Promise.
+
+
+Promise.stateDescriptionPromise.resultFulfilledWhen a promise is completed with a successful response.Resultant dataRejectedWhen a promise is failed.An error objectPendingWhen a promise is pending to execute.UndefinedSettledWhen a promise is either fulfilled or rejected successfully.Either result data or an error object
+
+
+The state and result are the properties of the Promise object.
+
+
+## Promise Consumers of JavaScript
+
+
+In the above section, we discussed how to produce the promise code. If you print the promise on the web page, it will show you [Object Promise].
+
+
+Lets learn it via the example below.
+
+
+### Example
+
+
+In the below code, we have used the Promise() constructor to define an instance of the Promise object.
+
+
+In the callback function, we resolve the promise if the value of the num variable is 10. Otherwise, we reject the promise.
+
+
+You can observe the promise1 in the output, it prints [Object Promise].
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output">The promise1 object is:  </div>
+
+   <script>
+
+      var num = 10;
+
+      const promise1 = new Promise((resolve, reject) => {
+
+         if (num == 10) {
+
+            resolve('The value of the number is 10 <br>');
+
+         } else {
+
+            reject('The value of the number is not 10 <br>');
+
+         }
+
+      });
+
+      document.getElementById('output').innerHTML += promise1;
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The promise1 object is: [object Promise]
+```
+
+
+To overcome the problem in the above example and get the resultant data from the promise, you are required to consume the promise code.
+
+
+You can use the below methods with the promise object to consume the promise code.
+
+
+
+- then() method
+- catch() method
+
+
+
+Lets learn to use both methods to consume the promise code.
+
+
+## JavaScript Promise then() Method
+
+
+You can use the then() method with an instance of promise to consume its code. With promises, you can get the resultant data or error object using the then() method.
+
+
+### Syntax
+
+
+You can follow the syntax below to use then() method to consume the promise code.
+
+
+```javascript
+promise.then(successFunc, errorfunc);
+```
+
+
+In the abvoe syntax, promise is an instance of the Promise object.
+
+
+### Parameters
+
+
+
+- successFunc− It is a function that will be executed when the promise is fulfilled.
+- errorFunc− It is a function that will get executed when the promise is rejected.
+
+
+
+### Example
+
+
+The example below contains the same code as the previous example. The main difference is that we have used the then() method to consume the code of the promise.
+
+
+The promise will be fulfilled as the value of the num variable is 10. We passed the successFunc()and errorfunc() functions as an argument of the then() method.
+
+
+In the output, you can observe that it executes the successFunc() function as the promise gets fulfilled.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      const num = 10;
+
+      const promise1 = new Promise((resolve, reject) => {
+
+         if (num == 10) {
+
+            resolve('The value of the number is 10 <br>');
+
+         } else {
+
+            reject('The value of the number is not 10 <br>');
+
+         }
+
+      });
+
+      promise1.then(successFunc, errorfunc);
+
+      function successFunc(message) {
+
+         document.getElementById('output').innerHTML += message;
+
+      }
+
+      function errorfunc(message) {
+
+         document.getElementById('output').innerHTML += message;
+
+      }
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The value of the number is 10
+```
+
+
+### Example
+
+
+In the below code, we reject the promise if the value of the num variable is not equal to 20. Also, we used the setTImeOut() method to reject the promise after the delay of 2000 milliseconds.
+
+
+In the output, you can observe that then() method executes the errorfunc() function as the promise is rejected.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      var num = 10;
+
+      let promise1 = new Promise((resolve, reject) => {
+
+         if (num == 20) {
+
+            resolve('The value of the number is 20 <br>');
+
+         } else {
+
+            setTimeout(() => {
+
+               reject('The value of the number is not 20 <br>');
+
+            }, 2000);
+
+         }
+
+      });
+
+      output.innerHTML += "Wait for consuming the promise <br>";
+
+      promise1.then(successFunc, errorfunc);
+
+      function successFunc(message) {
+
+         document.getElementById('output').innerHTML += message;
+
+      }
+
+      function errorfunc(message) {
+
+         document.getElementById('output').innerHTML += "Error: " + message;
+
+      }
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Wait for consuming the promise
+
+Error: The value of the number is not 20
+```
+
+
+## JavaScript Promise catch() Method
+
+
+The catch() method of Promise instance allows you to catch the error. If any error occurs while settling the promise, the control flow comes into the catch() method.
+
+
+### Syntax
+
+
+You can follow the syntax below to use the catch() method with promises.
+
+
+```javascript
+promise
+
+   .then(successFunc)
+
+   .catch(errorFunc);
+```
+
+
+We used the then() and catch() methods with promise in the above syntax.
+
+
+You can see that we have passed only the single function to the then() method. So, it will handle the success response, and the catch() method will handle the error response.
+
+
+### Parameters
+
+
+errorFunc− The errorFunc() callback function will be executed when the promise is rejected.
+
+
+### Example
+
+
+In the code below, we have created a promise using the Promise() object, and we have rejected the promise.
+
+
+While consuming the promise, we used the then() and catch() method. In the output, you can see that control goes into the catch() method directly, as we have rejected the promise.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      var num = 10;
+
+      const promise = new Promise((resolve, reject) => {
+
+         reject("Promise is rejected!");
+
+      });
+
+      promise
+
+      .then((message) => {
+
+         output.innerHTML += message;
+
+      })
+
+      .catch((message) => {
+
+         document.getElementById('output').innerHTML += "Inside the catch() method.<br>";
+
+         document.getElementById('output').innerHTML += message;
+
+      });
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Inside the catch() method.
+
+Promise is rejected!
+```
+
+
+## JavaScript Promise finally() Method
+
+
+The finally() method of the promise object can be used with the instance of the Promise object. The code of the finally() method always gets executed when the promise is fulfilled.
+
+
+### Syntax
+
+
+Users can follow the syntax below to use the finally() method with promise.
+
+
+```javascript
+promise
+
+   .then(successFunc)
+
+   .catch(errorFunc)
+
+   .finally(callback);
+```
+
+
+In the above syntax, we have used the then(), catch(), and finally() methods with promise.
+
+
+### Parameters
+
+
+Callback− It is a callback function that will always be executed when a promise is settled.
+
+
+### Example
+
+
+In the code below, we have defined the promise and resolved it.
+
+
+Also, we used the finally() method while consuming the code of the promise. In the output, you can observe that the JavaScript control first goes into the then() method and then goes to the finally() method.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "demo"> </div>
+
+   <script>
+
+      let output = document.getElementById('demo');
+
+      const num = 10;
+
+      const promise = new Promise((resolve, reject) => {
+
+         resolve("Promise is resolved successfully!");
+
+      });
+
+      promise
+
+      .then((message) => {
+
+         output.innerHTML += "Inside the then() method. <br>";
+
+         output.innerHTML += message;
+
+      })
+
+      .catch((message) => {
+
+         output.innerHTML += "Inside the catch() method.<br>";
+
+         output.innerHTML += message;
+
+      })
+
+      .finally(() => {
+
+         output.innerHTML += "<br>Inside the finally() method.";
+
+      });
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Inside the then() method.
+
+Promise is resolved successfully!
+
+Inside the finally() method.
+```
+
+
+The callback function of the finally() method is also executed even if the promise is rejected.
+
+
+## JavaScript Promise Reference
+
+
+### JavaScript Promise Constructor
+
+
+You can call the Promise() constructor using the new keyword.
+
+
+ConstructorDescriptionPromise()It is used to create an instance of the Promise object.
+
+
+### JavaScript Promise Properties
+
+
+Here, we have listed the properties of the Promise object.
+
+
+PropertyDescriptionconstructorTo get the promise constructor function for the instance of the Promise object.
+
+
+### JavaScript Promise Methods
+
+
+#### Static Methods
+
+
+The static methods can be called by taking the Promise as a reference.
+
+
+MethodDescriptionall()To handle multiple promises. It takes the array of promises as an argument.allSettled()To get a promise when all promises are settled.any()It returns the single promise that is fulfilled earliest.race()To get a single promise from the iterable of promises.reject()To reject a promise with a reason.resolve()To fulfill the promise with data or reason.
+
+
+#### Instance Method
+
+
+The instance methods can be called by taking the instance of the Promise object as a reference.
+
+
+MethodDescriptioncatch()To handle the error.then()To handle the resultant data and error.finally()It gets called when the promise is settled (fulfilled or rejected).
+

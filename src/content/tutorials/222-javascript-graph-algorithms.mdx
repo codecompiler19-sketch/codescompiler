@@ -1,0 +1,300 @@
+---
+title: "JavaScript - Graph Algorithms"
+description: "Learn JavaScript - Graph Algorithms with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2220
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Graph Algorithms — CodesCompiler JavaScript Guide"
+permalink: "javascript-graph-algorithms"
+---
+
+
+# JavaScript - Graph Algorithms
+
+php include ("mui-top.php");
+?
+
+A graph is a data structure which consist nodes and edges. The node are simply vertices and the lines which connect them are edges. Graph is non-linear data structure.
+
+
+A Graph algorithms in JavaScript are used to solve the graph problems. These algorithms are used to traverse the graph, find the shortest path, etc. We can use these algorithms to solve the problems like finding the shortest path, finding the connected components, etc.
+
+
+## Types of Graph
+
+
+Before dwelling deep into this chapter let's learn about types of graphs.
+
+
+
+- Directed Graph : Directed graph is a graph in which the edges have a direction. In other word, we can call it a Digraph. These edges may be one way or two ways and also it may have loops. Arrow is used for representing the direction of the edges.
+- Undirected Graph:Undirected graph are exactly opposite of directed graph. Means, in this graph edges does not have any direction. We can also call it simple graph.
+- Weighted Graph:Weighted graph means the graph edges have some weight it means value. It help us to define the cost, distance, etc. between the vertices.
+- Unweighted Graph:Unweighted graph is opposite of weighted graph. It means the graph edges does not have any weight at all.
+
+
+
+## Graph Representation
+
+
+There are two ways to represent the graph:
+
+
+
+- Adjacency Matrix:In this representation, we use a 2D array to represent the graph. The elements of the array are 0 or 1. If there is an edge between two vertices then we put 1 otherwise 0.
+- Adjacency List:In this representation, we use an array of linked list to represent the graph. Each element of the array represents a vertex and the linked list represents the edges of that vertex.
+
+
+
+## Graph Algorithms
+
+
+When we talk about graph algorithms, there are plenty of the algorithms available. We mostly use these algorithms to solve the graph problems. We have listed some of them below:
+
+
+
+- Breadth First Search (BFS)
+- Depth First Search (DFS)
+- Topological Sorting
+
+
+
+## Breadth First Search (BFS) Algorithm
+
+
+This algorithm we can use for traversing the graph. It is very useful for resolving many problems. In this algorithm, we start our traversal from the root node and then we go one level down, traverse all the nodes at that level and then move to the next level. We use queue data structure to implement this algorithm.
+
+
+### Algorithm
+
+
+We can implement the BFS using the below steps given:
+
+
+
+- First, we need to create a queue and add the root node to the queue.
+- Then we will create a visited array and mark the root node as visited.
+- Then loop through the queue until it is empty.
+- Then we will dequeue the node from the queue and print it.
+- After that, get all the adjacent nodes of the dequeued node and if they are not visited then mark them as visited and enqueue them.
+- Repeat the above steps until the queue is empty.
+
+
+
+### Implementation
+
+
+Following is the implementation of BFS algorithm in JavaScript:
+
+
+```javascript
+function BFS(graph, root) {
+   let visited = [];
+   let queue = [];
+   queue.push(root);
+
+   while (queue.length > 0) {
+      let node = queue.shift();
+
+      if (!visited[node]) {
+         console.log(node); // Process the node
+         visited[node] = true;
+      }
+
+      // Ensure neighbours is defined
+      const neighbours = graph[node] || [];
+      for (let i = 0; i < neighbours.length; i++) {
+         let neighbour = neighbours[i];
+         if (!visited[neighbour]) {
+            queue.push(neighbour);
+         }
+      }
+   }
+}
+
+let graph = [[1, 2], [3, 4], [5], [6], [6], [7], [8], []];
+BFS(graph, 0);
+```
+
+
+Following is the output of the above program −
+
+
+Following is the output of above code
+
+
+```javascript
+0
+2
+5
+7
+1
+4
+6
+8
+3
+```
+
+
+## Depth First Search (DFS) Algorithm
+
+
+Similar to BFS, this algorithm is also used for traversing the graph but in different way. In this algorithm, we start from the root node then move to left child or right child go to in-depth until we reach to leaf node then we backtrack and move to the next child.
+
+
+### Algorithm
+
+
+We can implement the DFS using the below steps given:
+
+
+
+- First, we need to create a stack and add the root node to the stack.
+- Then we will create a visited array and mark the root node as visited.
+- Then loop through the stack until it is empty.
+- Then we will pop the node from the stack and print it.
+- After that, get all the adjacent nodes of the popped node and if they are not visited then mark them as visited and push them to the stack.
+- Repeat the above steps until the stack is empty.
+
+
+
+### Implementation
+
+
+Following is the implementation of DFS algorithm in JavaScript:
+
+
+```javascript
+function DFS(graph, root) {
+   let visited = [];
+   let stack = [];
+   stack.push(root);
+
+   while (stack.length > 0) {
+      let node = stack.pop();
+      if (!visited[node]) {
+         console.log(node);
+         visited[node] = true;
+      }
+
+      // Set a default value if graph[node] is undefined
+      const neighbours = graph[node] || [];
+      for (let i = 0; i < neighbours.length; i++) {
+         let neighbour = neighbours[i];
+         if (!visited[neighbour]) {
+            stack.push(neighbour);
+         }
+      }
+   }
+}
+
+let graph = [[1, 2], [3, 4], [5], [6], [6], [7], [8], []];
+DFS(graph, 0);
+```
+
+
+### Output
+
+
+Following is the output of above code
+
+
+```javascript
+0
+2
+5
+7
+1
+4
+6
+8
+```
+
+
+## Topological Sorting Algorithm
+
+
+Using this algorithm we can actually sort the vertices of the graph in such a way that for every edge from vertex u to vertex v, u comes before v in the ordering.
+
+
+### Algorithm
+
+
+We can implement the Topological Sorting using the below steps given:
+
+
+
+- We will create a visited array and mark all the vertices as not visited.
+- Then, we will create a stack to store the vertices.
+- Then we will loop through all the vertices and call the recursive function.
+- Then we will create a recursive function and mark the current node as visited.
+- Then we will loop through all the adjacent nodes of the current node and if they are not visited then call the recursive function.
+- Then push the current node to the stack.
+- Repeat the above steps until all the vertices are visited.
+- Finally, print the stack.
+
+
+
+### Implementation
+
+
+Following is the implementation of Topological Sorting algorithm in JavaScript:
+
+
+```javascript
+function topologicalSort(graph) {
+   let visited = [];
+   let stack = [];
+   for (let i = 0; i < graph.length; i++) {
+      if (!visited[i]) {
+         topologicalSortUtil(graph, i, visited, stack);
+      }
+   }
+   while (stack.length > 0) {
+      console.log(stack.pop());
+   }
+}
+
+function topologicalSortUtil(graph, node, visited, stack) {
+   visited[node] = true;
+   const neighbours = graph[node] || [];
+   for (let i = 0; i < neighbours.length; i++) {
+      let neighbour = neighbours[i];
+      if (!visited[neighbour]) {
+         topologicalSortUtil(graph, neighbour, visited, stack);
+      }
+   }
+   stack.push(node);
+}
+
+// Valid DAG
+let graph = [
+   [1, 2], // Node 0 -> 1, 2
+   [3],    // Node 1 -> 3
+   [3, 4], // Node 2 -> 3, 4
+   [],     // Node 3 -> No outgoing edges
+   [5],    // Node 4 -> 5
+   []      // Node 5 -> No outgoing edges
+];
+topologicalSort(graph);
+```
+
+
+### Output
+
+
+Following is the output of above code
+
+
+```javascript
+0
+1
+2
+3
+4
+5
+6
+7
+8
+```
+

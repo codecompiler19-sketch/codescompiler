@@ -1,0 +1,438 @@
+---
+title: "JavaScript - var Keyword"
+description: "Learn JavaScript - var Keyword with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1610
+group: "JavaScript Important Keywords"
+seoTitle: "JavaScript - var Keyword — CodesCompiler JavaScript Guide"
+permalink: "javascript-var-keyword"
+---
+
+
+# JavaScript - var Keyword
+
+
+
+
+Thevarkeyword in JavaScript is used to declare variables. Before ES6, there was onlyvarkeyword to declare a variable. In ES6, let and const keywords were introduced as a better way to declare variables. It is advised to use let instead of var to declare a variable. If you are targeting older version of browser, you can use var.
+
+
+In JavaScript, variables are the data storage container. You can use the variables to store any type of data. For example, string, number, boolean, object, etc.
+
+
+A variable declared with var keyword has function scope. Whereas a variable declared with let has block scope.
+
+
+## Syntax
+
+
+Follow the syntax below to define the variable using the 'var' keyword.
+
+
+```javascript
+var identifier;
+var identifier = value;
+```
+
+
+Here, the identifier can be a valid variable name. In theJavaScript - Variableschapter, we have already discussed the rules to define valid identifiers.
+
+
+You may assign or not value to the variable while declaring it using the JavaScript 'var' keyword.
+
+
+### Example
+
+
+In the below code, we have defined the 3 variables using the 'var' keyword. In the num1 variable, we have stored the numeric value. In the str1 variable, we have stored the string value; in the bool variable, we have stored the boolean value.
+
+
+```html
+<html>
+<body>
+   <div id = "output1"> </div>
+   <div id = "output2"> </div>
+   <div id = "output3"> </div>
+   <script>
+      var num1 = 30;
+      var str1 = "Hello World!";
+      var bool = true;
+      document.getElementById('output1').innerHTML = num1;
+      document.getElementById('output2').innerHTML = str1;
+      document.getElementById('output3').innerHTML = bool;
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+30
+Hello World!
+true
+```
+
+
+## JavaScript Variable Scopes
+
+
+The scope of the variable defined using the JavaScript 'var' keyword has afunction scopeorglobal scope.
+
+
+### JavaScript Function Scope
+
+
+When you define the variable inside the function using the var keyword, it can be accessible inside the function anywhere. Even if you define the variable using the var keyword inside the particular block inside the function, it can be accessible anywhere.
+
+
+Let's understand the function scope with the example below.
+
+
+### Example
+
+
+In the below code, we have defined the variable 'x' inside the function. We have also defined the variable 'y' inside the block, which is inside the function.
+
+
+After that, we access the variables x and y inside the function.
+
+
+```html
+<html>
+<body>
+   <div id = "demo1"> </div>
+   <div id = "demo2"> </div>
+   <script>
+      function demo() {
+         var x = 10;
+         {
+            var y = 20;
+            // x and y both can be accessible here
+         }
+         document.getElementById('demo1').innerHTML = "X == " + x;
+         document.getElementById('demo2').innerHTML = "Y == " + y;
+      }
+      demo();
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+X == 10
+Y == 20
+```
+
+
+If you define the variable using the let keyword inside the block, which is inside the function, and try to access it outside the block, it will throw an error.
+
+
+### JavaScript Global Scope
+
+
+It becomes the global variable if you define the variable using the 'var' keyword outside the function or a particular block.
+
+
+After that, you can access the variable anywhere inside the code using the window object.
+
+
+### Example
+
+
+We have defined the 'num1' global variable in the code below.
+
+
+After that, we access the 'num1' variable inside the function using and without using the window object.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      const output = document.getElementById('output');
+      var num1 = 10;
+      function sum(num2) {
+         output.innerHTML += "num1 + num2 = " + (num1 + num2) + "<br>";
+         output.innerHTML += "window.num1 + num2 = " + (window.num1 + num2);
+      }
+      sum(20);
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+num1 + num2 = 30
+window.num1 + num2 = 30
+```
+
+
+## JavaScript Variable Hoisting
+
+
+The variable defined using the 'var' keyword is hoisted at the top of its scope. It means JavaScript adds the declaration of the variable at the top of its scope.
+
+
+So you can access the variable before the declaration of the variable.
+
+
+### Example
+
+
+In the below code, we have initialized the variable 'a' and printed its value before its declaration.
+
+
+The code runs without error, as the variable defined using the var keyword is hoisted at the top of its scope.
+
+
+```html
+<html>
+<body>
+   <div id = "output">Value of the variable a is:  </div>
+   <script>
+      function checkHoisting() {
+         a = 98;
+         document.getElementById('output').innerHTML += a;
+         var a;
+      }
+      // You can't access the variable a here.
+      checkHoisting();
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Value of the variable a is: 98
+```
+
+
+The above JavaScript code is similar to the below code.
+
+
+```javascript
+var a;
+a = 98;
+document.getElementById('output').innerHTML += a;
+```
+
+
+## Redeclaration of variable defined using the 'var' keyword
+
+
+You can redeclare the variables using the 'var' keyword, and the code will run without any error.
+
+
+If you have initialized the last duplicate variable with the latest value, it will contain that value. But if you don't initialize the last duplicate variable, the variable will contain its previous value without losing it.
+
+
+### Example
+
+
+In the code below, we have defined the variable 'a' two times and initialized it with different values. You can observe in the output that variable 'a' contains the last value.
+
+
+We have defined the variable 'a' a third time and haven't initialized it. So, it contains the value of the 2nd 'a' variable.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+      const output = document.getElementById('demo');
+      var a = 10;
+      var a = 20;
+      output.innerHTML += "The value of the a is: " + a + "<br>";
+      var a;
+      output.innerHTML += "The value of the a is: " + a;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The value of the a is: 20
+The value of the a is: 20
+```
+
+
+If you define the duplicate variables in the different scopes, it can have value according to where you access the variable.
+
+
+### Example
+
+
+In the code below, we have defined the 'num' variable outside and inside the function. When you access it inside or outside the function, it prints the different values.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+      const output = document.getElementById('demo');
+      var num = 10;
+      function printNum() {
+         var num = 20;
+         output.innerHTML += "Num inside the function is: " + num + "<br>";
+      }
+      printNum();
+      output.innerHTML += "Num outside the function is: " + num + "<br>";
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Num inside the function is: 20
+Num outside the function is: 10
+```
+
+
+## Declaring Many Variables in a Single Statement
+
+
+If you want to declare multiple variables using the JavaScript 'var' keyword, you can declare all variables in a single statement. It makes code readable.
+
+
+### Example
+
+
+In the below code, we have declared the variables 'a' and 'b' in the single statement and initialized them with different values after declaring.
+
+
+```html
+<html>
+<body>
+   <div id = "output1"> </div>
+   <div id = "output2"> </div>
+   <script>
+      var a, b;
+      a = 70;
+      b = 80;
+      document.getElementById('output1').innerHTML = "The value of a is: " + a;
+      document.getElementById('output2').innerHTML = "The value of b is: " + b;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The value of a is: 70
+The value of b is: 80
+```
+
+
+However, you can also assign the values to the variables while declaring the multiple variables in a single statement.
+
+
+## Using the var keyword with loops
+
+
+When you use the JavaScript 'var' keyword to define the iterator variable of for loop, you can also access it outside the for loop.
+
+
+### Example
+
+
+In the below code, we have defined the variable 'p' inside the for loop. We access the variable p inside and outside the loop.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      const output = document.getElementById('output');
+      for (var p = 0; p < 5; p++) {
+         output.innerHTML += "The value of p is: " + p + "<br>";
+      }
+      output.innerHTML += "The value of p outside the loop is: " + p;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The value of p is: 0
+The value of p is: 1
+The value of p is: 2
+The value of p is: 3
+The value of p is: 4
+The value of p outside the loop is: 5
+```
+
+
+## Declaration with Destructuring
+
+
+In JavaScript, you can declare the variables using the 'var' keyword while destructuring the array or objects.
+
+
+### Example
+
+
+In the below code, the 'arr' array contains 3 variables.
+
+
+After that, we define variables using the 'var' keyword and destructure the array.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      const output = document.getElementById('output');
+      var arr = [4, 5, 6];
+      var [a, b, c] = arr;
+      output.innerHTML = "a = " + a + ", b = " + b + ", c = " + c;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+a = 4, b = 5, c = 6
+```
+
+
+You can also use the 'var' keyword to define the variables and store the objects or function expressions.
+

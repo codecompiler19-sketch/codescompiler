@@ -1,0 +1,378 @@
+---
+title: "JavaScript - DOM Animation"
+description: "Learn JavaScript - DOM Animation with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1700
+group: "JavaScript HTML DOM"
+seoTitle: "JavaScript - DOM Animation — CodesCompiler JavaScript Guide"
+permalink: "javascript-dom-animation"
+---
+
+
+# JavaScript - DOM Animation
+
+
+
+
+TheDOM animationcan be achieved by changing the DOM element's style using JavaScript. When changes are gradual and time interval is small, the animation looks continuous. Generally, there are three ways to animate a DOM element:
+
+
+
+- Using CSS transitions− It utilizes pre-defined animation styles in CSS triggered by changes in the element's properties.
+- Using CSS animations− It offers more control over animation timing and behavior by defining keyframes and animation properties within the CSS file.
+- Using JavaScript− It provides the most flexibility, allowing you to dynamically manipulate style properties and create complex animations directly within your JavaScript code.
+
+
+
+This chapter provides a basic understanding of how to animate DOM elements using JavaScript.
+
+
+## Animate DOM Elements with JavaScript
+
+
+JavaScript can be used to change the style of the DOM element.
+
+
+You change the style of the DOM element after a particular time frame to animate them. For example, you can use the setInterval() method to change the position of the DOM element to move it from one position to another with animation.
+
+
+Similarly, you can update CSS properties like animation, etc., to animate the element dynamically.
+
+
+Furthermore, the requestAnimationFrame() method can also be used to animate the DOM elements.
+
+
+Below, you will learn different ways to animate the DOM elements.
+
+
+## Animate DOM elements using setInterval() method
+
+
+You can invoke a setInterval() method after each time frame and change the style of the DOM element to animate them. However, you can keep the time frame small to run animation smoothly.
+
+
+### Syntax
+
+
+Follow the syntax below to use the setInterval() method to animate DOM elements.
+
+
+```javascript
+let id = setInterval(frame_func, timeframe);
+function frame_func() {
+    if (animation_end) {
+        clearInterval(id);
+    } else {
+        // change style to animate
+    }
+}
+```
+
+
+In the above syntax, we start the animation using the setInterval() method and call the frame_func() after every timeframe milliseconds.
+
+
+In the frame_func() function, we have defined the condition to end or continue the animation.
+
+
+### Example
+
+
+In the below code, we have styled the `<div>` elements.
+
+
+When users click the button, it calls the startAnimation() function.
+
+
+In the startAnimation() function, we have defined the pos variable and initialized it with 0, representing the initial position of the div element.
+
+
+After that, we used the setInterval() method to invoke the animationFrame() function after every 5 milliseconds.
+
+
+In the animationFrame() function, if the position of the inner div becomes 350, we stop the animation using the clearInterval() method. Otherwise, we change the left position of the inner div.
+
+
+When you click the button, it will move the inner div element from left to right.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    #parent {
+      width: 700px;
+      height: 50px;
+      position: relative;
+      background: yellow;
+    }
+    #child {
+      width: 50px;
+      height: 50px;
+      position: absolute;
+      background-color: red;
+    }
+  </style>
+</head>
+<body>
+  <div id = "parent">
+    <div id = "child"> </div>
+  </div>
+  <br>
+  <button onclick = "startAnimation()"> Animate Div  </button>
+  <script>
+    function startAnimation() {
+      const elem = document.getElementById("child");
+      // Starting position
+      let pos = 0;
+      // Changing frames for animation
+      let id = setInterval(animationFrame, 5);
+      function animationFrame() {
+        // Stop the animation
+        if (pos == 350) {
+          clearInterval(id);
+        } else {
+          pos++;
+          elem.style.left = pos + "px";
+        }
+      }
+    }
+  </script>
+</body>
+</html>
+```
+
+
+### Example
+
+
+In the below code, the background color of the `<div>` element is green.
+
+
+We use the setInterval() method to call the animationFrame() function after every 50 milliseconds.
+
+
+In the animationFrame() function, we change the opacity of the `<div>` element by 0.1. We stop the animation when the opacity becomes less than or equal to 0 using the clearInterval() method.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    #parent {
+      width: 700px;
+      height: 200px;
+      background: green;
+    }
+  </style>
+</head>
+<body>
+  <div id = "parent">
+  </div>
+  <br>
+  <button onclick = "startAnimation()"> Animate Div </button>
+  <script>
+    function startAnimation() {
+      const parent = document.getElementById("parent");
+      let opacity = 1;
+      let id = setInterval(animationFrame, 50);
+      function animationFrame() {
+        if (opacity <= 0) {
+          // Stop animation
+          clearInterval(id);
+          parent.style.opacity = 1;
+          parent.style.backgroundColor = "red";
+        } else {
+          // Decrease the opacity
+          parent.style.opacity = opacity;
+          opacity = opacity - 0.1;
+        }
+      }
+    }
+  </script>
+</body>
+</html>
+```
+
+
+## Animate DOM elements using requestAnimationFrame() method
+
+
+The requestAnimationFrame() method is used to animate the DOM elements like the setInterval() method. It executes the tasks continuously and repaints the next frame in the browser.
+
+
+The requestAnimationFrame() method makes rendering more efficient than the setInterval() method.
+
+
+### Syntax
+
+
+Follow the syntax below to use the requestAnimationFrame() method to animate DOM elements.
+
+
+```javascript
+function animate() {
+    // Animation logic
+    // Request the next animation frame
+    requestAnimationFrame(animate);
+}
+// Animation loop
+animate();
+```
+
+
+Lets understand how the requestAnimationFrame() method works.
+
+
+
+- You pass the callback function as an argument of the requestAnimationFrame() method to execute the next frame.
+- The web browser will execute the callback before repainting the next frame.
+- The callback function will update the DOM element.
+- The browser will repaint the DOM element.
+- Again, the browser will call the callback function, and the loop will continue.
+
+
+
+You can use the cancelAnimationFrame() method to cancel animation.
+
+
+### Example
+
+
+In the code below, we have defined the startAnimation() and stopAnimation() functions and invoked them when the user clicks the button.
+
+
+In the startAnimation() function, we increment the value of the pos by 1, and update the left position of the child div element.
+
+
+After that, we used the requestAnimationFrame() method to paint the next frame in the web browser. It will move the child div element from left to right in the parent div element.
+
+
+The stopAnimation() function uses the cancelAnimationFrame() method to stop the animation. It takes the id returned by the requestAnimationFrame() method as an argument.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    #parent {width: 700px; height: 50px; position: relative;background: yellow;}
+    #child {width: 50px;height: 50px; position: absolute; background-color: red;}
+  </style>
+</head>
+<body>
+  <div id = "parent">
+    <div id = "child"> </div>
+  </div>
+  <br>
+  <button onclick = "startAnimation()"> Animate Div </button>
+  <button onclick = "stopAnimation()"> Stop Animation </button>
+  <script>
+    let animationId;
+    let pos = 0;
+    function startAnimation() {
+      const elem = document.getElementById("child");
+      function animationFrame() {
+        if (pos < 650) {
+          pos++;
+          elem.style.left = pos + "px";
+          // Make a call for a next frame
+          animationId = requestAnimationFrame(animationFrame);
+        }
+      }
+      // Start Animation
+      animationFrame();
+    }
+
+    function stopAnimation() {
+      // Stop animation
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+      }
+    }
+  </script>
+</body>
+</html>
+```
+
+
+## Animate DOM Elements by changing the CSS Properties
+
+
+The animation property of the CSS can be used to add animation to the DOM element. JavaScript also allows the customization of the animation property.
+
+
+### Syntax
+
+
+Follow the syntax below to animate the DOM element by changing the value of the animation property of the element in JavaScript.
+
+
+```javascript
+element.style.animation = "key_frame_name duration timing_function iterationCount";
+```
+
+
+### Property values
+
+
+
+- key_frame_name− It is the name of the keyframe, which you need to define in the CSS.
+- duration− It is the duration of the animation.
+- timing_function− It is used to set how animation should be executed.
+- iterationCount− It specifies how many times the animation should repeat.
+
+
+
+### Example
+
+
+In the below code, when users click the button, we call the animateDiv() function and update the value of the animation property of the style object of the div element.
+
+
+We have already defined the moveAnimation keyframe in CSS. So, when you click the button it will start moving the div element.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    #element {
+      width: 90px;
+      height: 90px;
+      background: blue;
+      color: white;
+      position: relative;
+      text-align: center;
+    }
+    @keyframes moveAnimation {
+      from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateX(550px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id = "element"> Animate </div>
+  <br>
+  <button onclick = "animateDiv()"> Animate Div </button>
+  <script>
+    function animateDiv() {
+      const element = document.getElementById("element");
+      element.style.animation = "moveAnimation 3s ease-in-out infinite";
+    }
+  </script>
+</body>
+</html>
+```
+
+
+The best way to animate the DOM element is using the requestAnimationFrame() method, which animates the DOM element smoothly. Also, it can be used to execute different animations simultaneously.
+

@@ -1,0 +1,431 @@
+---
+title: "SQL - Where Clause"
+description: "Learn SQL - Where Clause with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 380
+group: "SQL Operators and Clauses"
+seoTitle: "SQL - Where Clause — CodesCompiler SQL Guide"
+permalink: "sql-where-clause"
+---
+
+
+# SQL - WHERE Clause
+
+
+Table of contentThe SQL Where ClauseWHERE Clause with SELECT StatementWHERE Clause with UPDATE StatementWHERE Clause with IN OperatorWHERE Clause with NOT IN OperatorWHERE Clause with LIKE OperatorWHERE Clause with AND, OR OperatorsWHERE Clause with Comparison OperatorsWhere Clause with BETWEEN OperatorList Of Operators in the WHERE Clause
+
+
+
+
+## The SQL Where Clause
+
+
+The SQLWHEREclause is used to filter records based on specific conditions. It ensures that only the rows meeting the given criteria are affected or returned by aSELECT,UPDATE, orDELETEstatement.
+
+
+Without theWHEREclause, these statements would apply to all rows in the table. The clause is commonly used with comparison operators, logical operators, and other expressions to precisely target specific data.
+
+
+For instance, you can use the WHERE clause to retrieve details of employees of a department in an organization, or employees earning salary above/below certain amount, or details of students eligible for scholarships etc. This clause basically provides the specification of which records to be retrieved and which are to be to be neglected.
+
+
+### Syntax
+
+
+The basic syntax of the SQL WHERE clause is as shown below:
+
+
+```sql
+DML_Statement column1, column2,... columnN
+FROM table_name
+WHERE [condition];
+```
+
+
+Here, the DML_Statement can be any statement, such as SELECT, UPDATE, DELETE etc.
+
+
+You can specify a condition using thecomparison or logical operatorssuch as, >, `<, `=`,LIKE, NOT, etc.
+`
+
+## WHERE Clause with SELECT Statement
+
+
+Typically, the SELECT statement is used to retrieve data from a table. If we use the WHERE clause with the SELECT statement, we can filter the rows to be retrieved based on a specific condition (or expression).
+
+
+### Syntax
+
+
+Following is the syntax to use the WHERE clause with the SELECT statement:
+
+
+```sql
+SELECT column1, column2, ...
+FROM table_name
+WHERE condition;
+```
+
+
+### Example
+
+
+Assume we have created a table named CUSTOMERS in MySQL database using CREATE TABLE statement as shown below:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),
+   PRIMARY KEY (ID)
+);
+```
+
+
+Following INSERT query inserts 7 records into this table:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00),
+(2, 'Khilan', 25, 'Delhi', 1500.00),
+(3, 'Kaushik', 23, 'Kota', 2000.00),
+(4, 'Chaitali', 25, 'Mumbai', 6500.00),
+(5, 'Hardik', 27, 'Bhopal', 8500.00),
+(6, 'Komal', 22, 'Hyderabad', 4500.00),
+(7, 'Muffy', 24, 'Indore', 10000.00);
+```
+
+
+The table created is as shown below:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+In the following query, we are fetching the ID, NAME and SALARY fields from the CUSTOMERS table for the records where the SALARY is greater than 2000:
+
+
+```sql
+SELECT ID, NAME, SALARY FROM CUSTOMERS 
+WHERE SALARY > 2000;
+```
+
+
+This would produce the following result:
+
+
+IDNAMESALARY4Chaitali6500.005Hardik8500.006Komal4500.007Muffy10000.00
+
+
+## WHERE Clause with UPDATE Statement
+
+
+The UPDATE statement is used to modify the existing records in a table. Using the SQL WHERE clause with the UPDATE statement, we can update particular records. If the WHERE clause is not used, the UPDATE statement would affect all the records of a table.
+
+
+### Syntax
+
+
+Following is the syntax to use the WHERE clause with the UPDATE statement:
+
+
+```sql
+UPDATE table_name
+SET column1 = value1, column2 = value2, ...
+WHERE condition;
+```
+
+
+### Example
+
+
+In the following query, we are incrementing the salary of the customer named Ramesh by 10000 by using the WHERE clause along with the UPDATE statement:
+
+
+```sql
+UPDATE CUSTOMERS set SALARY = SALARY+10000 
+where NAME = 'Ramesh';
+```
+
+
+We get the following result. We can observe that the age of 2 customers have been modified:
+
+
+```sql
+Query OK, 2 rows affected (0.02 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+```
+
+
+### Verification
+
+
+To verify if the changes are reflected in the table, we can use SELECT statement as shown in the following query:
+
+
+```sql
+SELECT * FROM CUSTOMERS WHERE NAME = 'Ramesh';
+```
+
+
+The table is displayed as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad12000.00
+
+
+## WHERE Clause with IN Operator
+
+
+Using the IN operator you can specify the list of values or sub query in the where clause. If you use WHERE and IN with the SELECT statement, it allows us to retrieve the rows in a table that match any of the values in the specified list.
+
+
+### Syntax
+
+
+Following is the syntax to use the WHERE clause with the IN Operator:
+
+
+```sql
+WHERE column_name IN (value1, value2, ...);
+```
+
+
+Where, thecolumn_nameis the column of a table andvalue1, value2,etc. are the list of values that we want to compare with the column_name.
+
+
+### Example
+
+
+Suppose you want to display records with NAME valuesKhilan,HardikandMuffyfrom the CUSTOMERS table, you can use the following query:
+
+
+```sql
+SELECT * from CUSTOMERS 
+WHERE NAME IN ('Khilan', 'Hardik', 'Muffy');
+```
+
+
+The result obtained is as follows:
+
+
+IDNAMEAGEADDRESSSALARY2Khilan25Delhi1500.005Hardik27Bhopal8500.007Muffy24Indore10000.00
+
+
+## WHERE Clause with NOT IN Operator
+
+
+The WHERE clause with NOT IN operator is the negation of WHERE clause with the IN operator.
+
+
+
+- If you use WHERE with the IN operator, the DML statement will act on the the list of values (of a column) specified
+- Whereas, if you use WHERE with the NOT IN operator, the DML operation is performed on the values (of a column) that are not there in the specified list.
+
+
+
+Hence, if you use WHERE Clause with NOT IN Operator along with the SELECT statement, the rows that do not match the list of values are retrieved.
+
+
+### Syntax
+
+
+Following is the syntax to use the WHERE clause with the NOT IN Operator:
+
+
+```sql
+WHERE column_name NOT IN (value1, value2, ...);
+```
+
+
+### Example
+
+
+In this example, we are displaying the records from CUSTOMERS table, where AGE is NOT equal to25,23and22:
+
+
+```sql
+SELECT * from CUSTOMERS WHERE AGE NOT IN (25, 23, 22);
+```
+
+
+We obtain the result as given below:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad12000.005Hardik27Bhopal8500.007Muffy24Indore10000.00
+
+
+## WHERE Clause with LIKE Operator
+
+
+The WHERE clause with LIKE operator allows us to filter rows that matches a specific pattern. This specific pattern is represented by wildcards (such as %, _, [] etc).
+
+
+### Syntax
+
+
+Following is the syntax to use the WHERE clause with the LIKE Operator:
+
+
+```sql
+WHERE column_name LIKE pattern;
+```
+
+
+Where,column_nameis the column that we want to compare the pattern against andpatternis a string that can contain wildcards (such as %, _, [] etc).
+
+
+### Example
+
+
+Following is the query which would display all the records where the name starts with K and is at least 4 characters in length:
+
+
+```sql
+SELECT * FROM CUSTOMERS WHERE NAME LIKE 'K___%';
+```
+
+
+The result obtained is given below:
+
+
+IDNAMEAGEADDRESSSALARY2Khilan25Delhi1500.003Kaushik23Kota2000.006Komal22Hyderabad4500.00
+
+
+## WHERE Clause with AND, OR Operators (Logical Operators)
+
+
+We can use AND and OR operators together in SQL to combine multiple conditions in a WHERE clause to filter rows that meets the specified criteria. The AND operator will make sure only those rows are filtered that satisfy all the conditions and the OR operator will filter records that satisfy any one of the specified conditions. However, this is only used when specifying one condition is not enough to filter all the required rows.
+
+
+### Syntax
+
+
+Following is the syntax for using the AND and OR operators in a WHERE clause:
+
+
+```sql
+WHERE (condition1 OR condition2) AND condition3;
+```
+
+
+### Example
+
+
+In the following query, we are retrieving all rows from the CUSTOMERS table based on some conditions. The parentheses control the order of evaluation so that the OR operator is applied first, followed by the AND operator:
+
+
+```sql
+SELECT * FROM CUSTOMERS
+WHERE (AGE = 25 OR salary < 4500) 
+AND (name = 'Komal' OR name = 'Kaushik');
+```
+
+
+This would produce the following result:
+
+
+IDNAMEAGEADDRESSSALARY3Kaushik23Kota2000.00
+
+
+## WHERE Clause with Comparison Operators
+
+
+TheWHEREclause in SQL is often used withcomparison operatorsto filter rows based on specific conditions. These operators compare column values to a given constant or another column value and return only the rows that satisfy the condition.
+
+
+Following are the most commonly used comparison operators:
+
+
+
+- `=` Equal to
+- `!=`or`<>`Not equal to
+- `>` Greater than
+- `<` Less than
+- `>=` Greater than or equal to
+- `<=`Less than or equal to
+
+
+
+### Syntax
+
+
+Following is the basic syntax to use the WHERE clause with the comparison operators:
+
+
+```sql
+SELECT column1, column2, ...
+FROM table_name
+WHERE column_name comparison_operator value;
+```
+
+
+### Example
+
+
+This query retrieves all customers whose age is greater than 25:
+
+
+```sql
+SELECT * FROM CUSTOMERS
+WHERE AGE > 25;
+```
+
+
+We get the output as shown below:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.005Hardik27Bhopal8500.00
+
+
+## Where Clause with BETWEEN Operator
+
+
+TheBETWEENoperator in SQL is used within theWHEREclause to filter records that fall within a specific range. It is inclusive, meaning it includes the boundary values specified in the range.
+
+
+This operator is commonly used with numeric, date, and text data types. When combined with the WHERE clause, it allows you to retrieve rows where a column's value lies between two specified values.
+
+
+### Syntax
+
+
+Following is the basic syntax to use the WHERE clause with BETWEEN operator:
+
+
+```sql
+SELECT * FROM table_name 
+WHERE column_name BETWEEN value1 AND value2;
+```
+
+
+### Example
+
+
+In this example, we fetch records where the AGE of the customers is between 23 and 27:
+
+
+```sql
+SELECT * FROM CUSTOMERS 
+WHERE AGE BETWEEN 23 AND 27;
+```
+
+
+We get the output as shown below:
+
+
+IDNAMEAGEADDRESSSALARY2Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.007Muffy24Indore10000.00
+
+
+## List Of Operators in the WHERE Clause
+
+
+Following are the list of operators we can use in the WHERE clause in SQL:
+
+
+Operator TypeOperatorDescriptionComparison`=`, !=, `<>`, >, `<, >=`, `<=`Compares valuesLogicalAND, OR, NOTCombines multiple conditionsPattern MatchingLIKE, NOT LIKEMatches specific patterns using wildcardsRangeBETWEEN ... AND ...Checks if value lies within a rangeSet MembershipIN (...), NOT IN (...)Matches values in a given listNull CheckIS NULL, IS NOT NULLChecks for NULL values
+

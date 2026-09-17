@@ -1,0 +1,237 @@
+---
+title: "JavaScript - Function call()"
+description: "Learn JavaScript - Function call() with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 540
+group: "JavaScript Functions"
+seoTitle: "JavaScript - Function call() — CodesCompiler JavaScript Guide"
+permalink: "javascript-function-call"
+---
+
+
+# JavaScript - Function call() Method
+
+
+
+
+## Function call() Method
+
+
+The Function call() method allows us to invoke a function given a specific value for this and arguments provided individually. When a normal function is called, the value of this inside the function is the object that the function was accessed on. We can manipulate the this value and can assign an arbitrary object to this by using the call() method. In other word, we can call existing function as a method of an object without attaching the function to the object as a method.
+
+
+In JavaScript, every function is a Function object. The Function object provides properties and methods for functions. These properties and methods are defined on Function.prototype and shared by all Function instances. Some of the important methods provided by the Function object are call(), apply() and bind() methods.
+
+
+Let us understand the syntax of the Function call() method.
+
+
+### Syntax
+
+
+The syntax of Function call() method in JavaScript is as follows −
+
+
+```javascript
+funcName.call(thisArg, arg1, arg2, ... argN);
+```
+
+
+In the above syntax, the 'funcName' is the name of the function to be called.
+
+
+### Parameters
+
+
+
+- thisArg− It represents the context for the function. It is an object whose properties or methods we need to access using the 'this' keyword inside the function.
+- arg1, arg2, ... argN− It is N arguments to pass to the function. They are optional arguments.
+
+
+
+By default, the context of the function is a global (window) object. So, the 'this' keyword refers to the 'window' object.
+
+
+### Return value
+
+
+The call() method returns the value returned from the function.
+
+
+## Examples
+
+
+Let's understand JavaScript Function call() method with the help of some examples.
+
+
+### Function call() method without specifying arguments
+
+
+In the example below, we have defined the test() function. We have invoked the function using the function name and call() method. In both cases, the function prints the same output. So, when you don't pass any arguments, the call() method gives the same output as a normal function call.
+
+
+```html
+<html>
+<head>
+   <title> JavaScript - Function call() method </title>
+</head>
+<body>
+   p id = "output1" 
+   p id = "output2" 
+   <script>    
+      function test() {
+         return "The function is invoked!";
+      }
+        
+      document.getElementById("output1").innerHTML = test();
+      document.getElementById("output2").innerHTML = test.call();
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The function is invoked!
+The function is invoked!
+```
+
+
+### Function call() method with 'this' argument only
+
+
+As we discussed above, 'this' argument is used to specify the context of the function. Here, we have defined the person1 and person2 objects containing the name and age properties.
+
+
+We passed the object as an argument of the call() method. In the printMessage() function, we access the object's properties, which is passed as a function argument using the 'this' keyword.
+
+
+In the output, you can observe that it prints the object properties' value according to the object passed as an argument of the call() method.
+
+
+```html
+<html>
+<head>
+   <title> JavaScript - Function call() method </title>
+</head>
+<body>
+p id = "output1" 
+p id = "output2" 
+<script>
+   function printMessage() {
+      return "The age of the " + this.name + " is " + this.age;
+   }
+   const person1 = {
+      name: "John Doe",
+      age: 22,
+   }
+
+   const person2 = {
+      name: "Jane Doe",
+      age: 40,
+   }
+   document.getElementById("output1").innerHTML = printMessage.call(person1);
+   document.getElementById("output2").innerHTML = printMessage.call(person2);
+</script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The age of the John Doe is 22
+The age of the Jane Doe is 40
+```
+
+
+### Function call() method with multiple arguments
+
+
+The example below demonstrates passing multiple arguments to the call() method. The printSum() function returns the sum of function parameters and object properties in the below code.
+
+
+```html
+<html>
+<head>
+   <title> JavaScript - Function call() method </title>
+</head>
+<body>
+p id = "output" 
+<script>
+
+   function printSum(p1, p2) {
+      return (this.num1 + this.num2 + p1 + p2);
+   }
+
+   const nums = {
+      num1: 5,
+      num2: 10,
+   }
+
+   const ans = printSum.call(nums, 40, 32);
+   document.getElementById("output").innerHTML = "Total sum is " + ans;
+</script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Total sum is 87
+```
+
+
+When you pass the 'this' keyword as the first argument of the call() method instead of an object, it specifies the function itself as a function context.
+
+
+### Using a method of different object
+
+
+Using Function call() method, an object can use a method that is defined in other object. In the below example, we create three objects  student, student1 and student2. We define a method getAge() of the object student. This getAge() method is used by the other two objects (student1 and student2) to access the age. The objects student1 and student2 are passed as arguments to the call() method.
+
+
+```html
+<html>
+<head>
+   <title> JavaScript - Function call() method </title>
+</head>
+<body>
+p id = "output1" 
+p id = "output2" 
+<script>
+
+   const student = {
+      getAge: function(){
+         return this.age;
+      }
+   }
+   const student1 = {
+      name: "John",
+      age: 22
+   }
+
+   const student2 = {
+      name: "Doe",
+      age: 18
+   }
+  
+   document.getElementById("output1").innerHTML =student.getAge.call(student1);
+   document.getElementById("output2").innerHTML =student.getAge.call(student2);
+  
+</script>
+</body>
+</html>
+```
+
+
+The Function call() and apply() methods are the same but with minor difference as call() method accepts a list of arguments but the apply() method accepts an array of arguments. Let's understand the Function apply() method in detail in the next chapter this tutorial.
+

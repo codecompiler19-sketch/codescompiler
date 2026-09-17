@@ -1,0 +1,328 @@
+---
+title: "SQL - Having Clause"
+description: "Learn SQL - Having Clause with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 430
+group: "SQL Operators and Clauses"
+seoTitle: "SQL - Having Clause — CodesCompiler SQL Guide"
+permalink: "sql-having-clause"
+---
+
+
+# SQL - Having Clause
+
+
+Table of contentThe SQL HAVING ClauseHAVING with GROUP BY ClauseHAVING with ORDER BY ClauseHAVING Clause with COUNT() FunctionHAVING Clause with AVG() FunctionHAVING Clause with MAX() FunctionHAVING Clause with Multiple ConditionsHAVING Clause with JoinsSQL HAVING vs WHERE Clause
+
+
+
+
+## The SQL HAVING Clause
+
+
+TheHAVINGclause in SQL is used to filter grouped records based on a condition, involving aggregate functions such asCOUNT(),SUM(),AVG(),MAX(), orMIN(). It works in conjunction with theGROUP BYclause and is applied after the data has been grouped.
+
+
+While theWHEREclause filters individual rows before grouping, theHAVINGclause filters groups after the aggregation has been completed. This makesHAVINGimportant when you need to restrict the output of grouped data based on aggregate values.
+
+
+TheHAVINGclause was introduced in SQL because theWHEREclause cannot be used with aggregate functions.
+
+
+### Syntax
+
+
+Following is the basic syntax of the SQL HAVING clause:
+
+
+```sql
+SELECT column1, column2, aggregate_function(column)
+FROM table_name
+GROUP BY column1, column2
+HAVING condition;
+```
+
+
+The following code block shows the position of the HAVING Clause in a query:
+
+
+```sql
+SELECT
+FROM
+WHERE
+GROUP BY
+HAVING
+ORDER BY
+```
+
+
+## HAVING with GROUP BY Clause
+
+
+We can use the HAVING clause with the GROUP BY clause to filter groups of rows that meet certain conditions. It is used to apply a filter to the result set after the aggregation has been performed.
+
+
+### Example
+
+
+Assume we have created a table named CUSTOMERS, which contains the personal details of customers including their name, age, address and salary, using the following query:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),
+   PRIMARY KEY (ID)
+);
+```
+
+
+Now insert values into this table using the INSERT statement as follows:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00),
+(2, 'Khilan', 25, 'Delhi', 1500.00),
+(3, 'Kaushik', 23, 'Kota', 2000.00),
+(4, 'Chaitali', 25, 'Mumbai', 6500.00),
+(5, 'Hardik', 27, 'Bhopal', 8500.00),
+(6, 'Komal', 22, 'Hyderabad', 4500.00),
+(7, 'Muffy', 24, 'Indore', 10000.00);
+```
+
+
+The table created is as shown below:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+Now, we are grouping the records of the CUSTOMERS table based on the columns ADDRESS and AGE and filtering the groups where the AGE value is less than 25.
+
+
+```sql
+SELECT ADDRESS, AGE, MIN(SALARY) AS MIN_SUM 
+FROM CUSTOMERS 
+GROUP BY ADDRESS, AGE HAVING AGE > 25;
+```
+
+
+The result produced is as follows:
+
+
+ADDRESSAGEMIN_SUMAhmedabad322000.00Bhopal278500.00
+
+
+## HAVING with ORDER BY Clause
+
+
+The ORDER BY clause is used to arrange/sort the records of the result of a SELECT query based on a specific column (either in ascending order or in descending order).
+
+
+If we use the ORDER BY clause with the HAVING clause we can sort the filtered groups in the desired order.
+
+
+### Example
+
+
+Following query groups the records of the CUSTOMERS table based on the columns AGE and ADDRESS, filters the groups where the SALARY value is less than 5000 and, arranges the remaining groups in descending order based the total salaries of each group.
+
+
+```sql
+SELECT ADDRESS, AGE, SUM(SALARY) AS TOTAL_SALARY 
+FROM CUSTOMERS 
+GROUP BY ADDRESS, AGE HAVING TOTAL_SALARY >=5000 
+ORDER BY TOTAL_SALARY DESC;
+```
+
+
+The result produced is as follows:
+
+
+ADDRESSAGETOTAL_SALARYIndore2410000.00Bhopal278500.00Mumbai256500.00
+
+
+## HAVING Clause with COUNT() Function
+
+
+The HAVING clause can be used with the COUNT() function to filter groups based on the number of rows they contain.
+
+
+### Example
+
+
+Following query groups the records of the CUSTOMERS table based on the AGE column and, retrieves the details of the group that has more than two entities:
+
+
+```sql
+SELECT AGE, COUNT(AGE) 
+FROM CUSTOMERS GROUP BY AGE HAVING COUNT(age) > 2;
+```
+
+
+This would produce the following result:
+
+
+```sql
+Query OK, 0 rows affected (0.02 sec)
+```
+
+
+## HAVING Clause with AVG() Function
+
+
+The HAVING clause can also be used with the AVG() function to filter groups based on the average value of a specified column.
+
+
+### Example
+
+
+Now, we are retrieving the city of the customers whose average salary is greater than 5240:
+
+
+```sql
+SELECT ADDRESS, AVG(SALARY) as AVG_SALARY 
+FROM CUSTOMERS 
+GROUP BY ADDRESS HAVING AVG(SALARY) > 5240;
+```
+
+
+Following is the output of the above query:
+
+
+ADDRESSAVG_SALARYMumbai6500.000000Bhopal8500.000000Indore10000.000000
+
+
+## HAVING Clause with MAX() Function
+
+
+We can also use the HAVING clause with MAX() function to filter groups based on the maximum value of a specified column.
+
+
+### Example
+
+
+Now, we are retrieving the city of the customers whose maximum salary is greater than 5240:
+
+
+```sql
+SELECT ADDRESS, MAX(SALARY) as MAX_SALARY 
+FROM CUSTOMERS 
+GROUP BY ADDRESS HAVING MAX(SALARY) > 5240;
+```
+
+
+The result obtained is as follows:
+
+
+ADDRESSMAX_SALARYMumbai6500.00Bhopal8500.00Indore10000.00
+
+
+## HAVING Clause with Multiple Conditions
+
+
+The HAVING clause can also include multiple conditions combined using logical operators likeAND,OR, andNOT.This helps to filter grouped data more accurately using conditions with functions like SUM, COUNT, or AVG.
+
+
+### Example
+
+
+Now, we are retrieving the address and age of the customers where the total salary is greater than or equal to 5000 and the minimum salary in the group is greater than 1500:
+
+
+```sql
+SELECT ADDRESS, AGE, SUM(SALARY) AS TOTAL_SALARY, MIN(SALARY) AS MIN_SALARY
+FROM CUSTOMERS
+GROUP BY ADDRESS, AGE
+HAVING SUM(SALARY) >= 5000 AND MIN(SALARY) > 1500;
+```
+
+
+The result obtained is as follows:
+
+
+ADDRESSAGETOTAL_SALARYMIN_SALARYMumbai256500.006500.00Indore2410000.0010000.00Bhopal278500.008500.00
+
+
+## HAVING Clause with Joins
+
+
+The HAVING clause can also be used in conjunction withJOINoperations. When multiple tables are joined and the result is grouped, the HAVING clause can be applied to filter those grouped results based on aggregate values.
+
+
+### Example
+
+
+Assume we have another table namedORDERSwith the following structure and data:
+
+
+```sql
+CREATE TABLE ORDERS (
+   OID INT NOT NULL,
+   DATE VARCHAR(20) NOT NULL,
+   CUSTOMER_ID INT,
+   AMOUNT DECIMAL(10, 2),
+   PRIMARY KEY (OID)
+);
+```
+
+
+```sql
+INSERT INTO ORDERS VALUES
+(101, '2023-07-01', 1, 3000.00),
+(102, '2023-07-02', 3, 1500.00),
+(103, '2023-07-03', 4, 2500.00),
+(104, '2023-07-04', 6, 4000.00),
+(105, '2023-07-05', 5, 4500.00),
+(106, '2023-07-06', 7, 1000.00);
+```
+
+
+Now, let us retrieve the customer addresses and total order amounts for each address, but only where the total order amount is more than 3000:
+
+
+```sql
+SELECT C.ADDRESS, SUM(O.AMOUNT) AS TOTAL_ORDERS
+FROM CUSTOMERS C
+JOIN ORDERS O ON C.ID = O.CUSTOMER_ID
+GROUP BY C.ADDRESS
+HAVING SUM(O.AMOUNT) > 3000;
+```
+
+
+The result obtained is as follows:
+
+
+ADDRESSTOTAL_ORDERSHyderabad4000.00Bhopal4500.00
+
+
+## SQL HAVING vs WHERE Clause
+
+
+BothHAVINGandWHEREclauses are used to filter data in SQL queries. But they work differently and are used at different steps in the query process:
+
+
+WHERE ClauseHAVING ClauseFilters rows before grouping occurs.Filters groups after aggregation occurs.Cannot be used with aggregate functions.Can be used with aggregate functions (e.g., COUNT, AVG).Used in SELECT, UPDATE, DELETE statements.Used only with SELECT statements and usually after GROUP BY.Evaluates each row individually.Evaluates each group of rows.
+
+
+### Example
+
+
+Following query uses both WHERE and HAVING clauses:
+
+
+```sql
+SELECT ADDRESS, COUNT(*) AS TOTAL_CUSTOMERS
+FROM CUSTOMERS
+WHERE SALARY > 2000
+GROUP BY ADDRESS
+HAVING COUNT(*) >= 1;
+```
+
+
+This query first filters out customers with salary ≤ 2000 using WHERE, groups the remaining records by address, and then filters the groups that have at least one customer using HAVING.
+

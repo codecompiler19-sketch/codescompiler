@@ -1,0 +1,168 @@
+---
+title: "PYTHON - Performance Measurement"
+description: "Learn PYTHON - Performance Measurement with clear explanation, code examples, and practical guide."
+category: "python"
+order: 2030
+group: "Python Miscellenous"
+seoTitle: "PYTHON - Performance Measurement — CodesCompiler PYTHON Guide"
+permalink: "python-performance-measurement"
+---
+
+
+# Python - Performance Measurement
+
+
+
+
+A given problem may be solved by more than one alternative algorithms. Hence, we need to optimize the performance of the solution. Python'stimeitmodule is a useful tool to measure the performance of a Python application.
+
+
+The timit() function in this module measures execution time of your Python code.
+
+
+### Syntax
+
+
+```python
+timeit.timeit(stmt, setup, timer, number)
+```
+
+
+### Parameters
+
+
+
+- stmt− code snippet for measurement of performance.
+- setup− setup details arguments to be passed or variables.
+- timer− uses default timer, so, it may be skipped.
+- number− the code will be executed this number of times. The default is 1000000.
+
+
+
+### Example
+
+
+The following statement uses list comprehension to return a list of multiple of 2 for each number in the range upto 100.
+
+
+```python
+>>> [n*2 for n in range(100)]
+[0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34,
+36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68,
+70, 72, 74, 76, 78, 80, 82, 84, 86, 88, 90, 92, 94, 96, 98, 100,
+102, 104, 106, 108, 110, 112, 114, 116, 118, 120, 122, 124, 126,
+128, 130, 132, 134, 136, 138, 140, 142, 144, 146, 148, 150, 152,
+154, 156, 158, 160, 162, 164, 166, 168, 170, 172, 174, 176, 178,
+180, 182, 184, 186, 188, 190, 192, 194, 196, 198]
+```
+
+
+To measure the execution time of the above statement, we use the timeit() function as follows −
+
+
+```python
+>>> from timeit import timeit
+>>> timeit('[n*2 for n in range(100)]', number=10000)
+0.0862189000035869
+```
+
+
+Compare the execution time with the process of appending the numbers using a for loop.
+
+
+```python
+>>> string = '''
+... numbers=[]
+... for n in range(100):
+... numbers.append(n*2)
+... '''
+>>> timeit(string, number=10000)
+0.1010853999905521
+```
+
+
+The result shows that list comprehension is more efficient.
+
+
+The statement string can contain a Python function to which one or more arguments My be passed as setup code.
+
+
+We shall find and compare the execution time of a factorial function using a loop with that of its recursive version.
+
+
+The normal function using for loop is −
+
+
+```python
+def fact(x):
+   fact = 1
+   for i in range(1, x+1):
+      fact*=i
+   return fact
+```
+
+
+Definition of recursive factorial.
+
+
+```python
+def rfact(x):
+   if x==1:
+      return 1
+   else:
+      return x*fact(x-1)
+```
+
+
+Test these functions to calculate factorial of 10.
+
+
+```python
+print ("Using loop:",fact(10))
+print ("Using Recursion",rfact(10))
+Result
+Using loop: 3628800
+Using Recursion 3628800
+```
+
+
+Now we shall find their respective execution time with timeit() function.
+
+
+```python
+import timeit
+
+setup1="""
+from __main__ import fact
+x = 10
+"""
+
+setup2="""
+from __main__ import rfact
+x = 10
+"""
+
+print ("Performance of factorial function with loop")
+print(timeit.timeit(stmt = "fact(x)", setup=setup1, number=10000))
+
+print ("Performance of factorial function with Recursion")
+print(timeit.timeit(stmt = "rfact(x)", setup=setup2, number=10000))
+```
+
+
+### Output
+
+
+```python
+Performance of factorial function with loop
+0.00330029999895487
+Performance of factorial function with Recursion
+0.006506800003990065
+```
+
+
+The recursive function is slower than the function with loop.
+
+
+In this way, we can perform performance measurement of Python code.
+

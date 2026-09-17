@@ -1,0 +1,317 @@
+---
+title: "SQL - Delete Table"
+description: "Learn SQL - Delete Table with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 250
+group: "SQL Table"
+seoTitle: "SQL - Delete Table — CodesCompiler SQL Guide"
+permalink: "sql-delete-table"
+---
+
+
+# SQL DELETE Statement
+
+
+
+
+
+
+## SQL DELETE Statement
+
+
+TheDELETEstatement in SQL is used to remove one or more records (rows) from an existing table. UnlikeDROP, which removes the entire table,DELETEonly removes the data while keeping the table structure intact.
+
+
+You can delete specific records based on a condition using theWHEREclause. If no condition is given, all rows in the table will be deleted.
+
+
+### Syntax
+
+
+Following is the basic syntax to delete all rows from a table in MySQL:
+
+
+```sql
+DELETE FROM table_name;
+```
+
+
+### Example
+
+
+Assume we have creating a table namedCUSTOMERS, which contains the personal details of customers including their name, age, address and salary etc.
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+
+   ID INT NOT NULL,
+
+   NAME VARCHAR (20) NOT NULL,
+
+   AGE INT NOT NULL,
+
+   ADDRESS CHAR (25),
+
+   SALARY DECIMAL (18, 2),
+
+   PRIMARY KEY (ID)
+
+);
+```
+
+
+Now insert values into this table using the INSERT statement as follows:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00),
+
+(2, 'Khilan', 25, 'Delhi', 1500.00),
+
+(3, 'Kaushik', 23, 'Kota', 2000.00),
+
+(4, 'Chaitali', 25, 'Mumbai', 6500.00),
+
+(5, 'Hardik', 27, 'Bhopal', 8500.00),
+
+(6, 'Komal', 22, 'Hyderabad', 4500.00),
+
+(7, 'Muffy', 24, 'Indore', 10000.00);
+```
+
+
+The table will be created as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+Now, we will delete all records from the CUSTOMERS table without removing the table structure as shown below:
+
+
+```sql
+DELETE FROM CUSTOMERS;
+```
+
+
+This will remove all data from the table, but the table will still exist with all its columns:
+
+
+```sql
+Query OK, 7 rows affected (0.02 sec)
+```
+
+
+This will remove all data from the table, but the table will still exist with all its columns.
+
+
+### Verifying the Deletion
+
+
+You can run aSELECTquery to verify if the rows were deleted as shown below:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+The result will be empty as shown below:
+
+
+```sql
+Empty set (0.00 sec)
+```
+
+
+## Delete a Specific Row
+
+
+You can delete a single record from a table by using theDELETEstatement with aWHEREclause. This targets only the row(s) that match the specified condition.
+
+
+### Syntax
+
+
+Following is the basic syntax to delete a specific row in SQL:
+
+
+```sql
+DELETE FROM table_name 
+
+WHERE condition;
+```
+
+
+### Example
+
+
+In the following example, we delete the row from the CUSTOMERS table where the ID is equal to 3:
+
+
+```sql
+DELETE FROM CUSTOMERS 
+
+WHERE ID = 3;
+```
+
+
+This will remove the record ofKaushikfrom theCUSTOMERStable. We get the output as shown below:
+
+
+```sql
+Query OK, 1 row affected (0.02 sec)
+```
+
+
+### Verification
+
+
+You can verify whether the row has been deleted using the SELECT statement as shown below:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+We can see in the table below that there is no row with ID 3 associated with 'kaushik':
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## Delete Multiple Rows
+
+
+In SQL, you can delete multiple rows from a table at once using theDELETEstatement with appropriate conditions. Depending on your requirement, you can use a single condition or combine multiple conditions using logical operators likeAND,OR, etc.
+
+
+### Syntax
+
+
+Following is the basic syntax to delete multiple rows in SQL:
+
+
+```sql
+DELETE FROM table_name
+
+WHERE condition1 AND condition2 OR ... conditionN;
+```
+
+
+### Example: Deleting Rows with a Single Condition
+
+
+In this example, we delete all customers all customers from the CUSTOMERS table whose age is equal to '25':
+
+
+```sql
+DELETE FROM CUSTOMERS 
+
+WHERE AGE = 25;
+```
+
+
+We get the output as shown below:
+
+
+```sql
+Query OK, 2 rows affected (0.00 sec)
+```
+
+
+### Verification
+
+
+You can verify whether the records have been deleted using the SELECT statement as shown below:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+We can see in the table below that there are no rows where the AGE is 25:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.003Kaushik23Kota2000.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+### Example: Deleting Rows with Multiple Conditions
+
+
+You can also use multiple conditions to delete specific rows.
+
+
+In this example, we delete customers who are from 'Delhi' as well as those who have a salary below 3000:
+
+
+```sql
+DELETE FROM CUSTOMERS 
+
+WHERE ADDRESS = 'Delhi' OR SALARY < 3000;
+```
+
+
+Following is the output obtained:
+
+
+```sql
+Query OK, 3 rows affected (0.02 sec)
+```
+
+
+### Verification
+
+
+You can verify whether the correct rows were deleted using the following SELECT query:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+We can see in the table below that there are no rows where the address is 'Delhi' and the salary is less than 3000:
+
+
+IDNAMEAGEADDRESSSALARY4Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## Important Points About Deleting Data from a Table
+
+
+Following are the important points to remember when deleting a table in SQL:
+
+
+
+- TheDELETEremoves rows from a table, not the table itself.
+- Always use aWHEREclause to make sure you don't delete all the rows by accident.
+- If you are using a transaction and your database supports it, you can undo (rollback) a DELETE operation.
+
+
+
+## DELETE vs TRUNCATE vs DROP
+
+
+These SQL commands are used to remove data or entire tables, but they work in different ways:
+
+
+
+| Command | Removes Data | Removes Structure | Can Rollback | Condition Support |
+| --- | --- | --- | --- | --- |
+| DELETE | Yes | No | Yes (if transaction supported) | Yes (using WHERE) |
+| TRUNCATE | Yes (all rows) | No | No (in most DBMS) | No |
+| DROP | Yes | Yes | No | No |
+
+
+
+## Conclusion
+
+
+TheSQL DELETEcommand allows you to remove specific or all records from a table. It is safe (if used with conditions), and used for cleaning or updating records. Always cross-check yourWHEREclause to avoid accidental data loss.
+

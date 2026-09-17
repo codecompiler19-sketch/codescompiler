@@ -1,0 +1,217 @@
+---
+title: "SQL - Union vs Join"
+description: "Learn SQL - Union vs Join with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 720
+group: "SQL Joins"
+seoTitle: "SQL - Union vs Join — CodesCompiler SQL Guide"
+permalink: "sql-union-vs-join"
+---
+
+
+# Difference Between JOIN and UNION in SQL
+
+
+Table of contentWhat is JOIN in SQL?What is UNION in SQL?Difference Between JOIN and UNION in SQLConclusion
+
+
+
+
+Both JOIN and UNION are used in SQL to combine data from multiple tables, but they differ significantly in how the data is combined and presented.
+
+
+
+- JOINcombines columns from two or more tables based on a related column between them.
+- UNIONcombines rows from two or more queries, stacking the results vertically, regardless of whether the tables are directly related.
+
+
+
+## What is JOIN in SQL?
+
+
+AJOINin SQL is used to combine columns from two or more tables based on a common field between them.
+
+
+
+- It returns asingle result set with columns from multiple tables.
+- If there are rows in one table without a corresponding match in another table, the type of join (INNER, LEFT, RIGHT, FULL) determines whether those rows appear in the result.
+- JOINs are usually used to create relational views of data where information from multiple tables needs to be displayed together.
+
+
+
+There are two main types ofJOINsin SQL:
+
+
+
+- Inner Join
+- Outer Join
+
+
+
+AnInner Joinis the basic type of join and retrieves only the rows where there is a match in the common columns of both tables. It is the default join type.
+
+
+AnOuter Joinreturns both matched and unmatched rows from the tables, depending on the type. It has three subtypes:
+
+
+
+- Left Join:Returns all rows from the left table, with matching rows from the right table. Unmatched right table rows appear as NULL.
+- Right Join:Returns all rows from the right table, with matching rows from the left table. Unmatched left table rows appear as NULL.
+- Full Join:Returns all rows when there is a match in either table. Unmatched rows from both tables appear as NULL where there is no match.
+
+
+
+### Syntax
+
+
+Following is the basic syntax of a Join operation in SQL:
+
+
+```sql
+SELECT table1.column1, table2.column2...
+FROM table1
+JOIN table2
+ON table1.column_name = table2.column_name;
+```
+
+
+### Example
+
+
+Let us first create two table "COURSES_PICKED" and "EXTRA_COURSES_PICKED" with the same number of columns having same data types.
+
+
+Create table COURSES_PICKED using the following query:
+
+
+```sql
+CREATE TABLE COURSES_PICKED(
+   STUDENT_ID INT NOT NULL, 
+   STUDENT_NAME VARCHAR(30) NOT NULL, 
+   COURSE_NAME VARCHAR(30) NOT NULL
+);
+```
+
+
+Insert values into the COURSES_PICKED table with the help of the query given below:
+
+
+```sql
+INSERT INTO COURSES_PICKED VALUES
+(1, 'JOHN', 'ENGLISH'),
+(2, 'ROBERT', 'COMPUTER SCIENCE'),
+(3, 'SASHA', 'COMMUNICATIONS'),
+(4, 'JULIAN', 'MATHEMATICS');
+```
+
+
+Create table EXTRA_COURSES_PICKED using the following query:
+
+
+```sql
+CREATE TABLE EXTRA_COURSES_PICKED(
+   STUDENT_ID INT NOT NULL, 
+   STUDENT_NAME VARCHAR(30) NOT NULL, 
+   EXTRA_COURSE_NAME VARCHAR(30) NOT NULL
+);
+```
+
+
+Following is the query to insert values into the EXTRA_COURSES_PICKED table:
+
+
+```sql
+INSERT INTO EXTRA_COURSES_PICKED VALUES
+(1, 'JOHN', 'PHYSICAL EDUCATION'),
+(2, 'ROBERT', 'GYM'),
+(3, 'SASHA', 'FILM'),
+(4, 'JULIAN', 'PHOTOGRAPHY');
+```
+
+
+Now, let us join the tables COURSES_PICKED and EXTRA_COURSES_PICKED, using the JOIN query as follows:
+
+
+```sql
+SELECT c.STUDENT_ID, c.STUDENT_NAME, c.COURSE_NAME, e.EXTRA_COURSE_NAME 
+FROM COURSES_PICKED c
+JOIN EXTRA_COURSES_PICKED e
+ON c.STUDENT_ID = e.STUDENT_ID;
+```
+
+
+The resultant table will be displayed as follows:
+
+
+STUDENT_IDSTUDENT_NAMECOURSE_NAMEEXTRA_COURSE_NAME1JOHNENGLISHPHYSICAL EDUCATION2ROBERTCOMPUTER SCIENCEGYM3SASHACOMMUNICATIONSFILM4JULIANMATHEMATICSPHOTOGRAPHY
+
+
+## What is UNION in SQL
+
+
+AUNIONin SQL is used to combine the results of two or more SELECT queries into a single result set.
+
+
+
+- It returnsall rows from multiple SELECT queriesas a single vertical stack.
+- Each SELECT query must have the same number of columns, and the corresponding columns must have same data types.
+- By default, UNION removes duplicate rows. UsingUNION ALLpreserves duplicates.
+
+
+
+In UNION operation, column names of first table will become column names of resultant table, and contents of second table will be merged into resultant columns of same data type.
+
+
+### Syntax
+
+
+Following is the syntax of the SQL UNION operator:
+
+
+```sql
+SELECT * FROM table1
+UNION
+SELECT * FROM table2;
+```
+
+
+### Example
+
+
+Let us combine the tables COURSES_PICKED and EXTRA_COURSES_PICKED created above using the UNION query as follows:
+
+
+```sql
+SELECT * FROM COURSES_PICKED 
+UNION 
+SELECT * FROM EXTRA_COURSES_PICKED;
+```
+
+
+The resultant table obtained after performing the UNION operation is:
+
+
+STUDENT_IDSTUDENT_NAMECOURSE_NAME1JOHNENGLISH2ROBERTCOMPUTER SCIENCE3SASHACOMMUNICATIONS4JULIANMATHEMATICS1JOHNPHYSICAL EDUCATION2ROBERTGYM3SASHAFILM4JULIANPHOTOGRAPHY
+
+
+## Difference Between JOIN and UNION in SQL
+
+
+JOIN and UNION are both used to combine data from multiple tables in SQL, but they work in very different ways. The table below summarizes their differences:
+
+
+FeatureJOINUNIONDefinitionCombines columns from two or more tables based on a related column.Combines rows from two or more SELECT queries into a single result set.OrientationHorizontal (adds columns)Vertical (adds rows)PurposeUsed to retrieve related data from multiple tables in a single query.Used to merge results from multiple queries that have the same number of columns and compatible data types.TypesINNER JOIN, LEFT JOIN, RIGHT JOIN, FULL OUTER JOIN, CROSS JOIN.UNION and UNION ALL.Duplicate HandlingDoes not remove duplicate rows unless DISTINCT is explicitly usedRemoves duplicate rows by default; UNION ALL keeps duplicates.Columns RequirementColumns can differ between tables; only matching column(s) are used for join condition.All SELECT queries must have the same number of columns with compatible data types.Relation RequirementRequires a common column (key) between tables for meaningful combination (except CROSS JOIN).No relation between tables required; only matching column count and compatible data types.Result SetSingle combined row per matching key; unmatched rows appear depending on join type.All rows from both queries are stacked; order can be managed using ORDER BY at the end.Use CaseUsed when we want to display related data together, like employees with their department details.Used when we want to combine results from different queries into a single list, like combining employees from multiple departments.SQL Syntax ExampleSELECT A.id, A.name, B.salary
+FROM Employees A
+JOIN Salaries B ON A.id `=` B.emp_id;SELECT name, salary FROM Employees_US
+UNION
+SELECT name, salary FROM Employees_UK;
+
+
+## Conclusion
+
+
+JOIN and UNION in SQL are both used to combine data, but in different ways. JOIN merges columns horizontally from multiple tables based on a relationship, while UNION stacks rows vertically from multiple SELECT queries.
+
+
+Choosing between them depends on whether you want to combine data side-by-side from related tables (JOIN) or stack multiple query results into a single list (UNION).
+

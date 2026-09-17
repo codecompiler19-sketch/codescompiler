@@ -1,0 +1,301 @@
+---
+title: "JavaScript - Reference Type"
+description: "Learn JavaScript - Reference Type with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2600
+group: "JavaScript Miscellaneous"
+seoTitle: "JavaScript - Reference Type — CodesCompiler JavaScript Guide"
+permalink: "javascript-reference-type"
+---
+
+
+# JavaScript - Reference Type
+
+
+
+
+## JavaScript Reference Type
+
+
+There are two types of data types in JavaScript: primitive and reference type.
+
+
+Primitive data types are immutable, which means that they cannot be changed. The primitive data types in JavaScript are: Number, String, Boolean, Undefined, Null, Symbol.
+
+
+Reference data types are mutable, which means that they can be changed. The reference data types in JavaScript are: Object, Array, Function.
+
+
+When you assign a primitive data type to a variable, the variable gets a copy of the value. When you assign a reference data type to a variable, the variable gets a reference to the value. This means that if you change the value of a reference data type, the change will be reflected in all of the variables that reference that value.
+
+
+For example, the following code creates two variables, x and y, and assigns them the value 10:
+
+
+```javascript
+let x = 10;
+let y = 10;
+```
+
+
+The variables x and y both have a copy of the value 10. If you change the value of x, the value of y will not change.
+
+
+```javascript
+x = 20;
+console.log(x); // 20
+console.log(y); // 10
+```
+
+
+The following code creates two variables, x and y, and assigns them an array:
+
+
+```javascript
+const x = [1, 2, 3];
+const y = x;
+```
+
+
+The variables x and y both reference the same array. If you change the value of the array that x references, the change will be reflected in the array that y references.
+
+
+```javascript
+x[0] = 4;
+console.log(x); // [4, 2, 3]
+console.log(y); // [4, 2, 3]
+```
+
+
+It is important to understand the difference between primitive and reference data types in JavaScript so that you can write code that is efficient and predictable.
+
+
+Objects and functions are the two main reference types in JavaScript and are explained as follows.
+
+
+### Object
+
+
+Objects are unordered collections of key-value pairs, where keys are strings or symbols, and values can be any data type, including other objects.
+
+
+```javascript
+const person = {
+  firstName: "John",
+  lastName: "Doe",
+  age: 30
+};
+```
+
+
+### Function
+
+
+Functions are also reference types in JavaScript. Functions are special types of objects that can be invoked (called) to perform a task.
+
+
+```javascript
+function greet(name) {
+  alert("Hello, " + name + "!");
+}
+```
+
+
+## Examples
+
+
+### Example 1: Object Mutability
+
+
+In this example, we demonstrate object mutability for which first an object is created and then modifications are made through that reference which in turn affect the original object. The person object is modified via the reference from the anotherPerson precisely the age which is changed from 25 to 30. As seen in the output, the original object changes after the modification hence the object is said to be mutated.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+   ## JavaScript Reference Types Example: Object Mutability
+   <script>
+      // Create an object
+      const person = {
+         name: "John",
+         age: 25
+      };
+
+      // Create a reference to the object
+      let anotherPerson = person;
+
+      // Display the original object
+      document.write("pOriginal Object: " + JSON.stringify(person) + "");
+
+      // Modify the object through the reference
+      anotherPerson.age = 30;
+
+      // Display the modified object
+      document.write("pModified Object: " + JSON.stringify(person) + "");
+
+      // Both references point to the same object, so changes are reflected in both
+      document.write("pOriginal Object after modification through reference: " + JSON.stringify(person) + "");
+   </script>
+</body>
+</html>
+```
+
+
+### Example 2: Array Modification
+
+
+Arrays which can store multiple values of different data types in JavaScript inside of a single variable are demonstrated here. They exhibit mutability which means then when a reference is made to an array, changes made to the reference also reflect in the original array. Here we create an array of colors and modify it through the reference of moreColors, mainly by pushing an element yellow.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+   ## JavaScript Reference Types Example: Array Modification
+   <script>
+      // Create an array
+      const colors = ["red", "green", "blue"];
+
+      // Create a reference to the array 
+      let moreColors = colors;
+
+      // Display the original array
+      document.write("pOriginal Array: " + JSON.stringify(colors) + "");
+
+      // Modify the array through the reference
+      moreColors.push("yellow");
+
+      // Display the modified array
+      document.write("pModified Array: " + JSON.stringify(colors) + "");
+
+      // Both references point to the same array, so changes are reflected in both
+      document.write("pOriginal Array after modification through reference: " + JSON.stringify(colors) + "");
+   </script>
+</body>
+</html>
+```
+
+
+### Example 3: Function Reference Type
+
+
+In this example, we create a function greet whose reference is initially assigned to greetingFunction. After using it to say Hello, we modify the reference to point to a different function which greets with Hola. This demonstrated the flexibility of function references in JavaScript.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+   ## JavaScript Reference Types Example: Function Invocation
+   <script>
+      // Create a function
+      function greet(name) {
+         return "Hello, " + name + "!";
+      }
+
+      // Create a reference to the function
+      let greetingFunction = greet;
+
+      document.write("pOriginal Function Result: " + greetingFunction("John") + "");
+    
+      greetingFunction = function(name) {
+         return "Hola, " + name + "!";
+      };
+
+      document.write("pModified Function Result: " + greetingFunction("Maria") + "");
+   </script>
+</body>
+</html>
+```
+
+
+### Example 4: Custom class
+
+
+This example demonstrated custom classes in JavaScript another crucial aspect from the point of view reference types. The class consists of properties and functions/methods. Here we create a class Book with a constructor and a method. 4 instances of this book class are created namely (book1, book2, book3, book4) and are given the respective data such as title, author and genre.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+   ## JavaScript Reference Types Example: Custom class
+   <script>
+      // Define a custom class for Book
+      class Book {
+         constructor(title, author, genre) {
+            this.title = title;
+            this.author = author;
+            this.genre = genre;
+         }
+
+         // Method to get book details
+         getDetails() {
+            return Title: ${this.title}<br>Author: ${this.author}<br>Genre: ${this.genre};
+         }
+      }
+
+      // Create instances of the Book class
+      const book1 = new Book("The Great Gatsby", "F. Scott Fitzgerald", "Fiction");
+      const book2 = new Book("To Kill a Mockingbird", "Harper Lee", "Classics");
+      const book3 = new Book("Harry Potter and the Sorcerer's Stone", "J.K. Rowling", "Fantasy");
+      const book4 = new Book("1984", "George Orwell", "Dystopian Fiction");
+
+      document.write("### Book 1 Details:");
+      document.write("p" + book1.getDetails() + "");
+
+      document.write("### Book 2 Details:");
+      document.write("p" + book2.getDetails() + "");
+
+      document.write("### Book 3 Details:");
+      document.write("p" + book3.getDetails() + "");
+
+      document.write("### Book 4 Details:");
+      document.write("p" + book4.getDetails() + "");
+   </script>
+</body>
+</html>
+```
+
+
+### Example 5: Immutable Objects
+
+
+This example focuses on immutability of objects which is achieved using the Object.freeze() while creating the object. Immutability basically means the object will not change after creation or simply ensures that once an object is defined, its properties cannot be modified. Here we create a person object with name & age as properties and then attempt to change the age to 35. However, this modification is prevented by the frozen state of the object and throws an error. Immutability is an important aspect as helps maintain data integrity thereby preventing unintended changes and enhancing the predictability in code execution.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+   ## Immutable Object with Error Handling
+   <script>
+      // Enable strict mode
+      'use strict';
+
+      // Create an immutable object
+      const person = Object.freeze({
+         name: "Alice",
+         age: 30
+      });
+
+      document.write("p<strong>Before Modification:</strong>");
+      document.write("pName: " + person.name + "");
+      document.write("pAge: " + person.age + "");
+
+      try {
+         // Attempting to modify the object will result in an error
+         person.age = 35;
+      } catch (error) {
+         document.write(error);
+      }
+
+      document.write("p<strong>After Modification Attempt:</strong>");
+      document.write("pName: " + person.name + "");
+      document.write("pAge: " + person.age + "");
+   </script>
+</body>
+</html>
+```
+

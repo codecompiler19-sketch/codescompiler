@@ -1,0 +1,261 @@
+---
+title: "SQL - Drop Table"
+description: "Learn SQL - Drop Table with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 240
+group: "SQL Table"
+seoTitle: "SQL - Drop Table — CodesCompiler SQL Guide"
+permalink: "sql-drop-table"
+---
+
+
+# SQL DROP TABLE
+
+
+
+
+
+
+## SQL DROP TABLE Command
+
+
+TheDROP TABLEcommand in SQL is used to delete an entire table from the database permanently. This command removes both the table structure and all the data stored in it.
+
+
+Once a table is dropped, itcannot be recoveredunless a backup exists. So, use this command with caution.
+
+
+### Syntax
+
+
+Following is the basic syntax to drop a table in SQL:
+
+
+```sql
+DROP TABLE table_name;
+```
+
+
+### Example
+
+
+Assume we have created a table named CUSTOMERS using the CREATE TABLE statement as shown below:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+
+   ID INT NOT NULL,
+
+   NAME VARCHAR (20) NOT NULL,
+
+   AGE INT NOT NULL,
+
+   ADDRESS CHAR (25),
+
+   SALARY DECIMAL (18, 2),
+
+   PRIMARY KEY (ID)
+
+);
+```
+
+
+First, we will verify the structure of the CUSTOMERS table using the DESC command, and then proceed to delete it from the database:
+
+
+```sql
+DESC CUSTOMERS;
+```
+
+
+If the table is created successfully, the above command displays the structure of the table as shown below:
+
+
+FieldTypeNullKeyDefaultExtraIDintNOPRINULLNAMEvarchar(20)NONULLAGEintNONULLADDRESSchar(25)YESNULLSALARYdecimal(18,2)YESNULL
+
+
+This means that the CUSTOMERS table is available in our database, so let us now drop it as shown below:
+
+
+```sql
+DROP TABLE CUSTOMERS;
+```
+
+
+We get the output as shown below:
+
+
+```sql
+Query OK, 0 rows affected (0.04 sec)
+```
+
+
+## Verifying the Table Deletion
+
+
+Now, to verify if the table is actually dropped, you can use the DESC CUSTOMERS command as shown below:
+
+
+```sql
+DESC CUSTOMERS;
+```
+
+
+It displays the following error:
+
+
+```sql
+ERROR 1146 (42S02): Table 'testdb.customers' doesn't exist
+```
+
+
+When you drop a MySQL table using theDROP TABLEcommand, any privileges that were granted specifically to that table are not removed automatically, they must be revoked manually.
+
+
+## Dropping Multiple Tables
+
+
+Sometimes you may want to delete more than one table at once. In SQL (supported in MySQL and some other databases), you can drop multiple tables by separating their names with commas in a singleDROP TABLEstatement.
+
+
+### Syntax
+
+
+Following is the basic syntax to drop multiple tables at once in MySQL database:
+
+
+```sql
+DROP TABLE table1, table2, table3;
+```
+
+
+### Example
+
+
+The following command drops two tables namedsalaryandCUSTOMERSin MySQL:
+
+
+```sql
+DROP TABLE salary, CUSTOMERS;
+```
+
+
+We get the output as shown below:
+
+
+```sql
+Query OK, 0 rows affected (0.05 sec)
+```
+
+
+## DROP TABLE Using IF EXISTS Clause
+
+
+When you try to drop a table that does not exist, SQL throws an error. To avoid this, you can use theIF EXISTSclause with theDROP TABLEstatement. This allows the command to run safely by checking whether the table exists before attempting to drop it.
+
+
+### Syntax
+
+
+Following is the basic syntax to drop a table using IF EXISTS clause:
+
+
+```sql
+DROP TABLE [IF EXISTS] table_name;
+```
+
+
+### Example Without IF EXISTS
+
+
+In the following example, we drop a table that does not exist, without using the IF EXISTS clause:
+
+
+```sql
+DROP TABLE CUSTOMERS;
+```
+
+
+This will result in the following error:
+
+
+```sql
+ERROR 1051 (42S02): Unknown table 'testdb.customers'
+```
+
+
+### Example With IF EXISTS
+
+
+Now, we drop a table that does not exist, this time using theIF EXISTSclause:
+
+
+```sql
+DROP TABLE IF EXISTS CUSTOMERS;
+```
+
+
+If the table exists, it will be dropped. If it doesn't exist, the command is simply ignored with a warning:
+
+
+```sql
+Query OK, 0 rows affected, 1 warning (0.02 sec)
+```
+
+
+## Dropping a TEMPORARY Table
+
+
+In SQL, you can drop a temporary table by using theTEMPORARYkeyword with theDROP TABLEstatement. This helps to prevent accidental deletion of regular (non-temporary) tables.
+
+
+### Syntax
+
+
+Following is the basic syntax to drop a temporary table in MySQL:
+
+
+```sql
+DROP TEMPORARY TABLE table_name;
+```
+
+
+### Example
+
+
+Following is an example to delete a temporary tableCUSTOMERSin MySQL:
+
+
+```sql
+DROP TEMPORARY TABLE CUSTOMERS;
+```
+
+
+We get the output as shown below:
+
+
+```sql
+Query OK, 0 rows affected (0.05 sec)
+```
+
+
+## Important Points for Dropping a Table
+
+
+Following are the important points to remember when dropping a table in SQL:
+
+
+
+- Once a table is dropped, both the table and its data are permanently deleted and cannot be recovered.
+- Always back up your data before dropping a table if there's any chance you might need it later.
+- If you only want to remove the data but keep the table structure, consider using the DELETE or TRUNCATE commands instead.
+- To drop a table, the user must haveALTERpermission on the table andCONTROLpermission on the schema containing the table.
+
+
+
+## Conclusion
+
+
+TheDROP TABLEstatement is used to permanently delete a table and all of its data from the database. If you only want to remove the data and keep the structure, use theTRUNCATEcommand.
+

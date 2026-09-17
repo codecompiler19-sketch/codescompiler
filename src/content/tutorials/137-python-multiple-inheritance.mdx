@@ -1,0 +1,304 @@
+---
+title: "PYTHON - Multiple Inheritance"
+description: "Learn PYTHON - Multiple Inheritance with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1370
+group: "Object Oriented Programming"
+seoTitle: "PYTHON - Multiple Inheritance — CodesCompiler PYTHON Guide"
+permalink: "python-multiple-inheritance"
+---
+
+
+# Python - Multiple Inheritance
+
+
+
+
+Theinheritanceis a feature in object-oriented programming that allows a class to inherit attributes and methods from another class. In Python, you can implement different types of inheritance, such as single inheritance, multiple inheritance, and multilevel inheritance. This chapter coversmultiple inheritancein detail.
+
+
+## What is Multiple Inheritance?
+
+
+Multiple inheritance is a type of inheritance where a single class can inherit attributes and methods from more than one parent class. This can be used when you want to get the functionality of multiple classes into a single class. The image below illustrates multiple inheritance −
+
+
+### Example of Multiple Inheritance
+
+
+In the following example, the Child class inherits from both the Father and Mother classes −
+
+
+```python
+class Father:
+
+    def skill1(self):
+
+        print("Father's skill: Gardening")
+
+
+
+class Mother:
+
+    def skill2(self):
+
+        print("Mother's skill: Cooking")
+
+
+
+class Child(Father, Mother):
+
+    pass
+
+
+
+c = Child()
+
+c.skill1()
+
+c.skill2()
+```
+
+
+The output of above code will be −
+
+
+```python
+Father's skill: Gardening
+
+Mother's skill: Cooking
+```
+
+
+Explanation:In this example, theChildclass have access to bothskill1()andskill2()methods from its parent classes. When we create an instance of Child and callskill1(), it executes the method from the Father class. Similarly, when we callskill2(), it executes the method from the Mother class.
+
+
+But, what will happen if both parent classes have a method with the same name? Which will be executed? This is where the method resolution order (MRO) comes into play.
+
+
+## Method Resolution Order for Multiple Inheritance
+
+
+If methods with same name are defined in multiple parent classes, Python follows a specific order to decide which method to execute. This order is known as theMethod Resolution Order (MRO). This order is determined by the C3 linearization algorithm, also called MRO. The MRO order is listed below.
+
+
+
+- First, Python looks for the method in the child class itself.
+- If not found, it searches the parent classes in the order they are listed.
+- This continues until the method is found or all classes have been searched.
+
+
+
+You can check the MRO of a object using themro()method or the__mro__attribute. For example −
+
+
+```python
+print(Child.mro())
+
+
+
+Output:
+
+[<class '__main__.Child'>, <class '__main__.Father'>, <class '__main__.Mother'>, 
+
+<class 'object'>]
+```
+
+
+### Example
+
+
+In the following example, the Child class inherits skill() method from both the Father and Mother classes, but mother's method is called.
+
+
+```python
+class Father:
+
+    def skill(self):
+
+        print("Father's skill: Gardening")
+
+
+
+class Mother:
+
+    def skill(self):
+
+        print("Mother's skill: Cooking")
+
+
+
+class Child(Father, Mother):
+
+    pass
+
+
+
+c = Child()
+
+c.skill()
+```
+
+
+Explanation:When the skill method is called on the Child class instancec, it will first look for the method in the Child class. Since the Child class does not have a skill method, it will search the parent classes in the order they are listed (Father, then Mother) and execute the first one it finds.
+
+
+The output of above code will be −
+
+
+```python
+Father's skill: Gardening
+```
+
+
+## Using super() in Multiple Inheritance
+
+
+Thesuper()function is used by child class to call a method from a parent class. If you use super() in a method in the case of multiple inheritance, it will strictly follow the MRO order to determine which method to call.
+
+
+### Example
+
+
+In this example, we have a class hierarchy with four classes: A, B, C, and D. Class D inherits from both B and C, demonstrating multiple inheritance.
+
+
+```python
+class A:
+
+    def show(self):
+
+        print("Class A")
+
+
+
+class B(A):
+
+    def show(self):
+
+        print("Class B")
+
+        super().show()
+
+
+
+class C(A):
+
+    def show(self):
+
+        print("Class C")
+
+        super().show()
+
+
+
+class D(B, C):
+
+    def show(self):
+
+        print("Class D")
+
+        super().show()
+
+
+
+d = D()
+
+d.show()
+```
+
+
+The output of the above code will be −
+
+
+```python
+Class D
+
+Class B
+
+Class C
+
+Class A
+```
+
+
+Explanation:The MRO for class D is [D, B, C, A, object]. This means that when a method is called on an instance of D, Python will look for the method in D first, then B, then C, and finally A. So, "Class D", "Class B", "Class C", and "Class A" will be printed in that order.
+
+
+## Diamond Problem in Multiple Inheritance
+
+
+The diamond problem is a common issue in multiple inheritance. It arises when two parent classes inherit from the same base class, and a child class inherits from both parent classes. The diagram below shows this scenario:
+
+
+The diamond problem creates a confusion that which method to call from the base class when it is inherited by the child class. Python resolves this by following a the mro (Method Resolution Order) that we discussed earlier. Let's see an example of the diamond problem −
+
+
+### Example
+
+
+The code below demonstrates the diamond problem and how Python resolves it using MRO −
+
+
+```python
+class A:
+
+    def show(self):
+
+        print("Class A")
+
+
+
+class B(A):
+
+    def show(self):
+
+        print("Class B")
+
+
+
+class C(A):
+
+    def show(self):
+
+        print("Class C")
+
+
+
+class D(B, C):
+
+    pass
+
+
+
+d = D()
+
+d.show()
+```
+
+
+The output of the above code will be −
+
+
+```python
+Class B
+```
+
+
+Explanation:The MRO order for class D is [D, B, C, A]. So, when d.show() is called, it first looks in class D, no show function is found there, so it goes to class B, finds the show function, and executes it.
+
+
+## Pros and Cons of Multiple Inheritance
+
+
+The multiple inheritance has several advantages and disadvantages −
+
+
+ProsConsImproves code modularity and reusability.Increases complexity and may cause ambiguity.Allows combining functionalities from multiple classes.Can lead to the diamond problem.Can create complex real-world relationshipsHarder to debug and maintain.
+
+
+## Conclusion
+
+
+Multiple inheritance is object-oriented programming concept where a method from multiple parent classes can be inherited by a child class. We have discussed how Python handles multiple inheritance using Method Resolution Order (MRO) and how to use the super() function. The diamond problem is a common issue in multiple inheritance, but Python resolves it using MRO. The main drawback of multiple inheritance is it makes the class hierarchy more complex and harder to understand.
+

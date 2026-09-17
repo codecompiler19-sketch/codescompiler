@@ -1,0 +1,232 @@
+---
+title: "JavaScript - CORS Handling"
+description: "Learn JavaScript - CORS Handling with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1780
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - CORS Handling — CodesCompiler JavaScript Guide"
+permalink: "javascript-cors-handling"
+---
+
+
+# JavaScript - CORS Handling
+
+
+
+
+Cross-Origin Resource Sharing (CORS) is a browser-level security feature that, by default, blocks queries across different origins, like a front-end client querying a back-end server hosted on a separate origin or domain.
+
+
+We can use a variety of strategies to avoid or enable cross-origin queries. In this chapter, we will use code examples to demonstrate how to handle CORS in JavaScript.
+
+
+## What Is CORS?
+
+
+CORS is a security feature in web browsers which is used to prevent malicious sites from making unwanted requests to other domains. It maintains the same-origin policy, which prevents web pages from sending requests to domains other than those that served the page. CORS enables servers to specify who can access their resources.
+
+
+### Importance of CORS
+
+
+CORS is important for security, however it might be difficult during web development and API use. Developers deal with problems while trying to access resources from many domains. Let us examine these common issues and their solutions.
+
+
+## CORS Handling using Express server
+
+
+In this method, we will develop and use NodeJS and ExpressJS servers to handle CORS requests. To accept requests from any origin, we can add the "Access-Control-Allow-Origin" header to each response object header.
+
+
+### Example
+
+
+First you need to install the necessary packages for the application by using the below steps −
+
+
+```javascript
+npm init -y
+npm i express
+```
+
+
+Create the index.js file:Create the index.js file and set up the express server. Allow the "Access-Control-Allow-Origin" response header to be delivered for all requests to the same file.
+
+
+```javascript
+const express = require('express');
+const server = express();
+
+server.use((request, response, proceed) => {
+   response.header('Access-Control-Allow-Origin', '*');
+   response.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+   response.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+   proceed();
+});
+
+server.get('/info', (request, response) => {
+   response.json({country: 'India', currencyCode: 'INR'});
+});
+server.listen(3000, () => {
+   console.log('Application is live on port 3000');
+});
+```
+
+
+Run the express API server:Now you have to start the server with the help of the below command.
+
+
+```javascript
+npm start
+```
+
+
+Create a Vanilla JS Application:Now you have to create a vanilla JavaScript application for consuming the above API server endpoint. For this you have to run the following commands in the terminal to create a basic structure for creating our JS application.
+
+
+```javascript
+mkdir cors-test
+cd cors-test
+touch index.html
+```
+
+
+Now, change the project structure's index.html file to request data from the express API server and show it in the user interface.
+
+
+The index.html file is as follows −
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+   <body>
+      <h1>Data from Server</h1>
+      <div id="infoDisplay"></div>
+      <script>
+         document.addEventListener('DOMContentLoaded', () => {
+            const infoContainer = document.getElementById('infoDisplay');
+            fetch('http://localhost:3000/info').then(serverResponse => serverResponse.json()).then(info => {
+               const {
+                  country,
+                  currencyCode
+               } = info;
+               infoContainer.innerHTML = 
+                     
+      	pCountry: ${country}
+      	pCurrency Code: ${currencyCode}
+                  `;
+            }).catch(fetchError => {
+               console.warn('Failed to retrieve data:', fetchError);
+               infoContainer.innerHTML = ' < p > Error retrieving data.Please
+               try again later. < /p>';
+            });
+         });
+      </script>
+   </body>
+</html>
+```
+
+
+Run the Vanilla JS Application:Now you can open the index.html file you have created above and see the output in the browser.
+
+
+Output
+
+
+This will generate the below result −
+
+
+## Common CORS Issues
+
+
+Here are some of the common issues are listed for your reference −
+
+
+### Unauthorized Access Blocked by CORS
+
+
+One of the most common CORS issue is getting the error 'Access to XMLHttpRequest at 'URL' from origin 'Origin' has been blocked by CORS policy' in the browser console.
+
+
+To handle this problem you need to setup your server to provide the required CORS headers to enable access from the requesting origin.
+
+
+#### Example using Node.js and Express.js
+
+
+Following is the example using node.js and express.js −
+
+
+```javascript
+const express = require('express');
+const server = express();
+
+// Enable CORS for a specific origin
+server.use((request, response, proceed) => {
+   response.setHeader('Access-Control-Allow-Origin', 'https://example.com');
+   response.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+   response.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+   // If cookies are needed
+   response.setHeader('Access-Control-Allow-Credentials', 'true'); 
+   proceed();
+});
+
+// Your API routes
+server.get('/api/info', (request, response) => {
+   // Your response logic
+   response.json({ details: 'Information from the server' });
+});
+
+server.listen(3000, () => {
+   console.log('Application active on port 3000');
+});
+```
+
+
+In this example, we enabled CORS for a given origin (https://example.com) by giving the headers. This enables requests from https://example.com to access server resources.
+
+
+### Missing CORS Headers
+
+
+Sometimes the server fails to include the required CORS headers when it responses, leading the browser to block the request.
+
+
+Make that your server contains the necessary CORS headers in its answers to allow cross-origin queries.
+
+
+#### Example using Node.js and Express.js
+
+
+Here is the example using node.js and express.js −
+
+
+```javascript
+const express = require('express');
+const server = express();
+
+// Add CORS headers to all responses
+server.use((request, response, proceed) => {
+   response.setHeader('Access-Control-Allow-Origin', '*'); 
+   response.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+   response.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+   // If cookies are needed
+   response.setHeader('Access-Control-Allow-Credentials', 'true'); 
+   proceed();
+});
+
+// Your API routes
+server.get('/api/info', (request, response) => {
+   // Your response logic
+   response.json({ info: 'Information from the server' });
+});
+
+server.listen(3000, () => {
+   console.log('Application is now active on port 3000');
+});
+```
+
+
+In this example, CORS headers are added to all responses using middle-ware, enabling requests from any origin. But for security reasons, acceptable origins must be limited in a production environment.
+

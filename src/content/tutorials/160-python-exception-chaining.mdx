@@ -1,0 +1,145 @@
+---
+title: "PYTHON - Exception Chaining"
+description: "Learn PYTHON - Exception Chaining with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1600
+group: "Python Errors & Exceptions"
+seoTitle: "PYTHON - Exception Chaining — CodesCompiler PYTHON Guide"
+permalink: "python-exception-chaining"
+---
+
+
+# Python - Exception Chaining
+
+
+
+
+## Exception Chaining
+
+
+Exception chaining is a technique of handling exceptions by re-throwing a caught exception after wrapping it inside a new exception. The original exception is saved as a property (such as cause) of the new exception.
+
+
+During the handling of one exception 'A', it is possible that another exception 'B' may occur. It is useful to know about both exceptions in order to debug the problem. Sometimes it is useful for an exception handler to deliberately re-raise an exception, either to provide extra information or to translate an exception to another type.
+
+
+In Python 3.x, it is possible to implement exception chaining. If there is any unhandled exception inside an except section, it will have the exception being handled attached to it and included in the error message.
+
+
+### Example
+
+
+In the following code snippet, trying to open a non-existent file raises FileNotFoundError. It is detected by the except block. While handling another exception is raised.
+
+
+```python
+try:
+   open("nofile.txt")
+except OSError:
+   raise RuntimeError("unable to handle error")
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Traceback (most recent call last):
+  File "/home/cg/root/64afcad39c651/main.py", line 2, in <module>
+open("nofile.txt")
+FileNotFoundError: [Errno 2] No such file or directory: 'nofile.txt'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/cg/root/64afcad39c651/main.py", line 4, in <module>
+    raise RuntimeError("unable to handle error")
+RuntimeError: unable to handle error
+```
+
+
+## The raise . . from Statement
+
+
+If you use an optional from clause in the raise statement, it indicates that an exception is a direct consequence of another. This can be useful when you are transforming exceptions. The token after from keyword should be the exception object.
+
+
+```python
+try:
+   open("nofile.txt")
+except OSError as exc:
+   raise RuntimeError from exc
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Traceback (most recent call last):
+  File "/home/cg/root/64afcad39c651/main.py", line 2, in <module>
+    open("nofile.txt")
+FileNotFoundError: [Errno 2] No such file or directory: 'nofile.txt'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/cg/root/64afcad39c651/main.py", line 4, in <module>
+    raise RuntimeError from exc
+RuntimeError
+```
+
+
+## The raise . . from None Statement
+
+
+If we use None in from clause instead of exception object, the automatic exception chaining that was found in the earlier example is disabled.
+
+
+```python
+try:
+   open("nofile.txt")
+except OSError as exc:
+   raise RuntimeError from None
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Traceback (most recent call last):
+ File "C:\Python311\hello.py", line 4, in <module>
+  raise RuntimeError from None
+RuntimeError
+```
+
+
+## The __context__ and __cause__ Expression
+
+
+Raising an exception in the except block will automatically add the captured exception to the __context__ attribute of the new exception. Similarly, you can also add __cause__ to any exception using the expressionraise ... fromsyntax.
+
+
+```python
+try:
+   try:
+      raise ValueError("ValueError")
+   except ValueError as e1:
+      raise TypeError("TypeError") from e1
+except TypeError as e2:
+   print("The exception was", repr(e2))
+   print("Its __context__ was", repr(e2.__context__))
+   print("Its __cause__ was", repr(e2.__cause__))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+The exception was TypeError('TypeError')
+Its __context__ was ValueError('ValueError')
+Its __cause__ was ValueError('ValueError')
+```
+

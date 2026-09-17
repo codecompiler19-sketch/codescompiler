@@ -1,0 +1,433 @@
+---
+title: "SQL - Update Join"
+description: "Learn SQL - Update Join with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 700
+group: "SQL Joins"
+seoTitle: "SQL - Update Join — CodesCompiler SQL Guide"
+permalink: "sql-update-joins"
+---
+
+
+# SQL - UPDATE JOIN Statement
+
+
+Table of contentThe SQL UPDATE JOINUPDATE JOIN with WHERE ClauseThe UPDATE JOIN Clause in SQL ServerSQL UPDATE JOIN Using LEFT JOINSQL UPDATE JOIN Using INNER JOINImportant Points About SQL UPDATE JOIN
+
+
+
+
+## The SQL UPDATE JOIN
+
+
+AnUPDATE JOINin SQL is used to update records in one table based on matching values from another table. By combining theUPDATEstatement with aJOIN, you can modify rows in a target table using data from related tables.
+
+
+This is useful when you need to synchronize or adjust data across multiple tables that share a common key.
+
+
+### Syntax
+
+
+Following is the basic syntax of the SQL UPDATE JOIN statement:
+
+
+```sql
+UPDATE table1
+JOIN table2 ON table1.common_field = table2.common_field
+SET table1.column_to_update = table2.column_value
+WHERE table2.some_column = 'value';
+```
+
+
+Where,JOINcan be: Regular Join, Natural Join, Inner Join, Outer Join, Left Join, Right Join, Full Join etc.
+
+
+### Example
+
+
+Assume we have created a table named CUSTOMERS, which contains the personal details of customers including their name, age, address and salary etc., using the following query:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),       
+   PRIMARY KEY (ID)
+);
+```
+
+
+Now, insert values into this table using the INSERT statement as follows:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+(2, 'Khilan', 25, 'Delhi', 1500.00 ),
+(3, 'Kaushik', 23, 'Kota', 2000.00 ),
+(4, 'Chaitali', 25, 'Mumbai', 6500.00 ),
+(5, 'Hardik', 27, 'Bhopal', 8500.00 ),
+(6, 'Komal', 22, 'Hyderabad', 4500.00 ),
+(7, 'Muffy', 24, 'Indore', 10000.00 );
+```
+
+
+The table will be created as:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+Let us create another table ORDERS, containing the details of orders made and the date they are made on.
+
+
+```sql
+CREATE TABLE ORDERS (
+   OID INT NOT NULL,
+   DATE VARCHAR (20) NOT NULL,
+   CUSTOMER_ID INT NOT NULL,
+   AMOUNT DECIMAL (18, 2)
+);
+```
+
+
+Using the INSERT statement, insert values into this table as follows:
+
+
+```sql
+INSERT INTO ORDERS VALUES 
+(102, '2009-10-08 00:00:00', 3, 3000.00),
+(100, '2009-10-08 00:00:00', 3, 1500.00),
+(101, '2009-11-20 00:00:00', 2, 1560.00),
+(103, '2008-05-20 00:00:00', 4, 2060.00);
+```
+
+
+The table is displayed as follows:
+
+
+OIDDATECUSTOMER_IDAMOUNT1022009-10-08 00:00:0033000.001002009-10-08 00:00:0031500.001012009-11-20 00:00:0021560.001032008-05-20 00:00:0042060.00
+
+
+Following UPDATE JOIN query increments the salary of customers by 1000 with respect to the inflation of their order amount by 500:
+
+
+```sql
+UPDATE CUSTOMERS 
+JOIN ORDERS 
+ON CUSTOMERS.ID = ORDERS.CUSTOMER_ID 
+SET CUSTOMERS.SALARY = CUSTOMERS.SALARY + 1000, 
+ORDERS.AMOUNT = ORDERS.AMOUNT + 500;
+```
+
+
+We get the following output:
+
+
+```sql
+Query OK, 7 rows affected (0.04 sec)
+Rows matched: 7  Changed: 7  Warnings: 0
+```
+
+
+### Verification
+
+
+We can verify whether the changes are reflected in a table by retrieving its contents using the SELECT statement as follows:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+The updated CUSTOMERS table is displayed as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi2500.003Kaushik23Kota3000.004Chaitali25Mumbai7500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+Now, check whether the ORDERS table is updated using the following SELECT statement:
+
+
+```sql
+SELECT * FROM ORDERS;
+```
+
+
+The updated ORDERS table is displayed as follows:
+
+
+OIDDATECUSTOMER_IDAMOUNT1022009-10-08 00:00:0033500.001002009-10-08 00:00:0032000.001012009-11-20 00:00:0022060.001032008-05-20 00:00:0042560.00
+
+
+## UPDATE JOIN with WHERE Clause
+
+
+AnUPDATE JOINcan be combined with aWHEREclause to update only those rows that meet specific conditions after the join. The join defines the relationship between the tables, while the WHERE clause filters which rows should be updated.
+
+
+### Syntax
+
+
+The syntax of SQL UPDATE JOIN with WHERE clause in MySQL database is as follows:
+
+
+```sql
+UPDATE table(s)
+JOIN table2 ON column3 = column4
+SET table1.column1 = value1, table1.column2 = value2, ...
+WHERE condition;
+```
+
+
+### Example
+
+
+Now, let us execute the following query to increase the salary of customer whose id is3:
+
+
+```sql
+UPDATE CUSTOMERS 
+LEFT JOIN ORDERS 
+ON CUSTOMERS.ID = ORDERS.CUSTOMER_ID 
+SET CUSTOMERS.SALARY = CUSTOMERS.SALARY + 1000 
+WHERE ORDERS.CUSTOMER_ID = 3;
+```
+
+
+We get the following output:
+
+
+```sql
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+```
+
+
+### Verification
+
+
+We can verify whether the changes are reflected in a table by retrieving its contents using the SELECT statement as follows.
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+As we can see in the table below, SALARY value of "Kaushik" is increased by 1000:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota3000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## The UPDATE JOIN Clause in SQL Server
+
+
+The SQL UPDATE JOIN clause also works in SQL Server database. But, the syntax of the query is slightly different from that of MySQL. However, the working of it is exactly the same as MySQL query.
+
+
+In MySQL, the UPDATE statement is followed by the JOIN clause and SET statements respectively. Whereas, in MS SQL Server the SET statement is followed by the JOIN clause.
+
+
+### Syntax
+
+
+Following is the syntax of theUPDATE JOINin SQL Server:
+
+
+```sql
+UPDATE table1
+SET table1.col = table2.col
+FROM table1
+JOIN table2 ON table1.common_field = table2.common_field
+WHERE table2.some_column = 'value';
+```
+
+
+### Example
+
+
+In this example, we will update values of the CUSTOMERS and ORDERS table that we created above using the following UPDATE JOIN query:
+
+
+```sql
+UPDATE CUSTOMERS
+SET SALARY = SALARY + 1000
+FROM CUSTOMERS 
+JOIN ORDERS ON CUSTOMERS.ID = ORDERS.CUSTOMER_ID;
+```
+
+
+We get the output as shown below:
+
+
+```sql
+(3 rows affected)
+```
+
+
+### Verification
+
+
+We can verify whether the changes are reflected in a table by retrieving its contents using the SELECT statement as follows.
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+The updated CUSTOMERS table is displayed as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi2500.003Kaushik23Kota3000.004Chaitali25Mumbai7500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## SQL UPDATE JOIN Using LEFT JOIN
+
+
+TheLEFT JOINin an UPDATE statement is used when you want to update records in one table based on matching records from another table, while still considering rows from the left (first) table that do not have a match in the right (second) table.
+
+
+This is useful when you want to update all rows in the left table regardless of whether they have corresponding rows in the right table.
+
+
+### Syntax
+
+
+The syntax of SQL UPDATE JOIN using LEFT JOIN is as follows:
+
+
+```sql
+UPDATE table1
+LEFT JOIN table2 ON table1.common_field = table2.common_field
+SET table1.column_to_update = table2.column_value
+WHERE condition;
+```
+
+
+### Example
+
+
+Suppose we want to update theSALARYof all customers by 500 if they have placed an order, otherwise leave their salary unchanged:
+
+
+```sql
+UPDATE CUSTOMERS
+LEFT JOIN ORDERS
+ON CUSTOMERS.ID = ORDERS.CUSTOMER_ID
+SET CUSTOMERS.SALARY = CUSTOMERS.SALARY + 500
+WHERE ORDERS.CUSTOMER_ID IS NOT NULL;
+```
+
+
+This ensures that only customers with orders receive the salary increment. We get the output as shown below:
+
+
+```sql
+Query OK, 3 rows affected (0.04 sec)
+Rows matched: 3  Changed: 3  Warnings: 0
+```
+
+
+### Verification
+
+
+We can verify the changes by executing the following SELECT query:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+You will see that the salary values of customers who placed orders are updated accordingly.
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi2000.003Kaushik23Kota2500.004Chaitali25Mumbai7000.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## SQL UPDATE JOIN Using INNER JOIN
+
+
+AnINNER JOINin an UPDATE statement only updates rows in the target table that have matching rows in the joined table. If no match is found, no update occurs for that row.
+
+
+This is the most common type of UPDATE JOIN when you only want to update related data.
+
+
+### Syntax
+
+
+The syntax of SQL UPDATE JOIN using INNER JOIN is as follows:
+
+
+```sql
+UPDATE table1
+INNER JOIN table2 ON table1.common_field = table2.common_field
+SET table1.column_to_update = table2.column_value
+WHERE condition;
+```
+
+
+### Example
+
+
+Let us increase theSALARYof only those customers who have placed an order worth more than2000:
+
+
+```sql
+UPDATE CUSTOMERS
+INNER JOIN ORDERS
+ON CUSTOMERS.ID = ORDERS.CUSTOMER_ID
+SET CUSTOMERS.SALARY = CUSTOMERS.SALARY + 1000
+WHERE ORDERS.AMOUNT > 2000;
+```
+
+
+We get the output as follows:
+
+
+```sql
+Query OK, 2 rows affected (0.02 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+```
+
+
+### Verification
+
+
+We can verify the result by executing the following SELECT query:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+Only customers with orders greater than 2000 will have their salaries updated:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota3000.004Chaitali25Mumbai7500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## Important Points About SQL UPDATE JOIN
+
+
+Following are some important points you should know for using UPDATE JOIN in SQL:
+
+
+
+- Running an UPDATE JOIN without a WHERE clause may update a large number of rows unintentionally.
+- Always test your JOIN conditions using a SELECT query before running the UPDATE to ensure the correct rows are targeted.
+- In some databases (like MySQL), you can update columns in both tables involved in the join, but in others (like SQL Server), you may only update one table at a time.
+- UPDATE JOIN queries can be heavy on performance for large tables. Make sure proper indexes exist on the join columns.
+- UseINNER JOINwhen you only want to update matching rows. UseLEFT JOINwhen you also want to consider rows without matches in the right table.
+
+

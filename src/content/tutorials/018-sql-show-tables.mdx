@@ -1,0 +1,174 @@
+---
+title: "SQL - Show Tables"
+description: "Learn SQL - Show Tables with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 180
+group: "SQL Table"
+seoTitle: "SQL - Show Tables — CodesCompiler SQL Guide"
+permalink: "sql-show-tables"
+---
+
+
+# SQL - Show Tables (Listing Tables)
+
+
+Table of contentMySQL - Listing TablesSQL Server - Listing TablesOracle - Listing Tables
+
+
+
+
+There are several instances when you need to retrieve a list of tables from your database. This could be done for testing purposes, to identify any existing tables before adding or removing any, or for any other reason. This tutorial will discuss how we can list down all the table in MySQL, SQL Server and Oracle using simple SQL commands.
+
+
+## MySQL - Listing Tables
+
+
+You can use SQLSHOW TABLESstatements in MySQL to list down all the tables available in a selected database.
+
+
+### Syntax
+
+
+Following is the syntax to list all the tables in SQL in MySQL −
+
+
+```sql
+SHOW TABLES;
+```
+
+
+### Example
+
+
+Following is an example which will list down all the tables from atestDBdatabase.
+
+
+```sql
+USE testDB;
+
+SHOW TABLES;
+```
+
+
+This will display the following output depending on the number of tables available in your database.
+
+
+Tables_in_testDBCALENDARCUSTOMERSCOMPANIESSALARY
+
+
+## SQL Server - Listing Tables
+
+
+SQL Serverdoes notprovide SHOW TABLE command in an SQL Server. Instead, we can use the "SELECT" statement to retrieve information about tables in a database. We have three different commands to use with the SELECT statement to list all the tables in a database −
+
+
+
+- sys.tables
+- information_schema.tables
+- sysobjects
+
+
+
+### The SYS.TABLES View
+
+
+Following is the syntax to list down all the tables in SQL using theSYS.TABLESview −
+
+
+```sql
+SELECT * FROM SYS.TABLES;
+```
+
+
+Following is the output of the above query −
+
+
+nameobject_idprincipal_idschema_idCUSTOMER4195065NULL1ORDERS68195293NULL1COMPANIES100195407NULL1SALARY2107154552NULL1
+
+
+### The INFORMATION_SCHEMA.TABLES View
+
+
+Following is the syntax to list down all the tables in SQL using theINFORMATION_SCHEMA.TABLESview −
+
+
+```sql
+SELECT table_name, table_type FROM INFORMATION_SCHEMA.TABLES;
+```
+
+
+Following is the output of the above query −
+
+
+table_nametable_typeCUSTOMERBASE TABLEORDERSBASE TABLECOMPANIESBASE TABLESALARYBASE TABLE
+
+
+### The SYSOBJECTS View
+
+
+You can useSYSOBJECTSview to retrieve the information of all the objects created in SQL Server database, including stored procedures, views, system tables and user-defined tables. Following is the basic syntax of using sysobjects view −
+
+
+```sql
+SELECT name, id, xtype FROM sysobjects WHERE xtype = 'U';
+```
+
+
+Click here to see the different value of xtypeValueMeaningAFAggregate function (CLR)CCHECK constraintDDefault or DEFAULT constraintFFOREIGN KEY constraintLLogFNScalar functionFSAssembly (CLR) scalar-functionFTAssembly (CLR) table-valued functionIFIn-lined table-functionITInternal tablePStored procedurePCAssembly (CLR) stored-procedurePKPRIMARY KEY constraint (type is K)RFReplication filter stored procedureSSystem tableSNSynonymSQService queueTAAssembly (CLR) DML triggerTFTable functionTRSQL DML TriggerTTTable typeUUser tableUQUNIQUE constraint (type is K)VViewXExtended stored procedure
+
+
+This will produce following result −
+
+
+nameidxtypeCUSTOMER4195065UORDERS68195293UCOMPANIES100195407USALARY2107154552U
+
+
+## Oracle - Listing Tables
+
+
+There are following three SQL SELECT statements which you can use to list down the tables available in Oracle.
+
+
+### Listing ALL Tables
+
+
+Following is the SQL SELECT statement which will list down all the available tables in an Oracle Database.
+
+
+```sql
+SELECT owner, table_name FROM ALL_TABLES
+```
+
+
+### Listing DBA Tables
+
+
+Following is the SQL SELECT statement which will list down all the DBA related tables in an Oracle Database.
+
+
+```sql
+SELECT owner, table_name FROM DBA_TABLES
+```
+
+
+### Listing USER Tables
+
+
+Following is the SQL SELECT statement which will list down all the USER created tables in an Oracle Database.
+
+
+```sql
+SELECT owner, table_name FROM USER_TABLES
+```
+
+
+### Listing ALL Views
+
+
+Following is the SQL SELECT statement which will list down all the views available in an Oracle Database.
+
+
+```sql
+SELECT view_name FROM ALL_VIEWS;
+```
+

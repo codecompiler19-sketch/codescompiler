@@ -1,0 +1,370 @@
+---
+title: "JavaScript - Reduce Method"
+description: "Learn JavaScript - Reduce Method with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2300
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Reduce Method — CodesCompiler JavaScript Guide"
+permalink: "javascript-reduce-method"
+---
+
+
+# JavaScript - Reduce Method
+
+
+
+
+## What is Reduce Method?
+
+
+In JavaScript,Reducemethod is used to manipulate array. This method executes areducer functionon each element of the array (from left to right) and returns a 'single value' as a result.
+
+
+It accepts an optional parameter named 'initialValue'. If we do not pass this parameter to the method, it will consider the arr[0] value as the initial value. Additionally, it will execute the callback function on the passed initialValue parameter.
+
+
+This method does not execute the reducer function for empty array elements. In addition to that, it does not modify the original array.
+
+
+Note :If the current array is empty or doesn't contain any initialValue, this method will throw a 'TypeError' exception.
+
+
+### Syntax
+
+
+Following is the syntax of JavaScript Array.reduce() method
+
+
+```javascript
+reduce(callbackFn(accumulator, currentValue, currentIndex, array), initialValue)
+```
+
+
+### Parameters
+
+
+Thereduce()function has two parameters which are callbackfn() and initialValue. They are described below in detail.
+
+
+
+- initialValue (optional):The value to which the accumulator parameter is initialized when the first time the callback function is called.
+- callbackFn:This is the function that executes on each element in the array.
+
+
+
+ThecallbackFn()function in turn takes four arguments They are -
+
+
+
+- accumulator:This is the current element being processed in the array. If the initialValue is specified, its value will be arr[0], if not its value will be arr[1].
+- currentValue:It refers to the current element.
+- currentIndex (optional):This is the index of the current element being processed in the array.
+- array (optional):This is the array on which the reduce() method is called.
+
+
+
+### Return Value
+
+
+This method returns the single value that is the result after reducing the array.
+
+
+### Example
+
+
+In the following example, we are using the JavaScript Array.reduce() method to sum all the elements present in the provided array.
+
+
+```html
+<html>
+
+<body>
+
+<script>
+
+const number = [10, 20, 30, 40, 50];
+
+const sum = number.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+
+document.write(sum);
+
+</script>
+
+</body>
+
+</html>
+```
+
+
+The accumulator starts at 0, and for each element in the array, it adds the current element to the accumulator. The final result of the accumulator (150) is the sum of all the elements.
+
+
+### Output
+
+
+Following is the output of the above code
+
+
+```javascript
+150
+```
+
+
+### Example
+
+
+If the current array does not contain any element(no initial value available), the reduce() method will throw a"TypeError"exception
+
+
+```html
+<html>
+
+<body>
+
+<script>
+
+const numbers = [];
+
+   try {
+
+      numbers.reduce((accumulator, currentValue) => accumulator * currentValue);
+
+   } catch (error) {
+
+      document.write(error);
+
+}
+
+</script>
+
+</body>
+
+</html>
+```
+
+
+### Output
+
+
+Following is the output of the above code
+
+
+```javascript
+TypeError: Reduce of empty array with no initial value
+```
+
+
+## Reduce method on TypedArray
+
+
+We can use reduce method on TypedArray as well. Everything is similar to normal array, means we can process and combine elements in same way as we do with arrays.
+
+
+### Syntax
+
+
+Following is the syntax of JavaScript TypedArray reduce() method
+
+
+```javascript
+TypedArray.reduce(callbackFn(accumulator, currentValue, currentIndex, array), initialValue)
+```
+
+
+### Example
+
+
+The product of all elements within atyped array.
+
+
+In the following example, we are using the JavaScript TypedArray reduce() method to execute the user-provided function named multi() on each element of this typed array [1, 2, 3, 4, 5]. The multi() function multiplies all the elements within the current typed array.
+
+
+```html
+<html>
+
+<head>
+
+JavaScript TypedArray reduce() Method
+
+</head>
+
+<body>
+
+<script>
+
+//function
+
+function multi(accumulator, currentValue){
+
+   return accumulator * currentValue;
+
+}
+
+const T_array = new Uint16Array([1, 2, 3, 4, 5]);
+
+document.write("Typed array: ", T_array);
+
+      
+
+//Using the reduce() method
+
+document.write("<br>The product of typed array elements: ", T_array.reduce(multi));
+
+</script>    
+
+</body>
+
+</html>
+```
+
+
+### Output
+
+
+Following is the output of the above code
+
+
+```javascript
+Typed array: 1,2,3,4,5
+
+The product of typed array elements: 120
+```
+
+
+### Example
+
+
+If the current typed array does not contain any element(no initial value available), the reduce() method will throw a "TypeError" exception.
+
+
+In the given example below, we use the JavaScript TypedArray reduce() method to execute the user-provided reducer callback function named "ArrowFunction" on each element of this empty typed array ([]).
+
+
+```html
+<html>
+
+<head>
+
+<title>JavaScript TypedArray reduce() Method</title>
+
+</head>
+
+<body>
+
+<script>
+
+const T2_array = new Uint16Array([]);//empty typed array
+
+document.write("Length of the typed array: ", T2_array.length);
+
+//using the reduce method
+
+try {
+
+   T2_array.reduce((a, b)=> a + b);
+
+} catch (error) {
+
+    document.write("<br>", error);
+
+}
+
+</script>    
+
+</body>
+
+</html>
+```
+
+
+### Output
+
+
+Following is the output of the above code
+
+
+```javascript
+Length of the typed array: 0
+
+TypeError: Reduce of empty array with no initial value
+```
+
+
+## Reduce method on Map
+
+
+We can use reduce method on Map as well. Everything is similar to normal array, means we can process and combine elements in same way as we do with arrays.
+
+
+### Syntax
+
+
+Following is the syntax of JavaScript Map reduce() method
+
+
+```javascript
+Map.reduce(callbackFn(accumulator, currentValue, currentIndex, array), initialValue)
+```
+
+
+### Example
+
+
+The sum of all elements within aMap.
+
+
+In the following example, we are using the JavaScript Map reduce() method to execute the user-provided function named add() on each element of this map. The add() function adds all the elements within the current map.
+
+
+```html
+<html>
+
+<head>
+
+<title>JavaScript Map reduce() Method</title>
+
+</head>
+
+<body>
+
+<script>
+
+//function
+
+function add(accumulator, currentValue){
+
+   return accumulator + currentValue;
+
+}
+
+const map = new Map([[1, 2], [3, 4], [5, 6]]);
+
+document.write("Map: ", map);
+
+        
+
+//using the reduce() method
+
+document.write("<br>The sum of map elements: ", [...map.values()].reduce(add));
+
+</script>
+
+</body>
+
+</html>
+```
+
+
+### Output
+
+
+Following is the output of the above code
+
+
+```javascript
+Map: 1 => 2,3 => 4,5 => 6
+
+The sum of map elements: 12
+```
+

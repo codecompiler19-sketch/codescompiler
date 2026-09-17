@@ -1,0 +1,393 @@
+---
+title: "JavaScript - ECMAScript 2019"
+description: "Learn JavaScript - ECMAScript 2019 with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1100
+group: "JavaScript Versions"
+seoTitle: "JavaScript - ECMAScript 2019 — CodesCompiler JavaScript Guide"
+permalink: "javascript-ecmascript-2019"
+---
+
+
+# JavaScript - ECMAScript 2019
+
+
+
+
+TheECMAScript 2019standard was released in 2019. Important additions to this update include Arrayflat()and Array flatMap(), offering concise array manipulation methods. TheObject.fromEntries()method simplifies object creation from key-value pairs. These improvements in ECMAScript 2019 aimed to enhance code conciseness and functionality. This chapter will discuss all the newly added features in ECMAScript 2019.
+
+
+## New Features Added in ECMAScript 2019
+
+
+Here are the new methods, features, etc., added to the ECMAScript 2019 version of JavaScript.
+
+
+
+- Array.flat()
+- Array.flatMap()
+- Revised Array.Sort()
+- Object.fromEntries()
+- Optional catch binding
+- Revised JSON.stringify()
+- Revised Function.toString()
+- Separator symbols allowed in string literals
+- String.trimEnd()
+- String.trimStart()
+
+
+
+## JavaScript Array flat() Method
+
+
+The ECMAScript 2019 introduced Array.flat to the arrays. The JavaScript array flat() method is used to flatten the array by removing the nested array and adding its elements to the original array.
+
+
+### Example
+
+
+In the code below, we used the array.flat() method to flatten the arr array.
+
+
+```html
+<html>
+<body>
+   <div id = "output">The flatten array is: </div>
+   <script>
+      const arr = [1, [10, 20], 30, [40, [50], 60], 70];
+      document.getElementById("output").innerHTML +=  arr.flat();
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The flatten array is: 1,10,20,30,40,50,60,70
+```
+
+
+## JavaScript Array flatMap()
+
+
+The ECMAScript 2019 also introduced Array flatMap to arrays. The array flatMap() flatten the array after mapping the array elements with new elements.
+
+
+### Example
+
+
+In the below code, we return the array of two elements from the callback function of the flatMap() method. After that, the flatMap() method flattens it.
+
+
+In the output, you can see that 'updated' is a single array. So, it first maps the current element to a new element or array and flattens it.
+
+
+```html
+<html>
+<body>
+   <div id = "output">The updated array is: </div>
+   <script>
+      const arr = [2, 4, 6, 8];
+      const updated = arr.flatMap((ele) => [ele * 2, ele * 3]);
+      document.getElementById("output").innerHTML += updated;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The updated array is: 4,6,8,12,12,18,16,24
+```
+
+
+## Revised Array sort()
+
+
+In ECMAScript 2019, JavaScript array.prototype.sort() method has been revised to make it stable.
+
+
+Before 2019, the behavior of the sort() method was not consistent in sorting the equal elements. It could not preserve the original order for the same array elements.
+
+
+Now, array.sort() method is stable as it uses the variation of the merge sort.
+
+
+### Example
+
+
+In the below code, we have defined the watches array containing multiple objects. Each object of the array contains the brand and price property.
+
+
+We used the sort() method to sort the array based on the value of the brand property. In the output, you can see that it preserves the original order for the same brand name.
+
+
+```html
+<html>
+<body>
+   <div id = "output">The sorted array elements are: <br></div>
+   <script>
+      const watches = [{ brand: "Titan", price: 1000 },
+        { brand: "Casio", price: 1000 },
+        { brand: "Titan", price: 2000 },
+        { brand: "Titan", price: 3000 }]
+      watches.sort((a, b) => a.brand.localeCompare(b.brand))
+      for (let obj of watches) {
+         document.getElementById("output").innerHTML += JSON.stringify(obj) + "<br>";
+      }
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The sorted array elements are:
+{"brand":"Casio","price":1000}
+{"brand":"Titan","price":1000}
+{"brand":"Titan","price":2000}
+{"brand":"Titan","price":3000}
+```
+
+
+## JavaScript Object fromEntries
+
+
+The Object fromEnteries() method allows you to create a new object from the 2-dimensional array. Each element of the array should be an array of length 2, containing the key-value pair for the object.
+
+
+### Example
+
+
+In the below code, we have defined the 2D array containing the fruit name and price. After that, we used the Object.fromEntries() method to create an object from the array.
+
+
+```html
+<html>
+<body>
+   <div id = "output">The fruits object is : </div>
+   <script>
+      const entries = [["Apple", 20],
+      ["Banana", 40],
+      ["watermelon", 30]];
+       
+      const fruits = Object.fromEntries(entries);
+       
+      document.getElementById("output").innerHTML += JSON.stringify(fruits);
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The fruits object is : {"Apple":20,"Banana":40,"watermelon":30}
+```
+
+
+## Optional catch binding
+
+
+After ECMAScript 2019, you can remove the 'catch' block parameter if you don't need it.
+
+
+For example, before ECMAScript 2019, you must need the parameters with the catch block.
+
+
+```javascript
+try {
+} catch(error){
+}
+```
+
+
+After ECMAScript 2019,
+
+
+```javascript
+try {
+} catch {
+}
+```
+
+
+## Revised JSON.stringify()
+
+
+Before ECMAScript 2019, JavaScript JSON.stringify() method was not able to convert the Unicode characters into a string, but after ES10, it is possible, as shown in the example below.
+
+
+### Example
+
+
+In the code below, we convert the Unicode character into the JSON string and then use the JSON.parse() method to parse the string.
+
+
+```html
+<html>
+<body>
+   <div id = "output1">The unicode string value is:  </div>
+   <div id = "output2">The unicode JSON value is:  </div>
+   <script>
+      let str = JSON.stringify("\u27A6");
+      document.getElementById("output1").innerHTML += str;
+      document.getElementById("output2").innerHTML += JSON.parse(str);
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The unicode string value is: ""
+The unicode JSON value is:
+```
+
+
+## Revised Function toString()
+
+
+Before ECMAScript 2019, when you used the toString() method with the function, it returned the function's source code without comment, syntax, etc.
+
+
+After ES10, it returns the function with spaces, syntax, comments, etc.
+
+
+### Example
+
+
+The toString() method returns the function after converting into the string in the below code. The resultant string contains the spaces, comments, etc.
+
+
+```html
+<html>
+<body>
+   <div id = "output">After converting the function to string is: </div>
+   <script>
+      function test() {
+         return 10 * 20;
+      }
+      document.getElementById("output").innerHTML += test.toString();
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+After converting the function to string is: function test() { return 10 * 20; }
+```
+
+
+## Separator symbols allowed in string literals
+
+
+After ECMAScript 2019, you can use the separator symbols \u2028 and \u2029)to separate the line and paragraph in the string.
+
+
+### Example
+
+
+In the below code, we used the Unicode character to separate the line. However, you won't be able to see separating lines directly as we use the innerHTML property to update the HTML.
+
+
+```html
+<html>
+<body>
+   <div id = "output">The string with seprator symbol is:  </div>
+   <script>
+      let str = "Hi\u2028";
+      document.getElementById("output").innerHTML += str;
+   </script>
+</body>
+</html>
+```
+
+
+## JavaScript String trimEnd()
+
+
+The string trim() method was introduced in ECMAScript 2019. It is used to remove the whitespace from both ends of the string.
+
+
+The string.trimEnd() method removes the whitespaces from the end of the string.
+
+
+### Example
+
+
+The code below removes the white spaces from the end of the string.
+
+
+```html
+<html>
+<body>
+   <div id = "output">After removing white spaces from the end of the string: </div>
+   <script>
+      let str = "   Hello World! ";
+      document.getElementById("output").innerHTML += str.trimEnd();
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+After removing white spaces from the end of the string: Hello World!
+```
+
+
+## JavaScript String trimStart()
+
+
+ECMAScript 2019 introdued the string trimStart() method. It removes the whitespaces from the start of the string.
+
+
+### Example
+
+
+The code below removes the white spaces from the start of the string.
+
+
+```html
+<html>
+<body>
+   <div id = "output">After removing white spaces from the start of the string: <br></div>
+   <script>
+      let str = "   Hello World! ";
+      document.getElementById("output").innerHTML += str.trimStart();
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+After removing white spaces from the start of the string:
+Hello World!
+```
+

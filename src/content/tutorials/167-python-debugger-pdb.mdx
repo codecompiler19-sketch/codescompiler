@@ -1,0 +1,377 @@
+---
+title: "PYTHON - Debugger (PDB)"
+description: "Learn PYTHON - Debugger (PDB) with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1670
+group: "Python Errors & Exceptions"
+seoTitle: "PYTHON - Debugger (PDB) — CodesCompiler PYTHON Guide"
+permalink: "python-debugger-pdb"
+---
+
+
+# Python - Debugger (PDB)
+
+
+
+
+Python provides a built-in module calledpdbfor debugging Python programs. Thepdbmodule can be used to set breakpoints, move through code, check value of variables, and evaluate expressions. In this chapter, we will explain how to use the pdb module to debug Python programs.
+
+
+Following topics will be covered in this chapter −
+
+
+
+- The pdb Module in Python
+- Basic Commands in pdb Terminal
+- Example of Using pdb Module
+- Checking Variable Type at Runtime
+- Post-Mortem Debugging with pdb Module
+- Managing Breakpoints in pdb Module
+
+
+
+## The pdb Module in Python
+
+
+Thepdbmodule is a built-in Python module that provides an interactive debugging environment for Python programs. Internally, it is defined as a class calledPdb, which is a subclass of thebdb.Bdbclass. The main advantage of pdb debugger it will run completely in the terminal, meaning you don't need to install any additional software or IDE to use it.
+
+
+To start debugging withpdb, first import the module in your Python script −
+
+
+```python
+import pdb
+```
+
+
+Then, you can set breakpoints in your code using thepdb.set_trace()function. When the program execution reaches a breakpoint, it will pause and enter the pdb debugging terminal.
+
+
+## Basic Commands in pdb Terminal
+
+
+After entering the debugging terminal, you can use various commands to control the execution of your program. Here are some of the most commonly used pdb commands −
+
+
+
+- n (next)− Execute the next line of code.
+- s (step)− Step into a function call.
+- c (continue)− Continue execution until the next breakpoint.
+- l (list)− List the current location in the code.
+- p (print)− Print the value of a variable.
+- q (quit)− Quit the debugger and exit the program.
+- b (break)− Set a breakpoint at a specified line number or function.
+
+
+
+For a complete list of pdb commands, you can use thehcommand within the pdb interactive environment. It will look like this −
+
+
+## Example of Using pdb Module
+
+
+The following example shows howpdbcan be used to stop the execution of a program at certain points and inspect the values of variables.
+
+
+```python
+import pdb
+
+
+
+def add(a, b):
+
+    return a + b
+
+
+
+def subtract(a, b):
+
+    return a - b
+
+
+
+pdb.set_trace()  # Set a breakpoint here
+
+result = add(20, 30)
+
+print("Addition Result:", result)
+
+
+
+pdb.set_trace()  # Set another breakpoint here
+
+result = subtract(20, 10)
+
+print("Subtraction Result:", result)
+```
+
+
+When the program execution reaches thepdb.set_trace()line, it will pause and enter the pdb terminal. So, theoutputof the program will be −
+
+
+```python
+> /tmp/ipython-input-1706780559.py(11)<cell line: 0>()
+
+      9 x = 10
+
+     10 y = 20
+
+---> 11 pdb.set_trace()  # Set a breakpoint here
+
+     12 result = add(x, y)
+
+     13 print("Addition Result:", result)
+
+
+
+ipdb> c
+
+Addition Result: 30
+
+
+
+ipdb> c
+
+Subtraction Result: 10
+```
+
+
+Explanation− In the output, you can see that at this terminal, we pressed theccommand to continue execution until the next breakpoint. So we get addition result and program paused. Again we pressedcto continue execution and print the subtraction result.
+
+
+## Checking Variable Type at Runtime
+
+
+To check the type of a variable at runtime while using pdb, you can use thewhatiscommand at the pdb prompt. The example below demonstrates how to use thewhatiscommand −
+
+
+```python
+import pdb
+
+
+
+a = 10
+
+b = 20.5
+
+c = "Hello, World!"
+
+
+
+pdb.set_trace()  # Set a breakpoint here
+```
+
+
+Theoutputof the program will be −
+
+
+```python
+> /tmp/ipython-input-1057349253.py(7)<cell line: 0>()
+
+      3 a = 10
+
+      4 b = 20.5
+
+      5 c = "Hello, World!"
+
+      6 
+
+----> 7 pdb.set_trace()  # Set a breakpoint here
+
+
+
+ipdb> whatis a
+
+<class 'int'>
+
+ipdb> whatis b
+
+<class 'float'>
+
+ipdb> whatis c
+
+<class 'str'>
+```
+
+
+## Post-Mortem Debugging with pdb Module
+
+
+Thepost-mortemdebugging refers to the process of analyzing a program after it has crashed or reached an exception state. The pdb module can be used to perform post-mortem debugging using thepdb.post_mortem()function. You can call this function inside any exception handler at any point in your code.
+
+
+Thepdb.post_mortem()function takes the traceback object as an argument, you can get it using thesys.exc_info()function. Here is anexamplethat demonstrates how to use the pdb.post_mortem() function for post-mortem debugging −
+
+
+```python
+import pdb
+
+import sys
+
+
+
+def calculate_inverse(x):
+
+    print(f"Calculating inverse for {x}:")
+
+    result = 1 / x
+
+    print(result)
+
+
+
+try:
+
+    calculate_inverse(10)
+
+    calculate_inverse(0)  # This will raise error
+
+
+
+except Exception:
+
+    # This block is executed only after an exception (crash) occurs.
+
+    print("\n An exception occurred! Starting post-mortem debugging... ")
+
+
+
+    # Get the traceback object of the exception
+
+    extype, exvalue, tb = sys.exc_info()
+
+    
+
+    # Launch the post-mortem debugger
+
+    pdb.post_mortem(tb)
+```
+
+
+In this example, thecalculate_inverse()function is used to calculate the inverse of zero. This will create aZeroDivisionErrorexception. When the exception occurs, the program will enter theexceptblock. Here we call thepdb.post_mortem(tb)function to start the post-mortem debugging session. Theoutputof the program will be −
+
+
+```python
+Calculating inverse for 10:
+
+0.1
+
+Calculating inverse for 0:
+
+
+
+ An exception occurred! Starting post-mortem debugging... 
+
+> /tmp/ipython-input-1016125975.py(6)calculate_inverse()
+
+      4 def calculate_inverse(x):
+
+      5     print(f"Calculating inverse for {x}:")
+
+----> 6     result = 1 / x
+
+      7     print(result)
+
+      8 
+
+
+
+ipdb> p x
+
+0
+```
+
+
+Explanation− In the output, you can see that the program has paused at the line where the exception occurred. We printed the value of the variablexusing thepcommand. We will get clear idea that the program crashed because we tried to divide by zero.
+
+
+## Managing Breakpoints in pdb Module
+
+
+We already saw how to set breakpoints using thepdb.set_trace()function. While working on large applications, we often set multiple breakpoints in different parts of the code. So it is important properly manage these breakpoints. Here are  few commands that you can use to manage breakpoints in pdb −
+
+
+
+- break− The break command is used to set a breakpoint at any line number from the pdb prompt. For example,break main.py:9will set a breakpoint at line number 9 in themain.pyfile.
+- disable− The disable command is used to disable a specific breakpoint by its number. For example,disable 1will disable the breakpoint with number 1.
+- enable− The enable command is used to enable the breakpoint that was disabled bydisablecommand. For example,enable 1will enable the breakpoint with number 1.
+- clear− The clear command is used to remove a breakpoint by its number. For example,clear 1will remove the breakpoint with number 1.
+
+
+
+Here is anexamplethat demonstrates how to manage breakpoints in pdb −
+
+
+```python
+import pdb
+
+def multiply(a, b):
+
+    return a * b
+
+def divide(a, b):
+
+    return a / b
+
+
+
+pdb.set_trace()             # Set a breakpoint here
+
+result1 = multiply(10, 20)
+
+
+
+result2 = divide(10, 0)
+
+print("Multiplication Result:", result1)
+
+
+
+print("Division Result:", result2)
+```
+
+
+In the code, we set a breakpoint using thepdb.set_trace()function. When the program reaches this line, it will pause and enter the pdb session. Theoutputof the program will be −
+
+
+```python
+None
+
+> /tmp/ipython-input-2031724579.py(7)<cell line: 0>()
+
+      5     return a / b
+
+      6 
+
+----> 7 pdb.set_trace()             # Set a breakpoint here
+
+
+
+ipdb> break main.py:8 
+
+Breakpoint 1 at /tmp/ipython-input-2031724579.py:8
+
+ipdb> break
+
+Num Type         Disp Enb Where
+
+1   breakpoint   keep yes at /tmp/ipython-input-2031724579.py:8
+
+ipdb> disable 1
+
+Disabled breakpoint 1 at /tmp/ipython-input-2031724579.py:8
+
+ipdb> enable 1
+
+Enabled breakpoint 1 at /tmp/ipython-input-2031724579.py:8
+```
+
+
+Explanation− In the output, you can see that we used thebreakcommand at terminal to set a breakpoint at line number 8. Then we displayed the list of breakpoints using thebreakcommand without any arguments. After that, we disabled the breakpoint using thedisablecommand and then enabled it again using theenablecommand.
+
+
+## Conclusion
+
+
+In this chapter, we learned how to use thepdbmodule to debug Python programs. We learned the basic commands in pdb, how to set and manage breakpoints, how to check variable types at runtime, and how to perform post-mortem debugging. The debugging tool is very useful for identifying and fixing issues in large code bases. With proper practice, you can easily find and fix bugs in your Python programs.
+

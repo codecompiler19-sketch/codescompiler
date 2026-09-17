@@ -1,0 +1,511 @@
+---
+title: "JavaScript - Proxies"
+description: "Learn JavaScript - Proxies with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1020
+group: "Object Oriented JavaScript"
+seoTitle: "JavaScript - Proxies — CodesCompiler JavaScript Guide"
+permalink: "javascript-Proxies"
+---
+
+
+# JavaScript - Proxies
+
+
+
+
+## Proxy in JavaScript
+
+
+The JavaScriptproxiesare objects that allow you to wrap a particular object and customize the fundamental operations of the object, like getting and setting object properties. In short, using the proxy object, you can add custom behavior to the object. The proxies are used to implement features such as logging, caching, and securities.
+
+
+We can create a proxy object using the Proxy() constructor in JavaScript. The constructor accepts two parameters  target object and handler object. It returns a new proxy object for the target object.
+
+
+### Syntax
+
+
+Following is the syntax to create a proxy object in JavaScript −
+
+
+```javascript
+const obj = new Proxy(targetObj, Handler);
+```
+
+
+We used the Proxy() constructor with a new keyword in the above syntax.
+
+
+### Parameters
+
+
+The Proxy constructor takes two parameters.
+
+
+
+- targetObj− It is a target object for which you want to create a proxy object and customize its default behavior.
+- Handler− It is an object containing the functionality to customize the behavior of the target object.
+
+
+
+### Example
+
+
+In the example below, the person object contains the name and age property.
+
+
+We have defined the proxy object for the person object named proxyObj. Also, we passed the handler object as a Proxy() constructor parameter.
+
+
+In the handler object, we have defined the getters to access the object property. The getters check whether the object contains the property you are looking for. If yes, it returns the property value. Otherwise, it returns the message saying the object doesn't contain the property.
+
+
+```html
+<html>
+<body>
+   <div id = "demo1">The name of the person is: </div>
+   <div id = "demo2">The height of the person is: </div>
+   <script>
+      const person = {
+         name: "Same",
+         age: 32,
+      }
+      const handler = {
+         // Defining the getters
+         get: function (object, property) {
+            return object[property] ? object[property] : 
+            'Object doesnt contain the property.';
+         }
+      }
+      const proxyObj = new Proxy(person, handler);
+      document.getElementById("demo1").innerHTML += proxyObj.name;
+      document.getElementById("demo2").innerHTML += proxyObj.height;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The name of the person is: Same
+The height of the person is: Object doesnt contain the property.
+```
+
+
+When you access the non-existing property from the object, it returns the undefined. Here, we have customized the object's default behavior to return a nice and readable method.
+
+
+If you pass the empty handler object while creating the proxy object, the proxy object will work the same as the original object.
+
+
+## JavaScript Proxy Handlers
+
+
+There are multiple proxy handlers available in JavaScript, and we have covered some of them below. The proxy handlers are used to override the default behavior of the object.
+
+
+### The JavaScript get() proxy handler
+
+
+The get() proxy handler in JavaScript allows you to change the property accessing behavior of the object.
+
+
+#### Syntax
+
+
+Follow the syntax below to use the get() proxy handler with the proxy object.
+
+
+```javascript
+get(target, property, receiver)
+```
+
+
+#### Parameters
+
+
+
+- target− It is a target object.
+- property− It is a property whose value is needed to access.
+- receiver− It is a proxy object itself.
+
+
+
+#### Example
+
+
+In the below code, the watch object contains the brand, color, and price property. We have created the proxy for the watch object.
+
+
+The handler object contains the get() handler and returns the property value if it is not. Otherwise, it returns a readable message.
+
+
+```html
+<html>
+<body>
+   <div id = "output1">Brand:  </div>
+   <div id = "output2">Price:  </div>
+   <script>
+      const watch = {
+         brand: "Casio",
+         color: "Blue",
+         price: null,
+      }
+
+      const handler = {
+         get(object, property) {
+            return object[property] != null ? object[property] : "Property is null.";
+         }
+      }
+      const wathcProxy = new Proxy(watch, handler);
+      document.getElementById("output1").innerHTML += wathcProxy.brand;
+      document.getElementById("output2").innerHTML += wathcProxy.price;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Brand: Casio
+Price: Property is null.
+```
+
+
+### The JavaScript set() proxy handler
+
+
+The set() proxy handler in JavaScript is used to change the default behavior of updating the property of the object.
+
+
+#### Syntax
+
+
+Follow the syntax below to use the set() proxy handler.
+
+
+```javascript
+set(target, property, value, receiver)
+```
+
+
+#### Parameters
+
+
+
+- target− It is a target object.
+- property− It is a property to change its value.
+- value− It is an updated value.
+- receiver− It is a proxy object itself.
+
+
+
+#### Example
+
+
+In the below code, the handler object contains the set() proxy handler. The set() handler checks whether the property is equal to the 'price. If yes, it updates the property value with a new value. Otherwise, it sets 'Not Available' to the object property.
+
+
+```html
+<html>
+<body>
+   p id = "demo" 
+   <script>
+      const output = document.getElementById("demo");
+      const watch = {
+         brand: "Casio",
+         color: "Blue",
+         price: null,
+      }
+      const handler = {
+         set(object, property, value) {
+            if (property === "price") {
+               object[property] = value;
+            }
+            else {
+               object[property] = "Not Available";
+            }
+         }
+      }
+      const wathcProxy = new Proxy(watch, handler);
+      wathcProxy.price = 2000;
+      wathcProxy.dial = "Round";
+      output.innerHTML += "Price: " + wathcProxy.price + "<br>";
+      output.innerHTML += "Dial: " + wathcProxy.dial + "<br>";
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Price: 2000
+Dial: Not Available
+```
+
+
+### The JavaScript apply() proxy handler
+
+
+The apply() proxy handler is used to change the default behavior of the function call.
+
+
+#### Syntax
+
+
+Follow the syntax below to use the apply() proxy handler.
+
+
+```javascript
+apply(target, thisArg, arguments)
+```
+
+
+#### Parameters
+
+
+
+- target− It is a target function needed to execute.
+- thisArg− It refers to the context whose elements should be accessed using this keyword in the function body.
+- arguments− It is an array of arguments to pass to the function.
+
+
+
+#### Example
+
+
+In the below code, getDetails is a proxy object created for the getWatchDetails() function. The handler object contains the apply() method and calls the target function.
+
+
+We have called the getDetails() proxy by passing the watch object as a parameter.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      const watch = {
+         brand: "Casio",
+         color: "Blue",
+         price: 2000,
+      }
+      const getWatchDetails = function (watch) {
+         return Brand: ${watch.brand},  
+         Color: ${watch.color}, 
+         price: ${watch.price};
+      }
+      const getDetails = new Proxy(getWatchDetails, {
+         apply(target, thisArg, args) {
+            return target(...args).toUpperCase();
+         }
+      });
+      document.getElementById("output").innerHTML += getDetails(watch);
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+BRAND: CASIO, COLOR: BLUE, PRICE: 2000
+```
+
+
+## Uses of the Proxy Object in JavaScript
+
+
+Here, we have explained the benefits of using the proxy object with examples.
+
+
+### For Validation
+
+
+You can use the proxy object in JavaScript to validate the property values while updating the value of the property or adding a new property to the object.
+
+
+#### Example
+
+
+In the below code, the numbers object contains the num1, num2, and num3 properties. The set() proxy handler checks whether the new value is greater than the current value. If yes, it updates the value. Otherwise, it keeps old values.
+
+
+```html
+<html>
+<body>
+   p id = "demo" 
+   <script>
+      const output = document.getElementById("demo");
+      const numbers = {
+         num1: 10,
+         num2: 20,
+         num3: 30,
+      }
+      const handler = {
+         set(object, property, value) {
+            if (value > object[property]) { 
+               // Validing the new value using the previous value
+               object[property] = value;
+            }
+         }
+      }
+      const numberProxy = new Proxy(numbers, handler);
+      numberProxy.num1 = 20;
+      numberProxy.num2 = 10;
+
+      output.innerHTML += "num1: " + numbers.num1 + ", num2: " + numbers.num2;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+num1: 20, num2: 20
+```
+
+
+### For Access Control
+
+
+You can also use the proxy handler to control the access of the object in JavaScript. For example, you can restrict users from updating the object properties and making them read-only.
+
+
+#### Example
+
+
+In the below code, whenever you try to update the object property value, it prints the message that the object is read-only.
+
+
+```html
+<html>
+<body>
+   p id = "demo" 
+   <script>
+      const output = document.getElementById("demo");
+      const numbers = {
+         num1: 10,
+         num2: 20,
+         num3: 30,
+      }
+      const handler = {
+         set(object, property, value) {
+            output.innerHTML += "Object is read-only.<br>"
+         }
+      }
+      const numberProxy = new Proxy(numbers, handler);
+      numberProxy.num1 = 20;
+      output.innerHTML += "num1: " + numberProxy.num1;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Object is read-only.
+num1: 10
+```
+
+
+### Side Effects
+
+
+You may call the functions or class methods when anyone tries to access or update the object property.
+
+
+#### Example
+
+
+In the example below, the emailValidator() function checks whether the email includes the '@'. If yes, it returns true. Otherwise, it returns false.
+
+
+In the set() proxy handler, we update the property value based on the returned value of the emailValidator() function.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      const emails = {
+         email1: "abcd@gmail.com",
+      }
+      // Function to validate the email
+      function emailValidator(email) {
+         if (email.includes("@")) {
+            return true;
+         } else {
+            return false;
+         }
+      }
+      const handler = {
+         set(object, property, value) {
+            if (emailValidator(value)) {
+               object[property] = value;
+            }
+         }
+      }
+      const emailProxy = new Proxy(emails, handler);
+      emailProxy.email1 = "nmc@gmail.com";
+      document.getElementById("output").innerHTML = 
+      "email1: " + emailProxy.email1;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+email1: nmc@gmail.com
+```
+
+
+However, usage of the proxy handers is not limited, and we can't cover each use case in this tutorial. So, you may explore more use cases of the proxy handlers.
+
+
+## JavaScript Proxy Handlers List
+
+
+Here, we have listed all proxy handlers in JavaScript.
+
+
+### Proxy Handler Methods
+
+
+Sr.No.Proxy HandlerDescription1apply()It changes the default behavior of the function call.2construct()Trapping the construction of new object.3defineProperty()Changing the behavior of defining new property.4deleteProperty()Changing the behavior of deleting the new property.5get()Changing the behavior of accessing object property.6getOwnPropertyDescriptor()To trap the getOwnPropertyDescriptor() method of the object.7getPrototypeOf()Trapping the internal methods.8has()To manipulate the checking of whether an object contains the property.9isExtensible()To trap the isExtensible() method of the Object.10ownKeys()To change the behavior of the ownKeys() method.11preventExtension()To trap the preventing extension of the object.12set()To change the default behavior of adding new property or updating a property value of the object.13setPrototypeOf()To customize the Object.setPrototypeOf() method.
+
+
+### Constructor
+
+
+Sr.No.ConstructorDescription1Proxy()It is used to create a proxy object.
+
+
+### Static Method
+
+
+Sr.No.MethodDescription1revocable()It is also used to create a new proxy object similar to the Proxy() constructor.
+

@@ -1,0 +1,177 @@
+---
+title: "JavaScript - Date Formats"
+description: "Learn JavaScript - Date Formats with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2500
+group: "JavaScript Miscellaneous"
+seoTitle: "JavaScript - Date Formats — CodesCompiler JavaScript Guide"
+permalink: "javascript-date-formats"
+---
+
+
+# JavaScript - Date Formats
+
+
+
+
+## Date Formats
+
+
+JavaScript offers us a variety ofdate formatsranging from elementary locale-specific formatting all the way up to sophisticated customization options. Understanding the different date formats is a fundamental and essential aspect of web development, irrespective of whether youre building a dynamic web application, managing time sensitive data or simply displaying dates in a user-friendly manner.
+
+
+Here, we are going to cover different date formats of JavaScript and implement them with a few examples to understand them better. Below is a table explaining all the different date formats used in JavaScript.
+
+
+FormatExampleDescriptionISO Format (UTC)2024-01-29T12:34:56.789ZStandardized format with the year, month, day, and time components. The 'Z' indicates the time is in UTC (Coordinated Universal Time).Locale Date and Time1/29/2024, 12:34:56 PMIt is the localized date & time representation based on the users system or browsers settings and can vary in terms of symbols depending on the locale.Custom Date FormatJan 29, 2024, 12:34:56 PM PSTThe custom format allows developers to specify which components of the date (year, month, day, hour, minute, second) are to be included and in what format they should be occurring.Short Date Format01/29/24A short representation of the date with the month, day, and year. The order may vary based on the locale.Long Date FormatJanuary 29, 2024A long representation of the date with the full month name, day, and year.Short Time Format12:34 PMA short representation of the time with hours and minutes.Long Time Format12:34:56 PMA long representation of the time with hours, minutes, and seconds.UTC Date FormatTue, 29 Jan 2024 12:34:56 GMTCoordinated Universal Time (UTC) formatted date and time string. It includes the day of the week and the timezone abbreviation (GMT).Epoch Timestamp1643450096789The number of milliseconds since January 1, 1970, 00:00:00 UTC. Also known as Unix Timestamp. Useful for handling and comparing dates as numbers.Relative Time2 hours ago, 3 days agoA human-readable format that expresses the time difference in a relative manner, such as "ago" for past dates. Useful for displaying how much time has passed since a certain date.
+
+
+## Examples
+
+
+### Example 1: Displaying current date in different formats
+
+
+JavaScript in this example dynamically generates and displays a variety of date formats on the page: ISO format, locale date and time, custom date format; short and long date formats; short and long time formats; UTC date format, even an epoch timestamp. Furthermore, it calculates the relative time between two given dates  current one being compared to a specified previous one and presents these results in human-readable form. This code exemplifies pragmatic techniques for formatting dates within an HTML context using JavaScript.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+   ## All Types of Date Formats
+   <script>
+      const currentDate = new Date();
+
+      function appendFormattedDate(type, formatFunction) {
+         const formattedDate = formatFunction(currentDate);
+         const paragraph = document.createElement('p');
+         paragraph.innerText = ${type}: ${formattedDate};
+         document.body.appendChild(paragraph);
+      }
+
+      appendFormattedDate('ISO Format (UTC)', date => date.toISOString());
+
+      appendFormattedDate('Locale Date and Time', date => date.toLocaleString());
+
+      const options = { 
+         year: 'numeric', 
+         month: 'short', 
+         day: 'numeric', 
+         hour: '2-digit', 
+         minute: '2-digit', 
+         second: '2-digit', 
+         timeZoneName: 'short' 
+      };
+      appendFormattedDate('Custom Date Format', date => date.toLocaleString('en-US', options));
+
+      appendFormattedDate('Short Date Format', date => date.toLocaleDateString());
+      appendFormattedDate('Long Date Format', date => date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' }));
+
+      appendFormattedDate('Short Time Format', date => date.toLocaleTimeString());
+      appendFormattedDate('Long Time Format', date => date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+
+      appendFormattedDate('UTC Date Format', date => date.toUTCString());
+      appendFormattedDate('Epoch Timestamp', date => date.getTime());
+
+      const previousDate = new Date('2024-01-29T00:00:00Z');
+        
+      const relativeTime = formatRelativeTime(previousDate, currentDate);
+      appendFormattedDate('Relative Time', () => relativeTime);
+
+      // Function to calculate relative time
+      function formatRelativeTime(previousDate, currentDate) {
+         const elapsedMilliseconds = currentDate - previousDate;
+         const seconds = Math.floor(elapsedMilliseconds / 1000);
+         const minutes = Math.floor(seconds / 60);
+         const hours = Math.floor(minutes / 60);
+
+         if (seconds < 60) {
+            return ${seconds} second${seconds !== 1 ? 's' : ''} ago;
+         } else if (minutes < 60) {
+            return ${minutes} minute${minutes !== 1 ? 's' : ''} ago;
+         } else if (hours < 24) {
+            return ${hours} hour${hours !== 1 ? 's' : ''} ago;
+         } else {
+            return 'More than a day ago';
+         }
+      }
+   </script>
+</body>
+</html>
+```
+
+
+### Example 2: Customized date formats
+
+
+This example gives us a deeper understanding of the customized date formats which do not have any prefix format and are up to the developer choose. We use the Intl.DateTimeFormat object to create our format of (weekday, month, day, year). With this option customized date formats we can choose not only the parts of the date to be made visible but also their order. A website might be more suitable if it displayed dates in dd/mm/yyyy in some countries but more user friendly if it displayed dates in mm-dd-yyyy in some other countries.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+   ## Custom Date Format Example
+   <script>
+      const currentDate = new Date();
+     
+      function customDateFormat(date) {
+         const options = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
+         return new Intl.DateTimeFormat('en-US', options).format(date);
+      }
+
+      // Function to append formatted date to the body
+      function appendFormattedDate(type, formatFunction) {
+         const formattedDate = formatFunction(currentDate);
+         document.body.innerHTML += p${type}: ${formattedDate};
+      }
+
+      // Append custom date format
+      appendFormattedDate('Custom Date Format', customDateFormat);
+   </script>
+</body>
+</html>
+```
+
+
+### Example 3: Generating next 5 days dates
+
+
+In this example JavaScript generates future dates, specifically for the next five days based on the current date. Subsequently, it formats and displays these dates in three different ways; ISO format; locale-specific arrangement, and a custom layout are showcased on the web page. Without requiring any user input, JavaScript's date handling capabilities receive a practical illustration through dynamically generated dates from the generateFutureDates function.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+   ## Future Dates Generator
+   <div id="futureDates"></div>
+   <script>
+      function generateFutureDates() {
+         const today = new Date();
+         const futureDatesDiv = document.getElementById('futureDates');
+
+         for (let i = 1; i <= 5; i++) {
+            const futureDate = new Date(today.getTime() + i * 24 * 60 * 60 * 1000); // Adding 1 day for each iteration
+            const isoFormat = futureDate.toISOString();
+            const localeFormat = futureDate.toLocaleString();
+            const customFormatOptions = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZoneName: 'short' };
+            const customFormat = futureDate.toLocaleString('en-US', customFormatOptions);
+
+            futureDatesDiv.innerHTML += 
+            p<strong>Day ${i}:</strong>
+            pISO Format (UTC): ${isoFormat}
+            pLocale Date and Time: ${localeFormat}
+            pCustom Format: ${customFormat}
+            <hr>
+            `;
+         }
+      }
+
+      generateFutureDates();
+   </script>
+</body>
+</html>
+```
+

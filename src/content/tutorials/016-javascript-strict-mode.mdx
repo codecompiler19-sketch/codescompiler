@@ -1,0 +1,304 @@
+---
+title: "JavaScript - Strict Mode"
+description: "Learn JavaScript - Strict Mode with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 160
+group: "Javascript Basics Tutorial"
+seoTitle: "JavaScript - Strict Mode — CodesCompiler JavaScript Guide"
+permalink: "javascript-strict-mode"
+---
+
+
+# JavaScript - Strict Mode
+
+
+
+
+## Strict Mode in JavaScript
+
+
+In JavaScript, thestrict modeis introduced in the ES5 (ECMAScript 2009). The purpose behind introducing the "strict mode" is to make the JavaScript code more secure.
+
+
+The 'use strict' literal expression is used to add the strict mode in the JavaScript code. It removes the silent errors from the code, such as you can't use the variable without declaration, you can't modify the readable property of the object, etc.
+
+
+## Enabling Strict Mode
+
+
+To enble strcit mode, you should write the following literal expression to the top of your code −
+
+
+```javascript
+'use strict';
+```
+
+
+The 'use strict' directive is used enable JavaScript's strict mode.
+
+
+## Why Use the Strict Mode?
+
+
+Here, we have listed some reasons for using the strict JavaScript mode −
+
+
+
+- Error Prevention− The strict mode prevents the common errors which developers make while writing the JavaScript code, such as initializing the variable without declaration or using the reserved keywords as an identifier.
+- Safer Code− The strict mode prevents the creation of global variables accidentally. Also, it doesn't allow to use of statements like 'with', which can lead to vulnerability in the code.
+- Future Compatibility− You can align your code with the future versions of JavaScript by using the script mode. For example, the current version of JavaScript doesn't contain keywords like 'public' but is reserved for future versions. So, the strict mode won't allow you to use it as an identifier from now.
+
+
+
+## Strict Mode in the Global Scope
+
+
+When you add the 'use strict' at the top of the JavaScript code; it uses the strict mode for the whole code.
+
+
+### Example
+
+
+In the example below, we have defined the 'y' variable and initialized it with the 50. The code prints the value of 'y' in the output.
+
+
+Also, we initialized the variable 'x' without declaring it. So, it gives theerrorin the console and doesn't print the output.
+
+
+In short, the strict mode doesn't allow you to use the variable without its declaration.
+
+
+```html
+<html>
+<head>
+   <title> Using the strict mode gloablly </title>
+</head>
+<body>
+   <script>
+      "use strict";
+      let y = 50; // This is valid
+      document.write("The value of the X is: " + y);
+      x = 100; // This is not valid
+      document.write("The value of the X is: " + x);
+   </script>
+</body>
+</html>
+```
+
+
+## Strict Mode in the Local Scope
+
+
+You can also use the "strict mode" inside the particular function. So, it will be applied only in the function scope. Let's understand it with the help of an example.
+
+
+### Example
+
+
+In the example below, we used the 'use strict' literal only inside the test() function. So, it removes the unusual errors from the function only.
+
+
+The code below allows you to initialize the variable without declaring it outside the function but not inside it.
+
+
+```html
+<html>
+<head>
+    <title> Using the strict mode gloablly </title>
+</head>
+<body>
+    <script>
+        x = 100; // This is valid
+        document.write("The value of the X is - " + x);
+        function test() {
+            "use strict";
+            y = 50; // This is not valid
+            document.write("The value of the y is: " + x);
+        }
+        test();
+    </script>
+</body>
+</html>
+```
+
+
+## Mistakes that you should't make in the strict mode
+
+
+1. You can't initialize the variable with a value without declaring it.
+
+
+```javascript
+<script>
+   'use strict';
+   num = 70.90; // This is invalid
+</script>
+```
+
+
+2.	Similarly, you can't use the object without declaring it.
+
+
+```javascript
+<script>
+   'use strict';
+   numObj = {a: 89, b: 10.23}; // This is invalid
+</script>
+```
+
+
+3.	You can't delete objects using the delete keyword.
+
+
+```javascript
+<script>
+   'use strict';
+   let women = { name: "Aasha", age: 29 };
+   delete women; // This is invalid
+</script>
+```
+
+
+4.	You can't delete the object prototype in the strict mode.
+
+
+```javascript
+<script>
+   'use strict';
+   let women = { name: "Aasha", age: 29 };
+   delete women.prototype; // This is invalid
+</script>
+```
+
+
+5.	Deleting the function using the delete operator is not allowed.
+
+
+```javascript
+<script>
+   'use strict';
+   function func() { }
+   delete func; // This is invalid
+</script>
+```
+
+
+6.	You can't have a function with duplicate parameter values.
+
+
+```javascript
+<script>
+   'use strict';
+   function func(param1, param1, param2) {
+      // Function with 2 param1 is not allowed!
+   }
+</script>
+```
+
+
+7.	You can't assign octal numbers to variables.
+
+
+```javascript
+<script>
+   'use strict';
+   let octal = 010; // Throws an error
+</script>
+```
+
+
+8.	You can't use escape characters.
+
+
+```javascript
+<script>
+   'use strict';
+   let octal = \010; // Throws an error
+</script>
+```
+
+
+9.	You can't use reserved keywords like eval, arguments, public, etc., as an identifier.
+
+
+```javascript
+<script>
+   'use strict';
+   let public = 100; // Throws an error
+</script>
+```
+
+
+10.	You can't write to the readable property of the object.
+
+
+```javascript
+<script>
+    'use strict';
+    let person = {};
+
+    Object.defineProperty(person, 'name', { value: "abc", writable: false });
+    obj1.name = "JavaScript"; // throws an error
+</script>
+```
+
+
+11.	You can't assign values to the getters function.
+
+
+```javascript
+<script>
+   'use strict';
+   let person = { get name() { return "JavaScript"; } };
+   obj1.name = "JavaScript"; // throws an error
+</script>
+```
+
+
+12.	In the strict mode, when you use the 'this' keyword inside the function, it refers to the reference object through which the function is invoked. If the reference object is not specified, it refers to the undefined value.
+
+
+```javascript
+<script>
+   'use strict';
+   function test() {
+      console.log(this); // Undefined
+   }
+   test();
+</script>
+```
+
+
+13.	You can't use the 'with' statement in the strict mode.
+
+
+```javascript
+<script>
+   'use strict';
+   with (Math) {x = sin(2)}; // This will throw an error
+</script>
+```
+
+
+14.	You can't use the eval() function to declare the variables for the security reason.
+
+
+```javascript
+<script>
+   'use strict';
+   eval("a = 8")
+</script>
+```
+
+
+15.	You can't use the keywords as an identifier that are reserved for the future. Below keywords are reserved for the future −
+
+
+
+- implements
+- interface
+- package
+- private
+- protected
+
+

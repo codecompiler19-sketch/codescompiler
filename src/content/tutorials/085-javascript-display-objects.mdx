@@ -1,0 +1,311 @@
+---
+title: "JavaScript - Display Objects"
+description: "Learn JavaScript - Display Objects with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 850
+group: "Object Oriented JavaScript"
+seoTitle: "JavaScript - Display Objects — CodesCompiler JavaScript Guide"
+permalink: "javascript-display-objects"
+---
+
+
+# JavaScript - Display Objects
+
+
+
+
+## Displaying Objects in JavaScript
+
+
+There are different ways to display objects in JavaScript. Using the console.log() method, we can display the object in the web console. Sometimes developers require to display the object properties and their value in the HTML or for debugging the code.
+
+
+For displaying an object, we can access the different properties and display them. We can also convert the object to a JSON string and display it as a string.
+
+
+When you print the object like other variables in the output, it prints the '[object Object]' as shown in the example below.
+
+
+In the example below, we have created a fruit object and printed it in the output. You can observe that it prints the [object Object].
+
+
+```html
+<html>
+<body>
+  p id = "output"The object is: 
+  <script>
+    const fruit = {
+      name: "Banana",
+      price: 100,
+    }
+    document.getElementById("output").innerHTML += fruit;
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The object is: [object Object]
+```
+
+
+To overcome the above problem, you need to use specific approaches to display the object.
+
+
+Some approaches to display the JavaScript objects are as follows −
+
+
+
+- Accessing the object properties
+- Using the JSON.stringify() method
+- Using the Object.entries() method
+- Using the for...in loop
+
+
+
+## Accessing the Object Properties
+
+
+In the object properties chapter, you learned different ways to access the values of the object properties. You can use thedot notationorsquare bracketnotation to display the property values.
+
+
+This way, you may get all property values and display them in the output.
+
+
+### Syntax
+
+
+Users can follow the syntax below to display the object by accessing properties.
+
+
+```javascript
+obj.property;
+OR
+obj["property"];
+```
+
+
+In the above syntax, we access the property using the obj object's dot and square bracket notation.
+
+
+### Example
+
+
+In the example below, we have accessed the 'name' property of the object using the dot notation and the 'price' property using the square bracket notation.
+
+
+```html
+<html>
+<body>
+  p id="output" 
+  <script>
+    const fruit = {
+      name: "Banana",
+      price: 100,
+    }
+
+    const fruitName = fruit.name;
+    const fruitPrice = fruit["price"];
+
+    document.getElementById("output").innerHTML = 
+    "The price of the " + fruitName + " is: " + fruitPrice;
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The price of the Banana is: 100
+```
+
+
+## Using the JSON.stringify() Method
+
+
+When object contains the dynamic properties or you don't know object properties, you can't print properties and values using the first approach. So, you need to use the JSON.stringify() method. It converts the object into a string.
+
+
+### Syntax
+
+
+Follow the syntax below to use the JSON.stringify() method to display the object.
+
+
+```javascript
+JSON.stringify(obj);
+```
+
+
+You need to pass the object as a parameter of the JSON.stringify() method.
+
+
+### Example
+
+
+In the example below, we have converted the fruit string into the JSON string and displayed in the output.
+
+
+```html
+<html>
+<body>
+  p id = "output"The fruit object is 
+  <script>
+    const fruit = {
+      name: "Banana",
+      price: 100,
+    }
+    document.getElementById("output").innerHTML += JSON.stringify(fruit);
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The fruit object is {"name":"Banana","price":100}
+```
+
+
+## Using the Object.enteries() Method
+
+
+The Object.entries() is a static method of the Object class, allowing you to extract the properties and values in the 2D array. After that, you can use the loop to traverse the array and display each property and value pair individually.
+
+
+### Syntax
+
+
+Follow the syntax below to use the Object.entries() method.
+
+
+```javascript
+Object.entries(obj);
+```
+
+
+The Object.entries() method takes the object as a parameter and returns the 2D array, where each 1D array contains the key-value pair.
+
+
+### Example
+
+
+In the example below, the numbers object contains the 4 properties. We used the Object.entries() method to get all entries of the object.
+
+
+After that, we used the for loop to traverse the object entries and display them.
+
+
+```html
+<html>
+<body>
+  p Displaying the object entries
+  p id = "output" 
+  <script>
+    
+    const numbers = {
+      num1: 10,
+      num2: 20,
+      num3: 30,
+      num4: 40,
+    }
+    
+    for (const [key, value] of Object.entries(numbers)) {
+      document.getElementById("output").innerHTML += key + ": " + value + " <br>";
+    }
+    
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Displaying the object entries
+
+num1: 10
+num2: 20
+num3: 30
+num4: 40
+```
+
+
+## Using the for...in Loop
+
+
+The for...in loop is used to traverse the iterable, and the object is one of them.
+
+
+### Syntax
+
+
+Users can follow the syntax below to use the for...in loop to traverse the object and display it in the output.
+
+
+```javascript
+for (key in obj) {
+ // Use the key to access the value
+}
+```
+
+
+In the above syntax, obj is an object to display. In the loop body, you can access the value related to the key and print the key-value pair.
+
+
+### Example
+
+
+In the example below, we used the for...in loop to traverse each key of the object and print them in the output.
+
+
+```html
+<html>
+<body>
+  p Displaying Object Entries using for...in loop:
+  p id = "output" 
+  <script>
+    const languages = {
+      language1: "JavaScript",
+      language2: "Python",
+      language3: "Java",
+      language4: "HTML",
+    }
+
+    for (const key in languages) {
+      document.getElementById("output").innerHTML += 
+      key + ": " + languages [key] + " <br>";
+    }
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Displaying Object Entries using for...in loop:
+
+language1: JavaScript
+language2: Python
+language3: Java
+language4: HTML
+```
+
+
+The best way to display the object is using the JSON.stringify() method. It converts the object into a flat string. Other approaches can't be used to display the nested objects, but JSON.stringify() method can be used.
+

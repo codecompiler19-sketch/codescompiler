@@ -1,0 +1,468 @@
+---
+title: "SQL - AND & OR"
+description: "Learn SQL - AND & OR with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 440
+group: "SQL Operators and Clauses"
+seoTitle: "SQL - AND & OR — CodesCompiler SQL Guide"
+permalink: "sql-and-or-clauses"
+---
+
+
+# SQL - AND and OR Operators
+
+
+
+
+
+
+## SQL AND and OR Operators Overview
+
+
+In SQL, theANDandORoperators are logical operators used in theWHEREorHAVINGclause to combine multiple conditions when filtering query results.
+
+
+
+- ANDreturns results only whenallconditions are true.
+- ORreturns results whenat least onecondition is true.
+
+
+
+The following table provides a quick comparison of how AND and OR evaluate conditions. Use it to choose the right operator as per your query needs:
+
+
+
+| Operator | Returns TRUE if | Example |
+| --- | --- | --- |
+| AND | All conditions are TRUE | WHERE Age > 25 AND Salary > 5000 |
+| OR | Any condition is TRUE | WHERE City `=` 'London' OR City `=` 'Paris' |
+
+
+
+Following is thetruth tablefor SQL AND and OR opeartors:
+
+
+
+| Condition 1 | Condition 2 | AND Result | OR Result |
+| --- | --- | --- | --- |
+| TRUE | TRUE | TRUE | TRUE |
+| TRUE | FALSE | FALSE | TRUE |
+| FALSE | TRUE | FALSE | TRUE |
+| FALSE | FALSE | FALSE | FALSE |
+
+
+
+## SQL AND Operator
+
+
+TheSQL ANDoperator is used to return only those rows that satisfy all the specified conditions in a query. If even one condition is false, the row is excluded from the result set.
+
+
+It evaluates totrueor1only when all conditions are true. This operator is commonly used in theWHEREclause to combine multiple filtering conditions in a single SQL statement.
+
+
+### Syntax
+
+
+The basic syntax of the SQL AND operator is as follows:
+
+
+```sql
+SELECT column1, column2, ...
+FROM table_name
+WHERE condition1 AND condition2;
+```
+
+
+Where,condition1andcondition2are the filtering conditions we want to apply to the query.
+
+
+You can combine N number of conditions using the AND operator. For an action to be taken by the SQL statement, whether it be a transaction or a query, all the specified conditions (separated by the AND operator) must be TRUE.
+
+
+### Example
+
+
+Assume we have created a table with name CUSTOMERS in MySQL database using the CREATE TABLE statement as shown below:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),       
+   PRIMARY KEY (ID)
+);
+```
+
+
+Following query inserts values into this table using the INSERT statement:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00),
+(2, 'Khilan', 25, 'Delhi', 1500.00),
+(3, 'Kaushik', 23, 'Kota', 2000.00),
+(4, 'Chaitali', 25, 'Mumbai', 6500.00),
+(5, 'Hardik', 27, 'Bhopal', 8500.00),
+(6, 'Komal', 22, 'Hyderabad', 4500.00),
+(7, 'Muffy', 24, 'Indore', 10000.00);
+```
+
+
+The table obtained is as shown below:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+Following is an example which would fetch the ID, NAME and SALARY fields from the CUSTOMERS table, where the salary is greater than 2000 and the age is less than 25 years:
+
+
+```sql
+SELECT ID, NAME, SALARY FROM CUSTOMERS 
+WHERE SALARY > 2000 AND AGE < 25;
+```
+
+
+This would produce the following result:
+
+
+IDNAMESALARY6Komal4500.007Muffy10000.00
+
+
+## Using Multiple AND Operators in SQL
+
+
+You can also use multipleANDoperators in an SQL query to combine several conditions together. Conditions combined with the AND operator are evaluated from left to right. If any condition evaluates to FALSE, the record will be excluded from the result set.
+
+
+### Syntax
+
+
+Following is the syntax to use multiple AND operators in SQL:
+
+
+```sql
+SELECT column1, column2, ...
+FROM table_name
+WHERE condition1 AND condition2 AND condition3 ...;
+```
+
+
+### Example
+
+
+In the following query, we are selecting all records from the CUSTOMERS table where the name of the customer starts with 'K', the age of the customer is greater than or equal to 22, and their salary is less than 3742:
+
+
+```sql
+SELECT * FROM CUSTOMERS 
+WHERE NAME LIKE 'k%' AND AGE >= 22 AND SALARY < 3742;
+```
+
+
+Following is the result produced:
+
+
+IDNAMEAGEADDRESSSALARY2Khilan25Delhi1500.003Kaushik23Kota2000.00
+
+
+## Combining AND with Other Logical Operators
+
+
+The SQL AND operator can be combined with other logical operators such asORandNOTto check more than one type of condition in a query. When combining operators, use parentheses to control the evaluation order.
+
+
+In SQL,ANDhas higher precedence thanOR. Without parentheses, AND conditions are evaluated first.
+
+
+### Example
+
+
+We can combine theANDoperator with theNOToperator to create aNANDoperation. The 'NAND' operation returns true if at least one of the input conditions is false, and false if both input conditions are true.
+
+
+In the following query, we are selecting all records from the CUSTOMERS table where the condition (salary is greater than 4500 and the age is less than 26) is false. The "NOT" operator negates the entire condition, and the "AND" operator combines two conditions:
+
+
+```sql
+SELECT * FROM CUSTOMERS 
+WHERE NOT (SALARY > 4500 AND AGE < 26);
+```
+
+
+Following is the output of the above query:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.005Hardik27Bhopal8500.006Komal22Hyderabad4500.00
+
+
+## Using AND Operator with UPDATE Statement
+
+
+We can use the AND operator in the WHERE clause of an UPDATE statement to change only those rows that match all given conditions.
+
+
+### Syntax
+
+
+Following is the syntax to use the AND operator with the UPDATE statement in SQL:
+
+
+```sql
+UPDATE table_name
+SET column1 = value1, column2 = value2, ...
+WHERE condition1 AND condition2 AND ...;
+```
+
+
+Where,
+
+
+
+- table_nameis the name of the table we want to update.
+- column1, column2,etc. are the columns we want to modify.
+- value1, value2,etc. are the new values we want to set for those columns.
+
+
+
+### Example
+
+
+In the following query, we are updating the salary of all the customers whose age is greater than 27 and updating it to '55000' using UPDATE statement:
+
+
+```sql
+UPDATE CUSTOMERS SET SALARY = 55000 WHERE AGE > 27;
+```
+
+
+We get the following result. We can observe that the salary of 1 customer has been modified:
+
+
+```sql
+Query OK, 1 row affected (0.02 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+```
+
+
+### Verification
+
+
+To verify if the changes are reflected in the tables, we can use SELECT statement to print the tables. Following is the query to display the records in the CUSTOMERS table:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+The table is displayed as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad55000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+As we can see in the above table, the salary of 'Ramesh' has been updated to '55000' because his age is 32 i.e. greater than 27.
+
+
+## SQL OR Operator
+
+
+The SQLORoperator returns TRUE if at least one of the specified conditions is true; otherwise, it returns FALSE. This allows you to broaden your search results.
+
+
+Like AND, OR is used in the WHERE clause, but it haslower precedence, meaning parentheses can be important when combining it with AND.
+
+
+### Syntax
+
+
+The basic syntax of the OR operator in SQL is as follows:
+
+
+```sql
+SELECT column1, column2, ...
+FROM table_name
+WHERE condition1 OR condition2 OR condition3 ...;
+```
+
+
+Where,condition1, condition2are the conditions we want to apply to the query. Each condition is separated by the OR operator.
+
+
+You can combine N number of conditions using the OR operator. For an action to be taken by the SQL statement, whether it be a transaction or query, at least of the conditions separated by the OR operator must be TRUE.
+
+
+### Example
+
+
+The following query fetches the ID, NAME and SALARY fields from the CUSTOMERS table, where the salary is greater than 2000 OR the age is less than 25 years:
+
+
+```sql
+SELECT ID, NAME, SALARY FROM CUSTOMERS 
+WHERE SALARY > 2000 OR AGE < 25;
+```
+
+
+This would produce the following result:
+
+
+IDNAMESALARY3Kaushik2000.004Chaitali6500.005Hardik8500.006Komal4500.007Muffy10000.00
+
+
+## Using Multiple OR Operators in SQL
+
+
+In SQL, you can use multiple OR operators to connect several conditions in a query. If a row satisfies any of the conditions, it will be included in the result set.
+
+
+### Example
+
+
+In the following query, we are selecting all records from the CUSTOMERS table where either the name of the customer ends with 'l', or the salary of the customer is greater than 10560, or their age is less than 25:
+
+
+```sql
+SELECT * FROM CUSTOMERS 
+WHERE NAME LIKE '%l' OR SALARY > 10560 OR AGE < 25;
+```
+
+
+Following is the result obtained:
+
+
+IDNAMEAGEADDRESSSALARY3Kaushik23Kota2000.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## Combining AND and OR Operators in SQL Queries
+
+
+In SQL, the AND and OR operators can be used together in a WHERE clause to combine multiple conditions. This allows you to retrieve only the rows that match the specific criteria you define.
+
+
+When combining AND and OR in a single query, always consider the operator precedence. Use parentheses to make sure the correct logical grouping of conditions.
+
+
+### Syntax
+
+
+Following is the syntax to use the AND and OR operators together in SQL:
+
+
+```sql
+SELECT * FROM table_name 
+WHERE (condition1 OR condition2) AND condition3;
+```
+
+
+Where,condition1, condition2, and condition3represent the conditions that we want to combine with the AND and OR operators. The parentheses group the first two conditions and combine them with the OR operator. The result of that operation is combined with the third condition using the AND operator.
+
+
+### Example
+
+
+In the following query, we are retrieving all rows from the "CUSTOMERS" table where the age of the customer is equal to 25 or the salary is less than 4500 and the name is either Komal or Kaushik. The parentheses control the order of evaluation so that the OR operator is applied first, followed by the AND operator:
+
+
+```sql
+SELECT * FROM CUSTOMERS 
+WHERE (AGE = 25 OR SALARY < 4500) 
+AND (NAME = 'Komal' OR NAME = 'Kaushik');
+```
+
+
+This would produce the following result:
+
+
+IDNAMEAGEADDRESSSALARY3Kaushik23Kota2000.00
+
+
+## Using OR Operator with DELETE Statement
+
+
+We can also use the OR operator with the DELETE statement to delete rows that meet any one of the (multiple) conditions.
+
+
+### Syntax
+
+
+Following is the syntax of using OR operator with DELETE statement in SQL:
+
+
+```sql
+DELETE FROM table_name
+WHERE column1 = 'value1' OR column2 = 'value2';
+```
+
+
+### Example
+
+
+In the following query, we are deleting the records from the CUSTOMERS table where either the age of the customer equals 25 or their salary is less than 2000:
+
+
+```sql
+DELETE FROM CUSTOMERS WHERE AGE = 25 OR SALARY < 2000;
+```
+
+
+We get the following result:
+
+
+```sql
+Query OK, 2 rows affected (0.01 sec)
+```
+
+
+### Verification
+
+
+To verify if the changes are reflected in the tables, we can use SELECT statement to print the tables. Following is the query to display the records in the CUSTOMERS table:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+The table is displayed as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.003Kaushik23Kota2000.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## SQL Operator Precedence
+
+
+SQL evaluates logical operators in the following order:
+
+
+
+- NOT
+- AND
+- OR
+
+
+
+Without parentheses, AND will be processed before OR. This can lead to unexpected results if you don't explicitly control the grouping of conditions.
+
+
+## Common Mistakes When Using SQL AND and OR Operators
+
+
+Follwoing are some of the common mistakes we should avoid when using SQL AND and OR operators:
+
+
+
+- Forgetting to use parentheses when combining AND and OR, which can lead to unexpected results.
+- Not handlingNULLvalues correctly, comparisons with NULL return UNKNOWN, not TRUE or FALSE.
+- Using many OR conditions on columns without indexes can slow down query performance.
+- In some cases, for better performance, we can replace multiple OR conditions with UNION queries or add indexes.
+
+

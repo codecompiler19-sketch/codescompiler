@@ -1,0 +1,433 @@
+---
+title: "JavaScript - Geolocation API"
+description: "Learn JavaScript - Geolocation API with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1410
+group: "JavaScript Web APIs"
+seoTitle: "JavaScript - Geolocation API — CodesCompiler JavaScript Guide"
+permalink: "javascript-geolocation-api"
+---
+
+
+# JavaScript - Geolocation API
+
+
+
+
+## Geolocation API
+
+
+TheGeolocation APIis a web API that provides a JavaScript interface to access the user'sgeographical location data. A Geolocation API contains the various methods and properties that you can use to access the user's location on your website.
+
+
+It detects the location of the user's using the device's GPS. The accuracy of the location depends on the accuracy of the GPS device.
+
+
+As location compromises the users' privacy, it asks for permission before accessing the location. If users grant permission, websites can access the latitude, longitude, etc.
+
+
+Sometimes, developers need to get the user's location on the website. For example, if you are creating an Ola, Uber, etc. type applications, you need to know the user's location to pick them up for the ride.
+
+
+The Geolocation API allows users to share the location with a particular website.
+
+
+## Real-time use cases of the Geolocation API
+
+
+Here are the real-time use cases of the Geolocation API.
+
+
+
+- To get the user's location coordinates, show them on the map.
+- To tag the user's location on the photograph.
+- To suggest nearby stores, food courts, petrol pumps, etc., to users.
+- To get the current location for the product or food delivery.
+- To pick up users for the ride from their current location.
+
+
+
+## Using the Geolocation API
+
+
+To use the Geolocation API, you can use the 'navigator' property of the window object. The Navigator object contains the 'geolocation' property, containing the various properties and methods to manipulate the user's location.
+
+
+### Syntax
+
+
+Follow the syntax below to use the Geolocation API.
+
+
+```javascript
+var geolocation = window.navigator.geolocation;
+OR
+var geolocation = navigator.geolocation;
+```
+
+
+Here, the geolocation object allows you to access the location coordinates.
+
+
+### Example: Checking the browser support
+
+
+Using the navigator, you can check whether the user's browser supports the Geolocation.geolocation property.
+
+
+The code below prints the message accordingly whether the Geolocation is supported.
+
+
+First, we convert the data into the JSON format. After that, we convert the data into the string and print it on the web page.
+
+
+```html
+<html>
+<body>
+  <div id = "output"> </div>
+  <script>
+    const output = document.getElementById("output");
+    if (navigator.geolocation) {
+      output.innerHTML += "Geolocation is supported by your browser."
+    } else {
+      output.innerHTML += "Geolocation is not supported by your browser."
+    }
+  </script>
+  </body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Geolocation is supported by your browser.
+```
+
+
+## Geolocation Methods
+
+
+Here are the methods of the Geolocation API.
+
+
+MethodDescriptiongetCurrentPosition()It is used to retrieve the current geographic location of the website user.watchPosition()It is used to update the user's live location continuously.clearWatch()To clear the ongoing watch of the user's location using the watchPosition() method.
+
+
+## The Location Properties
+
+
+The getCurrentPosition() method executes the callback function you passed as an argument. The callback function takes the object as a parameter. The parametric object contains various properties with information about the user's location.
+
+
+Here, we have listed all properties of the location object in the table below.
+
+
+PropertyTypeDescriptioncoordsobjectsIt is an object you get as a parameter of the callback function of the getCurrentPosition() method. It contains the below properties.coords.latitudeNumberIt contains the latitude of the current location in decimal degrees. The value range is [-90.00, +90.00].coords.longitudeNumberIt contains the longitude of the current location in decimal degrees. The value range is [-180.00, +180.00].coords.altitudeNumberIt is an optional property, and it specifies the altitude estimate in meters above the WGS 84 ellipsoid.coords.accuracyNumberIt is also optional and contains the accuracy of the latitude and longitude estimates in meters.coords.altitudeAccuracyNumber[Optional]. It contains the accuracy of the altitude estimate in meters.coords.headingNumber[Optional]. It contains information about the device's current direction of movement in degrees counting clockwise relative to true north.coords.speedNumber[Optional]. It contains the device's current ground speed in meters per second.timestampdateIt contains the information about the time when the location information was retrieved, and the Position object created.
+
+
+## Getting User's Location
+
+
+You can use the getCurrentPosition() method to get the user's current location.
+
+
+### Syntax
+
+
+Users can follow the syntax below to get the user's current position using the getCurrentPosition() method.
+
+
+```javascript
+navigator.geolocation.getCurrentPosition(successCallback, errorCallback, options);
+```
+
+
+### Parameters
+
+
+The getCurrentPosition() object takes 3 parameters.
+
+
+
+- successCallback− This function will be called when the method successfully retrieves the user's location.
+- errorCallback− This function will be called when the method throws an error while accessing the user's location.
+- Options− It is an optional parameter. It is an object containing properties like timeout, maxAge, etc.
+
+
+
+### Permitting the website to access your location
+
+
+Whenever any website tries to access your location, the browser pops up the permission alert box. If you click the 'allow, it can fetch your location details. Otherwise, it throws an error.
+
+
+You can see the permission pop-up in the image below.
+
+
+### Example
+
+
+In the below code, we use the getCurrentPosition() method to get the user's location. The method calls the getCords() function to get the current location.
+
+
+In the getCords() function, we print the value of the various properties of the cords object.
+
+
+First, we convert the data into the JSON format. After that, we convert the data into the string and print it on the web page.
+
+
+```html
+<html>
+<body>
+  ###  Location Information 
+  <button onclick = "findLocation()"> Find Location </button>
+  p id = "output"  
+  <script>
+    const output = document.getElementById("output");
+    function findLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(getCords); //
+      }
+      else {
+        output.innerHTML += "Geo Location is not supported by this browser!";
+      }
+    }
+    // Callback function
+    function getCords(coords) {
+      output.innerHTML += "The current position is: <br>";
+      output.innerHTML += "Latitude: " + coords.coords.latitude + "<br>";
+      output.innerHTML += "Longitude: " + coords.coords.longitude + "<br>";
+      output.innerHTML += "Accuracy: " + coords.coords.accuracy + "<br>";
+      output.innerHTML += "Altitude: " + coords.coords.altitude + "<br>";
+    }  
+  </script>
+</body>
+</html>
+```
+
+
+## Geolocation Errors
+
+
+The getCurrentPosition() method takes the callback function as a second parameter to handle the error. The callback function can have an error object as a parameter.
+
+
+In the below cases, an error can occur.
+
+
+
+- When the user has denied access to the location.
+- When location information is not available.
+- When the request for the location is timed out.
+- It can also generate any random error.
+
+
+
+Here is the list of properties of the error object.
+
+
+PropertyTypeDescriptioncodeNumberIt contains the error code.messageStringIt contains the error message.
+
+
+Here is the list of different error codes.
+
+
+CodeConstantDescription0UNKNOWN_ERRORWhen methods of the geolocation object cant retrieve the location, it returns the code 0 for unknown error.1PERMISSION_DENIEDWhen the user has denied the permission to access the location.2POSITION_UNAVAILABLEWhen it cant find the location of the device.3TIMEOUTWhen the method of the geolocation object cant find the users position.
+
+
+### Example: Error Handling
+
+
+We use the getCurrentPosition() method in the findLocation() function in the below code. We have passed the errorCallback() function as a second parameter of the getCurrentPosition() method to handle the errors.
+
+
+In the errorCallback() function, we use the switch case statement to print the different error messages based on the error code.
+
+
+When you click the Find Location button, it will show you a pop-up asking permission to access the location. If you click on the 'block, it will show you an error.
+
+
+First, we convert the data into the JSON format. After that, we convert the data into the string and print it on the web page.
+
+
+```html
+<html>
+<body>
+<div id = "output"> </div>
+<button onclick = "findLocation()"> Find Location </button>
+<script>
+const output = document.getElementById("output");
+function findLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(getCords, errorCallback); //
+  }
+  else {
+    output.innerHTML += "Geo Location is not supported by this browser!";
+  }
+}
+// Callback function
+function getCords(coords) {
+  output.innerHTML += "The current position is: <br>";
+  output.innerHTML += "Latitude: " + coords.coords.latitude + "<br>";
+  output.innerHTML += "Longitude: " + coords.coords.longitude + "<br>";
+}
+// Function to handle error
+function errorCallback(err) {
+  switch (err.code) {
+    case err.PERMISSION_DENIED:
+      output.innerHTML += "You have denied to access your device's location";
+      break;
+    case err.POSITION_UNAVAILABLE:
+      output.innerHTML += "Your position is not available.";
+      break;
+    case err.TIMEOUT:
+      output.innerHTML += "Request timed out while fetching your location.";
+      break;
+    case err.UNKNOWN_ERROR:
+      output.innerHTML += "Unknown error occurred while fetching your location.";
+      break;
+  }
+}  
+</script>
+</body>
+</html>
+```
+
+
+### Geolocation Options
+
+
+The getCurrentPosition() method takes the object containing the options as a third parameter.
+
+
+Here is the list of options you can pass as a key to the option object.
+
+
+PropertyTypeDescriptionenableHighAccuracyBooleanIt represents whether you want to get the most accurate location.timeoutNumberIt takes a number of milliseconds as a value for that much time you want to wait to fetch the location data.maximumAgeNumberIt takes the milliseconds as a value, specifying the maximum age of the cached location.
+
+
+### Example
+
+
+The below code finds the most accurate location. Also, we have set milliseconds to the maximumAge, and timeout properties of the options object.
+
+
+First, we convert the data into the JSON format. After that, we convert the data into the string and print it on the web page.
+
+
+```html
+<html>
+<body>
+<div id = "output"> </div>
+<button onclick = "findLocation()"> Find Location </button>
+<script>
+  const output = document.getElementById("output");
+  function findLocation() {
+    if (navigator.geolocation) {
+      // Options for geolocation
+      const options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      };
+      navigator.geolocation.getCurrentPosition(getCords, errorfunc, options);
+    }
+    else {
+      output.innerHTML += "Geo Location is not supported by this browser!";
+    }
+  }
+  // Callback function
+  function getCords(coords) {
+    output.innerHTML += "The current position is: <br>";
+    output.innerHTML += "Latitude: " + coords.coords.latitude + "<br>";
+    output.innerHTML += "Longitude: " + coords.coords.longitude + "<br>";
+  }
+  function errorfunc(err) {
+    output.innerHTML += "The error message is - " + err.message + "<br>";
+  }
+</script>
+</body>
+</html>
+```
+
+
+## Watching the Current Location of the User
+
+
+The watchPosition() method allows you to track the live location of users. It returns the ID, which we can use with the clearWatch() method when you want to stop tracking the user.
+
+
+### Syntax
+
+
+Follow the syntax below to use the watchPosition() method to track the live location of users.
+
+
+```javascript
+var id = navigator.geolocation.watchPosition(successCallback, errorCallback, options)
+```
+
+
+The errorCallback and options are optional arguments.
+
+
+If you want to stop tracking the user, you can follow the syntax below.
+
+
+```javascript
+navigator.geolocation.clearWatch(id);
+```
+
+
+The clearWatch() method takes the id returned by the watchPosition() method as an argument.
+
+
+### Example
+
+
+In the below code, we used the geolocation object's watchPosition () method to get the user's continuous position.
+
+
+We used the getCords() function as a callback of the watchPosition() method, where we print the latitude and longitude of the user's position.
+
+
+In the findLocation() method, we used the setTimeOut() method to stop tracking after 30 seconds.
+
+
+In the output, you can observe that the code prints the user's position multiple times.
+
+
+First, we convert the data into the JSON format. After that, we convert the data into the string and print it on the web page.
+
+
+```html
+<html>
+<body>
+  <button onclick = "findLocation()"> Find Location </button>
+  <div id = "output"> </div>
+  <script>
+    let output = document.getElementById("output");
+    function findLocation() {
+      if (navigator.geolocation) {
+        let id = navigator.geolocation.watchPosition(getCoords);
+        setTimeout(function () {
+          navigator.geolocation.clearWatch(id);
+          output.innerHTML += "<br>Tracking stopped!";
+        }, 30000); // Stop tracking after 30 seconds.
+      } else {
+        output.innerHTML += "<br>Geo Location is not supported by this browser!";
+      }
+    }
+    // Callback function
+    function getCoords(location) {
+      let latitude = location.coords.latitude;
+      let longitude = location.coords.longitude;
+      output.innerHTML += <br> Latitude: ${latitude}, Longitude: ${longitude};
+    }
+  </script>
+</body>
+</html>
+```
+

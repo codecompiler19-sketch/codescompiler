@@ -1,0 +1,270 @@
+---
+title: "SQL - Cross Join"
+description: "Learn SQL - Cross Join with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 660
+group: "SQL Joins"
+seoTitle: "SQL - Cross Join — CodesCompiler SQL Guide"
+permalink: "sql-cross-join"
+---
+
+
+# SQL - Cross Join
+
+
+Table of contentThe SQL Cross JoinJoining Multiple Tables with Cross JoinSQL CROSS JOIN with Inline TablesDifferences Between CROSS JOIN and INNER JOINImportant Points About CROSS JOIN
+
+
+
+
+## The SQL Cross Join
+
+
+AnSQL CROSS JOINis used to return theCartesian productof two tables. This means every row from the first table is combined with every row from the second table, producing all possible row combinations.
+
+
+A Cartesian product is the result of multiplying two sets by pairing each element of the first set with every element of the second set.
+
+
+### Venn Diagram of SQL CROSS JOIN
+
+
+The following Venn diagram illustrates all possible combinations of rows in a SQL CROSS JOIN:
+
+
+As you can see, we have two columns:Hair StyleandHair Type, each containing several records. Using aCROSS JOIN, every record in the "Hair Style" column is combined with all records in the "Hair Type" column.
+
+
+The resulting table contains all possible combinations and is known as theCartesian productor the joined table.
+
+
+### Syntax
+
+
+Following is the basic syntax of the Cross Join query in SQL:
+
+
+```sql
+SELECT 
+    table1.column1,
+    table1.column2,
+    table2.column1,
+    table2.column2
+FROM table1
+CROSS JOIN table2;
+```
+
+
+### Example
+
+
+Assume we have created a table named CUSTOMERS, which contains the personal details of customers including their name, age, address and salary etc., using the following query:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),       
+   PRIMARY KEY (ID)
+);
+```
+
+
+Now, insert values into this table using the INSERT statement as follows:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+(2, 'Khilan', 25, 'Delhi', 1500.00 );
+```
+
+
+The table will be created as:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.00
+
+
+Let us create another table ORDERS, containing the details of orders made and the date they are made on.
+
+
+```sql
+CREATE TABLE ORDERS (
+   OID INT NOT NULL,
+   DATE VARCHAR (20) NOT NULL,
+   CUSTOMER_ID INT NOT NULL,
+   AMOUNT DECIMAL (18, 2)
+);
+```
+
+
+Using the INSERT statement, insert values into this table as follows:
+
+
+```sql
+INSERT INTO ORDERS VALUES 
+(100, '2009-10-08 00:00:00', 3, 1500.00),
+(101, '2009-11-20 00:00:00', 2, 1560.00);
+```
+
+
+The table is displayed as follows:
+
+
+OIDDATECUSTOMER_IDAMOUNT1002009-10-08 00:00:0031500.001012009-11-20 00:00:0021560.00
+
+
+Now, if we execute the followingCROSS JOIN queryon these two tables given above, the cross join combines each row in CUSTOMERS table with each row in ORDERS table.
+
+
+```sql
+SELECT  ID, NAME, AMOUNT, DATE
+FROM CUSTOMERS
+CROSS JOIN ORDERS;
+```
+
+
+The resultant table is as follows:
+
+
+IDNAMEAMOUNTDATE2Khilan1500.002009-10-08 00:00:001Ramesh15602009-11-20 00:00:002Khilan15602009-11-20 00:00:001Ramesh1500.002009-10-08 00:00:00
+
+
+## Joining Multiple Tables with Cross Join
+
+
+ACROSS JOINcan be used to join more than two tables, producing a Cartesian product of all the tables involved. Each row from the first table is combined with every row from the second table, and then with every row from the third table, and so on. This results in all possible combinations of rows from the joined tables.
+
+
+Be cautious, because joining multiple large tables with CROSS JOIN can create extremely large result sets.
+
+
+### Syntax
+
+
+Following is the syntax to join multiple tables using cross join in SQL:
+
+
+```sql
+SELECT column_name(s)
+FROM table1
+CROSS JOIN table2
+CROSS JOIN table3
+CROSS JOIN table4
+....
+....
+....
+CROSS JOIN tableN;
+```
+
+
+### Example
+
+
+Assume we have created another table named ORDER_RANGE using the following query:
+
+
+```sql
+CREATE TABLE ORDER_RANGE (
+   SNO INT NOT NULL,
+   ORDER_RANGE VARCHAR (20) NOT NULL
+);
+```
+
+
+Now, we can insert values into this empty tables using the INSERT statement as follows:
+
+
+```sql
+INSERT INTO ORDER_RANGE VALUES
+(1, '1-100'),
+(2, '100-200'),
+(3, '200-300');
+```
+
+
+The ORDER_RANGE table is created as follows:
+
+
+SNOORDER_RANGE11-1002100-2003200-300
+
+
+Following query combines the three tables CUSTOMERS, ORDERS and ORDER_RANGE, using cross join:
+
+
+```sql
+SELECT ID, NAME, AMOUNT, DATE, ORDER_RANGE
+FROM CUSTOMERS
+CROSS JOIN ORDERS
+CROSS JOIN ORDER_RANGE;
+```
+
+
+The resultant table is given below:
+
+
+IDNAMEAMOUNTDATEORDER_RANGE2Khilan15602009-11-20 00:00:001-1001Ramesh15602009-11-20 00:00:001-1002Khilan1500.002009-10-08 00:00:001-1001Ramesh1500.002009-10-08 00:00:001-1002Khilan15602009-11-20 00:00:00100-2001Ramesh15602009-11-20 00:00:00100-2002Khilan1500.002009-10-08 00:00:00100-2001Ramesh1500.002009-10-08 00:00:00100-2002Khilan15602009-11-20 00:00:00200-3001Ramesh15602009-11-20 00:00:00200-3002Khilan1500.002009-10-08 00:00:00200-3001Ramesh1500.002009-10-08 00:00:00200-300
+
+
+## SQL CROSS JOIN with Inline Tables
+
+
+SQL CROSS JOIN can also be used withinline tablesor subqueries. This is useful when you want to quickly combine two sets of values without creating permanent tables.
+
+
+Inline tables are temporary tables defined directly within a SQL query, often using the VALUES command or a subquery, without creating a permanent table. They allow you to quickly provide data for joins or calculations.
+
+
+### Example
+
+
+Following is the example to create two inline tables containing some sample data and perform a CROSS JOIN on them:
+
+
+```sql
+SELECT A.Name, B.Product
+FROM (SELECT 'Ramesh' AS Name UNION ALL SELECT 'Khilan') AS A
+CROSS JOIN (SELECT 'Laptop' AS Product UNION ALL SELECT 'Mobile') AS B;
+```
+
+
+The result of this query will produce the Cartesian product of the two inline tables:
+
+
+NameProductKhilanLaptopRameshLaptopKhilanMobileRameshMobile
+
+
+## Differences Between CROSS JOIN and INNER JOIN
+
+
+BothCROSS JOINandINNER JOINare used to combine tables, but they work very differently:
+
+
+
+| Feature | CROSS JOIN | INNER JOIN |
+| --- | --- | --- |
+| Result | Returns theCartesian productof two tables (all possible combinations of rows). | Returns only the rows where there is amatching valuein both tables based on the join condition. |
+| Join Condition | No join condition is required. | Requires aconditionusingONorUSINGclause. |
+| Use Case | Used when you want all possible combinations. | Used when you want related data from both tables. |
+| Size of Result | Number of rows `=` (rows in Table1 × rows in Table2) | Number of rows ≤ min(rows in Table1, rows in Table2) |
+
+
+
+## Important Points About CROSS JOIN
+
+
+Following are some important points you should know for using CROSS JOIN in SQL:
+
+
+
+- A CROSS JOIN returns theCartesian productof the tables involved.
+- It does not require aWHEREclause or a join condition.
+- Be careful when using CROSS JOIN with large tables as it can produce a very large number of rows.
+- CROSS JOIN can be combined withinline tablesor subqueries for quick testing or data generation.
+- When multiple tables are joined using CROSS JOIN, the total number of rows is the product of the number of rows in each table.
+
+

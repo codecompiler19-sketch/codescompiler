@@ -1,0 +1,267 @@
+---
+title: "CSS - What Is Cascading in CSS?"
+description: "Learn CSS - What Is Cascading in CSS? with clear CSS layout principles, modern selectors, and practical examples."
+category: "css"
+order: 850
+group: "CSS Basics"
+seoTitle: "CSS - What Is Cascading in CSS? — CodesCompiler CSS Guide"
+permalink: "css-what-is-cascading-in-css"
+---
+
+## CSS - What Is Cascading in CSS?
+
+## CSS Cascading
+
+Cascading in CSS refers to a process where a browser determines which rule to apply on any element when various conflicting rules exist. The cascade follows a structured order to specify which style rule will take precedence over other style rules.
+
+## Key Factors of CSS Cascading
+
+The key factors for deciding which CSS rule will take priority are mentioned below:
+
+### 1. Specificity
+
+Specificity refers to, how specific rules have been defined. For example: rules defined using the ID selector take priority over rules defined using the class selector if both selectors are used on the same element.
+
+```html
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <title>Document</title>
+
+    <style>
+
+        #txt {
+
+            color: #04af2f;
+
+        }
+
+
+
+        .txt {
+
+            color: blue;
+
+        }
+
+    </style>
+
+    </head>
+
+<body>
+
+    pWelcome to <span id="txt" class="txt">Tutorials Point</span>
+
+</body>
+
+</html>
+```
+
+### 2. Importance
+
+The styles marked with !important have higher priority over other rules. For example, if both inline and internal css, are used on an element. Then the rule that is marked as !important will take priority.
+
+Example
+
+```html
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <title>Document</title>
+
+    <style>
+
+        .txt {
+
+            color: #04af2f !important;
+
+        }
+
+        
+
+    </style>
+
+</head>
+
+<body>
+
+    pWelcome to <span class="txt" style="color: yellow;">Tutorials Point</span>
+
+</body>
+
+</html>
+```
+
+### 3. Source Order
+
+Source order refers to, the order in which a CSS rule is defined on any element. The rule defined later takes the priority over rule defined earlier.
+
+Example
+
+```html
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <title>Document</title>
+
+    <style>
+
+        .txt {
+
+            color: red;
+
+        }
+
+        
+
+        .txt {
+
+            color: #04af2f;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    pWelcome to <span class="txt">Tutorials Point</span>
+
+</body>
+
+</html>
+```
+
+## CSS Cascading Hierarchy
+
+If the CSS rules are applied from multiple sources on an element, then priority is decided on the basis of below mentioned criteria.
+
+- !important: Styles marked with !important get the highest priority.
+
+- Inline CSS Styles defined using inline CSS gets higher priority after !important.
+
+- Internal CSS Styles are defined under the style tag in the head section.
+
+- External CSS Styles are separately defined in another .css file and using `<link>` tag , it is defined in the main HTML document.
+
+- User/Browser styles: These are the default browser or user-defined preferences.
+
+> Priority Order: !important  > Inline CSS >  Internal CSS > External CSS > User/Browser Styles.
+
+## CSS Specificity
+
+CSS specificity plays an important role in deciding which CSS rule to apply to an element when multiple CSS rules are defined for the same element. The more specific the CSS rule is, the higher priority that CSS rule will get. A point system is used to calculate the CSS specificity. The point system for selectors is mentioned below:
+
+- Inline CSS: 1000 points
+
+- ID Selector: 100 points
+
+- Classes, Attributes, and Pseudo-Classes: 10 points
+
+- Elements and Pseudo-Elements: 1 point
+
+```css
+/*Lowest Priority*/    
+
+p { color: red; } /*1 point*/
+
+
+
+/*Higher Priority than Element Selector*/
+
+.myId { color: blue; } /*10 points*/
+
+
+
+/*Second Highest Priority*/
+
+#myClass { color: green; } /*100 points*/
+
+
+
+/*Highest Priority*/
+
+p style="color: #04af2f;"
+
+    Welcome to Tutorials Point
+
+
+```
+
+## CSS Rule Overriding
+
+CSS Rule overriding occurs when multiple styles are applied to the same element. CSS uses specificity, importance, and source order to decide which rule should be applied.
+
+Example
+
+In this example, we have used two element selectors on the p element . Based on source order the latter used style has been applied in the last paragraph.
+
+```html
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <title>Document</title>
+
+    <style>
+
+        p {
+
+            color: aqua;
+
+        }
+
+        #txt {
+
+            color: red;
+
+        }
+
+        
+
+        .txt {
+
+            color: #04af2f;
+
+        }
+
+        p {
+
+            color: blueviolet;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    p id="txt"Welcome to Tutorials Point
+
+    p class="txt" 
+
+        This is CSS example for Overriding 
+
+        rule in CSS.
+
+    
+
+    pThis is third paragraph.
+
+</body>
+
+</html>
+```

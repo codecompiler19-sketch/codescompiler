@@ -1,0 +1,163 @@
+---
+title: "PYTHON - Unpack Tuples"
+description: "Learn PYTHON - Unpack Tuples with clear explanation, code examples, and practical guide."
+category: "python"
+order: 830
+group: "Python Tuples"
+seoTitle: "PYTHON - Unpack Tuples — CodesCompiler PYTHON Guide"
+permalink: "python-unpack-tuples"
+---
+
+
+# Python - Unpack Tuple Items
+
+
+
+
+## Unpack Tuple Items
+
+
+The term "unpacking" refers to the process of parsingtupleitems in individualvariables. In Python, the parentheses are the default delimiters for a literal representation of sequence object.
+
+
+Following statements to declare a tuple are identical.
+
+
+```python
+>>> t1 = (x,y)
+>>> t1 = x,y
+>>> type (t1)
+<class 'tuple'>
+```
+
+
+### Example
+
+
+To store tuple items in individual variables, use multiple variables on the left of assignment operator, as shown in the following example −
+
+
+```python
+tup1 = (10,20,30)
+x, y, z = tup1
+print ("x: ", x, "y: ", "z: ",z)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+x: 10 y: 20 z: 30
+```
+
+
+That's how the tuple is unpacked in individual variables.
+
+
+In the above example, the number of variables on the left of assignment operator is equal to the items in the tuple. What if the number is not equal to the items?
+
+
+## ValueError While Unpacking a Tuple
+
+
+If the number of variables is more or less than the length of tuple, Python raises a ValueError.
+
+
+### Example
+
+
+```python
+tup1 = (10,20,30)
+x, y = tup1
+x, y, p, q = tup1
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+x, y = tup1
+  ^^^^
+ValueError: too many values to unpack (expected 2)
+  x, y, p, q = tup1
+  ^^^^^^^^^^
+ValueError: not enough values to unpack (expected 4, got 3)
+```
+
+
+## Unpack Tuple Items Using Asterisk (*)
+
+
+In such a case, the "*" symbol is used for unpacking. Prefix "*" to "y", as shown below −
+
+
+### Example 1
+
+
+```python
+tup1 = (10,20,30)
+x, *y = tup1
+print ("x: ", "y: ", y)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+x: y: [20, 30]
+```
+
+
+The first value in tuple is assigned to "x", and rest of items to "y" which becomes a list.
+
+
+### Example 2
+
+
+In this example, the tuple contains 6 values and variables to be unpacked are 3. We prefix "*" to the second variable.
+
+
+```python
+tup1 = (10,20,30, 40, 50, 60)
+x, *y, z = tup1
+print ("x: ",x, "y: ", y, "z: ", z)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+x: 10 y: [20, 30, 40, 50] z: 60
+```
+
+
+Here, values are unpacked in "x" and "z" first, and then the rest of values are assigned to "y" as a list.
+
+
+### Example 3
+
+
+What if we add "*" to the first variable?
+
+
+```python
+tup1 = (10,20,30, 40, 50, 60)
+*x, y, z = tup1
+print ("x: ",x, "y: ", y, "z: ", z)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+x: [10, 20, 30, 40] y: 50 z: 60
+```
+
+
+Here again, the tuple is unpacked in such a way that individual variables take up the value first, leaving the remaining values to the list "x".
+

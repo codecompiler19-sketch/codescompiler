@@ -1,0 +1,292 @@
+---
+title: "PYTHON - Constructors"
+description: "Learn PYTHON - Constructors with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1340
+group: "Object Oriented Programming"
+seoTitle: "PYTHON - Constructors — CodesCompiler PYTHON Guide"
+permalink: "python-constructors"
+---
+
+
+# Python - Constructors
+
+
+
+
+Pythonconstructoris an instance method in a class, that is automatically called whenever a new object of the class is created. The constructor's role is to assign value to instance variables as soon as the object is declared.
+
+
+Python uses a special method called__init__()to initialize the instance variables for the object, as soon as it is declared.
+
+
+## Creating a constructor in Python
+
+
+The__init__()method acts as a constructor. It needs a mandatory argument namedself, which is the reference to the object.
+
+May use this content
+In object-oriented programming, an object of a class is characterized by one or more instance variables or attributes, whose values are unique to each object. For example, if the Employee class has an instance attribute as name. Each of its objects e1 and e2 may have different value for the name variable.
+
+```python
+def __init__(self, parameters):
+#initialize instance variables
+```
+
+
+The__init__()method as well as any instance method in a class has a mandatory parameter,self. However, you can give any name to the first parameter, not necessarily self.
+
+
+## Types of Constructor in Python
+
+
+Python has two types of constructor −
+
+
+
+- Default Constructor
+- Parameterized Constructor
+
+
+
+## Default Constructor in Python
+
+
+The Python constructor which does not accept any parameter other thanselfis called as default constructor.
+
+
+### Example
+
+
+Let us define theconstructorin the Employee class to initialize name and age as instance variables. We can then access these attributes through its object.
+
+
+```python
+class Employee:
+   'Common base class for all employees'
+   def __init__(self):
+      self.name = "Bhavana"
+      self.age = 24
+
+e1 = Employee()
+print ("Name: {}".format(e1.name))
+print ("age: {}".format(e1.age))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Name: Bhavana
+age: 24
+```
+
+
+For the above Employee class, each object we declare will have same value for its instance variables name and age. To declare objects with varying attributes instead of the default, define arguments for the __init__() method.
+
+
+## Parameterized Constructor
+
+
+If a constructor is defined with multiple parameters along withselfis called as parameterized constructor.
+
+
+### Example
+
+
+In this example, the __init__() constructor has two formal arguments. We declare Employee objects with different values −
+
+
+```python
+class Employee:
+   'Common base class for all employees'
+   def __init__(self, name, age):
+      self.name = name
+      self.age = age
+
+e1 = Employee("Bhavana", 24)
+e2 = Employee("Bharat", 25)
+
+print ("Name: {}".format(e1.name))
+print ("age: {}".format(e1.age))
+print ("Name: {}".format(e2.name))
+print ("age: {}".format(e2.age))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Name: Bhavana
+age: 24
+Name: Bharat
+age: 25
+```
+
+
+You can also assign default values to the formal arguments in the constructor so that the object can be instantiated with or without passing parameters.
+
+
+```python
+class Employee:
+   'Common base class for all employees'
+   def __init__(self, name="Bhavana", age=24):
+      self.name = name
+      self.age = age
+
+e1 = Employee()
+e2 = Employee("Bharat", 25)
+
+print ("Name: {}".format(e1.name))
+print ("age: {}".format(e1.age))
+print ("Name: {}".format(e2.name))
+print ("age: {}".format(e2.age))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Name: Bhavana
+age: 24
+Name: Bharat
+age: 25
+```
+
+
+## Python - Instance Methods
+
+
+In addition to the __init__() constructor, there may be one or more instance methods defined in a class. A method with self as one of the formal arguments is called instance method, as it is called by a specific object.
+
+
+### Example
+
+
+In the following example a displayEmployee() method has been defined as an instance method. It returns the name and age attributes of the Employee object that calls the method.
+
+
+```python
+class Employee:
+   def __init__(self, name="Bhavana", age=24):
+      self.name = name
+      self.age = age
+   def displayEmployee(self):
+      print ("Name : ", self.name, ", age: ", self.age)
+
+e1 = Employee()
+e2 = Employee("Bharat", 25)
+
+e1.displayEmployee()
+e2.displayEmployee()
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Name : Bhavana , age: 24
+Name : Bharat , age: 25
+```
+
+
+You can add, remove, or modify attributes of classes and objects at any time −
+
+
+```python
+# Add a 'salary' attribute
+emp1.salary = 7000 
+# Modify 'name' attribute
+emp1.name = 'xyz' 
+# Delete 'salary' attribute
+del emp1.salary
+```
+
+
+Instead of using the normal statements to access attributes, you can use the following functions −
+
+
+
+- Thegetattr(obj, name[, default])− to access the attribute of object.
+- Thehasattr(obj,name)− to check if an attribute exists or not.
+- Thesetattr(obj,name,value)− to set an attribute. If attribute does not exist, then it would be created.
+- Thedelattr(obj, name)− to delete an attribute.
+
+
+
+```python
+# Returns true if 'salary' attribute exists
+print (hasattr(e1, 'salary')) 
+# Returns value of 'name' attribute
+print (getattr(e1, 'name')) 
+# Set attribute 'salary' at 8
+setattr(e1, 'salary', 7000) 
+# Delete attribute 'age'
+delattr(e1, 'age')
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+False
+Bhavana
+```
+
+
+## Python Multiple Constructors
+
+
+As mentioned earlier, we define the __init__() method to create a constructor. However, unlike other programming languages like C++ and Java, Python does not allow multiple constructors.
+
+
+If you try to create multiple constructors, Python will not throw an error, but it will only consider the last __init__() method in your class. Its previous definition will be overridden by the last one.
+
+
+But, there is a way to achieve similar functionality in Python. We can overload constructors based on the type or number of arguments passed to the __init__() method. This will allow a single constructor method to handle various initialization scenarios based on the arguments provided.
+
+
+### Example
+
+
+The following example shows how to achieve functionality similar to multiple constructors.
+
+
+```python
+class Student:
+   def __init__(self, *args):
+      if len(args) == 1:
+         self.name = args[0]
+        
+      elif len(args) == 2:
+         self.name = args[0]
+         self.age = args[1]
+        
+      elif len(args) == 3:
+         self.name = args[0]
+         self.age = args[1]
+         self.gender = args[2]
+            
+st1 = Student("Shrey")
+print("Name:", st1.name)
+st2 = Student("Ram", 25)
+print(f"Name: {st2.name} and Age: {st2.age}")
+st3 = Student("Shyam", 26, "M")
+print(f"Name: {st3.name}, Age: {st3.age} and Gender: {st3.gender}")
+```
+
+
+When we run the above code, it will produce the followingoutput−
+
+
+```python
+Name: Shrey
+Name: Ram and Age: 25
+Name: Shyam, Age: 26 and Gender: M
+```
+

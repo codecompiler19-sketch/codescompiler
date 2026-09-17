@@ -1,0 +1,177 @@
+---
+title: "PYTHON - Memory Management"
+description: "Learn PYTHON - Memory Management with clear explanation, code examples, and practical guide."
+category: "python"
+order: 2200
+group: "Python Advanced Concepts"
+seoTitle: "PYTHON - Memory Management — CodesCompiler PYTHON Guide"
+permalink: "python-memory-management"
+---
+
+
+# Python - Memory Management
+
+
+
+
+In Python,memory managementis automatic, it involves handling a private heap that contains all Python objects anddata structures. The Python memory manager internally ensures the efficient allocation and deallocation of this memory. This tutorial will explore Python's memory management mechanisms, including garbage collection, reference counting, and how variables are stored on the stack and heap.
+
+
+## Memory Management Components
+
+
+Python's memory management components provides efficient and effective utilization of memory resources throughout the execution of Python programs. Python has three memory management components −
+
+
+
+- Private Heap: Acts as the main storage for all Python objects and data. It is managed internally by the Python memory manager.
+- Raw Memory Allocator: This low-level component directly interacts with the operating system to reserve memory space in Python's private heap. It ensures there's enough room for Python's data structures and objects.
+- Object-Specific Allocators: On top of the raw memory allocator, several object-specific allocators manage memory for different types of objects, such as integers, strings, tuples, and dictionaries.
+
+
+
+## Memory Allocation in Python
+
+
+Python manages memory allocation in two primary ways − Stack and Heap.
+
+
+### Stack − Static Memory Allocation
+
+
+In static memory allocation, memory is allocated at compile time and stored in the stack. This is typical for function call stacks and variable references. The stack is a region of memory used for storing local variables and function call information. It operates on a Last-In-First-Out (LIFO) basis, where the most recently added item is the first to be removed.
+
+
+The stack is generally used for variables of primitive data types, such as numbers, booleans, and characters. These variables have a fixed memory size, which is known at compile-time.
+
+
+Example
+
+
+Let us look at an example to illustrate how variables of primitive types are stored on the stack. In the above example, variables named x, y, and z are local variables within the function named example_function(). They are stored on the stack, and when the function execution completes, they are automatically removed from the stack.
+
+
+```python
+def my_function():
+   x = 5
+   y = True
+   z = 'Hello'
+   return x, y, z
+
+print(my_function())
+print(x, y, z)
+```
+
+
+On executing the above program, you will get the followingoutput−
+
+
+```python
+(5, True, 'Hello')
+Traceback (most recent call last):
+  File "/home/cg/root/71937/main.py", line 8, in <module>
+    print(x, y, z)
+NameError: name 'x' is not defined
+```
+
+
+### Heap − Dynamic Memory Allocation
+
+
+Dynamic memory allocation occurs at runtime for objects and data structures of non-primitive types. The actual data of these objects is stored in the heap, while references to them are stored on the stack.
+
+
+Example
+
+
+Let's observe an example for creating a list dynamically allocates memory in the heap.
+
+
+```python
+a = [0]*10
+print(a)
+```
+
+
+Output
+
+
+On executing the above program, you will get the following results −
+
+
+```python
+[0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+```
+
+
+## Garbage Collection in Python
+
+
+Garbage Collection in Python is the process of automatically freeing up memory that is no longer in use by objects, making it available for other objects. Pythons garbage collector runs during program execution and activates when an object'sreference countdrops to zero.
+
+
+### Reference Counting
+
+
+Python's primary garbage collection mechanism is reference counting. Every object in Python maintains a reference count that tracks how many aliases (or references) point to it. When an object's reference count drops to zero, the garbage collector deallocates the object.
+
+
+Working of the reference counting as follows −
+
+
+
+- Increasing Reference Count− It happens when a new reference to an object is created, the reference count increases.
+- Decreasing Reference Count−  When a reference to an object is removed or goes out of scope, the reference count decreases.
+
+
+
+Example
+
+
+Here is an example that demonstrates working of reference counting in Python.
+
+
+```python
+import sys
+
+# Create a string object
+name = "Tutorialspoint"
+print("Initial reference count:", sys.getrefcount(name))  
+
+# Assign the same string to another variable
+other_name = "Tutorialspoint"
+print("Reference count after assignment:", sys.getrefcount(name)) 
+
+# Concatenate the string with another string
+string_sum = name + ' Python'
+print("Reference count after concatenation:", sys.getrefcount(name)) 
+
+# Put the name inside a list multiple times
+list_of_names = [name, name, name]
+print("Reference count after creating a list with 'name' 3 times:", sys.getrefcount(name)) 
+
+# Deleting one more reference to 'name'
+del other_name
+print("Reference count after deleting 'other_name':", sys.getrefcount(name))  
+
+# Deleting the list reference
+del list_of_names
+print("Reference count after deleting the list:", sys.getrefcount(name))
+```
+
+
+Output
+
+
+On executing the above program, you will get the following results −
+
+
+```python
+Initial reference count: 4
+Reference count after assignment: 5
+Reference count after concatenation: 5
+Reference count after creating a list with 'name' 3 times: 8
+Reference count after deleting 'other_name': 7
+Reference count after deleting the list: 4
+```
+

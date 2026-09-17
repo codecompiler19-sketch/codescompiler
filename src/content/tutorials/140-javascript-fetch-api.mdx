@@ -1,0 +1,437 @@
+---
+title: "JavaScript - Fetch API"
+description: "Learn JavaScript - Fetch API with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1400
+group: "JavaScript Web APIs"
+seoTitle: "JavaScript - Fetch API — CodesCompiler JavaScript Guide"
+permalink: "javascript-fetch-api"
+---
+
+
+# JavaScript - Fetch API
+
+
+
+
+## What is a Fetch API?
+
+
+The JavaScriptFetch APIis a web API that allows a web browser to make HTTP request to the web server. In JavaScript, the fetch API is introduced in the ES6 version. It is an alternative of the XMLHttpRequest (XHR) object, used to make a 'GET', 'POST', 'PUT', or 'DELETE' request to the server.
+
+
+The window object of the browser contains theFetch APIby default.
+
+
+The Fetch API provides fetch() method that can be used to access resources asynchronously across the web.
+
+
+The fetch() method allows you to make a request to the server, and it returns the promise. After that, you need to resolve the promise to get the response received from the server.
+
+
+### Syntax
+
+
+You can follow the syntax below to use the fetch() API in JavaScript
+
+
+```javascript
+window.fetch(URL, [options]);
+OR
+fetch(URL, [options]);
+```
+
+
+### Parameters
+
+
+The fetch() method takes two parameters.
+
+
+
+- URL− It is an API endpoint where you need to make a request.
+- [options]− It is an optional parameter. It is an object containing the method, headers, etc., as a key.
+
+
+
+### Return value
+
+
+It returns the promise, which you can solve using the 'then...catch' block or asynchronously.
+
+
+## Handling Fetch() API Response with 'then...catch' Block
+
+
+The JavaScript fetch() API returns the promise, and you can handle it using the 'then...catch' block.
+
+
+Follow the syntax below to use the fetch() API with the 'then...catch' block.
+
+
+```javascript
+fetch(URL)
+.then(data => {
+   // Handle data
+})
+.catch(err=> {
+   // Handle error
+})
+```
+
+
+In the above syntax, you can handle the 'data' in the 'then' block and the error in the 'catch' block.
+
+
+### Example
+
+
+In the below code, we fetch the data from the given URL using the fetch() API. It returns the promise we handle using the 'then' block.
+
+
+First, we convert the data into the JSON format. After that, we convert the data into the string and print it on the web page.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      const output = document.getElementById('output');
+      const URL = 'https://jsonplaceholder.typicode.com/todos/5';
+      fetch(URL)
+	  .then(res => res.json())
+	  .then(data => {
+	     output.innerHTML += "The data from the API is: " + "<br>";
+	  	 output.innerHTML += JSON.stringify(data);
+   	  });
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The data from the API is:
+{"userId":1,"id":5,"title":"laboriosam mollitia et enim quasi adipisci quia provident illum","completed":false}
+```
+
+
+## Handling Fetch() API Response Asynchronously
+
+
+You can also solve the promise returned by the fetch() API asynchronously using the async/await keyword.
+
+
+### Syntax
+
+
+Users can follow the syntax below to use the async/await keywords with the fetch() API.
+
+
+```javascript
+let data = await fetch(URL);
+data = await data.json();
+```
+
+
+In the above syntax, we used the 'await' keyword to stop the code execution until the promise gets fulfilled. After that, we again used the 'await' keyword with the data.json() to stop the execution of the function until it converts the data into the JSON format.
+
+
+### Example
+
+
+In the code below, we have defined the getData()asynchronous function to fetch the to-do list data from the given URL using the fetch() API. After that, we convert the data into JSON and print the output on the web page.
+
+
+```html
+<html>
+<body>
+<div id = "output"> </div>
+<script>
+   async function getData() {
+      let output = document.getElementById('output');
+      let URL = 'https://jsonplaceholder.typicode.com/todos/6';
+      let data = await fetch(URL);
+      data = await data.json();
+      output.innerHTML += "The data from the API is: " + "<br>";
+      output.innerHTML += JSON.stringify(data);
+   }
+   getData(); 
+</script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The data from the API is:
+{"userId":1,"id":6,"title":"qui ullam ratione quibusdam voluptatem quia omnis","completed":false}
+```
+
+
+## Options with Fetch() API
+
+
+You can also pass the object as a second parameter containing the options as a key-value pair.
+
+
+### Syntax
+
+
+Follow the syntax below to pass the options to the Fetch() API.
+
+
+```javascript
+fetch(URL, {
+    method: "GET",
+    body: JSON.stringify(data),
+    mode: "no-cors",
+    cache: "no-cache",
+    credentials: "same-origin",
+    headers: {
+        "Content-Type": "application/json",
+    },
+    redirect: "follow",
+})
+```
+
+
+### Options
+
+
+Here, we have given some options to pass to the fetch() API.
+
+
+
+- method− It takes the 'GET', 'POST', 'PUT', and 'DELETE' methods as a value based on what kind of request you want to make.
+- body− It is used to pass the data into the string format.
+- mode− It takes the 'cors', 'no-cors', 'same-origin', etc. values for security reasons.
+- cache− It takes the '*default', 'no-cache', 'reload', etc. values.
+- credentials− It takes 'same-origin', 'omit', etc. values.
+- headers− You can pass the headers with this attribute to the request.
+- redirect− If you want users to redirect to the other web page after fulfilling the request, you can use the redirect attribute.
+
+
+
+### Example: Making a GET Request
+
+
+In the below code, we have passed the "GET" method as an option to the fetch() API.
+
+
+Fetch () API fetches the data from the given API endpoint.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      let output = document.getElementById("output");
+      let options = {
+         method: 'GET',
+      }
+      let URL = "https://dummy.restapiexample.com/api/v1/employee/2";
+      fetch(URL, options)
+         .then(res => res.json())
+         .then(res => {
+            output.innerHTML += "The status of the response is - " + res.status + "<br>";
+            output.innerHTML += "The message returned from the API is - " + res.message + "<br>";
+            output.innerHTML += "The data returned from the API is - " + JSON.stringify(res.data);
+         })
+         .catch(err => {
+            output.innerHTML += "The error returned from the API is - " + JSON.stringify(err);
+         })
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The status of the response is - success
+The message returned from the API is - Successfully! Record has been fetched.
+The data returned from the API is - {"id":2,"employee_name":"Garrett Winters","employee_salary":170750,"employee_age":63,"profile_image":""}
+```
+
+
+### Example (Making a POST Request)
+
+
+In the below code, we have created the employee object containing the emp_name and emp_age properties.
+
+
+Also, we have created the options object containing the method, headers, and body properties. We use the 'POST' as a value of the method and use the employee object after converting it into the string as a body value.
+
+
+We make a POST request to the API endpoint using the fetch() API to insert the data. After making the post request, you can see the response on the web page.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      let output = document.getElementById("output");
+      let employee = {
+         "emp_name": "Sachin",
+         "emp_age": "30"
+      }
+      let options = {
+         method: 'POST', // To make a post request
+         headers: {
+            'Content-Type': 'application/json;charset=utf-8'
+         },
+         body: JSON.stringify(employee)
+      }
+      let URL = "https://dummy.restapiexample.com/api/v1/create";
+      fetch(URL, options)
+         .then(res => res.json()) // Getting response
+         .then(res => {
+            output.innerHTML += "The status of the request is : " + res.status + "<br>";
+            output.innerHTML += "The message returned from the API is : " + res.message + "<br>";
+            output.innerHTML += "The data added is : " + JSON.stringify(res.data);
+         })
+         .catch(err => {
+            output.innerHTML += "The error returned from the API is : " + JSON.stringify(err);
+         })
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The status of the request is : success
+The message returned from the API is : Successfully! Record has been added.
+The data added is : {"emp_name":"Sachin","emp_age":"30","id":7425}
+```
+
+
+### Example (Making a PUT Request)
+
+
+In the below code, we have created the 'animal' object.
+
+
+Also, we have created the options object. In the options object, we added the 'PUT' method, headers, and animal objects as a body.
+
+
+After that, we use the fetch() API to update the data at the given URL. You can see the output response that updates the data successfully.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      let output = document.getElementById("output");
+      let animal = {
+         "name": "Lion",
+         "color": "Yellow",
+         "age": 10
+      }
+      let options = {
+         method: 'PUT', // To Update the record
+         headers: {
+            'Content-Type': 'application/json;charset=utf-8'
+         },
+         body: JSON.stringify(animal)
+      }
+      let URL = "https://dummy.restapiexample.com/api/v1/update/3";
+      fetch(URL, options)
+         .then(res => res.json()) // Getting response
+         .then(res => {
+            console.log(res);
+            output.innerHTML += "The status of the request is : " + res.status + "<br>";
+            output.innerHTML += "The message returned from the API is : " + res.message + "<br>";
+            output.innerHTML += "The data added is : " + JSON.stringify(res.data);
+         })
+         .catch(err => {
+            output.innerHTML += "The error returned from the API is : " + JSON.stringify(err);
+         })
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The status of the request is : success
+The message returned from the API is : Successfully! Record has been updated.
+The data added is : {"name":"Lion","color":"Yellow","age":10}
+```
+
+
+### Example (Making a DELETE Request)
+
+
+In the below code, we make a 'DELETE' request to the given URL to delete the particular data using the fetch() API. It returns the response with a success message.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      const output = document.getElementById("output");
+      let options = {
+         method: 'DELETE', // To Delete the record
+
+      }
+      let URL = " https://dummy.restapiexample.com/api/v1/delete/2";
+      fetch(URL, options)
+		 .then(res => res.json()) // After deleting data, getting response
+		 .then(res => {
+			output.innerHTML += "The status of the request is : " + res.status + "<br>";
+			output.innerHTML += "The message returned from the API is : " + res.message + "<br>";
+			output.innerHTML += "The data added is - " + JSON.stringify(res.data);
+         })
+		 .catch(err => {
+		    output.innerHTML += "The error returned from the API is : " + JSON.stringify(err);
+		 })
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The status of the request is : success
+The message returned from the API is : Successfully! Record has been deleted
+The data added is - "2"
+```
+
+
+## Advantages of Using the Fetch() API
+
+
+Here are some benefits of using the fetch() API to interact with third-party software or web servers.
+
+
+
+- Easy Syntax− It provides a straightforward syntax to make an API request to the servers.
+- Promise-based− It returns the promise, which you can solve asynchronously using the 'then...catch' block or 'async/await' keywords.
+- JSON handling− It has built-in functionality to convert the string response data into JSON data.
+- Options− You can pass multiple options to the request using the fetch() API.
+
+

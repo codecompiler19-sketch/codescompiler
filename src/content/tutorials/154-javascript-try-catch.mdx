@@ -1,0 +1,796 @@
+---
+title: "JavaScript - try...catch"
+description: "Learn JavaScript - try...catch with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1540
+group: "JavaScript Error Handling"
+seoTitle: "JavaScript - try...catch — CodesCompiler JavaScript Guide"
+permalink: "javascript-try-catch"
+---
+
+
+# JavaScript - try...catch
+
+
+
+
+## JavaScript try...catch Statement
+
+
+Thetry-catch statementin JavaScript is used to handle the runtime errors (exceptions). This is very common in most programming languages to handle exceptions. A try-catch statement can handle only runtime errors. The try block must be followed by either exactly one catch block or one finally block (or one of both).
+
+
+Inside thetry&#123;&#125; statement, you can write the code having errors or possibilities of the errors. You can add regular JavaScript code into the try&#123;&#125; statement.
+
+
+Thecatch&#123;&#125; statementis used to handle the errors. When any error occurs in the code of the try&#123;&#125; statement, the JavaScript run engine executes the code of the catch&#123;&#125; statement to handle the errors.
+
+
+If no error occurs in the code of the try&#123;&#125; statement, it will skip the code of the catch&#123;&#125; statement and execute the next lines of the code.
+
+
+### Syntax
+
+
+You can follow the syntax below to use the try-catch statements in the code to handle exceptions.
+
+
+```javascript
+try {
+   // JavaScript code
+} catch(error) {
+   // Handle error
+}
+```
+
+
+You can print the error object in the catch&#123;&#125; statement or the custom error message based on the error type to show errors.
+
+
+### Parameters
+
+
+
+- error− The catch&#123;&#125; statement takes the error object as a parameter. It contains the name and message property. However, it is an optional parameter.
+
+
+
+### Example
+
+
+In the code below, we assign the num1 variables value to the num variable inside the try&#123;&#125; statement. Here, the num1 variable is not defined. So, it will throw an error.
+
+
+In the catch&#123;&#125; statement, we print the value of the error object's name and message property.
+
+
+In the output, you can observe that it throws a reference error with a proper error message.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+      const output = document.getElementById("demo");
+      try {
+         let num = num1;
+      } catch (err) {
+         output.innerHTML += "The error name is: " + err.name + "<br>";
+         output.innerHTML += "The error message is: " + err.message + ".<br>";
+      }
+   </script>
+</body>
+</html>
+```
+
+
+### Output
+
+
+```javascript
+The error name is: ReferenceError
+The error message is: num1 is not defined.
+```
+
+
+When any error occurs in the try&#123;&#125; statement, it skips the execution of the remaining code and executes the code of the catch&#123;&#125; statement.
+
+
+Lets understand it via the example below.
+
+
+### Example
+
+
+In the code below, we invoke the welcome() function, which is not defined. So, it will throw a reference error.
+
+
+In the catch&#123;&#125; statement, we handle the error.
+
+
+In the output, you can see that it prints the start message of the try&#123;&#125; statement, the start message of the catch&#123;&#125; statement, and the error message. It skips the end message of the try&#123;&#125; statement as an error occurs before that.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+      const output = document.getElementById("demo");
+      try {
+         output.innerHTML += "In the start of try block <br>";
+         welcome();
+         output.innerHTML += "In the end of try block <br>";
+      } catch (err) {
+         output.innerHTML += "In the catch block <br>";
+         output.innerHTML += "The error name is: " + err.name + "<br>";
+         output.innerHTML += "The error message is: " + err.message + ".<br>";
+      }
+   </script>
+</body>
+</html>
+```
+
+
+### Output
+
+
+```javascript
+In the start of try block
+In the catch block
+The error name is: ReferenceError
+The error message is: welcomeis not defined.
+```
+
+
+Note− The try-catch statement doesnt allow you to handle the syntax errors. It can handle only runtime errors.
+
+
+For example, if you run the below code. It will show you an error in the browsers console but cant catch the error using the &#123;&#125; statement.
+
+
+```javascript
+try {
+   let num = ;
+} catch (err) {
+   // Error handling
+}
+```
+
+
+## JavaScript trycatchfinally Statement
+
+
+The finally&#123;&#125; statement allows you to execute the particular code after completing the execution of the try&#123;&#125; and catch&#123;&#125; statements.
+
+
+JavaScript always executes the code of the finally&#123;&#125; statement, whether the error occurs in the code of the try&#123;&#125; statement. If an error occurs, it executes the code of the catch&#123;&#125; statement and then executes the code of the finally&#123;&#125; statement.
+
+
+### Example
+
+
+In the code below, we assign the value of the variable 'b' to the variable 'a' inside the try&#123;&#125; statement. It throws an error.
+
+
+In the catch&#123;&#125; statement, we print the error.
+
+
+In the finally&#123;&#125; statement, it prints the message.
+
+
+You can observe the output that it runs the code of the try&#123;&#125; statement first, the code of the catch&#123;&#125; statement after that, and the code of the finally&#123;&#125; statement at last.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      try {
+         let a = b;
+      } catch (e) {
+         document.getElementById("output").innerHTML = e;
+      }
+      finally {
+         document.getElementById("output").innerHTML += "<br>Finally block always executes";
+      }
+   </script>
+</body>
+</html>
+```
+
+
+### Output
+
+
+```javascript
+ReferenceError: b is not defined
+Finally block always executes
+```
+
+
+### Example
+
+
+In the example below, we have written the code without any error into the try&#123;&#125; statement.
+
+
+Also, we have added the catch&#123;&#125; and finally&#123;&#125; statements.
+
+
+The output shows that it executes the try&#123;&#125; statement code and finally&#123;&#125; statement code after that. It skips the execution of the catch&#123;&#125; statement, as the code is error-free.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+      const output = document.getElementById("demo");
+      try {
+         let a = 10;
+         output.innerHTML = "Value of a is " + a + "<br>";
+      } catch (e) {
+         output.innerHTML = e.name + " : " + e.message;
+      }
+      finally {
+         output.innerHTML += "Inside the finally block.";
+      }
+   </script>
+</body>
+</html>
+```
+
+
+### Output
+
+
+```javascript
+Value of a is 10
+Inside the finally block.
+```
+
+
+## JavaScript Throw Statement
+
+
+When any error occurs in the code, JavaScript throws an error by default. But you can also throw the error manually. For example, you are doing the form data validation. If the data is invalid, you can throw the error and ask users to correct the data.
+
+
+When you throw an error using the throw statement, the code present after that in the try&#123;&#125; statement will not executed, and it will execute the code of the catch&#123;&#125; statement.
+
+
+You can follow the syntax below to throw an error using the throw statement.
+
+
+```javascript
+throw <error>;
+```
+
+
+In the above syntax, `<error>` can be a Error object, string, number, primitive value, or a particular type of error object. It is a good practice to throw an Error object rather than throwing the primitive value.
+
+
+### Example: Throwing the Error object
+
+
+In the code below, we throw an Error object from the try&#123;&#125; statement using the throw statement. It stops the execution of the remaining code of the throw statement and executes the code of the catch&#123;&#125; statement.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+      const output = document.getElementById("demo");
+      try {
+         output.innerHTML += "Start of the try block. <br />";
+         throw new Error("Custom error");
+         output.innerHTML += "End of the try block. <br />"; //not executed
+      } catch (e) {
+         output.innerHTML += "Catch block: Caught exception. <br />";
+         output.innerHTML += e.name + " : " + e.message;
+      }
+   </script>
+</body>
+</html>
+```
+
+
+### Output
+
+
+```javascript
+Start of the try block
+Catch block: Caught exception.
+Error: Custom error
+```
+
+
+### Example: Throwing the primitive value
+
+
+In the code below, we throw the primitive numeric value from the try&#123;&#125; statement. In the catch&#123;&#125; statement, we get the thrown primitive value and print it.
+
+
+```html
+<html>
+<body>
+   <div id = "output">The error message is:  </div>
+   <script>
+      try {
+         throw 20;
+      } catch (e) {
+         document.getElementById("output").innerHTML += e;
+      }
+   </script>
+</body>
+</html>
+```
+
+
+### Output
+
+
+```javascript
+The error message is: 20
+```
+
+
+### Example: Input Validation Example
+
+
+In the code below, we have defined the `<input>` element of the number type to take the user age as an input.
+
+
+When the user clicks the submit age button, it invokes the handleAge() function.  The handleAge() function checks whether the age is less than 18. If yes, it throws the rangeError.
+
+
+The catch&#123;&#125; statement prints the error message to validate the age.
+
+
+```html
+<html>
+<body>
+   pAge: <input type = "number" id = "age" value = "20">
+   <button onclick = "handleAge()"> Submit Age </button>
+   p id = "demo" 
+   <script>
+      const output = document.getElementById("demo");
+      function handleAge() {
+         let age = document.getElementById("age").value;
+         try {
+            if (age < 18) {
+               throw RangeError("You are not eligible to vote");
+            } else {
+               output.innerHTML += "<br>You are eligible to vote";
+            }
+         } catch (e) {
+            output.innerHTML += "<br>The error is - " + e;
+         }
+      }
+   </script>
+</body>
+</html>
+```
+
+
+### Output
+
+
+```javascript
+Age: 20
+Submit Age
+The error is - RangeError: You are not eligible to vote
+```
+
+
+## Nesting Try Blocks
+
+
+Sometimes, developers are required to write the nested try-catch statements. The nested try-catch means a try block inside the try block.
+
+
+If the inner catch&#123;&#125; statement cant handle the error, the outer catch&#123;&#125; statement may handle it. You can also skip the inner catch&#123;&#125; statement, but in this case, you need to write the finally&#123;&#125; statement with the try&#123;&#125; statement.
+
+
+### Example
+
+
+We have used the two nested try&#123;&#125; statements in the code below. We have added the try-finally statement inside the outer try&#123;&#125; statement.
+
+
+The inner try&#123;&#125; statement throws the error, handled in the outer catch&#123;&#125; statement.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+      const output = document.getElementById("demo");
+      try {
+         try {
+            throw Error("Error in the inner try block");
+         } finally {
+            output.innerHTML += "Inside the inner finally block. <br>";
+         }
+      } catch (e) {
+         output.innerHTML += "Inside the outer catch block. <br>";
+         output.innerHTML += "Error: " + e.message;
+      }
+   </script>
+</body>
+</html>
+```
+
+
+### Output
+
+
+```javascript
+Inside the inner finally block.
+Inside the outer catch block.
+Error: Error in the inner try block
+```
+
+
+## The Rethrow Error
+
+
+Sometimes, it can happen that the catch&#123;&#125; statement cant handle the error. In such cases, you can rethrow the error from the catch block using the throw statement.
+
+
+The outer catch&#123;&#125; statement can handle the rethrown error if it is available.
+
+
+### Example
+
+
+In the code below, we have created the two nested try-catch blocks. In the inner try block, we throw the error using the throw statement. The inner catch&#123;&#125; statement will catch the error, and we rethrow the error from the inner catch&#123;&#125; statement.
+
+
+After that, we handle the error in the outer catch&#123;&#125; statement.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+      let output = document.getElementById("demo");
+      try {
+         try {
+            throw 20;
+         } catch (e) {
+            // Rethrowing the error.
+            output.innerHTML = "Inside the inner catch block. <br>";
+            output.innerHTML += "Error: " + e + "<br> <br>";
+            throw e;
+         }
+      } catch (e) {
+         output.innerHTML += "Inside the outer catch block. <br>";
+         output.innerHTML += "Error: " + e;
+      }
+   </script>
+</body>
+</html>
+```
+
+
+### Output
+
+
+```javascript
+inside the inner catch block.
+Error: 20
+
+Inside the outer catch block.
+Error: 20
+```
+
+
+## Conditional Catch-blocks
+
+
+Inside the catch&#123;&#125; block, you can use the if-else statement to handle the errors conditionally. In this way, you can use the single catch&#123;&#125; statement for the multiple try&#123;&#125; statements.
+
+
+In the catch&#123;&#125; statement, you can check the type of the error using the instanceOf operator and handle the error according to the error type.
+
+
+### Example
+
+
+In the code below, we have called the welcome function inside the try&#123;&#125; statement, and the welcome() function is not defined.
+
+
+In the catch&#123;&#125; statement, we check the type of the error using the instanceOf operator and print the message on the web page according to the type of the error.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+      const output = document.getElementById("demo");
+      try {
+         welcome(); // Function not defined
+      } catch (e) {
+         if (e instanceof ReferenceError) {
+            output.innerHTML = "Reference error is occurred.";
+         } else if (e instanceof TypeError) {
+            output.innerHTML = "Type error is occurred.";
+         } else if (e instanceof RangeError) {
+            output.innerHTML = "Range error is occurred.";
+         } else if (e instanceof SyntaxError) {
+            output.innerHTML = "Syntax error is occurred.";
+         } else {
+            output.innerHTML = "Error is occurred.";
+         }
+      }
+   </script>
+</body>
+</html>
+```
+
+
+### Output
+
+
+```javascript
+Reference error is occurred.
+```
+
+
+## JavaScript try...catch with setTimeout() Method
+
+
+Using the try-catch statement with the asynchronous JavaScript code wont catch the error thrown from the try block.
+
+
+The reason is that JavaScript executes the asynchronous code, when all main thread code gets executed.
+
+
+Lets understand it via the example below.
+
+
+### Example
+
+
+In the code below, we used the setTimeOut() method inside the try&#123;&#125; statement. It executes the callback function after 1000 milliseconds. In the callback function, we throw the error using the throw statement.
+
+
+In the output, you can observe that the cathc&#123;&#125; statement is not catching the error, and it prints the error in the browsers console.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+      const output = document.getElementById("demo");
+      try {
+         output.innerHTML = "Inside the try block. <br>";
+         setTimeout(() => {
+            throw new Error("Whoops!");
+         }, 1000);
+      } catch (err) {
+         output.innerHTML += "Inside the catch block. <br>";
+         output.innerHTML = err;
+      }
+   </script>
+</body>
+</html>
+```
+
+
+### Output
+
+
+```javascript
+Inside the try block.
+```
+
+
+## Promise-based Errors
+
+
+When any error occurs while consuming the promise code, you can use the catch() method to handle the error. Alternatively, you can pass the error handler as a second parameter of the then() method.
+
+
+### Examples
+
+
+In the code below, we have created the promise and rejected it after 1000 milliseconds.
+
+
+After that, we used the then() and catch() method to handle the promise. Here, we have rejected the promise so that control will execute the code of the catch() method.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+      const output = document.getElementById("demo");
+      output.innerHTML = "The promise is pending...";
+      let promise = new Promise((resolve, reject) => {
+         setTimeout(() => {
+            reject("The promise is rejected!");
+         }, 1000);
+      });
+      promise
+      .then((result) => {
+         output.innerHTML = result;
+      })
+      .catch((error) => {
+         output.innerHTML = error;
+      });
+   </script>
+</body>
+</html>
+```
+
+
+### Output
+
+
+```javascript
+The promise is rejected !
+```
+
+
+## Types of Errors in JavaScript
+
+
+There are different types of errors that JavaScript can throw. Here, we will learn each type one by one with examples.
+
+
+### JavaScript Range Error
+
+
+The JavaScript code throws a range error when the value is out of the specified range.
+
+
+#### Example
+
+
+In the code below, we used the toPrecision() method and passed 1000 as an argument. It throws the range error, as the number cant have 1000 digits.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      try {
+         let num = 10;
+         num.toPrecision(1000);
+      } catch (err) {
+         document.getElementById("output").innerHTML = err;
+      }
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+RangeError: toPrecision() argument must be between 1 and 100
+```
+
+
+### JavaScript Reference Error
+
+
+The reference error occurs when you try to access the undefined variables, functions, class methods, etc.
+
+
+#### Example
+
+
+In the code below, we execute the test() method of the window object. Here, the test() method is not defined, so it throws the reference error.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      try {
+         window.test();
+      } catch (err) {
+         document.getElementById("output").innerHTML = err;
+      }
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+TypeError: window.test is not a function
+```
+
+
+### JavaScript Type Error
+
+
+The JavaScript code throws the type error if you dont use the values of the valid type with methods or operators.
+
+
+#### Example
+
+
+In the example below, we use the toLowerCase() method with the boolean variable, but the toLowerCase() method is supported by string values only. So, it throws the type error.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      try {
+         let bool = true;
+         bool.toLowerCase();
+      } catch (err) {
+         document.getElementById("output").innerHTML = err;
+      }
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+TypeError: bool.toLowerCase is not a function
+```
+
+
+### JavaScript URI (Uniform Resource Identifier) Error
+
+
+The URI error occurs when you dont pass the valid URL as an argument of the encodeURI, decodeURI, etc. methods.
+
+
+#### Example
+
+
+In the example below, we passed the invalid encoded URI as an argument of the decodeURI() method. So, it throws the URIError.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      try {
+         decodeURI("%");
+      } catch (err) {
+         document.getElementById("output").innerHTML = err;
+      }
+   </script>
+</body>
+</html>
+```
+
+
+### Output
+
+
+```javascript
+URIError: URI malformed
+```
+

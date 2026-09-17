@@ -1,0 +1,352 @@
+---
+title: "JavaScript - Classes"
+description: "Learn JavaScript - Classes with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 810
+group: "Object Oriented JavaScript"
+seoTitle: "JavaScript - Classes — CodesCompiler JavaScript Guide"
+permalink: "javascript-classes"
+---
+
+
+# JavaScript - Classes
+
+
+
+
+## JavaScript Classes
+
+
+The JavaScriptclassesare a blueprint or template for object creation. They encapsulate the data and functions to manipulate that data. We can create the object using classes. Creating an object from a class is referred to as instantiating the class. In JavaScript, the classes are built on prototypes. The classes are introduced to JavaScript in ECMAScript 6 (ES6) in 2009.
+
+
+For example, you can think about writing code to represent the car entity. A code can contain the class having car properties. For different cars, you can create an instance of the class and initialize the car properties according to the car model.
+
+
+Before ES6, the constructor function was used to define a blueprint of the object. You can define the constructor function as shown below.
+
+
+```javascript
+function Car(brand) { // Constructor function
+	this.brand = brand; // property initialization
+}
+const carObj = new Car("Audi"); // Creating an object
+```
+
+
+## Defining JavaScript Classes
+
+
+The syntax of the class is very similar to the constructor function, but it uses the 'class' keyword to define the class. As we can define a function using function declaration or function expression, the classes are also can be defined using class declaration or class expression.
+
+
+### Syntax
+
+
+The syntax of class definition in JavaScript is as follows −
+
+
+```javascript
+// class declaration
+class ClassName {
+   // Class body
+}
+//Class expression
+const ClassName = class {
+   // class body
+}
+```
+
+
+A 'ClassName' is a class name in the above syntax.
+
+
+A JavaScript class is a function, but you can't use it as a regular function.
+
+
+## Type of JavaScript Classes
+
+
+A JavaScript class is a type offunction. In the example below, we used the 'typeof' operator to get the type of the class. It returns the 'function, which you can observe in the output.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+	p id = "output" The type of the car class is: 
+	<script>
+		class Car {
+			// Class body
+		}
+		document.getElementById("output").innerHTML += typeof Car;
+	</script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The type of the car class is: function
+```
+
+
+## The constructor() method
+
+
+When you use the function as an object blueprint, you can initialize the object properties inside the function body. Similarly, you need to use theconstructor()method with the class to initialize the object properties.
+
+
+Whenever you create an instance of the class, it automatically invokes theconstructor()method of the class.
+
+
+In below example, we use the constructor() method to create aCarclass −
+
+
+```javascript
+class Car {
+	constructor(brand) {// Defining the constructor
+		this.brand = brand;
+	}
+}
+```
+
+
+The constructor() method has no specific name but can be created using the 'constructor' keyword. You can initialize the class properties using the 'this' keyword inside the constructor function.
+
+
+## Creating JavaScript Objects
+
+
+To create an object of a JavaScript class, we usenewoperator followed by the class name and a pair of parentheses. We can pass thee arguments to it also.
+
+
+Let's create an object calledmyCaras follows −
+
+
+```javascript
+const myCar = new Car("Audi");
+```
+
+
+Thethiskeyword inside the constructor function refers to an object that is executing the current function.
+
+
+### Example: Creating class objects without arguments
+
+
+In the example below, we have defined the 'Car' class. The class contains the constructor and initializes the properties with default values.
+
+
+After that, we have created the instance of the class, and you can observe it in the output.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+	p id = "output" 
+	<script>
+		// creating Car class
+		class Car {
+			constructor() {
+				this.brand = "BMW";
+				this.model = "X5";
+				this.year = 2019;
+			}
+		}
+		// instantiate myCar object
+		const myCar = new Car();
+		// display the properties
+		document.getElementById("output").innerHTML = 
+      "Car brand is : " + myCar.brand + "<br>"
+      +"Car model is : " + myCar.model + "<br>"
+      +"Car year is : " + myCar.year + "<br>";
+	</script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Car brand is : BMW
+Car model is : X5
+Car year is : 2019
+```
+
+
+If you want to initialize the class properties dynamically, you can use the parameters with the constructor() method.
+
+
+### Example: Creating class objects with arguments
+
+
+In the example below, we have defined the 'Car' class. The constructor() method of the class takes 4 parameters and initializes the class properties with parametric values.
+
+
+While creating the 'Car' class instance, we passed 4 arguments. Inthisway, you can initialize the class properties dynamically.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+	p id = "output" 
+	<script>
+		class Car {
+			constructor(brand, model, price, year) {
+				this.brand = brand;
+				this.model = model;
+				this.price = price;
+				this.year = year;
+			}
+		}
+		const carObj = new Car("BMW", "X5", 9800000, 2019);
+		document.getElementById("output").innerHTML += 
+		"Car brand : " + carObj.brand + "<br>"
+		+ "Car model : " + carObj.model + "<br>"
+		+ "Car price : " + carObj.price + "<br>"
+		+ "Car year : " + carObj.year + "<br>"
+	</script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Car brand : BMW
+Car model : X5
+Car price : 9800000
+Car year : 2019
+```
+
+
+## JavaScript Class Methods
+
+
+You can also define the methods inside the class, which can be accessed using the class instance.
+
+
+### Syntax
+
+
+Follow the syntax below to define methods inside the class.
+
+
+```javascript
+class car {
+   methodName(params) {
+		// Method body
+	}
+}
+obj.methodName();
+```
+
+
+In the above syntax, 'methodName' is a dynamic name of the method. To define a class method, you don't need to write any keyword like 'function' before the method name.
+
+
+To invoke the class method, you need to use the instance of the class. Here, 'obj' is an instance of the class. You can also pass the parameters to the method.
+
+
+### Example
+
+
+The example below demonstrates how to pass parameters to the class methods.
+
+
+Here, we have defined theupdateprice()method to update the price of the car. So, while invoking theupdateprice()method, we pass the new price as an argument and use it inside the method body to update the price.
+
+
+You can see the original and updated price of the car in the output.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<body>
+	p id = "output" 
+	<script>
+		class Car {
+			constructor(brand, model, price, year) {
+				this.brand = brand;
+				this.model = model;
+				this.price = price;
+				this.year = year;
+			}
+
+			updateprice(newPrice) {
+			this.price = newPrice;
+			}
+		}
+    
+		const myCar = new Car("BMW", "X5", 9800000, 2019);
+		document.getElementById("output").innerHTML += 
+		"The car price is : " + myCar.price + "<br>";
+    
+		myCar.updateprice(8800000); // updating price
+    
+		document.getElementById("output").innerHTML += 
+		"After updating the car price is : " + myCar.price + "<br>";
+    
+	</script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The car price is : 9800000
+After updating the car price is : 8800000
+```
+
+
+## JavaScript Class Hoisting
+
+
+In JavaScript, the declaration of the class is not hoisted at the top of the code. So, you always need to define the class before you use it.
+
+
+```javascript
+const carObj = new Car(); // This will generate an error.
+class Car {
+}
+```
+
+
+You can try to run the above code. It will generate a reference error as the car class is used before its initialization.
+
+
+## Strict Mode with Classes
+
+
+The strict mode is used to avoid unusual errors. The class code is always in the strict mode by default.
+
+
+Let's understand it via the example below.
+
+
+```javascript
+class numbers {
+	constructor() {
+		num = 90; // Defining variable without var keyword
+	}
+}
+const numObj = new numbers();
+```
+
+
+In the above code, we define the 'num' global variable in the constructor() method. In the strict mode of JavaScript, it is not allowed to define the variables without using the var, let, or const keywords. So, the above code will throw an error.
+

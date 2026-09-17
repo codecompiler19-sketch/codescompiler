@@ -1,0 +1,206 @@
+---
+title: "JavaScript - History API"
+description: "Learn JavaScript - History API with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1360
+group: "JavaScript Web APIs"
+seoTitle: "JavaScript - History API — CodesCompiler JavaScript Guide"
+permalink: "javascript-history-api"
+---
+
+
+# JavaScript - History API
+
+
+
+
+## Web History API
+
+
+In JavaScript, thehistory APIallows us to access the browsers history. It can be used to navigate through the history.
+
+
+JavaScript History API provides us with methods to manipulate window history object. History object is a property of JavaScript window object. The window history object contains the array of visited URLs in the current session
+
+
+The history API is very powerful tool to create may useful effects. For example, we can use it to implement history based undo redo system.
+
+
+## How to use JavaScript History API?
+
+
+The History API is a very simple API to use. There are just a few methods and a property that you need to know about:
+
+
+
+- back() − This method navigates back to the previous page in the history.
+- forward() − This method navigates forward to the next page in the history.
+- go() − This method navigates to a specific page in the history. The number that you pass to the go() method is the relative position of the page that you want to navigate to. For example, to navigate to the previous page in the history, you would pass -1 to the go() method.
+- length − This property returns the length of the history list. It tells us the number of pages that have been visited by the user.
+
+
+
+## Syntax
+
+
+Followings are the syntaxes to use the different methods and property of the history object −
+
+
+```javascript
+// Load the previous URL in the history list
+history.back();
+
+// Load the next URL in the history list
+history.forward();
+
+// Load the page through its number
+history.go(-2); // This will go to the previous 2nd page
+history.go(2); // This will go to the next 2nd page
+
+// Get the length of the history list
+const length = history.length;
+```
+
+
+## Loading Previous Page in History List
+
+
+The JavaScript historyback()method of the history object loads the previous URL in the history list. We can also use the historygo()method to load the previous page. The difference between these two methods is that back() method only load the immediate previous URL in history list but we can use the go() method to load any previous URL in the history list.
+
+
+### Example: Using back() method to load previous page
+
+
+In the example below, we have used history back() method to load the previous page the user has already visited.
+
+
+Please note that if you have no previous page in the history list (i.e., you have not visited any page previously), the back() method will not work.
+
+
+We have implemented a back button, on clicking that we can load the previous visited page.
+
+
+```html
+<html>
+<body>
+    p Click "Load Previous Page" button to load previous visited page 
+    <button onclick="goback()"> Load Previous Page </button>
+    p id = "output" 
+    <script>
+        function goback() {
+            history.back();
+            document.getElementById("output").innerHTML += 
+            "You will have gone to previous visited page if it exists";
+        }
+    </script>
+</body>
+</html>
+```
+
+
+### Example: Using go() method to load the previous page
+
+
+In the example bellow, we have used the history go() method to load to the 2ndprevious visited page from the current web page.
+
+
+```html
+<html>
+<body>
+   p Click the below button to load 2nd previous visited page    
+   <button onclick = "moveTo()"> Load 2nd Previous Page </button>
+   p id = "output" 
+   <script>
+      function moveTo() {
+         history.go(-2);
+         document.getElementById("output").innerHTML = 
+         "You will have forwarded to 2nd previous visited page if it exists.";
+      }
+   </script>
+</body>
+</html>
+```
+
+
+## Loading Next Page in History List
+
+
+The JavaScript historyforward()method of the history object loads the next URL in the history list. We can also use the historygo()method to load the next page. The difference between these two methods is that forward() method only loads the immediate next URL in history list but we can use the go() method to load any next URL in the history list.
+
+
+### Example: Using forward() method to load next page
+
+
+In the below code, click the button to go to the next URL. It works as the forward button of the browser.
+
+
+```html
+<html>
+<body>
+   p Click "Load Next Page" button to load next visited page    
+   <button onclick = "goForward()"> Load Next Page </button>
+   p id = "output" 
+   <script>
+      function goForward() {
+         history.forward();
+         document.getElementById("output").innerHTML = 
+         "You will have forwarded to next visited page if it exists."
+      }
+   </script>
+</body>
+</html>
+```
+
+
+### Example: Using go() method  to load next page
+
+
+In the example below, we have used the go() method to move to the 2ndprevious page from the current web page.
+
+
+```html
+<html>
+<body>
+   p Click the below button to load  next 2nd visited page    
+   <button onclick = "moveTo()"> Load 2nd Next Page </button>
+   p id = "output" 
+   <script>
+      function moveTo() {
+         history.go(2);
+         document.getElementById("output").innerHTML = 
+         "You will have forwarded to 2nd next visited page if it exists.";
+      }
+   </script>
+</body>
+</html>
+```
+
+
+## Get the length of the history list
+
+
+We can use the history.length proerty to get the length of history list.
+
+
+### Example
+
+
+Try the follwing example −
+
+
+```html
+<html>
+<body>
+   p Click the below button to get the lenght of history list    
+   <button onclick = "moveTo()"> Get Lenght of History List </button>
+   p id = "output" 
+   <script>
+      const output = document.getElementById("output");
+      function moveTo() {
+         output.innerHTML = history.length;
+      }
+    </script>
+</body>
+</html>
+```
+

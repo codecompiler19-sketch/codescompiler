@@ -1,0 +1,238 @@
+---
+title: "SQL - INTERSECT Operator"
+description: "Learn SQL - INTERSECT Operator with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 590
+group: "SQL Operators and Clauses"
+seoTitle: "SQL - INTERSECT Operator — CodesCompiler SQL Guide"
+permalink: "sql-intersect-clause"
+---
+
+
+# SQL - INTERSECT
+
+
+Table of contentThe SQL INTERSECT OperatorINTERSECT with BETWEEN OperatorINTERSECT with IN OperatorINTERSECT with LIKE Operator
+
+
+
+
+In mathematical set theory, the intersection of two sets is a collection of values that are common to both sets.
+
+
+In real-time scenarios, there will be a huge number of tables in a database that contains information. The user may find it challenging to gather common information from various tables. So we use the INTERSECT operator to accomplish that. It helps to retrieve the common data from various tables.
+
+
+## The SQL INTERSECT Operator
+
+
+TheINTERSECToperator in SQL is used to retrieve the records that are identical/common between the result sets of two or more tables.
+
+
+Let us consider the below tables as an example to get a better understanding −
+
+
+If we perform the intersection operation on both tables described above using theINTERSECToperator, it returns the common records which areDevandAarohi.
+
+
+MySQL database does not support the INTERSECT operator. Instead of this, we can use the DISTINCT operator along with the INNER JOIN clause to retrieve common records from two or more tables.
+
+
+### Syntax
+
+
+Following is the SQL syntax of INTERSECT operator in Microsoft SQL Server −
+
+
+```sql
+SELECT column1, column2,..., columnN
+FROM table1, table2,..., tableN
+INTERSECT
+SELECT column1, column2,..., columnN
+FROM table1, table2,..., tableN
+```
+
+
+There are some mandatory rules for INTERSECT operations such as the number of columns, data types, and other columns must be the same in both SELECT statements for the INTERSECT operator to work correctly.
+
+
+### Example
+
+
+First of all, let us create a table namedSTUDENTSusing the following query −
+
+
+```sql
+CREATE TABLE STUDENTS(
+   ID INT NOT NULL, 
+   NAME VARCHAR(20) NOT NULL, 
+   SUBJECT VARCHAR(20) NOT NULL, 
+   AGE INT NOT NULL, 
+   HOBBY VARCHAR(20) NOT NULL, 
+   PRIMARY KEY(ID)
+);
+```
+
+
+Let's insert some values into the table using the following query −
+
+
+```sql
+INSERT INTO STUDENTS VALUES
+(1, 'Naina', 'Maths', 24, 'Cricket'),
+(2, 'Varun', 'Physics', 26, 'Football'),
+(3, 'Dev', 'Maths', 23, 'Cricket'),
+(4, 'Priya', 'Physics', 25, 'Cricket'),
+(5, 'Aditya', 'Chemistry', 21, 'Cricket'),
+(6, 'Kalyan', 'Maths', 30, 'Football');
+```
+
+
+The table produced is as shown below −
+
+
+IDNAMESUBJECTAGEHOBBY1NainaMathematics24Cricket2VarunPhysics26Football3DevMathematics23Cricket4PriyaPhysics25Cricket5AdithyaChemistry21Cricket6KalyanMathematics30Football
+
+
+Now, let us create another table namedSTUDENTS_HOBBYusing the following query −
+
+
+```sql
+CREATE TABLE STUDENTS_HOBBY(
+   ID INT NOT NULL, 
+   NAME VARCHAR(20) NOT NULL, 
+   HOBBY VARCHAR(20) NOT NULL, 
+   AGE INT NOT NULL, 
+   PRIMARY KEY(ID)
+);
+```
+
+
+Once the table is created, let us insert some values to the table using the query below −
+
+
+```sql
+INSERT INTO STUDENTS_HOBBY VALUES
+(1, 'Vijay', 'Cricket', 18),
+(2, 'Varun', 'Football', 26),
+(3, 'Surya', 'Cricket', 19),
+(4, 'Karthik', 'Cricket', 25),
+(5, 'Sunny', 'Football', 26),
+(6, 'Dev', 'Cricket', 23);
+```
+
+
+The table created is as follows −
+
+
+IDNAMEHOBBYAGE1VijayCricket182VarunFootball263SuryaCricket194KarthikCricket255SunnyFootball266DevCricket23
+
+
+Now, we are retrieving the common records from both the tables using the following query −
+
+
+```sql
+SELECT NAME, AGE, HOBBY FROM STUDENTS_HOBBY
+INTERSECT 
+SELECT NAME, AGE, HOBBY FROM STUDENTS;
+```
+
+
+### Output
+
+
+When we execute the above query, the output is obtained as follows −
+
+
+NAMEAGEHOBBYDev23CricketVarun26Football
+
+
+## INTERSECT with BETWEEN Operator
+
+
+We can use the INTERSECT operator with the BETWEEN operator in SQL to find records that fall within a specified range.
+
+
+### Example
+
+
+Now, let us retrieve the name, age, and hobby of students aged between 25 and 30 from both the 'STUDENTS' and 'STUDENTS_HOBBY' tables, returning only the common rows within the specified age range −
+
+
+```sql
+SELECT NAME, AGE, HOBBY FROM STUDENTS_HOBBY
+WHERE AGE BETWEEN 25 AND 30
+INTERSECT
+SELECT NAME, AGE, HOBBY FROM STUDENTS
+WHERE AGE BETWEEN 20 AND 30;
+```
+
+
+### Output
+
+
+The output for the above query is produced as given below −
+
+
+NAMEAGEHOBBYVarun26Football
+
+
+## INTERSECT with IN Operator
+
+
+We can also use the INTERSECT operator with the IN operator in SQL to find the common records that exists in the specified list of values. The IN operator is used to filter a result set based on a list of specified values.
+
+
+### Example
+
+
+The following SQL query returns the name, age, and hobby of students who have 'Cricket' as their hobby in both 'STUDENTS' and 'STUDENTS_HOBBY' tables −
+
+
+```sql
+SELECT NAME, AGE, HOBBY FROM STUDENTS_HOBBY
+WHERE HOBBY IN('Cricket')
+INTERSECT
+SELECT NAME, AGE, HOBBY FROM STUDENTS
+WHERE HOBBY IN('Cricket');
+```
+
+
+### Output
+
+
+When we execute the above query, the output is obtained as follows −
+
+
+NAMEAGEHOBBYDev23Cricket
+
+
+## INTERSECT with LIKE Operator
+
+
+The LIKE operator is used to perform pattern matching on a string. The INTERSECT operator can also be used with the LIKE operator in SQL to find the common rows that matches with the specified pattern.
+
+
+### Example
+
+
+The query below retrieves the names that start with 'V' using the wildcard '%' in the LIKE operator from the common names of both tables −
+
+
+```sql
+SELECT NAME, AGE, HOBBY FROM STUDENTS_HOBBY
+WHERE NAME LIKE 'v%'
+INTERSECT
+SELECT NAME, AGE, HOBBY FROM STUDENTS
+WHERE NAME LIKE 'v%';
+```
+
+
+### Output
+
+
+The output for the above query is produced as given below −
+
+
+NAMEAGEHOBBYVarun26Football
+

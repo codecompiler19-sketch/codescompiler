@@ -1,0 +1,235 @@
+---
+title: "SQL - Expressions"
+description: "Learn SQL - Expressions with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 90
+group: "SQL Basics"
+seoTitle: "SQL - Expressions — CodesCompiler SQL Guide"
+permalink: "sql-expressions"
+---
+
+
+# SQL - Expressions
+
+
+Table of contentWhat is SQL Expression?SQL Boolean ExpressionsSQL Numeric ExpressionsSQL Date Expressions
+
+
+
+
+## What is SQL Expression?
+
+
+An SQL expression is a combination of one or more values, operators and SQL functions that are all evaluated to a value. These SQL EXPRESSION(s) are like formulae and they are written in query language. You can also use them to query the database for a specific set of data.
+
+
+Expressions are used in WHERE clause of an SQL query. As you might have already known, a WHERE clause specifies a condition that needs to be satisfied for the purpose of filtering records from a database table. This condition is comprised of either single or multiple expressions. These expressions are further classified into three types −
+
+
+
+- Boolean Expressions
+- Numeric Expressions
+- Date and time Expressions
+
+
+
+Let us discuss each of these expressions in detail further in this chapter.
+
+
+### Syntax
+
+
+Consider the basic syntax of the SELECT statement containing some expressions as follows −
+
+
+```sql
+SELECT column1, column2, columnN
+FROM table_name
+WHERE [CONDITION|EXPRESSION];
+```
+
+
+## SQL Boolean Expressions
+
+
+SQL Boolean Expressions are SQL expressions that return only Boolean Datatype as a result. These expressions can be of two types −
+
+
+
+- Boolean Expressions that check for equality of two values using SQL comparison operators. Here, equality of these values is a condition.
+- Boolean Expressions can also contain one value paired with an SQL logical operator. In this case, the logic specified acts like a condition.
+
+
+
+They return either TRUE, FALSE or UNKNOWN as the result. If the condition is met, these expressions return TRUE; and FALSE otherwise. UNKNOWN is returned when either of the operands in the expression is a NULL value.
+
+
+### Syntax
+
+
+Following is the syntax of Boolean Expression −
+
+
+```sql
+SELECT column1, column2, columnN 
+FROM table_name 
+WHERE BOOLEAN EXPRESSION;
+```
+
+
+### Example
+
+
+Consider the CUSTOMERS table having the following records −
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+The following query is a simple example showing the usage of an SQL Boolean Expression −
+
+
+```sql
+SELECT * FROM CUSTOMERS WHERE SALARY = 10000;
+```
+
+
+### Output
+
+
+The output will be displayed as −
+
+
+IDNAMEAGEADDRESSSALARY7Muffy24Indore10000.00
+
+
+## SQL Numeric Expressions
+
+
+SQL Numeric expressions are comprised of two operands and an SQL Arithmetic Operator. These expressions are used to perform any mathematical operation in any query. Hence, the operands must always be numerals and the return value will always be a number as well.
+
+
+### Syntax
+
+
+Following is the syntax −
+
+
+```sql
+SELECT numerical_expression as OPERATION_NAME
+FROM table_name
+WHERE NUMERICAL EXPRESSION ;
+```
+
+
+Here, the numerical_expression is used for a mathematical expression or any formula.
+
+
+### Example
+
+
+Following is a simple example showing the usage of SQL Numeric Expressions −
+
+
+```sql
+SELECT 15 + 6;
+```
+
+
+### Output
+
+
+The output table is retrieved as −
+
+
+```sql
+21
+```
+
+
+### Example
+
+
+There are several built-in functions like avg(), sum(), count(), etc., to perform what is known as the aggregate data calculations against a table or a specific table column.
+
+
+```sql
+SELECT COUNT(*) FROM CUSTOMERS;
+```
+
+
+### Output
+
+
+The output is displayed as follows −
+
+
+```sql
+7
+```
+
+
+## SQL Date Expressions
+
+
+SQL Date Expressions are used to compare date related values with current system date and time values. For instance, in a manufacturing company, items manufactured per year can be segregated by using date expressions in a WHERE clause. Counting from the first day of an year to the last day, the count of each item will be retrieved; once the required information is gathered, the company can use this information for their own purposes.
+
+
+### Syntax
+
+
+Following is the syntax −
+
+
+```sql
+SELECT column_name(s)
+FROM table_name
+WHERE DATE EXPRESSION ;
+```
+
+
+### Example
+
+
+In this example we are trying to simply retrieve the current timestamp of the system using CURRENT_TIMESTAMP.
+
+
+```sql
+SELECT CURRENT_TIMESTAMP;
+```
+
+
+### Output
+
+
+The output table is displayed as −
+
+
+Current_Timestamp2009-11-12 06:40:23
+
+
+### Example
+
+
+Consider the following Customer Order records in an ORDERS table:
+
+
+ORDER_IDCUSTOMER_IDDATEORDER_AMOUNTITEM_COUNT10232009-10-08 00:00:003000410032009-10-08 00:00:001500210122009-11-20 00:00:001560710342008-05-20 00:00:0020603
+
+
+Now let's retrieve the records before 1st June, 2008:
+
+
+```sql
+SELECT * FROM ORDERS WHERE DATE < '2008/06/01';
+```
+
+
+### Output
+
+
+The output table is displayed as −
+
+
+ORDER_IDCUSTOMER_IDDATEORDER_AMOUNTITEM_COUNT10342008-05-20 00:00:0020603
+

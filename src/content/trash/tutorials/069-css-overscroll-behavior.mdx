@@ -1,0 +1,217 @@
+---
+title: "CSS - overscroll-behavior"
+description: "Learn CSS - overscroll-behavior with clear CSS layout principles, modern selectors, and practical examples."
+category: "css"
+order: 690
+group: "CSS Basics"
+seoTitle: "CSS - overscroll-behavior — CodesCompiler CSS Guide"
+permalink: "css-overscroll-behavior"
+---
+
+## CSS - overscroll-behavior
+
+The CSS property overscroll-behavior is a shorthand property that determines what a browser does when the boundary of a scrolling area is reached.
+
+The constituent properties of this property are overscroll-behavior-x and overscroll-behavior-y .
+
+Scroll chaining is a behavior that is observed when a user scrolls past the boundary (top, bottom, left or right) of a scrollable element, causing the scrolling on an ancestor element. This creates a chain effect in scrolling.
+
+For example, if you have a modal dialog box on the webpage, that has content which can be scrolled vertically. As you reach the end of the scrollable area of this modal, the scrolling continues on the main page's content behind the modal dialog box. This continuous scrolling experience is called the scroll chaining.
+
+This behavior may or may not be desirable and in order to avoid it, the property overscroll-behavior is used. The property is applied only on the scrollable containers . Setting this property on `<iframe>` has no effect and thus it needs to be set on both the `<html>` and the `<body>` elements of the iframe's document.
+
+## Possible Values
+
+The CSS property overscroll-behavior is defined as one or two of the keywords as given below. The two keywords specifies the value on the x and y axes respectively. When only one value is specified, both the x and y axes have the same value.
+
+- auto − The default scroll behavior is normal.
+
+auto − The default scroll behavior is normal.
+
+- contain − The scroll behavior is seen only in the element where the value is set. No scrolling set on neighboring elements.
+
+contain − The scroll behavior is seen only in the element where the value is set. No scrolling set on neighboring elements.
+
+- none − No scroll chaining behavior is seen. Default scroll overflow behavior is avoided.
+
+none − No scroll chaining behavior is seen. Default scroll overflow behavior is avoided.
+
+## Applies To
+
+All non-replaced block-level elements and non-replaced inline-block elements.
+
+## Syntax
+
+```css
+overscroll-behavior = [ contain | auto | none ]{1,2}
+```
+
+## CSS overscroll-behavior - auto Value
+
+Following example demonstrates the use of overscroll-behavior: auto that sets the scroll effect continuous. So as the boundary of the scrollable element is reached, on scrolling, the parent element gets scrolled.
+
+```html
+<html>
+<head>
+<style>
+   div {
+      margin: 5px 15px;
+      padding: 3px;
+      border: solid black 1px;
+      overflow: auto;
+      border: 2px solid black;
+   }
+
+   #main-box {
+      display: flex;
+      flex-wrap: wrap;
+      background-color: cornsilk;
+      height: 800px;
+   }
+
+   #box-1 {
+      background-color: lightblue;
+      overscroll-behavior: auto;
+   }
+
+   #main-box > div {
+      flex: 1;
+      height: 150px;
+   }
+</style>
+</head>
+<body>
+   <h1>overscroll-behavior Property</h1>
+   <p>The box displayed below has overscroll-behavior set as auto, which is the default value.</p>
+   <p>Scroll the blue box using the mouse and once it is scrolled completely keep scrolling and see the parent element gets scrolled.</p>
+
+   <div id="main-box">
+      <div id="box-1">
+         <h2>overscroll-behavior: auto</h2>
+         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos voluptatum adipisci harum? Repudiandae doloribus aspernatur ex odit rem quasi eligendi perspiciatis impedit porro reiciendis? Ipsa fugit reprehenderit nesciunt quae voluptates, labore ducimus iste consectetur quibusdam sapiente modi et ab reiciendis assumenda ullam, voluptatibus maiores sunt cupiditate amet. Magnam vel explicabo tempora ad numquam cumque soluta aliquid dolore, ducimus et obcaecati perferendis voluptatibus beatae quasi, facilis nihil culpa dolorum modi officia ab similique at. Iure ab, eius amet similique quaerat tempore, exercitationem aperiam fugiat pariatur error ratione laborum autem nam neque quae quo sed ipsam ullam animi officiis. Magnam assumenda facere similique molestiae harum ratione, esse, laboriosam cum vel quisquam labore est tenetur vero quas ex eum atque voluptatibus temporibus voluptate iste ipsam fugiat reiciendis dolor velit. Delectus molestiae deleniti quam, nisi ullam perspiciatis doloribus dolore dolores, ratione, reprehenderit rerum. Saepe ex, maiores reiciendis aperiam laudantium ipsa ipsam iure amet aliquid at suscipit labore voluptate et iste architecto fugit esse est a eum dicta asperiores error exercitationem minus. Praesentium voluptatem recusandae accusamus veritatis voluptate! Officia nostrum esse vitae fuga odit ab optio quia autem consequuntur, ea modi dignissimos enim assumenda voluptatibus maxime explicabo aliquid repellendus magni molestias hic dolores earum tenetur.</p>
+      </div>
+   </div>
+</body>
+</html>
+```
+
+## CSS overscroll-behavior - Comparison of Values
+
+Following example demonstrates the use of overscroll-behavior: contain that sets the scrolling effect contained to the element it is applied. So as the boundary of the scrollable element is reached, on scrolling, the parent element does not get scrolled.
+
+```html
+<html>
+<head>
+<style>
+   div {
+  margin: 5px 15px;
+  padding: 3px;
+  border: solid black 1px;
+  overflow: auto;
+  border: 2px solid black;
+}
+   #main-box {
+      display: flex;
+      flex-wrap: wrap;
+      background-color: darkcyan;
+      height: 800px;
+   }
+
+   #box-1 {
+      background-color: pink;
+   }
+
+   #box-2 {
+      background-color: aliceblue;
+      overscroll-behavior: contain;
+   }
+   #main-box > div {
+  flex: 1;
+  height: 150px;
+}
+</style>
+</head>
+<body>
+   <h1>overscroll-behavior Property</h1>
+   <p>The two boxes displayed below has overscroll-behavior set as auto and contain, respectively.</p>
+   <p>Scroll the first pink box using the mouse and once it is scrolled completely keep scrolling and see the parent element gets scrolled.</p>
+   <p>Scroll the second white box using the mouse and once it is scrolled completely keep scrolling and see the parent element not getting scrolled.</p>
+   <div id="main-box">
+   <div id="box-1">
+      <h3>overscroll-behavior: auto</p>
+      <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos voluptatum adipisci harum? Repudiandae doloribus aspernatur ex odit rem quasi eligendi perspiciatis impedit porro reiciendis? Ipsa fugit reprehenderit nesciunt quae voluptates, labore ducimus iste consectetur quibusdam sapiente modi et ab reiciendis assumenda ullam, voluptatibus maiores sunt cupiditate amet. Magnam vel explicabo tempora ad numquam cumque soluta aliquid dolore, ducimus et obcaecati perferendis voluptatibus beatae quasi, facilis nihil culpa dolorum modi officia ab similique at. Iure ab, eius amet similique quaerat tempore, exercitationem aperiam fugiat pariatur error ratione laborum autem nam neque quae quo sed ipsam ullam animi officiis. Magnam assumenda facere similique molestiae harum ratione, esse, laboriosam cum vel quisquam labore est tenetur vero quas ex eum atque voluptatibus temporibus voluptate iste ipsam fugiat reiciendis dolor velit. Delectus molestiae deleniti quam, nisi ullam perspiciatis doloribus dolore dolores, ratione, reprehenderit rerum. Saepe ex, maiores reiciendis aperiam laudantium ipsa ipsam iure amet aliquid at suscipit labore voluptate et iste architecto fugit esse est a eum dicta asperiores error exercitationem minus. Praesentium voluptatem recusandae accusamus veritatis voluptate! Officia nostrum esse vitae fuga odit ab optio quia autem consequuntur, ea modi dignissimos enim assumenda voluptatibus maxime explicabo aliquid repellendus magni molestias hic dolores earum tenetur.
+      </p>
+   </div>
+   <div id="box-2">
+      <h3>overscroll-behavior: contain</p>
+      <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos voluptatum adipisci harum? Repudiandae doloribus aspernatur ex odit rem quasi eligendi perspiciatis impedit porro reiciendis? Ipsa fugit reprehenderit nesciunt quae voluptates, labore ducimus iste consectetur quibusdam sapiente modi et ab reiciendis assumenda ullam, voluptatibus maiores sunt cupiditate amet. Magnam vel explicabo tempora ad numquam cumque soluta aliquid dolore, ducimus et obcaecati perferendis voluptatibus beatae quasi, facilis nihil culpa dolorum modi officia ab similique at. Iure ab, eius amet similique quaerat tempore, exercitationem aperiam fugiat pariatur error ratione laborum autem nam neque quae quo sed ipsam ullam animi officiis. Magnam assumenda facere similique molestiae harum ratione, esse, laboriosam cum vel quisquam labore est tenetur vero quas ex eum atque voluptatibus temporibus voluptate iste ipsam fugiat reiciendis dolor velit. Delectus molestiae deleniti quam, nisi ullam perspiciatis doloribus dolore dolores, ratione, reprehenderit rerum. Saepe ex, maiores reiciendis aperiam laudantium ipsa ipsam iure amet aliquid at suscipit labore voluptate et iste architecto fugit esse est a eum dicta asperiores error exercitationem minus. Praesentium voluptatem recusandae accusamus veritatis voluptate! Officia nostrum esse vitae fuga odit ab optio quia autem consequuntur, ea modi dignissimos enim assumenda voluptatibus maxime explicabo aliquid repellendus magni molestias hic dolores earum tenetur.
+      </p>
+   </div>
+   </div>
+</body>
+</html>
+```
+
+## CSS overscroll-behavior - Two Keyword Values
+
+Following example demonstrates the use of overscroll-behavior: auto contain (two values), that sets the scrolling effect auto on x axis and contained on y-axis. So as the vertical boundary of the scrollable element is reached, on scrolling, the parent element does not get scrolled (as contained), but the horizontal boundary set as auto, which leads to scrolling of parent element on the x-axis.
+
+```html
+<html>
+<head>
+<style>
+   #main-box, #box-2 {
+      margin: 15px;
+      padding: 3px;
+      border: solid black 1px;
+      overflow: auto;
+   }
+
+   #main-box p {
+      width: 200%;
+   }
+
+   #main-box {
+      background-color: rgb(197, 255, 236);
+      height: 1300px;
+      width: 2000px;
+   }
+
+   #box-2 {
+      float: left;
+      height: 250px;
+      width: 30%;
+      background-color: rgb(255, 205, 213);
+      overscroll-behavior: auto none;
+   } 
+</style>
+</head>
+<body>
+   <h1>overscroll-behavior - Two value Syntax</h1>
+   <p>The two value syntax is used with overscroll-behavior as auto on x axis and none on y-axis.</p>
+   
+   <div id="main-box">
+   
+   <div id="box-2">
+      <h3>overscroll-behavior: auto none</p>
+      <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos voluptatum adipisci harum? Repudiandae doloribus aspernatur ex odit rem quasi eligendi perspiciatis impedit porro reiciendis? Ipsa fugit reprehenderit nesciunt quae voluptates, labore ducimus iste consectetur quibusdam sapiente modi et ab reiciendis assumenda ullam, voluptatibus maiores sunt cupiditate amet. Magnam vel explicabo tempora ad numquam cumque soluta aliquid dolore, ducimus et obcaecati perferendis voluptatibus beatae quasi, facilis nihil culpa dolorum modi officia ab similique at. Iure ab, eius amet similique quaerat tempore, exercitationem aperiam fugiat pariatur error ratione laborum autem nam neque quae quo sed ipsam ullam animi officiis. Magnam assumenda facere similique molestiae harum ratione, esse, laboriosam cum vel quisquam labore est tenetur vero quas ex eum atque voluptatibus temporibus voluptate iste ipsam fugiat reiciendis dolor velit. Delectus molestiae deleniti quam, nisi ullam perspiciatis doloribus dolore dolores, ratione, reprehenderit rerum. Saepe ex, maiores reiciendis aperiam laudantium ipsa ipsam iure amet aliquid at suscipit labore voluptate et iste architecto fugit esse est a eum dicta asperiores error exercitationem minus. Praesentium voluptatem recusandae accusamus veritatis voluptate! Officia nostrum esse vitae fuga odit ab optio quia autem consequuntur, ea modi dignissimos enim assumenda voluptatibus maxime explicabo aliquid repellendus magni molestias hic dolores earum tenetur.
+      </p>
+   </div>
+   </div>
+</body>
+</html>
+```
+
+## CSS overscroll-behavior - Associated Properties
+
+Following table lists down the CSS properties that are associated with overscroll-behavior property:
+
+| Property | Description |
+| :--- | :--- |
+| overscroll-behavior-x | Sets the browser's behavior when the horizontal boundary of a scrolling area is reached. |
+| overscroll-behavior-y | Sets the browser's behavior when the vertical boundary of a scrolling area is reached. |
+| overscroll-behavior-block | Sets the browser's behavior when the block direction boundary of a scrolling area has been reached. |
+| overscroll-behavior-inline | Sets the browser's behavior when the inline direction boundary of a scrolling area has been reached. |

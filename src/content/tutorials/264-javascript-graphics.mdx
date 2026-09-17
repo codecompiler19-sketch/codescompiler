@@ -1,0 +1,358 @@
+---
+title: "JavaScript - Graphics"
+description: "Learn JavaScript - Graphics with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2640
+group: "JavaScript Miscellaneous"
+seoTitle: "JavaScript - Graphics — CodesCompiler JavaScript Guide"
+permalink: "javascript-graphics"
+---
+
+
+# JavaScript - Graphics
+
+
+
+
+In JavaScript, graphics can be created using the Canvas API. However, developers can also use some other libraries, like p5.js, chart.js, pllotly.js, Google charts, etc., to draw various graphics and charts.
+
+
+Here, we will explore some of these libraries and learn about them with help of some examples
+
+
+## WebGL
+
+
+WebGL allows developers to create graphics from scratch using the code, and integrate it in the web pages. It operates directly with the HTML `<canvas>` element, allowing for GPU-accelerated usage of physics and image processing and effects as part of the web page canvas.
+
+
+WebGL allows to development of a wide range of applications from 2D games to complex 3D visualization applications. Also, it is supported by most modern browsers, which makes it a go-to choice for developers to develop graphics.
+
+
+### Example
+
+
+In the code below, we have used the `<canvas>` element to create a canvas and accessed it in the JavaScript using the id. Next, we used the getCContext() method to get the context of the WebGL. If it is not supported by the browser, the getContext() method returns undefined value.
+
+
+In the initiateShader() function, we compile the shader source code into shaders, attach those shaders to a program, and then link the program so it can be used in a WebGL context. The loadShader() function loads and compiles the shader code.
+
+
+In the drawScene() function, we use the useProgram() method by passing the graphics info as a parameter to draw a triangle on the canvas. In the output, you can observe the red triangle on the black canvas.
+
+
+```html
+<html>
+<body>
+   ##  JavaScript - Graphics (WebGL) 
+   <canvas id="webgl-canvas" width="600" height="400"></canvas>
+   <div id="error"> </div>
+   <script>
+      // Get the canvas element and its WebGL context
+      var canvas = document.getElementById('webgl-canvas');
+      let errorDiv = document.getElementById('error');
+      // Get context of webgl
+      var gl = canvas.getContext('webgl');
+
+      if (!gl) {
+         console.error('Your browser may not support WebGL.');
+      }
+
+      // Vertex shader program
+      var vsSource = 
+         attribute vec4 aVertexPosition;
+         void main(void) {
+            gl_Position = aVertexPosition;
+         }
+         `;
+
+      // Fragment shader program
+      var fsSource = 
+      void main(void) {
+         gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); // Red color
+      }
+      `;
+
+      function initShaderProgram(gl, vsSource, fsSource) {
+         const vertexShader = loadShader(gl, gl.VERTEX_SHADER, vsSource);
+         const fragmentShader = loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
+
+         // Create the shader program
+         const shaderProgram = gl.createProgram();
+         gl.attachShader(shaderProgram, vertexShader);
+         gl.attachShader(shaderProgram, fragmentShader);
+         gl.linkProgram(shaderProgram);
+
+         // If creating the shader program failed, alert
+         if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
+
+            alert('Unable to initialize the shader program: ' + gl.getProgramInfoLog(shaderProgram));
+            return null;
+         }
+
+         return shaderProgram;
+      }
+
+      function loadShader(gl, type, source) {
+         const shader = gl.createShader(type);
+
+         // Send the source to the shader object
+         gl.shaderSource(shader, source);
+
+         // Compile the shader program
+         gl.compileShader(shader);
+
+         // See if it compiled successfully
+         if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+            error.innerHTML = 'An error occurred compiling the shaders: ' + gl.getShaderInfoLog(shader);
+            gl.deleteShader(shader);
+            return null;
+         }
+
+         return shader;
+      }
+
+      // Initialize a shader program; this is where all the lighting
+      // for the vertices and subsequently the creation of the
+      // geometry and colors will be established.
+      var shaderProgram = initShaderProgram(gl, vsSource, fsSource);
+
+      // Collect all the info needed to use the shader program.
+      // Look up which attribute our shader program is using
+      // for aVertexPosition and look up uniform locations.
+      var programInfo = {
+         program: shaderProgram,
+         attribLocations: {
+            vertexPosition: gl.getAttribLocation(shaderProgram, 'aVertexPosition'),
+         },
+      };
+
+      // Vertices of the triangle
+      var positions = [
+         0.0, 1.0,  // Vertex 1 (X, Y)
+         -1.0, -1.0, // Vertex 2 (X, Y)
+         1.0, -1.0,  // Vertex 3 (X, Y)
+      ];
+      var positionBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+
+      // Draw the scene
+      function drawScene(gl, programInfo, buffers) {
+         gl.clearColor(0.0, 0.0, 0.0, 1.0);  // Clear to black, fully opaque
+         gl.clear(gl.COLOR_BUFFER_BIT);
+         gl.useProgram(programInfo.program);
+
+         // Tell WebGL how to pull out the positions from the position
+         // buffer into the vertexPosition attribute.
+         {
+            const numComponents = 2;  // pull out 2 values per iteration
+            const type = gl.FLOAT;    // the data in the buffer is 32bit floats
+            const normalize = false;  // don't normalize
+            const stride = 0;         // how many bytes to get from one set to the next
+            const offset = 0;         // how many bytes inside the buffer to start from
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+            gl.vertexAttribPointer(
+               programInfo.attribLocations.vertexPosition,
+               numComponents,
+               type,
+               normalize,
+               stride,
+               offset);
+            gl.enableVertexAttribArray(
+               programInfo.attribLocations.vertexPosition);
+         }
+
+         // Draw the triangle.
+         gl.drawArrays(gl.TRIANGLES, 0, 3);
+      }
+
+      drawScene(gl, programInfo, positionBuffer);
+   </script>
+</body>
+</html>
+```
+
+
+## P5.js
+
+
+P5.js is also a very popular graphics library used to create various shapes by writing the code. It also allows us to animate the shapes and make them visually more appealing.  However, it is not limited to shape but it also allows to interact with audio, video, etc.
+
+
+Lets understand the usage of P5.js with the example below.
+
+
+### Example
+
+
+In the code below, the program starts with two main functions: setup() and draw(). The setup() function is run once when the program starts, and it's used for initial setup tasks. The draw() function continuously executes the lines of code contained inside its block until the program is stopped or noLoop() is called, making it ideal for animations.
+
+
+In the setup() function, we create a canvas and draw the circle on that. In the draw() function, we continuously change the position of the circles by redrawing them. The output of the below code shows the moving circle.
+
+
+```html
+<html>
+<head>
+   <title>p5.js Example</title>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+</head>
+<body>
+   <script>
+      // Define variables for the circle's properties
+      let x, y; // Position
+      let dx = 2; // Speed and direction on x-axis
+      let dy = -2; // Speed and direction on y-axis
+      let radius = 50; // Circle's radius
+
+      function setup() {
+         // Create a canvas that fills the window
+         createCanvas(windowWidth, windowHeight);
+         // Initialize circle's position to center of the canvas
+         x = width / 2;
+         y = height / 2;
+      }
+
+      function draw() {
+         background(220); // Fill the background with a light gray color
+         // Draw a circle with a random fill color
+         fill(random(255), random(255), random(255));
+         ellipse(x, y, radius * 2); // Circle diameter is twice the radius
+         // Update the position of the circle
+         x += dx;
+         y += dy;
+
+         // Check for bouncing
+         if (x + radius > width || x - radius < 0) {
+            dx = -dx; // Reverse direction on the x-axis
+         }
+         if (y + radius > height || y - radius < 0) {
+            dy = -dy; // Reverse direction on the y-axis
+         }
+      }
+
+      // Resize the canvas when the window is resized
+      function windowResized() {
+         resizeCanvas(windowWidth, windowHeight);
+      }
+   </script>
+</body>
+</html>
+```
+
+
+## Plotly.js
+
+
+Plotly.js is a JavaScript library that allows developers to create various types of high-quality graphs and visualizations with ease. We can use it to draw statistical charts, 3d charts, etc. The Plotly.js library can be integrated into various programming languages and frameworks.
+
+
+### Example
+
+
+In the code below, we have created the trace1 object, which contains the x, y, and type properties. After that, we used the newPlot() method to create a line chart using the given data points.
+
+
+```html
+<html>
+<body>
+   ##  JavaScript - Graphics 
+   <div id = "plotlyChart" style="width:600px;height:400px;"> </div>
+   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+   <script>
+      // Create a simple line chart
+      var trace1 = {
+         x: [1, 2, 3, 4],
+         y: [10, 15, 13, 17],
+         type: 'scatter'
+      };
+
+      var data = [trace1];
+      Plotly.newPlot('plotlyChart', data);
+   </script>
+</body>
+</html>
+```
+
+
+## Chart.js
+
+
+Chart.js is also a JavaScript library that allows developers to draw various kinds of charts. It supports six chart types: line, bar, radar, doughnut, pie, and polar area.
+
+
+### Example
+
+
+In the code below, we used the Chart() constructor from the chart.js library to create a new bar chart.
+
+
+```html
+<html>
+<body>
+   ##  JavaScript - Graphics 
+   <canvas id="chartjsBarChart" width="600" height="400"></canvas>
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   <script>
+      // Get Canvas context
+      var ctx = document.getElementById('chartjsBarChart').getContext('2d');
+      // Create a chart
+      var myChart = new Chart(ctx, {
+         type: 'bar',
+         data: {
+            labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple'],
+            datasets: [{
+               label: '# of Votes',
+               data: [1, 6, 3, 5, 2],
+               backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(153, 102, 255, 0.2)'
+               ],
+               borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(153, 102, 255, 1)'
+               ],
+               borderWidth: 1
+            }]
+         },
+         options: {
+            scales: {
+               y: {
+                  beginAtZero: true
+               }
+            }
+         }
+      });
+   </script>
+</body>
+</html>
+```
+
+
+## Google Charts
+
+
+Google Charts library also provides various types of charts, including the ones below.
+
+
+
+- Scatter Chart
+- Bar / Column Chart
+- Org Chart
+- Area Chart
+- Donut Chart
+- Map / Geo Chart
+- Line Chart
+- Pie Chart
+
+
+
+However, there are some more JavaScript libraries like D3.js available on the internet that can be used to draw various kinds of graphics.
+

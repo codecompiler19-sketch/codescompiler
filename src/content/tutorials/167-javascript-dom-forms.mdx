@@ -1,0 +1,335 @@
+---
+title: "JavaScript - DOM Forms"
+description: "Learn JavaScript - DOM Forms with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1670
+group: "JavaScript HTML DOM"
+seoTitle: "JavaScript - DOM Forms — CodesCompiler JavaScript Guide"
+permalink: "javascript-dom-forms"
+---
+
+
+# JavaScript - DOM Forms
+
+
+
+
+## The DOM Forms
+
+
+The HTML DOM documentformsare used to get the data from the users.
+
+
+In JavaScript, you can use the'forms' collectionof the 'document' object to access all `<form>` elements of the HTML document.
+
+
+You can access all forms elements of particular forms and manipulate them. Using JavaScript, you can validate the form values, handle the form data submission, etc.
+
+
+### Syntax
+
+
+Follow the syntax below to use the 'forms' collection to manipulate the forms of the DOM.
+
+
+```javascript
+document.forms;
+```
+
+
+Here, 'forms' is a property of the 'document' object.
+
+
+### Properties of 'forms' Collection
+
+
+PropertyDescriptionlengthIt represents the number of `<form>` elements in the HTML document.
+
+
+### Methods of 'forms' Collection
+
+
+MethodDescription[index]To get the particular `<form>` element from the 0-based index of the collection of HTML forms.item(index)To get the particular `<form>` element from the 0-based index of the collection of HTML forms.namedItem(id)To get the `<form>` element with a particular id.
+
+
+### Return value
+
+
+The document.forms returns the collection of all forms in the same order as they are present in the HTML document.
+
+
+### Example: Finding total `<form>` elements in the HTML document)
+
+
+In the below code, we use the 'length' property of the 'forms' collection to find the number of existing forms in the HTML document.
+
+
+```html
+<html>
+<body>
+  <form>
+    <input type = "text" name = "first" id = "first" value = "First Name">
+  </form>
+  <form>
+    <input type = "text" name = "second" id = "second" value = "Last Name">
+  </form>
+  <form>
+    <input type = "text" name = "third" id = "third" value = "Contact">
+  </form>
+  <div id = "output">Total number of forms in the HTML document is: </div>
+  <script>
+    document.getElementById('output').innerHTML += document.forms.length;
+  </script>
+</body>
+</html>
+```
+
+
+### Example: Get the id of all `<form>` elements
+
+
+In the below code, we access each form using its index and use the 'id' property to get the id of a particular form.
+
+
+```html
+<html>
+<body>
+<form id = "form1">
+  <label for = "first"> Fruit Name: </label>
+  <input type = "text" name = "first" id = "first">
+</form>
+<form id = "form2">
+  <label for = "second"> Price: </label>
+  <input type = "text" name = "second" id = "second">
+</form>
+<form id = "form3">
+  <label for = "third"> Color: </label>
+  <input type = "text" name = "third" id = "third">
+</form>
+<div id = "output"> </div>
+<script>
+  document.getElementById('output').innerHTML = 
+  "Id of the first form is: " + document.forms[0].id + "<br>" +
+  "Id of the second form is: " + document.forms[1].id + "<br>" +
+  "Id of the third form is: " + document.forms[2].id;
+</script>
+</body>
+</html>
+```
+
+
+### Example: Get particular form using its id and namedItem() method
+
+
+In the code below, we used the namedItem() method by taking the 'forms' collection as a reference to get a form with a particular id.
+
+
+```html
+<html>
+<body>
+<form id = "form1">
+    <label for = "first"> First Name </label>
+    <input type = "text" name = "first" id = "first">
+  </form>
+  <form id = "form2">
+    <label for = "second"> Last Name </label>
+    <input type = "text" name = "second" id = "second">
+  </form>
+<div id = "output">The innerHTML of the form element having id equal to form2 is: </div>
+  <script>
+    const output = document.getElementById('output');
+    output.innerHTML += document.forms.namedItem('form2').innerHTML;
+  </script>
+</body>
+</html>
+```
+
+
+## JavaScript Form Submission
+
+
+In JavaScript, you can submit the form using the 'submit' input type and execute a particular function to handle the form data using the onsubmit() event handler.
+
+
+### Example
+
+
+In the below code, the form takes users' first and last names. After that, when users click the submit input, it calls the submitForm() function.
+
+
+In the submitForm() function, we used the preventDefault() method to prevent the execution of the function without submitting the form.
+
+
+After that, we use the 'forms' collection to access the form and values of its input fields.
+
+
+At last, we print the input values in the output.
+
+
+```html
+<html>
+<body>
+<form onsubmit = "submitForm(event)" id = "nameform">
+  p<label>First Name: </label><input type = "text" name = "firstname">
+  p<label>Last Name: </label><input type = "text" name = "lastname">
+  p<input type = "submit">
+</form>
+<div id = "output"> </div>
+<script>
+  function submitForm(e) {
+    e.preventDefault(); 
+    const output = document.getElementById('output');
+    const firstname = document.forms['nameform']['firstname'].value;
+    const lastname = document.forms['nameform']['lastname'].value; 
+    output.innerHTML = "First Name: " + firstname + ", Last Name: " + lastname;
+  }
+</script>
+</body>
+</html>
+```
+
+
+## JavaScript Form Validation
+
+
+In JavaScript, you can also validate the form to ensure the users have filled the required inputs. You can perform the validation check in the function that you are invoking on form submit.
+
+
+Furthermore, you may also show the error message in the output if the form is not fulfilling the particular condition.
+
+
+### Example
+
+
+In the below code, we check whether the length of the first name and last name is less than 3 when users submit the form. If the length of firstname or lastname is less than 3, we show the error message.
+
+
+```html
+<html>
+<body>
+<form onsubmit = "submitForm(event)" id = "nameform">
+  pFirst Name: <input type = "text" name = "firstname"> 
+  pLast Name: <input type = "text" name = "lastname"> 
+  p<input type = "submit">
+</form>
+<div id = "output"> </div>
+<script> 
+  function submitForm(e) {
+    e.preventDefault();
+    const output = document.getElementById('output');
+    const firstname = document.forms['nameform']['firstname'].value;
+    const lastname = document.forms['nameform']['lastname'].value;
+    if (firstname.length < 3 || lastname.length < 3) {
+      output.innerHTML += "The length of the first name or last name should be greater than 3. <br>";
+    } else {
+      output.innerHTML = "First Name: " + firstname + ", Last Name: " + lastname;
+    }
+  }
+</script>
+</body>
+</html>
+```
+
+
+## JavaScript Form Data Validation
+
+
+It is also required to validate the input data.
+
+
+Sometimes, it happens that you want users to pass the numeric data, but they pass the string data by mistake. In such cases, developers are required to validate the data and show the error message.
+
+
+You may validate the data on the client side or server side. It is a best practice to validate the data on the client side and send pure data to the server.
+
+
+### Example
+
+
+In the code below, we have created the input field to take emails from users. When users submit the form, we use the regex and test() method to check whether they have passed the valid email address in the input.
+
+
+```html
+<html>
+<body>
+  <form onsubmit = "submitForm(event)" id = "emailform">
+    pEmail: <input type = "email" name = "email"> 
+    p<input type = "submit">
+  </form>
+  <div id = "output"> </div>
+  <script>
+    function submitForm(e) {
+      e.preventDefault();
+
+      const email = document.forms['emailform']['email'].value;
+      //Validate email using regex
+      const emailRegex = /^[a-z0-9]+@[a-z]+\.[a-z]{2,3}$/;
+      if (emailRegex.test(email)) {
+        document.getElementById('output').innerHTML = "Email is valid!";
+      } else {
+        document.getElementById('output').innerHTML = "Email is not valid!";
+      }
+    }
+  </script>
+</body>
+</html>
+```
+
+
+## Form Validation Using the HTML Constraint
+
+
+### (Automatic form validation)
+
+
+In HTML5, some constraints are introduced to validate the form. You can use these constraints as an attribute of the HTML element, and it prevents the form submission if the input doesn't match the constraints.
+
+
+The table below contains the constraints and their description.
+
+
+ConstraintDescriptiondisabledTo disable the input element.maxTo specify the maximum value of the input element.minTo specify the minimum value of the input element.patternTo specify the particular pattern for the input element.requiredTo specify the input element as a required field.typeTo specify the type of the input element.
+
+
+### Syntax
+
+
+Follow the syntax below to add the above constraints as an attribute to the `<input>` element.
+
+
+```javascript
+<input attr=value >
+```
+
+
+### Example: Using the required attribute
+
+
+In the below code, we used the 'required' attribute with the input element. When you submit the form without entering the number in the input field, it will show a default error message.
+
+
+```html
+<html>
+<body>
+  <form onsubmit = "submitForm(event)" id = "form">
+    pNumber: <input type = "number" name = "num" required> 
+    p<input type = "submit">
+  </form>
+  <div id = "output"> </div>
+  <script>
+    function submitForm(e) {
+      e.preventDefault();
+      const num = document.forms['form']['num'].value;
+      document.getElementById('output').innerHTML += "The submitted numeric value is: " + num + "<br>";
+    }
+  </script>
+</body>
+</html>
+```
+
+
+The HTML form validation constraints provide limited functionality. So, you can write a custom JavaScript function to validate the form.
+
+
+You may also use the CSS selectors to validate the form.
+

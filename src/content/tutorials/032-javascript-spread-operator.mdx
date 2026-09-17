@@ -1,0 +1,222 @@
+---
+title: "JavaScript - Spread Operator"
+description: "Learn JavaScript - Spread Operator with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 320
+group: "JavaScript Operators"
+seoTitle: "JavaScript - Spread Operator — CodesCompiler JavaScript Guide"
+permalink: "javascript-spread-operator"
+---
+
+
+# JavaScript - Spread Operator
+
+
+
+
+## What is a Spread Operator?
+
+
+The JavaScriptspreadoperator () allows us to spread out elements of an iterable such as an array. The spread operator is represented with three dots (). This is operator is introduced in ES6. The main use cases of the spread operator are to copy array elements, concatenate arrays or objects with rest parameters, etc.
+
+
+Let's take an example to expand the elements of an array
+
+
+```javascript
+let x = ["Tutorials", "Point"];
+console.log(x); // [ 'Tutorials', 'Point' ]
+console.log(...x); // Tutorials Point
+```
+
+
+## Spread Operator to Concatenate Arrays
+
+
+The JavaScript spread operator can be used to concatenate the arrays.
+
+
+### Example
+
+
+In the below example, we have defined two different arrays. After that, we used the spread operator to concatenate these arrays.
+
+
+```html
+<html>
+<body>
+   <div id = "output"></div>
+   <script>
+      const nums1 = [10, 20, 30];
+      const nums2 = [40, 50, 60];
+      const res = [...nums1, ...nums2];
+      document.getElementById("output").innerHTML = res;
+   </script>
+</body>
+</html>
+```
+
+
+It will produce the following result −
+
+
+```javascript
+10,20,30,40,50,60
+```
+
+
+You can also change the concatenation order of the array.
+
+
+## Spread Operator to Clone an Array
+
+
+In JavaScript, when we assign one array (object) to another array, it assigns the reference rather than cloning the array. So, whenever you update the original array, it also updates the cloned array. The assignement operator creates adeep copyof the array.
+
+
+### Example: Without Using Spread Operator
+
+
+In this example, we defined an array named nums1. We defiend another array named nums2 and assigned the array nums1 to array nums2. Here, you can see that when you change nums1, it also updates the nums2.
+
+
+```html
+<html>
+<body>
+   <div id = "result1"></div>
+   <div id = "result2"></div>
+   <script>
+      const nums1 = [10, 20, 30];
+      const nums2 = nums1;
+      document.getElementById("result1").innerHTML = nums2;
+      nums1.push(40);
+      document.getElementById("result2").innerHTML = nums2;
+   </script>
+</body>
+</html>
+```
+
+
+It will produce the following result −
+
+
+```javascript
+10,20,30
+10,20,30,40
+```
+
+
+### Example: Using Spread Operator to Clone Arrays
+
+
+Using the spread operator to clone the array creates an actual copy of the array, and the cloned array doesn't change when you make changes to the original array. Here, you can see that nums3 doesn't get updated even if you change the nums1.
+
+
+```html
+<html>
+<body>
+   <div id = "result1"></div>
+   <div id = "result2"></div>
+   <script>
+      const nums1 = [10, 20, 30];
+      const nums3 = [...nums1];
+      document.getElementById("result1").innerHTML = nums3;
+      nums1.push(50);
+      document.getElementById("result2").innerHTML = nums1 + "<br>";
+      document.getElementById("result2").innerHTML += nums3;
+   </script>
+</body>
+</html>
+```
+
+
+It will produce the following result −
+
+
+```javascript
+10,20,30
+10,20,30,50
+10,20,30
+```
+
+
+## Spread Operator to Concatenate Objects
+
+
+You can use the spread operator to copy object properties into another object. Here, consider the 'car' object as a parent object containing similar properties to all cars. After that, created the 'BMW' object, representing the particular car, and concatenated all properties of the 'car' object with the 'BMW' object's property.
+
+
+```html
+<html>
+<body>
+   <div id = "result1"></div>
+   <div id = "result2"></div>
+   <script>
+      const car = {
+         gears: 6,
+         color: "Black"
+      }
+      document.getElementById("result1").innerHTML = JSON.stringify(car);
+    
+      const BMW = {
+         model: "X5",
+         year: 2019,
+         ...car,
+      }
+      document.getElementById("result2").innerHTML = JSON.stringify(BMW);
+   </script>
+</body>
+</html>
+```
+
+
+It will produce the following result −
+
+
+```javascript
+{"gears":6,"color":"Black"}
+{"model":"X5","year":2019,"gears":6,"color":"Black"}
+```
+
+
+## Function Rest Parameters
+
+
+When you need to pass an unknown number of arguments to the function, you can use the spread operator with the function parameters, called the rest parameter.
+
+
+Here, you can see that we have passed multiple numbers as a function argument and collected all arguments in the nums[] array using the spread operator except the first argument.
+
+
+```html
+<html>
+<body>
+   <div id = "result"></div>
+   <script>
+  
+      function sum(a, ...nums) {
+         let sum = a;
+         for (let i = 0; i < nums.length; i++) {
+            sum += nums[i];
+         }
+         document.getElementById("result").innerHTML = sum;
+      }
+
+      sum(3, 6, 9, 8, 6, 5, 3, 3, 2, 1);
+
+   </script>
+</body>
+</html>
+```
+
+
+It will produce the following result −
+
+
+```javascript
+46
+```
+
+
+You can also use the spread operator to expand the string into the array of characters, clone the string, or concatenate the string. Also, set, map, etc., are iterable objects in JavaScript. So, you can use the spread operator with them.
+

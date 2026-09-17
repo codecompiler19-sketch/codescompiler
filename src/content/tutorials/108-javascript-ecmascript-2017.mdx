@@ -1,0 +1,257 @@
+---
+title: "JavaScript - ECMAScript 2017"
+description: "Learn JavaScript - ECMAScript 2017 with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1080
+group: "JavaScript Versions"
+seoTitle: "JavaScript - ECMAScript 2017 — CodesCompiler JavaScript Guide"
+permalink: "javascript-ecmascript-2017"
+---
+
+
+# JavaScript - ECMAScript 2017
+
+
+
+
+The ECMAScript 2017 version of JavaScript was released in 2017. ECMAScript 2017 introduced a number of new features to the language. One the most notable features is async/await syntax which allows us to write asynchronous operations in a more synchronous style. It provided shared memory and atomics that enhances support for concurrent programming.
+
+
+In this chapter, we will discuss all the new added features in ECMAScript 2017.
+
+
+## New Features Added in ECMAScript 2017
+
+
+Here are the new methods, features, etc., added to the ECMAScript 2017 version of JavaScript.
+
+
+
+- padStart() and padEnd() methods
+- Object.entries() method
+- Object.values() method
+- JavaScript async and await
+- Object getOwnPropertyDescriptors() Method
+- JavaScript Shared Memory
+
+
+
+Here, we have explained each feature in detail.
+
+
+## String Padding: padStart() and padEnd() methods
+
+
+The ECMAScript 2017 introduced two string methods,padStart()andpadEnd()methods, that allow you to add padding to the string at the start and end by adding a particular character. These methods are used to extend the string and achieve the desired length.
+
+
+### Example
+
+
+In the below code, we have passed the desired string length as the first parameter of the padStart() and padEnd() method and the character as a second parameter.
+
+
+However, you can also pass the string as a second parameter.
+
+
+```html
+<html>
+<body>
+   <div id = "output1">After padding at the start: </div>
+   <div id = "output2">After padding at the end: </div>
+   <script>
+      let base = "TurorialsPoint";
+      let start_updated = base.padStart(18, "@"); // Padding at the start
+      let end_updated = base.padEnd(18, "*");   // Padding at the end
+      document.getElementById("output1").innerHTML += start_updated;
+      document.getElementById("output2").innerHTML += end_updated;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+After padding at the start: @@@@TurorialsPoint
+After padding at the end: TurorialsPoint****
+```
+
+
+## The Object.entries() Method
+
+
+ECMAScript 2017 added Object.entries() method to objects. The Object.entries() method returns an iterator to traverse the key-value pair of the object.
+
+
+### Example
+
+
+In the below code, the employee object contains three properties. We used the Object entries() method to get the iterator of the object.
+
+
+After that, we used the for...of loop to traverse object properties using the iterator.
+
+
+```html
+<html>
+<body>
+   <div id = "demo"> </div>
+   <script>
+      const output = document.getElementById("demo");
+      const employee = {
+         Company: "TutorialsPoint",
+         Ex_company: "TCS",
+         Experience: 4,
+      }
+      const emp_iterator = Object.entries(employee);
+      for (let pair of emp_iterator) {
+         output.innerHTML += pair + "<br>";
+      }
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Company,TutorialsPoint
+Ex_company,TCS
+Experience,4
+```
+
+
+## The Object.values() Method
+
+
+ECMAScript 2017 introduced Object.values() method to objects. The JavaScript Object.values() method is used to get the array of values of the object properties.
+
+
+### Example
+
+
+In the below code, we used the Object.values() method to get all the values of the object in the array.
+
+
+```html
+<html>
+<body>
+   <div id = "output">Object values are: </div>
+   <script>
+      const wall = {
+         color: "blue",
+         size: "15x12",
+         paintBrand: "Asiant paints"
+      }
+      document.getElementById("output").innerHTML += 
+	  " " + Object.values(wall);
+    </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Object values are: blue,15x12,Asiant paints
+```
+
+
+## JavaScript async and await
+
+
+The async and await keywords are added to the language in ECMAScript 2017. The async/await keywords are used to create asynchronous functions. The async keyword is used to create asynchronous functions, and await keyword handles the operations.
+
+
+### Example
+
+
+The printMessage() function is asynchronous in the below code. We have defined a new promise inside the function and stored it in the getData variable.
+
+
+The promise takes the time of 0.5 seconds to resolve. The await keyword handles the promise and blocks the function code execution until the promise gets resolved.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      async function printMessage() {
+         let getData = new Promise(function (res, rej) {
+            setTimeout(() => { res("Promise resolved !!"); }, 500);
+         });
+         document.getElementById("output").innerHTML = await getData;
+      }
+
+      printMessage();
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Promise resolved !!
+```
+
+
+## The Object.getOwnPropertyDescriptors() Method
+
+
+The Object.getOwnPropertyDescriptor() method returns the property descriptors for each property, such as writable, enumerable, configurable, value, etc. It is metadata for the object property.
+
+
+### Example
+
+
+In the below code, we get the property descriptors for each property of the object using the getOwnPrpopertyDescriptors() method.
+
+
+```html
+<html>
+<body>
+   <div id = "output">The Property descriptors of the wall object is: <br></div>
+   <script>
+      const wall = {
+         color: "blue",
+         thickness: 10,
+      }
+      document.getElementById("output").innerHTML += 
+	  JSON.stringify(Object.getOwnPropertyDescriptors(wall));
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The Property descriptors of the wall object is:
+{"color":{"value":"blue","writable":true,"enumerable":true,"configurable":true},"thickness":{"value":10,"writable":true,"enumerable":true,"configurable":true}}
+```
+
+
+## JavaScript Shared Memory and Atomics
+
+
+In JavaScript, share memory allows multiple threads to share a memory, enabling efficient communication between multiple threads.
+
+
+JavaScript is a single-threaded programming language. However, you can use the web workers to run the JavaScript code in the different threads.
+
+
+In 2018, SharedArrayBuffer was introduced to share memory and perform atomic operations by sharing the data.
+

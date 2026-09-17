@@ -1,0 +1,280 @@
+---
+title: "PYTHON - Data Model"
+description: "Learn PYTHON - Data Model with clear explanation, code examples, and practical guide."
+category: "python"
+order: 2350
+group: "Python Advanced Concepts"
+seoTitle: "PYTHON - Data Model — CodesCompiler PYTHON Guide"
+permalink: "python-data-model"
+---
+
+
+# Python - Data Model
+
+
+
+
+In Python everything is a object like integers, strings, lists and functions. These objects behave consistently as they are built upon a common framework called thePython Data Model.
+
+
+The data model defines the object how to behave and interact with the python syntax and built-in functions. It allows to create a own class that act like the built-in type. For example, classes that can be added, compared, sliced or iterated just like lists or numbers.
+
+
+By implementing the special methods like __len__, __getitem__ etc. which are also called as thedunder methodswe can make the custom objects to integrate easily with the Python’s features. Let's dive into the below example to understand more about the Python data model.
+
+
+## Basic Example - Custom Vector Class
+
+
+Here, we will start by creating a simple vector class, which represents the 2D vector and behave like the built-in numeric type.
+
+
+```python
+class demo:
+
+    def __init__(self, x, y):
+
+        self.x = x
+
+        self.y = y
+```
+
+
+Now, Let's improve it by using theData Model.
+
+
+### Representations - __repr__ and __str__
+
+
+When we try to print a built-in object, we get a readable output like:
+
+
+```python
+print([11, 2, 33])
+
+# Output: [11, 2, 33]
+```
+
+
+We can customize how our own objects are displayed by defining the following special methods:
+
+
+
+- __repr__(self)− It Returns an official string representation of the object. It is mainly used for debugging.
+- __str__(self)− It Returns an human-readable representation of the object, which is displayed when we useprint()orstr().
+
+
+
+```python
+class demo:
+
+    def __init__(self, x, y):
+
+        self.x = x
+
+        self.y = y
+
+    
+
+    def __repr__(self):
+
+        return f"Vector({self.x}, {self.y})"
+
+    
+
+    def __str__(self):
+
+        return f"({self.x}, {self.y})"
+
+v = demo(3, 5)
+
+print(v)         
+
+print(repr(v))
+```
+
+
+Following is theoutputof the above program -
+
+
+```python
+(3, 5)
+
+Vector(3, 5)
+```
+
+
+### Arithmetic Operations
+
+
+Python allows the operator overloading using the special methods also known as theMagic Methods. It allows us to define how operators like+,-and*behave for our custom objects. For example:
+
+
+```python
+a + b -> calls a.__add__(b)
+
+
+
+a - b -> calls a.__sub__(b)
+
+
+
+a * b -> calls a.__mul__(b)
+```
+
+
+Let's implement the vector addition and multiplication for a custom class.
+
+
+```python
+class demo:
+
+    def __init__(self, x, y):
+
+        self.x = x
+
+        self.y = y
+
+    
+
+    def __repr__(self):
+
+        return f"Vector({self.x}, {self.y})"
+
+    
+
+    def __add__(self, other):
+
+        return demo(self.x + other.x, self.y + other.y)
+
+    
+
+    def __mul__(self, scalar):
+
+        return demo(self.x * scalar, self.y * scalar)
+
+x1 = demo(2, 3)
+
+x2 = demo(4, 5)
+
+print(x1 + x2)
+
+print(x1 * 2)
+```
+
+
+Theoutputof the above program is -
+
+
+```python
+Vector(6, 8)
+
+Vector(4, 6)
+```
+
+
+### Length and Truth Value
+
+
+In Python, built-in types like lists and strings naturally supports thelen()functionand theboolean evaluation.
+
+
+```python
+if [1, 2, 3]:
+
+    print("List is not empty")
+```
+
+
+To make our custom classes behave similarly, we can define:
+
+
+
+- We will implement the__len__()for len(object).
+- We will implement the__bool__()for the boolean evaluation.
+
+
+
+```python
+import math
+
+class demo:
+
+    def __init__(self, x, y):
+
+        self.x = x
+
+        self.y = y
+
+    def __repr__(self):
+
+        return f"Vector({self.x}, {self.y})"
+
+    def __add__(self, other):
+
+        return demo(self.x + other.x, self.y + other.y)
+
+    def __mul__(self, scalar):
+
+        return demo(self.x * scalar, self.y * scalar)
+
+    def __len__(self):
+
+        return 2    
+
+    def __bool__(self):
+
+        return bool(math.hypot(self.x, self.y))
+
+v = demo(0, 0)
+
+print(bool(v))
+
+v = demo(3, 4)
+
+print(bool(v))
+```
+
+
+Following is theoutputof the above program -
+
+
+```python
+False
+
+True
+```
+
+
+### Equality Comparison
+
+
+Instead of using the`=`=`for comparison, we are going to implement the__eq__.
+
+
+```python
+class demo:
+
+    def __init__(self, x, y):
+
+        self.x, self.y = x, y
+
+    def __eq__(self, other):
+
+        return (self.x, self.y) == (other.x, other.y)
+
+v1 = demo(2, 3)
+
+v2 = demo(2, 3)
+
+print(v1 == v2)
+```
+
+
+Theoutputof the above program is -
+
+
+```python
+True
+```
+

@@ -1,0 +1,346 @@
+---
+title: "PYTHON - Decorators"
+description: "Learn PYTHON - Decorators with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1940
+group: "Python Miscellenous"
+seoTitle: "PYTHON - Decorators — CodesCompiler PYTHON Guide"
+permalink: "python-decorators"
+---
+
+
+# Python - Decorators
+
+
+
+
+A Decorator in Python is a function that receives another function as argument. The argument function is the one to be decorated by decorator. The behaviour of argument function is extended by the decorator without actually modifying it.
+
+
+In this chapter, we whall learn how to use Python decorator.
+
+
+## Defining Function Decorator
+
+
+Function in Pythonis a first order object. It means that it can be passed as argument to another function just as otherdata typessuch as number, string or list etc. It is also possible to define a function inside another function. Such a function is called nested function. Moreover, a function can return other function as well.
+
+
+The typical definition of a decorator function is as under −
+
+
+```python
+def decorator(arg_function): #arg_function to be decorated
+   def nested_function():
+      #this wraps the arg_function and extends its behaviour
+      #call arg_function
+      arg_function()
+   return nested_function
+```
+
+
+Here a normal Python function −
+
+
+```python
+def function():
+   print ("hello")
+```
+
+
+You can now decorate this function to extend its behaviour by passing it to decorator −
+
+
+```python
+function=decorator(function)
+```
+
+
+If this function is now executed, it will show output extended by decorator.
+
+
+## Examples of Python Decorators
+
+
+Practice the following examples to understand the concept of Python decorators −
+
+
+### Example 1
+
+
+Following code is a simple example of decorator −
+
+
+```python
+def my_function(x):
+   print("The number is=",x)
+
+def my_decorator(some_function,num):
+   def wrapper(num):
+      print("Inside wrapper to check odd/even")
+      if num%2 == 0:
+         ret= "Even"
+      else:
+         ret= "Odd!"
+      some_function(num)
+      return ret
+   print ("wrapper function is called")
+   return wrapper
+
+no=10
+my_function = my_decorator(my_function, no)
+print ("It is ",my_function(no))
+```
+
+
+The my_function() just prints out the received number. However, its behaviour is modified by passing it to a my_decorator. The inner function receives the number and returns whether it is odd/even. Output of above code is −
+
+
+```python
+wrapper function is called
+Inside wrapper to check odd/even
+The number is= 10
+It is Even
+```
+
+
+### Example 2
+
+
+An elegant way to decorate a function is to mention just before its definition, the name of decorator prepended by @ symbol. The above example is re-written using this notation −
+
+
+```python
+def my_decorator(some_function):
+   def wrapper(num):
+      print("Inside wrapper to check odd/even")
+      if num%2 == 0:
+         ret= "Even"
+      else:
+         ret= "Odd!"
+      some_function(num)
+      return ret
+   print ("wrapper function is called")
+   return wrapper
+
+@my_decorator
+def my_function(x):
+   print("The number is=",x)
+no=10
+print ("It is ",my_function(no))
+```
+
+
+Python's standard library defines following built-in decorators −
+
+
+## @classmethod Decorator
+
+
+The classmethod is a built-in function. It transforms a method into a class method. A class method is different from an instance method. Instance method defined in a class is called by its object. The method received an implicit object referred to by self. A class method on the other hand implicitly receives the class itself as first argument.
+
+
+### Syntax
+
+
+In order to declare a class method, the following notation of decorator is used −
+
+
+```python
+class Myclass:
+   @classmethod
+   def mymethod(cls):
+   #....
+```
+
+
+The @classmethod form is that of function decorator as described earlier. The mymethod receives reference to the class. It can be called by the class as well as its object. That means Myclass.mymethod as well as Myclass().mymethod both are valid calls.
+
+
+### Example of @classmethod Decorator
+
+
+Let us understand the behaviour of class method with the help of following example −
+
+
+```python
+class counter:
+   count=0
+   def __init__(self):
+      print ("init called by ", self)
+      counter.count=counter.count+1
+      print ("count=",counter.count)
+   @classmethod
+   def showcount(cls):
+      print ("called by ",cls)
+      print ("count=",cls.count)
+
+c1=counter()
+c2=counter()
+print ("class method called by object")
+c1.showcount()
+print ("class method called by class")
+counter.showcount()
+```
+
+
+In the class definition count is a class attribute. The __init__() method is the constructor and is obviously an instance method as it received self as object reference. Every object declared calls this method and increments count by 1.
+
+
+The @classmethod decorator transforms showcount() method into a class method which receives reference to the class as argument even if it is called by its object. It can be seen even when c1 object calls showcount, it displays reference of counter class.
+
+
+It will display the followingoutput−
+
+
+```python
+init called by <__main__.counter object at 0x000001D32DB4F0F0>
+count= 1
+init called by <__main__.counter object at 0x000001D32DAC8710>
+count= 2
+class method called by object
+called by <class '__main__.counter'>
+count= 2
+class method called by class
+called by <class '__main__.counter'>
+```
+
+
+## @staticmethod Decorator
+
+
+The staticmethod is also a built-in function in Python standard library. It transforms a method into a static method. Static method doesn't receive any reference argument whether it is called by instance of class or class itself. Following notation used to declare a static method in a class −
+
+
+### Syntax
+
+
+```python
+class Myclass:
+@staticmethod
+def mymethod():
+#....
+```
+
+
+Even though Myclass.mymethod as well as Myclass().mymethod both are valid calls, the static method receives reference of neither.
+
+
+### Example of @staticmethod Decorator
+
+
+The counter class is modified as under −
+
+
+```python
+class counter:
+   count=0
+   def __init__(self):
+      print ("init called by ", self)
+      counter.count=counter.count+1
+      print ("count=",counter.count)
+   @staticmethod
+   def showcount():
+      print ("count=",counter.count)
+
+c1=counter()
+c2=counter()
+print ("class method called by object")
+c1.showcount()
+print ("class method called by class")
+counter.showcount()
+```
+
+
+As before, the class attribute count is increment on declaration of each object inside the __init__() method. However, since mymethod(), being a static method doesn't receive either self or cls parameter. Hence value of class attribute count is displayed with explicit reference to counter.
+
+
+Theoutputof the above code is as below −
+
+
+```python
+init called by <__main__.counter object at 0x000002512EDCF0B8>
+count= 1
+init called by <__main__.counter object at 0x000002512ED48668>
+count= 2
+class method called by object
+count= 2
+class method called by class
+count= 2
+```
+
+
+## @property Decorator
+
+
+Python's property() built-in function is an interface for accessing instance variables of a class. The @property decorator turns an instance method into a "getter" for a read-only attribute with the same name, and it sets the docstring for the property to "Get the current value of the instance variable."
+
+
+You can use the following three decorators to define a property −
+
+
+
+- @property−  Declares the method as a property.
+- @`<property-name>`.setter:− Specifies the setter method for a property that sets the value to a property.
+- @`<property-name>`.deleter− Specifies the delete method as a property that
+deletes a property.
+
+
+
+A property object returned by property() function has getter, setter, and delete methods.
+
+
+```python
+property(fget=None, fset=None, fdel=None, doc=None)
+```
+
+
+The fget argument is the getter method, fset is setter method. It optionally can have fdel as method to delete the object and doc is the documentation string.
+
+
+### Syntax
+
+
+The property() object's setter and getter may also be assigned with the following syntax also.
+
+
+```python
+speed = property()
+speed=speed.getter(speed, get_speed)
+speed=speed.setter(speed, set_speed)
+```
+
+
+Where get_speed() and set_speeds() are the instance methods that retrieve and set the value to an instance variable speed in Car class.
+
+
+The above statements can be implemented by @property decorator. Using the decorator car class is re-written as −
+
+
+### Example of @property Decorator
+
+
+```python
+class car:
+   def __init__(self, speed=40):
+      self._speed=speed
+      return
+   @property
+   def speed(self):
+      return self._speed
+   @speed.setter
+   def speed(self, speed):
+      if speed<0 or speed>100:
+         print ("speed limit 0 to 100")
+         return
+      self._speed=speed
+      return
+
+c1=car()
+print (c1.speed) #calls getter
+c1.speed=60 #calls setter
+```
+
+
+Property decorator is very convenient and recommended method of handling instance attributes.
+

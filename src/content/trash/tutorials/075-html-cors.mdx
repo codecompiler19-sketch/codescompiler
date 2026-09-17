@@ -1,0 +1,122 @@
+---
+title: "HTML - CORS"
+description: "Learn HTML - CORS with clear HTML concepts, practical examples, and maintainable markup."
+category: "html"
+order: 750
+group: "HTML Miscellaneous"
+seoTitle: "HTML - CORS — CodesCompiler HTML Guide"
+permalink: "html-cors"
+---
+
+## HTML - CORS
+
+Cross-origin resource sharing (CORS) is a mechanism to allows to load the restricted resources from another domain in web browser
+
+For example, suppose we click on HTML5 video player in HTML5 demo section. First, it will ask camera permission, if user allow the permission then only it will open the camera otherwise not.
+
+## Making a CORS request
+
+The modern browsers like Chrome, Firefox, Opera and Safari all use the XMLHttprequest2 object and Internet Explorer uses the similar XDomainRequest object.
+
+```html
+function createCORSRequest(method, url) {
+   var xhr = new XMLHttpRequest();
+   
+   if ("withCredentials" in xhr) {
+      // Check if the XMLHttpRequest object has a "withCredentials" property.
+      // "withCredentials" only exists on XMLHTTPRequest2 objects.
+      xhr.open(method, url, true);
+   } else if (typeof XDomainRequest != "undefined") {
+      // Otherwise, check if XDomainRequest.
+      // XDomainRequest only exists in IE, and is IE's way of making CORS requests.
+      xhr = new XDomainRequest();
+      xhr.open(method, url);
+   } 
+   else {
+      // Otherwise, CORS is not supported by the browser.
+      xhr = null;
+   }
+   return xhr;
+}
+var xhr = createCORSRequest('GET', url);
+if (!xhr) {
+   throw new Error('CORS not supported');
+}
+```
+
+## Event handles in CORS
+
+| Sr.No. | Event Handler & Description |
+| :--- | :--- |
+| 1 | onloadstart Starts the request |
+| 2 | onprogress Loads the data and send the data |
+| 3 | onabort Abort the request |
+| 4 | onerror request has failed |
+| 5 | onload request load successfully |
+| 6 | ontimeout time out has happened before request could complete |
+| 7 | onloadend When the request is complete either successful or failure |
+
+### Example of onload or onerror event
+
+```html
+xhr.onload = function() {
+   var responseText = xhr.responseText;
+   // process the response.
+   console.log(responseText);
+};
+xhr.onerror = function() {
+   console.log('There was an error!');
+};
+```
+
+### Example of CORS with handler
+
+Below example will show the example of makeCorsRequest() and onload handler
+
+```html
+// Create the XHR object.
+function createCORSRequest(method, url) {
+   var xhr = new XMLHttpRequest();
+   if ("withCredentials" in xhr) {
+      
+      // XHR for Chrome/Firefox/Opera/Safari.
+      xhr.open(method, url, true);
+   } else if (typeof XDomainRequest != "undefined") {
+      
+      // XDomainRequest for IE.
+      xhr = new XDomainRequest();
+      xhr.open(method, url);
+   } else {
+      
+      // CORS not supported.
+      xhr = null;
+   }
+   return xhr;
+}
+// Helper method to parse the title tag from the response.
+function getTitle(text) {
+   return text.match('<title>(.*)?</title>')[1];
+}
+
+// Make the actual CORS request.
+function makeCorsRequest() {
+   // All HTML5 Rocks properties support CORS.
+   var url = 'http://www.tutorialspoint.com';
+   var xhr = createCORSRequest('GET', url);
+   if (!xhr) {
+      alert('CORS not supported');
+      return;
+   }
+   
+   // Response handlers.
+   xhr.onload = function() {
+      var text = xhr.responseText;
+      var title = getTitle(text);
+      alert('Response from CORS request to ' + url + ': ' + title);
+   };
+   xhr.onerror = function() {
+      alert('Woops, there was an error making the request.');
+   };
+   xhr.send();
+}
+```

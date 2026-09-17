@@ -1,0 +1,298 @@
+---
+title: "SQL - Clone Tables"
+description: "Learn SQL - Clone Tables with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 210
+group: "SQL Table"
+seoTitle: "SQL - Clone Tables — CodesCompiler SQL Guide"
+permalink: "sql-clone-tables"
+---
+
+
+# SQL - Clone Tables
+
+
+Table of contentSimple Cloning in MySQLShallow Cloning in MySQLDeep Cloning in MySQLTable Cloning in SQL Server
+
+
+
+
+There may be a situation when you need an exact copy of a table with the same columns, attributes, indexes, default values and so forth. Instead of spending time on creating the exact same version of an existing table, you can create a clone of the existing table.
+
+
+SQLCloning Operationallows to create the exact copy of an existing table along with its definition.  There are three types of cloning possible using SQL in various RDBMS; they are listed below −
+
+
+
+- Simple Cloning
+- Shallow Cloning
+- Deep Cloning
+
+
+
+## Simple Cloning in MySQL
+
+
+Simple cloning operation creates a new replica table from the existing table and copies all the records in newly created table. To break this process down, a new table is created using the CREATE TABLE statement; and the data from the existing table, as a result of SELECT statement, is copied into the new table.
+
+
+Here, clone table inherits only the basic column definitions like the NULL settings and default values from the original table. It does not inherit the indices and AUTO_INCREMENT definitions.
+
+
+### Syntax
+
+
+Following is the basic syntax to perform simple cloning in MySQL−
+
+
+```sql
+CREATE TABLE new_table SELECT * FROM original_table;
+```
+
+
+### Example
+
+
+Consider the following existing CUSTOMERS table which will be cloned in next new few steps.
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+Now let's use the following SQL statement to create NEW_CUSTOMERS table using the existing table CUSTOMERS.
+
+
+```sql
+CREATE TABLE NEW_CUSTOMERS SELECT * FROM CUSTOMERS;
+```
+
+
+### Output
+
+
+The output is displayed as −
+
+
+```sql
+Query OK, 7 rows affected (0.06 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+```
+
+
+### Verification
+
+
+To verify whether the table has been cloned successfully, we can use the following SELECT query −
+
+
+```sql
+SELECT * FROM NEW_CUSTOMERS;
+```
+
+
+If NEW_CUSTOMERS table is created successfully, then it should get all the records which are available in CUSTOMERS table.
+
+
+## Shallow Cloning in MySQL
+
+
+Shallow cloning operation creates a new replica table from the existing table but does not copy any data records into newly created table, so only new but empty table is created.
+
+
+Here, the clone table contains only the structure of the original table along with the column attributes including indices and AUTO_INCREMENT definition..
+
+
+### Syntax
+
+
+Following is the basic syntax to perform shallow cloning in MySQL RDBMS −
+
+
+```sql
+CREATE TABLE new_table LIKE original_table;
+```
+
+
+### Example
+
+
+Following is an example to create a shallow clone copy of the existing table CUSTOMERS.
+
+
+```sql
+CREATE TABLE SHALL_CUSTOMERS LIKE CUSTOMERS;
+```
+
+
+### Output
+
+
+The output is displayed as −
+
+
+```sql
+Query OK, 0 rows affected (0.06 sec)
+```
+
+
+### Verification
+
+
+To verify whether the table has been cloned successfully, we can use the following DESC table_name query −
+
+
+```sql
+DESC SHALL_CUSTOMERS;
+```
+
+
+This will display the following information about the SHALL_CUSTOMERS table which is just a replica of CUSTOMERS table −
+
+
+FieldTypeNullKeyDefaultExtraIDint(11)NOPRINULLNAMEvarchar(20)NONULLAGEint(11)NONULLADDRESSchar(25)YESNULLSALARYdecimal(18,2)YESNULL
+
+
+## Deep Cloning in MySQL
+
+
+Deep cloning operation is a combination of simple cloning and shallow cloning. It not only copies the structure of the existing table but also its data into the newly created table. Hence, the new table will have all the contents from existing table and all the attributes including indices and the AUTO_INCREMENT definitions.
+
+
+Since it is a combination of shallow and simple cloning, this type of cloning will have two different queries to be executed: one with CREATE TABLE statement and one with INSERT INTO statement. The CREATE TABLE statement will create the new table by including all the attributes of existing table; and INSERT INTO statement will insert the data from existing table into new table.
+
+
+### Syntax
+
+
+Following is the basic syntax to perform deep cloning in MySQL RDBMS −
+
+
+```sql
+CREATE TABLE new_table LIKE original_table;
+INSERT INTO new_table SELECT * FROM original_table;
+```
+
+
+### Example
+
+
+Following is an example to create a deep clone copy of the existing table CUSTOMERS. First step is to create a shallow clone of the existing table.
+
+
+```sql
+CREATE TABLE DEEP_CUSTOMERS LIKE CUSTOMERS;
+```
+
+
+The output is displayed as −
+
+
+```sql
+Query OK, 0 rows affected (0.06 sec)
+```
+
+
+Now second step is to copy all the records from the CUSTOMERS table to DEEP_CUSTOMERS.
+
+
+```sql
+INSERT INTO DEEP_CUSTOMERS SELECT * FROM CUSTOMERS;
+```
+
+
+### Output
+
+
+The output is displayed as −
+
+
+```sql
+Query OK, 7 rows affected (0.01 sec)
+Records: 7  Duplicates: 0  Warnings: 0
+```
+
+
+### Verification
+
+
+To verify whether the table has been cloned successfully, we can use the following SELECT query −
+
+
+```sql
+SELECT * FROM DEEP_CUSTOMERS;
+```
+
+
+If DEEP_CUSTOMERS table is cloned successfully, then it should get all the records which are available in CUSTOMERS.
+
+
+## Table Cloning in SQL Server
+
+
+However, there is no direct way to fully clone a table in an SQL server. However, we have some work around to handle the situation.
+
+
+### SELECT...INTO STATEMENT
+
+
+MS SQL Server can make use of theSELECT...INTOstatement to create a new table and copies the data from an existing table into it. However, this command only copies the data and not the definition of it, thus, omitting constraints, indexes etc., if any. They need to be added separately if one wishes to have the exact same structure of the original table in their new table.
+
+
+You can use the SELECT...INTO command to copy a table within the same database as well as across different databases.
+
+
+### Syntax
+
+
+Following is the basic syntax of the SELECT...INTO statement −
+
+
+```sql
+SELECT * INTO new_table FROM original_table;
+```
+
+
+The above SQL command will create a tablenew_tableusing the structure oforiginal_tableand then it will copy all the data from original_table to new_table.
+
+
+### Example
+
+
+Consider the following existing CUSTOMERS table which will be cloned in this section.
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+Now, if you want to clone the data of this table into a new tableNEW_CUSTOMERS, let's use the following SQL query as shown below −
+
+
+```sql
+SELECT * INTO NEW_CUSTOMERS FROM CUSTOMERS;
+```
+
+
+### Output
+
+
+The output will be displayed as −
+
+
+```sql
+(7 rows affected)
+```
+
+
+### Verification
+
+
+To verify whether all the data has been copied into the new table NEW_CUSTOMERS, we shall use the SQL SELECT statement as follows −
+
+
+```sql
+SELECT * FROM NEW_CUSTOMERS;
+```
+
+
+If NEW_CUSTOMERS table is created successfully, then it should get all the records which are available in CUSTOMERS table.
+

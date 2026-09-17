@@ -1,0 +1,421 @@
+---
+title: "PYTHON - Reflection"
+description: "Learn PYTHON - Reflection with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1530
+group: "Object Oriented Programming"
+seoTitle: "PYTHON - Reflection — CodesCompiler PYTHON Guide"
+permalink: "python-reflection"
+---
+
+
+# Python - Reflection
+
+
+
+
+In object-oriented programming,reflectionrefers to the ability to extract information about any object in use. You can get to know the type of object, whether is it a subclass of any other class, what are itsattributes, and much more. Python's standard library has several functions that reflect on different properties of an object.Reflectionis also sometimes calledintrospect.
+
+
+Following is the list of reflection functions in Python −
+
+
+
+- type() Function
+- isinstance() Function
+- issubclass() Function
+- callable() Function
+- getattr() Function
+- setattr() Function
+- hasattr() Function
+- dir() Function
+
+
+
+## The type() Function
+
+
+We have used this function many times. It tells you which class an object belongs to.
+
+
+### Example
+
+
+Following statements print the respective class of different built-in data type objects
+
+
+```python
+print (type(10))
+print (type(2.56))
+print (type(2+3j))
+print (type("Hello World"))
+print (type([1,2,3]))
+print (type({1:'one', 2:'two'}))
+```
+
+
+Here, you will get the followingoutput−
+
+
+```python
+<class 'int'>
+<class 'float'>
+<class 'complex'>
+<class 'str'>
+<class 'list'>
+<class 'dict'>
+```
+
+
+Let us verify the type of an object of a user-defined class −
+
+
+```python
+class test:
+   pass
+   
+obj = test()
+print (type(obj))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+<class '__main__.test'>
+```
+
+
+## The isinstance() Function
+
+
+This is another built-in function in Python which ascertains if an object is an instance of the given class.
+
+
+### Syntax
+
+
+```python
+isinstance(obj, class)
+```
+
+
+This function always returns aBoolean value, true if the object is indeed belongs to the given class and false if not.
+
+
+### Example
+
+
+Following statements return True −
+
+
+```python
+print (isinstance(10, int))
+print (isinstance(2.56, float))
+print (isinstance(2+3j, complex))
+print (isinstance("Hello World", str))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+True
+True
+True
+True
+```
+
+
+In contrast, these statements print False.
+
+
+```python
+print (isinstance([1,2,3], tuple))
+print (isinstance({1:'one', 2:'two'}, set))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+False
+False
+```
+
+
+You can also perform check with a user defined class
+
+
+```python
+class test:
+   pass
+   
+obj = test()
+print (isinstance(obj, test))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+True
+```
+
+
+In Python, even the classes are objects. All classes are objects of object class. It can be verified by following code −
+
+
+```python
+class test:
+   pass
+   
+print (isinstance(int, object))
+print (isinstance(str, object))
+print (isinstance(test, object))
+```
+
+
+All the above print statements print True.
+
+
+## The issubclass() Function
+
+
+This function checks whether a class is a subclass of another class. Pertains to classes, not their instances.
+
+
+As mentioned earlier, all Python classes are subclassed from object class. Hence, output of following print statements is True for all.
+
+
+```python
+class test:
+   pass
+   
+print (issubclass(int, object))
+print (issubclass(str, object))
+print (issubclass(test, object))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+True
+True
+True
+```
+
+
+## The callable() Function
+
+
+An object is callable if it invokes a certain process. APython function, which performs a certain process, is a callable object. Hence callable(function) returns True. Any function, built-in, user-defined, ormethodis callable. Objects of built-indata typessuch as int, str, etc., are not callable.
+
+
+### Example
+
+
+```python
+def test():
+   pass
+   
+print (callable("Hello"))
+print (callable(abs))
+print (callable(list.clear([1,2])))
+print (callable(test))
+```
+
+
+Astringobject is not callable. But abs is a function which is callable. The pop method of list is callable, butclear()is actually call to the function and not a function object, hence not a callable
+
+
+It will produce the followingoutput−
+
+
+```python
+False
+True
+True
+False
+True
+```
+
+
+A class instance is callable if it has a__call__()method. In the example below, the test class includes__call__()method. Hence, its object can be used as if we are calling function. Hence, object of a class with__call__()function is a callable.
+
+
+```python
+class test:
+   def __init__(self):
+      pass
+   def __call__(self):
+      print ("Hello")
+      
+obj = test()
+obj()
+print ("obj is callable?", callable(obj))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Hello
+obj is callable? True
+```
+
+
+## The getattr() Function
+
+
+Thegetattr()built-in function retrieves the value of the named attribute of object.
+
+
+### Example
+
+
+```python
+class test:
+   def __init__(self):
+      self.name = "Manav"
+      
+obj = test()
+print (getattr(obj, "name"))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Manav
+```
+
+
+## The setattr() Function
+
+
+Thesetattr()built-in function adds a new attribute to the object and assigns it a value. It can also change the value of an existing attribute.
+
+
+In the example below, the object of test class has a single attribute − name. We usesetattr()to add age attribute and to modify the value of name attribute.
+
+
+```python
+class test:
+   def __init__(self):
+      self.name = "Manav"
+      
+obj = test()
+setattr(obj, "age", 20)
+setattr(obj, "name", "Madhav")
+print (obj.name, obj.age)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Madhav 20
+```
+
+
+## The hasattr() Function
+
+
+This built-in function returns True if the given attribute is available to the object argument, and false if not. We use the same test class and check if it has a certain attribute or not.
+
+
+```python
+class test:
+   def __init__(self):
+      self.name = "Manav"
+      
+obj = test()
+print (hasattr(obj, "age"))
+print (hasattr(obj, "name"))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+False
+True
+```
+
+
+## The dir() Function
+
+
+If this built-in function is called without an argument, return the names in the current scope. For any object as an argument, it returns a list of the attributes of the given object and attributes reachable from it.
+
+
+
+- For a module object− the function returns the module's attributes.
+- For a class object− the function returns its attributes, and recursively the attributes of its bases.
+- For any other object− its attributes, its class's attributes, and recursively the attributes of its class's base classes.
+
+
+
+### Example
+
+
+```python
+print ("dir(int):", dir(int))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+dir(int): ['__abs__', '__add__', '__and__', '__bool__', '__ceil__', '__class__', '__delattr__', '__dir__', '__divmod__', '__doc__', '__eq__', '__float__', '__floor__', '__floordiv__', '__format__', '__ge__', '__getattribute__', '__getnewargs__', '__getstate__', '__gt__', '__hash__', '__index__', '__init__', '__init_subclass__', '__int__', '__invert__', '__le__', '__lshift__', '__lt__', '__mod__', '__mul__', '__ne__', '__neg__', '__new__', '__or__', '__pos__', '__pow__', '__radd__', '__rand__', '__rdivmod__', '__reduce__', '__reduce_ex__', '__repr__', '__rfloordiv__', '__rlshift__', '__rmod__', '__rmul__', '__ror__', '__round__', '__rpow__', '__rrshift__', '__rshift__', '__rsub__', '__rtruediv__', '__rxor__', '__setattr__', '__sizeof__', '__str__', '__sub__', '__subclasshook__', '__truediv__', '__trunc__', '__xor__', 'as_integer_ratio', 'bit_count', 'bit_length', 'conjugate', 'denominator', 'from_bytes', 'imag', 'numerator', 'real', 'to_bytes']
+```
+
+
+### Example
+
+
+```python
+print ("dir(dict):", dir(dict))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+dir(dict): ['__class__', '__class_getitem__', '__contains__', '__delattr__', '__delitem__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__getstate__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__ior__', '__iter__', '__le__', '__len__', '__lt__', '__ne__', '__new__', '__or__', '__reduce__', '__reduce_ex__', '__repr__', '__reversed__', '__ror__', '__setattr__', '__setitem__', '__sizeof__', '__str__', '__subclasshook__', 'clear', 'copy', 'fromkeys', 'get', 'items', 'keys', 'pop', 'popitem', 'setdefault', 'update', 'values']
+```
+
+
+### Example
+
+
+```python
+class test:
+   def __init__(self):
+      self.name = "Manav"
+
+obj = test()
+print ("dir(obj):", dir(obj))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+dir(obj): ['__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getstate__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', 'name']
+```
+

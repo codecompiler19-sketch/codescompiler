@@ -1,0 +1,508 @@
+---
+title: "JavaScript - Inheritance"
+description: "Learn JavaScript - Inheritance with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 910
+group: "Object Oriented JavaScript"
+seoTitle: "JavaScript - Inheritance — CodesCompiler JavaScript Guide"
+permalink: "javascript-inheritance"
+---
+
+
+# JavaScript - Inheritance
+
+
+
+
+## Inheritance in JavaScript
+
+
+The concept ofinheritancein JavaScript allows the child class to inherit the properties and methods of the parent class. Inheritance is also a fundamental concept of object-oriented programming likeencapsulationandpolymorphism.
+
+
+Sometimes, you must add the properties and methods of the one class into another. For example, you have created a general class for the bike containing the same properties and methods for each bike. After that, you create a separate class for the bike "Honda", and you need to add all properties and methods to the "Honda" class. You can achieve it using inheritance.
+
+
+Before ECMAScript 6 (ES6), the object's prototype was used for inheritance, but in ES6, the 'extends' keyword was introduced to inherit classes.
+
+
+The following terminologies are used in this chapter.
+
+
+
+- Parent class− It is a class whose properties are inherited by other classes.
+- Child class− It is a class that inherits the properties of the other class.
+
+
+
+## JavaScript Single Class Inheritance
+
+
+You can use the 'extends' keyword to inherit the parent class properties into the child class. In single class inheritance only a single class inherits the properties of another class.
+
+
+### Syntax
+
+
+You can follow the syntax below for the single-class inheritance.
+
+
+```javascript
+class childClass extends parentClass {
+    // Child class body
+}
+```
+
+
+In the above syntax, you can replace the 'childClass' with the name of the child class and 'parentClass' with the name of the parent class.
+
+
+### Example: Single Class Inheritance
+
+
+In the example below, the 'Bike' class is a parent class, and the 'Suzuki' class is a child class. The suzuki class inherits the properties of the Bike class.
+
+
+The Bike class contains the constructor() method initializing the gears property and the getGears() method returning the value of the gears property.
+
+
+The suzuki class contains the constructor() method to initialize the brand property and getBrand() method, returning the value of the brand property.
+
+
+We have created an object of the 'suzuki' class. Using the 'suzuki' class instance, we invoke the getBrand() and getGears() methods.
+
+
+```html
+<html>
+<body>
+   <div id = "output1">The brand of the bike is: </div>
+   <div id = "output2">Total gears in the bike is: </div>
+   <script>
+      // Parent class
+      class Bike {
+         constructor() {
+            this.gear = 5;
+         }
+
+         getGears() {
+            return this.gear;
+         }
+      }
+      // Child class
+      class suzuki extends Bike {
+         constructor() {
+            super();
+            this.brand = "Yamaha"
+         }
+
+         getBrand() {
+            return this.brand;
+         }
+      }
+
+      const suzukiBike = new suzuki();
+      document.getElementById("output1").innerHTML += suzukiBike.getBrand();
+      document.getElementById("output2").innerHTML += suzukiBike.getGears();
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The brand of the bike is: Yamaha
+Total gears in the bike is: 5
+```
+
+
+In this way, you can use the properties and methods of the parent class through the instance of the child class.
+
+
+## JavaScript super() Keyword
+
+
+In the above example, we have initialized the 'gear' property of the Bike class with a static value. In real life, you need to initialize it with the dynamic value according to the model of the bike.
+
+
+Now, the question is how to initialize the properties of the parent class from the child class. The solution is a super() keyword.
+
+
+The super() keyword is used to invoke the method or access the properties of the parent class in the child class. By default, the super() keyword invokes the constructor function of the parent class. You can also pass the parameters to the super() keyword to pass it to the constructor of the parent class.
+
+
+### Example: Using super() keyword to initialize the parent class properties
+
+
+In the example below, suzuki class extends the Bike class.
+
+
+The Bike class contains the constructor, taking gears as parameters and, using it, initializes the gears property.
+
+
+The 'suzuki' class also contains the constructor, taking a brand and gears as a parameter. Using the brand parameter, it initializes the brand property and passes the gears parameter as an argument of the super() keyword.
+
+
+After that, we create an object of the 'suzuki' class and pass the brand and gears as an argument of the constructor. You can see the dynamic value of the brand and gear property in the output.
+
+
+```html
+<html>
+<body>
+   <div id = "output1">The brand of the bike is: </div>
+   <div id = "output2">Total gears in the bike is: </div>
+   <script>
+      // Parent class
+      class Bike {
+         constructor(gears) {
+            this.gears = gears;
+        }
+      }
+      // Child class
+      class suzuki extends Bike {
+         constructor(brand, gears) {
+            super(gears);
+            this.brand = brand;
+         }
+      }
+      const suzukiBike = new suzuki("Suzuki", 4);
+      document.getElementById("output1").innerHTML += suzukiBike.brand;
+      document.getElementById("output2").innerHTML += suzukiBike.gears;
+
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The brand of the bike is: Suzuki
+Total gears in the bike is: 4
+```
+
+
+In this way, you can dynamically initialize the properties of the parent class from the child class.
+
+
+## JavaScript Multilevel Inheritance
+
+
+Multilevel inheritance is a type of inheritance in JavaScript. In multilevel inheritance, one class inherits the properties of another class, and other classes inherit current class properties.
+
+
+### Syntax
+
+
+Users can follow the syntax below for the multilevel inheritance.
+
+
+```javascript
+class A {
+}
+class B extends A {
+}
+class C extends B {
+}
+```
+
+
+In the above syntax, the C class inherits the B class, and the B class inherits the A class.
+
+
+### Example
+
+
+In the example below, the Honda class inherits the Bike class. The Shine class inherits the Honda class.
+
+
+We use the super() keyword in each class to invoke the parent class's constructor () and initialize its properties.
+
+
+We are accessing the properties of the Bike class using the instance of the Shine class, as it indirectly inherits the properties of the Bike class.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      // Parent class
+      class Bike {
+         constructor(gears) {
+            this.gears = gears;
+         }
+      }
+      // Child class
+      class Honda extends Bike {
+         constructor(brand, gears) {
+            super(gears);
+            this.brand = brand;
+         }
+      }
+      class Shine extends Honda {
+         constructor(model, brand, gears) {
+            super(brand, gears);
+            this.model = model;
+         }
+      }
+      const newBike = new Shine("Shine", "Honda", 5);
+      document.getElementById("output").innerHTML = The ${newBike.model} model of the ${newBike.brand} brand has total ${newBike.gears} gears.;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The Shine model of the Honda brand has total 5 gears.
+```
+
+
+## JavaScript Hierarchical Inheritance
+
+
+In JavaScript hierarchical inheritance, one class is inherited by multiple classes.
+
+
+### Syntax
+
+
+The syntax of JYou can follow the syntax below for the hierarchical inheritance.
+
+
+```javascript
+class A {
+}
+class B extends A {
+}
+Class C extends A {
+}
+```
+
+
+In the above syntax, B and C both classes inherit the properties of the A class.
+
+
+### Example
+
+
+In the example below, the Bike class contains the gears property and is initialized using the constructor() method.
+
+
+The Honda class extends the Bike class. The constructor() method of the Honda class initializes the properties of the  Bike class using the super() keyword and model property of itself.
+
+
+The Suzuki class inherits the Bike class properties. The constructor() method of the Suzuki class also initializes the Bike class properties and the other two properties of itself.
+
+
+After that, we create objects of both Honda and Suzuki classes and access their properties.
+
+
+```html
+<html>
+<body>
+   p id = "output1" Honda Bike Object: 
+   p id = "output2" Suzuki Bike Object: 
+   <script>
+      // Parent class
+      class Bike {
+         constructor(gears) {
+            this.gears = gears;
+         }
+      }
+      // Child class
+      class Honda extends Bike {
+         constructor(model, gears) {
+            super(gears);
+            this.model = model;
+         }
+      }
+      // Child class
+      class Suzuki extends Bike {
+         constructor(model, color, gears) {
+            super(gears);
+            this.model = model;
+            this.color = color;
+         }
+      }
+      const h_Bike = new Honda("Shine", 5);
+      const s_Bike = new Suzuki("Zx6", "Blue", 6);
+      document.getElementById("output1").innerHTML += JSON.stringify(h_Bike);
+      document.getElementById("output2").innerHTML += JSON.stringify(s_Bike);
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Honda Bike Object: {"gears":5,"model":"Shine"}
+
+Suzuki Bike Object: {"gears":6,"model":"Zx6","color":"Blue"}
+```
+
+
+## Inheriting Static Members of the Class
+
+
+In JavaScript, you can invoke the static methods of the parent class using the super keyword in the child class. Outside the child class, you can use the child class name to invoke the static methods of the parent and child class.
+
+
+### Example
+
+
+In the example below, the Bike class contains the getDefaultBrand() static method. The Honda class also contains the Bikename() static method.
+
+
+In the Bikename() method, we invoke the getDefaultBrand() method of the parent class using the 'super' keyword.
+
+
+Also, we execute the Bikename() method using the 'Honda' class name.
+
+
+```html
+<html>
+<body>
+   p id = "output"The bike name is: 
+   <script>
+      // Parent class
+      class Bike {
+         constructor(gears) {
+            this.gears = gears;
+         }
+
+         static getDefaultBrand() {
+            return "Yamaha";
+         }
+      }
+      // Child class
+      class Honda extends Bike {
+         constructor(model, gears) {
+            super(gears);
+            this.model = model;
+         }
+         static BikeName() {
+            return super.getDefaultBrand() + ", X6";
+         }
+      }
+      document.getElementById("output").innerHTML += Honda.BikeName();
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The bike name is: Yamaha, X6
+```
+
+
+When you execute any method using the 'super' keyword in the multilevel inheritance, the class finds the methods in the parent class. If the method is not found in the parent class, it finds in the parent's parent class, and so on.
+
+
+## JavaScript Prototype Based Inheritance
+
+
+You can also update or extend the prototype of the class to inherit the properties of the multiple classes to the single class. So, it is also called multiple inheritance.
+
+
+### Syntax
+
+
+You can follow the syntax below to use prototype-based inheritance.
+
+
+```javascript
+Child.prototype = Instance of parent class
+```
+
+
+In the above syntax, we assign the parent class instance to the child object's prototype.
+
+
+### Example: JavaScript Prototype Based Inheritance
+
+
+In the example below, Bike() is an object constructor that initializes the brand property.
+
+
+After that, we add the getBrand() method to the prototype of the Bike() function.
+
+
+Next, we have created the Vehicle() object constructor and instance of the Bike() constructor.
+
+
+After that, we update the prototype of the Vehicle class with an instance of the Bike. Here, Vehicle works as a child class and Bike as a parent class.
+
+
+We access the getBrand() method of the Bike() function's prototype using the instance of the Vehicle () function.
+
+
+```html
+<html>
+<body>
+   p id = "output1"Bike brand: 
+   p id = "output2"Bike Price: 
+   <script>
+      function Bike(brand) {
+         this.brand = brand;
+      }
+      Bike.prototype.getBrand = function () {
+         return this.brand;
+       }
+      //Another constructor function  
+      function Vehicle(price) {
+         this.price = price;
+      }
+      const newBike = new Bike("Yamaha");
+      Vehicle.prototype = newBike; //Now Bike treats as a parent of Vehicle.  
+      const vehicle = new Vehicle(100000);
+
+      document.getElementById("output1").innerHTML += vehicle.getBrand();
+      document.getElementById("output2").innerHTML += vehicle.price;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Bike brand: Yamaha
+
+Bike Price: 100000
+```
+
+
+You can't access the private members to the parent class in the child class.
+
+
+## Benefits of Inheritance
+
+
+Here, we will learn the benefits of the inheritance concept in JavaScript.
+
+
+
+- Code reusability− The child class can inherit the properties of the parent class. So, it is the best way to reuse the parent class code.
+- Functionality extension− You can add new properties and methods to extend the parent class functionality in each child class.
+- Code maintenance− It is easier to maintain a code as you can divide the code into sub-classes.
+- Multilevel and hierarchical inheritance allows you to combine data together.
+
+

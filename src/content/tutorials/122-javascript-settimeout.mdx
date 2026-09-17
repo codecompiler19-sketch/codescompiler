@@ -1,0 +1,446 @@
+---
+title: "JavaScript - setTimeout()"
+description: "Learn JavaScript - setTimeout() with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1220
+group: "JavaScript Asynchronous"
+seoTitle: "JavaScript - setTimeout() — CodesCompiler JavaScript Guide"
+permalink: "javascript-settimeout"
+---
+
+
+# JavaScript - setTimeout() Method
+
+
+
+
+## JavaScript setTimeout() Method
+
+
+In JavaScript, the setTimeout() is a global method that allows you to execute the function or a particular JavaScript code only once after a specified time.
+
+
+The window object contains the setTimeout() method. You may use the window object to execute the setTimeout() method.
+
+
+The setTimeout() method can also be used to manipulate the DOM elements after the specified time of the user interaction.
+
+
+### Syntax
+
+
+The syntax of the setTimeout() method in JavaScript is as follows −
+
+
+```javascript
+window.setTimeout(callback, delay, param1, param2, ..., paramN);
+
+OR
+
+setTimeout(callback, delay, param1, param2, ..., paramN);
+```
+
+
+The setTimeout() method takes at least 2 parameters.
+
+
+### Parameters
+
+
+
+- Callback− It is a callback function that will be called after a specific time. You can pass the arrow function, function expression, or regular expression as a value of this parameter.
+- delay− It is the number of milliseconds after that the callback function should be called. Here, 1 second is equal to 1000 milliseconds.
+- param1, param2, ..., paramN− They are optional parameters to be passed as a callback function parameter.
+
+
+
+### Return Value
+
+
+It returns the numeric id, which you can use to clear timeout.
+
+
+### Example
+
+
+In the below code, we have defined the timeout() function, printing the message in the web page.
+
+
+We passed the timeout() function as the first argument of the setTimeout() method, and 1000 milliseconds as a second argument.
+
+
+The setTimeout() method will invoke the timeout() function after 1 second or 1000 milliseconds.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      document.getElementById('output').innerHTML = "Wait for a message! <br>";
+
+      setTimeout(timeout, 1000);
+
+      function timeout() {
+
+         document.getElementById('output').innerHTML += "This message is printed after 1 second!";
+
+      }
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Wait for a message!
+
+This message is printed after 1 second!
+```
+
+
+## Arrow Function with setTimeout() Method
+
+
+In the below code, we have passed the arrow function as the first argument of the setTimeout() method. It works the same as passing the function name as an argument and defining the function outside.
+
+
+It prints the message after 2000 milliseconds.
+
+
+### Example
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      document.getElementById('output').innerHTML += 
+
+         "You will see the message after 2000 milliseconds! <br>";
+
+      setTimeout(() => {
+
+         document.getElementById('output').innerHTML += 'Hi! How are you?';
+
+      }, 2000);
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+You will see the message after 2000 milliseconds!
+
+Hi! How are you?
+```
+
+
+## Passing More than 2 Arguments to setTimeout() Method
+
+
+You can pass more than 2 arguments to the setTimeout() method. The first argument is a callback function, the second argument is a delay in the milliseconds, and other arguments to pass to the function parameter.
+
+
+In the code below, we have passed 5 arguments to the setTimeout() method. In the sum() function, we received the last 3 arguments of the seetTimeOut() method as a parameter and summed them.
+
+
+### Example
+
+
+```html
+<html>
+
+<body>
+
+   <div>Wait for a sum of 3 number.!</div>
+
+   <div id = "output"></div>
+
+   <script>
+
+      setTimeout(sum, 1000, 10, 20, 30);
+
+      function sum(num1, num2, num3) {
+
+         let result = num1 + num2 + num3;
+
+         document.getElementById('output').innerHTML = "Sum = " + result;
+
+      }
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Wait for a sum of 3 number.!
+
+Sum = 60
+```
+
+
+## Execute Code After Every N Seconds
+
+
+We created the counter using the setTimeout() method in the code below.
+
+
+We have defined the global variable p for the counter. In the counter() function, we print the counter value and use the setTimeout() method to call the counter function again after 1000 milliseconds.
+
+
+### Example
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      let output = document.getElementById('output');
+
+      output.innerHTML += "The output of the counter is given below. <br>";
+
+      var p = 0;
+
+      function counter() {
+
+         output.innerHTML += "count is - " + p + ".<br>";
+
+         setTimeout(counter, 1000);
+
+         p++;
+
+      }
+
+      counter();
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The output of the counter is given below.
+
+count is - 0.
+
+count is - 1.
+
+count is - 2.
+
+count is - 3.
+
+count is - 4.
+
+count is - 5.
+
+count is - 6.
+```
+
+
+## JavaScript clearTimeout() Method
+
+
+Sometimes, developers are required to cancel the time out before it executes the function or the JavaScript code. In such cases, you can use the clearTimeout() method.
+
+
+### Syntax
+
+
+You can follow the syntax below to use the clearTimeout() method.
+
+
+```javascript
+clearTimeout(id);
+```
+
+
+### Parameters
+
+
+id− It is an id returned by the setTimeout() method to cancel it.
+
+
+### Example
+
+
+In the below code, we have defined the startTimeOut() and stopTimeOut() functions, which will be called when users press the respective buttons.
+
+
+In the startTimeOut() function, we set the timeout of the 3 seconds and store the id returned by the setTimeout() method into the timeOut variable.
+
+
+In the stopTimeOut() function, we use the clearTimeout() method and pass the timeOut as an argument to clear the timeout.
+
+
+```html
+<html>
+
+<body>
+
+   pClick the Stop timeout button within 3 seconds after pressing the Start timeout button.
+
+   <button onclick = "startTimeOut()">Start Timeout</button>
+
+   <button onclick = "stopTimeOut()">Stop Timeout</button>
+
+   p id = "output" 
+
+   <script>
+
+      let output = document.getElementById('output');
+
+      let timeout;
+
+      function startTimeOut() {
+
+         timeout = setTimeout(() => {
+
+            output.innerHTML = "Timeout is done";
+
+         }, 3000);
+
+      }
+
+
+
+      function stopTimeOut() {
+
+         clearTimeout(timeout);
+
+         output.innerHTML = "Timeout is stopped";
+
+      }
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+## Zero Delay SetTimeout
+
+
+The zero delay timeout means you call the setTimeout() method by passing the 0 milliseconds as an argument.
+
+
+As you pass the 0 milliseconds as an argument, it may or may not call the JavaScript code written into the callback function after 0 milliseconds. It totally depends on the pending tasks in the queue. Once the queue of tasks is completed, it will execute the code of the callback function.
+
+
+Now, the question is, what is the need of the zero delay timeout?
+
+
+Sometimes, you need to execute the particular JavaScript code as soon as possible once the script gets loaded into the browser. In such cases, you can use the setTimeout() method by passing 0 milliseconds as a second argument.
+
+
+### Syntax
+
+
+Follow the syntax below to use the zero-delay timeout.
+
+
+```javascript
+setTimeout(callback, 0);
+```
+
+
+In the above syntax, we have passed the callback function as the first parameter and 0 milliseconds as the second parameter.
+
+
+### Example
+
+
+In the code below, we add a start message, zero delay timeout message, and end message to the web page.
+
+
+In the output, you can see that it prints the start message. After that, it prints the end message and the zero delay timeout message. So, it executes the zero delay timeout code when the whole script gets loaded in the browser.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      let output = document.getElementById('output');
+
+      output.innerHTML += "The code execution started. <br>";
+
+      setTimeout(function () {
+
+         output.innerHTML += "Inside the zero delay timeout. <br>";
+
+      }, 0);
+
+      output.innerHTML += "The code execution ended. <br>";
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The code execution started.
+
+The code execution ended.
+
+Inside the zero delay timeout.
+```
+
+
+You can also recursively use the setTimeout() method, as shown in the example of the counter. Furthermore, you can also pass the anonymous function expression as a first parameter, like the arrow function. If you want to execute the particular JavaScript code, you can use the zero delay timeout once the whole script gets executed.
+

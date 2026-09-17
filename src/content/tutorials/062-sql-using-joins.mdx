@@ -1,0 +1,472 @@
+---
+title: "SQL - Using Joins"
+description: "Learn SQL - Using Joins with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 620
+group: "SQL Joins"
+seoTitle: "SQL - Using Joins — CodesCompiler SQL Guide"
+permalink: "sql-using-joins"
+---
+
+
+# SQL - JOINS
+
+
+
+
+
+
+## SQL JOIN
+
+
+TheJOINclause in SQL is used to combine rows from two or more tables based on a related column between them. It allows you to retrieve data from multiple tables as if they were a single table.
+
+
+UsingJOINhelps in organizing data stored in different tables and returning a meaningful dataset.
+
+
+### Syntax
+
+
+Following is the basic syntax of the SQLJOINclause:
+
+
+```sql
+SELECT columns
+FROM table1
+JOIN table2
+ON table1.column_name = table2.column_name;
+```
+
+
+Here,
+
+
+
+- table1andtable2are the tables to be joined.
+- column_nameis the common column used to match rows between the tables.
+
+
+
+## Types of SQL JOINS
+
+
+There are different types of SQL joins used to combine data from multiple tables. They are as follows:
+
+
+
+- INNER JOINreturns only the records that have matching values in both tables.
+- LEFT JOINreturns all records from the left table and matching ones from the right table.
+- RIGHT JOINreturns all records from the right table and matching ones from the left table.
+- FULL JOINreturns all records when there is a match in either table.
+- SELF JOINis a join where a table is joined with itself to compare rows within the same table.
+- CROSS JOINreturns the Cartesian product of the two tables, pairing each row from one table with all rows from the other.
+
+
+
+Let us discuss all of them one-by-one further in this tutorial
+
+
+## SQL INNER JOIN
+
+
+TheINNER JOINkeyword in SQL selects only the rows that have matching values in both tables. If there is no match, the row is not included in the result.
+
+
+### Syntax
+
+
+Following is the syntax of the SQLINNER JOINclause:
+
+
+```sql
+SELECT column1, column2, ...
+FROM table1
+INNER JOIN table2
+ON table1.column_name = table2.column_name;
+```
+
+
+### Example
+
+
+Assume we have created a table with name CUSTOMERS in MySQL database using CREATE TABLE statement as shown below:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),       
+   PRIMARY KEY (ID)
+);
+```
+
+
+Following query inserts values into this table using the INSERT statement:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00),
+(2, 'Khilan', 25, 'Delhi', 1500.00),
+(3, 'Kaushik', 23, 'Kota', 2000.00),
+(4, 'Chaitali', 25, 'Mumbai', 6500.00),
+(5, 'Hardik', 27, 'Bhopal', 8500.00),
+(6, 'Komal', 22, 'Hyderabad', 4500.00),
+(7, 'Muffy', 24, 'Indore', 10000.00);
+```
+
+
+The CUSTOMERS table is as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+Now, creating the second table ORDERS using CREATE TABLE statement as shown below:
+
+
+```sql
+CREATE TABLE ORDERS (
+   OID INT NOT NULL,
+   DATE DATETIME NOT NULL,
+   CUSTOMER_ID INT NOT NULL,
+   AMOUNT INT NOT NULL,      
+   PRIMARY KEY (OID)
+);
+```
+
+
+Following query inserts values into this table using the INSERT statement:
+
+
+```sql
+INSERT INTO ORDERS VALUES
+(102, '2009-10-08 00:00:00', 3, 3000),
+(100, '2009-10-08 00:00:00', 3, 1500),
+(101, '2009-11-20 00:00:00', 2, 1560),
+(103, '2008-05-20 00:00:00', 4, 2060);
+```
+
+
+The ORDERS table is as follows:
+
+
+OIDDATECUSTOMER_IDAMOUNT1022009-10-08 00:00:0033000.001002009-10-08 00:00:0031500.001012009-11-20 00:00:0021560.001032008-05-20 00:00:0042060.00
+
+
+Now, we will retrieve customer names along with their order amounts by joining theCUSTOMERSandORDERStables usingINNER JOIN:
+
+
+```sql
+SELECT CUSTOMERS.ID, CUSTOMERS.NAME, ORDERS.AMOUNT
+FROM CUSTOMERS
+INNER JOIN ORDERS
+ON CUSTOMERS.ID = ORDERS.CUSTOMER_ID;
+```
+
+
+Following is the output obtained:
+
+
+IDNAMEAMOUNT3Kaushik1500.002Khilan1560.003Kaushik3000.004Chaitali2060.00
+
+
+## SQL LEFT JOIN
+
+
+TheLEFT JOINkeyword in SQL returns all rows from the left table, and the matched rows from the right table. If no match exists, NULL values are returned for columns from the right table.
+
+
+### Syntax
+
+
+Following is the syntax of the SQLLEFT JOINclause:
+
+
+```sql
+SELECT column1, column2, ...
+FROM table1
+LEFT JOIN table2
+ON table1.column_name = table2.column_name;
+```
+
+
+### Example
+
+
+Here, we will retrieve all customers along with their orders, even if they have not placed any order:
+
+
+```sql
+SELECT CUSTOMERS.ID, CUSTOMERS.NAME, ORDERS.AMOUNT
+FROM CUSTOMERS
+LEFT JOIN ORDERS
+ON CUSTOMERS.ID = ORDERS.CUSTOMER_ID;
+```
+
+
+We get the output as shown below:
+
+
+IDNAMEAMOUNT1RameshNULL2Khilan1560.003Kaushik3000.003Kaushik1500.004Chaitali2060.005HardikNULL6KomalNULL7MuffyNULL
+
+
+## SQL RIGHT JOIN
+
+
+TheRIGHT JOINkeyword in SQL returns all rows from the right table, and the matched rows from the left table. If there is no match, NULL values are returned from the left table.
+
+
+### Syntax
+
+
+Following is the syntax of the SQLRIGHT JOINclause:
+
+
+```sql
+SELECT column1, column2, ...
+FROM table1
+RIGHT JOIN table2
+ON table1.column_name = table2.column_name;
+```
+
+
+### Example
+
+
+In this example, we will retrieve all orders along with the customer details, even if no matching customer exists:
+
+
+```sql
+SELECT CUSTOMERS.ID, CUSTOMERS.NAME, ORDERS.AMOUNT
+FROM CUSTOMERS
+RIGHT JOIN ORDERS
+ON CUSTOMERS.ID = ORDERS.CUSTOMER_ID;
+```
+
+
+The result is displayed as follows:
+
+
+IDNAMEAMOUNT3Kaushik1500.002Khilan1560.003Kaushik3000.004Chaitali2060.00
+
+
+## SQL FULL JOIN
+
+
+The SQLFULL JOINkeyword returns all rows from both tables, with NULLs where there is no match. Some databases useFULL OUTER JOIN.
+
+
+### Syntax
+
+
+Following is the syntax of the SQLFULL JOINclause:
+
+
+```sql
+SELECT column1, column2, ...
+FROM table1
+FULL JOIN table2
+ON table1.column_name = table2.column_name;
+```
+
+
+MySQL does not support FULL JOIN directly. You can imitate it using a UNION of LEFT and RIGHT JOIN.
+
+
+### Example
+
+
+Here, we will retrieve all customers and orders, showing NULL where there is no matching record in the SQL Server database:
+
+
+```sql
+SELECT CUSTOMERS.ID, CUSTOMERS.NAME, ORDERS.AMOUNT
+FROM CUSTOMERS
+FULL JOIN ORDERS
+ON CUSTOMERS.ID = ORDERS.CUSTOMER_ID;
+```
+
+
+The table produced is as follows:
+
+
+IDNAMEAMOUNT1RameshNULL2Khilan1560.003Kaushik1500.003Kaushik3000.004Chaitali2060.005HardikNULL6KomalNULL7MuffyNULL
+
+
+## SQL SELF JOIN
+
+
+ASELF JOINin SQL is a regular join where a table is joined to itself. This is useful for comparing rows within the same table.
+
+
+### Syntax
+
+
+Following is the syntax of the SQLSELF JOINclause:
+
+
+```sql
+SELECT A.column1, B.column1, ...
+FROM table_name A, table_name B
+WHERE condition;
+```
+
+
+### Example
+
+
+This query uses a SELF JOIN on the CUSTOMERS table to match customers with others of the same age. It returns each pair's names along with their shared age, excluding matches to themselves:
+
+
+```sql
+SELECT A.NAME AS CUSTOMER1, B.NAME AS CUSTOMER2, A.AGE
+FROM CUSTOMERS A, CUSTOMERS B
+WHERE A.AGE = B.AGE AND A.ID <> B.ID;
+```
+
+
+The table produced is as follows:
+
+
+CUSTOMER1CUSTOMER2AGEChaitaliKhilan25KhilanChaitali25
+
+
+## SQL CROSS JOIN
+
+
+ACROSS JOINin SQL returns theCartesian productof two tables. A Cartesian product means every row from the first table is combined with every row from the second table, producing all possible row combinations.
+
+
+For example, ifTable Ahas 3 rows andTable Bhas 4 rows, the result of a CROSS JOIN will have3 × 4 `=` 12rows as shown below:
+
+
+```sql
+-- Table A
+A1
+A2
+A3
+
+-- Table B
+B1
+B2
+B3
+B4
+
+-- CROSS JOIN result
+A1 B1
+A1 B2
+A1 B3
+A1 B4
+A2 B1
+A2 B2
+...
+```
+
+
+### Syntax
+
+
+Following is the syntax for CROSS JOIN in SQL:
+
+
+```sql
+SELECT column_name(s)
+FROM table1
+CROSS JOIN table2;
+```
+
+
+### Example
+
+
+The following query lists every possible combination of a customer's name and an order ID from the two tables using CROSS JOIN:
+
+
+```sql
+SELECT CUSTOMERS.NAME, ORDERS.OID
+FROM CUSTOMERS
+CROSS JOIN ORDERS;
+```
+
+
+The table produced is as follows:
+
+
+NAMEOIDRamesh103Ramesh102Ramesh101Ramesh100Khilan103Khilan102Khilan101Khilan100Kaushik103Kaushik102Kaushik101Kaushik100Chaitali103Chaitali102Chaitali101Chaitali100Hardik103Hardik102Hardik101Hardik100Komal103Komal102Komal101Komal100Muffy103Muffy102Muffy101Muffy100
+
+
+IfCUSTOMERShasnrows andORDERShasmrows, the result will haven × mrows.
+
+
+## SQL JOIN with Multiple Tables
+
+
+You can join more than two tables by chaining multiple JOIN clauses together. Each JOIN matches rows based on a related column between the tables.
+
+
+### Syntax
+
+
+Following is the syntax of joining multiple tables in SQL:
+
+
+```sql
+SELECT columns
+FROM table1
+JOIN table2 ON table1.column = table2.column
+JOIN table3 ON table2.column = table3.column;
+```
+
+
+### Example
+
+
+In the following example, we retrieve customer names, their order amounts, and the corresponding order dates by joining theCUSTOMERSandORDERStables along with an additional tablePAYMENTS.
+
+
+To do this, let us first create the PAYMENTS table:
+
+
+```sql
+CREATE TABLE PAYMENTS (
+   PID INT NOT NULL,
+   OID INT NOT NULL,
+   PAYMENT_DATE DATETIME NOT NULL,
+   AMOUNT DECIMAL(10,2),
+   PRIMARY KEY (PID)
+);
+```
+
+
+Now, we insert some values to the PAYMENTS table:
+
+
+```sql
+INSERT INTO PAYMENTS VALUES
+(1, 102, '2009-10-10 00:00:00', 3000.00),
+(2, 101, '2009-11-22 00:00:00', 1560.00),
+(3, 103, '2008-05-22 00:00:00', 2060.00);
+```
+
+
+Now, join all three tables in SQL using the following query:
+
+
+```sql
+SELECT CUSTOMERS.NAME, ORDERS.AMOUNT, PAYMENTS.PAYMENT_DATE
+FROM CUSTOMERS
+INNER JOIN ORDERS ON CUSTOMERS.ID = ORDERS.CUSTOMER_ID
+INNER JOIN PAYMENTS ON ORDERS.OID = PAYMENTS.OID;
+```
+
+
+The result is displayed as follows:
+
+
+NAMEAMOUNTPAYMENT_DATEKaushik30002009-10-10 00:00:00Khilan15602009-11-22 00:00:00Chaitali20602008-05-22 00:00:00
+

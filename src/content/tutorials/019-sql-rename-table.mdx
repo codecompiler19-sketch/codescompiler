@@ -1,0 +1,288 @@
+---
+title: "SQL - Rename Table"
+description: "Learn SQL - Rename Table with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 190
+group: "SQL Table"
+seoTitle: "SQL - Rename Table — CodesCompiler SQL Guide"
+permalink: "sql-rename-table"
+---
+
+
+# SQL RENAME TABLE
+
+
+Table of contentThe SQL RENAME TABLE CommandRenaming a Table in MySQL ServerRenaming a Table in SQL ServerRenaming a Table in PostgreSQLImportant Points on Renaming Table
+
+
+
+
+## The SQL RENAME TABLE Command
+
+
+TheRENAME TABLEcommand is used in SQL to change the name of an existing table. This is useful when you want to give your table a new name without affecting the data or structure of the table.
+
+
+For example, if your table is namedCUSTOMERSand you want to rename it toBUYERS, you can use theRENAMEcommand to make this change easily.
+
+
+However, not all database systems use the same syntax for renaming a table. The command differs betweenMySQL,SQL Server, andPostgreSQL:
+
+
+
+- MySQLdirectly supportsRENAME TABLE.
+- SQL Serverdoes not support this directly. You must use a special command calledsp_rename.
+- PostgreSQLdoes not supportRENAME TABLE, but allows renaming usingALTER TABLE ... RENAME TOcommand.
+
+
+
+## Renaming a Table in MySQL Server
+
+
+InMySQL, theRENAME TABLEcommand is used to rename a table. It is a simple and direct method to change a table name.
+
+
+### Syntax
+
+
+Following is the basic syntax to rename a table in MySQL Server:
+
+
+```sql
+RENAME TABLE old_table_name TO new_table_name;
+```
+
+
+### Example
+
+
+Let us create a table with the name CUSTOMERS which contains the personal details of customers including their name, age, address and salary etc. as shown below:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+
+   ID INT NOT NULL,
+
+   NAME VARCHAR (20) NOT NULL,
+
+   AGE INT NOT NULL,
+
+   ADDRESS CHAR (25),
+
+   SALARY DECIMAL (18, 2),
+
+   PRIMARY KEY (ID)
+
+);
+```
+
+
+Now, let us insert few records into this table using the INSERT statement as follows:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+
+(2, 'Khilan', 25, 'Delhi', 1500.00 ),
+
+(3, 'Kaushik', 23, 'Kota', 2000.00 ),
+
+(4, 'Chaitali', 25, 'Mumbai', 6500.00 ),
+
+(5, 'Hardik', 27, 'Bhopal', 8500.00 ),
+
+(6, 'Komal', 22, 'Hyderabad', 4500.00 ),
+
+(7, 'Muffy', 24, 'Indore', 10000.00 );
+```
+
+
+The table will be created as follows:
+
+
+IDNameAgeAddressSalary1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+In the following example query, we are renaming the tableCUSTOMERStoBUYERSin MySQL Server:
+
+
+```sql
+RENAME TABLE CUSTOMERS TO BUYERS;
+```
+
+
+We get the output as shown below:
+
+
+```sql
+Query OK, 0 rows affected (0.02 sec)
+```
+
+
+This command only changes the table name. All existing data and column definitions remain unchanged:
+
+
+### Verifying the Rename
+
+
+After renaming a table, you can confirm the change by using the following SQL command:
+
+
+```sql
+SHOW TABLES;
+```
+
+
+This command will list all the tables in the current database. You should now seeBUYERSinstead ofCUSTOMERS:
+
+
+Tables_in_testdbBUYERSsalary
+
+
+You can also verify the renamed table by retrieving its data using the SELECT statement as shown below:
+
+
+```sql
+SELECT * FROM BUYERS;
+```
+
+
+This will display all records from the newly renamed BUYERS table:
+
+
+IDNameAgeAddressSalary1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## Renaming a Table in SQL Server
+
+
+SQL Server does not supportRENAME TABLEcommand directly. Instead, it uses a built-in stored procedure calledsp_renameto rename tables.
+
+
+### Syntax
+
+
+Following is the basic syntax to rename a table in SQL Server:
+
+
+```sql
+EXEC sp_rename 'old_table_name', 'new_table_name';
+```
+
+
+### Example
+
+
+The following command renames the above createdCUSTOMERStable toWORKERSin SQL Server:
+
+
+```sql
+EXEC sp_rename 'CUSTOMERS', 'WORKERS';
+```
+
+
+We get the output as shown below:
+
+
+```sql
+Caution: Changing any part of an object name could break scripts and stored procedures.
+
+Completion time: 2025-07-29T15:46:44.1359549+05:30
+```
+
+
+SQL Server shows this standard cautionary message after a successful rename.
+
+
+### Verification
+
+
+We can verify whether the changes are reflected by retrieving its contents using the SELECT statement as follows:
+
+
+```sql
+SELECT * FROM WORKERS;
+```
+
+
+This will list down all the records available in WORKERS table as follows:
+
+
+IDNameAgeAddressSalary1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+Since you have renamed the table toWORKERS, if you try to retrieve the details using the old table name, it will throw an error indicating that the table does not exist.
+
+
+## Renaming a Table in PostgreSQL
+
+
+In PostgreSQL, the renaming is done using theALTER TABLEcommand with aRENAME TOclause.
+
+
+### Syntax
+
+
+Following is the basic syntax to rename a table in PostgreSQL:
+
+
+```sql
+ALTER TABLE old_table_name RENAME TO new_table_name;
+```
+
+
+### Example
+
+
+In this example query, we rename the above createdCUSTOMERStable toBUYERSin PostgreSQL:
+
+
+```sql
+ALTER TABLE CUSTOMERS RENAME TO BUYERS;
+```
+
+
+We get the output as shown below:
+
+
+```sql
+ALTER TABLE
+```
+
+
+PostgreSQL outputs the keywordALTER TABLEto confirm that the command executed successfully.
+
+
+### Verification
+
+
+We can verify whether the changes are reflected by retrieving its contents using the SELECT statement as follows:
+
+
+```sql
+SELECT * FROM BUYERS;
+```
+
+
+This will list down all the records available in BUYERS table as follows:
+
+
+IDNameAgeAddressSalary1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+## Important Points on Renaming Table
+
+
+Following are a few important points to remember before renaming a table in a database:
+
+
+
+- TheRENAMEcommand only changes the name of the table. It does not change the data or structure.
+- Make sure no other part of your application depends on the old table name.
+- You must have the required permission to rename a table.
+- Each database system has its own preferred syntax. Use the correct one to avoid errors.
+
+

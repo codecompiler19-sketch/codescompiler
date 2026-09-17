@@ -1,0 +1,317 @@
+---
+title: "JavaScript - Asynchronous"
+description: "Learn JavaScript - Asynchronous with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1140
+group: "JavaScript Asynchronous"
+seoTitle: "JavaScript - Asynchronous — CodesCompiler JavaScript Guide"
+permalink: "javascript-asynchronous"
+---
+
+
+# Asynchronous JavaScript
+
+
+
+
+Asynchronous JavaScript is a programming technique that enables your program to start a potentially long-running task and continue to executing other tasks parallelly. JavaScript is a single-threaded programming language. It means you can execute a single script or particular code at a time. JavaScript control flow moves the line by line and executes each line of code.
+
+
+We can implement asynchronous operations in our JavaScript programs using callback functions, promises, async/await etc. The callback functions are functions passed as arguments to other functions. The promises are objects representing the success of failure of an asynchronous operation. The async/await syntax is simple implementation of promises. We will discuss these approaches in details in respective chapters.
+
+
+To perform the multiple tasks parallelly, you need asynchronous JavaScript.
+
+
+Lets understand what synchronous JavaScript is before understanding asynchronous JavaScript.
+
+
+## What is Synchronous JavaScript?
+
+
+The Synchronous JavaScript executes the JavaScript code line-by-line. The control flow moves from top to bottom and runs each statement one by one.
+
+
+Lets understand it via the example below.
+
+
+### Example
+
+
+The control flow for the code is given below.
+
+
+
+- It calls the test1() function.
+- In the test1() function, it prints the start message.
+- Next, it calls the test2() function.
+- The test2() function prints the start and end messages.
+- After that, it prints the end message in the test1() function.
+- End of the code execution.
+
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "demo"> </div>
+
+   <script>
+
+      let output = document.getElementById('demo');
+
+      function test2() {
+
+         output.innerHTML += '<br>test2 started!';
+
+         output.innerHTML += '<br>test2 finished!';
+
+      }
+
+      function test1() {
+
+         output.innerHTML += 'test1 started!';
+
+         test2();
+
+         output.innerHTML += '<br>test1 finished!';
+
+      }
+
+      test1();
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+test1 started!
+
+test2 started!
+
+test2 finished!
+
+test1 finished!
+```
+
+
+It creates a call stack, adds the code to it, and executes the code in the last in, first out (LIFO) order.
+
+
+Now, lets understand that what is the asynchronous JavaScript.
+
+
+## What is Asynchronous JavaScript?
+
+
+Asynchronous JavaScript enables simultaneous code execution. You can use asynchronous JavaScript to make your application multi-threaded. It allows you to perform time-consuming or expensive tasks together.
+
+
+Lets understand the Asynchronous JavaScript via the example below.
+
+
+### Example
+
+
+The execution flow of the code is explained below.
+
+
+
+- It prints the start message.
+- After that, it prints the end message without waiting until the execution of the setTimeOut() method is finished.
+- At last, it executes the code of the setTimeOut() method.
+
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "demo"> </div>
+
+   <script>
+
+      let output = document.getElementById('demo');
+
+      output.innerHTML += "Code execution started. <br>";
+
+      setTimeout(function () {
+
+         output.innerHTML += "setTimeout() called. <br>";
+
+      }, 1000);
+
+      output.innerHTML += "Code execution finished. <br>";
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Code execution started.
+
+Code execution finished.
+
+setTimeout() called.
+```
+
+
+By writing the asynchronous JavaScript code, you can execute another JavaScript code without waiting to finish the execution of the particular code.
+
+
+## Why Do We Need Asynchronous JavaScript?
+
+
+In the above section, we have learned to write the asynchronous JavaScript code via simple example. But the question is when you need to write the asynchronous JavaScript code as you dont need to perform simple tasks like printing the messages.
+
+
+Lets understand it via the example below.
+
+
+### Example
+
+
+In the below code, we find the first 10 lakh prime numbers. For that, we traverse through numbers and check whether the number is prime using the checkForPrime() function.
+
+
+In the code, you can click the generate prime button. The code will start finding the first 10 lakh prime numbers. After that, you can immediately click the print message button to print the message. You can observe that the web page is responsive and does not print any message.
+
+
+However, it will print the message once the execution of the getPrimes() function is finished.
+
+
+So, it is necessary to complete such time-expensive tasks parallelly. Otherwise, it makes the web page unresponsive.
+
+
+```html
+<html>
+
+<body>
+
+   <button onclick = "getPrimes()"> Generate primes </button>
+
+   <button onclick = "printMessage()"> Print Message </button>
+
+   <div id = "demo"> </div>
+
+   <script>
+
+      let output = document.getElementById('demo');
+
+      
+
+      // Function to check whether the number is a prime number
+
+      function checkForPrime(num) {
+
+         for (let p = 2; p <= Math.sqrt(num); p++) {
+
+            if (num % p === 0) { // Check whether the number is divisible by p
+
+               return false;
+
+            }
+
+         }
+
+         return num > 1;
+
+      }
+
+      function getPrimes() {
+
+         const primeNums = []; // Array to store prime numbers
+
+         let p = 1;
+
+         while (primeNums.length < 1000000) { // Find first 10 lakh prime numbers
+
+            if (checkForPrime(p)) {
+
+               primeNums.push(p);
+
+            }
+
+            p++;
+
+         }
+
+         output.innerHTML += "The execution of the getPrime() function is completed. <br>";
+
+      }
+
+      function printMessage() { // Function to print the message
+
+         output.innerHTML += "Button is clicked! <br>";
+
+      }
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+## Real-time Use Cases of Asynchronous JavaScript
+
+
+Here are the real-time use cases of asynchronous JavaScript.
+
+
+### Fetching data from API
+
+
+When you fetch data from the API, it takes time to get the data according to the server's response time. So, you can use the asynchronous JavaScript to continue the execution of the other code without waiting for the API response.
+
+
+### Loading external resources
+
+
+Sometimes, it happens that you need to load multiple libraries, external scripts, images, etc., into the application. The web page doesnt allow you to interact with the web page without loading all external resources. So you can load the external resources asynchronously.
+
+
+### Task scheduling
+
+
+You can use asynchronous JavaScript to schedule the tasks using the setTimeOut() method or perform tasks after a particular interval using the setInterval() method.
+
+
+### Data validation
+
+
+Sometimes, developers are required to do data validation. You can perform such tasks in the background or parallel with other codes.
+
+
+### File uploads
+
+
+If you allow users to upload large files, it may take time to upload according to users' internet speed. So you can execute the file uploading asynchronously.
+
+
+### Data caching
+
+
+The data caching is one of the most important features of the application to increase the performance and may take time according to the data size. So, you can use the promises to cache the data asynchronously.
+

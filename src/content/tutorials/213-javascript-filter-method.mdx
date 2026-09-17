@@ -1,0 +1,258 @@
+---
+title: "JavaScript - Filter Method"
+description: "Learn JavaScript - Filter Method with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2130
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Filter Method — CodesCompiler JavaScript Guide"
+permalink: "javascript-filter-method"
+---
+
+
+# JavaScript - Filter Method
+
+
+
+
+## JavaScript - Filter Method
+
+
+In JavaScript, thefilter()method is used to create a new array with elements that pass a certain condition. It takes a callback function as its argument which is executed for each and every element in the array. If the callback function returns true, the element is added to the new array or else it is filtered out.
+
+
+This method does not change or modify the original array. Also, it does not execute the callback function for empty elements.
+
+
+### Syntax
+
+
+Following is the syntax of JavaScript Array.filter() method −
+
+
+```javascript
+array.filter(callback(element, index, array), thisArg)
+```
+
+
+### Parameters
+
+
+This method accepts two parameters. The same is described below −
+
+
+
+- thisArg (optional)It specifies a value passed to the function to be used as itsthisvalue.
+- callbackThis is a callback function that will be called once for each element in the array. It further takes three arguments:
+- element:The current element being processed in the array.
+- index:The index of the current element being processed.
+- array:The array of the current element.
+
+
+
+### Return Value
+
+
+This method returns a new array containing the elements for which the callback function returned true.
+
+
+### Example
+
+
+In the following example, the provided callback function checks each element in the numbers array and returns a new array, "result", containing all the elements that are greater than 30.
+
+
+```html
+<html>
+
+   <body>
+
+      <script>
+
+         const numbers = [10, 20, 30, 40, 50];
+
+         
+
+         const result = numbers.filter(function (number) {
+
+             return number > 30;
+
+         });
+
+         document.write(result);
+
+      </script>
+
+   </body>
+
+</html>
+```
+
+
+### Output
+
+
+Following is the output of the above program.
+
+
+```javascript
+40,50
+```
+
+
+## Filter method on Typed Arrays
+
+
+Typed arrays are array-like objects that provide a mechanism for reading and writing raw binary data.We can use filter() method on typed arrays as well.
+
+
+### Example
+
+
+If all elements in the typed array pass the callbackFn test, a new typed array is returned that contains only those elements that pass the test.
+
+
+In the following example, we use theJavaScript TypedArray filter()method to filter out all the odd elements from the given typed array [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]. We create a function namedisOdd()that checks for odd values, and passes it as an argument to the filter() method.
+
+
+```html
+<html>
+
+<head>
+
+<title>JavaScript TypedArray filter() Method</title>
+
+</head>
+
+<body>
+
+   <script>
+
+      function isOdd(element, index, array){
+
+         return element %2 != 0;
+
+      }
+
+      const T_array = new Int8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+
+      document.write("The typedArray elements are: ", T_array);
+
+      
+
+      //create new empty typed array
+
+      let odd_t_array = ([]);
+
+      
+
+      //using filer() method
+
+      odd_t_array = T_array.filter(isOdd);
+
+      document.write("<br>New typed array(containing only odd elements): ", odd_t_array);
+
+   </script>    
+
+</body>
+
+</html>
+```
+
+
+### Output
+
+
+Following is the output of the above program.
+
+
+```javascript
+The typedArray elements are: 1,2,3,4,5,6,7,8,9,10
+
+New typed array(containing only odd elements): 1,3,5,7,9
+```
+
+
+## Filter method on Map
+
+
+We can use filter() method on Map as well. Everything is similar to normal array, means we can filter out elements in same way as we do with arrays.
+
+
+### Example
+
+
+If all elements in the map pass the callbackFn test, a new map is returned that contains only those elements that pass the test.
+
+
+In the following example, we use the JavaScript Map filter() method to filter out all the elements from the given map that are greater than 30. We create a function named isGreater() that checks for values greater than 30, and passes it as an argument to the filter() method.
+
+
+```html
+<html>
+
+<head>
+
+<title>JavaScript Map filter() Method</title>
+
+</head>
+
+<body>
+
+<script>
+
+   function isGreater(value, key, map){
+
+      return value > 30;
+
+   }
+
+   const map = new Map([[1, 10], [2, 20], [3, 30], [4, 40], [5, 50]]);
+
+   document.write("The map elements are: ");
+
+   for (let [key, value] of map) {
+
+      document.write(key + " => " + value + ",");
+
+   }
+
+   
+
+   //create new empty map
+
+   let new_map = new Map();
+
+   
+
+   //using filer() method
+
+   new_map = new Map([...map].filter(([key, value]) => isGreater(value, key, map)));
+
+   document.write("<br>New map(containing only elements greater than 30): ");
+
+   for (let [key, value] of new_map) {
+
+      document.write(key + " => " + value + ",");
+
+   }
+
+</script>
+
+</body>
+
+</html>
+```
+
+
+### Output
+
+
+Following is the output of the above program.
+
+
+```javascript
+The map elements are: 1 => 10,2 => 20,3 => 30,4 => 40,5 => 50
+
+New map(containing only elements greater than 30): 4 => 40,5 => 50
+```
+

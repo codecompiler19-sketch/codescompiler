@@ -1,0 +1,337 @@
+---
+title: "PYTHON - Iterators"
+description: "Learn PYTHON - Iterators with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1890
+group: "Python Miscellenous"
+seoTitle: "PYTHON - Iterators — CodesCompiler PYTHON Guide"
+permalink: "python-iterators"
+---
+
+
+# Python - Iterators
+
+
+
+
+## Python Iterators
+
+
+An iterator in Python is an object that enables traversal through a collection such as a list or a tuple, one element at a time. It follows the iterator protocol by using the implementation of two methods__iter__()and__next__().
+
+
+The__iter__()method returns the iterator object itself and the__next__()method returns the next element in the sequence by raising aStopIterationexception when no more elements are available.
+
+
+Iterators provide a memory-efficient way to iterate over data, especially useful for large datasets. They can be created from iterable objects using theiter()function or implemented using custom classes and generators.
+
+
+### Iterables vs Iterators
+
+
+Before going deep into the iterator working, we should know the difference between the Iterables and Iterators.
+
+
+
+- Iterable:An object capable of returning its members one at a time (e.g., lists, tuples).
+- Iterator:An object representing a stream of data, returned one element at a time.
+
+
+
+We normally useforloop to iterate through an iterable as follows −
+
+
+```python
+for element in sequence:
+   print (element)
+```
+
+
+Python's built-in methoditer()implements__iter__()method. It receives an iterable and returns iterator object.
+
+
+### Example of Python Iterator
+
+
+Following code obtains iterator object from sequence types such as list, string and tuple. Theiter()function also returns keyiterator from dictionary.
+
+
+```python
+print (iter("aa"))
+print (iter([1,2,3]))
+print (iter((1,2,3)))
+print (iter({}))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+<str_iterator object at 0x7fd0416b42e0>
+<list_iterator object at 0x7fd0416b42e0>
+<tuple_iterator object at 0x7fd0416b42e0>
+<dict_keyiterator object at 0x7fd041707560>
+```
+
+
+However, int id not iterable, hence it produces TypeError.
+
+
+```python
+iterator = iter(100)
+print (iterator)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Traceback (most recent call last):
+   File "C:\Users\user\example.py", line 5, in <module>
+      print (iter(100))
+            ^^^^^^^^^
+TypeError: 'int' object is not iterable
+```
+
+
+## Error Handling in Iterators
+
+
+Iterator object has a method named__next__(). Every time it is called, it returns next element in iterator stream. Call to next() function is equivalent to calling __next__() method of iterator object.
+
+
+This method which raises aStopIterationexception when there are no more items to return.
+
+
+### Example
+
+
+In the following is an example the iterator object we have created have only 3 elements and we are iterating through it more than thrice −
+
+
+```python
+it = iter([1,2,3])
+print (next(it))
+print (it.__next__())
+print (it.__next__())
+print (next(it))
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+1
+2
+3
+Traceback (most recent call last):
+   File "C:\Users\user\example.py", line 5, in <module>
+      print (next(it))
+            ^^^^^^^^
+StopIteration
+```
+
+
+This exception can be caught in the code that consumes the iterator using try and except blocks, though it's more common to handle it implicitly by using constructs like for loops which manage the StopIteration exception internally.
+
+
+```python
+it = iter([1,2,3, 4, 5])
+print (next(it))
+while True:
+   try:
+      no = next(it)
+      print (no)
+   except StopIteration:
+      break
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+1
+2
+3
+4
+5
+```
+
+
+## Custom Iterator
+
+
+A custom iterator in Python is a user-defined class that implements the iterator protocol which consists of two methods__iter__()and__next__(). This allows the class to behave like an iterator, enabling traversal through its elements one at a time.
+
+
+To define a custom iterator class in Python, the class must define these methods.
+
+
+### Example
+
+
+In the following example, the Oddnumbers is a class implementing __iter__() and __next__() methods. On every call to __next__(), the number increments by 2 thereby streaming odd numbers in the range 1 to 10.
+
+
+```python
+class Oddnumbers:
+
+   def __init__(self, end_range):
+      self.start = -1
+      self.end = end_range
+
+   def __iter__(self):
+      return self
+
+   def __next__(self):
+      if self.start &lt self.end-1:
+         self.start += 2
+         return self.start
+      else:
+         raise StopIteration
+
+countiter = Oddnumbers(10)
+while True:
+   try:
+      no = next(countiter)
+      print (no)
+   except StopIteration:
+      break
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+1
+3
+5
+7
+9
+```
+
+
+### Example
+
+
+Let's create another  iterator that generates the first n Fibonacci numbers with the following code −
+
+
+```python
+class Fibonacci:
+   def __init__(self, max_count):
+      self.max_count = max_count
+      self.count = 0
+      self.a, self.b = 0, 1
+
+   def __iter__(self):
+      return self
+
+   def __next__(self):
+      if self.count >= self.max_count:
+         raise StopIteration
+        
+      fib_value = self.a
+      self.a, self.b = self.b, self.a + self.b
+      self.count += 1
+      return fib_value
+
+# Using the Fibonacci iterator
+fib_iterator = Fibonacci(10)
+
+for number in fib_iterator:
+   print(number)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+0
+1
+1
+2
+3
+5
+8
+13
+21
+34
+```
+
+
+## Asynchronous Iterator
+
+
+Asynchronous iterators in Python allow us to iterate over asynchronous sequences, enabling the handling of async operations within a loop.
+
+
+They follow the asynchronous iterator protocol which consists of the methods__aiter__()and__anext__()(added in Python 3.10 version onwards.). These methods are used in conjunction with the async for loop to iterate over asynchronous data sources.
+
+
+Theaiter()function returns an asynchronous iterator object. It is an asynchronous counter part of the classical iterator. Any asynchronous iterator must support ___aiter()__and__anext__()methods. These methods are internally called by the two built-in functions.
+
+
+Asynchronous functions are called co-routines and are executed withasyncio.run()method. The main() co-routine contains a while loop that successively obtains odd numbers and raises StopAsyncIteration if the number exceeds 9.
+
+
+Like the classical iterator the asynchronous iterator gives a stream of objects. When the stream is exhausted, the StopAsyncIteration exception is raised.
+
+
+### Example
+
+
+In the example give below, an asynchronous iterator class Oddnumbers is declared. It implements __aiter__() and __anext__() method. On each iteration, a next odd number is returned and the program waits for one second, so that it can perform any other process asynchronously.
+
+
+```python
+import asyncio
+
+class Oddnumbers():
+   def __init__(self):
+      self.start = -1
+
+   def __aiter__(self):
+      return self
+      
+   async def __anext__(self):
+      if self.start >= 9:
+         raise StopAsyncIteration
+      self.start += 2
+      await asyncio.sleep(1)
+      return self.start
+      
+async def main():
+   it = Oddnumbers()
+   while True:
+      try:
+         awaitable = anext(it)
+         result = await awaitable
+         print(result)
+      except StopAsyncIteration:
+         break
+         
+asyncio.run(main())
+```
+
+
+### Output
+
+
+It will produce the followingoutput−
+
+
+```python
+1
+3
+5
+7
+9
+```
+

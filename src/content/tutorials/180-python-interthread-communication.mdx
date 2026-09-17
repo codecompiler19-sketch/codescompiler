@@ -1,0 +1,283 @@
+---
+title: "PYTHON - Inter-thread Communication"
+description: "Learn PYTHON - Inter-thread Communication with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1800
+group: "Python Synchronization"
+seoTitle: "PYTHON - Inter-thread Communication — CodesCompiler PYTHON Guide"
+permalink: "python-interthread-communication"
+---
+
+
+# Python - Inter-Thread Communication
+
+
+
+
+Inter-Thread Communication refers to the process of enabling communication and synchronization between threads within a Python multi-threaded program.
+
+
+Generally, threads in Python share the same memory space within a process, which allows them to exchange data and coordinate their activities through shared variables, objects, and specialized synchronization mechanisms provided by thethreadingmodule.
+
+
+To facilitate inter-thread communication, the threading module provides various synchronization primitives like, Locks, Events, Conditions, and Semaphores objects. In this tutorial you will learn how to use the Event and Condition object for providing the communication between threads in a multi-threaded program.
+
+
+## The Event Object
+
+
+An Event object manages the state of an internal flag so that threads can wait or set.Eventobject provides methods to control the state of this flag, allowing threads to synchronize their activities based on shared conditions.
+
+
+The flag is initially false and becomes true with the set() method and reset to false with the clear() method. The wait() method blocks until the flag is true.
+
+
+Following are the key methods of theEventobject −
+
+
+
+- is_set(): Return True if and only if the internal flag is true.
+- set(): Set the internal flag to true. All threads waiting for it to become true are awakened. Threads that call wait() once the flag is true will not block at all.
+- clear(): Reset the internal flag to false. Subsequently, threads calling wait() will block until set() is called to set the internal flag to true again.
+- wait(timeout`=` None): Block until the internal flag is true. If the internal flag is true on entry, return immediately. Otherwise, block until another thread calls set() to set the flag to true, or until the optional timeout occurs. When the timeout argument is present and not None, it should be a floating point number specifying a timeout for the operation in seconds.
+
+
+
+### Example
+
+
+The following code attempts to simulate the traffic flow being controlled by the state of traffic signal either GREEN or RED.
+
+
+There are two threads in the program, targeting two different functions. The signal_state() function periodically sets and resets the event indicating change of signal from GREEN to RED.
+
+
+The traffic_flow() function waits for the event to be set, and runs a loop till it remains set.
+
+
+```python
+from threading import Event, Thread
+import time
+
+terminate = False
+
+def signal_state():
+    global terminate
+    while not terminate:
+        time.sleep(0.5)
+        print("Traffic Police Giving GREEN Signal")
+        event.set()
+        time.sleep(1)
+        print("Traffic Police Giving RED Signal")
+        event.clear()
+
+def traffic_flow():
+    global terminate
+    num = 0
+    while num < 10 and not terminate:
+        print("Waiting for GREEN Signal")
+        event.wait()
+        print("GREEN Signal ... Traffic can move")
+        while event.is_set() and not terminate:
+            num += 1
+            print("Vehicle No:", num," Crossing the Signal")
+            time.sleep(1)
+        print("RED Signal ... Traffic has to wait")
+
+event = Event()
+t1 = Thread(target=signal_state)
+t2 = Thread(target=traffic_flow)
+t1.start()
+t2.start()
+
+# Terminate the threads after some time
+time.sleep(5)
+terminate = True
+
+# join all threads to complete
+t1.join()
+t2.join()
+
+print("Exiting Main Thread")
+```
+
+
+### Output
+
+
+On executing the above code you will get the following output −
+
+
+```python
+Waiting for GREEN Signal
+Traffic Police Giving GREEN Signal
+GREEN Signal ... Traffic can move
+Vehicle No: 1  Crossing the Signal
+Traffic Police Giving RED Signal
+RED Signal ... Traffic has to wait
+Waiting for GREEN Signal
+Traffic Police Giving GREEN Signal
+GREEN Signal ... Traffic can move
+Vehicle No: 2  Crossing the Signal
+Vehicle No: 3  Crossing the Signal
+Traffic Police Giving RED Signal
+Traffic Police Giving GREEN Signal
+Vehicle No: 4  Crossing the Signal
+Traffic Police Giving RED Signal
+RED Signal ... Traffic has to wait
+Traffic Police Giving GREEN Signal
+Traffic Police Giving RED Signal
+Exiting Main Thread
+```
+
+
+## The Condition Object
+
+
+The Condition object in Python'sthreadingmodule provides a more advanced synchronization mechanism. It allows threads to wait for a notification from another thread before proceeding. The Condition object are always associated with a lock and provide mechanisms for signaling between threads.
+
+
+Following is the syntax of the threading.Condition() class −
+
+
+```python
+threading.Condition(lock=None)
+```
+
+
+Below are the key methods of the Condition object −
+
+
+
+- acquire(*args): Acquire the underlying lock. This method calls the corresponding method on the underlying lock; the return value is whatever that method returns.
+- release(): Release the underlying lock. This method calls the corresponding method on the underlying lock; there is no return value.
+- wait(timeout`=` None): This method releases the underlying lock, and then blocks until it is awakened by a notify() or notify_all() call for the same condition variable in another thread, or until the optional timeout occurs. Once awakened or timed out, it re-acquires the lock and returns.
+- wait_for(predicate, timeout`=` None): This utility method may call wait() repeatedly until the predicate is satisfied, or until a timeout occurs. The return value is the last return value of the predicate and will evaluate to False if the method timed out.
+- notify(n`=`1): This method wakes up at most n of the threads waiting for the condition variable; it is a no-op if no threads are waiting.
+- notify_all(): Wake up all threads waiting on this condition. This method acts like notify(), but wakes up all waiting threads instead of one. If the calling thread has not acquired the lock when this method is called, a RuntimeError is raised.
+
+
+
+### Example
+
+
+This example demonstrates a simple form of inter-thread communication using theConditionobject of the Python's threading module. Herethread_aandthread_bare communicated using a Condition object, thethread_awaits until it receives a notification fromthread_b. thethread_bsleeps for 2 seconds before notifyingthread_aand then finishes.
+
+
+```python
+from threading import Condition, Thread
+import time
+
+c = Condition()
+
+def thread_a():
+    print("Thread A started")
+    with c:
+        print("Thread A waiting for permission...")
+        c.wait()
+        print("Thread A got permission!")
+    print("Thread A finished")
+
+def thread_b():
+    print("Thread B started")
+    with c:
+        time.sleep(2)
+        print("Notifying Thread A...")
+        c.notify()
+    print("Thread B finished")
+
+Thread(target=thread_a).start()
+Thread(target=thread_b).start()
+```
+
+
+Output
+
+
+On executing the above code you will get the following output −
+
+
+```python
+Thread A started
+Thread A waiting for permission...
+Thread B started
+Notifying Thread A...
+Thread B finished
+Thread A got permission!
+Thread A finished
+```
+
+
+### Example
+
+
+Here is another code demonstrating how the Condition object is used for providing the communication between threads. In this, the thread t2 runs the taskB() function, and the thread t1 runs the taskA() function. The t1 thread acquires the condition and notifies it.
+
+
+By that time, the t2 thread is in a waiting state. After the condition is released, the waiting thread proceeds to consume the random number generated by the notifying function.
+
+
+```python
+from threading import Condition, Thread
+import time
+import random
+
+numbers = []
+
+def taskA(c):
+    for _ in range(5):
+        with c:
+            num = random.randint(1, 10)
+            print("Generated random number:", num)
+            numbers.append(num)
+            print("Notification issued")
+            c.notify()
+        time.sleep(0.3)
+
+def taskB(c):
+    for i in range(5):
+        with c:
+            print("waiting for update")
+            while not numbers: 
+                c.wait()
+            print("Obtained random number", numbers.pop())
+        time.sleep(0.3)
+
+c = Condition()
+t1 = Thread(target=taskB, args=(c,))
+t2 = Thread(target=taskA, args=(c,))
+t1.start()
+t2.start()
+t1.join()
+t2.join()
+print("Done")
+```
+
+
+When you execute this code, it will produce the followingoutput−
+
+
+```python
+waiting for update
+Generated random number: 2
+Notification issued
+Obtained random number 2
+Generated random number: 5
+Notification issued
+waiting for update
+Obtained random number 5
+Generated random number: 1
+Notification issued
+waiting for update
+Obtained random number 1
+Generated random number: 9
+Notification issued
+waiting for update
+Obtained random number 9
+Generated random number: 2
+Notification issued
+waiting for update
+Obtained random number 2
+Done
+```
+

@@ -1,0 +1,326 @@
+---
+title: "JavaScript - IndexedDB"
+description: "Learn JavaScript - IndexedDB with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2610
+group: "JavaScript Miscellaneous"
+seoTitle: "JavaScript - IndexedDB — CodesCompiler JavaScript Guide"
+permalink: "javascript-indexeddb"
+---
+
+
+# JavaScript - IndexedDB
+
+
+
+
+## What is IndexedDB?
+
+
+IndexedDB, or Indexed Database, represents a low-level JavaScript API. Its function involves the storage and retrieval of voluminous structured data - this includes files and blobs. With its capabilities to work with client-side databases: it enables web applications to locally store, query, and modify data on the user's device. This functionality proves particularly advantageous when constructing web applications that confront significant data volumes; operate without an internet connection, working offline and deliver responsive user experiences through local data caching.
+
+
+Key concepts and features of IndexedDB:
+
+
+
+- Asynchronous API− Relying on event-driven programming, IndexedDB utilizes an asynchronous API to prevent main-thread blocking and enhance user experience.
+- Database− IndexedDB databases, functioning as containers for object stores, facilitate the organization, retrieval and deletion of data.
+- Object Store− An object store akin to a table in a relational database, encapsulates collections of JavaScript objects; it provides support for CRUD operations.
+- Index− Indexes in object stores can enhance the efficiency of data querying, as they are able to improve search and sort performance based on specific fields.
+- Transactions− Transactions in IndexedDB perform all operations, guaranteeing consistency and integrity through their ability to make multiple actions either succeed or fail as a unit.
+
+
+
+## Why use IndexedDB?
+
+
+Web developers, in their search for efficient client-side storage solutions, find IndexedDB indispensable. Its asynchronous nature guarantees a responsive user experience: it thwarts main-thread blocking; moreover, its support for transactions by maintaining data integrity is commendable. IndexedDB is capable of managing significant volumes of structured data locally; this capability significantly enhances offline functionality a reduction on the need for relentless server communication. With its flexible key structure, indexing support for optimized queries, and the ability to upgrade schema; it stands as a robust choice for constructing web applications. These applications often require local storage, offline support and most importantly effective data management.
+
+
+## CRUD Operations
+
+
+Let us now see the CRUD operation codes with IndexedDB.
+
+
+### Create/Insert Operation
+
+
+To insert a new record into an object store, you utilize the add() method in IndexedDB. This method accepts a JavaScript object or value as its parameter and subsequently incorporates it within the designated object store. However, if there already exists an entry with identical key parameters; this operation will fail, thus rendering it ideal for guaranteeing uniqueness.
+
+
+```javascript
+const request = objectStore.add(data);
+request.onsuccess = () => {
+// Handle success event
+};
+
+request.onerror = () => {
+// Handle error
+};
+```
+
+
+### Read (Retrieve) Opeation
+
+
+#### The get() Method
+
+
+Utilize the get() method: it retrieves a singular record from an object store, this action is contingent upon your possession of knowledge regarding the specific key for your intended entry.
+
+
+#### The openCursor() Method
+
+
+Initiating an active cursor that iterates through records within an object store, the openCursor() method enhances efficiency and control by allowing for processing each individual entry; this proves useful in traversing all entries present in the said object store.
+
+
+```javascript
+const request = objectStore.openCursor();
+request.onsuccess = (event) => {
+   const cursor = event.target.result;
+   if (cursor) {
+      const data = cursor.value;
+      // Process data
+      cursor.continue();
+   }
+};
+
+request.onerror = () => {
+   // Handle error
+};
+```
+
+
+### Update Operation
+
+
+The put() method updates an existing record or adds a new one when the key doesn't exist. Its versatility renders it suitable for data manipulation, specifically updating and inserting.
+
+
+```javascript
+const request = objectStore.put(data);
+```
+
+
+### Delete Operation
+
+
+To remove a specific record from an object store based on its key, one must employ the delete() method; this method offers a direct approach for deleting entries.
+
+
+```javascript
+const request = objectStore.delete(key);
+```
+
+
+## Implementation Example
+
+
+All the important methods of the above CRUD operation are implemented in this code. It presents database data as a table, each record accompanied by delete and update buttons. When you click on the create button, it displays an element for form creation on screen; thereby allowing entry of name and email to be inserted into the database. By default, this form remains hidden; it only appears upon button click and subsequently vanishes when its task is complete. The 'prompt()' method populates the details update form, a feature that provides convenience for users as alerts also appear in this same location. Moreover: pertinent alerts serve to signal either successful events or errors to the user.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+   <style>
+      body {
+         font-family: Arial, sans-serif;
+         margin: 20px;
+      }
+      h2 {
+         color: #333;
+      }
+
+      button {
+         padding: 8px;
+         margin: 5px;
+      }
+
+      #createForm, #updateForm {
+         display: none;
+         border: 1px solid #ddd;
+         padding: 10px;
+         margin-bottom: 10px;
+      }
+
+      table {
+         border-collapse: collapse;
+         width: 100%;
+         margin-top: 20px;
+         width: auto;
+      }
+
+      th, td {
+         border: 1px solid #dddddd;
+         text-align: left;
+         padding: 8px;
+      }
+
+      th {
+         background-color: #f2f2f2;
+      }
+   </style>
+</head>
+<body>
+   ## IndexedDB CRUD Operations
+   <button onclick="showCreateForm()">Create Data</button>
+   <div id="createForm" style="display: none;">
+      // hidden by default, displayed on create button click
+      ### Create Data
+      <label for="name">Name:</label>
+      <input type="text" id="name" required><br><br>
+      <label for="email">Email:</label>
+      <input type="email" id="email" required><br>
+      <button onclick="createData()">Save</button>
+      <button onclick="cancelCreate()">Cancel</button>
+   </div>
+   <table id="data-table">
+      <thead>
+         <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Actions</th>
+         </tr>
+      </thead>
+      <tbody></tbody>
+   </table>
+   <script>
+      const dbName = "myDatabase";
+      let db;
+	   // Open/create indexedDB named myDatabase with version 11
+      const request = window.indexedDB.open(dbName, 11);
+      request.onerror = (event) => {
+         alert("Database error: " + event.target.errorCode);
+      };
+
+      request.onsuccess = (event) => {
+         db = event.target.result;
+         showData();
+      };
+      request.onupgradeneeded = (event) => {
+         db = event.target.result;
+         const objectStore = db.createObjectStore("myObjectStore", { keyPath: "id", autoIncrement: true });
+         objectStore.createIndex("name", "name", { unique: false });
+         objectStore.createIndex("email", "email", { unique: true });
+      };
+      function showData() {
+         //populates the table from the db
+         const transaction = db.transaction(["myObjectStore"], "readonly");
+         const objectStore = transaction.objectStore("myObjectStore");
+         const tableBody = document.querySelector("#data-table tbody");
+         tableBody.innerHTML = "";
+         const request = objectStore.openCursor();
+         request.onsuccess = (event) => {
+            const cursor = event.target.result;
+            if (cursor) {
+               const row = tableBody.insertRow();
+               row.insertCell(0).textContent = cursor.value.id;
+               row.insertCell(1).textContent = cursor.value.name;
+               row.insertCell(2).textContent = cursor.value.email;
+               const actionsCell = row.insertCell(3);
+               //update & delete is performed on the basis of id, hence id is passed as parameter to functions when corresponding button is clicked
+               actionsCell.innerHTML = 
+               <button onclick="showUpdateForm(${cursor.value.id})">Update</button>
+               <button onclick="deleteData(${cursor.value.id})">Delete</button>
+                    `;
+               cursor.continue();
+            }
+         };
+      }
+
+      function createData() {
+         const transaction = db.transaction(["myObjectStore"], "readwrite");
+         const objectStore = transaction.objectStore("myObjectStore");
+         const name = document.getElementById("name").value;
+         const email = document.getElementById("email").value;
+
+         const newData = {
+            name: name,
+            email: email
+         };
+
+         const request = objectStore.add(newData);
+
+         request.onsuccess = () => {
+            showData();
+            cancelCreate();
+            alert("Data added successfully")
+         };
+
+         request.onerror = () => {
+            alert("Error creating data.");
+         };
+      }
+
+      function showCreateForm() {
+         document.getElementById("createForm").style.display = "block";
+      }
+
+      function cancelCreate() {
+      //if the user decides to not insert the record.
+      document.getElementById("createForm").style.display = "none";
+         document.getElementById("name").value = "";
+         document.getElementById("email").value = "";
+      }
+
+      function showUpdateForm(id) {
+         const transaction = db.transaction(["myObjectStore"], "readwrite");
+         const objectStore = transaction.objectStore("myObjectStore");
+
+         const request = objectStore.get(id);
+
+         request.onsuccess = (event) => {
+            const data = event.target.result;
+ 
+            if (data) {
+               const name = prompt("Update Name:", data.name);
+               const email = prompt("Update Email:", data.email);
+
+               if (name !== null && email !== null) {
+                  data.name = name;
+                  data.email = email;
+
+                  const updateRequest = objectStore.put(data);
+
+                  updateRequest.onsuccess = () => {
+                     showData();
+                     alert("Updated data for "+data.name)
+                  };
+
+                  updateRequest.onerror = () => {
+                     alert("Error updating data.");
+                  };
+               }
+            }
+         };
+      }
+
+      function deleteData(id) {
+         const transaction = db.transaction(["myObjectStore"], "readwrite");
+         const objectStore = transaction.objectStore("myObjectStore");
+ 
+         const request = objectStore.delete(id);
+ 
+         request.onsuccess = () => {
+            showData();
+            alert("Deleted data for id "+id)
+         };
+
+         request.onerror = () => {
+            alert("Error deleting data.");
+         };
+      }
+     
+   </script>
+</body>
+</html>
+```
+
+
+Try running the above program. In the output, you will get an interface to create, update, and delete data. The newly created or updated data will appear in tabular form just after the operation is finished.
+

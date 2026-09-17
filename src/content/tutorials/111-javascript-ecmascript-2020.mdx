@@ -1,0 +1,229 @@
+---
+title: "JavaScript - ECMAScript 2020"
+description: "Learn JavaScript - ECMAScript 2020 with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1110
+group: "JavaScript Versions"
+seoTitle: "JavaScript - ECMAScript 2020 — CodesCompiler JavaScript Guide"
+permalink: "javascript-ecmascript-2020"
+---
+
+
+# JavaScript - ECMAScript 2020
+
+
+
+
+The ECMAScript 2020 version of JavaScript was released in 2020. Notable features added in this version include thenullish coalescing operator(??) for more concise default value assignment and dynamicimport()for on-demand module loading. BigInt  provides a way to safely work with very large integers. This chapter will discuss all the newly added features in ECMAScript 2020.
+
+
+## Features Added in ECMAScript 2020
+
+
+Here are the new methods, features, etc., added to the ECMAScript 2020 version of JavaScript.
+
+
+
+- BigInt
+- Promise allSettled()
+- String matchAll()
+- The Nullish Coalescing Operator (??)
+- The Optional Chaining Operator (?.)
+
+
+
+Here, we have explained each feature in detail.
+
+
+## BigInt Primitive DataType
+
+
+The ECMAScript 2020 introduced BigInt to the primitive data types. You can use the Big Int when you need to store a large number, which cant be represented using the 64-bit representation.
+
+
+To convert the number into the Big int, you can write the number followed by n.
+
+
+### Example
+
+
+In the below code, we have defined the number of big int data type.
+
+
+```html
+<html>
+<body>
+   <div id = "output">The number of bigint type is: </div>
+   <script>
+      const bigNum = 1325461651565143545565n;
+      document.getElementById("output").innerHTML += bigNum;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The number of bigint type is: 1325461651565143545565
+```
+
+
+## The Nullish Coalescing Operator (??)
+
+
+The JavaScript Nullish Coalescing operator returns the left operand if it is not undefined or null. Otherwise, it returns the right operand. It is used to set default values to the variables.
+
+
+### Example
+
+
+In the below code, the left operand for the nullish coalescing operator is undefined. So, it returns the value of the right operand.
+
+
+```html
+<html>
+<body>
+   <div id = "output">The value of the str is: </div>
+   <script>
+      let str = undefined ?? "Hello";
+      document.getElementById("output").innerHTML += str;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The value of the str is: Hello
+```
+
+
+## Promise allSettled() Method
+
+
+The Promise.allSettled() method returns the status of all promises once all promises get fulfilled.
+
+
+### Example
+
+
+In the code below, we have defined the array of promises.
+
+
+After that, we used the promise.allSettled() method to fulfill all promises. In the output, you can see that method returns the array of objects, representing the status and result of each promise.
+
+
+```html
+<html>
+<body>
+   <div id = "output"> </div>
+   <script>
+      const promises = [
+         Promise.resolve("Hello"),
+         Promise.reject("Error message"),
+         Promise.resolve(21342)
+      ];
+      Promise.allSettled(promises)
+         .then(results => {
+            document.getElementById("output").innerHTML += JSON.stringify(results);
+         });
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+[{"status":"fulfilled","value":"Hello"},{"status":"rejected","reason":"Error message"},{"status":"fulfilled","value":21342}]
+```
+
+
+## The String matchAll() Method
+
+
+The string matchAll() method matches all occurrences of the particular string substring. It takes the string or regular expression as a parameter.
+
+
+### Example
+
+
+In the below code, we used the String.matchAll() method to match the abcd substring in the str string. The method returns an iterator of all matching occurrences.
+
+
+```html
+<html>
+<body>
+   <div id = "output">The matching results are: <br></div>
+   <script>
+      let str = "Abcd abcd abcd";
+      let matches = str.matchAll('abcd');
+      for (let x of matches) {
+         document.getElementById("output").innerHTML += x + "<br>"
+      }
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The matching results are:
+abcd
+abcd
+```
+
+
+## The Optional Chaining Operator (?.)
+
+
+The Optional chaining operator is used to access the nested object properties. If any nested object is undefined, it returns undefined rather than throwing an error.
+
+
+### Example
+
+
+In the code below, the obj object contians the obj1 nested object, containing the name property.
+
+
+We try to access the obj2 objects name property with an optional chaining operator. Obj2 is not defined here, so it returns the undefined rather than throwing an error.
+
+
+```html
+<html>
+<body>
+   <div id = "output">The name of obj2 is: </div>
+   <script>
+      let obj = {
+         obj1: {
+            name: "JavaScript",
+         }
+      }
+      document.getElementById("output").innerHTML += obj?.obj2?.name;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The name of obj2 is: undefined
+```
+
+
+Warning  Some of the above features are not supported by some browsers. So, you can use the polyfill to avoid errors.
+

@@ -1,0 +1,259 @@
+---
+title: "PYTHON - Automation Tutorial"
+description: "Learn PYTHON - Automation Tutorial with clear explanation, code examples, and practical guide."
+category: "python"
+order: 2270
+group: "Python Advanced Concepts"
+seoTitle: "PYTHON - Automation Tutorial — CodesCompiler PYTHON Guide"
+permalink: "python-automation-tutorial"
+---
+
+
+# Python - Automation Tutorial
+
+
+
+
+## Automation using Python
+
+
+Automation with Python involves using programming techniques to perform tasks automatically, typically without human intervention. Python provides various libraries to make it a powerful tool for automating different types of repetitive tasks including, task scheduling, web scraping, GUI automation and many more.
+
+
+Utilizing the Python's extensive libraries, can create automation solutions to fit specific needs.
+
+
+## Python Libraries for Automation
+
+
+Following are the few of the Python libraries that are commonly used for automation −
+
+
+
+- unittest− Unit testing framework in Python.
+- Selenium− Web automation framework for testing web applications across different browsers.
+- Beautiful Soup− Library for parsing HTML and XML documents, used for web scraping.
+- pandas− Data manipulation library, useful for automating data analysis tasks.
+- requests− HTTP library for sending HTTP requests and handling responses.
+- Selenium− A web automation framework for testing web applications across different browsers.
+- PyAutoGUI− GUI automation library for simulating mouse and keyboard actions.
+
+
+
+In this tutorial you will learn about the various aspects of automation using Python, from scheduling tasks withschedulemodule, web scraping withBeautifulSoup, and GUI automation withBeautifulSoup.
+
+
+Here we are providing practical examples and please ensure that you have the necessary modules installed before executing the provided codes in your local system using the below commands in your command prompt −
+
+
+```python
+pip install schedule
+pip install beautifulsoup4
+pip install pyautogui
+```
+
+
+## Python Automation with "schedule" Module
+
+
+Theschedulemodule in Python allows scheduling tasks to run automatically at specified intervals or times. It's ideal for automating repetitive tasks such as job scheduling, periodic tasks, or time-based events.
+
+
+### Example
+
+
+This example demonstrates the application of Python for automating routine tasks such as scheduling weekly meetings, setting alarms, and more, using Python'sschedulemodule.
+
+
+```python
+import schedule
+import time
+
+# Function definitions for scheduled tasks
+def alarm():
+   print("Time to restart the server   ")
+
+def job():
+   print("Starting daily tasks   ")
+
+def meet():
+   print('Weekly standup meeting   ')
+
+# Schedule tasks
+schedule.every(5).seconds.do(alarm)  # Run every 5 seconds
+schedule.every().day.at("10:30").do(job)  # Run daily at 10:30 AM
+schedule.every().monday.at("12:15").do(meet)  # Run every Monday at 12:15 PM
+
+# Main loop to execute scheduled tasks
+while True:
+   schedule.run_pending()
+   time.sleep(0.5)
+```
+
+
+Output
+
+
+On executing the above code we will get the following output −
+
+
+```python
+Time to restart the server   
+Time to restart the server   
+Time to restart the server 
+...
+```
+
+
+## Python Web Scraping
+
+
+Web scraping is a straightforward example of automation task. It is a process of automatically extracting information from websites. This technique involves fetching web pages and extracting the required data from the HTML content.
+
+
+Web scraping is widely used for data mining, data analysis, and automated tasks where collecting information from the web is necessary.
+
+
+### Example
+
+
+This example demonstrates how to useBeautifulSoupand theurllib.requestmodule to scrape a webpage for URLs containing the keyword "python".
+
+
+```python
+from bs4 import BeautifulSoup
+from urllib.request import urlopen
+import re
+
+html = urlopen("https://www.tutorialspoint.com/python/index.htm")
+content = html.read()
+soup = BeautifulSoup(content, "html.parser")
+for a in soup.findAll('a',href=True):
+   if re.findall('python', a['href']):
+      print("Python URL:", a['href'])
+```
+
+
+Output
+
+
+On executing the above code we will get the following output −
+
+
+```python
+Python URL: /machine_learning_with_python/index.htm
+Python URL: /python_pandas/index.htm
+Python URL: /python/index.htm
+Python URL: /python/index.htm
+Python URL: /python_pandas/index.htm
+Python URL: /python_pillow/index.htm
+Python URL: /machine_learning_with_python/index.htm
+Python URL: /python_technologies_tutorials.htm
+Python URL: /python/index.htm
+....
+```
+
+
+## Automating Mouse Movements with "pyautogui"
+
+
+Thepyautoguimodule allows your Python scripts to automate mouse movements, keyboard inputs, and window interactions, useful for testing GUI applications or automating repetitive desktop tasks.
+
+
+### Example
+
+
+This example demonstrates how the Python'spyautoguimodule can be used to automate mouse movements in a square pattern.
+
+
+```python
+import pyautogui
+
+# Move the mouse in a larger square pattern
+for i in range(5):
+   pyautogui.moveTo(300, 100, duration=0.25)   
+   pyautogui.move(300, 0, duration=0.25)       
+   pyautogui.move(0, 300, duration=0.25)       
+   pyautogui.move(-300, 0, duration=0.25)      
+   pyautogui.move(0, -300, duration=0.25)
+```
+
+
+Output
+
+
+On executing the above code we will get the following output −
+
+
+## Automating Unit Testing in Python
+
+
+The unittest module in Python is used for automated testing. Automated unit testing is the practice of writing tests for individual units of code, such as functions or methods, and running these tests automatically to ensure they behave as expected.
+
+
+Theunittestmodule in Python is a built-in library that provides a framework for creating and running automated tests.
+
+
+### Example
+
+
+This example demonstrates how to use theunittestmodule in Python to perform automated testing on string methods. Each test case method begins with the prefixtest_, which is recognized by theunittestframework as a method to run.
+
+
+```python
+# importing unittest module
+import unittest
+
+class TestingStringMethods(unittest.TestCase):
+   # string equal
+   def test_string_equality(self):
+      # if both arguments are then it's succes
+      self.assertEqual('ttp' * 5, 'ttpttpttpttpttp')
+   
+   # comparing the two strings
+   def test_string_case(self):
+      # if both arguments are then it's succes
+      self.assertEqual('Tutorialspoint'.upper(), 'TUTORIALSPOINT')
+
+   # checking whether a string is upper or not
+   def test_is_string_upper(self):
+      # used to check whether the statement is True or False
+      self.assertTrue('TUTORIALSPOINT'.isupper())
+      self.assertFalse('TUTORIALSpoint'.isupper())
+      
+   def test_string_startswith(self):
+       # Used the startswith() to identify the start of the string
+       self.assertTrue('tutorialspoint'.startswith('putor'))
+       self.assertFalse('tutorialspoint'.startswith('point'))
+       
+# running the tests
+unittest.main(verbosity=2)
+```
+
+
+Output
+
+
+On executing the above code we will get the following output −
+
+
+```python
+test_is_string_upper (__main__.TestingStringMethods) ... ok
+test_string_case (__main__.TestingStringMethods) ... ok
+test_string_equality (__main__.TestingStringMethods) ... ok
+test_string_startswith (__main__.TestingStringMethods) ... FAIL
+
+======================================================================
+FAIL: test_string_startswith (__main__.TestingStringMethods)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "main.py", line 23, in test_string_startswith
+    self.assertTrue('tutorialspoint'.startswith('putor'))
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.000s
+
+FAILED (failures=1)
+```
+

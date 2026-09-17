@@ -1,0 +1,176 @@
+---
+title: "JavaScript - Dynamic Imports"
+description: "Learn JavaScript - Dynamic Imports with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2540
+group: "JavaScript Miscellaneous"
+seoTitle: "JavaScript - Dynamic Imports — CodesCompiler JavaScript Guide"
+permalink: "javascript-dynamic-imports"
+---
+
+
+# JavaScript - Dynamic Imports
+
+
+
+
+## Dynamic Imports
+
+
+Whenever the application code grows and contains thousands of lines, it is important to split the code into modules. Modules allow developers to break down complex codes and use them in different files by importing.
+
+
+In JavaScriptmoduleschapter, you learned to import and export objects from the modules, but it was a static import, as we load them at the top of the code. Sometimes, we need to import the modules whenever needed rather than importing them statically to improve the performance of the web application. It is also calleddynamic imports.
+
+
+## The import() Expression for Dynamic Imports
+
+
+Whenever you need to import a module dynamically, you can use theimport()expression, which returns the promise. We can import the module dynamically using the import() expression anywhere in the code.
+
+
+### Syntax
+
+
+Users can follow the syntax below to import modules dynamically using the import() expression.
+
+
+```javascript
+import(moduleName).then(module => {
+        // Use the module here.
+    });
+```
+
+
+In the above syntax, we use the then() method with the import() expression to resolve the promise.
+
+
+### Parameters
+
+
+
+- moduleName− It takes a module name or path as a parameter, which we need to load dynamically.
+
+
+
+### Return Value
+
+
+It returns the promise.
+
+
+## Examples of Dynamic Import
+
+
+### Example 1
+
+
+Filename: test.js
+
+
+In the code below, we export the 'val1' variable containing the integer value.
+
+
+```javascript
+export const val1 = 11;
+```
+
+
+Filename: test.html
+
+
+In the code below, we have used the if-else statement. We import the module and use its objects in the if() block.
+
+
+This way, we can import modules dynamically using the import() expression.
+
+
+```html
+<html>
+<body>
+   <div>Example 1 - dynamic import in JavaScript</div>
+   <div id = "output"> </div>
+   <script type="module">
+      let output = document.getElementById('output');
+      let val = 2;
+      if (val < 5) {
+         // Importing the module
+         import('./test.js').then(module => {
+            output.innerHTML = "The imported value is " + module.val1;
+         });
+      }
+      else {
+         output.innerHTML = "Value is greater than 5";
+      }
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Example 1 - dynamic import in JavaScript
+The imported value is 11
+```
+
+
+### Example 2
+
+
+Filename: test.js
+
+
+In the code below, we have defined the add() function, which returns the sum of two numbers.
+
+
+```javascript
+export function add(a, b) {
+    return a + b;
+}
+```
+
+
+Filename: test.html
+
+
+In the code below, we have added the 'click' event listener to the button. When a user clicks the button, it loads the 'test.js' module. Here, we used the async/await to handle the promise returned by the import() expression.
+
+
+After that, we use the add() function of the module to sum two numbers, and users can observe the summation result in the output.
+
+
+```html
+<html>
+   <body>
+   <div>Example 2 - dynamic imports in JavaScript</h2>
+   <div id = "output"> </div>
+   <button id = "button"> Click me </button>
+   <script type="module">
+      let output = document.getElementById('output');
+      let btn = document.getElementById('button');
+      //When the button is clicked, load the module
+      btn.addEventListener('click', async () => {
+         let module = await import('./test.js');
+         let result = module.add(2, 3);
+         output.innerHTML = "The sum of 2 and 3 is " + result;
+      });
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Example 2 - dynamic imports in JavaScript
+The sum of 2 and 3 is 5
+```
+
+
+This way, developers can import modules dynamically in the function, if-else block, etc., whenever needed rather than importing them at the top of the code.
+

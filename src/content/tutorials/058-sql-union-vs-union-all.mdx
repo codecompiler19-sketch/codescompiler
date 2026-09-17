@@ -1,0 +1,181 @@
+---
+title: "SQL - UNION vs UNION ALL"
+description: "Learn SQL - UNION vs UNION ALL with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 580
+group: "SQL Operators and Clauses"
+seoTitle: "SQL - UNION vs UNION ALL — CodesCompiler SQL Guide"
+permalink: "sql-union-vs-union-all"
+---
+
+
+# SQL - UNION vs UNION ALL
+
+
+Table of contentDifference Between SQL UNION and UNION ALLSQL UNION OperatorSQL UNION ALL Operator
+
+
+
+
+SQLUNIONandUNION ALLoperators combine rows from multiple tables into a single result set.UNIONreturns only distinct rows, whileUNION ALLreturns all rows, including duplicates.
+
+
+For these operators to work, the tables must have the same number of columns with matching data types, though the number of rows can differ. The column names from the first table determine the column names in the result, and matching columns from other tables are merged accordingly.
+
+
+## Difference Between SQL UNION and UNION ALL
+
+
+The following table shows the basic differences betweenUNIONandUNION ALLoperators in SQL:
+
+
+FeaturesUNIONUNION ALLDuplicate RowsRemoves duplicate rows from the result set.Keeps all rows, including duplicates.PerformanceSlower because it checks and removes duplicates.Faster because it doesn't check for duplicatesResult SizeReturns only unique records.Returns all matching records, including repeated ones.Use CaseUse when you need distinct results without duplicates.Use when you want to keep all the rows including duplicates.SortingAutomatically sorts data to remove duplicates.Does not sort the data; keeps the original order.SyntaxSELECT ... FROM ...UNIONSELECT ... FROM ...;SELECT ... FROM ...UNION ALLSELECT ... FROM ...;
+
+
+## SQL UNION Operator
+
+
+TheUNIONoperator in SQL combines data from multiple tables that are union-compatible, similar to the union operation in relational algebra.
+
+
+It returns only distinct rows in the result set, automatically eliminating any duplicate records from the combined tables.
+
+
+### Syntax
+
+
+Following is the syntax of UNION operator in SQL:
+
+
+```sql
+SELECT * FROM table1
+UNION
+SELECT * FROM table2;
+```
+
+
+### Example
+
+
+Let us first create two tables COURSES_PICKED and EXTRA_COURSES_PICKED with the same number of columns having the same data types.
+
+
+Create table COURSES_PICKED using the following query:
+
+
+```sql
+CREATE TABLE COURSES_PICKED(
+   STUDENT_ID INT NOT NULL, 
+   STUDENT_NAME VARCHAR(30) NOT NULL, 
+   COURSE_NAME VARCHAR(30) NOT NULL
+);
+```
+
+
+Insert values into the COURSES_PICKED table with the help of the query given below:
+
+
+```sql
+INSERT INTO COURSES_PICKED VALUES
+(1, 'JOHN', 'ENGLISH'),
+(2, 'ROBERT', 'COMPUTER SCIENCE'),
+(3, 'SASHA', 'COMMUNICATIONS'),
+(4, 'JULIAN', 'MATHEMATICS');
+```
+
+
+The table will be displayed as shown below:
+
+
+STUDENT_IDSTUDENT_NAMECOURSE_NAME1JOHNENGLISH2ROBERTCOMPUTER SCIENCE3SASHACOMMUNICATIONS4JULIANMATHEMATICS
+
+
+Now, let us create another table EXTRA_COURSES_PICKED using the following query:
+
+
+```sql
+CREATE TABLE EXTRA_COURSES_PICKED(
+   STUDENT_ID INT NOT NULL, 
+   STUDENT_NAME VARCHAR(30) NOT NULL, 
+   EXTRA_COURSE_NAME VARCHAR(30) NOT NULL
+);
+```
+
+
+Following is the query to insert values into the "EXTRA_COURSES_PICKED" table:
+
+
+```sql
+INSERT INTO EXTRA_COURSES_PICKED VALUES
+(1, 'JOHN', 'PHYSICAL EDUCATION'),
+(2, 'ROBERT', 'GYM'),
+(3, 'SASHA', 'FILM'),
+(4, 'JULIAN', 'MATHEMATICS');
+```
+
+
+The table will be created as shown below:
+
+
+STUDENT_IDSTUDENT_NAMECOURSES_PICKED1JOHNPHYSICAL EDUCATION2ROBERTGYM3SASHAFILM4JULIANMATHEMATICS
+
+
+Now, let us combine both of these tables using the UNION query as follows:
+
+
+```sql
+SELECT * FROM COURSES_PICKED
+UNION
+SELECT * FROM EXTRA_COURSES_PICKED;
+```
+
+
+The resultant table obtained after performing the UNION operation is as follows:
+
+
+STUDENT_IDSTUDENT_NAMECOURSE_NAME1JOHNENGLISH2ROBERTCOMPUTER SCIENCE3SASHACOMMUNICATIONS4JULIANMATHEMATICS1JOHNPHYSICAL EDUCATION2ROBERTGYM3SASHAFILM
+
+
+## SQL UNION ALL Operator
+
+
+UNION ALLis an SQL operator used to combine data from multiple tables into a single result set, including all duplicate rows.
+
+
+For example, consider two tables: one listing the number of international games a player has played, and the other listing national games.
+
+
+In the tables above, Kohli played 234 matches internationally and 234 matches nationally. Even though the numbers are the same, these represent separate matches. To include both rows in the combined result showing the total matches played, we use theUNION ALLoperator.
+
+
+### Syntax
+
+
+Following is the syntax of UNION ALL operator in SQL:
+
+
+```sql
+SELECT * FROM table1
+UNION ALL
+SELECT * FROM table2;
+```
+
+
+### Example
+
+
+Let us perform a UNION ALL operation on the sample tables COURSES_PICKED and EXTRA_COURSES_PICKED. The query for this operation is shown below:
+
+
+```sql
+SELECT * FROM COURSES_PICKED
+UNION ALL
+SELECT * FROM EXTRA_COURSES_PICKED;
+```
+
+
+The resultant table is displayed as follows:
+
+
+STUDENT_IDSTUDENT_NAMECOURSE_NAME1JOHNENGLISH2ROBERTCOMPUTER SCIENCE3SASHACOMMUNICATIONS4JULIANMATHEMATICS1JOHNPHYSICAL EDUCATION2ROBERTGYM3SASHAFILM4JULIANMATHEMATICS
+

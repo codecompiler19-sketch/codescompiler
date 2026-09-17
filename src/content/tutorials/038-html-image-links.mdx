@@ -1,0 +1,205 @@
+---
+title: "HTML - Image Links"
+description: "Learn HTML - Image Links with clear HTML concepts, practical examples, and maintainable markup."
+category: "html"
+order: 380
+group: "HTML Links"
+seoTitle: "HTML - Image Links — CodesCompiler HTML Guide"
+permalink: "html-image-links"
+---
+
+## HTML - Image Links
+
+Images can also be used as links in HTML, which means by clicking the images we can navigate to other web pages or resources. HTML image links are very useful in creating websites like photo galleries, portfolios, online stores, and so on. In this article, we will learn how to use images to create hyperlinks. It is similar to the HTML - Text Link .
+
+## Creating Image Links
+
+To create an HTML image link , we need an `<img>` tag and an anchor element. The image element is used to display the image on the web page, and the anchor element is used to specify the destination URL of the link.
+
+Here, the href attribute of `<a>` element contains the destination link and src attribute of `<img>` tag contains the path of image.
+
+### Syntax
+
+Here, the href attribute of the `<a>` element contains the destination link, and the src attribute of the `<img>` tag contains the path of the image.
+
+```html
+<a href=" destination URL">
+   <img src="image URL" alt="alternative text">
+</a>
+```
+
+## Examples of HTML Image Links
+
+Here are some example codes that explain the usage of image links in HTML:
+
+- Create Hyperlink for an Image
+
+- Image Link with Tooltip
+
+- Mouse-Sensitive Images Server-Side Image Maps Client-Side Image Maps
+
+- Server-Side Image Maps
+
+- Client-Side Image Maps
+
+## Create Hyperlink for an Image
+
+In the following example, we are using an image as a hyperlink. If you execute the below code, an image will be displayed, and if we click on it, the page will redirect to the home page of Tutorials Point.
+
+### Example
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+   <title>Image Hyperlink Example</title>
+</head>
+<body>
+   <a href="https://www.tutorialspoint.com">
+      <img src="/html/images/logo.png" 
+           alt="Tutorials Point" 
+           border="0" />
+   </a>
+</body>
+</html>
+```
+
+## Image Link with Tooltip
+
+You can also define a tooltip for an image link; when someone moves the mouse over the linked image, it will display a tooltip. To set the tooltip, you can set the title attribute of the `<a>` tag.
+
+### Example
+
+The following example demonstrates a tooltip to an image link:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+   <title>Image Hyperlink Example</title>
+</head>
+<body>
+   <a href="https://www.tutorialspoint.com" title="Go to TutorialsPoint">
+      <img src="/html/images/logo.png" 
+           alt="Tutorials Point" 
+           border="0" />
+   </a>
+</body>
+</html>
+```
+
+In the above example, hovering over the logo will display the tooltip " Go to TutorialsPoint".
+
+## Mouse-Sensitive Images
+
+The HTML and XHTML standards provide a feature that lets us embed several different links inside a single image. We can create different links on the single image based on different coordinates available on the image.
+
+Once the links are attached to all coordinates, clicking on the different parts of the image redirects us to target documents. Such mouse-sensitive images are known as image maps.
+
+There are two ways to create image maps:
+
+- Server-side image maps: This is enabled by the ismap attribute of the `<img>` tag and requires access to a server and related image-map processing applications.
+
+- Client-side image maps: This is created with the usemap attribute of the `<img>` tag, along with corresponding `<map>` and `<area>` tags.
+
+### Server-Side Image Maps
+
+In the server-side image maps , we simply put the image inside a hyperlink and use the ismap attribute, which makes it a special image, and when the user clicks some place within the image, the browser passes the coordinates of the mouse pointer along with the URL specified in the `<a>` tag to the web server. The server uses the mouse pointer coordinates to determine which document to deliver back to the browser.
+
+When ismap is used, the href attribute of the containing `<a>` tag must contain the URL of a server application like a CGI or PHP script to process the incoming request based on the passed coordinates.
+
+The coordinates of the mouse position are screen pixels counted from the upper-left corner of the image, beginning with (0,0). The coordinates, preceded by a question mark, are added to the end of the URL.
+
+#### Example
+
+The following code snippet demonstrates the use of server-side image maps.
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+   <title>ISMAP Hyperlink Example</title>
+</head>
+<body>
+   p
+      Click on the Image to get its coordinates. 
+   
+   <a href="#" target="_self">
+      <img src="/images/logo.png" 
+           alt="Tutorials Point" 
+           ismap/>
+   </a>
+</body>
+</html>
+```
+
+On executing the above code, tutorialspoint logo will be displayed. When we click on the logo, the address bar will display the respective coordinates, as shown below:
+
+This way we can assign distinct links to different coordinates of the image, and when those coordinates are clicked, we will be redirected to the linked documents. To learn more about the ismap attribute, check HTML ismap Attribute
+
+### Client-Side Image Maps
+
+Client-side image maps are enabled by the usemap attribute of the `<img />` tag and defined by special `<map>` and `<area>` extension tags. The `<map>` along with `<area>` tags define all the image coordinates and corresponding links. The `<area>` tag inside the map tag specifies the shape and the coordinates to define the boundaries of each clickable hotspot available on the image.
+
+The image that is going to form the map is inserted into the page using the `<img />` tag as a normal image, except it carries an extra attribute called usemap .
+
+On running the below code, an image with clickable areas will be displayed. If you click on one of the area, you will be redirected to the tutorial of that part.
+
+To know how the value of the coords attribute is calculated, you can visit the explanation of coords attribute .
+
+#### Example
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+   <h1>Welcome to our interactive map!</h1>
+   p
+      Click on a region to visit the 
+      respective language page:
+   
+   <img src="/html/images/lang.jpg" 
+        usemap="#langmap" 
+        alt="language Map" />
+
+   <map name="langmap">
+      <area shape="rect" 
+            coords="0,0,180,165" 
+            alt="HTML" 
+            href="html/index.htm" 
+            target="_blank" 
+            hreflang="en" />
+      <area shape="rect" 
+            coords="180,0,375,167" 
+            alt="JavaScript" 
+            href="javascript/index.htm" 
+            target="_blank" 
+            hreflang="en" />
+      <area shape="rect" 
+            coords="0,166,180,338" 
+            alt="PHP" 
+            href="/php/index.htm" 
+            target="_blank" hreflang="en" />
+      <area shape="rect" 
+            coords="180,165,375,338" 
+            alt="ReactJS" 
+            href="reactjs/index.htm" 
+            target="_blank" 
+            hreflang="en" />
+   </map>
+</body>
+</html>
+```
+
+## Coordinate System in HTML Images
+
+The actual value of coordinates is totally dependent on the shape of the clickable area. Let us understand the coordinates of different shapes.
+
+| Shape | Coordinates | Description |
+| :--- | :--- | :--- |
+| Rectangle | x 1 , y 1 , x 2 , y 2 | Where x 1 and y 1 are the coordinates of the upper left corner of the rectangle; x 2 and y 2 are the coordinates of the lower right corner. |
+| Circle | x c , y c , radius | Where x c and y c are the coordinates of the center of the circle, and radius is the circle's radius. A circle centred at 200,50 with a radius of 25 would have the attribute coords`=`" 200,50,25 ". |
+| Polygon | x 1 , y 1 , x 2 , y 2 , x 3 , y 3 , ... x n , y n | The various x-y pairs define vertices (points) of the polygon, with a "line" being drawn from one point to the next point. A diamond-shaped polygon with its top point at 20,20 and 40 pixels across at its widest points would have the attribute coords`=`" 20,20,40,40,20,60,0,40 ". |
+
+> Note: All coordinates are relative to the upper-left corner of the image (0,0). Each shape has a related URL. You can use any image software to know the coordinates of different positions. For example, the paint in Windows

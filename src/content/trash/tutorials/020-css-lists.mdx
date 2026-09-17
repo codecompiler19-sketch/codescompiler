@@ -1,0 +1,433 @@
+---
+title: "CSS - Styling Lists"
+description: "Learn CSS - Styling Lists with clear CSS layout principles, modern selectors, and practical examples."
+category: "css"
+order: 200
+group: "CSS Basics"
+seoTitle: "CSS - Styling Lists — CodesCompiler CSS Guide"
+permalink: "css-lists"
+---
+
+## CSS - Styling Lists
+
+Lists are useful as they present the information in a structured and organized manner. Lists improve the readability and comprehension of content on a web page. So, if the content is listed, it is easy to follow.
+
+Lists are commonly used to display items, steps, options, or any other type of related information that should be presented sequentially or in a group.
+
+This chapter will discuss how to control list type, position, style, etc., using CSS. Before that let us understand what are the type of lists in HTML.
+
+## Table of Contents
+
+## Types of Lists
+
+Following are types of lists used HTML.
+
+- Ordered List (`<ol>`): Used when the items need to be presented in a specific order. Commonly used for procedures, steps, instructions, or any sequence of information where the order matters.
+
+- Unordered List (`<ul>`): Used when the order of items doesn't matter, and you want to present items as a group. Commonly used for lists of features, benefits, options, or any non-sequential information.
+
+- Definition List (`<dl>`): Used for terms and their corresponding definitions.
+
+## List Style Type Property
+
+The CSS list-style-type property is used to change the marker (such as a bullet or number) style for list items in ordered (`<ol>`) or unordered (`<ul>`) lists.
+
+Following example shows some types of list styles.
+
+### Example
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        /* Unordered List Styles */
+        ul.circle {
+            list-style-type: circle; /* Circle bullets */
+        }
+
+        ul.square {
+            list-style-type: square; /* Square bullets */
+        }
+
+        ul.none {
+            list-style-type: none; /* No bullets */
+        }
+
+        /* Ordered List Styles */
+        ol.decimal {
+            list-style-type: decimal; /* Default decimal numbers */
+        }
+
+        ol.upper-roman {
+            list-style-type: upper-roman; /* Uppercase Roman numerals */
+        }
+
+        ol.lower-alpha {
+            list-style-type: lower-alpha; /* Lowercase alphabetic characters */
+        }
+    </style>
+</head>
+<body>
+    <h2>Unordered Lists</h2>
+    <ul class="circle">
+        <li>Circle bullet 1</li>
+        <li>Circle bullet 2</li>
+        <li>Circle bullet 3</li>
+    </ul>
+
+    <ul class="square">
+        <li>Square bullet 1</li>
+        <li>Square bullet 2</li>
+        <li>Square bullet 3</li>
+    </ul>
+
+    <ul class="none">
+        <li>No bullet </li>
+        <li>No bullet </li>
+        <li>No bullet </li>
+    </ul>
+
+    <h2>Ordered Lists</h2>
+    <ol class="decimal">
+        <li>Decimal number </li>
+        <li>Decimal number </li>
+        <li>Decimal number </li>
+    </ol>
+
+    <ol class="upper-roman">
+        <li>Roman numeral </li>
+        <li>Roman numeral </li>
+        <li>Roman numeral </li>
+    </ol>
+
+    <ol class="lower-alpha">
+        <li>Letter </li>
+        <li>Letter </li>
+        <li>Letter </li>
+    </ol>
+</body>
+</html>
+```
+
+## List Style Image Property
+
+The list-style-image property can be used to to specify an image/icon as an item list marker.
+
+You can use your own bullet style. If no image is found, then default bullets are returned.
+
+### Example
+
+```html
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        ul { 
+            list-style-image: url('/css/images/smiley.png');
+        }
+        ol{
+            list-style-type: upper-roman;
+            list-style-image: url('/css/images/smiley');      
+        }
+    </style>
+</head>
+
+<body>
+    <ul>
+        <li> This is unordered list </li>
+        <li> We made custom marker for this </li>
+    </ul>
+
+    <ol>
+        <li> Incorrect URL given for ol style </li>
+        <li> No custom image will be used.</li>
+        <li> Specified style type will be used. </li>
+    </ol>
+</body>
+
+</html>
+```
+
+> It is advisable to provide an alternative for an image as list marker, so that in case of image not getting loaded or gets corrupted, the user is having a fallback option.
+
+## List Style Position Property
+
+The list-style-position property indicates whether the marker should appear inside or outside of the box containing the bullet points. It can have one of the following values.
+
+- list-style-position: inside If the text goes onto a second line, the text will wrap underneath the marker. It will also have proper indentation.
+
+- list-style-position: outside If the text goes onto a second line, the text will be aligned with the start of the first line (to the right of the bullet).
+
+- list-style-position: inherit Inherits the property of the parent list in the case of nested lists.
+
+### Example
+
+```html
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body{
+            padding: 10px;
+        }
+        ul {
+            padding: 0;
+            border-left: solid 2px;
+        }
+    </style>
+</head>
+
+<body>
+  <ul style = "list-style-position:outside;">
+      <li>
+          The list style position property is outside. In this 
+          case when text overflows to the next line, the marker 
+          will lay outside the text area of list. 
+      </li>
+      <li> Check out yourselves. </li>
+  </ul>
+  <ul style = "list-style-position:inside;">
+      <li>
+          The list style position property is inside. In this 
+          case when text overflows to the next line, the marker 
+          will lay inside the text area of list. 
+      </li>
+      <li> Check out yourselves. </li>
+  </ul>
+</body>
+</html>
+```
+
+## List Style Shorthand Property
+
+The list-style property allows you to specify all the three list properties in a single declaration.
+
+```css
+ul{
+    list-style: url() | Marker Type |  Marker Position;
+}
+```
+
+You can follow any order of the values for the list-style property. If any of the value(s) is missing, it will be filled by the default value for the same. But there has to be minimum one value passed.
+
+### Example
+
+```html
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        ul{
+           list-style: url('/css/images/smiley.png')  circle outside;
+        }
+    </style>
+</head>
+
+<body>
+   <h2>List style shorthand</h2>
+      <ul>
+          <li> Item 1</li>
+          <li> Item 2</li>
+          <li> Item 3</li>
+          <li> Item 4</li>
+      </ul>
+</body>
+</html>
+```
+
+## Styling Unordered List
+
+Following example shows how to style a unordered list in CSS by adding background colors, hover effect and other CSS properties.
+
+### Example
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        .container {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 20px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        h2 {
+            color: #2c3e50;
+        }
+
+        .styled-list {
+            list-style-type: none; 
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .styled-list li {
+            background-color: #e3f2fd; 
+            margin: 5px 0; 
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .styled-list li::before {
+            content: ""; 
+            color: #3498db; 
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .styled-list ol li::before {
+            content: counter(list-item) ". "; 
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        .styled-list li:hover {
+            background-color: #bbdefb; 
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="ul">
+        <h2>Unordered List</h2>
+            <ul class="styled-list">
+                <li>First item</li>
+                <li>Second item</li>
+                <li>Third item</li>
+                <li>Fourth item</li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+</html>
+```
+
+## Styling Definition List
+
+The following example shows how to style a definition list in CSS by adding background colors, hover effects, and other CSS properties.
+
+### Example
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        .container {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 20px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        h2 {
+            color: #2c3e50;
+        }
+
+        .styled-dl {
+            margin: 20px 0;
+            padding: 0;
+        }
+
+        .styled-dl dt {
+            background-color: #e3f2fd;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .styled-dl dd {
+            margin-left: 20px;
+            margin-bottom: 10px;
+            padding-left: 10px;
+            border-left: 3px solid #3498db;
+            color: #555;
+            background-color: #f1f8e9;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .styled-dl dt:hover,
+        .styled-dl dd:hover {
+            background-color: #bbdefb;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="dl">
+        <h2>Definition List</h2>
+            <dl class="styled-dl">
+                <dt>HTML</dt>
+                <dd> 
+                    A standard markup language for creating web 
+                    pages.
+                </dd>
+
+                <dt>CSS</dt>
+                <dd>
+                    A style sheet language used for describing the 
+                    presentation of a document.
+                </dd>
+
+                <dt>JavaScript</dt>
+                <dd>
+                    A programming language that enables interactive 
+                    web pages.
+                </dd>
+            </dl>
+        </div>
+    </div>
+</body>
+
+</html>
+```
+
+## List Style Type Reference
+
+Following table lists possible values that can be used for property list-style-type :
+
+| Value | Description | Example |
+| :--- | :--- | :--- |
+| none | No any marker will be displayed. | NA |
+| disc (default) | A filled-in circle |  |
+| circle | An empty circle |  |
+| square | A filled-in square |  |
+| decimal | Number | 1, 2, 3, 4, 5, ... |
+| decimal-leading-zero | 0 before the number | 01, 02, 03, 04, 05, ... |
+| lower-alpha | Lowercase alphanumeric characters | a, b, c, d, e, ... |
+| upper-alpha | Uppercase alphanumeric characters | A, B, C, D, E, ... |
+| lower-roman | Lowercase Roman numerals | i, ii, iii, iv, v, ... |
+| upper-roman | Uppercase Roman numerals | I, II, III, IV, V, ... |
+| lower-greek | The marker is lower-greek | alpha, beta, gamma, ... |
+| lower-latin | The marker is lower-latin | a, b, c, d, e, ... |
+| upper-latin | The marker is upper-latin | A, B, C, D, E, ... |
+| hebrew | The marker is traditional Hebrew numbering |  |
+| armenian | The marker is traditional Armenian numbering |  |
+| georgian | The marker is traditional Georgian numbering |  |
+| cjk-ideographic | The marker is plain ideographic numbers |  |
+| hiragana | The marker is Japanese numbering - hiragana | a, i, u, e, o, ka, ki |
+| katakana | The marker is Japanese numbering - katakana | A, I, U, E, O, KA, KI |
+| hiragana-iroha | The marker is Japanese numbering (hiragana-iroha) | i, ro, ha, ni, ho, he, to |
+| katakana-iroha | The marker is Japanese numbering (katakana-iroha) | I, RO, HA, NI, HO, HE, TO |

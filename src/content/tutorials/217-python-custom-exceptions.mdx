@@ -1,0 +1,142 @@
+---
+title: "PYTHON - Custom Exceptions"
+description: "Learn PYTHON - Custom Exceptions with clear explanation, code examples, and practical guide."
+category: "python"
+order: 2170
+group: "Python Advanced Concepts"
+seoTitle: "PYTHON - Custom Exceptions — CodesCompiler PYTHON Guide"
+permalink: "python-custom-exceptions"
+---
+
+
+# Python - Custom Exceptions
+
+
+
+
+## What are Custom Exceptions in Python?
+
+
+Pythoncustom exceptionsare user-defined error classes that extend the base Exception class. Developers can define and handle specific error conditions that are unique to their application. Developers can improve their code by creating custom exceptions. This allows for more meaningful error messages and facilitates the debugging process by indicating what kind of error occurred and where it originated.
+
+
+To define a unique exception we have to typically create a new class that takes its name from Python's built-in Exception class or one of its subclasses. A corresponding except block can be used to raise this custom class and catch it.
+
+
+Developers can control the flow of the program when specific errors occur and take appropriate actions such as logging the error, retrying operations or gracefully shutting down the application. Custom exceptions can carry additional context or data about the error by overriding the__init__method and storing extra information as instance attributes.
+
+
+Using custom exceptions improves the clarity of error handling in complex programs. It helps to distinguish between different types of errors that may require different handling strategies. For example when a file parsing library might define exceptions like FileFormatError, MissingFieldError or InvalidFieldError to handle various issues that can arise during file processing. This level of granularity allows the client code to catch and address specific issues more effectively by improving the robustness and user experience of the software. Python's custom exceptions are a great tool for handling errors and writing better with more expressive code.
+
+
+## Why to Use Custom Exceptions?
+
+
+Custom exceptions in Python offer several advantages which enhances the functionality, readability and maintainability of our code. Here are the key reasons for using custom exceptions −
+
+
+
+- Specificity:Custom exceptions allow us to represent specific error conditions that are unique to our application.
+- Clarity:They make the code more understandable by clearly describing the nature of the errors.
+- Granularity:Custom exceptions allow for more precise error handling.
+- Consistency:They help to maintain a consistent error-handling strategy across the codebase.
+
+
+
+## Creating Custom Exceptions
+
+
+Creatingcustom exceptionsin Python involves defining new exception classes that extend from Python's built-in Exception class or any of its subclasses. This allows developers to create specialized error types that cater to specific scenarios within their applications. Here's how we can create and use custom exceptions effectively −
+
+
+### Define the Custom Exception Class
+
+
+We can start creating the custom exceptions by defining a new class that inherits fromExceptionor another exception class such asRuntimeError,ValueError, etc. depending on the nature of the error.
+
+
+Following is the example of defining the custom exception class. In this example CustomError is a custom exception class that inherits from Exception. The__init__ methodinitializes the exception with an optional error message −
+
+
+```python
+class CustomError(Exception):
+   def __init__(self, message):
+      super().__init__(message)
+      self.message = message
+```
+
+
+### Raise the Custom Exception
+
+
+To raise the custom exception we can use the raise statement followed by an instance of our custom exception class. Optionally we can pass a message to provide context about the error.
+
+
+In this functionprocess_data()the CustomError exception is raised when the data parameter is empty by indicating a specific error condition.
+
+
+```python
+def process_data(data):
+   if not data:
+      raise CustomError("Empty data provided")
+   # Processing logic here
+```
+
+
+### Handle the Custom Exception
+
+
+To handle the custom exception we have to use atry-except block. Catch the custom exception class in the except block and handle the error as needed.
+
+
+Here in the below code ifprocess_data([])raises a CustomError then the except block catches it and we can print the error message (e.message) or perform other error-handling tasks.
+
+
+```python
+try:
+   process_data([])
+except CustomError as e:
+   print(f"Custom Error occurred: {e.message}")
+   # Additional error handling logic
+```
+
+
+## Example of Custom Exception
+
+
+Following is the basic example of custom exception handling in Python. In this example we define a custom exception by subclassing the built-in Exception class and use a try-except block to handle the custom exception −
+
+
+```python
+# Define a custom exception
+class CustomError(Exception):
+   def __init__(self, message):
+      self.message = message
+      super().__init__(self.message)
+
+# Function that raises the custom exception
+def check_value(value):
+   if value < 0:
+      raise CustomError("Value cannot be negative!")
+   else:
+      return f"Value is {value}"
+
+# Using the function with exception handling
+try:
+   result = check_value(-5)
+   print(result)
+except CustomError as e:
+   print(f"Caught an exception: {e.message}")
+```
+
+
+### Output
+
+
+On executing the above code we will get the followingoutput−
+
+
+```python
+Caught an exception: Value cannot be negative!
+```
+

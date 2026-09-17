@@ -1,0 +1,384 @@
+---
+title: "JavaScript - Sets"
+description: "Learn JavaScript - Sets with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 710
+group: "JavaScript Objects"
+seoTitle: "JavaScript - Sets — CodesCompiler JavaScript Guide"
+permalink: "javascript-sets-object"
+---
+
+
+# JavaScript - Sets
+
+
+
+
+A JavaScriptSetobject is a collection of unique values. Each value can only occur once in a Set. ASetcan hold any value of any data type. The sets are introduced to JavaScript in ECMAScript 6 (ES6).
+
+
+JavaScript Sets are similar to Arrays, but there are some key differences:
+
+
+
+- Sets can only hold unique values, while Arrays can hold duplicate values.
+- Sets are not ordered, while Arrays are ordered.
+- Sets are faster to add and remove items from than Arrays.
+
+
+
+JavaScript Sets are often used to store unique values, such as the unique users who have visited a website. They can also be used to remove duplicate values from an Array.
+
+
+## Syntax
+
+
+Users can follow the syntax below to define a set in JavaScript −
+
+
+```javascript
+let set1 = new Set([iterable]);
+```
+
+
+In the above syntax, we used the Set() constructor function with a new keyword to define a set.
+
+
+## Parameters
+
+
+
+- Iterable −It is an optional parameter. The Set() constructor function traverses through the elements of the iterable and creates a new set using those elements.
+
+
+
+## Examples
+
+
+### Example (Access set elements)
+
+
+In the example below, we have passed the array containing the duplicate elements as an argument of the Set() constructor function. The num_set contains only unique values.
+
+
+We used the values() method to get the iterator of the set values. To traverse the iterator, we use the for...of loop. In the loop, we access the element and print it. You can observe that set contains unique values even if the input array contains duplicate elements.
+
+
+```html
+<html>
+<body>
+   pThe set elements are: 
+   p id = "output"
+   <script>
+  
+      const num_set = new Set([10, 20, 20, 20]);
+
+      for (let value of num_set.values()) {
+         document.getElementById("output").innerHTML += value + "<br> ";
+      }
+    
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The set elements are:
+
+10
+20
+```
+
+
+### Example (Insert elements into the sets)
+
+
+Users can use the add() method to insert the element into the set. Here, we have created the empty set. After that, we used the add() method 3 times to add the 60, 50, 50 elements into the set.
+
+
+We inserted the 50 for 2 times, but the set contains only once as it contains unique values.
+
+
+```html
+<html>
+<body>
+   pSet elements after adding element/s to it: 
+   <div id = "output"> </div>
+   <script>
+
+      const num_set = new Set();
+      num_set.add(60);
+      num_set.add(50);
+      num_set.add(50);
+
+      for (let value of num_set.values()) {
+         document.getElementById("output").innerHTML += value + "<br> ";
+      }
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Set elements after adding element/s to it:
+
+60
+50
+```
+
+
+### Example (Remove set elements)
+
+
+The delete() method of the set allows you to delete the element from the set. Here, we created the set containing the various numbers and used the delete() method to delete the 200 and 400 from the set.
+
+
+```html
+<html>
+<body>
+   p After deleting elements from the set: 
+   <div id = "output"> </div>
+   <script>
+
+      let num_set = new Set([100, 200, 300, 400, 500]);
+
+      num_set.delete(200);
+      num_set.delete(400);
+
+      for (let value of num_set.values()) {
+         document.getElementById("output").innerHTML += value + "<br> ";
+      }
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The set contains 100?: true
+```
+
+
+### Example (Check if the set contains a specific value)
+
+
+The example below demonstrates of using the has() method to check whether the set contains the specific value.
+
+
+Here, we check whether the set contains 100 and print the message in the output accordingly.
+
+
+```html
+<html>
+<body>
+   p id = "output"The set contains 100?: 
+   <script>
+      const num_set = new Set([100, 200, 300, 400, 500]);
+      document.getElementById("output").innerHTML += num_set.has(100);
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+It returns "true" because the element 100 is present in the set.
+
+
+```javascript
+The set contains 100?: true
+```
+
+
+## Mathematical set operations
+
+
+The Set class doesnt contain the built-in methods to perform the mathematical set operations like union, intersection, or set difference. So, you need to write the custom JavaScript code to perform the mathematical operations as shown below.
+
+
+### Example (Union of two sets)
+
+
+The union of two sets contains all unique elements of set1 and set2.
+
+
+In the example below, set1 and set2 contain the car names. We have defined the union set and passed the array as an argument. We used the spread operator to create an array containing the elements of set1 and set2.
+
+
+```html
+<html>
+<body>
+   pThe Union of set1 and set2 is: 
+   <div id = "output"> </div>
+   <script>
+
+      const set1 = new Set(["BMW", "Audi", "TATA"]);
+      const set2 = new Set(["BMW", "TaTa", "Honda", "Suzuki"]);
+
+      const union = new Set([...set1, ...set2]); // Taking union
+
+      for (let value of union.values()) {
+         document.getElementById("output").innerHTML += value + "<br> ";
+      }
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+If we execute the program, it returns all unique elements of set1 and set2.
+
+
+```javascript
+The Union of set1 and set2 is:
+
+BMW
+Audi
+TATA
+TaTa
+Honda
+Suzuki
+```
+
+
+### Example (Intersection of two sets)
+
+
+The intersection of two sets contains the unique elements which exist in set1 and set2 both.
+
+
+Here, we have two sets containing the car names and defined the inter set to store the set elements which exist in both sets.
+
+
+We traverse through the elements of set1, and inside the loop we use the has() method to check whether the element of the set1 exists in the set2. If yes, we add an element into the inter set.
+
+
+```html
+<html>
+<body>
+   p The intersection of set1 and set2 is: 
+   p id = "output" 
+   <script>
+
+      const set1 = new Set(["BMW", "Audi", "TATA"]);
+      const set2 = new Set(["BMW", "TATA", "Honda", "Suzuki"]);
+
+      const inter = new Set();
+      for (let car of set1) {
+         if (set2.has(car)) {
+            inter.add(car);
+         }
+      }
+
+      for (let value of inter.values()) {
+         document.getElementById("output").innerHTML += value + "<br> ";
+      }
+
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The intersection of set1 and set2 is:
+
+BMW
+TATA
+```
+
+
+### Example (Difference of two sets)
+
+
+The difference between set1 and set2 contains all elements in the set1 but not in the set2.
+
+
+We have created the new set named diff and initialized it with the set1 elements. After that, we traverse the set2 elements. If any element of the set2 exists in the diff set, we delete it.
+
+
+```html
+<html>
+<body>
+   pThe difference of set1 and set2 is: 
+   <div id = "output"> </div>
+   <script>
+
+      const set1 = new Set(["BMW", "Audi", "TATA"]);
+      const set2 = new Set(["BMW", "TATA", "Honda", "Suzuki"]);
+
+      const diff = new Set(set1);
+      for (let car of set2) {
+         diff.delete(car);
+      }
+
+      for (let value of diff.values()) {
+         document.getElementById("output").innerHTML += value + "<br> ";
+      }
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The difference of set1 and set2 is:
+
+Audi
+```
+
+
+## JavaScript Set Reference
+
+
+In JavaScript, a Set is a collection of unique values. In other words, each value can occur only once within a set. It provides methods to add, remove, and check for the presence of elements in the set. Here, we have listed the properties and methods of the Set class.
+
+
+### JavaScript Set Constructor()
+
+
+Following is the constructor of Set in JavaScript −
+
+
+Sr.No.Name & Description1Set()Creates and returns the set of unique values from values passed as an argument.
+
+
+### JavaScript Set Properties
+
+
+Following are the properties of Set class −
+
+
+Sr.No.Name & Description1sizeThis property returns the size of the set.
+
+
+### JavaScript Set Methods
+
+
+In the following table, we have listed all the properties of Set class −
+
+
+Sr.No.Name & Description1add()This method insert elements into the set.2clear()This method removes removes all elements of the set.3delete()This method deletes a single element of the set.4difference()This method returns elements in first set but not in the second set.5entries()To get an iterator containing all set entries.6forEach()This method executes a provided function once for each value in this set.7has()This method indicates whether an element with the specified value exists or not.8intersection()This method returns the common elements in both sets.9keys()This method is an alias for values() method.10values()This method returns a new Set iterator object that containing values for each element in a Set object.
+

@@ -1,0 +1,202 @@
+---
+title: "PYTHON - Daemon Threads"
+description: "Learn PYTHON - Daemon Threads with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1780
+group: "Python Multithreading"
+seoTitle: "PYTHON - Daemon Threads — CodesCompiler PYTHON Guide"
+permalink: "python-daemon-threads"
+---
+
+
+# Python - Daemon Threads
+
+
+
+
+Daemon threads in Python are useful for running background tasks that are not critical to the program's operation. They allow you to run tasks in the background without worrying about keeping track of them.
+
+
+Python provides two types of threads: non-daemon and daemon threads. By default, threads are non-daemon threads. This tutorial provides a detailed explanation with relevant examples about daemon threads in Python programming.
+
+
+## Overview of Daemon Threads
+
+
+Sometimes, it is necessary to execute a task in the background. A special type of thread is used for background tasks, called a daemon thread. In other words, daemon threads execute tasks in the background. These threads handle non-critical tasks that may be useful to the application but do not hamper it if they fail or are canceled mid-operation.
+
+
+Also, a daemon thread will not have control over when it is terminated. The program will terminate once all non-daemon threads finish, even if there are daemon threads still running at that point of time.
+
+
+### Difference Between Daemon & Non-Daemon Threads
+
+
+
+| Daemon | Non-daemon |
+| --- | --- |
+| A process will exit if only daemon threads are running (or if no threads are running). | A process will not exit if at least one non-daemon thread is running. |
+| Daemon threads are used for background tasks. | Non-daemon threads are used for critical tasks. |
+| Daemon threads are terminated abruptly. | Non-daemon threads run to completion. |
+
+
+
+Daemon threads can perform tasks such as −
+
+
+
+- Create a file that stores Log information in the background.
+- Perform web scraping in the background.
+- Save the data automatically into a database in the background.
+
+
+
+## Creating a Daemon Thread in Python
+
+
+To create a daemon thread, you need to set thedaemonproperty to True of theThreadconstructor.
+
+
+```python
+t1=threading.Thread(daemon=True)
+```
+
+
+By default thedaemonproperty  is set to None, If you change it to not None, daemon explicitly sets whether the thread is daemonic.
+
+
+### Example
+
+
+Take a look at the following example to create a daemon thread and check whether the thread daemonic or not using thedaemonattribute.
+
+
+```python
+import threading 
+from time import sleep
+
+# function to be executed in a new thread
+def run():
+   # get the current thread
+   thread = threading.current_thread()
+   # is it a daemon thread?
+   print(f'Daemon thread: {thread.daemon}')
+
+# Create a new thread and set it as daemon
+thread = threading.Thread(target=run, daemon=True)
+
+# start the thread
+thread.start()
+
+print('Is Main Thread is Daemon thread:', threading.current_thread().daemon)
+
+# Block for a short time to allow the daemon thread to run
+sleep(0.5)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Daemon thread: True
+Is Main Thread is Daemon thread: False
+```
+
+
+If a thread object is created in the main thread without any parameters, then the created thread will be a non-daemon thread because the main thread is not a daemon thread. Therefore, all threads created in the main thread default to non-daemon. However, we can change thedaemonproperty toTrueby using theThread.daemonattribute beforestarting the thread, nothing but before calling thestart()method.
+
+
+### Example
+
+
+Here is an example −
+
+
+```python
+import threading 
+from time import sleep
+
+# function to be executed in a new thread
+def run():
+   # get the current thread
+   thread = threading.current_thread()
+   # is it a daemon thread?
+   print(f'Daemon thread: {thread.daemon}')
+
+# Create a new thread  
+thread = threading.Thread(target=run)
+
+# Using the daemon property set the thread as daemon before starting the thread
+thread.daemon = True
+
+# start the thread
+thread.start()
+
+print('Is Main Thread is Daemon thread:', threading.current_thread().daemon)
+
+# Block for a short time to allow the daemon thread to run
+sleep(0.5)
+```
+
+
+On executing the above program, we will get the following output −
+
+
+```python
+Daemon thread: True
+Is Main Thread is Daemon thread: False
+```
+
+
+## Managing the Daemon Thread Attribute
+
+
+If you attempt to set the daemon status of a thread after starting it, then a RuntimeError will be raised.
+
+
+### Example
+
+
+Here is another example that demonstrates the getting the RuntimeError when you try to set the daemon status of a thread after starting it.
+
+
+```python
+from time import sleep
+from threading import current_thread
+from threading import Thread
+
+# function to be executed in a new thread
+def run():
+   # get the current thread
+   thread = current_thread()
+   # is it a daemon thread?
+   print(f'Daemon thread: {thread.daemon}')
+   thread.daemon = True
+   
+# create a new thread
+thread = Thread(target=run)
+
+# start the new thread
+thread.start()
+
+# block for a 0.5 sec for daemon thread to run
+sleep(0.5)
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Daemon thread: False
+Exception in thread Thread-1 (run):
+Traceback (most recent call last):
+   . . . .
+   . . . .
+    thread.daemon = True
+  File "/usr/lib/python3.10/threading.py", line 1203, in daemon
+    raise RuntimeError("cannot set daemon status of active thread")
+RuntimeError: cannot set daemon status of active thread
+```
+

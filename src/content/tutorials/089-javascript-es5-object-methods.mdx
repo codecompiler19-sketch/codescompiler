@@ -1,0 +1,593 @@
+---
+title: "JavaScript - ES5 Object Methods"
+description: "Learn JavaScript - ES5 Object Methods with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 890
+group: "Object Oriented JavaScript"
+seoTitle: "JavaScript - ES5 Object Methods — CodesCompiler JavaScript Guide"
+permalink: "javascript-es5-object-methods"
+---
+
+
+# JavaScript - ES5 Object Methods
+
+
+
+
+TheES5 Object methodsin JavaScript are used to manipulate and protect the obejcts. ECMAScript 5 (ES5) is a significant revision of the language introduced in 2009. It has added many object methods to JavaScript.
+
+
+These methods provide us with efficient ways to iterate through object properties, manipulate values, and perform various operations on objects.  Object manipulation is a fundamental aspect of JavaScript programming.
+
+
+## JavaScript ES5 Object Methods
+
+
+In ES5, object-related methods are added to manipulate and protect the objects. The following tables highlight the object methods and their descriptions −
+
+
+### Methods to Manipulate the Object
+
+
+JavaScript contains built-in constructors, which we have listed in the below table.
+
+
+Sr.No.MethodDescription1create()To create new objects with specified prototype object.2defineProperty()To make a clone of the object and add new properties to its prototype.3defineProperties()To define a property into a particular object and get the updated object.4getOwnPropertyDescriptor()To get the property descriptor for the properties of the object.5getOwnPropertyNames()To get object properties.6getPrototypeOf()To get the prototype of the object.7keys()To get all keys of the object in the array format.
+
+
+### Methods to Protect the Object
+
+
+Sr.No.MethodDescription1freeze()To prevent adding or updating object properties by freezing the object.2seal()To seal the object.3isFrozen()To check if the object is frozen.4isSealed()To check if the object is sealed.5isExtensible()To check if an object is extensible.6keys()To get all keys of the object in the array format.7preventExtensions()To prevent the prototype updation of the object.
+
+
+Let's undertand each of the methods listed above with the help of some examples −
+
+
+## JavaScript Object.create() Method
+
+
+The JavaScript Object.create() method creates a new object with the specified prototype object and properties. It is a static method in JavaScript.
+
+
+The syntax of the Object.create() method in JavaScript is as follows
+
+
+```javascript
+Object.create(proto, propertiesObject)
+```
+
+
+The paramters in the Object.create() method are as follows −
+
+
+
+- proto− it is the object that is used as prototype of new object.
+- propertiesObejct (optaional)− It's an object that defines the properties of new object.
+
+
+
+### Example
+
+
+In the example below, the student object is created using the person object as it's prototype.
+
+
+```html
+<html>
+<body>
+  <div id = "output"> </div>
+  <script>  
+    const person = {
+      firstName: "John",
+      lastName: "Doe"
+    };
+
+    const student = Object.create(person);
+    student.age = 18;
+    
+    document.getElementById("output").innerHTML = 
+    student.firstName + "<br>" +
+    student.lastName + "<br>" +
+    student.age;  
+
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+John
+Doe
+18
+```
+
+
+## JavaScript Object.defineProperty() Method
+
+
+You can use the Object.definedProperty() method to define a single property of the object or update the property value and metadata. It's a static method in JavaScript.
+
+
+The syntax of the Object.definedProperty() method in JavaScript is as follows −
+
+
+```javascript
+Object.defineProperty(obj, prop, descriptor)
+```
+
+
+The paramters in the Object.definedProperty() method are as follows −
+
+
+
+- obj− it is the object on which the property is to be defined or modified.
+- prop (string or symbol)− It's the name of property to be defined or modified.
+- descriptor− It's an object that defines the property's attributes.
+
+
+
+### Example
+
+
+The below example contains the car object's brand, model, and price properties. We used the defineProperty() method to define the 'gears' property in the object.
+
+
+```html
+<html>
+<body>
+    <div id = "output">The obj object is - </div>
+    <script>
+        const car = {
+            brand: "Tata",
+            model: "Nexon",
+            price: 1000000,
+        }
+
+        Object.defineProperty(car, "gears", {
+            value: 6,
+            writable: true,
+            enumerable: true,
+            configurable: true
+        })
+        
+        document.getElementById("output").innerHTML += JSON.stringify(car);
+    </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The obj object is - {"brand":"Tata","model":"Nexon","price":1000000,"gears":6}
+```
+
+
+## JavaScript Object.defineProperties() Method
+
+
+The Object.defineProperties() method in JavaScript is a static method that defines  new  properties of object or modifies the properties.
+
+
+The syntax of Object.defineProperties() method in JavaScript is as follows
+
+
+```javascript
+Object.defineProperties(obj, props)
+```
+
+
+The parameters in the Object.defineProperties() method are as follows −
+
+
+
+- obj− it is the object on which the properties are to be defined or modified.
+- prop (string or symbol)−  It's the name of property to be defined or modified.
+
+
+
+### Example
+
+
+In the following example, we use Object.defineProperties() method to add two mew properties named property1 and property2. The property1 is writable and property2 is non-writable.
+
+
+```html
+<html>
+<body>
+  <div id = "output"> </div>
+  <script>  
+
+    const object1 = {};
+
+    Object.defineProperties(object1, {
+      property1: {
+        value: 42,
+        writable: true,
+      },
+      property2: {
+      value: "Tutorials Point",
+      writable: false,},
+    });
+
+    document.getElementById("output").innerHTML = 
+    "Property1 : "  + object1.property1 + "<br>" +
+    "Property2 : "  + object1.property2;
+    
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Property1 : 42
+Property2 : Tutorials Point
+```
+
+
+## JavaScript Object.getOwnPropertyDescriptor() Method
+
+
+The Object.getOwnPropertyDescriptor() method in JavaScript returns a property descriptor for a specific property of an object. The returned property descriptor is a JavaScript object.
+
+
+### Example
+
+
+Try the following example −
+
+
+```html
+<html>
+<body>
+  <div id = "output"> </div>
+  <script>  
+
+    const object1 = {
+      property1: 42,
+    };
+
+    const descriptor1 = Object.getOwnPropertyDescriptor(object1, 'property1');
+
+    document.getElementById("output").innerHTML = 
+    "descriptor configurable? : "  + descriptor1.configurable + "<br>" +
+    "descriptor value : "  + descriptor1.value;
+
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+descriptor configurable? : true
+descriptor value : 42
+```
+
+
+## JavaScript Object.getOwnPropertyNames() Method
+
+
+The Object.getOwnPropertyNames() method in JavaScript returns an array of all the properties found in a given object. This includes both enumerable and non-enumerable properties.
+
+
+### Example
+
+
+In the example below, we use getOwnPropertyNames() method to get the property names of the created object.
+
+
+```html
+<html>
+<body>
+  <div id = "output"> </div>
+  <script>  
+    const obj = {
+      a: 10,
+      b: 20,
+      c: 30,
+    };
+    document.getElementById("output").innerHTML = Object.getOwnPropertyNames(obj);
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+a,b,c
+```
+
+
+## JavaScript Object.getPrototypeOf() Method
+
+
+The Object.getPrototypeOf() method in JavaScript returns the prototype of the specified object. It's a static JavaScript method added in ES5.
+
+
+### Example
+
+
+```html
+<html>
+<body>
+  <div id = "output"> </div>
+  <script>  
+    const prototype1 = {name: "John Doe"};
+    const object1 = Object.create(prototype1);
+    const prot = Object.getPrototypeOf(object1)
+    document.getElementById("output").innerHTML = JSON.stringify(prot);
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+{"name":"John Doe"}
+```
+
+
+## JavaScrip Object.keys() Method
+
+
+The Object.keys() method in javaScript takes an object as an argument and returns an array containing the object's own enumerable property names.
+
+
+```html
+<html>
+<body>
+  <div id = "output"> </div>
+  <script>  
+     let person = {
+       name: "John Doe",
+       age: 20,
+       profession: "Software Engineer"
+      };
+
+    document.getElementById("output").innerHTML = Object.keys(person);
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+name,age,profession
+```
+
+
+## JavaScript Object.freeze() Method
+
+
+The Object.freeze() in JavaScript is static method that freezes an object. A frozen object can not be further changed. No new property can be added or the existing properties can not be removed. The values of the properties can not be modified.
+
+
+```html
+<html>
+<body>
+  <div id = "output"> </div>
+  <script>  
+    const obj = {
+      prop: 23,
+    };
+
+    Object.freeze(obj);    
+    // obj.prop = 33;
+    // Throws an error in strict mode
+    document.getElementById("output").innerHTML = obj.prop;
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+23
+```
+
+
+## JavaScript Object.seal() Method
+
+
+The Object.seal() static method seals an object. In a sealed object, no new property can be added, no property can be deleted.
+
+
+```html
+<html>
+<body>
+  <div id = "output"> </div>
+  <script>  
+    const obj = {
+      property: 34,
+    };
+
+    Object.seal(obj);
+    obj.property = 33;
+    document.getElementById("output").innerHTML = obj.property;
+
+    delete obj.property; // Cannot delete when sealed
+    
+    document.getElementById("output").innerHTML = obj.property;
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+33
+```
+
+
+## JavaScript Object.isFrozen() Method
+
+
+The Object.isFrozen() method in JavaScript returns true if the given object is frozen, else it returns false if the object is not frozen.
+
+
+```html
+<html>
+<body>
+  <div id = "output1"> </div>
+  <div id = "output2"> </div>
+  <script>  
+    const person = {
+      age: 21,
+    };
+    document.getElementById("output1").innerHTML = Object.isFrozen(person);
+    // Expected output: false
+    Object.freeze(person);
+    document.getElementById("output2").innerHTML += Object.isFrozen(person);
+    // Expected output: true
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+false
+true
+```
+
+
+## JavaScript Object.isSealed() Method
+
+
+The Object.isSeal() method in JavaScript is used to check if the given object is sealed or not. It returns true if the object is sealed else it retuens flase.
+
+
+```html
+<html>
+<body>
+  <div id = "output1"> </div>
+  <div id = "output2"> </div>
+  <script>  
+    const person = {
+      name: "John Doe",
+    };
+    document.getElementById("output1").innerHTML = Object.isFrozen(person);
+    // Expected output: false
+    Object.seal(person);
+    document.getElementById("output2").innerHTML += Object.isSealed(person);
+    // Expected output: true
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+false
+true
+```
+
+
+## JavaScript Object.preventExtensions() Method
+
+
+The ES5 Object.preventExtensions() method is used to prevent the prototype updation of an object. It also prevent the new properties to be added to an object.
+
+
+```html
+<html>
+<body>
+  <div id = "output"> </div>
+  <script>  
+    const person = {};
+    Object.preventExtensions(person);
+    try {
+      Object.defineProperty(person, 'name', {
+        value: "John Doe",
+      });
+    } catch (e) {
+      document.getElementById("output").innerHTML =e;
+    }
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+It will produce the following output −
+
+
+```javascript
+TypeError: Cannot define property name, object is not extensible
+```
+
+
+## JavaScript Object.isExtensible() Method
+
+
+The JavaScript Object.isExtensible() method is used to check if an object is extensible or not. It returns true indicating the given object is extensible, else it will return false. An object is extensible if it can have new properties added to it.
+
+
+```html
+<html>
+<body>
+  <div id = "output1"> </div>
+  <div id = "output2"> </div>
+  <script>  
+    const person = {
+      name: "John Doe",
+    };
+    
+    document.getElementById("output1").innerHTML = Object.isExtensible(person);
+    // Expected output: false
+    Object.preventExtensions(person);
+    document.getElementById("output2").innerHTML += Object.isExtensible(person);
+    // Expected output: false
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+true
+false
+```
+

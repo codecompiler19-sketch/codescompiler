@@ -1,0 +1,356 @@
+---
+title: "JavaScript - Object Accessors"
+description: "Learn JavaScript - Object Accessors with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 860
+group: "Object Oriented JavaScript"
+seoTitle: "JavaScript - Object Accessors — CodesCompiler JavaScript Guide"
+permalink: "javascript-object-accessors"
+---
+
+
+# JavaScript - Object Accessors
+
+
+
+
+Theobject accessorproperties in JavaScript are methods that get or set the value of an object. They are defined using the get and set keywords. Accessor properties are a powerful way to control how your objects are accessed and modified.
+
+
+The JavaScript object can have two kinds of properties.
+
+
+
+- Data properties
+- Accessor properties
+
+
+
+The below property is called the data properties.
+
+
+```javascript
+const obj = {
+    key: "value", // Data property
+}
+```
+
+
+## Object Accessor Properties
+
+
+In JavaScript, you can use the getters to get the object properties and setters to set the object properties.
+
+
+There are two keywords to define accessor properties.
+
+
+
+- get − The get keyword is used to define a method to get the object property value.
+- set − The set keyword is used to define a method to update the object property value.
+
+
+
+## JavaScript Getters
+
+
+Thegettersare used to access the object properties. To define a method as getter, we usegetkeyword followed by method name. Follow the syntax below to define the getter.
+
+
+```javascript
+get methodName() {
+     // Method body
+}
+obj.methodName;
+```
+
+
+In the above syntax, we have defined the getters using the 'get' keyword followed by the method name.
+
+
+You can use the method name as an object property to get its returned value.
+
+
+You don't need to write the pair of parenthesis followed by the method name to execute the getters. You can access it like the object property.
+
+
+### Example
+
+
+In the example below, in the wall object, we have defined thegetColor()getters. ThegetColor()returns the value of the color property.
+
+
+After that, we use thegetColor()method to access the color property value of the object.
+
+
+```html
+<html>
+<body>
+  p id = "output"The color of the wall is : 
+  <script>
+    const wall = {
+      color: "brown",
+      get getColor() {
+        return this.color;
+      }
+    }
+    document.getElementById("output").innerHTML += wall.getColor;
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The color of the wall is : brown
+```
+
+
+## JavaScript Setters
+
+
+Thesettersare used to update the JavaScript object properties. To define a method as setter, we usesetkeyword followed by method name You can follow the syntax below to define setters in the JavaScript object.
+
+
+```javascript
+set methodName(param) { // Setter method
+     return this.color = color;
+}
+
+wall.methodName = "Red";
+```
+
+
+
+- In the above syntax, the 'set' keyword is used to define the setter method.
+- The method_name can be any valid identifier.
+- The setter method always takes a single parameter. If you don't pass a parameter or multiple parameters, it will give you an error.
+- You can assign value to the setter method as you assign value to the property.
+
+
+
+### Example
+
+
+In the example below, we have defined the setter method to set the value of the color property of the wall object. We set the 'red' value to the color property of the object using the 'setColor' setter method.
+
+
+```html
+<html>
+<body>
+  p id = "output" 
+  <script>
+    const wall = {
+      color: "brown",
+      set setColor(color) {
+        return this.color = color;
+      }
+    }
+    document.getElementById("output").innerHTML += 
+    "The color of the wall before update is : " + wall.color + "<br>";
+    //updating the color of wall
+    wall.setColor = "Red";
+    document.getElementById("output").innerHTML += 
+    "The color of the wall after update is : " + wall.color;
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The color of the wall before update is : brown
+The color of the wall after update is : Red
+```
+
+
+## JavaScript Object Methods vs. Getters/Setters
+
+
+In JavaScript, whatever you can do using thegettersandsetters, you can also do by defining the specific object method. The difference is thatgettersandsettersprovide simpler syntax.
+
+
+Let's understand it with the help of some examples.
+
+
+### Example
+
+
+In the example below, we have defined thegetColor()getters method and colorMethod() object method in the wall object. Both method returns the color value.
+
+
+You can observe that defining and accessing getters is more straightforward than defining and accessing the object method.
+
+
+```html
+<html>
+<body>
+  p id = "output" 
+  <script>
+    const wall = {
+      color: "brown",
+      get getColor() {
+        return this.color;
+      },
+      colorMethod: function () {
+        return this.color;
+      }
+    }
+    
+    document.getElementById("output").innerHTML += 
+    "Getting the color using the getters : " + wall.getColor + "<br>";
+    
+    document.getElementById("output").innerHTML += 
+    "Getting the color using the object method : " + wall.colorMethod();
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Getting the color using the getters : brown
+Getting the color using the object method : brown
+```
+
+
+## Data Quality and Security
+
+
+Thegetterandsettermethods can provide better data quality. Also, they are used for encapsulation to secure the object data.
+
+
+Let's understand howgetterandsetterimprove data quality and provide security via the example below.
+
+
+### Example
+
+
+In the example below, thegetColor()is a getter method, returning the value of the color property after converting it to the uppercase. Also, it hides the color property from users, as you can access its value using thegetColor()method.
+
+
+```html
+<html>
+<body>
+  p id = "output" 
+  <script>
+    const wall = {
+      color: "Brown",
+      get getColor() {
+        return this.color.toUpperCase();
+      }
+    }
+    document.getElementById("output").innerHTML += 
+    "Getting the color using the getters : " + wall.getColor;
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Getting the color using the getters : BROWN
+```
+
+
+## Defining getters/setters using the Object.defineProperty()
+
+
+You can also use the Object.defineProperty() method to addgettersorsettersinto the object.
+
+
+```javascript
+Object.defineProperty(object, "methodName", {
+    keyword: function () {
+        // Method body
+    },
+})
+```
+
+
+Using the above syntax, you can define the getter or setter same as methodName.
+
+
+### Parameters
+
+
+
+- object− It is an object where you need to add getters or setters.
+- methodName− It is the name of the method for getters or setters.
+- keyword− It can be 'get' or 'set' according to you want to define the getter or setter method.
+
+
+
+### Example
+
+
+In the example below, we have added thegetSizeandsetSizegetter and setter to the object using the object.defineProperty() method.
+
+
+After that, we use thegetSizeandsetSizeto get and set the size, respectively.
+
+
+```html
+<html>
+<body>
+  p id = "demo" 
+  <script>
+    const output = document.getElementById("demo");
+    const door = {
+      size: 20,
+    }
+    Object.defineProperty(door, "getSize", {
+      get: function () {
+        return this.size;
+      }
+    });
+
+    Object.defineProperty(door, "setSize", {
+      set: function (value) {
+        this.size = value;
+      },
+    })
+
+    output.innerHTML += "Door size is : " + door.getSize + "<br>";
+    door.setSize = 30;
+    output.innerHTML += "Door size after update is : " + door.getSize;
+  </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Door size is : 20
+Door size after update is : 30
+```
+
+
+## Reasons to use getters and setters
+
+
+Here are the benefits of using the getters and setters in JavaScript.
+
+
+
+- It has a simple syntax than object methods.
+- To improve the data quality by validating the data.
+- For the encapsulation or securing the data.
+- It also allows abstraction or data hiding.
+
+

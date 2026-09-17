@@ -1,0 +1,173 @@
+---
+title: "JavaScript - DOM Collections"
+description: "Learn JavaScript - DOM Collections with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1720
+group: "JavaScript HTML DOM"
+seoTitle: "JavaScript - DOM Collections — CodesCompiler JavaScript Guide"
+permalink: "javascript-dom-collections"
+---
+
+
+# JavaScript - DOM Collections
+
+
+
+
+## DOM Collections
+
+
+The DOM (Document Object Model)collectionsare a way to group together related HTML elements. They are read-only and can be accessed using the properties of DOM objects such as the document object or a DOM node.
+
+
+There are many different types of DOM collections, including:
+
+
+
+- TheHTMLCollectionobject is an array-like list (collection) of HTML elements.
+- TheNodeListobject is a list (collection) of nodes extracted from a document.
+- The Form element collection in HTML DOM is used to set or return the collection of all `<input>` elements inside a form element.
+- The HTMLDOM formscollection is used for returning all the form elements that are present inside the HTML document as a collection.
+
+
+
+DOM collections can be used to perform a variety of tasks, such as:
+
+
+
+- Traversing the DOM
+- Adding, removing, or modifying elements
+- Changing the style or content of elements
+- Responding to user events
+
+
+
+This tutorial provides basic understanding of DOM collections, particularly HTMLCollection object. The other type of DOM collections are discussed in next chapters.
+
+
+## The HTMLCollection Object
+
+
+AnHTMLCollectionobject is an array-like data structure of HTML elements. When you use the getElementByTagName()method to access DOM elements, it returns an HTMLCollection object.
+
+
+It is the same as an array butnot an array. You can traverse the HTML collection and access each HTML element through the index, but you can use the pop(), push(), etc. methods with HTML collection.
+
+
+The methods and properties given below return the HTML collection.
+
+
+
+- getElementByTagName() method
+- getElementByClassname() method
+- children property
+
+
+
+### Properties and Methods of DOM HTMLCollection Object
+
+
+Here, we have listed the properties and methods that can be used with HTML collections.
+
+
+Method / PropertyDescriptionlengthTo get a count of HTML elements in the collection.item()To get elements from the specific index.namedItem()To get the HTML element using its id from the given collection.
+
+
+### Example: Traversing the Collection Elements
+
+
+In the below code, we have added the list of numbers.
+
+
+In JavaScript, we access all `<li>` elements using the getElementByTagName() method, which returns the HTML collection.
+
+
+After that, we use the for...of loop to traverse each HTML element. The collection contains each HTML element in the object format. We used the innnerHTML property with each element of the collection to get its HTML and print it on the web page.
+
+
+```html
+<DOCTYPE html>
+<html>
+<body>
+   <ul>
+      <li> One </li>
+      <li> Two </li>
+      <li> Three </li>
+   </ul>
+
+   <div id = "output"> </div>
+   <script>
+      const output = document.getElementById('output');
+      let lists = document.getElementsByTagName('li');
+      for (let list of lists) {
+         output.innerHTML += "inner HTML - " + list.innerHTML + "<br>";
+      }
+   </script>
+</body>
+</html>
+```
+
+
+### Example: Getting the length of the collection
+
+
+In the below code, we used the 'length' property of the collection to get the number of elements in the collection.
+
+
+```html
+<DOCTYPE html>
+<html>
+<body>
+   <div class = "text"> JavaScript </div>
+   <div class = "text"> HTML </div>
+   <div class = "text"> CSS </div>
+   <div class = "text"> CPP </div>
+   <div id = "output">The length of the collection is: </div>
+   <script>
+      const divs = document.getElementsByClassName('text');
+      document.getElementById('output').innerHTML += " " + divs.length;
+   </script>
+</body>
+</html>
+```
+
+
+### Example: Using the namedItem method with collection
+
+
+In the below code, we access all `<div>` elements using the getElementByClassName() method, returning the collection of `<div>` elements.
+
+
+After that, we used the namedItem() method to access the `<div>` element having id equal to 'JavaScript'.
+
+
+```html
+<DOCTYPE html>
+<html>
+<body>
+   <div class = "text" id = "JavaScript"> JavaScript </div>
+   <div class = "text" id = "PHP"> PHP </div>
+   <div class = "text" id = "Python"> Python </div>
+   <div class = "text" id = "Java"> Java </div>
+   <div id = "output">The Element having id equal to JavaScript is: </div>
+   <script>
+      const output = document.getElementById('output');
+      const langs = document.getElementsByClassName('text');
+      output.innerHTML += langs.namedItem('JavaScript').innerHTML;
+   </script>
+</body>
+</html>
+```
+
+
+## Collections of document Object and DOM Elements
+
+
+The document object contains some built-in collection to get the elements from the document.
+
+
+In the below table, we have listed all collections which can be accessed using the document object.
+
+
+Collection NameDescriptiondocument.linksTo get all `<a>` elements from the document.document.formsTo get all `<form>` elements from the document.document.imagesTo get all `<img>` elements from the document.document.scriptsTo get all `<script>` elements from the document.document.styleSheetsTo get all the document's `<link>` and `<style>` elements.Element.childrenTo get a collection of all children of the particular HTML element.element.attributesTo get the collection of all attributes of the given element.element.optionsTo get all `<options>` elements from the document.element.classListTo get a collection of class names of a particular DOM element.
+

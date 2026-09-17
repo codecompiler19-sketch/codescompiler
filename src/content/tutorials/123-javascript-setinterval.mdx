@@ -1,0 +1,489 @@
+---
+title: "JavaScript - setInterval()"
+description: "Learn JavaScript - setInterval() with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1230
+group: "JavaScript Asynchronous"
+seoTitle: "JavaScript - setInterval() — CodesCompiler JavaScript Guide"
+permalink: "javascript-setinterval"
+---
+
+
+# JavaScript - setInterval() Method
+
+
+
+
+## JavaScript setInterval() Method
+
+
+In JavaScript, the setInterval() is a window method that is used to execute a function repeatedly at a specific interval. The setTimeout() Method allows you to execute the function only once after the specified time.
+
+
+The window object contains the setInterval() method. However, you can execute the setInterval() Method without taking the window object as a reference.
+
+
+### Syntax
+
+
+Following is the syntax to use the setInterval() method in JavaScript
+
+
+```javascript
+setInterval(callback,interval, arg1, arg2, ..., argN);
+```
+
+
+The first two parameters are required others are optional.
+
+
+### Parameters
+
+
+
+- Callback− It is a callback function that will be executed after every interval.
+- Interval− It is the number of milliseconds after the callback function should be executed.
+- Arg1, arg2, arg3, , argN− They are multiple arguments to pass to the callback function.
+
+
+
+### Return Value
+
+
+The setInterval() method returns the numeric id.
+
+
+### Example
+
+
+In the code below, the startTimer() function uses the setInterval() method to call the timer() function after every 1000 milliseconds.
+
+
+The timer() function increases the value of the second global variable every time it is called by the setInterval() method and prints the counter.
+
+
+You can click the button to start a timer in the output.
+
+
+```html
+<html>
+
+<body>
+
+   <button onclick = "startTimer()">Start Timer</button>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      let output = document.getElementById('output');
+
+      var seconds = 0;
+
+      function startTimer() {
+
+         setInterval(timer, 1000); // Calls timer() function after every second
+
+      }
+
+      function timer() { // Callback function
+
+         seconds++;
+
+         output.innerHTML += "Total seconds are: " + seconds + "<br>";
+
+      }
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+## Arrow Function with setInterval() Method
+
+
+The below example contains almost the same code as the above example. Here, we have passed the arrow function as a first argument of the setInterval() method rather than passing the function name only. You can click the button to start the timer.
+
+
+### Example
+
+
+```html
+<html>
+
+<body>
+
+   <button onclick = "startTimer()">Start Timer</button>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      let output = document.getElementById('output');
+
+      var seconds = 0;
+
+      function startTimer() {
+
+         setInterval(() => {
+
+            seconds++;
+
+            output.innerHTML += "Total seconds are: " + seconds + "<br>";
+
+         }, 1000); // Calls timer() function after every second
+
+      }
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+## Passing More than 2 Arguments to setInterval() Method
+
+
+In the code below, we have passed 3 arguments to the setInterval() method. The first argument is a callback function to print the date, the second argument is an interval, and the third argument will be passed to the callback function.
+
+
+### Example
+
+
+```html
+<html>
+
+<body>
+
+   <button onclick = "startTimer()">Start Date Timer</button>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      let output = document.getElementById('output');
+
+      var seconds = 0;
+
+      function startTimer() {
+
+         let message = "The date and time is: ";
+
+         setInterval(printDate, 1000, message);
+
+      }
+
+      function printDate(message) {
+
+         let date = new Date();
+
+         output.innerHTML += message + date + "<br>";
+
+      }
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+## The clearInterval() Method in JavaScript
+
+
+The JavaScript clearInterval() method is used to stop the code execution started using the clearItnerval() method.
+
+
+It takes the numeric id returned by the setInterval () method as an argument.
+
+
+### Syntax
+
+
+Follow the syntax below to use the clearInterval() method.
+
+
+```javascript
+clearInterval(id);
+```
+
+
+Here id is an id returned by the setInterval() method.
+
+
+### Example
+
+
+In the code below, we have used the setInterval() method to show the number after incrementing by 10 and after each second.
+
+
+When the number becomes 50, we stop the timer using the clearInterval() method.
+
+
+```html
+<html>
+
+<body>
+
+   <div id = "output"> </div>
+
+   <script>
+
+      let output = document.getElementById('output');
+
+      let number = 10;
+
+      let id = setInterval(() => {
+
+         if (number == 50) {
+
+            clearInterval(id);
+
+            output.innerHTML += "The time is stopped."
+
+         }
+
+         output.innerHTML += "The number is: " + number + "<br>";
+
+         number += 10;
+
+      }, 1000);
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The number is: 10
+
+The number is: 20
+
+The number is: 30
+
+The number is: 40
+
+The time is stopped.The number is: 50
+```
+
+
+## Real-time Use Case of the setInterval() Method
+
+
+In the above examples, we have printed the messages using the setInterval() method. In this section, we will see the real-time use cases of the setInterval() method.
+
+
+Here, we have listed some of the real-time use cases.
+
+
+
+- To refresh the date
+- For slideshow
+- For animation
+- To show the clock on the webpage
+- To update live cricket score
+- To update weather information
+- To run cron jobs
+
+
+
+Here are the real-time examples of the setInterval() method.
+
+
+## Flipping the color of the HTML element after each interval
+
+
+In the code below, we flip the color of the `<div>` element after every second.
+
+
+We have defined the div element in the HTML body.
+
+
+In the `<head>` section, we have added the red and green classes. Also, we added the background color in the red and green classes.
+
+
+In JavaScript, we have passed the callback function as the first argument of the setInterval() method, which will be called after every 1000 milliseconds.
+
+
+We access the `<div>` element in the callback function using its id. After that, we check whether the classList of the `<div>` element contains the red class. If yes, we remove it and add the green class. Similarly, if classList contains the green class, we remove it and add the red class.
+
+
+This is how we are flipping the color of the `<div>` element using the setInterval() method.
+
+
+### Example
+
+
+```html
+<html>
+
+<head>
+
+   <style>
+
+      .red {background-color: red;}
+
+      .green {background-color: green;}
+
+      #square {height: 200px; width: 200px;}
+
+   </style>
+
+</head>
+
+<body>
+
+   <div>Using setInterval() method to flip the color of the HTML element after each interval</div>
+
+   <div id = "square" class = "red"> </div>
+
+   <script>
+
+      let output = document.getElementById('output');
+
+      setInterval(function () {
+
+         let square = document.getElementById('square');
+
+         if (square.classList.contains('red')) {
+
+            square.classList.remove('red');
+
+            square.classList.add('green');
+
+         } else {
+
+            square.classList.remove('green');
+
+            square.classList.add('red');
+
+         }
+
+      }, 1000);
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+## Moving Animation Using the setInterval() Method
+
+
+In the code below, we create moving animation using the setInterval() method.
+
+
+We have created the two nested div elements. The outer div has the parent id, and the inner div has the child id. We have set dimensions for both div elements and position to relative.
+
+
+In JavaScript, we have initialized the left variable with 0. After that, we invoke the callback function of the setInterval() method after every 50 milliseconds.
+
+
+In each interval, we change the position of the `<div>` element by 5px, and when the left position becomes 450px, we stop the animation.
+
+
+### Example
+
+
+```html
+<html>
+
+<head>
+
+   <style>
+
+      #parent {
+
+         position: relative; 
+
+         height: 50px;
+
+         width: 500px;
+
+         background-color: yellow;
+
+      }
+
+      #child {
+
+         position: relative; 
+
+         height: 50px;
+
+         width: 50px;
+
+         background-color: red;
+
+      }
+
+   </style>
+
+</head>
+
+<body>
+
+   <div id = "parent">
+
+      <div id = "child"> </div>
+
+   </div>
+
+   <script>
+
+      let child = document.getElementById('child');
+
+      let left = 0;
+
+      // Moving animation using the setInterval() method
+
+      setInterval(() => {
+
+         if (left < 450) {
+
+            left += 5;
+
+            child.style.left = left + 'px';
+
+         }
+
+      }, 50);
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+#### Output
+
+
+You can also use the setInterval() method to run the particular code asynchronously.
+

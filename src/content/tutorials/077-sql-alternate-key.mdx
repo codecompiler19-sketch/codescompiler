@@ -1,0 +1,150 @@
+---
+title: "SQL - Alternate Key"
+description: "Learn SQL - Alternate Key with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 770
+group: "SQL Keys"
+seoTitle: "SQL - Alternate Key — CodesCompiler SQL Guide"
+permalink: "sql-alternate-key"
+---
+
+
+# SQL - Alternate Key
+
+
+Table of contentThe SQL Alternate KeyKeys in a table
+
+
+
+
+## The SQL Alternate Key
+
+
+SQLAlternate Keysin a database table are candidate keys that are not currently selected as a primary key. They can be used to uniquely identify a tuple(or a record) in a table.
+
+
+There is no specific query or syntax to set the alternate key in a table. It is just a column that is a close second candidate which could be selected as a primary key. Hence, they are also called secondary candidate keys.
+
+
+If a database table consists of only one candidate key, that is treated as the primary key of the table, then there is no alternate key in that table.
+
+
+Let us understand the concept of alternate key with an example. Suppose we have a table named CUSTOMERS with various fields like ID, NAME, AGE, AADHAAR_ID, MOBILE_NO and SALARY as shown below.
+
+
+The details like id, mobile number and aadhaar number of a customer are unique, and we can identify the records from the CUSTOMERS table uniquely using their respective fields; ID, AADHAAR_ID and MOBILE_NO. Therefore, these three fields can be treated as candidate keys.
+
+
+And among them, if one is declared as the primary key of the CUSTOMERS table then the remaining two would be alternate keys.
+
+
+### Features of Alternate Keys
+
+
+Following are some important properties/features of alternate keys:
+
+
+
+- The alternate key does not allow duplicate values.
+- A table can have more than one alternate keys.
+- The alternate key can contain NULL values unless the NOT NULL constraint is set explicitly.
+- All alternate keys can be candidate keys, but all candidate keys can not be alternate keys.
+- The primary key, which is also a candidate key, can not be considered as an alternate key.
+
+
+
+### Example
+
+
+For a better understanding, let us create the above discussed table demonstrating the usage of the various keys and illustrating the fields that can be considered as alternate keys.
+
+
+```sql
+CREATE TABLE CUSTOMERS(
+   ID INT,
+   NAME VARCHAR (20),
+   AGE INT,
+   AADHAAR_ID BIGINT,
+   MOBILE_NO BIGINT,
+   SALARY DECIMAL (18, 2),
+   PRIMARY KEY(ID)      
+);
+```
+
+
+Now, insert some records into the CUSTOMERS table using the INSERT statement as shown below:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+(1, 'Ramesh', 32, 90123498456, 9023456789, 22000.00 ),
+(2, 'Khilan', 25, 91123249545, 9032456578, 24500.34 ),
+(3, 'Kaushik', 23, 91223242546, 9012436789, 20000.12 );
+```
+
+
+The table will be created as:
+
+
+IDNAMEAGEAADHAAR_IDMOBILE_NOSALARY1Ramesh3290123498456902345678922000.002Khilan2591123249545903245657824500.343Kaushik2391223242546901243678920000.12
+
+
+## Keys in a table
+
+
+As a summary lets revisit all the keys in a database table:
+
+
+### Candidate Key
+
+
+ACandidate keyis a subset of super keys that is used to uniquely identify records of a table. It can be a single field or multiple fields. The primary keys, alternate keys, foreign keys in a table are all types of candidate key.
+
+
+### Primary Key
+
+
+APrimary Keyis a main key that is used to retrieve records from a table. It is a single column or field in a table that uniquely identifies each record in a database table.
+
+
+It can be set using the PRIMARY KEY keyword while creating a table using the CREATE TABLE statement. Following is the basic syntax to create primary key constraint on a column in a table:
+
+
+```sql
+CREATE TABLE table_name(
+   column1 datatype,
+   column2 datatype,
+   column3 datatype,
+   .....
+   columnN datatype,
+   PRIMARY KEY(column_name)
+);
+```
+
+
+### Foreign Key
+
+
+The Primary key of one table will be theForeign keyin another table. While inserting values into these tables, values in the primary key field must match the values in the foreign key field; otherwise, the foreign key column will not accept theINSERTquery and throws an error.
+
+
+In SQL server, the syntax to set a foreign key field in a table is:
+
+
+```sql
+CREATE TABLE table_name (
+    column1 datatype,
+    column2 datatype,
+    ...
+    CONSTRAINT fk_name 
+	FOREIGN KEY (column_name) 
+	REFERENCES referenced_table(referenced_column)
+);
+```
+
+
+### Alternate Key
+
+
+AnAlternate keyis a candidate key that could be a primary key but is not. Like primary key, it also uniquely identifies the records in a field of a table to retrieve row tuples from the said table. There can be a single or multiple fields identifying as alternate keys in a table.
+

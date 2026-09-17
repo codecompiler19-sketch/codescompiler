@@ -1,0 +1,240 @@
+---
+title: "SQL - Delete Join"
+description: "Learn SQL - Delete Join with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 690
+group: "SQL Joins"
+seoTitle: "SQL - Delete Join — CodesCompiler SQL Guide"
+permalink: "sql-delete-joins"
+---
+
+
+# SQL - DELETE JOIN
+
+
+Table of contentThe SQL DELETE JOINDELETE JOIN with WHERE ClauseImportant Points about DELETE JOIN
+
+
+
+
+## The SQL DELETE JOIN
+
+
+ADELETE JOINin SQL is used to remove rows from a table based on a condition that involves another table. It combines theDELETEstatement with a join, allowing you to target specific rows that match between two or more tables.
+
+
+This is useful when you need to delete related records in one table that depend on values in another.
+
+
+### Syntax
+
+
+Following is the basic syntax of the SQL DELETE JOIN statement:
+
+
+```sql
+DELETE table1, table2
+FROM table1 JOIN table2
+ON table1.common_field = table2.common_field
+WHERE table2.some_column = 'value';
+```
+
+
+When we say JOIN here, we can use any type of Join: Regular Join, Natural Join, Inner Join, Outer Join, Left Join, Right Join, Full Join etc.
+
+
+### Example
+
+
+To demonstrate this deletion operation, we must first create tables and insert values into them. We can create these tables using CREATE TABLE queries as shown below.
+
+
+Create a table named CUSTOMERS, which contains the personal details of customers including their name, age, address and salary etc. Using the following query:
+
+
+```sql
+CREATE TABLE CUSTOMERS (
+   ID INT NOT NULL,
+   NAME VARCHAR (20) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS CHAR (25),
+   SALARY DECIMAL (18, 2),       
+   PRIMARY KEY (ID)
+);
+```
+
+
+Now, insert values into this table using the INSERT statement as follows:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES
+(1, 'Ramesh', 32, 'Ahmedabad', 2000.00 ),
+(2, 'Khilan', 25, 'Delhi', 1500.00 ),
+(3, 'Kaushik', 23, 'Kota', 2000.00 ),
+(4, 'Chaitali', 25, 'Mumbai', 6500.00 ),
+(5, 'Hardik', 27, 'Bhopal', 8500.00 ),
+(6, 'Komal', 22, 'Hyderabad', 4500.00 ),
+(7, 'Muffy', 24, 'Indore', 10000.00 );
+```
+
+
+The table will be created as:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.002Khilan25Delhi1500.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+Let us create another table ORDERS, containing the details of orders made and the date they are made on.
+
+
+```sql
+CREATE TABLE ORDERS (
+   OID INT NOT NULL,
+   DATE VARCHAR (20) NOT NULL,
+   CUSTOMER_ID INT NOT NULL,
+   AMOUNT DECIMAL (18, 2)
+);
+```
+
+
+Using the INSERT statement, insert values into this table as follows:
+
+
+```sql
+INSERT INTO ORDERS VALUES 
+(102, '2009-10-08 00:00:00', 3, 3000.00),
+(100, '2009-10-08 00:00:00', 3, 1500.00),
+(101, '2009-11-20 00:00:00', 2, 1560.00),
+(103, '2008-05-20 00:00:00', 4, 2060.00);
+```
+
+
+The table is displayed as follows:
+
+
+OIDDATECUSTOMER_IDAMOUNT1022009-10-08 00:00:0033000.001002009-10-08 00:00:0031500.001012009-11-20 00:00:0021560.001032008-05-20 00:00:0042060.00
+
+
+FollowingDELETE JOIN queryremoves records from these tables at once:
+
+
+```sql
+DELETE a
+FROM CUSTOMERS AS a INNER JOIN ORDERS AS b
+ON a.ID = b.CUSTOMER_ID;
+```
+
+
+The output will be displayed in SQL as follows:
+
+
+```sql
+Query OK, 3 rows affected (0.01 sec)
+```
+
+
+### Verification
+
+
+We can verify whether the changes are reflected in a table by retrieving its contents using the SELECT statement as follows:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+The table is displayed as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+Since, we only deleted records from CUSTOMERS table, the changes will not be reflected in the ORDERS table. We can verify it using the following query.
+
+
+```sql
+SELECT * FROM ORDERS;
+```
+
+
+The ORDERS table is displayed as:
+
+
+OIDDATECUSTOMER_IDAMOUNT1022009-10-08 00:00:0033000.001002009-10-08 00:00:0031500.001012009-11-20 00:00:0021560.001032008-05-20 00:00:0042060.00
+
+
+## DELETE JOIN with WHERE Clause
+
+
+ADELETE JOINcan be combined with aWHEREclause to delete rows that meet specific conditions after the join. The join defines the relationship between the tables, and the WHERE clause further filters which rows should be removed.
+
+
+### Example
+
+
+In the following query, we are deleting the records of customers, in theCUSTOMERStable, whose salary is lower than Rs. 2000.00.
+
+
+```sql
+DELETE a
+FROM CUSTOMERS AS a INNER JOIN ORDERS AS b
+ON a.ID = b.CUSTOMER_ID
+WHERE a.SALARY < 2000.00;
+```
+
+
+On executing the query, following output is displayed.
+
+
+```sql
+Query OK, 1 row affected (0.01 sec)
+```
+
+
+### Verification
+
+
+We can verify whether the changes are reflected in a table by retrieving its contents using the SELECT statement as follows:
+
+
+```sql
+SELECT * FROM CUSTOMERS;
+```
+
+
+The CUSTOMERS table after deletion is as follows:
+
+
+IDNAMEAGEADDRESSSALARY1Ramesh32Ahmedabad2000.003Kaushik23Kota2000.004Chaitali25Mumbai6500.005Hardik27Bhopal8500.006Komal22Hyderabad4500.007Muffy24Indore10000.00
+
+
+Since we only deleted records from the CUSTOMERS table, the changes will not be reflected in the ORDERS table. We can verify it using the following query:
+
+
+```sql
+SELECT * FROM ORDERS;
+```
+
+
+The ORDERS table is displayed as:
+
+
+OIDDATECUSTOMER_IDAMOUNT1022009-10-08 00:00:0033000.001002009-10-08 00:00:0031500.001012009-11-20 00:00:0021560.001032008-05-20 00:00:0042060.00
+
+
+## Important Points about DELETE JOIN
+
+
+Following are some important points you should know for using DELETE JOIN in SQL:
+
+
+
+- DELETE JOINis used to remove rows from one table based on matching conditions with another table.
+- You can specify which table to delete from by using its alias in theDELETEstatement.
+- It is often combined with aWHEREclause to filter the rows that should be deleted.
+- The syntax may vary slightly between different SQL databases (e.g., MySQL, SQL Server, PostgreSQL).
+- Always test your query with aSELECTstatement before executingDELETE JOINto avoid accidental data loss.
+
+

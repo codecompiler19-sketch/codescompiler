@@ -1,0 +1,162 @@
+---
+title: "JavaScript - Tagged Templates"
+description: "Learn JavaScript - Tagged Templates with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 790
+group: "JavaScript Objects"
+seoTitle: "JavaScript - Tagged Templates — CodesCompiler JavaScript Guide"
+permalink: "javascript-tagged-templates"
+---
+
+
+# JavaScript - Tagged Templates
+
+
+
+
+## JavaScript Tagged Templates
+
+
+The tagged templates in JavaScript are an advanced version of the template literals. You can define the function to format the string and use it with a template literal to format the string according to the functionality of the function.
+
+
+The tagged template can be used with the string using the function name only, and it does not need to add the parenthesis while using the function.
+
+
+### Syntax
+
+
+Following is the syntax to use the tagged templates in JavaScript −
+
+
+```javascript
+function format(str, exp1, exp2, ...expN) {
+    //    Format the string
+}
+
+let res = format${exp1} abcd ${exp2};
+```
+
+
+The format() function works as a template tag in the above syntax. The function takes multiple parameters, which you can use inside the function body to format the string.
+
+
+### Parameters
+
+
+
+- str− It is an array of strings of template literal.
+- exp1, exp2, ...expN− They are expressions of the template literals.
+
+
+
+## Examples
+
+
+### Example: Basic Tagged Template
+
+
+In the example below, we have defined the format() function. The format() function takes the array of strings as a parameter.
+
+
+The function body joins all elements of the str array, converts the string into the upper case using the toUpperCase() method, and returns the updated string.
+
+
+In the output, you can see that the template tagged has converted the string into uppercase.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      function format(str) {
+         return str.join("").toUpperCase();
+      }
+      let res = formatHi How are you?;
+      document.getElementById("output").innerHTML = res;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+HI HOW ARE YOU?
+```
+
+
+### Example: Expression with Tagged Templates
+
+
+In the example below, the format() function takes the array of strings and name variable as a parameter. We join all string instances in the function body and append the name at the end. After that, return the updated string.
+
+
+In the output, you can see the name at the end of the string.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      function format(str, name) {
+         return str.join(" ") + name;
+      }
+      let name = "John";
+      let res = formatHi ${name}, How are you?;
+      document.getElementById("output").innerHTML = res;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+Hi , How are you?John
+```
+
+
+### Example: Using Rest Parameter
+
+
+You can also use the spread operator (parameter) to collect all expressions in the single function parameters. Otherwise, you need to pass the parameter for each expression used in the string separately.
+
+
+In the below example, we use spread operator to pass two parameters, name and price. In output you can notice the values of the parameters (arguments) are displayed.
+
+
+```html
+<html>
+<body>
+   <div id = "output1"> </div>
+   <div id = "output2"> </div>
+   <script>
+      function format(str, ...values) {
+         document.getElementById("output1").innerHTML = values;
+         return str.join(" ") + values[1];
+      }
+      const price = 100;
+      let name = "John"
+      const res = formatHi,${name} The price is ${price};
+      document.getElementById("output2").innerHTML = res;
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+John,100
+Hi, The price is 100
+```
+

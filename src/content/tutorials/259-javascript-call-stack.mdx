@@ -1,0 +1,145 @@
+---
+title: "JavaScript - Call Stack"
+description: "Learn JavaScript - Call Stack with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2590
+group: "JavaScript Miscellaneous"
+seoTitle: "JavaScript - Call Stack — CodesCompiler JavaScript Guide"
+permalink: "javascript-call-stack"
+---
+
+
+# JavaScript - Call Stack
+
+
+
+
+JavaScript engine uses the call stacks to manage the execution context. It is an important mechanism by which a JavaScript run engine keeps track of the function calls in a JavaScript code. However, the working of the JavaScript call stack is performed internally, but it is important to understand how JavaScript executes the functions.
+
+
+JavaScript call stack keeps track of what function or block of code needs to run currently. It works in the LIFO (Last In, First Out) manner. So, whatever function is added at the top in the call stack it gets executed first.
+
+
+## How JavaScript Call Stack Works?
+
+
+Whenever you execute any JavaScript code, it adds the global execution context to the script.
+
+
+When you call any function, the JavaScript engine adds the function to the call stack. After that, when you call any nested function from the outer function, it adds a nested function in the call stack.
+
+
+When the execution of the inner function is complete, it pops the function from the call stack. Next, it executes the outer function and pops it from the call stack. Again, it starts executing the code in the global context.
+
+
+When the call stack becomes empty, the script stops running.
+
+
+Let's understand the JavaScript call stack via example.
+
+
+```javascript
+function two() {
+  console.log("this is function two");
+}
+
+function one() {
+  two();
+  console.log("This is function one");
+}
+
+one();
+```
+
+
+The above code would be executed like this.
+
+
+1.	When the execution of the code starts, the call stack remains empty until execution reaches the one() function.
+
+
+2.	Add function one() in the call stack. Now, the call stack is [one()].
+
+
+3.	Execute the first line of function one(), which calls the function two().
+
+
+4.	Add function two() in the call stack. Now, the call stack is [two(), one()].
+
+
+5.	Execute all lines of function two().
+
+
+6.	Move back to execute the remaining lines of code of function one().
+
+
+7.	Delete the function two() from the call stack. Now, the call stack is [one()].
+
+
+8.	Start executing the remaining code of the function one(). When the execution of function one() completes, the JavaScript engine starts executing the remaining code.
+
+
+9.	Delete function one() from the call stack. Now, the call stack is empty.
+
+
+10. Execute the remaining code.
+
+
+### Example
+
+
+Whenever we execute the below code, it will add the global execution context in the call stack. Whenever it calls any function from the global execution contest, it will add that function to the call stack, and start executing that function first.
+
+
+When another function is called from the particular function, it gets added to the call stack and gets priority for the execution.
+
+
+When the execution of the particular function is finished, the interpreter removes it from the call stack.
+
+
+Whenever a stack takes more space than its size, it throws the 'stack overflow' error.
+
+
+```html
+<html>
+<body>
+   ##  JavaScript - Call stack 
+   <div id = "output"></div>
+   <script>
+
+    const output = document.getElementById("output");
+    function two() {
+        output.innerHTML += "two <br>";
+    }
+
+    function one() {
+        two();
+        output.innerHTML += "one <br>";
+    }
+
+    one();
+</script>
+</body>
+</html>
+```
+
+
+## JavaScript Call Stack Overflow
+
+
+Whenever the size of the call stack exceeds the defined size, a call stack overflow occurs. Generally, whenever a recursive function doesn't have an exit point call, a stack overflow occurs.
+
+
+For example, in the code below, the fib() function doesn't have an exit point. So, it throws a call stack overflow error.
+
+
+```javascript
+function fib() {
+   fib();
+}
+fib();
+```
+
+
+Javascript is a single-thread programming language. So, it runs the code line-by-line from top to bottom. It means a JavaScript program can have only 1 call stack, and it can execute one line at a time.
+

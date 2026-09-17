@@ -1,0 +1,110 @@
+---
+title: "JavaScript - Browsers"
+description: "Learn JavaScript - Browsers with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2470
+group: "JavaScript Miscellaneous"
+seoTitle: "JavaScript - Browsers — CodesCompiler JavaScript Guide"
+permalink: "javascript-browsers-handling"
+---
+
+
+# JavaScript - Browsers Compatibility
+
+
+
+
+It is important to understand the differences between different browsers in order to handle each in the way it is expected. So it is important to know which browser your web page is running in.
+
+
+To get information about the browser your webpage is currently running in, use the built-innavigatorobject.
+
+
+## Navigator Properties
+
+
+There are several Navigator related properties that you can use in your Web page. The following is a list of the names and descriptions of each.
+
+
+
+| Sr.No. | Property & Description |
+| --- | --- |
+| 1 | appCodeNameThis property is a string that contains the code name of the browser, Netscape for Netscape and Microsoft Internet Explorer for Internet Explorer. |
+| 2 | appVersionThis property is a string that contains the version of the browser as well as other useful information such as its language and compatibility. |
+| 3 | languageThis property contains the two-letter abbreviation for the language that is used by the browser. Netscape only. |
+| 4 | mimTypes[]This property is an array that contains all MIME types supported by the client. Netscape only. |
+| 5 | platform[]This property is a string that contains the platform for which the browser was compiled."Win32" for 32-bit Windows operating systems |
+| 6 | plugins[]This property is an array containing all the plug-ins that have been installed on the client. Netscape only. |
+| 7 | userAgent[]This property is a string that contains the code name and version of the browser. This value is sent to the originating server to identify the client. |
+
+
+
+## Navigator Methods
+
+
+There are several Navigator-specific methods. Here is a list of their names and descriptions.
+
+
+
+| Sr.No. | Description |
+| --- | --- |
+| 1 | javaEnabled()This method determines if JavaScript is enabled in the client. If JavaScript is enabled, this method returns true; otherwise, it returns false. |
+| 2 | plugings.refreshThis method makes newly installed plug-ins available and populates the plugins array with all new plug-in names. Netscape only. |
+| 3 | preference(name,value)This method allows a signed script to get and set some Netscape preferences. If the second parameter is omitted, this method will return the value of the specified preference; otherwise, it sets the value. Netscape only. |
+| 4 | taintEnabled()This method returns true if data tainting is enabled; false otherwise. |
+
+
+
+## Browser Detection
+
+
+There is a simple JavaScript which can be used to find out the name of a browser and then accordingly an HTML page can be served to the user.
+
+
+```html
+<html>   
+   <head>
+      <title>Browser Detection Example</title>
+   </head>
+   
+   <body>      
+      <script type = "text/javascript">
+         var userAgent   = navigator.userAgent;
+         var opera       = (userAgent.indexOf('Opera') != -1);
+         var ie          = (userAgent.indexOf('MSIE') != -1);
+         var gecko       = (userAgent.indexOf('Gecko') != -1);
+         var netscape    = (userAgent.indexOf('Mozilla') != -1);
+         var version     = navigator.appVersion;
+            
+         if (opera) {
+            document.write("Opera based browser");
+            // Keep your opera specific URL here.
+         } else if (gecko) {
+            document.write("Mozilla based browser");
+            // Keep your gecko specific URL here.
+         } else if (ie) {
+            document.write("IE based browser");
+            // Keep your IE specific URL here.
+         } else if (netscape) {
+            document.write("Netscape based browser");
+            // Keep your Netscape specific URL here.
+         } else {
+            document.write("Unknown browser");
+         }
+          
+         // You can include version to along with any above condition.
+         document.write("<br /> Browser version info : " + version );
+      </script>      
+   </body>
+</html>
+```
+
+
+### Output
+
+
+On executing the above program, you will get the output similar to the following −
+
+
+Please note that you may get some more information about the browser depending upon the type of browser you are using.
+

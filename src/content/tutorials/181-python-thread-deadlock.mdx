@@ -1,0 +1,244 @@
+---
+title: "PYTHON - Thread Deadlock"
+description: "Learn PYTHON - Thread Deadlock with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1810
+group: "Python Synchronization"
+seoTitle: "PYTHON - Thread Deadlock — CodesCompiler PYTHON Guide"
+permalink: "python-thread-deadlock"
+---
+
+
+# Python - Thread Deadlock
+
+
+
+
+A deadlock may be described as a concurrency failure mode. It is a situation in a program where one or more threads wait for a condition that never occurs. As a result, the threads are unable to progress and the program is stuck or frozen and must be terminated manually.
+
+
+Deadlock situation may arise in many ways in your concurrent program. Deadlocks are never not developed intentionally, instead, they are in fact a side effect or bug in the code.
+
+
+Common causes of thread deadlocks are listed below −
+
+
+
+- A thread that attempts to acquire the same mutex lock twice.
+- Threads that wait on each other (e.g. A waits on B, B waits on A).
+- When a thread that fails to release a resource such as lock, semaphore, condition, event, etc.
+- Threads that acquire mutex locks in different orders (e.g. fail to perform lock ordering).
+
+
+
+## How to Avoid Deadlocks in Python Threads
+
+
+When multiple threads in a multi-threaded application attempt to access the same resource, such as performing read/write operations on the same file, it can lead to data inconsistency. Therefore, it is important to synchronize concurrent access to resources by usinglocking mechanisms.
+
+
+The Pythonthreadingmodule provides a simple-to-implement locking mechanism tosynchronize threads. You can create a new lock object by calling theLock()class, which initializes the lock in an unlocked state.
+
+
+## Locking Mechanism with the Lock Object
+
+
+An object of theLockclass has two possible states − locked or unlocked, initially in unlocked state when first created. A lock doesn't belong to any particular thread.
+
+
+The Lock class defines acquire() and release() methods.
+
+
+### The acquire() Method
+
+
+Theacquire()method of the Lock class changes the lock's state from unlocked to locked. It returns immediately unless the optional blocking argument is set to True, in which case it waits until the lock is acquired.
+
+
+Here is theSyntaxof this method −
+
+
+```python
+Lock.acquire(blocking, timeout)
+```
+
+
+Where,
+
+
+
+- blocking− If set to False, it means do not block. If a call with blocking set to True would block, return False immediately; otherwise, set the lock to locked and return True.
+- timeout− Specifies a timeout period for acquiring the lock.
+
+
+
+The return value of this method is True if the lock is acquired successfully; False if not.
+
+
+### The release() Method
+
+
+When the state is locked, this method in another thread changes it to unlocked. This can be called from any thread, not only the thread which has acquired the lock
+
+
+Following is theSyntaxof therelease()method −
+
+
+```python
+Lock.release()
+```
+
+
+The release() method should only be called in the locked state. If an attempt is made to release an unlocked lock, a RuntimeError will be raised.
+
+
+When the lock is locked, reset it to unlocked, and return. If any other threads are blocked waiting for the lock to become unlocked, allow exactly one of them to proceed. There is no return value of this method.
+
+
+### Example
+
+
+In the following program, two threads try to call the synchronized() method. One of them acquires the lock and gains the access while the other waits. When the run() method is completed for the first thread, the lock is released and the synchronized method is available for second thread.
+
+
+When both the threads join, the program comes to an end.
+
+
+```python
+from threading import Thread, Lock
+import time
+
+lock=Lock()
+threads=[]
+
+class myThread(Thread):
+   def __init__(self,name):
+      Thread.__init__(self)
+      self.name=name
+   def run(self):
+      lock.acquire()
+      synchronized(self.name)
+      lock.release()
+
+def synchronized(threadName):
+   print ("{} has acquired lock and is running synchronized method".format(threadName))
+   counter=5
+   while counter:
+      print ('**', end='')
+      time.sleep(2)
+      counter=counter-1
+   print('\nlock released for', threadName)
+
+t1=myThread('Thread1')
+t2=myThread('Thread2')
+
+t1.start()
+threads.append(t1)
+
+t2.start()
+threads.append(t2)
+
+for t in threads:
+   t.join()
+print ("end of main thread")
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Thread1 has acquired lock and is running synchronized method
+**********
+lock released for Thread1
+Thread2 has acquired lock and is running synchronized method
+**********
+lock released for Thread2
+end of main thread
+```
+
+
+## Semaphore Object for Synchronization
+
+
+In addition to locks, Pythonthreadingmodule supportssemaphores, which offering another synchronization technique. It is one of the oldest synchronization techniques invented by a well-known computer scientist, Edsger W. Dijkstra.
+
+
+The basic concept of semaphore is to use an internal counter which is decremented by each acquire() call and incremented by each release() call. The counter can never go below zero; when acquire() finds that it is zero, it blocks, waiting until some other thread calls release().
+
+
+The Semaphore class in threading module defines acquire() and release() methods.
+
+
+### The acquire() Method
+
+
+If the internal counter is larger than zero on entry, decrement it by one and return True immediately.
+
+
+If the internal counter is zero on entry, block until awoken by a call to release(). Once awoken (and the counter is greater than 0), decrement the counter by 1 and return True. Exactly one thread will be awoken by each call to release(). The order in which threads awake is arbitrary.
+
+
+If blocking parameter is set to False, do not block. If a call without an argument would block, return False immediately; otherwise, do the same thing as when called without arguments, and return True.
+
+
+### The release() Method
+
+
+Release a semaphore, incrementing the internal counter by 1. When it was zero on entry and other threads are waiting for it to become larger than zero again, wake up n of those threads.
+
+
+Example
+
+
+This example demonstrates how to use aSemaphoreobject in Python to control access to a shared resource among multiple threads, for avoiding deadlock in Python's multi-threaded program.
+
+
+```python
+from threading import *
+import time
+
+# creating thread instance where count = 3
+lock = Semaphore(4)
+
+# creating instance
+def synchronized(name):
+   
+   # calling acquire method
+   lock.acquire()
+
+   for n in range(3):
+      print('Hello! ', end = '')
+      time.sleep(1)
+      print( name)
+
+      # calling release method
+      lock.release()
+
+# creating multiple thread
+thread_1 = Thread(target = synchronized , args = ('Thread 1',))
+thread_2 = Thread(target = synchronized , args = ('Thread 2',))
+thread_3 = Thread(target = synchronized , args = ('Thread 3',))
+
+# calling the threads
+thread_1.start()
+thread_2.start()
+thread_3.start()
+```
+
+
+It will produce the followingoutput−
+
+
+```python
+Hello! Hello! Hello! Thread 1
+Hello! Thread 2
+Thread 3
+Hello! Hello! Thread 1
+Hello! Thread 3
+Thread 2
+Hello! Hello! Thread 1
+Thread 3
+Thread 2
+```
+

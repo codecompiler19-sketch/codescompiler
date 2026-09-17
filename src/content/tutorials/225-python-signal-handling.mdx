@@ -1,0 +1,190 @@
+---
+title: "PYTHON - Signal Handling"
+description: "Learn PYTHON - Signal Handling with clear explanation, code examples, and practical guide."
+category: "python"
+order: 2250
+group: "Python Advanced Concepts"
+seoTitle: "PYTHON - Signal Handling — CodesCompiler PYTHON Guide"
+permalink: "python-signal-handling"
+---
+
+
+# Python - Signal Handling
+
+
+
+
+Signal handlingin Python allows you to define custom handlers for managing asynchronous events such as interrupts or termination requests from keyboard, alarms, and even system signals. You can control how your program responds to various signals by defining custom handlers. Thesignalmodule in Python provides mechanisms to set and manage signal handlers.
+
+
+Asignal handleris a function that gets executed when a specific signal is received. Thesignal.signal()function allows defining custom handlers for signals. Thesignalmodule offers a way to define custom handlers that will be executed when a specific signal is received. Some default handlers are already installed in Python, which are −
+
+
+
+- SIGPIPEis ignored.
+- SIGINTis translated into a KeyboardInterrupt exception.
+
+
+
+## Commonly Used Signals
+
+
+Python signal handlers are executed in the main Python thread of the main interpreter, even if the signal is received in another thread. Signals can't be used for inter-thread communication.
+
+
+Following are the list of some common signals and their default actions −
+
+
+
+- SIGINT− Interrupt from keyboard (Ctrl+C), which raises a KeyboardInterrupt.
+- SIGTERM− Termination signal.
+- SIGALRM− Timer signal from alarm().
+- SIGCHLD− Child process stopped or terminated.
+- SIGUSR1andSIGUSR2−  User-defined signals.
+
+
+
+## Setting a Signal Handler
+
+
+To set a signal handler, we can use thesignal.signal()function. It allows you to define custom handlers for signals. A handler remains installed until explicitly reset, except forSIGCHLD.
+
+
+### Example
+
+
+Here is an example of setting a signal handler using thesignal.signal()function with theSIGINThandler.
+
+
+```python
+import signal
+import time
+
+def handle_signal(signum, frame):
+   print(f"Signal {signum} received")
+
+# Setting the handler for SIGINT
+signal.signal(signal.SIGINT, handle_signal)
+
+print("Press Ctrl+C to trigger SIGINT")
+while True:
+   time.sleep(1)
+```
+
+
+Output
+
+
+On executing the above program, you will get the following results −
+
+
+```python
+Press Ctrl+C to trigger SIGINT
+Signal 2 received
+Signal 2 received
+Signal 2 received
+Signal 2 received
+```
+
+
+## Signal Handling on Windows
+
+
+On Windows, thesignal.signal()function can only handle a limited set of signals. If you try to use a signal not supported on Windows, aValueErrorwill be raised. And, anAttributeErrorwill be raised if a signal name is not defined as a SIG* module level constant.
+
+
+The supported signals on Windows are follows −
+
+
+
+- SIGABRT
+- SIGFPE
+- SIGILL
+- SIGINT
+- SIGSEGV
+- SIGTERM
+- SIGBREAK
+
+
+
+## Handling Timers and Alarms
+
+
+Timers and alarms can be used to schedule signal delivery after a certain amount of time.
+
+
+### Example
+
+
+Let's observe following example of handling alarms.
+
+
+```python
+import signal
+import time
+
+def handler(signum, stack):
+   print('Alarm: ', time.ctime())
+
+signal.signal(signal.SIGALRM, handler)
+signal.alarm(2)
+time.sleep(5)
+for i in range(5):
+   signal.alarm(2)
+   time.sleep(5)
+   print("interrupted #%d" % i)
+```
+
+
+Output
+
+
+On executing the above program, you will get the following results −
+
+
+```python
+Alarm:  Wed Jul 17 17:30:11 2024
+Alarm:  Wed Jul 17 17:30:16 2024
+interrupted #0
+Alarm:  Wed Jul 17 17:30:21 2024
+interrupted #1
+Alarm:  Wed Jul 17 17:30:26 2024
+interrupted #2
+Alarm:  Wed Jul 17 17:30:31 2024
+interrupted #3
+Alarm:  Wed Jul 17 17:30:36 2024
+interrupted #4
+```
+
+
+## Getting Signal Names from Numbers
+
+
+There is no straightforward way of getting signal names from numbers in Python. You can use thesignalmodule to get all its attributes, filter out those that start withSIG, and store them in a dictionary.
+
+
+### Example
+
+
+This example creates a dictionary where the keys are signal numbers and the values are the corresponding signal names. This is useful for dynamically resolving signal names from their numeric values.
+
+
+```python
+import signal
+
+sig_items = reversed(sorted(signal.__dict__.items()))
+final = dict((k, v) for v, k in sig_items if v.startswith('SIG') and not v.startswith('SIG_'))
+print(final)
+```
+
+
+Output
+
+
+On executing the above program, you will get the following results −
+
+
+```python
+{<Signals.SIGXFSZ: 25>: 'SIGXFSZ', <Signals.SIGXCPU: 24>: 'SIGXCPU', <Signals.SIGWINCH: 28>: 'SIGWINCH', <Signals.SIGVTALRM: 26>: 'SIGVTALRM', <Signals.SIGUSR2: 12>: 'SIGUSR2', <Signals.SIGUSR1: 10>: 'SIGUSR1', <Signals.SIGURG: 23>: 'SIGURG', <Signals.SIGTTOU: 22>: 'SIGTTOU', <Signals.SIGTTIN: 21>: 'SIGTTIN', <Signals.SIGTSTP: 20>: 'SIGTSTP', <Signals.SIGTRAP: 5>: 'SIGTRAP', <Signals.SIGTERM: 15>: 'SIGTERM', <Signals.SIGSYS: 31>: 'SIGSYS', <Signals.SIGSTOP: 19>: 'SIGSTOP', <Signals.SIGSEGV: 11>: 'SIGSEGV', <Signals.SIGRTMIN: 34>: 'SIGRTMIN', <Signals.SIGRTMAX: 64>: 'SIGRTMAX', <Signals.SIGQUIT: 3>: 'SIGQUIT', <Signals.SIGPWR: 30>: 'SIGPWR', <Signals.SIGPROF: 27>: 'SIGPROF', <Signals.SIGIO: 29>: 'SIGIO', <Signals.SIGPIPE: 13>: 'SIGPIPE', <Signals.SIGKILL: 9>: 'SIGKILL', <Signals.SIGABRT: 6>: 'SIGABRT', <Signals.SIGINT: 2>: 'SIGINT', <Signals.SIGILL: 4>: 'SIGILL', <Signals.SIGHUP: 1>: 'SIGHUP', <Signals.SIGFPE: 8>: 'SIGFPE', <Signals.SIGCONT: 18>: 'SIGCONT', <Signals.SIGCHLD: 17>: 'SIGCHLD', <Signals.SIGBUS: 7>: 'SIGBUS', <Signals.SIGALRM: 14>: 'SIGALRM'}
+```
+

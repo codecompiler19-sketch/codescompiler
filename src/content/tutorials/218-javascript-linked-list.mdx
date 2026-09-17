@@ -1,0 +1,418 @@
+---
+title: "JavaScript - Linked List"
+description: "Learn JavaScript - Linked List with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 2180
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Linked List — CodesCompiler JavaScript Guide"
+permalink: "javascript-linked-list"
+---
+
+
+# JavaScript - Linked List
+
+
+
+
+Linked List is an ordered collection of data elements. In linked list the data will be represented in Nodes. Node has two parts, the first part will be holding the data of the element and second part of the node (pointer) will store the address of the very next node. In linked list elements are stored in a sequential manner.
+
+
+Node:This represents each element in the linked list. It consists of 2 parts, data and next.
+
+
+Head:The reference to the first element is called a head.
+
+
+Next:This is the pointer that points to the next node in the linked list.
+
+
+## Types of Linked List
+
+
+There are three types of linked list:
+
+
+
+- Singly Linked List: In this type of linked list, each node in the list is connected only to the next node in the list.
+- Doubly Linked List: In this type of linked list, each node in the list is connected to the next and the previous node.
+- Circular Linked List: In this type of linked list, the last node is connected to the first node.
+
+
+
+## Implementations of Linked List
+
+
+Defining node class and liked list class, this is basically the prerequisite in order to implement a linked list in JavaScript. In this step, 2 classes namely one for the nodes and the other for the linked list need to be created.
+
+
+The Node class represents a single node in the linked list. It has two properties which are data and next. The data property is used to store the actual data of the node, whereas the next property is a reference to the next node in the list. The Node class consists of a constructor that initializes the data and next property when creating a new Node.
+
+
+```javascript
+class Node {
+
+   constructor(data) {
+
+      this.data = data;
+
+      this.next = null;
+
+   }
+
+}
+```
+
+
+The LinkedList class is a representation of the linked list itself. It has a head property that refers to the first node in the list. The LinkedList class also has a constructor that initializes the head property when creating a new LinkedList.
+
+
+```javascript
+class LinkedList {
+
+   constructor() {
+
+      this.head = null;
+
+      this.tail = null;
+
+      this.length = 0;
+
+   }
+
+}
+```
+
+
+The LinkedList class also consists of a method that allows you to insert, delete, and search for nodes in the list while simultaneously allowing other operations like printing the list, counting the elements, reversing the list and so on.
+
+
+## Inserting a Node
+
+
+To insert a node in the linked list, we need to create a new node first and need to assign the data to it. Then we need to check if the head is null, if it is null then we need to assign the new node to the head. If the head is not null, then we need to traverse the list till the last node and assign the new node to the next of the last node.
+
+
+```javascript
+insert(data) {
+
+   let node = new Node(data);
+
+   if (!this.head) {
+
+      this.head = node;
+
+      this.tail = this.head;
+
+   } else {
+
+      this.tail.next = node;
+
+      this.tail = node;
+
+   }
+
+   this.length++;
+
+   return this;
+
+}
+```
+
+
+## Searching a Node
+
+
+If there is a need to search a element in the linked list we can simply traverse the linked list and check if current node data is equal to the data we are searching for. If we find the data we are searching for, we can return the node.
+
+
+```javascript
+search(data) {
+
+   let current = this.head;
+
+   while (current) {
+
+      if (current.data === data) {
+
+         return current;
+
+      }
+
+      current = current.next;
+
+   }
+
+   return null;
+
+}
+```
+
+
+## Deleting a Node
+
+
+If we want to delete a node from the linked list, let's say you have nodeprevand nodecurrentand you want to delete the nodecurrent. You can simply assign the next of theprevto the next of thecurrentand the nodecurrentwill be deleted.
+
+
+```javascript
+delete(data) {
+
+   if (!this.head) return null;
+
+   if (this.head.data === data) {
+
+      this.head = this.head.next;
+
+      this.length--;
+
+      return this;
+
+   }
+
+   let current = this.head;
+
+   let prev = null;
+
+   while (current) {
+
+      if (current.data === data) {
+
+         prev.next = current.next;
+
+         this.length--;
+
+         return this;
+
+      }
+
+      prev = current;
+
+      current = current.next;
+
+   }
+
+   return null;
+
+}
+```
+
+
+## Printing the Linked List
+
+
+You can print the elements of a linked list by traversing through the list and printing the data of each node.
+
+
+```javascript
+print() {
+
+   let current = this.head;
+
+   while (current) {
+
+      console.log(current.data);
+
+      current = current.next;
+
+   }
+
+}
+```
+
+
+## Code Example
+
+
+Following is an example of a linked list implementation in JavaScript.
+
+
+```javascript
+<!DOCTYPE html>
+
+<head>
+
+<title>Linked List</title>
+
+</head>
+
+<body>
+
+p id = "demo"
+
+<script>
+
+class Node {
+
+   constructor(data) {
+
+      this.data = data;
+
+      this.next = null;
+
+   }
+
+}
+
+
+
+class LinkedList {
+
+   constructor() {
+
+      this.head = null;
+
+      this.tail = null;
+
+      this.length = 0;
+
+   }
+
+
+
+   insert(data) {
+
+      let node = new Node(data);
+
+      if (!this.head) {
+
+         this.head = node;
+
+         this.tail = this.head;
+
+      } else {
+
+         this.tail.next = node;
+
+         this.tail = node;
+
+      }
+
+      this.length++;
+
+      return this;
+
+   }
+
+
+
+   search(data) {
+
+      let current = this.head;
+
+      while (current) {
+
+         if (current.data === data) {
+
+            return current;
+
+         }
+
+         current = current.next;
+
+      }
+
+      return null;
+
+   }
+
+
+
+   delete(data) {
+
+      if (!this.head) return null;
+
+      if (this.head.data === data) {
+
+         this.head = this.head.next;
+
+         this.length--;
+
+         return this;
+
+      }
+
+      let current = this.head;
+
+      let previous = null;
+
+      while (current) {
+
+         if (current.data === data) {
+
+            previous.next = current.next;
+
+            this.length--;
+
+            return this;
+
+         }
+
+         previous = current;
+
+         current = current.next;
+
+      }
+
+      return null;
+
+   }
+
+
+
+   print() {
+
+      let current = this.head;
+
+      let output = "";
+
+      while (current) {
+
+          output += current.data + " ";
+
+          current = current.next;
+
+      }
+
+      document.getElementById("demo").innerHTML = output;
+
+   }
+
+}
+
+
+
+let list = new LinkedList();
+
+list.insert(1);
+
+list.insert(2);
+
+list.insert(3);
+
+list.insert(4);
+
+list.insert(5);
+
+list.print();
+
+</script>
+
+</body>
+
+</html>
+```
+
+
+### Output
+
+
+Following is the output of the above code.
+
+
+```javascript
+1 2 3 4 5
+```
+
+
+In the above example, we have created a linked list with elements 1, 2, 3, 4, and 5. We have inserted these elements into the linked list and printed the list.
+

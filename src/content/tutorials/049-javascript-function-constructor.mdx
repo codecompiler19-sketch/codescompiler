@@ -1,0 +1,167 @@
+---
+title: "JavaScript - Function() Constructor"
+description: "Learn JavaScript - Function() Constructor with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 490
+group: "JavaScript Functions"
+seoTitle: "JavaScript - Function() Constructor — CodesCompiler JavaScript Guide"
+permalink: "javascript-function-constructor"
+---
+
+
+# JavaScript - Function() Constructor
+
+
+
+
+## The Function() Constructor
+
+
+The JavaScriptFunction()constructor can dynamically create a function object at the run time. The functions created using Function() constructor have global scope only.
+
+
+The Function() constructor can be used to define the function at the run time, but you should use the Function() constructor with caution as it can lead to vulnerabilities in the code.
+
+
+We can pass multiple arguments to the Function() constructor. All arguments except the last argument are the names of the parameters in the new function to be created. The last argument is the function body.
+
+
+### Syntax
+
+
+Following is the syntax to use the Function() constructor to create an object of the function in JavaScript
+
+
+```javascript
+const obj = new Function(arg1, arg2..., functionBody);
+```
+
+
+The Function() constructor can be called with or without new keyword to create a new function object. All the parameters are JavaScript strings.
+
+
+#### Parameters
+
+
+
+- arg1, arg2...− These are arguments (optional) names that are used in function body.  These are treated as the names of parameters in the function to be created.
+- functionBody− This argument contains the JavaScript statements comprising the function definition.
+
+
+
+### Example
+
+
+In the example below, we have passed the 3 arguments to the Function() constructor. The first 2 arguments are arguments for the func() function, and the third is a body of the func() function.
+
+
+In the output, the func() function returns the multiplication of 5 and 7.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      const func = new Function("p", "q", "return p * q");
+      document.getElementById("output").innerHTML = 
+      "The value returned from the function is: " + func(5, 7);
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The value returned from the function is: 35
+```
+
+
+### Example
+
+
+In the example below, we passed the one argument to the Function() constructor. So, it considers it as the function body. All the parameters except the last one are optional.
+
+
+In the output, you can observe that the func() function returns the sum of 10 and 20.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      const func = new Function("return 10 + 20");
+      document.getElementById("output").innerHTML =
+      "The value returned from the function is: " + func();
+   </script>
+</body>
+</html>
+```
+
+
+#### Output
+
+
+```javascript
+The value returned from the function is: 30
+```
+
+
+## Function Declaration or Function Expression as Parameter
+
+
+Creating function using Function constructor is less efficient than creating function using a function declaration or function expression and calling it within the code.
+
+
+We can write multiple statements in thefunctionBodyparameter of the Function() constructor. All statements are separated by semicolons.  We can create a function withfunction declarationorfunction expressionand pass it as a statement in the fucntionBody parameter.
+
+
+## Example
+
+
+In this example, we defined a function sum with function expression and passed to the Function() constructor as a part of the parameter (functionBody). Here the return statement is required.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      const add = new Function(
+	  "const sum = function (a, b) {return  a+ b};  return sum",
+	  )();    
+      document.getElementById("output").innerHTML = add(5,10) // 15
+   </script>
+</body>
+</html>
+```
+
+
+### Example
+
+
+In this example, we defined a function anonymous function with function declaration and passed to the Function() constructor as a part of the parameter (functionBody). Here the return statement at the end is not required.
+
+
+```html
+<html>
+<body>
+   p id = "output" 
+   <script>
+      const sayHello = new Function(
+	  "return function (name) { return Hello, ${name} }",
+	  )();    
+      document.getElementById("output").innerHTML = 
+	  sayHello("world"); // Hello, world
+    </script>
+</body>
+</html>
+```
+
+
+Please note that in both the examples above, the new Function is self-invoked.
+

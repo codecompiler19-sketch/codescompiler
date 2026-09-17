@@ -1,0 +1,318 @@
+---
+title: "SQL - Create Index"
+description: "Learn SQL - Create Index with clear explanation, code examples, and practical guide."
+category: "sql"
+order: 790
+group: "SQL Indexes"
+seoTitle: "SQL - Create Index — CodesCompiler SQL Guide"
+permalink: "sql-create-index"
+---
+
+
+# SQL - CREATE INDEX Statement
+
+
+Table of contentWhat is SQL Index?The SQL CREATE INDEX StatementCREATE UNIQUE INDEXCreating SQL Index on Multiple FieldsWhen Should Indexes Be Created?DROP INDEX Statement in SQLImportant Points About SQL CREATE INDEX Statement
+
+
+PreviousNext
+
+
+## What is SQL Index?
+
+
+Anindexin SQL is a database object that improves the speed of data retrieval on a table. It works like an index in a book, allowing the database to quickly locate the desired information without scanning the entire table.
+
+
+Indexes are useful when dealing with large datasets and queries that involve searching, filtering, or sorting.
+
+
+## The SQL CREATE INDEX Statement
+
+
+TheCREATE INDEXstatement in SQL is used to create indexes on one or more columns of a table. An index allows the database to find and access rows much faster than scanning the entire table, which improves the performance ofSELECTqueries and join operations.
+
+
+Indexes are especially useful on large tables that are queried frequently. However, they also take up storage space and can slow downINSERT,UPDATE, andDELETEoperations since the index must be updated whenever the underlying data changes.
+
+
+### Syntax
+
+
+The basic syntax for creating an index in SQL is as follows:
+
+
+```sql
+CREATE INDEX index_name
+ON table_name (column_name);
+```
+
+
+Here,
+
+
+
+- index_nameThis specifies the name of the index that you want to create.
+- table_nameThis specifies the name of the table on which you want to create the index.
+- (column_name1, column_name2...column_nameN)are the names of one or more columns on which the index is being created.
+
+
+
+### Example
+
+
+To create an index on a database table, we first need to create a table. So, in this example, we are creating a table namedCUSTOMERSusing the following query:
+
+
+```sql
+CREATE TABLE CUSTOMERS(
+   ID INT NOT NULL,
+   NAME VARCHAR(15) NOT NULL,
+   AGE INT NOT NULL,
+   ADDRESS VARCHAR(25),
+   SALARY DECIMAL(10, 4),
+   PRIMARY KEY(ID));
+);
+```
+
+
+Then, insert some values into the CUSTOMERS table using the following query:
+
+
+```sql
+INSERT INTO CUSTOMERS VALUES 
+(1, 'Ramesh', '32', 'Ahmedabad', 2000),
+(2, 'Khilan', '25', 'Delhi', 1500),
+(3, 'Kaushik', '23', 'Kota', 2000),
+(4, 'Chaitali', '25', 'Mumbai', 6500),
+(5, 'Hardik','27', 'Bhopal', 8500),
+(6, 'Komal', '22', 'Hyderabad', 9000),
+(7, 'Muffy', '24', 'Indore', 5500);
+```
+
+
+Once the table is created, create an index for the column namedNAMEin the CUSTOMERS table using the following query:
+
+
+```sql
+CREATE INDEX index_name ON CUSTOMERS(NAME);
+```
+
+
+When we execute the above query, the output is obtained as follows:
+
+
+```sql
+Query OK, 0 rows affected (0.06 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+```
+
+
+### Verification
+
+
+The following SHOW INDEX query is used to display all the indexes created on an existing table.
+
+
+```sql
+SHOW INDEX FROM CUSTOMERS;
+```
+
+
+In the list obtained, you can find the column name NAME, along with the ID in the list of indexes.
+
+
+TableNon_uniqueKey_nameSeq_in_indexColumn_namecustomers0PRIMARY1IDcustomers1index_name1NAME
+
+
+## CREATE UNIQUE INDEX
+
+
+AUNIQUE INDEXis a special type of index that ensures all values in the indexed column (or group of columns) are unique. It prevents duplicate entries, similar to how aUNIQUEconstraint works.
+
+
+If you try to insert a duplicate value into a column with a unique index, the database will return an error.
+
+
+### Syntax
+
+
+The syntax of the CREATE UNIQUE INDEX statement is as follows:
+
+
+```sql
+CREATE UNIQUE INDEX index_name
+ON table_name (column_name);
+```
+
+
+### Example
+
+
+Suppose we want to ensure that no two customers have the sameADDRESSvalue. We can create a unique index as follows:
+
+
+```sql
+CREATE UNIQUE INDEX idx_address
+ON CUSTOMERS (ADDRESS);
+```
+
+
+Following is the output obtained:
+
+
+```sql
+Query OK, 0 rows affected (0.02 sec)
+```
+
+
+## Creating SQL Index on Multiple Fields
+
+
+SQL allows us to create an index on multiple columns. Such an index is known as acomposite indexormulti-column index. It is useful when queries involve conditions on more than one column.
+
+
+### Syntax
+
+
+The syntax for creating an index on multiple fields is as follows:
+
+
+```sql
+CREATE INDEX index_name
+ON table_name (column1, column2, ...);
+```
+
+
+### Example
+
+
+Suppose we often search theCUSTOMERStable using bothAGEandNAME. We can create a composite index as shown below:
+
+
+```sql
+CREATE INDEX idx_age_name
+ON CUSTOMERS (AGE, NAME);
+```
+
+
+This allows the database engine to quickly locate rows based on the combination of AGE and NAME values. Following is the output obtained:
+
+
+```sql
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+```
+
+
+### Verification
+
+
+Now, let us list all the indexes that are created on the CUSTOMERS table using the following SHOW INDEX query:
+
+
+```sql
+SHOW INDEX FROM CUSTOMERS;
+```
+
+
+As you observe, you can find the column names NAME, and AGE along with ID (PRIMARY KEY), in the list of indexes.
+
+
+TableNon_uniqueKey_nameSeq_in_indexColumn_namecustomers0PRIMARY1IDcustomers1index_name1NAMEcustomers1mult_index_data1NAMEcustomers1mult_index_data2AGE
+
+
+## When Should Indexes Be Created?
+
+
+Indexes should be created carefully, as they consume additional storage and may slow downINSERT,UPDATE, andDELETEoperations. They are best used when:
+
+
+
+- You frequently query large tables withWHEREconditions.
+- You often performJOINoperations between tables.
+- You run queries involvingORDER BYorGROUP BYclauses.
+- You need to enforce uniqueness on a column using a UNIQUE INDEX.
+
+
+
+## DROP INDEX Statement in SQL
+
+
+TheDROP INDEXstatement is used to remove an existing index from a table. 
+Once an index is dropped, the database will no longer use it to speed up queries, and all queries will fall back to normal table scans.
+
+
+### Syntax
+
+
+The syntax of the DROP INDEX statement differs slightly between SQL databases. Following is the basic syntax to drop an index in MySQL database:
+
+
+```sql
+DROP INDEX index_name ON table_name;
+```
+
+
+Following is the basic syntax to drop an index in SQL Server/Oracle:
+
+
+```sql
+DROP INDEX index_name;
+```
+
+
+### Example: Drop Index in MySQL
+
+
+Following is an example to drop the indexidx_namefrom theCUSTOMERStable in MySQL database:
+
+
+```sql
+DROP INDEX idx_name ON CUSTOMERS;
+```
+
+
+We get the output as shown below:
+
+
+```sql
+Query OK, 0 rows affected (0.01 sec)
+```
+
+
+### Example: Drop Index in SQL Server
+
+
+The following example drops the indexidx_namefrom theCUSTOMERStable in SQL Server:
+
+
+```sql
+DROP INDEX idx_name ON CUSTOMERS;
+```
+
+
+The output will confirm the successful execution of the statement:
+
+
+```sql
+Command(s) completed successfully.
+```
+
+
+## Important Points About SQL CREATE INDEX Statement
+
+
+Following are some of the important points you should know about the SQL CREATE INDEX statement in SQL:
+
+
+
+- Indexes are mainly used to improve the speed ofSELECTqueries and join operations by reducing the amount of data the database needs to scan.
+- Indexes do not change the actual data in the table but create a separate data structure that makes lookups faster.
+- Creating too many indexes can slow downINSERT,UPDATE, andDELETEoperations because the indexes also need to be updated whenever data changes.
+- Indexes consume additional storage space in the database, so they should be created only when needed.
+- APRIMARY KEYorUNIQUE constraintautomatically creates an index on the specified column(s).
+- Indexes can be created on a single column or on multiple columns (composite indexes) to optimize queries that filter or sort by multiple fields.
+- It is good to create indexes on columns that are frequently used inWHEREclauses,JOINconditions, orORDER BYoperations.
+
+

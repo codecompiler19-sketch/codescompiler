@@ -1,0 +1,211 @@
+---
+title: "PYTHON - User-defined Exception"
+description: "Learn PYTHON - User-defined Exception with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1620
+group: "Python Errors & Exceptions"
+seoTitle: "PYTHON - User-defined Exception — CodesCompiler PYTHON Guide"
+permalink: "python-userdefined-exception"
+---
+
+
+# Python - User-Defined Exceptions
+
+
+
+
+## User-Defined Exceptions in Python
+
+
+User-defined exceptions in Python are custom error classes that you create to handle specific error conditions in your code. They are derived from the built-in Exception class or any of its sub classes.
+
+
+User-defined exceptions provide more precise control over error handling in your application −
+
+
+
+- Clarity −They provide specific error messages that make it clear what went wrong.
+- Granularity −They allow you to handle different error conditions separately.
+- Maintainability −They centralize error handling logic, making your code easier to maintain.
+
+
+
+## How to Create a User-Defined Exception
+
+
+To create a user-defined exception, follow these steps −
+
+
+### Step 1 − Define the Exception Class
+
+
+Create a new class that inherits from the built-in "Exception" class or any other appropriate base class. This new class will serve as your custom exception.
+
+
+```python
+class MyCustomError(Exception):
+   pass
+```
+
+
+Explanation
+
+
+
+- Inheritance −By inheriting from "Exception", your custom exception will have the same behaviour and attributes as the built-in exceptions.
+- Class Definition −The class is defined using the standard Python class syntax. For simple custom exceptions, you can define an empty class body using the "pass" statement.
+
+
+
+### Step 2 − Initialize the Exception
+
+
+Implement the "__init__" method to initialize any attributes or provide custom error messages. This allows you to pass specific information about the error when raising the exception.
+
+
+```python
+class InvalidAgeError(Exception):
+   def __init__(self, age, message="Age must be between 18 and 100"):
+      self.age = age
+      self.message = message
+      super().__init__(self.message)
+```
+
+
+Explanation
+
+
+
+- Attributes −Define attributes such as "age" and "message" to store information about the error.
+- Initialization −The "__init__" method initializes these attributes. The "super().__init__(self.message)" call ensures that the base "Exception" class is properly initialized with the error message.
+- Default Message −A default message is provided, but you can override it when raising the exception.
+
+
+
+### Step 3 − Optionally Override "__str__" or "__repr__"
+
+
+Override the "__str__" or "__repr__" method to provide a custom string representation of the exception. This is useful for printing or logging the exception.
+
+
+```python
+class InvalidAgeError(Exception):
+   def __init__(self, age, message="Age must be between 18 and 100"):
+      self.age = age
+      self.message = message
+      super().__init__(self.message)
+
+   def __str__(self):
+      return f"{self.message}. Provided age: {self.age}"
+```
+
+
+Explanation
+
+
+
+- __str__ Method −The "__str__" method returns a string representation of the exception. This is what will be displayed when the exception is printed.
+- Custom Message −Customize the message to include relevant information, such as the provided age in this example.
+
+
+
+## Raising User-Defined Exceptions
+
+
+Once you have defined a custom exception, you can raise it in your code to signify specific error conditions. Raising user-defined exceptions involves using theraisestatement, which can be done with or without custom messages and attributes.
+
+
+### Syntax
+
+
+Following is the basic syntax for raising an exception −
+
+
+```python
+raise ExceptionType(args)
+```
+
+
+### Example
+
+
+In this example, the "set_age" function raises an "InvalidAgeError" if the age is outside the valid range −
+
+
+```python
+def set_age(age):
+   if age < 18 or age > 100:
+      raise InvalidAgeError(age)
+   print(f"Age is set to {age}")
+```
+
+
+## Handling User-Defined Exceptions
+
+
+Handling user-defined exceptions in Python refers to using "try-except" blocks to catch and respond to the specific conditions that your custom exceptions represent. This allows your program to handle errors gracefully and continue running or to take specific actions based on the type of exception raised.
+
+
+### Syntax
+
+
+Following is the basic syntax for handling exceptions −
+
+
+```python
+try:
+   # Code that may raise an exception
+except ExceptionType as e:
+   # Code to handle the exception
+```
+
+
+### Example
+
+
+In the below example, the "try" block calls "set_age" with an invalid age. The "except" block catches the "InvalidAgeError" and prints the custom error message −
+
+
+```python
+try:
+   set_age(150)
+except InvalidAgeError as e:
+   print(f"Invalid age: {e.age}. {e.message}")
+```
+
+
+## Complete Example
+
+
+Combining all the steps, here is a complete example of creating and using a user-defined exception −
+
+
+```python
+class InvalidAgeError(Exception):
+   def __init__(self, age, message="Age must be between 18 and 100"):
+      self.age = age
+      self.message = message
+      super().__init__(self.message)
+
+   def __str__(self):
+     return f"{self.message}. Provided age: {self.age}"
+
+def set_age(age):
+   if age < 18 or age > 100:
+      raise InvalidAgeError(age)
+   print(f"Age is set to {age}")
+
+try:
+   set_age(150)
+except InvalidAgeError as e:
+   print(f"Invalid age: {e.age}. {e.message}")
+```
+
+
+Following is the output of the above code −
+
+
+```python
+Invalid age: 150. Age must be between 18 and 100
+```
+

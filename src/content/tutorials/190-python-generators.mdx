@@ -1,0 +1,333 @@
+---
+title: "PYTHON - Generators"
+description: "Learn PYTHON - Generators with clear explanation, code examples, and practical guide."
+category: "python"
+order: 1900
+group: "Python Miscellenous"
+seoTitle: "PYTHON - Generators — CodesCompiler PYTHON Guide"
+permalink: "python-generators"
+---
+
+
+# Python - Generators
+
+
+
+
+## Python Generators
+
+
+Generators in Python are a convenient way to create iterators. They allow us to iterate through a sequence of values which means, values are generated on the fly and not stored in memory, which is especially useful for large datasets or infinite sequences.
+
+
+The generator in Python is a special type of function that returns an iterator object. It appears similar to a normal Python function in that its definition also starts with def keyword. However, instead of return statement at the end, generator uses the yield keyword.
+
+
+### Syntax
+
+
+The following is the syntax of thegenerator()function −
+
+
+```python
+def generator():
+ . . .
+ . . .
+ yield obj
+it = generator()
+next(it)
+. . .
+```
+
+
+## Creating Generators
+
+
+There are two primary ways to create generators in python −
+
+
+
+- Using Generator Functions
+- Using Generator Expressions
+
+
+
+### Using Generator Functions
+
+
+The generator function uses 'yield' statement for returning the values all at a time. Each time the generators__next__()method is called the generator resumes where it left off i.e. from right after the last yield statement. Here's the example of creating the generator function.
+
+
+```python
+def count_up_to(max_value):
+    current = 1
+    while current <= max_value:
+        yield current
+        current += 1
+
+# Using the generator
+counter = count_up_to(5)
+for number in counter:
+    print(number)
+```
+
+
+#### Output
+
+
+```python
+1
+2
+3
+4
+5
+```
+
+
+### Using Generator Expressions
+
+
+Generator expressions provide a compact way to create generators. They use a syntax similar to list comprehensions but used parentheses i.e. "&#123;&#125;" instead of square brackets i.e. "[]"
+
+
+```python
+gen_expr = (x * x for x in range(1, 6))
+
+for value in gen_expr:
+    print(value)
+```
+
+
+#### Output
+
+
+```python
+1
+4
+9
+16
+25
+```
+
+
+## Exception Handling in Generators
+
+
+We can create a generator and iterate it using a 'while' loop with exception handling for 'StopIteration' exception. The function in the below code is a generator that successively yield integers from 1 to 5.
+
+
+When this function is called, it returns an iterator. Every call tonext()method transfers the control back to the generator and fetches next integer.
+
+
+```python
+def generator(num):
+   for x in range(1, num+1):
+      yield x
+   return
+   
+it = generator(5)
+while True:
+   try:
+      print (next(it))
+   except StopIteration:
+      break
+```
+
+
+### Output
+
+
+```python
+1
+2
+3
+4
+5
+```
+
+
+## Normal function vs Generator function
+
+
+Normal functions and generator functions in Python serve different purposes and exhibit distinct behaviors. Understanding their differences is essential for leveraging them effectively in our code.
+
+
+A normal function computes and returns a single value or a set of values whether in a list or tuple, when called. Once it returns, the function's execution is complete and all local variables are discarded where as a generator function yields values one at a time by suspending and resuming its state between each yield. It uses the yield statement instead of return.
+
+
+### Example
+
+
+In this example we are creating a normal function and build a list of Fibonacci numbers and then iterate the list using a loop −
+
+
+```python
+def fibonacci(n):
+   fibo = []
+   a, b = 0, 1
+   while True:
+      c=a+b
+      if c>=n:
+         break
+      fibo.append(c)
+      a, b = b, c
+   return fibo
+f = fibonacci(10)
+for i in f:
+   print (i)
+```
+
+
+### Output
+
+
+```python
+1
+2
+3
+5
+8
+```
+
+
+### Example
+
+
+In the above example we created a fibonacci series using the normal function and When we want to collect all Fibonacci series numbers in a list and then the list is traversed using a loop. Imagine that we want Fibonacci series going upto a large number.
+
+
+In such cases, all the numbers must be collected in a list requiring huge memory. This is where generator is useful as it generates a single number in the list and gives it for consumption. Following code is the generator-based solution for list of Fibonacci numbers −
+
+
+```python
+def fibonacci(n):
+   a, b = 0, 1
+   while True:
+      c=a+b
+      if c>=n:
+         break
+      yield c
+      a, b = b, c
+   return
+   
+f = fibonacci(10)
+while True:
+   try:
+      print (next(f))
+   except StopIteration:
+      break
+```
+
+
+Output
+
+
+```python
+1
+2
+3
+5
+8
+```
+
+
+## Asynchronous Generator
+
+
+An asynchronous generator is a co-routine that returns an asynchronous iterator. A co-routine is a Python function defined with async keyword, and it can schedule and await other co-routines and tasks.
+
+
+Just like a normal generator, the asynchronous generator yields incremental item in the iterator for every call toanext()function, instead of next() function.
+
+
+### Syntax
+
+
+The following is the syntax of the Asynchronous Generator −
+
+
+```python
+async def generator():
+. . .
+. . .
+yield obj
+it = generator()
+anext(it)
+. . .
+```
+
+
+### Example
+
+
+Following code demonstrates a coroutine generator that yields incrementing integers on every iteration of anasync forloop.
+
+
+```python
+import asyncio
+
+async def async_generator(x):
+   for i in range(1, x+1):
+      await asyncio.sleep(1)
+      yield i
+      
+async def main():
+   async for item in async_generator(5):
+      print(item)
+      
+asyncio.run(main())
+```
+
+
+### Output
+
+
+```python
+1
+2
+3
+4
+5
+```
+
+
+### Example
+
+
+Let us now write an asynchronous generator for Fibonacci numbers. To simulate some asynchronous task inside the co-routine, the program calls sleep() method for a duration of 1 second before yielding the next number. As a result, we will get the numbers printed on the screen after a delay of one second.
+
+
+```python
+import asyncio
+
+async def fibonacci(n):
+   a, b = 0, 1
+   while True:
+      c=a+b
+      if c>=n:
+         break
+      await asyncio.sleep(1)
+      yield c
+      a, b = b, c
+   return
+   
+async def main():
+   f = fibonacci(10)
+   async for num in f:
+      print (num)
+      
+asyncio.run(main())
+```
+
+
+### Output
+
+
+```python
+1
+2
+3
+5
+8
+```
+

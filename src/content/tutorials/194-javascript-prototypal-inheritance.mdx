@@ -1,0 +1,403 @@
+---
+title: "JavaScript - Prototypal Inheritance"
+description: "Learn JavaScript - Prototypal Inheritance with clear explanation, code examples, and interactive syntax guide."
+category: "javascript"
+order: 1940
+group: "JavaScript Advanced Chapters"
+seoTitle: "JavaScript - Prototypal Inheritance — CodesCompiler JavaScript Guide"
+permalink: "javascript-prototypal-inheritance"
+---
+
+
+# JavaScript - Prototypal Inheritance
+
+
+
+
+## Prototypal Inheritance
+
+
+The classical inheritance phenomenon involves making a new class that actually extends or reuses the attributes, functions, or methods of another class that are used by different programming languages (like C, C++, Java, and so on). JavaScript uses Prototype Inheritance rather than classical inheritance.
+
+
+Prototype Inheritance happens when one object uses the prototype linkage to access another object's attributes or methods. All JavaScript objects derive properties and methods from their prototypes. Prototypes are hidden objects that inherit properties and methods from their parent classes.
+
+
+### Syntax
+
+
+The prototype inheritance syntax contains the __proto__ property, which allows access to the child prototype. The syntax for prototype inheritance is as follows −
+
+
+```javascript
+child.__proto__ = parent;
+```
+
+
+## Example of Prototypal Inheritance
+
+
+Assume you have a basic car (a "prototype") with basic parts like wheels and an engine. Now you want to create a certain vehicle, like a sports car, without beginning from scratch. Instead of creating a new vehicle, you use the existing one as a foundation (prototype). The sports vehicle inherits the basic car's features (wheels and engine) but it can also be upgraded with optional features like more horsepower or a spoiler.
+
+
+It works the same way in JavaScript. An object can inherit characteristics and methods from another object (its prototype); still the inherited object can also be extended.
+
+
+### Code for the Example
+
+
+In this case, sportsCar inherits the car's characteristics and methods while also including a new feature called speed.
+
+
+```javascript
+// Basic car object (prototype)
+let car = {
+   wheels: 4,
+   drive: function() {
+     console.log("The car is driving");
+   }
+ }; 
+ 
+ // SportsCar object
+ let sportsCar = {
+   speed: 200,
+ }; 
+ 
+ // SportsCar object inherits from car object
+ sportsCar.__proto__ = car; 
+ 
+ console.log(sportsCar);
+ 
+ // Calling method from car object using sportsCar
+ sportsCar.drive(); 
+ 
+ // Inherited from car
+ console.log(sportsCar.wheels); 
+ 
+ // New property in sportsCar
+ console.log(sportsCar.speed);
+```
+
+
+#### Output
+
+
+Here is the outcome of the above code −
+
+
+```javascript
+The car is driving
+4
+200
+```
+
+
+We can now use any method and property from the 'car' object to the 'sportsCar' object. Later in the chapter, we will talk about how an object's characteristics and methods are inherited.
+
+
+## Properties of Prototypal Inheritance
+
+
+Here are some of the properties of Prototypal inheritance is listed −
+
+
+
+- Properties are the characteristics that identify an object, such as its status or features.
+- In the case of prototypical inheritance, the prototype's properties are shared by all instances that inherit from it.
+- When a property is accessed on an object, JavaScript searches for it first in the object and then in its prototype chain.
+- Properties can include data values, arrays, objects or other JavaScript data types.
+- Properties may be data values, arrays, objects, or any other JavaScript data type.
+
+
+
+## Methods of Prototypal Inheritance
+
+
+Methods are functions that are bound to an object and can perform operations or computations on its data. Prototypical inheritance allows all instances that inherit from a prototype to share the methods provided in it. Methods can be invoked on an object, giving access to its attributes and other methods. It can execute a variety of tasks, such as modifying data, making calculations, and communicating with other objects or the environment.
+
+
+Now let us discuss some methods of prototypal inheritance in the below section −
+
+
+### Object.create
+
+
+Object.createis a JavaScript method that generates a new object from the prototype and its properties. It enables you to create an object that inherits from a prototype without requiring a constructor method. This function is commonly used to initialize the prototype chain for objects, so it allows prototype-based inheritance.
+
+
+The syntax for Object.create is provided below −
+
+
+```javascript
+Object.create(proto, [propertiesObject]);
+```
+
+
+Here,
+
+
+
+- -protois the prototype object that the newly formed object will inherit from.
+- -propertiesObject (optional)is an object that defines additional properties for the newly created object. These properties are added to the newly created object and replace properties with the same name from the prototype chain.
+
+
+
+#### Example
+
+
+Here is an example for showing how to use Object.create method −
+
+
+```javascript
+// Create a prototype object
+const animalPrototype = {
+  describe: function() {
+    console.log(This is a ${this.species}, and it is ${this.age} years old.);
+  }
+};
+
+// Create a new object that inherits from the animalPrototype
+const tiger = Object.create(animalPrototype);
+tiger.species = 'Tiger';
+tiger.age = 5;
+
+// Call the describe method on the tiger object
+tiger.describe();
+```
+
+
+##### Output
+
+
+This will generate the below result −
+
+
+```javascript
+This is a Tiger, and it is 5 years old.
+```
+
+
+### Object.prototype.constructor
+
+
+The property Object.prototype.constructor denotes the function that produced the object instance. When an object is created with a constructor function or class, the constructor attribute is immediately set to the prototype.
+
+
+The constructor property is widely used to validate an object's type and create new instances of the same type via JavaScript's prototype-based inheritance.
+
+
+#### Example
+
+
+Here is an example of how to use Object.prototype.constructor −
+
+
+```javascript
+// Constructor function for creating Animal objects
+function Animal(species, age) {
+  this.species = species;
+  this.age = age;
+}
+
+// Creating an instance of the Animal object
+const animal = new Animal('Tiger', 5);
+
+// Accessing the constructor property of the prototype
+console.log(animal.constructor);
+```
+
+
+##### Output
+
+
+This will produce the following result −
+
+
+```javascript
+Animal(species, age) { this.species = species; this.age = age; }
+```
+
+
+### hasOwnProperty
+
+
+In JavaScript the hasOwnProperty function is used to determine whether an object has a given property rather than inheriting it from its prototype chain. It returns a boolean value indicating whether the object contains the given property.
+
+
+The hasOwnProperty function is widely used in JavaScript to differentiate between an object's own properties and those inherited from its prototype chain to make sure the property being checked exists directly on the object.
+
+
+#### Syntax
+
+
+The syntax for the hasOwnProperty is given below −
+
+
+```javascript
+object.hasOwnProperty(propertyName)
+```
+
+
+Here,
+
+
+
+- objectis an object to which the hasOwnProperty method is applied.
+- PropertyNameis the name of the property to look for in the object.
+
+
+
+#### Example
+
+
+Below is an example of using the hasOwnProperty method −
+
+
+```javascript
+const animal = {
+  species: 'Lion',
+  habitat: 'Grasslands'
+};
+
+console.log(animal.hasOwnProperty('species')); 
+console.log(animal.hasOwnProperty('habitat')); 
+console.log(animal.hasOwnProperty('diet'));
+```
+
+
+##### Output
+
+
+This will produce the following result −
+
+
+```javascript
+true
+true
+false
+```
+
+
+## The Prototype Chain
+
+
+The prototype chain is used to represent multiple inheritances at various hierarchy levels. We can connect one prototype to another using the steps mentioned below.
+
+
+### Example
+
+
+Here's an example of the prototype chain in JavaScript −
+
+
+```javascript
+let pupil = {
+  id: 1,
+};
+let fee = {
+  id: 2,
+};
+let institution = {
+  id: 3,
+};
+
+// Level 1 inheritance
+pupil.__proto__ = institution; 
+
+// Level 2 inheritance
+pupil.__proto__.__proto__ = fee; 
+
+// Outputs the pupil object's property
+console.log(pupil.id); 
+
+// Outputs the institution object's property
+console.log(pupil.__proto__.id);
+```
+
+
+### Output
+
+
+Here is the output based on the hierarchy −
+
+
+```javascript
+1
+2
+```
+
+
+## Inheriting Methods
+
+
+Prototype inheritance inherits both the object's properties and its methods. We can create a function in the parent class and call it from the child class. We can also include getter and setter methods in the parent class for usage by the child class.
+
+
+### Example
+
+
+Here is the example for demonstrating how you can inherit methods −
+
+
+```javascript
+let userBase = {
+   // Parent object
+   canRead: true,
+   profession: "",
+   showReadPermission: function () {
+     console.log(this.canRead);
+   },
+   // Setter method to set the profession of user
+   set info(value) {
+     this.profession = value;
+   },
+   // Getter method to get profession detail
+   get info() {
+     return ${this.profession};
+   },
+};
+
+let writer = {
+   // Child object
+   canWrite: true,
+};
+
+writer.__proto__ = userBase;
+
+// Calling parent function
+writer.showReadPermission(); 
+
+// Calling setter method
+writer.info = "blogger"; 
+
+// Calling getter method
+console.log(writer.info);
+```
+
+
+#### Output
+
+
+This will produce the following result −
+
+
+```javascript
+true
+blogger
+```
+
+
+## Drawbacks of Prototypical Inheritance
+
+
+Here is the list of drawbacks you should consider while working with Prototypal inheritance −
+
+
+
+- It limits flexibility because a single __proto__ property can only inherit from one class.
+- Multiple inheritances can only happen at different levels. To inherit a second class we have to use the __proto__.__proto__ property, extending the hierarchy and making tracking more difficult.
+- Prototype relationships can only be created using objects.
+- Accessing elements with the same name as an element in the base class is difficult, that is, properties with the same name may exist in different classes, but they are difficult to access.
+- The same prototypes cannot be inherited since they create a loop.
+
+
