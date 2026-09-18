@@ -1,0 +1,245 @@
+---
+title: "CSS - Specificity"
+description: "Learn CSS - Specificity with clear explanation, code examples, and practical guide."
+category: "css"
+order: 1340
+group: "CSS3 Advanced Features"
+seoTitle: "CSS - Specificity — CodesCompiler CSS Guide"
+permalink: "css-specificity"
+---
+
+
+# CSS - Specificity
+
+
+
+
+Imagine what will happen if we declare a property multiple times in CSS using different selectors. CSS usesspecificityorder for selectors in order to determine which selector have highest preference to be used.
+
+
+For instance, if two or more CSS rules are specified on an HTML element using a class selector and ID selector, the property declared in the selector with highest specificity value(in this case Id selector) will be applied on that element.
+
+
+## Specificity Hierarchy
+
+
+Everyselectorsin CSS have a specificity level. Following are specificity order of CSS selectors.
+
+
+
+- Inline Styles:The styles defined for an element using style attribute have highest priority.
+
+
+
+```css
+<h1 style="color: blue;"> Example </h1>
+```
+
+
+Id Selectors:In Selectors, id selector have highest priority.
+
+
+```css
+<style>
+   #mainDiv {
+        color: blue;
+    }
+</style>
+```
+
+
+Classes, Attributes and Pseudo-classes:These are the next in line. Class selectors are prefixed with a ., attribute selectors use square brackets [], and pseudo-classes are prefixed with :
+
+
+```css
+<style>
+   .subDivs {
+        color: blue;
+    }
+</style>
+```
+
+
+Elements and Pseudo-elements:These have the lowest specificity. Element selectors use the element name directly, and pseudo-elements are prefixed with ::.
+
+
+```css
+<style>
+    div {
+        color: blue;
+    }
+</style>
+```
+
+
+## How to Calculate Specificity?
+
+
+To calculate specificity value you need memorize this values. Inline style gets a specificity value of 1000. ID selector gets a value of 100. For class selector, attribute selector and pseudo-classes the specificity value is 10. Finally for element selector and pseudo element specificity value is 1. Universal selectors does not have specificity value, we can consider value 0 for comparison purpose.
+
+
+SelectorSpecificityCalculation`<div style="color: green">``</div>`10001000#uniqueId100100.mainClass1010div11div #uniqueId101100+1div .mainClass1110+1div .mainClass .navbar2110+10+1div #uniqueId .navbar111100+10+1
+
+
+## Specificity Rules Examples
+
+
+Below example code will illustrate the CSS Specificity.
+
+
+### Selector with highest specificity value will take Effect
+
+
+Following example uses multiple selectors to apply color property to a paragraph, In first case id selector take effect and in second case inline CSS take effect.
+
+
+```html
+<!DOCTYPE html> 
+<html>
+
+<head>
+    <style>
+        /*Multiple selectors for paragraph */
+        p {
+            color: black;
+            font-weight: bold;
+        }
+
+        .special {
+            color: blue;
+        }
+
+        #unique {
+            color: darkgreen;
+        }
+    </style>
+</head>
+
+<body>
+    <p id="unique" class="special">
+        This paragraph will be darkgreen. Id selector wins!!!!
+    </p>
+
+    <p class="special">
+        This paragraph will be blue. Class selector wins!!!!
+    </p>
+
+    <p class="special" style="color: darkblue;">
+        This paragraph will be darkblue. Inline style wins!!!!
+    </p>
+</body>
+
+</html>
+```
+
+
+### Equal specificity value, latest rule Wins
+
+
+Following example shows that when two class selector target same paragraph and try to apply same style to it, the last defined class take effect.
+
+
+```html
+<!DOCTYPE html> 
+<html>
+
+<head>
+    <style>
+        p {
+            color: black;
+            font-weight: bold;
+        }
+
+        .special {
+            color: blue;
+        }
+
+        .superSpecial{
+            color: gold;
+        }
+    </style>
+</head>
+
+<body>
+    <p class="special superSpecial">
+        This paragraph is gold color. Class superSpecial wins!!!
+    </p>
+</body>
+
+</html>
+```
+
+
+### Internal CSS style Preferred over External Stylesheet
+
+
+The selector defined using style tag inside a HTML document have higher preference over externally imported stylesheet.
+
+
+```css
+/*From imported external CSS file:*/
+#uniqueID {
+    color: red;
+}
+
+/*In HTML file:*/
+<style>
+    #uniqueID {
+        color: yellow;
+    }
+</style>
+```
+
+
+Yellow color will be set for element.
+
+
+## Override Specificity Rules
+
+
+Following example demonstrates that the order of specificity gets irrelevant if a property is marked as!important.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html> 
+<html>
+
+<head>
+    <style>
+        p {
+            color: black;
+            font-weight: bold;
+        }
+
+        .special {
+            color: blue;
+        }
+
+        #unique {
+            color: darkgreen;
+        }
+
+        p {
+            color: darkred !important;
+        }
+    </style>
+</head>
+
+<body>
+    <p id="unique" class="special">
+        This paragraph is darkred. The !important keyword wins 
+        over every other selector!!! 
+    </p>
+
+    <p class="special" style="color: green">
+        This paragraph is darkred. The !important keyword wins 
+        even over inline style!!! 
+    </p>
+</body>
+
+</html>
+```
+

@@ -1,0 +1,232 @@
+---
+title: "CSS - Printing"
+description: "Learn CSS - Printing with clear explanation, code examples, and practical guide."
+category: "css"
+order: 1040
+group: "CSS Advanced"
+seoTitle: "CSS - Printing — CodesCompiler CSS Guide"
+permalink: "css-printing"
+---
+
+
+# CSS Printing
+
+
+
+
+CSS printing involves using specific CSS rules and properties to control how a webpage is formatted when printed. Generally for any printable versions of webpage, the styling will be done with light colors. Because the dark color like black, red will consume more ink from printer. In this tutorial we will learn how to design a printer friendly webpage using CSS.
+
+
+## Table of Contents
+
+
+Styles For Printer-Friendly PagesUsing a Print Style SheetUsing Media Queries and @pageDetecting Print Requests
+
+
+## Styles For Printer-Friendly Pages
+
+
+Here are the key styles that can be applied for creating printer-friendly pages:
+
+
+
+- Simplify the Layout:Remove unnecessary elements like sidebars, navigation menus, advertisement sections and interactive content by settingdisplayas none
+- Remove Background Colors:It is recommended to remove background color (or set light color) and set text color as black for printable version of pages. This helps to save ink.
+- Adjust Font Sizes and Styles:Use readable font sizes and styles, typically larger and more legible fonts like serif fonts.
+- Display URLs for Links:When you print a page containing hyperlinks, the exact URL for that will not be visible. So you need to replace this with exact link on printable version.
+- Manage Page Breaks:Make sure to control where content breaks between pages to avoid splitting important sections or headings across pages.
+
+
+
+There are multiple ways we can style printer version of pages. We can explicitly declare an external stylesheet for printer version or we can use media queries inside internal stylesheet. Let's look into that.
+
+
+## Using a Print Style Sheet
+
+
+You can have a external stylesheet explicitly for printing needs and link it to your code. You just need to set the value formediaattribute as "print" for link tag. Add the following tag to head section of your HTML document.
+
+
+```css
+<link href="/path/to/print.css" media="print" rel="stylesheet" />
+```
+
+
+The print.css will look like this:
+
+
+```css
+body{
+    background-color: white;
+    color: black;
+}
+.navbar{
+    display: none;
+}
+```
+
+
+## Using Media Queries and @page
+
+
+CSSmedia queriescan be used to style printable versions in internal stylesheet itself.
+
+
+```css
+@media print {
+    body{
+        background-color: white;
+        color: black;
+    }
+    .navbar{
+        display: none;
+    }
+}
+```
+
+
+CSS@pagerule is used to control aspects like the size, orientation, and margins of the printed content. This can be useful for setting a consistent page size and margin for all printed pages and creating booklets or documents with specific page layouts.
+
+
+```css
+@page {
+    size: A4 portrait; /* A4 size, portrait orientation */
+    margin: 2cm; /* 2cm margins on all sides */
+}
+
+/* First page has different styling */
+@page :first {
+    margin: 5cm; 
+}
+```
+
+
+Let see an example for this two.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body{
+            background-color: black;
+            color: white;
+            padding: 10px;
+        }
+        @media print {
+            body { 
+                background-color: white;
+                color: black;
+                padding: 10px;
+            }
+        }
+        @page {
+            size: A4 portrait; 
+            margin: 2cm; 
+        }
+        button {
+            background-color: aqua;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    ###  CodesCompiler </h
+    CSS Media Type - Print
+    <p>
+        Background is white for printable version of this page.
+        Check out...
+    </p>
+
+    <button onclick="printPage()">Print Page</button>
+    <script>
+        function printPage() {
+            window.print();
+        }
+    </script>
+</body>
+</html>
+```
+
+
+## Detecting Print Requests
+
+
+Browsers trigger 'beforeprint' and 'afterprint' events to identify when printing is about to happen or has just occurred. You can use these events to modify the user interface during the print process, such as showing or hiding specific elements while printing, or even change style after printing.
+
+
+```css
+<script>
+    window.addEventListener("afterprint", () => self.close);   
+</script>
+```
+
+
+The above declaration will automatically close the current window, after printing its contents. Let's see an example for this.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        button{
+            background-color: green; 
+            color: white; 
+            font-size: 1em;
+        }
+        @media screen {
+            h2 {
+                font-size: large;
+                font-family: sans-serif;
+                color: blue;
+                font-style: normal;
+            }
+        }
+
+        @media print {
+            h2 {
+                font-family: cursive;
+                font-style: italic;
+                color: red;
+            }
+        }
+
+        @media print {
+            button {display: none;}
+        }
+    </style>
+</head>
+
+<body>
+    <article>
+        <section>
+        ## Header1
+        <p>
+            Section one
+        </p>
+        </section>
+    </article>
+    <button >Print</button>
+    <script>
+        const button = document.querySelector("button");
+
+        button.addEventListener("click", () => {
+        window.print();
+        });
+
+        window.addEventListener("afterprint", () => self.close);
+    </script>
+</body>
+
+</html>
+```
+

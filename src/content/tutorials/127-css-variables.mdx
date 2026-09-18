@@ -1,0 +1,502 @@
+---
+title: "CSS - Variables"
+description: "Learn CSS - Variables with clear explanation, code examples, and practical guide."
+category: "css"
+order: 1270
+group: "CSS3 Advanced Features"
+seoTitle: "CSS - Variables — CodesCompiler CSS Guide"
+permalink: "css-variables"
+---
+
+
+# CSS - Variables
+
+
+
+
+CSS Variablesare custom properties that allows you to store and reuse values throughout your CSS program. CSS variables are similar to variables in other programming languages.
+
+
+## Table of Contents
+
+
+How to declare a Variable in CSS?The Traditional WayUsing CSS VariablesThe Root Pseudo-ClassInheritance of Custom PropertiesCSS Variables Fallback ValueCSS Variables Invalid ValueCSS Variables in Javascript
+
+
+## How to declare a Variable in CSS?
+
+
+CSS variables are typically defined using :root selector. Following is syntax to declare a CSS variable:
+
+
+```css
+:root {
+    --variable-name: value;
+}
+```
+
+
+To use a CSS variable, follow the syntax:
+
+
+```css
+selector {
+    var(--variable-name, fallback-value);
+}
+```
+
+
+The selector can be aclass,idortag. Learn what isselectorshere.
+
+
+We can use thevarfunction to replace values for CSS properties on any elements.
+
+
+CSS does not allow variables to be used in media queries or container queries, Also you cannot use them to set the name of a CSS property or selector.
+
+
+## The Traditional Way
+
+
+In this example we will see how the colors and styling done without using variable. Here you can notice that we are repetitively specifying property values.
+
+
+### Example
+
+
+```html
+<html lang="en">
+
+<head>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            color: #333;
+            font-family: 'Arial', sans-serif;
+            padding: 10px;
+        }
+
+        header {
+            background-color: #0044cc;
+            color: #fff;
+            padding: 10px;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        # Welcome to My Website
+    </header>
+    <div class="container">
+        <p>
+            This is a container with a background color 
+            defined traditionally. Here we need to specify 
+            repeating color values multiple times. 
+        </p>
+    </div>
+</body>
+
+</html>
+```
+
+
+## Using CSS Variables
+
+
+The following code shows how to use variables to avoid redundancy in CSS. This become more relevant when working on large code bases in real world application.
+
+
+Here you can also see that we defined the color '#0044cc' as blue, So developer can repetitively use this color by using variable blue.
+
+
+### Example
+
+
+```html
+<html lang="en">
+
+<head>
+    <style>
+        :root {
+            --main-bg-color: #f0f0f0;
+            --main-text-color: #333;
+            --primary-font: 'Arial', sans-serif;
+            --padding: 10px;
+            --blue: #0044cc;
+            --header-text: #fff;
+            --container-bg: #fff;
+        }
+        
+        body {
+            background-color: var(--main-bg-color);
+            color: var(--main-text-color);
+            font-family: var(--primary-font);
+            padding: var(--padding);
+        }
+        
+        header {
+            background-color: var(--blue);
+            color: var(--header-text);
+            padding: var(--padding);
+        }
+        
+        .container {
+            background-color: var(--container-bg);
+            padding: var(--padding);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        # Welcome to My Website
+    </header>
+    <div class="container">
+        <p>
+            This is a container with a background color 
+            defined using variables.
+        </p>
+    </div>
+</body>
+
+</html>
+```
+
+
+## The Root Pseudo-Class
+
+
+CSS variables are declared at the top of the stylesheet using the:rootpseudo-class, which matches the root element of the document. This means that CSS variables declared using the:rootselector can be used by any element in the document.
+
+
+CSS variable names are case-sensitive, which means that --pink-color and --Pink-color are two different variables.
+
+
+Step-1:Define the custom properties
+
+
+To declare variables using the :rootpseudo-class, you simply add the'--'prefix to the variable name and then set its value.
+
+
+```css
+:root {
+   --pink-color: pink;
+   --blue-color: blue;
+}
+```
+
+
+Step-2:Use the custom properties in the CSS
+
+
+These variables can then be used throughout your CSS code using thevar()function.
+
+
+```css
+.box {
+   width: 400px;
+   height: 200px;
+   background-color: var(--pink-color);
+   color: var(--blue-color);
+}
+.box1, .box2 {
+   display: inline-block;
+   background-color: var(--pink-color);
+   width: 100px;
+   height: 50px;
+   color: var(--blue-color);
+}
+```
+
+
+### Example
+
+
+The following example shows that how to define our own shade of color variation in hex and rgb value, store in a variable and reuse later.
+
+
+```html
+<html>
+
+<head>
+    <style>
+        :root {
+            --white-color: #f0f0f0;
+            --black-color: rgb(0, 0, 21);
+        }
+        .box {
+            text-align: center;
+            padding: 20px;
+            background-color: var(--white-color);
+            color: var(--black-color);
+        }
+        .box1, .box2 {
+            display: inline-block;
+            background-color: var(--black-color);
+            color: var(--white-color);
+            width: 100px;
+            height: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        ## CodesCompiler
+         How to code a website using HTML and CSS 
+        <div class="box1"> HTML </div>
+        <div class="box2"> CSS </div>
+    </div>
+</body>
+
+</html>
+```
+
+
+## Inheritance of Custom Properties
+
+
+You can use CSS variables to define reusable CSS values that can be inherited by child elements.
+
+
+Step - 1:Declare the custom property in the:rootselector.
+
+
+This makes the variable global and accessible to all elements in the document.
+
+
+```css
+:root {
+   --pink-color: pink;
+}
+```
+
+
+Step - 2:Use thevar()function to access the custom property in the CSS.
+
+
+This allows you to reuse the custom property throughout all the children of box.
+
+
+```css
+.box {
+   --box-background: var(--pink-color);
+   background-color: var(--box-background);
+}
+```
+
+
+Step - 3:Use the color inside child.
+
+
+This allows you to customize the value of the custom property for specific elements.
+
+
+```css
+.box1, .box2 {
+   background-color: var(--box-background);
+}
+```
+
+
+### Example
+
+
+The following example demonstrates that the use of CSS custom properties with inheritance.
+
+
+```html
+<html>
+
+<head>
+    <style>
+        :root {
+            --white-color: #f0f0f0;
+            --black-color: rgb(0, 0, 21);
+        }
+        .box {
+            --box-background: var(--white-color);
+            background-color: var(--box-background);
+            text-align: center;
+            padding: 20px;
+        }
+        .box1, .box2 {
+            display: inline-block;
+            background-color: var(--black-color);
+            /* Box Background is defined at parent box */
+            color: var(--box-background);
+            width: 100px;
+            height: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        ## CodesCompiler
+         How to code a website using HTML and CSS 
+        <div class="box1"> HTML </div>
+        <div class="box2"> CSS </div>
+    </div>
+</body>
+
+</html>
+```
+
+
+## CSS Variables Fallback Value
+
+
+You can use CSS variables with fallback values to ensure that your CSS code is still valid and works even if the variable is not defined.
+
+
+CSS fallback values are not used to make CSS custom properties work in older browsers. They are only used as a backup in browsers that support CSS custom properties, in case the variable is not defined or has an invalid value.
+
+
+### Example
+
+
+In below example, we have only defined color shade for white, But are also using black variable. Since we are defining fallback-value for black color variable, there will not be any error.
+
+
+```html
+<html>
+
+<head>
+    <style>
+        :root {
+            --white-color: #f0f0f0;/* Shade for white */
+            /* variable for black not defined */
+        }
+        .box {
+            text-align: center;
+            padding: 20px;
+            background-color: var(--white-color, white);
+            color: var(--black-color, black);
+        }
+        .box1, .box2 {
+            display: inline-block;
+            background-color: var(--black-color, black);
+            color: var(--white-color, white);
+            width: 100px;
+            height: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        ## CodesCompiler
+         How to code a website using HTML and CSS 
+        <div class="box1"> HTML </div>
+        <div class="box2"> CSS </div>
+    </div>
+</body>
+
+</html>
+```
+
+
+## CSS Variables Invalid Value
+
+
+In below example, the--red-colorcustom property is defined with a value of15px. This is an invalid value because the red color property only accepts color values.
+
+
+However, the browser will not be able to resolve the value of the custom property because it is invalid. As a result, it will simply ignore the CSS rule and the text in the second h2 element will remain the same color.
+
+
+### Example
+
+
+In this example even though we are making color of h2 as red using color property, due to error caused by invalid color the default color black is used.
+
+
+```html
+<html>
+
+<head>
+    <style>
+    :root {
+        /* define a invalid value for c0lor */
+        --red-color: 15px;
+    }
+    h2 {
+        /* Make color of h2 as red */
+        color: red;
+    }
+    h2 {
+        /* Use invalid color for h2, this will cause error
+          and default color value (black) is used */
+        color: var(--red-color);
+    }
+    </style>
+</head>
+
+<body>
+    <h2>
+        CodesCompiler CSS Variables.
+    </h2>
+</body>
+
+</html>
+```
+
+
+## CSS Variables in Javascript
+
+
+The following example demonstrates that how to use JavaScript to set CSS variables globally and locally.
+
+
+### Example
+
+
+```html
+<html>
+<head>
+    <style>
+        .box {
+            text-align: center;
+            padding: var(--padding);
+            background-color: var(--white-color);
+            color: var(--black-color);
+        }
+        .box1, .box2 {
+            display: inline-block;
+            background-color: var(--black-color);
+            color: var(--white-color);
+            width: 100px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        ## CodesCompiler
+        How to code a website using HTML and CSS
+        <div class="box1">HTML</div>
+        <div class="box2">CSS</div>
+    </div>
+
+    <script>
+        const root = document.documentElement;
+        const boxElement = document.querySelector('.box');
+
+        // Define a global variable
+        root.style.setProperty('--padding', '20px');
+
+        // Define variables specific to the box element
+        boxElement.style.setProperty('--white-color', '#f0f0f0');
+        boxElement.style.setProperty('--black-color', 'rgb(0, 0, 21)');
+    </script>
+</body>
+</html>
+```
+

@@ -1,0 +1,132 @@
+---
+title: "CSS - Pointer Events"
+description: "Learn CSS - Pointer Events with clear explanation, code examples, and practical guide."
+category: "css"
+order: 720
+group: "CSS Basics"
+seoTitle: "CSS - Pointer Events — CodesCompiler CSS Guide"
+permalink: "css-pointer-events"
+---
+
+
+# CSS - pointer-event Property
+
+
+
+
+CSSpointer-eventproperty  is used to control how an element responds to pointer events such as mouse clicks, mouseovers, and mouse movements. It allows you to specify whether an element should receive pointer events and whether those events should trigger actions like clicking or hovering.
+
+
+## Possible Values
+
+
+
+- auto− : This is the default value. It indicates that the element behaves as normal and responds to pointer events based on its specified CSS properties and content. In SVG content, this value andvisiblePaintedhave the same effect.
+- none− This value indicates that the element should not respond to pointer events. Clicks, hover effects, and other interactions will pass through the element as if it were not there, and the elements beneath it will receive those events instead.
+- visiblePainted−  This value indicates that the element does not receive pointer events unless they are triggered on a visible, painted area of the element. Transparent areas within the element do not respond to pointer events..
+- visibleFill−  Similar tovisiblePainted, this value indicates that the element only responds to pointer events triggered on visible, painted areas or the fill of the element, ignoring pointer events on transparent areas.
+- visibleStroke−  Similar tovisiblePaintedandvisibleFill, this value indicates that the element only responds to pointer events triggered on visible, painted areas or the stroke of the element, ignoring pointer events on transparent areas.
+- visible− Targets pointer events only when the visibility is set tovisible. and the mouse cursor is over its interior (fill) or perimeter (stroke), with thefillandstrokevalues not affecting event processing
+- painted− This value indicates that the element only responds to pointer events triggered on its painted content. Transparent areas within the element do not respond to pointer events.
+- fill− Similar topainted, this value indicates that the element only responds to pointer events triggered on its fill, ignoring events on transparent areas.
+- stroke− Similar topaintedandfill, this value indicates that the element only responds to pointer events triggered on its stroke, ignoring events on transparent areas.
+- all− Targets to pointer events when the pointer is over their interior (fill) or perimeter (stroke). Thefill,strokeandvisibilityproperties values are unaffected.
+
+
+
+## Applies To
+
+
+All elements.
+
+
+## Syntax
+
+
+```css
+pointer-event: auto | none | visiblePainted | visibleFill | visibleStroke | visible | painted | fill | stroke | all;
+```
+
+
+## Points To Remember
+
+
+When this property is not defined, SVG content has the same properties as thevisiblePaintedvalue.
+
+
+The"onevalue in pointer events not only makes the element the target rather than the pointer event, but it also allows the event to passthrough, targeting what isunderneaththe element.
+
+
+Disabling pointer events on an element usingpointer-eventsdoes not mean that event listeners will not be triggered. If a child of that element haspointer-eventsenabled to allow it to be the event target, events aimed at the child will pass via the parent, potentially triggering event listeners. However, if the pointer activity occurs in an area only covered by the parent, it will be missed by both the child and the parent.
+
+
+Elements withpointer-events: nonewill still get focus via sequential keyboard navigation with the Tab key.
+
+
+## CSS pointer-event - none Value
+
+
+The following example demonstrates how thepointer-event: noneproperty disables the hyperlink from being clicked −
+
+
+```html
+<html>
+<head>
+<style> 
+   a[href="https://codescompiler_css_pointer-event.com"] {
+      pointer-events: none;
+   }
+</style>
+</head>
+<body>
+   css_pointer-event
+</body>
+</html>
+```
+
+
+## CSS pointer-event - auto Value
+
+
+The following example demonstrates thepointer-event: autoproperty allows the anchor element to be clickable −
+
+
+```html
+<html>
+<head>
+<style> 
+   a[href="https://codescompiler_css_pointer-event.com"] {
+      pointer-events: auto;
+   }
+</style>
+</head>
+<body>
+   css_pointer-event
+</body>
+</html>
+```
+
+
+## CSS pointer-event - Disabling Pointer Events on Images
+
+
+The following example demonstrates thepointer-event: autoproperty disables pointer events (clicking, hovering, etc.) on an images −
+
+
+```html
+<html>
+<head>
+<style>
+   img {
+      height: 100px; 
+      width: 100px;
+      pointer-events: none;
+   }
+</style>
+</head>
+<body>
+   <img src="images/pink-flower.jpg" alt="pink-flower">
+</body>
+</html>
+```
+

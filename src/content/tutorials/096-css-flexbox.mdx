@@ -1,0 +1,303 @@
+---
+title: "CSS - Flexbox"
+description: "Learn CSS - Flexbox with clear explanation, code examples, and practical guide."
+category: "css"
+order: 960
+group: "CSS Advanced"
+seoTitle: "CSS - Flexbox — CodesCompiler CSS Guide"
+permalink: "css-flexbox"
+---
+
+
+# CSS - Flexbox
+
+
+
+
+Flexbox organizes elements within a container along a single dimension, which can be either horizontally or vertically aligned.
+
+
+## What is CSS Flexbox?
+
+
+CSS flexbox is a layout model in CSS that provides an efficient and flexible way to arrange and distribute space between items within a container. It arranges elements in a single dimension, either horizontally or vertically, within a container.
+
+
+In this article we will cover all the properties for managing the positioning, alignment, and gaps between elements along both the main and cross axes briefly.
+
+
+## Table of Contents
+
+
+Elements of FlexboxBasic Flexbox LayoutVertical Flexbox LayoutFlexbox Justify ContentFlexbox Align ItemsCentering a DivFlexbox Wrap PropertyFlexbox Align SelfFlexbox Container PropertiesFlexbox Items Properties
+
+
+## Elements of Flexbox
+
+
+
+- Flexbox Container:The flex container defines the outer element of flexbox, where all the child elements are present. A flexbox container can be defined by setting'display: flex'or'display: inline-flex'.
+- Flexbox items:Flexbox items are direct children of flexbox container. This items can be arranged vertically and horizontally inside flexbox container based on need.
+- Main Axis:Main axis is primary axis along which items arranged in a container. By default this is horizontal axis.
+- Cross Axis:>Cross axis is perpendicular axis to primary axis. By default this is vertical axis.
+
+
+
+Following Diagram will demonstrate the CSS Flexbox:
+
+
+## Basic Flexbox Layout
+
+
+Flexbox is commonly used to create responsive flexbox layout.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <style>
+      .container {
+         display: flex;
+         flex-direction: row;
+         justify-content: space-between;
+         align-items: center;
+         height: 100vh;
+      }
+      .item {
+         background-color: lightcoral;
+         padding: 20px;
+         margin: 10px;
+         border: 3px solid #ccc;
+      }
+   </style>
+</head>
+
+<body>
+      <div class="container">
+         <div class="item">Item 1</div>
+         <div class="item">Item 2</div>
+         <div class="item">Item 3</div>
+      </div>
+</body>
+</html>
+```
+
+
+## Vertical Flexbox Layout
+
+
+In CSS, we can also define vertical flexbox by setting`flex-direction: column`.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <style>
+      .container {
+         display: flex;
+         flex-direction: column;
+         justify-content: center;
+         align-items: center;
+         height: 100vh;
+      }
+      .item {
+         background-color: lightseagreen;
+         padding: 20px;
+         margin: 10px;
+         border: 3px solid #ccc;
+      }
+   </style>
+</head>
+
+<body>
+   <div class="container">
+      <div class="item">Item 1</div>
+      <div class="item">Item 2</div>
+      <div class="item">Item 3</div>
+   </div>
+</body>
+</html>
+```
+
+
+## Flexbox Justify Content Property
+
+
+The`justify-content`property is commonly used inside flexbox containers to align flexbox items inside container. There are several values possible for this property, for a complete reference of justify-content property visit our tutorial onjustify-content property.
+
+
+Some of the commonly used values of justify-content is noted down below. There are lot more values associated with it.
+
+
+```css
+// Align Item at center of main axis
+justify-content: center; 
+
+// Align Item at start of main axis
+justify-content: flex-start; 
+
+// Align Item at end of main axis
+justify-content: flex-end; 
+
+// Align Item at left side of main axis
+justify-content: left;
+
+// Align Item at right side of main axis
+justify-content: right;
+```
+
+
+## Flexbox Align Items Property
+
+
+The`align-items`property in CSS is used to align flex items across cross axis (vertical axis in a row layout, horizontal axis in a column layout) of the container. There are several values associated with this property. To learn more about`align-items`property visit our tutorial onCSS Align Items.
+
+
+```css
+// Align items at start of cross axis of container
+align-items: flex-start;
+
+// Align items at end of cross axis of container
+align-items: flex-end;
+
+// Align items at center of cross axis of container
+align-items: center;
+
+// Align baselines of items (For items with variable sizes)
+align-items: baseline;
+
+// Stretch items along cross axis to fill container
+align-items: stretch;
+```
+
+
+## Centering a Div using Flexbox
+
+
+Centering a div element( or any other elements ) is always a challenging and most discussed problem in CSS. With the help of CSS flexbox we can easily center a div element inside a container. We have to use`justify-content`and`align-items`properties to center items, following code shows how this is done.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <style>
+      .flex-container {
+         display: flex;
+         /* Center horizontally */
+         justify-content: center;
+         /* Center Vertically */
+         align-items: center;
+         border: 1px solid #ccc;
+         height: 250px;
+         background-color: grey;
+      }
+
+      .flex-item {
+         background-color: lightblue;
+         border: 1px solid #333;
+         padding: 5px;
+         height: 70px;
+         width: 70px;
+      }  
+   </style>
+</head>
+
+<body>
+   <div class="flex-container">
+      <div class="flex-item">
+         This div is in center of container
+      </div>
+   </div>
+</body>
+</html>
+```
+
+
+## Flexbox Wrap Property
+
+
+Flexbox with wrap property allows items within a container to move to next line when there is no enough space in a single line. This helps to maintain a responsive layout.
+
+
+Following code demonstrates how to use flexbox to create a responsive layout that centers its items and wraps them to fit within the available space. For a complete guidance on flex wrap, visit our tutorial onCSS flex-wrap.
+
+
+```css
+.container {
+   display: flex;
+   flex-wrap: wrap;
+   justify-content: center;
+   align-items: center;
+}
+.item {
+   padding: 20px;
+   margin: 10px;
+   /* base size 100px */
+   flex: 1 1 100px; 
+}
+```
+
+
+## Flexbox Align Self Property
+
+
+In CSS, we have`align-self`property which can be used to override`align-items`property set on container. This helps to dynamically place each items at special locations inside container.
+
+
+Following code shows how to use`align-self`property. Here we can see that`align-items: stretch`is not applicable to second and third items, this property is override by`align-self`property of items.
+
+
+```css
+.container {
+   display: flex;
+   flex-direction: row;
+   justify-content: space-around;
+   align-items: stretch;
+   height: 250px;
+}
+.item {
+   background-color: lightpink;
+   padding: 20px;
+   margin: 10px;
+   border: 1px solid #ccc;
+}
+.item:nth-child(2) {
+   /* Center 2nd item along the cross axis */
+   align-self: center; 
+}
+.item:nth-child(3) {
+   /* Align 3rd item at the end of the cross axis */
+   align-self: flex-end; 
+}
+```
+
+
+## CSS Flexbox Container Properties
+
+
+Following are all the CSS properties that can be applied to flex container.
+
+
+PropertyValueExampleflex-directionSets the flex direction of the flex items.Try Itflex-wrapSets whether flex items should wrap onto the next lineTry Itjustify-contentSets the alignment of flex items along the main axis.Try Italign-itemsSets the alignment of flex items along the cross axis.Try Italign-contentSets the alignment and spacing of flex lines within the flex container.Try Itflex-flowSets both the flex-direction and flex-wrap properties.Try It
+
+
+## CSS Flexbox Items Properties
+
+
+Following are all the CSS properties that can be applied to flex items.
+
+
+PropertyValueExampleflex-growSets flex item to grow within a flex container.Try Itflex-shrinkSets flex item to shrink in size to fit the available space.Try Itflex-basisSets the initial size of a flex item.Try ItflexShorthand property, combines three flex-related properties: flex-grow, flex-shrink, and flex-basis.Try Italign-selfSets the alignment of a specific flex item along the cross-axis.Try ItorderUsed to specify the order in which flex items appear inside their flex container.Try It
+

@@ -1,0 +1,1193 @@
+---
+title: "CSS - Pagination"
+description: "Learn CSS - Pagination with clear explanation, code examples, and practical guide."
+category: "css"
+order: 1260
+group: "CSS3 Advanced Features"
+seoTitle: "CSS - Pagination — CodesCompiler CSS Guide"
+permalink: "css-pagination"
+---
+
+
+# CSS - Pagination
+
+
+
+
+CSS pagination is a technique of creating page numbers for a website. This help users to easily navigate between large amounts of content. In this chapter, we will learn how to setup and style pagination using CSS.
+
+
+## CSS Pagination Example
+
+
+Here is a example of pagination styled using CSS.
+
+
+12345
+
+
+First PageSecond PageThird PageForth PageFifth Page
+
+
+## Table of Contents
+
+
+Setup Pagination For a WebsiteSimple Pagination ExampleStyling Pagination Using CSSRounded Pagination ButtonsHoverable Transition EffectBordered PaginationSpace Between LinksPagination SizeCentered PaginationNext and Previous ButtonsBreadcrumb PaginationPagination With List
+
+
+## How to Setup Pagination For a Website?
+
+
+To set up pagination for a website, you need to break your content into small pages and provide navigation to move between them in every page. Let's see step by step procedure for setting up pagination.
+
+
+### Setup HTML Structure
+
+
+First we need to set HTML structure for pagination setup. We can use anchor tags enclosed in div elements for this. Following is code for HTML structure of a pagination setup.
+
+
+```css
+<div class="pagination">
+
+    « <!-- Previous Page -->
+
+    1
+
+    2
+
+    3
+
+    » <!-- Next Page -->
+
+</div>
+
+
+
+<div id="page1" class="page active">Page 1 Shows....</div>
+
+<div id="page2" class="page">Page 2 Shows....</div>
+```
+
+
+### Control Visibility With CSS
+
+
+Initially all the pages should be invisible, expect the first page. For this, we can usedisplayproperty as none for all pages. As class "active" is added to first page, it will be visible initially.
+
+
+```css
+.pagination {
+
+    display: flex;            
+
+    justify-content: center;    
+
+}
+
+
+
+.page {
+
+    display: none;         
+
+}
+
+
+
+.active {
+
+    display: block;      
+
+}
+```
+
+
+### Pagination Logic With JavaScript
+
+
+Now, we need to add some JavaScript to handle pagination logic. We can capture click event on pagination links using JavaScriptaddEventListener()method and change visibility of pages based on that.
+
+
+## Simple Pagination Example
+
+
+The example belows shows simple pagination setup developed using the above steps.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+
+<html>
+
+
+
+<head>
+
+    <style>
+
+        body{
+
+            height: 150px;
+
+        }
+
+        .pagination {
+
+            display: flex;            
+
+            justify-content: center;    
+
+            margin: 20px 0;            
+
+        }
+
+
+
+        .pagination a {
+
+            color: green;               
+
+            border: 5px solid #ddd;     
+
+            padding: 5px 10px;         
+
+            margin: 0 5px;           
+
+        }
+
+
+
+        .page {
+
+            display: none;         
+
+        }
+
+
+
+        .active {
+
+            display: block;      
+
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+    <div class="pagination">
+
+        1
+
+        2
+
+        3
+
+        4
+
+        5
+
+    </div>
+
+
+
+    <div id="page1" class="page active">Page 1 Shows....</div>
+
+    <div id="page2" class="page">Page 2 Shows....</div>
+
+    <div id="page3" class="page">Page 3 Shows....</div>
+
+    <div id="page4" class="page">Page 4 Shows....</div>
+
+    <div id="page5" class="page">Page 5 Shows....</div>
+
+
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+
+            const pages = document.querySelectorAll('.pagination a');
+
+            const contentPages = document.querySelectorAll('.page');
+
+
+
+            pages.forEach(page => {
+
+                page.addEventListener('click', function(event) {
+
+                    event.preventDefault();
+
+
+
+                    // Remove 'active' class from all content pages
+
+                    contentPages.forEach(p => p.classList.remove('active'));
+
+
+
+                    // Find the target page and display it
+
+                    const targetPage = document.querySelector(this.getAttribute('href'));
+
+                    if (targetPage) {
+
+                        targetPage.classList.add('active');
+
+                    }
+
+
+
+                    // Add 'active' class to the clicked link
+
+                    this.classList.add('active');
+
+                });
+
+            });
+
+        });
+
+    </script>
+
+</body>
+
+
+
+</html>
+```
+
+
+## Styling Pagination Using CSS
+
+
+To style pagination links, we can usepseudo-class:active and :hover.
+
+
+
+- Pseudo-class :activeCan be used to highlight current page in pagination links.
+- Pseudo-class :hoverCan be used to style mouse hover states of pagination link.
+
+
+
+The following example shows how these properties can enhance appearance of pagination links.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+
+<html>
+
+
+
+<head>
+
+    <style>
+
+        .pagination {
+
+            display: flex;
+
+            list-style: none;
+
+            padding: 0;
+
+        }
+
+        .pagination a {
+
+            text-decoration: none;
+
+            padding: 8px 12px;
+
+            color: #333;
+
+        }
+
+        .pagination a.active-link {
+
+            background-color: violet;
+
+            color: white;
+
+        }
+
+        .pagination a:hover:not(.active-link) {
+
+            background-color: pink;
+
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+    <div class="pagination">
+
+        «
+
+        A
+
+        B
+
+        C
+
+        D
+
+        E
+
+        »
+
+    </div>
+
+</body>
+
+
+
+</html>
+```
+
+
+## Rounded Pagination Buttons
+
+
+We can create a pagination links with a rounded button by usingborder-radiusCSS property. Let see an example:
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+
+<html>
+
+
+
+<head>
+
+    <style>
+
+        .pagination {
+
+            display: flex;
+
+            list-style: none;
+
+            padding: 0;
+
+        }
+
+        .pagination a {
+
+            text-decoration: none;
+
+            padding: 8px 12px;
+
+            color: #333;
+
+            border-radius: 8px;
+
+        }
+
+        .pagination a.active-link {
+
+            background-color: violet;
+
+            color: white;
+
+        }
+
+        .pagination a:hover:not(.active-link) {
+
+            background-color: pink;
+
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+    <div class="pagination">
+
+        «
+
+        A
+
+        B
+
+        C
+
+        D
+
+        E
+
+        »
+
+    </div>
+
+</body>
+
+
+
+</html>
+```
+
+
+## Hoverable Transition Effect
+
+
+We can make pagination link smooth with transition effects when hovering over the each page links usingtransitionproperty. Let see an example:
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+
+<html>
+
+
+
+<head>
+
+    <style>
+
+        .pagination {
+
+            display: flex;
+
+            list-style: none;
+
+            padding: 0;
+
+        }
+
+        .pagination a {
+
+            text-decoration: none;
+
+            padding: 8px 12px;
+
+            color: #333;
+
+            transition: background-color 0.4s;
+
+        }
+
+        .pagination a.active-link {
+
+            background-color: violet;
+
+            color: white;
+
+        }
+
+        .pagination a:hover:not(.active-link) {
+
+            background-color: pink;
+
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+    <div class="pagination">
+
+        «
+
+        A
+
+        B
+
+        C
+
+        D
+
+        E
+
+        »
+
+    </div>
+
+</body>
+
+
+
+</html>
+```
+
+
+## Bordered Pagination
+
+
+To add border to pagination links, we can use CSSborderproperty. Here is an example:
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+
+<html>
+
+
+
+<head>
+
+    <style>
+
+        .pagination {
+
+            display: flex;
+
+            list-style: none;
+
+            padding: 0;
+
+        }
+
+        .pagination a {
+
+            text-decoration: none;
+
+            padding: 8px 12px;
+
+            color: #333;
+
+            transition: background-color 0.4s;
+
+            border: 2px solid black;
+
+        }
+
+        .pagination a.active-link {
+
+            background-color: violet;
+
+            color: white;
+
+        }
+
+        .pagination a:hover:not(.active-link) {
+
+            background-color: pink;
+
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+    <div class="pagination">
+
+        «
+
+        A
+
+        B
+
+        C
+
+        D
+
+        E
+
+        »
+
+    </div>
+
+</body>
+
+
+
+</html>
+```
+
+
+## Space Between Links
+
+
+We can use CSSmarginproperty to create a space around each link in the pagination component. Let see an example for this.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+
+<html>
+
+
+
+<head>
+
+    <style>
+
+        .pagination {
+
+            display: flex;
+
+            list-style: none;
+
+            padding: 0;
+
+        }
+
+        .pagination a {
+
+            text-decoration: none;
+
+            padding: 8px 12px;
+
+            color: #333;
+
+            transition: background-color 0.4s;
+
+            border: 2px solid black;
+
+            margin: 2px;
+
+        }
+
+        .pagination a.active-link {
+
+            background-color: violet;
+
+            color: white;
+
+        }
+
+        .pagination a:hover:not(.active-link) {
+
+            background-color: pink;
+
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+    <div class="pagination">
+
+        «
+
+        A
+
+        B
+
+        C
+
+        D
+
+        E
+
+        »
+
+    </div>
+
+</body>
+
+
+
+</html>
+```
+
+
+## Pagination Size
+
+
+To change the size of pagination links, we can usefont-sizeproperty. Let see an example:
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+
+<html>
+
+
+
+<head>
+
+    <style>
+
+        .pagination {
+
+            display: flex;
+
+            list-style: none;
+
+            padding: 0;
+
+        }
+
+        .pagination a {
+
+            text-decoration: none;
+
+            padding: 8px 12px;
+
+            color: #333;
+
+            border: 2px solid black;
+
+            font-size: 20px;
+
+            margin: 2px;
+
+        }
+
+        .pagination a.active-link {
+
+            background-color: violet;
+
+            color: white;
+
+        }
+
+        .pagination a:hover:not(.active-link) {
+
+            background-color: pink;
+
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+    <div class="pagination">
+
+        «
+
+        A
+
+        B
+
+        C
+
+        D
+
+        E
+
+        »
+
+    </div>
+
+</body>
+
+
+
+</html>
+```
+
+
+## Centered Pagination
+
+
+We can use thejustify-contentCSS property to center pagination links. Here is an example.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+
+<html>
+
+
+
+<head>
+
+    <style>
+
+        .pagination {
+
+            display: flex;
+
+            list-style: none;
+
+            padding: 0;
+
+            justify-content: center;
+
+        }
+
+        .pagination a {
+
+            text-decoration: none;
+
+            padding: 8px 12px;
+
+            color: #333;
+
+            transition: background-color 0.7s;
+
+            border: 2px solid black;
+
+            margin: 2px;
+
+        }
+
+        .pagination a.active-link {
+
+            background-color: violet;
+
+            color: white;
+
+        }
+
+        .pagination a:hover:not(.active-link) {
+
+            background-color: pink;
+
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+    <div class="pagination">
+
+        «
+
+        A
+
+        B
+
+        C
+
+        D
+
+        E
+
+        »
+
+    </div>
+
+</body>
+
+
+
+</html>
+```
+
+
+## Pagination With Next and Previous Buttons
+
+
+We can add previous and next buttons across pagination links for quicker navigation. Let see an example for this.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+
+<html>
+
+
+
+<head>
+
+    <style>
+
+        .pagination {
+
+            display: flex;
+
+            list-style: none;
+
+            padding: 0;
+
+            margin: 10px;
+
+        }
+
+        .pagination a {
+
+            text-decoration: none;
+
+            padding: 8px 12px;
+
+            color: #333;
+
+            transition: background-color 0.4s;
+
+            border: 2px solid black;
+
+            margin: 2px;
+
+        }
+
+        .prev-next{
+
+            background-color: grey;
+
+        }
+
+        .pagination a.active-link {
+
+            background-color: violet;
+
+            color: white;
+
+        }
+
+        .pagination a:hover:not(.active-link) {
+
+            background-color: pink;
+
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+    <div class="pagination">
+
+        < Previous
+
+        Page 1
+
+        Page 2
+
+        Page 3
+
+        Page 4
+
+        Next >
+
+    </div>
+
+</body>
+
+
+
+</html>
+```
+
+
+## Breadcrumb Pagination
+
+
+Breadcrumb pagination is a navigation method that shows users the path theyve taken to reach their current page. Let's see an example to design breadcrumb pagination.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+
+<html>
+
+
+
+<head>
+
+    <style>
+
+        ul.breadcrumb-pagination {
+
+            padding: 10px;
+
+            list-style: none;
+
+            background-color: pink;
+
+        }
+
+        ul.breadcrumb-pagination li {
+
+            display: inline-block;
+
+        }
+
+        ul.breadcrumb-pagination li a {
+
+            color: blue;
+
+        }
+
+        ul.breadcrumb-pagination li+li:before {
+
+            padding: 10px;
+
+            content: "/\00a0";
+
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+    <ul class="breadcrumb-pagination">
+
+        <li>CodesCompiler</li>
+
+        <li>CSS Pagination</li>
+
+        <li class="active-link">CSS Pagnation With Breadcrumb</li>
+
+    </ul>
+
+</body>
+
+
+
+</html>
+```
+
+
+## Pagination With List
+
+
+We can also use unordered list (`<ul>`) and list items (`<li>`) for creating the pagination. Let see an example.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+
+<html>
+
+
+
+<head>
+
+    <style>
+
+        .pagination {
+
+            display: flex;
+
+            padding: 0;
+
+            list-style: none;
+
+        }
+
+        .pagination li {
+
+            margin: 5px;
+
+        }
+
+        .pagination a {
+
+            text-decoration: none;
+
+            padding: 8px 12px;
+
+            color: #333;
+
+            border: 2px solid black;
+
+        }
+
+        .pagination a:hover {
+
+            background-color: pink;
+
+        }
+
+        .pagination .active-link {
+
+            background-color: violet;
+
+            color: white;
+
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+   <ul class="pagination">
+
+      <li></li>
+
+      <li>A</li>
+
+      <li>B</li>
+
+      <li>C</li>
+
+      <li>D</li>
+
+      <li>E</li>
+
+      <li></li>
+
+   </ul>
+
+</body>
+
+
+
+</html>
+```
+

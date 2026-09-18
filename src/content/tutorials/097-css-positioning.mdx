@@ -1,0 +1,405 @@
+---
+title: "CSS - Positioning"
+description: "Learn CSS - Positioning with clear explanation, code examples, and practical guide."
+category: "css"
+order: 970
+group: "CSS Advanced"
+seoTitle: "CSS - Positioning — CodesCompiler CSS Guide"
+permalink: "css-positioning"
+---
+
+
+# CSS - Positioning
+
+
+
+
+CSSPositioninghelps to manipulate position of any element in a web page. In this tutorial we will learn position property and values associated with it.
+
+
+## Table of Contents
+
+
+What is CSS Position?Static Positioned ElementRelative Positioned ElementsAbsolutely Positioned ElementsPosition Fixed ElementSticky Positioned ElementPositioning Text in an ImagePosition Related Properties
+
+
+## What is CSS Position?
+
+
+In CSSpositionproperty is used to create floating elements, floating sidebar, and other interactive features by adjusting position of elements in webpage.
+
+
+Along with position property, other properties liketop,bottom,right, andleftare used to control its exact position on the page. They specify the offsets of an element from its edges. We will see examples for those in this tutorial.
+
+
+## Syntax
+
+
+Following are possible values for css position.
+
+
+```css
+position: static | relative | absolute | fixed | sticky;
+```
+
+
+## Static Positioned Element
+
+
+When you use theposition: staticproperty, the element will be positioned normally in the document flow. Theleft,right,top,bottom, andz-indexproperties will not affect the element. This is the default value for position property.
+
+
+### Example
+
+
+In this example we defined two static positioned div elements and one relative positioned element. See the difference.
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+      .container {
+         padding: 20px;
+         border: 1px solid #ccc;
+      }
+      .static-element {
+         position: static;
+         background-color: lightblue;
+         padding: 10px;
+         margin: 10px 0;
+      }
+      .non-static-element {
+         position: relative; 
+         top: 20px;
+         background-color: lightgreen;
+         padding: 10px;
+      }
+    </style>
+</head>
+<body>
+    <div class="container">
+      <div class="static-element">
+         This is a static element (default position).
+      </div>
+      <div class="non-static-element">
+         This element is not static and is moved 
+         20px down.
+      </div>
+      <div class="static-element">
+         This is another static element (default 
+         position).
+      </div>
+    </div>
+</body>
+</html>
+```
+
+
+## Relative Positioned Elements
+
+
+CSSposition: relativeproperty positions the elements relative to their original position in the page. You can use the left, right, top, and bottom properties to move the element around, but it will still take up space in the document flow.
+
+
+### Example
+
+
+In this example we defined one static positioned div element and one relative positioned element. See the difference.
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <style>
+      *{
+         padding: 15px;
+      }
+      .container {
+         border: 1px solid #ccc;
+      }
+      .static-element {
+         position: static;
+         background-color: lightblue;
+      }
+      .relative-element {
+         position: relative;
+         top: 20px;  
+         left: 30px; 
+         background-color: lightgreen;
+      }
+      .normal-flow {
+         background-color: lightcoral;
+         margin: 10px 0;
+      }
+   </style>
+</head>
+
+<body>
+   <div class="container">
+      <div class="static-element">
+         This is a static element (default position).
+      </div>
+      <div class="relative-element">
+         This element is relatively positioned 20px 
+         down and 30px right.
+      </div>
+      <div class="normal-flow">
+         This element is in the normal document 
+         flow, after the relative element.
+      </div>
+   </div>
+</body>
+</html>
+```
+
+
+## Absolutely Positioned Elements
+
+
+An element withposition: absoluteis taken out of the document flow and positioned relative to its nearest positioned ancestor (if any). If there is no positioned ancestor, then the element is positioned relative to the viewport.
+
+
+You can use top, right, bottom, and left properties to specify the position of the element relative to its containing block.
+
+
+### Example
+
+
+This example show use of position absolute
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+      *{
+         padding: 15px;
+      }
+      .container {
+       /* This makes container positioned ancestor */
+         position: relative;
+         width: 70%;
+         height: 200px;
+         border: 1px solid #ccc;
+      }
+      .static-element {
+         position: static;
+         background-color: lightblue;
+         padding: 10px;
+         margin: 10px 0;
+      }
+      .absolute-element {
+         position: absolute;
+      /* 50px from top of nearest positioned ancestor */
+         top: 50px;
+      /* 30px from left of nearest positioned ancestor */
+         left: 30px; 
+         background-color: lightgreen;
+         padding: 10px;
+      }
+    </style>
+</head>
+<body>
+    <div class="container">
+      <div class="static-element">
+         This is a static element (default position).
+      </div>
+      <div class="absolute-element">
+         This element is absolutely positioned 30px 
+         from top and 50px from left.
+      </div>
+    </div>
+</body>
+</html>
+```
+
+
+## Position Fixed Element
+
+
+In CSSposition: fixedproperty is used to make element stay in the same place on the screen even when the user scrolls. You can then use the left, right, top, and bottom properties to position the element where you want it.
+
+
+### Example
+
+
+In this example you can see that paragraph element remain there when you scroll down.
+
+
+```html
+<html>
+<head>
+<style>
+   div {
+      width: 100%;
+      height: 500px;
+      background-color: lightgrey;
+      overflow: auto;
+      padding: 15px;
+   }
+   .fixed-position {
+      position: fixed;
+      top: 50%;
+      left: 20%;
+      padding: 5px;
+      background-color: white;
+   }
+</style>
+</head>
+<body>
+    <div>
+      You can Scroll down...
+      <p class="fixed-position">
+         CodesCompiler CSS Position Fixed
+      </p>
+      <p>
+         White screen will remain at 50% 
+         height from top 
+      </p>
+    </div>
+</body>
+</html>
+```
+
+
+## Sticky Positioned Element
+
+
+In CSSposition: stickyproperty is used to make any element stay at the top of container even when the user scrolls. You can then use the left, right, top, and bottom properties to position the element where you want it.
+
+
+Theposition: stickyproperty is a combination of theposition: relativeandposition: fixedproperties
+
+
+### Example
+
+
+In this example you can see that when you scroll, fixed move to top
+
+
+```html
+<html>
+<head>
+<style>
+   div {
+      width: 100%;
+      height: 500px;
+      background-color: lightgrey;
+      overflow: auto;
+      padding: 15px;
+   }
+   .sticky-position {
+      position: sticky;
+      top: 50%;
+      left: 20%;
+      padding: 5px;
+      background-color: white;
+   }
+</style>
+</head>
+
+<body>
+      <div>
+      You can Scroll down...
+      <p class="sticky-position">
+         CodesCompiler CSS Position Fixed
+      </p>
+      <p>
+         White screen will stick at top of 
+         screen when you scroll down.
+      </p>
+      </div>
+</body>
+</html>
+```
+
+
+## Positioning Text in an Image
+
+
+In following example, you can use theposition: absoluteproperty to position text in different directions inside an image. The text elements are positioned at the top left, top right, bottom left, and bottom right corners.
+
+
+### Example
+
+
+In the following example we have positioned text on an image.
+
+
+```html
+<html>
+<head>
+<style>
+   .container {
+      position: relative;
+      border: 2px solid #ef2c2c;
+   }
+   .center {
+      position: absolute;
+      top: 45%;
+      width: 100%;
+      text-align: center;
+   }
+   .top-left {
+      position: absolute;
+      top: 12px;
+      left: 30px;
+   }
+   .top-right {
+      position: absolute;
+      top: 12px;
+      right: 30px;
+   }
+   .bottom-left {
+      position: absolute;
+      bottom: 12px;
+      left: 30px;
+   }
+   .bottom-right {
+      position: absolute;
+      bottom: 12px;
+      right: 30px;
+   }
+   img {
+      width: 100%;
+      opacity: 0.7;
+   }
+</style>
+</head>
+<body>
+   <div class="container">
+      <img src="/css/images/red-flower.jpg" 
+            width="1000px" height="350px">
+
+      <h3 class="center">
+         Text at Center
+      </h3>
+      <h3 class="top-left">
+         Text at Top Left
+      </h3>
+      <h3 class="top-right">
+         Text at Top Right
+      </h3>
+      <h3 class="bottom-left">
+         Text at Bottom Left</h3>
+      <h3 class="bottom-right">
+         Text at Bottom Right
+      </h3>
+   </div>
+</body>
+</html>
+```
+
+
+## CSS Position Related Properties
+
+
+Following is the list of all the CSS properties related toposition:
+
+
+PropertyDescriptionExamplebottomUsed with the position property to place the bottom edge of an element.Try ItclipSets the clipping mask for an element.Try ItleftUsed with thepositionproperty to place the left edge of an element.Try ItoverflowDetermines how overflow content is rendered.Try ItrightUsed with thepositionproperty to place the right edge of an element.Try IttopSets the positioning model for an element.Try Itvertical-alignSets the vertical positioning of an element.Try Itz-indexSets the rendering layer for the current element.Try It
+

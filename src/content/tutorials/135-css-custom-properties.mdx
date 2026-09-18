@@ -1,0 +1,366 @@
+---
+title: "CSS - Custom Properties"
+description: "Learn CSS - Custom Properties with clear explanation, code examples, and practical guide."
+category: "css"
+order: 1350
+group: "CSS3 Advanced Features"
+seoTitle: "CSS - Custom Properties — CodesCompiler CSS Guide"
+permalink: "css-custom-properties"
+---
+
+
+# CSS - Custom Properties
+
+
+
+
+Custom Properties are variables in CSS that are used to store and reuse values in stylesheet. These are same as variables in other programming languages.
+
+
+## Declaring Custom Properties in CSS
+
+
+The following code show how to declare custom properties in CSS.
+
+
+```css
+:root {
+
+    --primary-color: #3498db;
+
+    --font-size-large: 1.5rem;
+
+}
+
+body{
+
+    background-color: var(--primary-color);
+
+    font-size: var(--font-size-large)
+
+}
+```
+
+
+Here are few things to be considered when using custom properties in CSS.
+
+
+
+- You can define custom properties in any selectors in stylesheet, but if you define a custom property inside:rootselector it will have scope across all over the stylesheet.
+- Thevarfunction is used to apply variable values to CSS properties on any elements.
+- CSS does not allow custom properties to be used in media queries or container queries, Also you cannot use them to set the name of a CSS property or selector.
+- Custom properties are case sensitive.
+
+
+
+## CSS Custom Properties Example
+
+
+Following code shows example of using custom properties in CSS. Here you can see that we defined the color '#0044cc' as blue, So developer can repetitively use this color by using variable blue.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+
+<html lang="en">
+
+
+
+<head>
+
+    <style>
+
+        :root {
+
+            --main-bg-color: #f0f0f0;
+
+            --main-text-color: #333;
+
+            --primary-font: 'Arial', sans-serif;
+
+            --padding: 10px;
+
+            --blue: #0044cc;
+
+            --header-text: #fff;
+
+            --container-bg: #fff;
+
+        }
+
+        
+
+        body {
+
+            background-color: var(--main-bg-color);
+
+            color: var(--main-text-color);
+
+            font-family: var(--primary-font);
+
+            padding: var(--padding);
+
+        }
+
+        
+
+        header {
+
+            background-color: var(--blue);
+
+            color: var(--header-text);
+
+            padding: var(--padding);
+
+        }
+
+        
+
+        .container {
+
+            background-color: var(--container-bg);
+
+            padding: var(--padding);
+
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+    <header>
+
+        # Welcome to My Website
+
+    </header>
+
+    <div class="container">
+
+        <p>
+
+            This is a container with a background color 
+
+            defined using variables.
+
+        </p>
+
+    </div>
+
+</body>
+
+
+
+</html>
+```
+
+
+## Custom Property Fallback Values
+
+
+We can define custom properties with fallback values to ensure that your CSS code is still valid and works even if the variable is not defined.
+
+
+Fallback values are not used to make CSS custom properties work in older browsers. They are only used as a backup in browsers that support CSS custom properties, in case the variable is not defined or has an invalid value.
+
+
+### Example
+
+
+In below example, we have only defined color shade for white, But are also using black variable. Since we are defining fallback-value for black color variable, there will not be any error.
+
+
+```html
+<!DOCTYPE html>
+
+<html>
+
+
+
+<head>
+
+    <style>
+
+        :root {
+
+            --white-color: #f0f0f0;/* Shade for white */
+
+            /* Custom Property for black is not defined */
+
+        }
+
+        .box {
+
+            text-align: center;
+
+            padding: 20px;
+
+            background-color: var(--white-color, white);
+
+            color: var(--black-color, black);
+
+        }
+
+        .box1, .box2 {
+
+            display: inline-block;
+
+            background-color: var(--black-color, black);
+
+            color: var(--white-color, white);
+
+            width: 100px;
+
+            height: 50px;
+
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+    <div class="box">
+
+        ## CodesCompiler
+
+         How to code a website using HTML and CSS 
+
+        <div class="box1"> HTML </div>
+
+        <div class="box2"> CSS </div>
+
+    </div>
+
+</body>
+
+
+
+</html>
+```
+
+
+## Inheritance of Custom Properties
+
+
+In CSS, custom properties are inherited by default from parent elements to child element. Any variable declared on a parent element will be available to all its descendants unless overridden.
+
+
+```css
+.container {
+
+    --main-bg-color: black;
+
+    --text-color: white;
+
+}
+
+
+
+.child {
+
+    /* Use inherited value from parent for background color*/
+
+    background-color: var(--main-bg-color);
+
+
+
+    /* Overrides the parents value for text color*/
+
+    --text-color: lightgrey; 
+
+    color: var(--main-bg-color); 
+
+}
+```
+
+
+### Example
+
+
+The following example demonstrates that the use of CSS custom properties with inheritance.
+
+
+```html
+<!DOCTYPE html>
+
+<html>
+
+
+
+<head>
+
+    <style>
+
+        :root {
+
+            --white-color: #f0f0f0;
+
+            --black-color: rgb(0, 0, 21);
+
+        }
+
+        .box {
+
+            --box-background: var(--white-color);
+
+            background-color: var(--box-background);
+
+            text-align: center;
+
+            padding: 20px;
+
+        }
+
+        .box1, .box2 {
+
+            display: inline-block;
+
+            background-color: var(--black-color);
+
+            /* Box Background is defined at parent box */
+
+            color: var(--box-background);
+
+            width: 100px;
+
+            height: 50px;
+
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+    <div class="box">
+
+        ## CodesCompiler
+
+         How to code a website using HTML and CSS 
+
+        <div class="box1"> HTML </div>
+
+        <div class="box2"> CSS </div>
+
+    </div>
+
+</body>
+
+
+
+</html>
+```
+

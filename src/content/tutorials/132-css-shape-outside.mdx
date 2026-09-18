@@ -1,0 +1,472 @@
+---
+title: "CSS - Shapes"
+description: "Learn CSS - Shapes with clear explanation, code examples, and practical guide."
+category: "css"
+order: 1320
+group: "CSS3 Advanced Features"
+seoTitle: "CSS - Shapes — CodesCompiler CSS Guide"
+permalink: "css-shape-outside"
+---
+
+
+# CSS - shape-outside
+
+
+
+
+CSSshape-outsideproperty is used to define a shape around which inline content (such as text or images) should wrap. This property is particularly useful for creating non-rectangular or complex text wrapping shapes.
+
+
+## Possible Values
+
+
+
+- none− Inline content flows around the element's margin box, while the float area remains unchanged.
+- margin-box− It represents the shape around the outside edge of the margin, with the corner radii specified by the border-radius and margin values.
+- content-box− It represents the shape around the outside edge of the content. The corner radius of the box is determined by taking the larger value between 0 and border-radius - border-width - padding.
+- border-box− It represents the shape around the outside edge of the border. The shape for the outside of the border follows the standard border radius shaping rule.
+- padding-box− It represents the shape around the outside padding edge. The shape for the inside of the border follows the standard border radius shaping rule.
+- `<basic-shape>`− The shape created with functions such ascircle(),ellipse(),polygon(), orpath()(introduced in the level 2 specification,) determines the float area.
+- url()− It identifies which image should be used to wrap text around.
+- linear-gradient()− To create gradient shapes that text and other inline content can wrap around.
+
+
+
+## Applies to
+
+
+Floats.
+
+
+## Syntax
+
+
+```css
+shape-outside = none | margin-box | content-box | border-box | padding-box | circle() | ellipse() | inset() | polygon | path() | url() | linear-gradient();
+```
+
+
+## CSS shape-outside - margin-box
+
+
+The following example demonstrates the proeprtyshape-outside: margin-boxproperty defines that content should wrap around the outer edge of the element's margin box −
+
+
+```html
+<html>
+<head>
+<style>
+   .box-shape {
+      float: left;
+      width: 150px;
+      height: 150px;
+      background-color: violet;
+      border: 8px blue;
+      border-style: dashed double;
+      padding: 20px;
+      text-align: center;
+      background-clip: content-box;
+      shape-outside: margin-box;
+      margin: 20px; 
+   }
+</style>
+</head>
+<body>
+   <div class="box-shape">content box</div>
+      <p>
+         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non arcu justo. Integer et ex ut justo auctor aliquam ac nec augue. Vivamus sit amet augue vitae mi scelerisque congue ac vel lacus.
+      </p>
+      <p>
+         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non arcu justo. Integer et ex ut justo auctor aliquam ac nec augue. Vivamus sit amet augue vitae mi scelerisque congue ac vel lacus.
+      </p>
+</body>
+</html>
+```
+
+
+## CSS shape-outside - content-box
+
+
+The following example demonstrates the propertyshape-outside: content-boxproperty defines that content should wrap around the element's content box −
+
+
+```html
+<html>
+<head>
+<style>
+  .box-shape {
+      float: left;
+      width: 150px;
+      height: 150px;
+      background-color: violet;
+      border: 8px blue;
+      border-style: dashed double;
+      padding: 20px;
+      text-align: center;
+      background-clip: content-box;
+      shape-outside: content-box;
+      margin: 10px; 
+  }
+</style>
+</head>
+<body>
+   <div class="box-shape">content box</div>
+   <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non arcu justo. Integer et ex ut justo auctor aliquam ac nec augue. Vivamus sit amet augue vitae mi scelerisque congue ac vel lacus.
+   </p>
+   <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non arcu justo. Integer et ex ut justo auctor aliquam ac nec augue. Vivamus sit amet augue vitae mi scelerisque congue ac vel lacus.
+   </p>
+</body>
+</html>
+```
+
+
+## CSS shape-outside - padding-box
+
+
+The following example demonstrates the propertyshape-outside: padding-boxproperty defines that content should wrap around the outer edge of the element's padding box −
+
+
+```html
+<html>
+<head>
+<style>
+   .box-shape {
+      float: left;
+      width: 150px;
+      height: 150px;
+      background-color: violet;
+      border: 8px blue;
+      border-style: dashed double;
+      padding: 20px;
+      text-align: center;
+      background-clip: content-box;
+      shape-outside: padding-box;
+      margin: 10px; 
+   }
+</style>
+</head>
+<body>
+   <div class="box-shape">content box</div>
+   <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non arcu justo. Integer et ex ut justo auctor aliquam ac nec augue. Vivamus sit amet augue vitae mi scelerisque congue ac vel lacus.
+   </p>
+   <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non arcu justo. Integer et ex ut justo auctor aliquam ac nec augue. Vivamus sit amet augue vitae mi scelerisque congue ac vel lacus.
+   </p>
+</body>
+</html>
+```
+
+
+## CSS shape-outside - border-box
+
+
+The following example demonstrates the propertyshape-outside: border-boxdefines the flow of the content around the shape defined by the outer border of the element −
+
+
+```html
+<html>
+<head>
+<style>
+   .box-shape {
+      float: left;
+      width: 150px;
+      height: 150px;
+      background-color: violet;
+      border: 8px blue;
+      border-style: dashed double;
+      padding: 20px;
+      text-align: center;
+      background-clip: content-box;
+      shape-outside: border-box;
+      margin: 10px; 
+   }
+</style>
+</head>
+<body>
+   <div class="box-shape">content box</div>
+   <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non arcu justo. Integer et ex ut justo auctor aliquam ac nec augue. Vivamus sit amet augue vitae mi scelerisque congue ac vel lacus.
+   </p>
+   <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non arcu justo. Integer et ex ut justo auctor aliquam ac nec augue. Vivamus sit amet augue vitae mi scelerisque congue ac vel lacus.
+   </p>
+</body>
+</html>
+```
+
+
+## CSS shape-outside - circle()
+
+
+The following example demonstrates the propertyshape-outside: circle()property creates a circular shape, and the content wraps around the edge of the circle −
+
+
+```html
+<html>
+<head>
+<style>
+   .circle-shape {
+      float: left;
+      width: 150px;
+      height: 150px;
+      margin: 10px;
+      shape-outside: circle(50%); 
+   }
+</style>
+</head>
+<body>
+   <div class="circle-shape"></div>
+   <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac mauris sit amet augue consectetur
+      vestibulum. Integer id tortor nec justo consequat laoreet. Aenean volutpat lacinia turpis at
+      facilisis. Proin in malesuada ligula, at cursus erat. Nullam vehicula justo in erat posuere
+      congue. Morbi bibendum purus sit amet libero sagittis, eu tincidunt augue congue.
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac mauris sit amet augue consectetur
+      vestibulum. Integer id tortor nec justo consequat laoreet. Aenean volutpat lacinia turpis at
+      facilisis. Proin in malesuada ligula, at cursus erat. Nullam vehicula justo in erat posuere
+      congue. Morbi bibendum purus sit amet libero sagittis, eu tincidunt augue congue.
+   </p>
+</body>
+</html>
+```
+
+
+## CSS shape-outside - ellipse()
+
+
+The following example demonstrates the propertyshape-outside: ellipse()property creates a ellipse shape, and the content wraps around the element's bounding box −
+
+
+```html
+<html>
+<head>
+<style>
+  .ellipse-shape {
+    float: left;
+    width: 150px; 
+    height: 250px; 
+    margin: 10px;
+    shape-outside: ellipse(50px 100px at 50% 50%);
+  }
+</style>
+</head>
+<body>
+  <div class="ellipse-shape"></div>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac mauris sit amet augue consectetur
+      vestibulum. Integer id tortor nec justo consequat laoreet. Aenean volutpat lacinia turpis at
+      facilisis. Proin in malesuada ligula, at cursus erat. Nullam vehicula justo in erat posuere
+      congue. Morbi bibendum purus sit amet libero sagittis, eu tincidunt augue congue.
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac mauris sit amet augue consectetur
+      vestibulum. Integer id tortor nec justo consequat laoreet. Aenean volutpat lacinia turpis at
+      facilisis. Proin in malesuada ligula, at cursus erat. Nullam vehicula justo in erat posuere
+      congue. Morbi bibendum purus sit amet libero sagittis, eu tincidunt augue congue.
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac mauris sit amet augue consectetur
+      vestibulum.
+    </p>
+  </div>
+</body>
+</html>
+```
+
+
+## CSS shape-outside - url()
+
+
+The following example demonstrates the propertyshape-outside: url()property allowing text to flow around the defined shape of the image −
+
+
+```html
+<html>
+<head>
+<style>
+   .url-shape {
+      float: left;
+      width: 150px;
+      height: 100px;
+      margin: 10px;
+      shape-outside: url("images/yellow-flower.jpg"); 
+   }
+</style>
+</head>
+<body>
+   <div class="url-shape"></div>
+   <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac mauris sit amet augue consectetur
+      vestibulum. Integer id tortor nec justo consequat laoreet. Aenean volutpat lacinia turpis at
+      facilisis. Proin in malesuada ligula, at cursus erat. Nullam vehicula justo in erat posuere
+      congue. Morbi bibendum purus sit amet libero sagittis, eu tincidunt augue congue.
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac mauris sit amet augue consectetur
+      vestibulum. Integer id tortor nec justo consequat laoreet. Aenean volutpat lacinia turpis at
+      facilisis. Proin in malesuada ligula, at cursus erat. Nullam vehicula justo in erat posuere
+      congue. Morbi bibendum purus sit amet libero sagittis, eu tincidunt augue congue.
+   </p>
+   </div>
+</body>
+</html>
+```
+
+
+## CSS shape-outside - polygon()
+
+
+The following example demonstrates that theshape-outside: polygon()creates a polygonal shape, and the content wraps around the element's bounding box −
+
+
+```html
+<html>
+<head>
+<style>
+   .polygon-shape {
+      float: left;
+      width: 150px;
+      height: 100px;
+      margin: 10px;
+      shape-outside: polygon(0 0, 0 200px, 200px 300px); 
+   }
+</style>
+</head>
+<body>
+   <div class="polygon-shape"></div>
+      <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac mauris sit amet augue consectetur
+      vestibulum. Integer id tortor nec justo consequat laoreet. Aenean volutpat lacinia turpis at
+      facilisis. Proin in malesuada ligula, at cursus erat. Nullam vehicula justo in erat posuere
+      congue. Morbi bibendum purus sit amet libero sagittis, eu tincidunt augue congue.
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac mauris sit amet augue consectetur
+      vestibulum. Integer id tortor nec justo consequat laoreet. Aenean volutpat lacinia turpis at
+      facilisis. Proin in malesuada ligula, at cursus erat. Nullam vehicula justo in erat posuere
+      congue. Morbi bibendum purus sit amet libero sagittis, eu tincidunt augue congue.
+      </p>
+   </div>
+</body>
+</html>
+```
+
+
+## CSS shape-outside - inset()
+
+
+The following example demonstrates that theshape-outside: inset()property create rectangular shape, and the content wraps around the edge of the rectangle −
+
+
+```html
+<html>
+<head>
+<style>
+   .inset-shape {
+      float: left;
+      width: 150px;
+      height: 100px;
+      margin: 10px;
+      shape-outside: inset(10px 10px 10px 10px); 
+   }
+</style>
+</head>
+<body>
+   <div class="inset-shape"></div>
+   <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac mauris sit amet augue consectetur
+      vestibulum. Integer id tortor nec justo consequat laoreet. Aenean volutpat lacinia turpis at
+      facilisis. Proin in malesuada ligula, at cursus erat. Nullam vehicula justo in erat posuere
+      congue. Morbi bibendum purus sit amet libero sagittis, eu tincidunt augue congue.
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac mauris sit amet augue consectetur
+      vestibulum. Integer id tortor nec justo consequat laoreet. Aenean volutpat lacinia turpis at
+      facilisis. Proin in malesuada ligula, at cursus erat. Nullam vehicula justo in erat posuere
+      congue. Morbi bibendum purus sit amet libero sagittis, eu tincidunt augue congue.
+   </p>
+   </div>
+</body>
+</html>
+```
+
+
+## CSS shape-outside - path()
+
+
+The following example demonstrates that theshape-outside: path()property creates triangular shape and allowing text to flow around it −
+
+
+```html
+<html>
+<head>
+<style>
+   .path-shape {
+      float: left;
+      width: 90px;
+      height: 90px;
+      margin: 10px;
+      background-color: violet;
+      clip-path: polygon(0% 0%, 100% 0%, 0% 100%);
+      shape-outside: polygon(0% 0%, 100% 0%, 0% 100%);
+   }
+</style>
+</head>
+<body>
+   <div class="path-shape"></div>
+   <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac mauris sit amet augue consectetur
+      vestibulum. Integer id tortor nec justo consequat laoreet. Aenean volutpat lacinia turpis at
+      facilisis. Proin in malesuada ligula, at cursus erat. Nullam vehicula justo in erat posuere
+      congue. Morbi bibendum purus sit amet libero sagittis, eu tincidunt augue congue.
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac mauris sit amet augue consectetur
+      vestibulum. Integer id tortor nec justo consequat laoreet. Aenean volutpat lacinia turpis at
+      facilisis. Proin in malesuada ligula, at cursus erat. Nullam vehicula justo in erat posuere
+      congue. Morbi bibendum purus sit amet libero sagittis, eu tincidunt augue congue.
+   </p>
+   </div>
+</body>
+</html>
+```
+
+
+## CSS shape-outside - linear-gradient()
+
+
+The following example demonstrates that theshape-outside: linear-gradient()property allowing text to flow around the shape defined by linear-gradient −
+
+
+```html
+<html>
+<head>
+<style>
+   .gradient-shape {
+      float: left;
+      width: 150px;
+      height: 150px;
+      background: linear-gradient(45deg, #fff 150px, red 150px);
+      shape-outside: linear-gradient(45deg, #fff 150px, red 150px);
+      margin-right: 20px;
+   }
+   .content {
+      margin-top: 20px;
+      font-size: 16px;
+   }
+</style>
+</head>
+<body>
+   <div class="gradient-shape"></div>
+   <div class="content">
+      <p>
+         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac mauris sit amet augue consectetur
+         vestibulum. Integer id tortor nec justo consequat laoreet. Aenean volutpat lacinia turpis at
+         facilisis. Proin in malesuada ligula, at cursus erat. Nullam vehicula justo in erat posuere
+         congue. Morbi bibendum purus sit amet libero sagittis, eu tincidunt augue congue.
+      </p>
+   </div>
+</body>
+</html>
+```
+
+
+## CSS shape-outside - Related Properties
+
+
+Following is the list of CSS properties related to shape-outside:
+
+
+propertyvalueshape-marginAdds margin to CSS shapes that are created with theshape-outsideproperty.shape-image-thresholdSets the alpha channel threshold for shape extraction when using an image with theshape-outsideproperty.
+

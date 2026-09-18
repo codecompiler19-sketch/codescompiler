@@ -1,0 +1,337 @@
+---
+title: "CSS RWD - Grid View"
+description: "Learn CSS RWD - Grid View with clear explanation, code examples, and practical guide."
+category: "css"
+order: 1380
+group: "CSS Responsive"
+seoTitle: "CSS RWD - Grid View — CodesCompiler CSS Guide"
+permalink: "css-rwd-grid"
+---
+
+
+# CSS RWD Grid view
+
+
+
+
+A responsive webpage always uses grid layout structure, as it can be easily adapted to different screen sizes and devices. In this chapter we will discuss grid view in responsive web development and how to design a grid based responsive website.
+
+
+## What is Grid View?
+
+
+In responsive web design, a grid view is a layout structure that uses a grid-based system to arrange layout elements in rows and columns. A typical grid-view may have 12 columns, and has a total width of 100%. The grid will shrink and expand as the size of the browser changes.
+
+
+## Building a Responsive Grid-View
+
+
+
+- Set Border Box:First of all we need to setbox-sixingproperty as `border-box' for all the elements in webpage. This will ensure padding and border are included in the total width and height of all elements. Use the following code to set:
+
+
+
+```css
+* {
+
+    box-sizing: border-box;
+
+}
+```
+
+
+Set Width of Column:Next we have to decide how many columns are needed in our webpage layout. For Example we need a 3 column layout, for that width of one column will be 100% / 3 columns = 33.33%.
+
+
+Use Media Queries:To ensure responsiveness, we have to usemedia queriesfor screen dependent stylings. With this we can add breakpoints for screen widths, at which layout need to be changed.
+
+
+## Grid Rows and Columns
+
+
+In CSS, we can define the number of columns and rows required in our layout. Each cell will represent a grid item. Following code shows how to define rows and columns in grid.
+
+
+### Example
+
+
+In this example we will create two grid layout one is for row and another one is for column, each grid has row and column.
+
+
+```html
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <style>
+
+        .grid-container {
+
+            display: grid;
+
+            gap: 10px;
+
+            padding: 10px;
+
+            width: 75%;
+
+        }
+
+        .grid-item {
+
+            background-color: #4CAF50;
+
+            border: 1px solid #ddd;
+
+            padding: 20px;
+
+            text-align: center;
+
+            font-size: 1.2em;
+
+            color: white;
+
+        }
+
+        .row{
+
+            grid-template-columns: 1fr;
+
+            grid-template-rows: repeat(3, 1fr);
+
+        }
+
+        .column{
+
+            grid-template-columns: repeat(3, 1fr);
+
+            grid-template-rows: 1fr;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    # Grid Layout Example
+
+    ### Grid Rows</h
+
+    <div class="grid-container row">
+
+      <div class="grid-item item1">
+
+         Item 1
+
+      </div>
+
+      <div class="grid-item item2">
+
+         Item 2
+
+      </div>
+
+      <div class="grid-item item3">
+
+         Item 3
+
+      </div>
+
+    </div>
+
+    
+
+    ### Grid Columns</h
+
+    <div class="grid-container column">
+
+      <div class="grid-item item1">
+
+         Item 1
+
+      </div>
+
+      <div class="grid-item item2">
+
+         Item 2
+
+      </div>
+
+      <div class="grid-item item3">
+
+         Item 3
+
+      </div>
+
+    </div>
+
+</body>
+
+</html>
+```
+
+
+## Grid 12 Column Layout
+
+
+The 12 column layout structure involve dividing the container into 12 equal-width columns, So that each individual elements can span across a specified number of columns to create different sections. Following image shows an example of 12 column layout.
+
+
+### Example
+
+
+Following code shows example of designing a responsive 12 column layout. Run this in CodesCompilerHTML Compilerto see how layout changes with width.
+
+
+```html
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <title>12-Column Grid Layout</title>
+
+    <style>
+
+        /* Basic Grid Container Styling */
+
+        .grid-container {
+
+            display: grid;
+
+            grid-template-columns: repeat(12, 1fr); /* 12 equal-width columns */
+
+            gap: 10px; /* Space between items */
+
+            padding: 10px;
+
+        }
+
+
+
+        /* Column Spans */
+
+        .col-span-12 {
+
+            grid-column: span 12;
+
+            background-color: #4CAF50;
+
+            color: white;
+
+            padding: 20px;
+
+            text-align: center;
+
+        }
+
+
+
+        .col-span-8 {
+
+            grid-column: span 8;
+
+            background-color: #8BC34A;
+
+            color: white;
+
+            padding: 20px;
+
+            text-align: center;
+
+        }
+
+
+
+        .col-span-4 {
+
+            grid-column: span 4;
+
+            background-color: #CDDC39;
+
+            color: white;
+
+            padding: 20px;
+
+            text-align: center;
+
+        }
+
+
+
+        .col-span-3 {
+
+            grid-column: span 3;
+
+            background-color: #FFEB3B;
+
+            color: black;
+
+            padding: 20px;
+
+            text-align: center;
+
+        }
+
+
+
+        /* Responsive Adjustments */
+
+        @media (max-width: 400px) {
+
+            .col-span-8, .col-span-4, .col-span-3 {
+
+                grid-column: span 12; /* Make all elements full-width on smaller screens */
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+
+<div class="grid-container">
+
+    <!-- Header -->
+
+    <div class="col-span-12">Header (12 columns)</div>
+
+
+
+    <!-- Main Content and Sidebar -->
+
+    <div class="col-span-8">Main Content (8 columns)</div>
+
+    <div class="col-span-4">Sidebar (4 columns)</div>
+
+
+
+    <!-- Footer Links -->
+
+    <div class="col-span-3">Footer Link 1 (3 columns)</div>
+
+    <div class="col-span-3">Footer Link 2 (3 columns)</div>
+
+    <div class="col-span-3">Footer Link 3 (3 columns)</div>
+
+    <div class="col-span-3">Footer Link 4 (3 columns)</div>
+
+</div>
+
+
+
+</body>
+
+</html>
+```
+

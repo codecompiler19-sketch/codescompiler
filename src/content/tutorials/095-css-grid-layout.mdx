@@ -1,0 +1,276 @@
+---
+title: "CSS - Grid Layout"
+description: "Learn CSS - Grid Layout with clear explanation, code examples, and practical guide."
+category: "css"
+order: 950
+group: "CSS Advanced"
+seoTitle: "CSS - Grid Layout — CodesCompiler CSS Guide"
+permalink: "css-grid-layout"
+---
+
+
+# CSS - Grid Layout
+
+
+
+
+CSS Grid Layout is a two-dimensional layout system for developing responsive webpages. In this tutorial we will learn how to design a webpage layout using grid systems.
+
+
+## What is a Grid Layout?
+
+
+Grid Layout used to enhance user experience over all the user devices by providing a responsive and flexible arrangement of HTML components over the webpage.
+
+
+Grid is ideal for creating overall layout of a webpage, whileflexboxis mostly used to align items inside a container.
+
+
+## Table of Contents
+
+
+Grid ElementsDisplay Grid PropertyGrid Rows and ColumnsGrid GapGrid LinesCSS Grid Properties Reference
+
+
+## Grid Elements
+
+
+In a grid layout system, we have two elements,Grid ContainerandGrid Item.
+
+
+### Grid Container
+
+
+Grid container defines the outer element of grid, where all the child elements are present. A grid container can be defined by setting`display: grid`or`display: inline-grid`
+
+
+### Grid items
+
+
+Grid items are all the direct elements inside grid container. This items can be arranged vertically and horizontally inside flexbox container based on need.
+
+
+## Display Grid Property
+
+
+A HTML element become a grid container if we set value of display property as`grid`or`inline-grid.`All direct children of the grid container automatically become grid items.
+
+
+
+- grid:This value defines block level grid container, means it behave like a block element taking full width available. ( Similar to div )
+- inline-grid:This value defines inline level grid container, means it behave like a inline element taking as much width as it's content. ( Similar to span )
+
+
+
+### Example
+
+
+Following example show the difference between grid and inline-grid
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <style>
+      .grid-container {
+         display: grid;
+         grid-template-columns: 1fr 1fr 1fr;
+         gap: 10px;
+         width: 100%;
+         background-color: lightblue;
+      }
+      .inline-grid-container {
+         display: inline-grid;
+         grid-template-columns: 1fr 1fr 1fr;
+         gap: 10px;
+         background-color: lightgreen;
+      }
+      .grid-item {
+         background-color: lightcoral;
+         padding: 20px;
+         text-align: center;
+      }
+   </style>
+</head>
+
+<body>
+   ### Inline Grid Example</h
+   <p>
+         Here is an example of 
+         <span class="inline-grid-container">
+            <span class="grid-item">1</span>
+            <span class="grid-item">2</span>
+            <span class="grid-item">3</span>
+         </span> 
+         inline grid.
+   </p>
+   
+   ### Grid Example</h
+      <div class="grid-container">
+      <div class="grid-item">1</div>
+      <div class="grid-item">2</div>
+      <div class="grid-item">3</div>
+   </div>
+</body>
+</html>
+```
+
+
+## Grid Rows and Columns
+
+
+In CSS, we can define the number of columns and rows required in our layout. Each cell will represent a grid item. Following code shows how to define rows and columns in grid.
+
+
+### Example
+
+
+In this example we will create two grid layout one is for row and another one is for column, each grid has row and column but showing them individually will help you to crack the rows and columns.
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .grid-container {
+            display: grid;
+            gap: 10px;
+            padding: 10px;
+            width: 75%;
+        }
+        .grid-item {
+            background-color: #4CAF50;
+            border: 1px solid #ddd;
+            padding: 20px;
+            text-align: center;
+            font-size: 1.2em;
+            color: white;
+        }
+        .row{
+            grid-template-columns: 1fr;
+            grid-template-rows: repeat(3, 1fr);
+        }
+        .column{
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: 1fr;
+        }
+    </style>
+</head>
+<body>
+    # Grid Layout Example
+    ### Grid Rows - 3 Rows X 1 Column</h
+    <div class="grid-container row">
+      <div class="grid-item item1">
+         Item 1
+      </div>
+      <div class="grid-item item2">
+         Item 2
+      </div>
+      <div class="grid-item item3">
+         Item 3
+      </div>
+    </div>
+    
+    ### Grid Columns - 1 Row X 3 Columns </h
+    <div class="grid-container column">
+      <div class="grid-item item1">
+         Item 1
+      </div>
+      <div class="grid-item item2">
+         Item 2
+      </div>
+      <div class="grid-item item3">
+         Item 3
+      </div>
+    </div>
+</body>
+</html>
+```
+
+
+## Grid Gap
+
+
+The grid gap properties are used to add gaps between rows and columns of grid items. We have three properties associated with this,`gap`, `column-gap`and`row-gap`.
+
+
+Thegapproperty can set equal gap for both row and column, while`row-gap`and`column-gap`can set different gap values  for row and column. Row value and column value have more preference over gap value, so if we define all three row value and column value will override over gap value.
+
+
+### Example
+
+
+Here in this example we tried to explain the gap between grid items.
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <style>
+      .grid-container {
+         display: grid;
+         grid-template-columns: 1fr 1fr 1fr;
+         grid-template-rows: 100px 100px 100px;
+
+         /* Sets both row and column gaps to 20px */
+         gap: 20px; 
+         /* Make gap between rows as 10px (override) */
+         row-gap: 10px; 
+         /* Make gap between columns as 5px (override) */
+         column-gap: 5px; 
+      }
+      .grid-item {
+         background-color: #4CAF50;
+         border: 1px solid #ddd;
+         padding: 20px;
+         text-align: center;
+         font-size: 1.2em;
+         color: white;
+      }
+   </style>
+</head>
+
+<body>
+    # Grid Gap Example
+    <div class="grid-container">
+      <div class="grid-item">
+         Item 1
+      </div>
+      <div class="grid-item">
+         Item 2
+      </div>
+      <div class="grid-item">
+         Item 3
+      </div>
+      <div class="grid-item">
+         Item 4
+      </div>
+      <div class="grid-item">
+         Item 5
+      </div>
+      <div class="grid-item">
+         Item 6
+      </div>
+    </div>
+</body>
+</html>
+```
+
+
+## CSS Grid Lines
+
+
+In CSS, Grid items can be placed according to the imaginary ines between grid cell called grid items. The lines between columns are called column lines and lines between rows are called row lines.
+
+
+## CSS Grid Properties Reference
+
+
+Following is the list of CSS properties related to grid:
+
+
+propertyvalueExampledisplayDefine whether an element is a grid container or an inline grid container.Try ItgapDefines the gap between rows and columns.Try Itgrid-areaDefines the location and size of the grid item within a grid layout.Try Itgrid-columnControl the placement of a grid item within the grid container in the column direction.Try Itgrid-rowControl the placement of a grid item within the grid container in the row direction.Try Itgrid-templateSpecify the grid columns, grid rows and grid areas.Try Itgrid-auto-columnsDetermines the size of automatically generated grid column tracks or a pattern of such tracks.Try Itgrid-auto-rowsDetermines the size of automatically- generated grid rows tracks or a pattern of such tracks.Try Itgrid-auto-flowSpecifies arrangement of the grid item within the grid.Try It
+

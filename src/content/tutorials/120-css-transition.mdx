@@ -1,0 +1,264 @@
+---
+title: "CSS - Transition"
+description: "Learn CSS - Transition with clear explanation, code examples, and practical guide."
+category: "css"
+order: 1200
+group: "CSS3 Advanced Features"
+seoTitle: "CSS - Transition — CodesCompiler CSS Guide"
+permalink: "css-transition"
+---
+
+
+# CSS - transition Property
+
+
+
+
+CSStransitionproperty allows you to animate changes in an element's style properties over a specified duration. They provide a simple and efficient way to add animations to web elements without the need for complex JavaScript code or external libraries.
+
+
+CSStransitionproperty is a shorthand property for
+
+
+
+- transition-property
+- transition-duration
+- transition-timing-function
+- transition-delay
+- transition-behavior(This property is on an experimental basis and may not be supported).
+
+
+
+## Possible Values
+
+
+
+- `<length>`− A specific length value such as pixels (px), centimeters (cm), inches (in), etc.
+
+
+
+## Applies to
+
+
+All elements, ::before and ::after pseudo-elements.
+
+
+## Syntax
+
+
+```css
+transition: margin-right 4s;
+transition: margin-right 4s 1s;
+transition: margin-right 4s ease-in-out;
+transition: margin-right 4s ease-in-out 1s;
+transition: display 4s allow-discrete;
+transition: margin-right 4s, color 1s;
+```
+
+
+The value for the transition property is defined as one of the following:
+
+
+
+- Thenonevalue indicates that there will be no transitions on this element. This is the default value.
+- Commas are used to separate one or more single-property transitions.
+
+
+
+A single-property transition specifies the transition for one specific property or all properties. This includes:
+
+
+
+- A zero or one value indicating the property or properties for which the transition should be applied. This can be specified as:A`<custom-ident>`representing a single property.Theallvalue in transitions indicates that the transition will be applied to all attributes that change when the element changes its stateIf no value is specified,allvalue  will be assumed, and the transition will apply to all changing properties.
+- Specify zero or one`<easing-function>`value indicating the easing function to be used.
+- Specify zero, one, or two`<time>`values for transition properties. The first parsed-time value is applied totransition-duration, and the second is assigned totransition-delay.
+- If a property has discrete animation behaviour, a zero or one value indicates whether to initiate transitions. If the value is present, it can be eitherallow-discreteornormalkeyword.
+
+
+
+## CSS transition -  With Two Values
+
+
+The following example demonstrates that transition is applied to thepaddingproperty with a duration of2s. When you hover over the box, padding increases to15pxand the background color changes togreenyellow−
+
+
+```html
+<html>
+<head>
+<style>
+   .box {
+      font-size: 14px;
+      width: 100px;
+      padding: 5px;
+      transition: padding 2s;
+      background-color: lightskyblue;
+   }
+   .box:hover {
+      background-color: greenyellow;
+      padding: 15px;
+   }
+</style>
+</head>
+<body>
+   <div class="box">Hover over me</div>
+</body>
+</html>
+```
+
+
+## CSS transition - delay Value
+
+
+The following example demonstrates that transition is applied to thepaddingproperty. The transition takes2sto complete, and it starts after a delay of0.5s−
+
+
+```html
+<html>
+<head>
+<style>
+   .box {
+      font-size: 14px;
+      width: 100px;
+      padding: 5px;
+      transition: padding 2s .5s;
+      background-color: lightskyblue;
+   }
+   .box:hover {
+      background-color: greenyellow;
+      padding: 15px;
+   }
+</style>
+</head>
+<body>
+   <div class="box">Hover over me</div>
+</body>
+</html>
+```
+
+
+## CSS transition - easing Function
+
+
+The following example demonstrates that transition is applied to thebackground-colorproperty. When you hover over the box, background color changes to green-yellow, starting a smooth color transition with anease-in-outtiming function over the4sduration −
+
+
+```html
+<html>
+<head>
+<style>
+   .box {
+      font-size: 14px;
+      width: 100px;
+      padding: 15px;
+      transition: background-color 4s ease-in-out;
+      background-color: lightskyblue;
+   }
+   .box:hover {
+      background-color: greenyellow;
+   }
+</style>
+</head>
+<body>
+   <div class="box">Hover over me</div>
+</body>
+</html>
+```
+
+
+## CSS transition - easing Function and delay
+
+
+The following example demonstrates that transition is applied to thepaddingproperty. When you hover over the box, background color changes to green-yellow and padding increases to 15px, starting a smooth transition over the duration of4swith anease-in-outtiming function and a delay of0.7s−
+
+
+```html
+<html>
+<head>
+<style>
+   .box {
+      font-size: 14px;
+      width: 100px;
+      padding: 5px;
+      transition: padding 4s ease-in-out 0.7s;
+      background-color: lightskyblue;
+   }
+   .box:hover {
+      background-color: greenyellow;
+      padding: 15px;
+   }
+</style>
+</head>
+<body>
+   <div class="box">Hover over me</div>
+</body>
+</html>
+```
+
+
+## CSS transition - behavior Value
+
+
+The following example demonstrates that transition is applied to thebackground-colorproperty. When you hover over the box, background color changes to green-yellow, starting a smooth transition over the duration of5susing theallow-discretetiming function −
+
+
+```html
+<html>
+<head>
+<style>
+   .box {
+      font-size: 14px;
+      width: 100px;
+      padding: 10px;
+      transition: background-color 5s allow-discrete;
+      background-color: lightskyblue;
+   }
+   .box:hover {
+      background-color: greenyellow;
+   }
+</style>
+</head>
+<body>
+   <div class="box">Hover over me</div>
+</body>
+</html>
+```
+
+
+## CSS transition - Applied To Two Properties
+
+
+The following example demonstrates that transition will be applied on text color in2sand onmargin-leftin4s. The text color will transition in2s, while the left margin will take4s−
+
+
+```html
+<html>
+<head>
+<style>
+   .box {
+      font-size: 14px;
+      width: 100px;
+      padding: 10px;
+      transition: color 2s, margin-left 4s;
+      background-color: lightskyblue;
+   }
+   .box:hover {
+      color: red;
+      margin-left: 70px;
+   }
+</style>
+</head>
+<body>
+   <div class="box">Hover over me</div>
+</body>
+</html>
+```
+
+
+## CSS transition - Related Properties
+
+
+Following is the list of CSS properties related to transition:
+
+
+propertyvaluetransition-delayDetermines the amount of time to wait  before starting a transition effect when a property's value changes.transition-durationDetermines amount of time that a transition animation should take to complete.transition-propertySpecifies which CSS properties should have a transition effect applied.transition-timing-functionDetermines which intermediate values are generated for CSS properties affected by a transition effect.
+

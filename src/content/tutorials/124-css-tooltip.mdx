@@ -1,0 +1,720 @@
+---
+title: "CSS - Tooltips"
+description: "Learn CSS - Tooltips with clear explanation, code examples, and practical guide."
+category: "css"
+order: 1240
+group: "CSS3 Advanced Features"
+seoTitle: "CSS - Tooltips — CodesCompiler CSS Guide"
+permalink: "css-tooltip"
+---
+
+
+# CSS - Tooltips
+
+
+
+
+CSS Tooltips are small pop-up boxes that appears when user hovers over an element, providing additional information or more context. Tooltips are styled and positioned using CSS properties inset, translateX, translateY etc. In this tutorial we will learn how create, position and style tooltips using CSS.
+
+
+## Demo Tooltip Examples
+
+
+The following section shows examples of demo tooltips. The tooltip will be visible when you hover over the texts below.
+
+
+TopTooltip on topRightTooltip on rightLeftTooltip on leftBottomTooltip on bottom
+
+
+## Table of Contents
+
+
+How to Create Tooltips in CSS?Basic TooltipPositioning TooltipsTooltip ArrowsFade In TooltipsAdvantages of Tooltips
+
+
+## How to Create Tooltips in CSS?
+
+
+We will be following below mentioned steps to create tooltips using CSS and HTML.
+
+
+
+- Setting Up the Element:Create the element you want to hover over to trigger the tooltip such as, a button, an image, or any other HTML element.
+- Create the Tooltip Text:Use `<span>` element to create tooltip container and include tooltip texts there. We will hide this initially usingvisibility: hiddenproperty in CSS.
+- Position the Tooltip:Using CSSpositioningproperties, we will place the tooltip element at right location around container. We have set 'position: absolute' on the tooltip and 'position: relative' on the container.
+- Styling the Tooltip:Modify the appearance of the tooltip by setting thebackground-color,text-color,padding, etc.
+- Display the Tooltip on Hover:For displaying the tooltip when user hovers over the target element, we have used CSShover effect. This displays the tooltip.
+
+
+
+## Basic Tooltip
+
+
+The following example demonstrates how to create a basic tooltips using CSS. The tooltip is displayed when the user hovers over the text.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+
+<html>
+
+
+
+<head>
+
+    <style>
+
+        .tooltip {
+
+            position: relative;
+
+            display: inline-block;
+
+            cursor: pointer;
+
+        }
+
+
+
+        .tooltip .tooltiptext {
+
+            visibility: hidden;
+
+            width: 120px;
+
+            background-color: #000;
+
+            color: #fff;
+
+            text-align: center;
+
+            border-radius: 6px;
+
+            padding: 5px;
+
+            position: absolute;
+
+            z-index: 1;
+
+            bottom: 125%;
+
+            left: 50%;
+
+            margin-left: -60px;
+
+            opacity: 0;
+
+            transition: opacity 0.3s;
+
+        }
+
+
+
+        .tooltip:hover .tooltiptext {
+
+            visibility: visible;
+
+            opacity: 1;
+
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+    ### Hover over the text below to see the tooltip</h
+
+
+
+    <div class="tooltip">
+
+        Hover over this text
+
+        <span class="tooltiptext"> This is a tooltip </span>
+
+    </div>
+
+</body>
+
+
+
+</html>
+```
+
+
+## Positioning Tooltips
+
+
+Using CSSpositioningrules we can position tooltips anywhere around main container such as top, bottom, left or right.
+
+
+To position a tooltip, first we need to set 'position: relative;' property to element container of tooltip. It allows child elements with 'position: absolute' to be positioned relative to the element container. The position of absolutely positioned element can be easily adjusted by usinginsetproperties like top, bottom, right and left.
+
+
+```css
+.element {
+
+   position: relative;
+
+}
+
+.tooltip{
+
+    position: absolute;
+
+    top: 50px; 
+
+    left: 50px;
+
+}
+```
+
+
+The tooltip element will be placed 50px from top border and 50px from left border of container element.
+
+
+Now let us look at an example of displaying tooltip in all different direction.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+
+<html lang="en">
+
+
+
+<head>
+
+    <style>
+
+        .container{
+
+            display: flex;
+
+            justify-content: space-around;
+
+            margin-top: 10%;
+
+        }
+
+        .tooltip-container {
+
+            position: relative;
+
+        }
+
+        
+
+        .button{
+
+            font-family: san-serif;
+
+            font-weight: bold;
+
+            padding: 2px;
+
+            border-radius: 5px;
+
+            background-color: white;
+
+        }
+
+
+
+        .tooltip-container .tooltip-text {
+
+            visibility: hidden;
+
+            width: 120px;
+
+            background-color: black;
+
+            color: #fff;
+
+            text-align: center;
+
+            border-radius: 6px;
+
+            padding: 5px 0;
+
+            position: absolute;
+
+            z-index: 1;
+
+            opacity: 0;
+
+            transition: opacity 0.3s;
+
+        }
+
+
+
+        .tooltip-container:hover .tooltip-text {
+
+            visibility: visible;
+
+            opacity: 1;
+
+        }
+
+
+
+        /* Tooltip on top */
+
+        .tooltip-top .tooltip-text {
+
+            bottom: 125%;
+
+            left: 50%;
+
+            transform: translateX(-50%);
+
+        }
+
+
+
+        /* Tooltip on bottom */
+
+        .tooltip-bottom .tooltip-text {
+
+            top: 125%;
+
+            left: 50%;
+
+            transform: translateX(-50%); /* To center on top side */
+
+        }
+
+
+
+        /* Tooltip on left */
+
+        .tooltip-left .tooltip-text {
+
+            top: 50%;
+
+            right: 125%;
+
+            transform: translateY(-50%);
+
+        }
+
+
+
+        /* Tooltip on right */
+
+        .tooltip-right .tooltip-text {
+
+            top: 50%;
+
+            left: 125%;
+
+            transform: translateY(-50%);
+
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+    <div class="container">
+
+        <div class="tooltip-container tooltip-top">
+
+            <button class="button">Top </button>
+
+            <span class="tooltip-text">Tooltip on top</span>
+
+        </div>
+
+        
+
+        <div class="tooltip-container tooltip-right">
+
+            <button class="button">Right </button>
+
+            <span class="tooltip-text">Tooltip on right</span>
+
+        </div>
+
+
+
+        <div class="tooltip-container tooltip-left">
+
+            <button class="button">Left </button>
+
+            <span class="tooltip-text">Tooltip on left</span>
+
+        </div>
+
+        
+
+        <div class="tooltip-container tooltip-bottom">
+
+            <button class="button">Bottom</button>
+
+            <span class="tooltip-text">Tooltip on bottom</span>
+
+        </div>
+
+    </div>
+
+</body>
+
+
+
+</html>
+```
+
+
+## Tooltip Arrows
+
+
+To create an arrow for tooltip that appears from a specific side of the tooltip, add "empty" content after tooltip, using the pseudo-element::afterand content property. The arrow then can be shaped and colored using border property.
+
+
+```css
+/* Arrow styles */
+
+.tooltip-text::after {
+
+    content: "";
+
+    position: absolute;
+
+    border-width: 5px;
+
+    border-style: solid;
+
+    border-color: black transparent transparent transparent;
+
+}
+```
+
+
+We set color only for one side of border, this will result in a triangular shaped border on top side as the content is empty. To learn more about how to create arrow in CSS, visit our free tutorial onCSS arrows.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+
+<html lang="en">
+
+
+
+<head>
+
+    <style>
+
+        .container{
+
+            display: flex;
+
+            justify-content: space-around;
+
+            margin: 10%;
+
+        }
+
+        .tooltip-container {
+
+            position: relative;
+
+        }
+
+        
+
+        .button{
+
+            font-family: san-serif;
+
+            font-weight: bold;
+
+            padding: 2px;
+
+            border-radius: 5px;
+
+            background-color: white;
+
+        }
+
+
+
+        .tooltip-container .tooltip-text {
+
+            visibility: hidden;
+
+            width: 120px;
+
+            background-color: black;
+
+            color: #fff;
+
+            text-align: center;
+
+            border-radius: 6px;
+
+            padding: 5px 0;
+
+            position: absolute;
+
+            z-index: 1;
+
+            opacity: 0;
+
+            transition: opacity 0.3s;
+
+        }
+
+
+
+        .tooltip-container:hover .tooltip-text {
+
+            visibility: visible;
+
+            opacity: 1;
+
+        }
+
+
+
+        /* Tooltip on top */
+
+        .tooltip-top .tooltip-text {
+
+            bottom: 125%;
+
+            left: 50%;
+
+            transform: translateX(-50%);
+
+        }
+
+
+
+        /* Tooltip on right */
+
+        .tooltip-right .tooltip-text {
+
+            top: 50%;
+
+            left: 125%;
+
+            transform: translateY(-50%);
+
+        }
+
+
+
+        /* Arrow styles */
+
+        .tooltip-text::after {
+
+            content: "";
+
+            position: absolute;
+
+            border-width: 5px;
+
+            border-style: solid;
+
+        }
+
+
+
+        /* Arrow pointing up for top tooltip */
+
+        .tooltip-top .tooltip-text::after {
+
+            top: 100%;
+
+            left: 50%;
+
+            transform: translateX(-50%);
+
+            border-color: black transparent transparent transparent;
+
+        }
+
+
+
+        /* Arrow pointing left for right tooltip */
+
+        .tooltip-right .tooltip-text::after {
+
+            top: 50%;
+
+            left: -10px;
+
+            transform: translateY(-50%);
+
+            border-color: transparent black transparent transparent;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="tooltip-container tooltip-top">
+
+            <button class="button">Top </button>
+
+            <span class="tooltip-text">Tooltip on top</span>
+
+        </div>
+
+        
+
+        <div class="tooltip-container tooltip-right">
+
+            <button class="button">Right </button>
+
+            <span class="tooltip-text">Tooltip on right</span>
+
+        </div>
+
+    </div>
+
+</body>
+
+
+
+</html>
+```
+
+
+## Fade In Tooltips
+
+
+The CSS fade in tooltip or tool tip animation is a tooltip that appears gradually with a fading effect, creating a smooth and visually appealing transition.
+
+
+To create a fade in tooltip, first you need to setopacityof tooltip element as 0, then for hovered state of tooltip element set opacity as 1. Now usetransitionto smoothly change opacity from 0 to 1.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+
+<html>
+
+
+
+<head>
+
+    <style>
+
+        .tooltip {
+
+            position: relative;
+
+            display: inline-block;
+
+            cursor: pointer;
+
+            margin: 10%;
+
+        }
+
+        .tooltip .tooltiptext {
+
+            visibility: hidden;
+
+            width: 120px;
+
+            background-color: #555;
+
+            color: #fff;
+
+            text-align: center;
+
+            border-radius: 6px;
+
+            padding: 5px;
+
+            position: absolute;
+
+            z-index: 1;
+
+            bottom: 125%;
+
+            left: 50%;
+
+            margin-left: -60px;
+
+            opacity: 0;
+
+            transition: opacity 2s;
+
+        }
+
+        .tooltip:hover .tooltiptext {
+
+            visibility: visible;
+
+            opacity: 1;
+
+        }
+
+    </style>
+
+</head>
+
+
+
+<body style="text-align:center;">
+
+    <div class="tooltip">
+
+        Hover over this text
+
+        <span class="tooltiptext">
+
+            This is a fade-in tooltip
+
+        </span>
+
+    </div>
+
+</body>
+
+
+
+</html>
+```
+
+
+## Advantages of Tooltips
+
+
+
+- Tooltips give extra info without making the webpage messy. They help users understand different parts of the webpage better.
+- CSS tooltips can be customized and put in different positions for different screens and devices. This makes them useful for all types of websites, even those that change sizes on different screens.
+- CSS tooltips are highly customizable, it allows developers to style them to match the website's design theme, including colors, fonts, and animations.
+- Implementing CSS tooltips is relatively simple and doesn't require complex JavaScript or additional libraries.
+
+

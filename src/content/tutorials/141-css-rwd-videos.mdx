@@ -1,0 +1,352 @@
+---
+title: "CSS RWD - Videos"
+description: "Learn CSS RWD - Videos with clear explanation, code examples, and practical guide."
+category: "css"
+order: 1410
+group: "CSS Responsive"
+seoTitle: "CSS RWD - Videos — CodesCompiler CSS Guide"
+permalink: "css-rwd-videos"
+---
+
+
+# CSS RWD Videos
+
+
+
+
+In responsive web design, its important to make sure videos are fitting properly to the layout. Videos should expand to fill the entire content area while keeping their original aspect ratio.
+
+
+When a fixed width or height of a video is specified, it may cause layout issue in very large or very small screens, such as breaking page layouts, distorting the shape, or displaying black bars around the video. The black bars around the video are calledletterboxing(on top and bottom of the video),pillarboxing(on left and right of the video), andwindowboxing(on all sides of the video).
+
+
+So, it's important to use relative units for the width and height property such as percentage, instead of absolute values, such as pixels. Absolute values restrict the video getting responsive.
+
+
+## Responsive Videos Using width Property
+
+
+To make an video scale according to screen size, we need to setwidthproperty of the video to 100% andheightto auto.
+
+
+```css
+video {
+
+    width: 100%;
+
+    height: auto;
+
+}
+```
+
+
+Setting style in this way makes the video take up 100% of the width of its parent element, and the height will be adjusted to maintain the video's aspect ratio. This setup allows the video to scale with the screen size. However, on very large screens, the video may stretch beyond its natural width, making it appear distorted.
+
+
+### Example
+
+
+In this example, the video displayed will scale according to screen size of output window. Run this code in CodesCompilerHTML Compilerto adjust output window width and verify.
+
+
+```html
+<!DOCTYPE html>
+
+<html>
+
+
+
+<head>
+
+    <style>
+
+        video {
+
+            width: 100%;
+
+            height: auto;
+
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+    <p>
+
+        The video will cover 100% width
+
+    </p>
+
+    <video width="400" controls>
+
+        <source src="/css/foo.mp4" type="video/mp4">
+
+   </video>
+
+</body>
+
+
+
+</html>
+```
+
+
+## Responsive Videos Using max-width Property
+
+
+The above mentioned method has a drawback, on large screens the video will get stretched beyond it's natural dimension. To prevent this, we can usemax-widthproperty instead of 'width' property.
+
+
+```css
+video {
+
+    max-width: 100%;
+
+    height: auto;
+
+}
+```
+
+
+By setting video properties in this way, the video will scale down if it has to, but never scale up to be larger than its original size.
+
+
+### Example
+
+
+In this example, the video displayed will scale according to screen size of output window but never scale more than it's natural size. Run this code in CodesCompilerHTML Compilerto adjust output window width and verify.
+
+
+```html
+<!DOCTYPE html>
+
+<html>
+
+
+
+<head>
+
+    <style>
+
+        video {
+
+            max-width: 100%;
+
+            height: auto;
+
+        }
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+    <p>
+
+        The video will cover 100% width if natural width is less than
+
+        output screen width
+
+    </p>
+
+    <video width="400" controls>
+
+        <source src="/css/foo.mp4" type="video/mp4">
+
+    </video>
+
+</body>
+
+
+
+</html>
+```
+
+
+## Add a Video to the Example Web Page
+
+
+The following example demonstrates the use of a responsive video in a webpage. Based on the max-width value of the video, the video gets scaled down as per the screen size.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+
+<html>
+
+
+
+<head>
+
+    <style>
+
+    * {
+
+        box-sizing: border-box;
+
+    }
+
+
+
+    .title {
+
+        border: 2px solid black;
+
+        padding: 10px;
+
+        background-color: blanchedalmond;
+
+    }
+
+
+
+    .grid-one {
+
+        width: 60%;
+
+        float: left;
+
+        padding: 10px;
+
+        border: 2px solid black;
+
+        background-color: darkseagreen;
+
+    }
+
+
+
+    .grid-two {
+
+        width: 40%;
+
+        float: left;
+
+        padding: 15px;
+
+        border: 2px solid black;
+
+        background-color: lightgreen;
+
+    }
+
+
+
+    ul {
+
+        list-style-type: none;
+
+    }
+
+
+
+    li {
+
+        background-color: aqua;
+
+        padding: 5px;
+
+        border: 1px solid black;
+
+        margin: 5px;
+
+    }
+
+
+
+    video {
+
+        max-width: 100%;
+
+        height: auto;
+
+    }
+
+    </style>
+
+</head>
+
+
+
+<body>
+
+    <div class="title">
+
+        # Responsive Web Design
+
+    </div>
+
+
+
+    <div class="grid-two">
+
+    <ul>
+
+        <li>Viewport</li>
+
+        <li>Grid view</li>
+
+        <li>Media queries</li>
+
+        <li>Images</li>
+
+        <li>Videos</li>
+
+        <li>Frameworks</li>
+
+    </ul>
+
+    </div>
+
+
+
+    <div class="grid-one">
+
+        # Responsive Videos
+
+        <p>
+
+            Alike images, videos can be made responsive too, such 
+
+            that the video should expand to fill the entire content 
+
+            area, while maintaining its original aspect ratio.
+
+        </p>
+
+
+
+        <video width="400" controls>
+
+            <source src="/css/foo.mp4" type="video/mp4">
+
+        </video>
+
+        <p>
+
+            Resize the browser window to see how the content gets 
+
+            responsive to the resizing.
+
+        </p>
+
+    </div>
+
+</body>
+
+
+
+</html>
+```
+

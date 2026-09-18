@@ -1,0 +1,321 @@
+---
+title: "CSS - Important"
+description: "Learn CSS - Important with clear explanation, code examples, and practical guide."
+category: "css"
+order: 1080
+group: "CSS Advanced"
+seoTitle: "CSS - Important — CodesCompiler CSS Guide"
+permalink: "css-important"
+---
+
+
+# CSS !important Rule
+
+
+
+
+CSS!importantrule is used to add more priority to a property than normal. In this tutorial we will learn !important rule and how to use it in CSS. Following is syntax of important rule.
+
+
+## Syntax
+
+
+```css
+selector {
+   property: value !important; 
+}
+```
+
+
+## Table of Contents
+
+
+What is CSS !important Rule?Specificity in CSSCSS !important Rule ExampleCSS !important and SpecificityOverride Inline StylesMultiple Important KeywordCustom Properties !importantShorthand Properties !important
+
+
+## What is CSS !important Rule?
+
+
+
+- An exclamation mark (!) followed by the wordimportant(without space) tells the browser to prioritize that value for the property above all other declaration.
+- The !important rule will be applied regardless of specificity of property. We will discuss specificity later in this tutorial.
+- If multiple selectors use important keyword for a property, then the selector with high specificity will be considered to be applied.
+
+
+
+## Specificity in CSS
+
+
+Specificityin CSS determines which styles are applied to an element when multiple rules could apply. For example, inline styles have highest priority, then id selector, then class selectors and then element selector.
+
+
+```css
+/* Element selector Styles */
+p {
+  color: black;
+}
+
+/* Override the above style, Class have higher specificity */
+p.special {
+  color: blue;
+}
+
+/* Using !important to force an override */
+p {
+  color: red !important;
+}
+```
+
+
+The above declaration make the text color of paragraph as red. The style of element selector is overridden by class selector, which then again overridden by important keyword.
+
+
+
+- Keep in mind that while '!important' can be handy in specific cases, it's best to use it only when truly needed.
+- Using '!important' too frequently can make your code harder to manage and debug.
+- It's a good practice to rely on proper CSS specificity and structure to prevent the excessive use of '!important'.
+
+
+
+## CSS !important Rule Example
+
+
+The following example demonstrates the use of '!important' which we saw above.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html> 
+<html>
+
+<head>
+    <style>
+        /* Element Selector Styles */
+        p {
+            color: black;
+            font-weight: bold;
+        }
+
+        /* Using !important to force a color override */
+        p {
+            color: red !important;
+        }
+    </style>
+</head>
+
+<body>
+    <p> 
+        This paragraph will be red. Because the style of element 
+        selector is overridden by important keyword.
+    </p>
+</body>
+
+</html>
+```
+
+
+## CSS !important and Specificity
+
+
+According to CSSspecificityinline styles have highest priority, then id selector, then class selectors and then element selector. Which means the style written by element selectors can be override by class selectors, id selector and inline style respectively.
+
+
+Following example uses multiple selectors to apply color property to a paragraph but the element selector property having important keyword is applied to paragraph.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html> 
+<html>
+
+<head>
+    <style>
+        /*Multiple selectors for paragraph */
+        p {
+            color: black;
+            font-weight: bold;
+        }
+
+        .special {
+            color: blue;
+        }
+
+        #unique {
+            color: darkgreen;
+        }
+
+        p {
+            color: red !important;
+        }
+    </style>
+</head>
+<body>
+    <p id="unique" class="special">
+        This paragraph will be red. Because element selector  
+        will set color as black, class selector ".special" 
+        will override this color to blue and id selector will 
+        make it green. Finally important keyword is used at 
+        last so this have more priority.
+    </p>
+</body>
+</html>
+```
+
+
+## Override Inline Styles
+
+
+Inline style have most priority over any selector in CSS. But important keyword can override inline CSS also. Lets see an example.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html> 
+<html>
+
+<head>
+    <style>
+            p {
+                color: black !important; 
+                font-weight: bold;
+            }
+    </style>
+</head>
+
+<body>
+    <p style="color:red">
+        Paragraph is black. Inline style is overridden by 
+        important keyword
+    </p>
+</body>
+
+</html>
+```
+
+
+## Multiple Important Keyword
+
+
+When we apply multiple important keyword for a property in CSS using multiple selectors, the property which is inside the selector with high specificity is applied. Lets look at an example for this.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html> 
+<html>
+
+<head>
+    <style>
+        /*Multiple selectors for paragraph */
+        p {
+            color: black !important;
+            font-weight: bold;
+        }
+
+        .special {
+            color: blue !important;
+        }
+
+        #unique {
+            color: darkgreen !important;
+        }
+
+        p {
+            color: red !important;
+        }
+    </style>
+</head>
+
+<body>
+    <p id="unique" class="special">
+        This paragraph will be darkgreen. Since important keyword 
+        is present at every selectors, high priority selector 
+        will be chosen. In this case it is id "#unique"
+    </p>
+</body>
+
+</html>
+```
+
+
+## CSS !important for Custom Properties
+
+
+When you add '!important' to a custom property, it means that this value is really important. The '!important' flag is not passed as part of the custom property value to thevar()function.
+
+
+### Example
+
+
+```html
+<!DOCTYPE html> 
+<html>
+
+<head>
+    <style>
+        :root {
+            --primary-color: blue !important;
+            --primary-color: red ;
+        }
+
+        .box {
+            background-color: var(--primary-color) ;
+            width: 200px;
+            height: 200px;
+        }
+        p {
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box"> </div>
+     Primary Color variable is Blue 
+</body>
+
+</html>
+```
+
+
+## CSS !important on Shorthand Properties
+
+
+When you use  '!important' with a shorthand property, it also applies importance to all its individual properties. The following examples are identical.This example:
+
+
+### Example
+
+
+```html
+<!DOCTYPE html> 
+<html>
+
+<head>
+    <style>
+        p {
+            /* Applies to all */
+            font: 15px Arial, sans-serif !important;
+        }
+    </style>
+</head>
+
+<body>
+    <p style="font-size: 100px;">
+        The font will set as per in CSS declaration. The font size of 
+        100px will not be applied because important keyword is used 
+        for shorthand property font. 
+    </p>
+</body>
+
+</html>
+```
+

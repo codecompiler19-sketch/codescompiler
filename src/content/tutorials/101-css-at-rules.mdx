@@ -1,0 +1,308 @@
+---
+title: "CSS - @ Rules"
+description: "Learn CSS - @ Rules with clear explanation, code examples, and practical guide."
+category: "css"
+order: 1010
+group: "CSS Advanced"
+seoTitle: "CSS - @ Rules — CodesCompiler CSS Guide"
+permalink: "css-at-rules"
+---
+
+
+# CSS - @ Rules
+
+
+
+
+CSSat-rulesare special instructions or statements beginning with the"@"symbol. They are used to control or modify the behavior of the stylesheet and are typically used for tasks such as defining media queries, importing external stylesheets, or specifying font faces.
+
+
+CSS at-rules improves the CSS capabilities beyond basic selectors and property-value pairs. An at-rule begins with anat (@)sign, followed by an identifier, and further includes everything up to the next semicolon (;) or next CSS block.
+
+
+## Syntax
+
+
+```css
+/* General structure */
+
+@identifier (RULE);
+```
+
+
+## Types of @ Rules
+
+
+### Regular
+
+
+CSS provides different regular at-rules, based on the identifier and each has a different syntax.
+
+
+
+- @charset: Specifies the character encoding of an external stylesheet.
+- @import: Used to import an external CSS file into the current stylesheet.
+- @namespace: Used to declare and define XML namespaces within a CSS stylesheet.
+
+
+
+### Nested
+
+
+A subset of nested statements that serve as both standalone style sheet statements and components within conditional group rules.
+
+
+
+- @media: Content of conditional group rule gets applied, if the device meets the criteria of the condition defined usingmedia query.
+- @supports: Content of conditional group rule gets applied, if the given condition is met by the browser.
+- @page: Defines the layout of printed pages.
+- @font-face: Defines custom fonts to be used in a web page.
+- @keyframes: Defines the aspect of intermediate steps in a CSS animation sequence.
+- @counter-style: Defines the different custom counter styles that are not predefined.
+- @font-feature-values: Defines the common names in font-variant-alternates for feature activated in OpenType. It deals with the usage of alternate glyphs and these glyphs are defined in@font-feature-values
+- @property: Defines the usage of custom properties and variables.
+- @layer: Defines a layer and sets the order of precedence, when there are multiple cascade layers.
+
+
+
+## CSS @ Rules - @page Example
+
+
+Here is an example of usage of@page:
+
+
+```html
+<html>
+
+<head>
+
+<style>
+
+   @page :first {
+
+      margin-left: 80%;
+
+      margin-top: 80%;
+
+}
+
+
+
+p {
+
+   page-break-after: always;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+   Page One.
+
+   Page Two.
+
+   <button>Print</button>
+
+
+
+   <script>
+
+      document.querySelector("button").addEventListener("click", () => {
+
+      window.print();
+
+      });
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+## CSS @ Rules - @keyframes Example
+
+
+Here is an example of usage of@keyframes:
+
+
+```html
+<html>
+
+<head>
+
+<style>
+
+   p {
+
+      animation-duration: 3s;
+
+      animation-name: slidein;
+
+   }
+
+
+
+   @keyframes slidein {
+
+      from {
+
+         margin-left: 100%;
+
+         width: 300%;
+
+      }
+
+
+
+      to {
+
+         margin-left: 0%;
+
+         width: 100%;
+
+      }
+
+   }
+
+</style>
+
+</head>
+
+<body>
+
+   <p>
+
+      The text appears from right to left
+
+      </p>
+
+</body>
+
+</html>
+```
+
+
+## CSS @ Rules - @property Example
+
+
+Here is an example of usage of@property:
+
+
+```html
+<html>
+
+<head>
+
+<style>
+
+   @property --item-size {
+
+      syntax: "<percentage>";
+
+      inherits: true;
+
+      initial-value: 40%;
+
+   }
+
+
+
+   .container {
+
+      display: flex;
+
+      height: 100px;
+
+      border: 3px dotted black;
+
+
+
+   /* set custom property values on parent */
+
+      --item-size: 50%;
+
+      --item-color: tomato;
+
+      --item-border: 5px solid green;
+
+   }
+
+
+
+   /* use custom properties to set item size and background color */
+
+   .item {
+
+      width: var(--item-size);
+
+      height: var(--item-size);
+
+      border: var(--item-border);
+
+      background-color: var(--item-color);
+
+   }
+
+
+
+   /* set custom property values on element itself */
+
+   .second {
+
+      --item-size: initial;
+
+      --item-color: inherit;
+
+   }
+
+</style>
+
+</head>
+
+<body>
+
+   <div class="container">
+
+      <div class="first item">First Item</div>
+
+      <div class="second item">Second Item</div>      
+
+   </div>
+
+
+
+   <script>
+
+      window.CSS.registerProperty({
+
+      name: "--item-color",
+
+      syntax: "<color>",
+
+      inherits: false,
+
+      initialValue: "peachpuff",
+
+   });
+
+   </script>
+
+</body>
+
+</html>
+```
+
+
+## CSS @ Rules - Rule List
+
+
+The table given below lists all the CSS @ Rules:
+
+
+@RuleExample@charset@charset "UTF-8";@container@container (width > 400px) &#123; h1 &#123;font-size: 2em;&#125; &#125;@counter-style@counter-style sample &#123;&#125;@font-face@font-face &#123; font-family: "CustomFont"; src: url("customfont.woff2") format("woff2"); &#125;@font-feature-value@font-feature-values "CustomFont" &#123;@swash &#123; fancy: 2; &#125;&#125;@font-palette-values@font-palette-values One &#123; font-family: "Bungee Spice";&#125;@import@import ur();@keyframes@keyframes sample-slide &#123; from &#123; transform: translateY(100%) &#125; &#125;@layer@layer sample-layer&#123; .margin-lg &#123; margin: 5px; &#125; &#125;@media@media screen and (max-width: 600px) &#123;&#125;@namespace@namespace svg url();@page@page &#123; size: 5in 6in; margin-left: 4in &#125;@property@property sample-property &#123; rules &#125;@supports@supports (transform-origin: 10% 10%) &#123;&#125;
+

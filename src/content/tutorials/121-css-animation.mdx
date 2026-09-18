@@ -1,0 +1,466 @@
+---
+title: "CSS - Animation"
+description: "Learn CSS - Animation with clear explanation, code examples, and practical guide."
+category: "css"
+order: 1210
+group: "CSS3 Advanced Features"
+seoTitle: "CSS - Animation — CodesCompiler CSS Guide"
+permalink: "css-animation"
+---
+
+
+# CSS - Animations
+
+
+
+
+CSSanimationsallows to create smooth transitions between different styles without using JavaScript. For example,
+
+
+## What is CSS Animation?
+
+
+In CSS we can dynamically change styles of elements based on time duration, user interaction or state changes called CSS animations. It is implemented using the`@keyframes`rule to create the animation and the animation property to apply it to an element.
+
+
+## Table of Contents
+
+
+CSS @keyframes RuleAnimation Delay PropertySet Animation Iteration CountAnimation Direction PropertyAnimation Timing FunctionSet Animation Fill ModesAnimation Shorthand PropertyList of CSS Animation Properties
+
+
+## The @keyframes Rule
+
+
+The`@keyframes`rule is used to define keyframes for animation specifying how the animated element look at various stage of animation. Consider following code that defines a keyframe rule.
+
+
+```css
+.box{
+    animation: colorChange 5s infinite;
+}
+
+@keyframes colorChange {
+    0% {
+        background-color: red;
+    }
+    50% {
+        background-color: green;
+    }
+    100% {
+        background-color: blue;
+    }
+}
+```
+
+
+This code will define animation for element with class `.box`, the name of animation is colorChange, run for 5 seconds and it repeats infinite number of times.
+
+
+The keyframe rule is defined for animation named colorChange.
+
+
+
+- At 0% of total duration of animation( ie, 0 seconds) the background color will be red.
+- At 50% of total time( ie, 2.5 seconds) the background color changes to green.
+- At 100% of total duration( ie, 5 seconds) color changes to blue.
+
+
+
+## Animation Delay Property
+
+
+We can set delay for starting an animation usinganimation-delayproperty. Check out following example
+
+
+You can also set negative value for animation-delay properties. If you are using a negative value -n, then the animation will start as if it had already been playing for n seconds.
+
+
+### Example
+
+
+In this example ball will start to move left after 2 seconds.
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .ball {
+            width: 50px;
+            height: 50px;
+            background-color: #3498db;
+            border-radius: 50%;
+            position: absolute;
+            left: 0; 
+
+            animation-name: moveRight;
+            /* Set duration */
+            animation-duration: 2s;
+            /* Set delay for animation */
+            animation-delay: 2s; 
+        }
+
+        @keyframes moveRight {
+            to {
+                left: calc(100% - 50px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="ball"></div>
+    </div>
+</body>
+</html>
+```
+
+
+## Set Animation Iteration Count
+
+
+We can set number of times a animation should repeats itself usinganimation-iteration-countproperty.
+
+
+The CSS specification does not support negative values for this property. It can take value as a positive integer (e.g., 1, 2, 3, etc.) or keyword 'infinite'
+
+
+### Example
+
+
+In this example we set ball iteration count to infinite.
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .ball {
+            width: 50px;
+            height: 50px;
+            background-color: #3498db;
+            border-radius: 50%;
+            position: absolute; 
+            left: 0; 
+
+            animation-name: moveRight;
+            /* Set duration */
+            animation-duration: 2s;
+            /* Set number of time animation repeats */
+            animation-iteration-count: infinite;
+        }
+
+        @keyframes moveRight {
+            to {
+                left: calc(100% - 50px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="ball"></div>
+    </div>
+</body>
+</html>
+```
+
+
+## Animation Direction Property
+
+
+We can specify the direction in which animation should run usinganimation-directionproperty.
+
+
+Following are the valid values for animation-direction property
+
+
+
+- normal:The animation is played as normal (forwards). This is default.
+- reverse:The animation is played in reverse direction (backwards).
+- alternate:The animation is played forwards first, then backwards.
+- alternate-reverse:The animation is played backwards first, then forwards.
+
+
+
+### Example
+
+
+In this example we used inline css to set animation direction property.
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .ball {
+            width: 50px;
+            height: 50px;
+            background-color: #3498db;
+            border-radius: 50%;
+            position: relative;
+            left:0;
+            
+            animation-name: moveRight ;
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+        }
+        @keyframes moveRight {
+            to {
+                left: calc(100% - 50px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    ## animation-direction: normal
+    <div class="ball" 
+         style="animation-direction: normal; ">
+    </div>
+
+    ## animation-direction: reverse
+    <div class="ball" 
+         style="animation-direction: reverse;">
+    </div>
+
+    ## animation-direction: alternate
+    <div class="ball" 
+         style="animation-direction: alternate;">
+    </div>
+
+    ## animation-direction: alternate-reverse
+    <div class="ball" 
+         style="animation-direction: alternate-reverse;">
+    </div>
+</body>
+</html>
+```
+
+
+## Animation Timing Function
+
+
+In CSS, theanimation-timing-functionproperty is used to define speed curve of animation. It can take following values.
+
+
+
+- ease:The animation will start slow, then fast, then end slowly (The default value).
+- linear:Animation with the same speed from start to end.
+- ease-in:Animation with a slow start.
+- ease-out:Animation with a slow end.
+- ease-in-out:Animation with a slow start and end.
+- cubic-bezier(n,n,n,n):This lets us to define our own values for speed. To know more check outCubic Bezier Functionarticle.
+
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .ball {
+            width: 50px;
+            height: 50px;
+            background-color: #3498db;
+            border-radius: 50%;
+            position: relative;
+            left:0;
+            
+            animation-name: moveRight ;
+            animation-duration: 2s;
+            animation-iteration-count: infinite;
+        }
+        @keyframes moveRight {
+            to {
+                left: calc(100% - 50px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    ## linear
+    <div class="ball" 
+         style="animation-timing-function: linear;">
+    </div>
+
+    ## ease
+    <div class="ball" 
+         style="animation-timing-function: ease;">
+    </div>
+
+    ## ease-in
+    <div class="ball" 
+         style="animation-timing-function: ease-in;">
+    </div>
+
+    ## ease-out
+    <div class="ball" 
+         style="animation-timing-function: ease-out;">
+    </div>
+    
+    ## ease-in-out
+    <div class="ball" 
+         style="animation-timing-function: ease-in-out;">
+    </div>
+    
+    ## cubic-bezier(0.25, 0.1, 0.25, 1)
+    <div class="ball" 
+         style="animation-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);">
+    </div>
+</body>
+</html>
+```
+
+
+## Set Animation Fill Modes
+
+
+Theanimation-fill-modeproperty specifies a style for the target element when the animation is not playing (before it starts, after it ends, or both).
+
+
+The animation-fill-mode property can have the following values:
+
+
+
+- none:The animation will not apply any style before or after it starts. This is default.
+- forwards:At end of animation element will keep the style set by the last keyframe rule.
+- backwards:At end of animation element will keep the style set by the first keyframe rule.
+- both:The animation will follow the rules for both forwards and backwards.
+
+
+
+Check out output of following code for more understanding:
+
+
+### Example
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        .box {
+            padding: 10px;
+            background-color: green;
+            color: white;
+            font-size: 16px;
+            margin: 20px;
+            animation-duration: 2s;
+            animation-name: changeColor;
+        }
+
+        /* Animation Definition */
+        @keyframes changeColor {
+            0% {
+                background-color: blue;
+            }
+            100% {
+                background-color: red ;
+            }
+        }
+
+        /* Animation Fill Modes */
+        .none {
+            animation-fill-mode: none;
+        }
+
+        .forwards {
+            animation-fill-mode: forwards;
+        }
+
+        .backwards {
+            animation-fill-mode: backwards;
+            animation-delay: 2s;
+        }
+
+        .both {
+            animation-fill-mode: both;
+            animation-delay: 2s;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box none">None</div>
+    <div class="box forwards">Forwards</div>
+    <div class="box backwards">Backwards</div>
+    <div class="box both">Both</div>
+</body>
+</html>
+```
+
+
+## Animation Shorthand Property
+
+
+In CSS, theanimationproperty is shorthand for following properties
+
+
+
+- animation-name:Sets name for animation.
+- animation-duration:Sets duration of animation.
+- animation-timing-function:Define speed curve of animation.
+- animation-delay:Sets delay before which animation starts.
+- animation-iteration-count:Sets number of time animation repeats.
+- animation-direction:Defines direction of execution of animation.
+- animation-fill-mode:Describes the pre-run and post-run styling.
+- animation-play-state:Describes play/pause nature of animation.
+
+
+
+### Example
+
+
+```html
+<html lang="en">
+<head>
+    <style>
+    .box {
+        padding: 20px;
+        background-color: #3498db;
+        color: white;
+        font-size: 16px;
+        /* Name, duration, timing function, delay, repeat, direction, fill mode */
+        animation: changeColor 2s ease-in-out 1s infinite alternate both;
+    }
+
+    /* Animation Definition */
+    @keyframes changeColor {
+        0% {
+            background-color: #3498db;
+        }
+        100% {
+            background-color: #e74c3c;
+        }
+    }
+
+    </style>
+</head>
+
+<body>
+    <div class="box">Animate Me!</div>
+</body>
+</html>
+```
+
+
+## List of CSS Animation Properties
+
+
+The following are theanimationproperty's sub-properties:
+
+
+PropertyDescriptionExampleanimation-compositionIndicates the composite operation to apply when many animations are having simultaneous effects on the same property.Try Itanimation-delayIndicates whether the animation should begin at the beginning of the animation or somewhere along the way, as well as the amount of time that should pass between an element loading and the start of an animation sequence.Try Itanimation-directionIndicates if the initial iteration of animation should be forward or backward and if iterations after that should continue in the same direction or change direction each time the sequence is executed.Try Itanimation-durationIndicates how long it takes for an animation to finish one cycle.Try Itanimation-fill-modeDescribes the pre-run and post-run styling that an animation applies to its target.Try Itanimation-iteration-countIndicates how many times an animation should recur.Try Itanimation-nameIt gives the name of the @keyframes at-rule that describes the keyframes of an animation.Try Itanimation-play-stateIndicates whether an animation sequence should be played or paused.Try Itanimation-timing-functionDescribes the acceleration curves that are used to specify the keyframe transitions in an animation.Try It
+

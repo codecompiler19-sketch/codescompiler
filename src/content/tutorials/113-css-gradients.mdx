@@ -1,0 +1,473 @@
+---
+title: "CSS - Gradients"
+description: "Learn CSS - Gradients with clear explanation, code examples, and practical guide."
+category: "css"
+order: 1130
+group: "CSS3 Advanced Features"
+seoTitle: "CSS - Gradients — CodesCompiler CSS Guide"
+permalink: "css-gradients"
+---
+
+
+# CSS - Gradients
+
+
+
+
+CSSgradientsallows to design custom colors for HTML elements by creating a smooth transition between two or more colors.
+
+
+## What is CSS Gradient?
+
+
+
+- In CSS, gradient is a special type of user defined images that can be used for background or borders of element.
+- We can set a gradient to background property of any HTML elements using functiongradient(type, color1, color2, color3);
+- Zooming a image gradient does not loose it's quality as this are defined by browsers according to developers code.
+
+
+
+## Table of Contents
+
+
+Types of CSS GradientsLinear GradientsRadial GradientsConic GradientsGradients for BordersPositioning Color StopsCreating Hard LinesColor Bands Using GradientsStacked GradientsRelated Functions
+
+
+## Types of CSS Gradients
+
+
+CSS defines three types of gradients
+
+
+
+- Linear Gradient:Goes from left to right, up to down or diagonally.
+- Radial Gradient:Start from center to edges.
+- Conic Gradient:Revolve around a center point.
+
+
+
+Linear GradientRadial GradientConic GradientChoose a gradient for background
+
+
+## Linear Gradients
+
+
+Thelinear gradientcreates a color band that flows in a single direction, i.e. from left-to-right, top-to-bottom, or at any angle.
+
+
+### Syntax
+
+
+```css
+linear-gradient(direction, color1, color2, ...);
+
+/* Gradient from bottom right to top left */
+linear-gradient(to top left, color1, color2, ...);
+
+/* Gradient at an angle 45 degree */
+linear-gradient(45deg, red, yellow);
+```
+
+
+Thedirectionparameter specifies the angle or direction ( [to left | to right] || [to top | to bottom]) of the gradient.
+
+
+### Example
+
+
+In order to create a basic linear gradient, you just need two colors, which are known ascolor stops. You must have minimum two, but can have more than two as well.
+
+
+Following example demonstrates this:
+
+
+```html
+<html>
+<head>
+   <style>
+      div {
+         height: 70px;
+         width: 100%;
+      }
+      .topBottom {
+         background: linear-gradient(green, yellow);
+      }
+      .RightLeft{
+         background: linear-gradient(to right, green, yellow);
+      }
+   </style>
+</head>
+
+<body>
+   # Linear gradient
+   ### Top to Bottom ( Default )</h
+         <div class="topBottom"></div>
+   ### Right to left</h
+         <div class="RightLeft"></div>
+</body>
+</html>
+```
+
+
+## Radial Gradients
+
+
+Aradial gradientis a type of gradient that consists of colors radiating outward from a central point.
+
+
+In a radial gradient, the colors smoothly transition from one color at the center to another color at the outer edges in a circular or elliptical pattern.
+
+
+### Syntax
+
+
+```css
+radial-gradient(shape size position, color1, color2..);
+```
+
+
+
+- Theshapeparameter defines the shape of the gradient (circle or ellipse).
+- Thesizeparameter specifies the size of the shape.
+- Thepositionparameter sets the center of the gradient
+
+
+
+### Example
+
+
+In order to create a basic radial gradient, you just need two colors. The center of the gradient is at 50% 50% mark, by default; where the gradient is elliptical matching with the aspect ratio of its box.
+
+
+Let us see an example:
+
+
+```html
+<html>
+<head>
+   <style>
+      div {
+         height: 100px;
+         width: 100%;
+      }
+
+      .gradient {
+         background: radial-gradient(green, yellow);
+      } 
+      .center-gradient {
+         background:
+            radial-gradient(
+               at 0% 50%,
+               green 30px,
+               yellow 60%,
+               magenta 20%
+            );
+      }
+   </style>
+</head>
+
+<body>
+   # Radial gradient
+   ### Simple Radial Gradient</h
+       <div class="gradient"></div>
+
+   ### Center Positioned Radial Gradient</h   
+       <div class="center-gradient"></div>
+</body>
+</html>
+```
+
+
+## Conic Gradients
+
+
+Aconic gradient, also known as a conical gradient or angular gradient, is a type of gradient in which colors are arranged in a circular or conical pattern, radiating out from a central point in a 360-degree arc.
+
+
+## Syntax
+
+
+```css
+conic-gradient(from 'angle' at 'position', 'color-list')
+```
+
+
+
+- position(optional): Specifies the position of the starting point of the gradient. It can be a percentage or a keyword like center.
+- angle(optional): Specifies the starting angle of the gradient in degrees.
+- color-list: Defines the colors and their positions in the gradient.
+
+
+
+### Example
+
+
+In this example we will create a conic gradient pie chart with four different colors, then align gradient at different locations of diagram.
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+      div {
+         height: 80px;
+         width: 110px;
+         border-radius: 50%; 
+      }
+      .gradient1{
+         background: conic-gradient(
+                        from 45deg at 50% 50%, 
+                        red, yellow, green, 
+                        blue, red);
+      }
+      .gradient2{
+         background: conic-gradient(
+                        from 45deg at 20% 40%, 
+                        red, yellow, green, 
+                        blue, red);
+      }
+    </style>
+</head>
+
+<body>
+    # Conic Gradient Example
+    ### Align at center</h
+        <div class="gradient1"></div>
+    ### Align at 20-40</h
+        <div class="gradient2"></div>
+</body>
+</html>
+```
+
+
+## Gradients for Borders
+
+
+The CSS gradients can be used to create fancy borders as well. You can use the gradients in wide variety to create effects in the border patterns.
+
+
+### Syntax
+
+
+```css
+border-image: linear-gradient('color-list')
+```
+
+
+You can also use radial and conical gradients for borders.
+
+
+### Example
+
+
+Here is an example of use of gradients in creation of borders:
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+      <style>
+         .gradient-border {
+            height: 200px;
+            width: 200px;
+            border: 10px solid;
+            border-image: linear-gradient(
+                              to right, 
+                              red, yellow, 
+                              green, blue) 1;
+         }
+      </style>
+</head>
+<body>
+      ## Gradient Border 
+      <div class="gradient-border"></div>
+</body>
+</html>
+```
+
+
+## Positioning Color Stops
+
+
+Positioning color stops for gradient allows to control the point at which transition occur for a gradient.
+
+
+### Syntax
+
+
+```css
+linear-gradient(to right, red 10%, pink 30%, blue 60%)
+```
+
+
+
+- to right:Specifies the direction of gradient.
+- red 10%:Sets the red color to stop at 10% of the gradient
+- pink 30%:Sets the pink color to stop at 30% of the gradient.
+- blue 60%:Sets the blue color to stop at 60% of the gradient.
+
+
+
+### Example
+
+
+```html
+<html>
+<head>
+   <style>
+      div {
+         height: 100px;
+         width: 100%;
+      }
+
+      .linear-position {
+         background: linear-gradient(to right, 
+                        blue 15px, magenta 33%, 
+                        red 66%, yellow 60%, 
+                        orange 100%);
+      }
+   </style>
+</head>
+
+<body>
+   <div class="linear-position"></div>
+</body>
+</html>
+```
+
+
+## Creating Hard Lines
+
+
+A hard line can be created in between two colors, such that no smooth transition can be seen. This effect can be achieved by carefully positioning color stops in CSS gradients. Check out following example
+
+
+### Example
+
+
+In this example we will create hard line using gradient function.
+
+
+```html
+<html>
+<head>
+   <style>
+      div {
+         height: 100px;
+         width: 100px;
+         display: inline-block;
+         text-align: center;
+         margin: 5px;
+      }
+
+      .linear-hard-line {
+         background: linear-gradient(to top right, 
+                           green 50%, orange 50%);
+      }
+   </style>
+</head>
+<body>
+   <div class="linear-hard-line"></div>
+</body>
+</html>
+```
+
+
+## Color Bands Using Gradients
+
+
+In order to create a striped effect, the second color stop for each color is set at the same location as the first color stop for the adjacent color.
+
+
+### Syntax
+
+
+```css
+linear-gradient(to right, red 10%, 
+               pink 10% 30%, 
+               blue 60% 80%,
+               yellow 80%);
+```
+
+
+### Example
+
+
+In this example will create a multi colored color band.
+
+
+```html
+<html>
+<head>
+   <style>
+      div {
+         height: 100px;
+         width: 100%;
+      }
+
+      .linear-gradient-stripes {
+         background: linear-gradient(
+                     to right,
+                     green 20%,
+                     lightgreen 20% 40%, 
+                     orange 40% 60%,
+                     yellow 60% 80%,
+                     red 80%);
+      }
+   </style>
+</head>
+<body>
+   <div class="linear-gradient-stripes">
+   </div>
+</body>
+</html>
+```
+
+
+## Stacked Gradients
+
+
+One gradient can be stacked over other gradients. Just make sure the gradient at the top should not be completely opaque, so that the gradients below it can be seen.
+
+
+### Example
+
+
+Lets see an example of stacked gradients.
+
+
+```html
+<html>
+<head>
+   <style>
+      div {
+         height: 200px;
+         width: 100%;
+      }
+      .stacked-linear {
+         background: 
+            linear-gradient(90deg, green, yellow),
+            linear-gradient(220deg, white 70.71%, black 38%),
+            linear-gradient(217deg, orange, grey 70.71%);
+      }
+   </style>
+</head>
+
+<body>
+   <div class="stacked-linear">
+   </div>
+</body>
+</html>
+```
+
+
+## Related Functions
+
+
+The following table lists all the functions related to CSS gradients:
+
+
+Gradient TypeDescriptionExamplelinear-gradient()Type of gradient in which colors transition in a straight line from one point to another.Try Itradial-gradient()Type of gradient that consists of colors radiating outward from a central point.Try Itconic-gradient()Type of gradient in which colors are arranged in a circular or conical pattern.Try Itrepeating-linear-gradient()Allows you to create a linear gradient pattern that repeats in a specified direction.Try Itrepeating-radial-gradient()Allows you to create a repeating radial gradient pattern.Try Itrepeating-conic-gradient()Allows you to create a repeating conic gradient pattern.Try It
+

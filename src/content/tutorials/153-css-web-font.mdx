@@ -1,0 +1,242 @@
+---
+title: "CSS - Web Safe Fonts"
+description: "Learn CSS - Web Safe Fonts with clear explanation, code examples, and practical guide."
+category: "css"
+order: 1530
+group: "CSS References"
+seoTitle: "CSS - Web Safe Fonts — CodesCompiler CSS Guide"
+permalink: "css-web-font"
+---
+
+
+# CSS - Web Fonts
+
+
+
+
+Font that is used in a website, but not installed by default on the user's device, is known as theweb font. CSS allows to specify the font files, that are available on the web, to be easily downloaded along with your website when accessed.
+
+
+## CSS Web Fonts - Font Format Types
+
+
+The different types of font formats are explained below:
+
+
+
+- TrueType Fonts (TTF): TrueType font is an outline font developed by Apple. It is the most common font format for MacOS and Windows Operating System.
+- OpenType Fonts (OTF): OpenType fonts are derived from TrueType font format's basic structure, but adds some additional intricate data structures to it. It provides more typographic control.
+- Web Open Font Format (WOFF): As the name suggests, it is an open web font developed by Mozilla. It uses a compressed version of structure that is used by TrueType, OpenType, and Open Font Format, along with additional information of metadata and private-use data structures.
+- Web Open Font Format2 (WOFF2): It is the second version of Web Open Font Format. Denoted aswoff2. This font has better compressed algorithm than woff.
+- SVG Fonts / Shapes: An SVG font is a new version of OpenType font format. This format allows the characters to be displayed in multiple colors, with different transparencies and even with animation.
+- Embedded Open Type Fonts (EOT): These are compact form of OpenType font designed by Microsoft, used as embedded fonts on web pages. They are supported only by the Microsoft Internet Explorer.
+
+
+
+## CSS Web Fonts - Key Points
+
+
+Some vital points related to web fonts are specified in following section:
+
+
+
+- The fonts on web are generally not free, to use. You either need to pay for them or follow the license conditions, like giving credit to the creators of the font, in your code or on your site. Stealing these fonts or using them without giving proper credit, is ethically incorrect.
+- Web Open Font Format versions 1 and 2 (WOFF and WOFF2) are supported by major browsers, even the older ones.
+- The TrueType and OpenType specifications, including variable fonts, chromatic fonts, and font collections, are completely supported by the WOFF2 file format.
+- Important is the order in which the font files are listed. The browser selects the first font file that it is able to use from the list of multiple font files provided. Hence, you should list the preferred format first. When a format is not understood by the browser, it fallbacks to the next format.
+- When using legacy browsers, you should provide EOT (Embedded Open Type), TTF (True Type Font), and SVG web fonts for download.
+
+
+
+## CSS Web Fonts - @font-face At-Rule
+
+
+Using@font-faceCSS at-rule, a font can be specified for a website that is not installed on the user's device. The@font-faceat-rule has a number of descriptors to identify and describe the font. Refer the following code block for @font-face at-rule syntax:
+
+
+```css
+@font-face {
+   font-family: "Sansation Light Font";
+   src: url("font/SansationLight.woff") format("woff");
+   font-weight: normal;
+   font-style: normal;
+}
+```
+
+
+The above syntax lists following properties:
+
+
+
+- font-family: Specifies the name by which you refer a font. The name can be anything you want, but you should be using this name consistently in your css code.
+- src: Specifies the path to the font file to be imported in your CSS, via. theurl()and the format of the font file, via. theformat, which is optional. Specifyingformatis useful as it allows browser to determine the font that needs to be used. Multiple declarations can be made using comma separated values.
+- font-weight: Specifies the weight (or boldness) of the font. Accepts two values to specify a range that is supported by a font-face, for example font-weight: 100 400;
+- font-style: Specifies whether a font should be styled with a normal, italic, or oblique face from its font-family.
+
+
+
+Note: Values such asfont-variantandfont-stretchcan also be specified for the web font, along withunicode-rangein newer browsers. This range is useful, when the font is downloaded only if the page contains these specified characters in the range, saving the unnecessary downloading.
+
+
+Let us see an example where @font-face at-rule is applied:
+
+
+```html
+<html>
+<head> 
+<style>
+   @font-face {
+      font-family: "Sansation Light Font";
+      src: url("font/SansationLight.woff");
+   }
+   body {
+      font-family: "Sansation Light Font", serif;
+   }
+</style>
+</head>
+<body>
+   ## @font-face at-rule
+   This is SansationLight Font.
+</body>
+</html>
+```
+
+
+## CSS Web Fonts - @font-face / font-stretch
+
+
+Following example demonstrates the setting of stretch value for a font face, using the percentage range50% and 200%used inside the@font-faceat-rule:
+
+
+```html
+<html>
+<head> 
+<style>
+   @font-face {
+      src: local("monospace");
+      font-family: "f1";
+      font-style: normal;
+      font-stretch: 50% 200%;
+   }
+
+   .container {
+      font: 2rem "f1", sans-serif;
+   }
+
+   .font-condensed {
+      font-stretch: 50%;
+   }
+
+   .font-normal {
+      font-stretch: 100%;
+   }
+
+   .font-ultra-expanded {
+      font-stretch: 200%;
+   }
+
+   .font-semi-condensed {
+      font-stretch: semi-condensed;
+   }
+
+   .font-extra-condensed {
+      font-stretch: extra-condensed;
+   }
+
+   .font-ultra-condensed {
+      font-stretch: ultra-condensed;
+   }
+
+   .font-semi-expanded {
+      font-stretch: semi-expanded;
+   }
+
+   .font-extra-expanded {
+      font-stretch: extra-expanded;
+   }
+</style>
+</head>
+<body>
+   <div class="container">
+      <p class="font-condensed">ultra-condensed (50%)</p>
+      <p class="font-normal">normal (100%)</p>
+      <p class="font-expanded">ultra-expanded (200%)</p>
+      <p class="font-semi-condensed">semi-condensed</p>
+      <p class="font-ultra-condensed">ultra-condensed</p>
+      <p class="font-semi-expanded">semi-expanded</p>
+      <p class="font-extra-expanded">extra-expanded</p>
+      </div>
+</body>
+</html>
+```
+
+
+The above example shows the declaration of@font-faceat-rule along with its descriptors, such as,font-family, src, font-style,andfont-stretch.
+
+
+## CSS Web Fonts - Online Font Service
+
+
+Most of the online font service is subscription-based, that generally stores and serves font that you can use.Google Fontsis a free service and easy to use. Refer the following steps to use Google Fonts:
+
+
+
+- Go toGoogle Fonts.
+- Search for your desired fonts or use the filters provided to look for your choice of fonts and then select a couple of fonts.
+- You can select a font family, by clicking the (+) plus button alongside the font name.
+- After choosing the font family, press theView your selected familiesbutton.
+- Copy the line of HTML code shown on the resulting screen and paste it in your html code, under the `<head>` tag. Place it above the`<link>`element, so that the desired font is imported before you use it in your CSS.
+- In order to apply the custom fonts to your HTML, copy the CSS declarations listed in your CSS.
+
+
+
+## CSS Web Fonts - Import Font
+
+
+Following example demonstrates the importing of a google font in the html code and using it.
+
+
+```html
+<html>
+<head>
+   <link href='https://fonts.googleapis.com/css?family=Lobster|Raleway' rel='stylesheet' type='text/css'>
+<style>
+   html {
+      font-size: 12px;
+      margin: 0;
+      font-family: sans-serif;
+   }
+
+   body {
+      width: 80%;
+      max-width: 600px;
+      margin: 0 auto;
+   }
+
+   h1 {
+      font-size: 4.2rem;
+   }
+
+   h2 {
+      font-size: 3.5rem;
+   }
+
+   h1, h2 {
+      font-family: 'Lobster', cursive;
+   }
+
+   p {
+      font-size: 1.4rem;
+      line-height: 1.6;
+      font-family: 'monospace', sans-serif;
+   }
+</style>
+</head>
+<body>
+   # Web Font
+   ## Google Font
+   Using the Google Font (Lobster) by importing it.
+</body>
+</html>
+```
+

@@ -1,0 +1,565 @@
+---
+title: "CSS - Media Queries"
+description: "Learn CSS - Media Queries with clear explanation, code examples, and practical guide."
+category: "css"
+order: 1280
+group: "CSS3 Advanced Features"
+seoTitle: "CSS - Media Queries — CodesCompiler CSS Guide"
+permalink: "css-media-queries"
+---
+
+
+# CSS - Media Queries
+
+
+
+
+Media queries in CSS are used to apply different CSS styles based on the screen size, resolution, and other characteristics of the user device. Media queries uses@mediarule to include a extra block of CSS properties when a certain conditions are met. Media queries can also be used to style printable version of page separately.
+
+
+## Syntax
+
+
+```css
+@media not|only mediatype and (media feature) and (media feature) {
+    CSS-Code;
+}
+```
+
+
+Here,media-typecan be things like screen, print, speech, etc., andmedia-featurecan be characteristics such as width, height, aspect ratio, orientation, and more.
+
+
+You might have noticed that the same website looks different on mobile and desktop devices. This type of screen depended styling is achieved using CSS media queries. In this tutorial, we will learn about media queries and the properties associated with them.
+
+
+## Table of Contents
+
+
+Media TypesCSS Media Type PrintCSS Media Type ScreenCSS Media Type AllWidth Ranges for Media QueriesCombining CSS Media QueriesCSS Media Type With OnlyCSS Media Queries AND OperatorMedia Queries NOT OperatorCreating Complex Media QueryMedia Queries Screen OrientationList of Media Queries Features
+
+
+## Media Types
+
+
+Media types are used in CSS media queries to apply different styles based on device. The most common media types areall,print, andscreen. If you don't specify a media type, it matches all devices.
+
+
+
+- all:Default Value. This value applies to all media types.
+- print:This value is only valid when printing the document.
+- screen:This value is only valid for screens, such as computers, tablets, and smartphones.
+
+
+
+JavaScript provides a CSS object model interface calledCSSMediaRule, which can be used to access the rules created using the @media CSS at-rule.
+
+
+## CSS Media Type Print
+
+
+Sometimes the print version generated for user doesn't require all the styling shown in screen. The print version generally generated in grayscale style or with simple light colors. This type of designing is recommended, as dark backgrounds will consume more ink from printer.
+
+
+### Example
+
+
+Following example demonstrates use of a CSS media query with the media typeprint.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body{
+            background-color: black;
+            color: white;
+            padding: 10px;
+        }
+        @media print {
+            body { 
+                background-color: white;
+                color: black;
+                padding: 10px;
+            }
+        }
+        button {
+            background-color: aqua;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    ###  CodesCompiler </h
+    CSS Media Type - Print
+    <p>
+        Background is white for printable version of this page.
+        Check out...
+    </p>
+
+    <button onclick="printPage()">Print Page</button>
+    <script>
+    function printPage() {
+        window.print();
+    }
+    </script>
+</body>
+</html>
+```
+
+
+## CSS Media Type All
+
+
+This is used to specify common styling that used in all screen sizes, printable version and other versions.
+
+
+### Example
+
+
+The following example demonstrates the use of a CSS media query with the media typeall
+
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        @media all {
+            body{
+                background-color: black;
+                color: white;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    ### CodesCompiler </h
+     CSS Media Type - All 
+    <p> 
+        In printable version or any screen size, the 
+        styles of this page is same.
+    </p>
+    <button onclick="printPage()">
+        Print Page
+    </button>
+    <script>
+        function printPage() {
+        window.print();
+        }
+    </script>
+</body>
+</html>
+```
+
+
+## CSS Media Type Screen
+
+
+This value is only valid for screens, such as computers, tablets, and smartphones.
+
+
+### Example
+
+
+The following example demonstrates that if the screen size is greater than 500px, the background color changes to pink and text color changes to blue
+
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .container {
+            display: flex;
+            flex-direction: row;
+            padding: 10px;
+            gap: 10px;
+        }
+        .child{
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 2px solid;
+        }
+        @media screen and (max-width: 500px) {
+            .container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <p>
+        Orientation of child elements depend on screen size,
+        for screen size less than 500px, children align in 
+        two different columns. 
+    </p>
+    <div class="container">
+        <div class="child" > HTML </div>
+        <div class="child"> CSS </div>
+    </div>
+</body>
+</html>
+```
+
+
+## Width Ranges for Media Queries
+
+
+In media Queries, you can also specify screen width range like this.
+
+
+```css
+@media (width > 700px) {
+   /* Styles for screens that are at least 700px wide */
+}
+```
+
+
+### Example
+
+
+The following example demonstrates that when the screen width is between 600px and 800px, the background color changes to yellow and text color changes to red.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+    p {
+        color: blue;
+    }
+    @media (600px < width < 800px) {
+        p {
+            background-color: yellow;
+            color: red;
+        }
+    }
+    </style>
+</head>
+
+<body>
+    # CodesCompiler
+    CSS Media Type - Screen
+    Resize the browser size to see the effect.
+</body>
+
+</html>
+```
+
+
+## Comma Separated Media Types
+
+
+A comma in media query is similar to logical 'OR' operator.
+
+
+The following declaration will applying to screen width less than 500px or for printable versions. You can also use OR operator instead of comma.
+
+
+```css
+@media (min-width: 500px), print {
+    /* Styles */
+}
+```
+
+
+### Example
+
+
+The following example demonstrates using media types with comma separation. The background color changes when in print mode and also for screen size is > 500px
+
+
+```html
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            background-color: white;
+            color: black;
+        }
+        @media (min-width: 500px), print {
+            body {
+                background-color: black;
+                color: white;
+            }
+        }
+    button {
+        background-color: violet;
+        padding: 5px;
+    }
+    </style>
+</head>
+
+<body>
+    # CSS Media Type - Screen and Print
+    <p>
+        Resize the window to less than 500px to see the 
+        background and font color changes to default.
+    </p>
+
+    <p>
+        Click on below button to see the effect when you 
+        print the page. ( Enable background graphics options 
+        if any at print section )
+    </p>
+    <button onclick="printPage()">Print Page</button>
+    <script>
+        function printPage() {
+            window.print();
+        }
+    </script>
+</body>
+</html>
+```
+
+
+## CSS Media Type With Only
+
+
+Media Type With Only applies the style only if the entire media query matches. This can be helpful to prevent older browsers from applying styles.
+
+
+### Example
+
+
+The following example demonstrates that when the screen width is between 500px and 700px, the background color changes to pink and text color changes to blue
+
+
+```html
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+    body {
+        color: red;
+    }
+    @media only screen and (min-width: 500px) and (max-width: 700px) {
+        body {
+            color: blue;
+            background-color: pink;
+        }
+    }
+    </style>
+</head>
+<body>
+   # CodesCompiler
+   CSS Media Type - Screen
+   <p>
+    Resize the browser window to see the effect.
+</p>
+</body>
+</html>
+```
+
+
+## CSS Media Queries AND Operator
+
+
+The AND operator is used to combine multiple conditions in a media query. Both conditions must be true for the styles to apply.
+
+
+### Example
+
+
+This example demonstrates when screen width is between 500px and 700px, style will be added.
+
+
+```html
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body {
+            background-color: lightgray;
+            color: black;
+        }
+        @media (min-width: 500px) and (max-width: 700px) {
+            body {
+                background-color: lightgreen;
+                color: blue;
+            }
+        }
+    </style>
+</head>
+<body>
+    #  Media Query with AND Operator
+    <p> 
+        Resize the browser window between 500px and 700px 
+        to see the effect.
+    </p>
+</body>
+</html>
+```
+
+
+## Media Queries NOT Operator
+
+
+The NOT operator negates a media query, applying the styles only if the media query does not match.
+
+
+The NOT operator is evaluated last in a media query, so the above media query would be evaluated as follows:
+
+
+```css
+@media not (all and (monochrome)) {
+   /*  */
+}
+
+/* It's not evaluated like this:*/ 
+@media (not all) and (monochrome) {
+    /*  */
+ }
+```
+
+
+### Example
+
+
+In this example NOT operator negate the condition width `< `700.
+
+
+```html
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body {
+            background-color: lightgray;
+            color: black;
+        }
+        @media not screen and (width < 700px) {
+            body {
+                background-color: orange;
+                color: white;
+            }
+        }
+    </style>
+</head>
+<body>
+    #  Media Query with NOT Operator 
+    <p> 
+        Resize the browser window to less than 700px 
+        to see the effect.
+    </p>
+</body>
+</html>
+```
+
+
+## Creating Complex Media Query
+
+
+You can create complex media queries by combining multiple conditions using theand,not, andonlyoperators. You can also combine multiple media queries into a comma-separated list.
+
+
+### Example
+
+
+In this example we combined multiple media queries, try changing browser width to see multiple effects.
+
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            background-color: lightgray;
+            color: black;
+        }
+        @media only screen and (min-width: 500px) and (max-width: 700px) {
+            body {
+                background-color: pink;
+                color: blue;
+            }
+        }
+        @media not screen and (max-width: 700px) {
+            body {
+                background-color: orange;
+                color: white;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1> 
+        Media Query with AND, NOT, and ONLY Operators 
+    </h1>
+    <p> 
+        Resize the browser window to see the effects.
+    </p>
+</body>
+</html>
+```
+
+
+## CSS Media Queries For Screen Orientation
+
+
+We can define style for specific orientation (landscape or portrait) of user device. The default value for this is portrait.
+
+
+```css
+@media (orientation: portrait) {
+    /* Styles */
+}
+```
+
+
+### Example
+
+
+The following example demonstrates that when the screen width is greater than 500px and the device is in landscape orientation, the text color changes to blue
+
+
+```html
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body {
+            color: red;
+        }
+        @media (min-width: 500px) and (orientation: landscape) {
+            body {
+                color: blue;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    ### Resize the browser window to see the effect.</h
+    <p>
+        The text color changed to blue when the viewport width is 
+        at least 500px and the device is in landscape orientation.
+    </p>
+</body>
+</html>
+```
+
+
+## List of Media Queries Features
+
+
+CSS media queries feature is used to apply different styles to the webpage based on the a specific characteristic,  output device, or environment.
+
+
+Following is the list of CSS properties related to media features:
+
+
+Media FeaturesDescriptionExampleany-hoverTo check if any of the user's input devices can hover over elements on the page.Try Itany-pointerTo determine if the user has a pointing device such as mouse and whether that device is accurate or not.Try Itaspect-ratioTo check the aspect ratio of the viewport or the rendering surface.Try ItcolorTo specify the desired number of bits per color component of the output device.Try Itcolor-gamutTo apply different styles to your web page depending on the range of colors that the user's device can display.Try Itcolor-indexTo check how many colors a device can display.Try Itdevice-aspect-ratioTo check the aspect ratio between the width and height of an output device. This media feature is obsolete and rarely used. Instead, use the aspect-ratio media feature.Try Itdevice-heightTo check height of the output device's display area. This media feature is obsolete and rarely used. Instead, use the height media feature.Try Itdevice-widthTo check width of the output device's display area. This media feature is obsolete and rarely used. Instead, use the width media feature.Try Itdisplay-modeTo detect and style web content based on the current display mode of a web application. ( fullscreen | standalone | minimal-ui | browser | window-controls-overlay )Try Itdynamic-rangeTo check whether the user agent and output device supports the high brightness, contrast ratio, and color depth.Try Itforced-colorsTo check the user has enabled a forced colors mode on their device.Try ItgridTo check if the user device or screen supports a grid layout.Try ItheightTo determine the height of the viewport.Try IthoverTo determine if the user's device is able to hover over elements.Try ItmonochromeTo determine the number of bits are used to represent each pixel in the monochrome frame buffer of the output device.Try ItorientationTo check whether the device's screen or page is in a portrait or landscape orientation.Try Itoverflow-blockTo determine how the user device handles content that goes beyond the initial container's boundaries in a vertical direction.Try Itoverflow-inlineTo determine how the user device handles content that goes beyond the initial container's boundaries in a horizontal direction.Try ItpointerTo check if the user has a pointing device they can use to point and click, such as a mouse or touchscreen.Try Itprefers-color-schemeTo determine whether a user prefers a website to have a light or dark mode.Try Itprefers-contrastTo check if the user wants the website to have more or less contrast.Try Itprefers-reduced-motionTo check if a user has enabled a setting on their device to reduce unnecessary moving animations.Try ItresolutionTo check how many pixels are displayed per inch on a screen.Try ItwidthTo determine the width of the viewport.Try ItupdateTo check how the content look on the screen after when the user device can change the appearance of contentTry It
+

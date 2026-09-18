@@ -1,0 +1,496 @@
+---
+title: "CSS - Pseudo Elements"
+description: "Learn CSS - Pseudo Elements with clear explanation, code examples, and practical guide."
+category: "css"
+order: 1000
+group: "CSS Advanced"
+seoTitle: "CSS - Pseudo Elements — CodesCompiler CSS Guide"
+permalink: "css-pseudo-elements"
+---
+
+
+# CSS - Pseudo Elements
+
+
+
+
+CSSpseudo-elementsare used to style specified parts of an element. While browsing a webpage, you might have noticed that the first letter of some paragraphs is larger than rest of letters. This type of styling for a specific part of elements is done using pseudo-elements in CSS. In this tutorial we will explain all the pseudo-elements and their functioning.
+
+
+## Table of Contents
+
+
+What is Pseudo-Element?Insertion Pseudo-ElementsCSS Backdrop Pseudo-ElementCSS Cue Pseudo-ElementCSS First-Letter Pseudo-ElementCSS First-Line Pseudo-ElementCSS File-Selector-ButtonCSS Marker Pseudo-ElementCSS Placeholder Pseudo-ElementCSS Selection Pseudo-ElementMultiple Pseudo-elementsAll CSS Pseudo-Elements
+
+
+## What is Pseudo-Element?
+
+
+A pseudo-element in CSS, is used to style a specific part of an element that are not the part of the DOM (Document Object Model) and do not exist in the HTML markup. For Example first letter of a paragraph, placeholder text inside input element or selected part in a document.
+
+
+
+- Pseudo-elements are denoted by a double colon (::) notation.
+- Only one pseudo-element can be used in a selector.
+- A pseudo-element in a selector must appear after all the other components. For example,p::last-line:hoveris invalid.
+- Pseudo-elements can be used to add decorative styles, create special effects, and modify the appearance of certain parts of an element, that has a state already applied to it. For example,p:hover::last-lineis a valid statement and selects the last line of the paragraph when the paragraph is hovered
+
+
+
+### Syntax
+
+
+```css
+selector::pseudo-element {
+   property: value;
+}
+```
+
+
+The single colon syntax is supported by the browsers for the four original pseudo-elements, i.e., ::before, ::after, ::first-line, and ::first-letter.
+
+
+## Content Insertion Pseudo-Elements
+
+
+In CSS, pseudo-elements::beforeand::afterare used to insert text contents or images before and after any element.
+
+
+### Example
+
+
+This example shows how to insert text and images at start and end of a paragraph using CSS.
+
+
+```html
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        p:before {
+            content: "NOTE:";
+            font-weight: bold;
+        }
+        p:after {
+            content: url(/css/images/smiley.png);
+        }       
+    </style>
+</head>
+
+<body>
+    <p>
+        We inserted intro at start and emoji at end.
+    </p>
+</body>
+</html>
+```
+
+
+## CSS Backdrop Pseudo-Element
+
+
+In CSS the::backdroppseudo-element is used to style the backdrop of an element that is in a modal context, such as the backdrop behind a`<dialog>`element when it is shown.
+
+
+### Example
+
+
+Following example demonstrates use of::backdroppseudo-element.
+
+
+```html
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        body{
+            height: 200px;
+        }
+        dialog {
+            padding: 20px;
+            border: 2px solid black;
+            border-radius: 10px;
+        }
+        dialog::backdrop {
+            /* Semi-transparent black */
+            background-color: rgba(0, 0, 0, 0.5); 
+        }
+    </style>
+</head>
+
+<body>
+    ###  Backdrop Example </h
+
+    <dialog id="myDialog">
+         This is a dialog with a styled backdrop. 
+        <button id="closeButton"> Close </button>
+    </dialog>
+
+    <button id="openButton">Open Dialog</button>
+
+    <script>
+        const dialog = document.getElementById('myDialog');
+        const openButton = document.getElementById('openButton');
+        const closeButton = document.getElementById('closeButton');
+
+        openButton.addEventListener('click', () => {
+            dialog.showModal();
+        });
+
+        closeButton.addEventListener('click', () => {
+            dialog.close();
+        });
+    </script>
+</body>
+</html>
+```
+
+
+## CSS Cue Pseudo-Element
+
+
+In CSS, the pseudo-element::cueis used with Web Video Text Tracks to style specific parts of text tracks, such as subtitles or captions, for media elements like`<video>`and`<audio>`.
+
+
+### Example
+
+
+Following example demonstrates use of ::cue pseudo-element:
+
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    video {
+        width: 100%;
+    }
+
+    video::cue {
+        font-size: 1rem;
+        color: peachpuff;
+    }
+</style>
+</head>
+<body>
+    <video controls src="/css/foo.mp4">
+        <track default kind="captions" 
+               srclang="en" src="/css/cue-sample.vtt" />
+    </video>    
+</body>
+</html>
+```
+
+
+## CSS First-Letter Pseudo-Element
+
+
+In CSS, the::first-letterpseudo-element is used to target the first letter of text content of any elements likediv,paragraph,spanetc
+
+
+### Example
+
+
+Following example demonstrates use of::first-letterpseudo-element:
+
+
+```html
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        p::first-letter { 
+            text-transform: uppercase;
+            font-size: 2em;
+            color: darkred;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+    <p>
+        this is a paragraph with first letter in lowercase, 
+        we used ::first-letter pseudo-element to capitalize
+        first-letter of paragraph with a larger font size 
+        and a different color. 
+    </p>
+</body>
+
+</html>
+```
+
+
+## CSS First-Line Pseudo-Element
+
+
+In CSS, the::first-linepseudo-element is used to target the first line of text content of any elements likediv,paragraph,spanetc
+
+
+### Example
+
+
+Following example demonstrates use of::first-linepseudo-element:
+
+
+```html
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        p::first-line { 
+            background-color: #f0f0f0;
+            color: darkred;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+    <p>
+        This is a normal paragraph with no stylings, we used 
+        ::first-line pseudo-element to only style first-line of 
+        paragraph by adding a background color, font-style and 
+        text color
+    </p>
+</body>
+
+</html>
+```
+
+
+## CSS File-Selector-Button Pseudo-Element
+
+
+In CSS, the::file-selector-buttonpseudo-element is used to style the button of a fileinputelement (`<input type="file">`) in modern browsers.
+
+
+### Example
+
+
+Following example demonstrates use of::file-selector-buttonpseudo-element:
+
+
+```html
+<!DOCTYPE html>
+<html> 
+
+<head>
+    <style>
+        body {
+            display: block;
+            height: 100px;
+        }
+
+        input::file-selector-button {
+            background-image:url(/css/images/border.png);
+            background-size: 200%;
+            border: 2px solid black;
+            border-radius: 8px;
+            font-weight: 600;
+            color: rgb(6, 1, 9);
+            padding: 15px;
+            transition: all 0.25s;
+        }
+    </style>
+</head>
+
+<body>
+    ##  Select a file 
+    <input type="file">
+</body>
+
+</html>
+```
+
+
+## CSS Marker Pseudo-Element
+
+
+In CSS, the::markerpseudo-element is used to style the marker ofordered listandunordered list.
+
+
+### Example
+
+
+Following example demonstrates use of::markerpseudo-element:
+
+
+```html
+<!DOCTYPE html>
+<html> 
+
+<head>
+    <style>
+        ol li::marker {
+            color: rgb(11, 38, 241);
+            font-weight: bold;
+        }
+        ul li::marker {
+            content: url('/css/images/smiley.png')
+        }
+    </style>
+</head>
+
+<body>
+    ## Numbered list
+    <ol>
+        <li>One</li>
+        <li>Two</li>
+        <li>Three</li>
+    </ol>
+
+    ## Bulleted list
+    <ul>
+        <li>One</li>
+        <li>Two</li>
+        <li>Three</li>
+    </ul>
+</body>
+
+</html>
+```
+
+
+## CSS Placeholder Pseudo-Element
+
+
+In CSS, the::placeholderpseudo-element is used to style the default text inside textinputelement (`<input type="text">`).
+
+
+### Example
+
+
+Following example demonstrates use of::placeholderpseudo-element:
+
+
+```html
+<!DOCTYPE html>
+<html> 
+<head>
+    <style>
+        .form {
+            border: 2px solid black;
+            background: lightgray;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input{
+            padding: 10px;
+            background-color: cornsilk;
+        }
+
+        input::placeholder { 
+            color: grey; 
+            font-style: italic;
+            font-size: 20px;
+        } 
+    </style>
+</head>
+
+<body>
+    <div class="form">
+        ##  Your Details:
+
+        <input type="text" placeholder="First Name">
+        <input type="text" placeholder="Last Name">
+        <input type="text" placeholder="Address">
+        <input type="text" placeholder="Phone">
+    </div>
+</body>
+
+</html>
+```
+
+
+## CSS Selection Pseudo-Element
+
+
+In CSS, the::selectionpseudo-element is used to style the user selected text inside any elements likediv,paragraph,spanetc
+
+
+### Example
+
+
+Following example demonstrates use of::selectionpseudo-element:
+
+
+```html
+<!DOCTYPE html>
+<html> 
+
+<head>
+    <style>
+        .highlight::selection { 
+            color: yellow;
+            background: brown;
+        } 
+    </style>
+</head>
+
+<body>
+    <p class="highlight">
+        Select Me!!! to see the effect.
+    </p>
+     No style applied to me. 
+</body>
+</html>
+```
+
+
+## Multiple Pseudo-elements
+
+
+We can also add multiple pseudo elements to a selector, Check out the example.
+
+
+### Example
+
+
+Following example demonstrates usage of multiple pseudo-elements (::first-line and ::first-letter).
+
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        p::first-line { 
+            text-decoration: underline;
+        }
+        
+        p::first-letter { 
+            text-transform: uppercase;
+            font-size: 2em;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <p>
+        the first line of this paragraph will be underlined and 
+        first letter is uppercase, 2em and red in color, as the
+        pseudo-element ::first-line & ::first-letter is applied 
+        on p. The other lines are not underlined.
+    </p>
+</body>
+</html>
+```
+
+
+## All CSS Pseudo-Elements
+
+
+The following table shows all pseudo-elements in CSS:
+
+
+Pseudo-elementDescriptionExample::afterAdds a pseudo-element that is the last child of the selected element.Try It::backdropUsed to style the backdrop of an element like dialog box.Try It::beforeAdds a pseudo-element that is the first child of the selected element.Try It::cueUsed to style the captions and cues in media with video text tracks.Try It::first-letterApplies styles to the first letter of the first line of a block level element.Try It::first-lineApplies styles to the first line of a block level element.Try It::file-selector-buttonRepresents the button of an `<input>` of type="file".Try It::markerSelects the marker box of a list item.Try It::part()Represents an element within a shadow tree that has a matching part attribute.Try It::placeholderRepresents a placeholder text in an `<input>` or `<textarea>` element.Try It::selectionApplies styles to the selected part of the document (selected by clicking and dragging the mouse across text).Try It::slotted()Represents an element that has been placed into a slot inside an HTML template.Try It::grammar-errorUsed to style text that has been identified as grammatically incorrect by the browsers built-in grammar checking tools.Try It::spelling-errorUsed to style text that has been identified as incorrect spelling by the browsers built-in spelling checking tools.Try It
+

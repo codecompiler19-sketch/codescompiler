@@ -1,0 +1,151 @@
+---
+title: "CSS - Box Sizing"
+description: "Learn CSS - Box Sizing with clear explanation, code examples, and practical guide."
+category: "css"
+order: 1230
+group: "CSS3 Advanced Features"
+seoTitle: "CSS - Box Sizing — CodesCompiler CSS Guide"
+permalink: "css-box-sizing"
+---
+
+
+# CSS - Box Sizing
+
+
+
+
+Thebox-sizingproperty in CSS is used to define how the total width and height of an element is calculated. By default, the width and height of an element includes its content, padding, and border. However, with thebox-sizingproperty, you can alter this behavior to include or exclude the padding and border from the width and height calculation.
+
+
+In older version of CSS (CSS2), the default way in which the box model worked made the element look bigger than the dimensions that were passed to it (width and height).
+
+
+width + padding + border = actual visible/rendered width of an element's boxheight + padding + border = actual visible/rendered height of an element's box
+
+
+## CSS box sizing property
+
+
+The CSSbox-sizingproperty is useful in adjusting the behaviour of the layout of the elements.
+
+
+## Possible Values
+
+
+Thebox-sizingCSS property can have a value, that is a keyword, either of one of the following:
+
+
+
+- content-box: This is the default value. When this value is passed tobox-sizingproperty, it returns the default behavior, where padding or/and border are added in the total width and height of the element.
+- border-box: When this value is passed tobox-sizingproperty, it tells the browser to adjust the padding or margin values, that are passed to an element. This results in shrinking the content area and absorbing the border or/and padding specified for the element. It is the default styling used for`<table>`, `<select>`, `<button>`,and`<input>`elements.
+
+
+
+padding-boxvalue is not supported by any browser and hence can not be passed to thebox-sizingproperty.
+
+
+## Applies to
+
+
+All the HTML elements that accept width or height.
+
+
+## DOM Syntax
+
+
+```css
+object.style.boxSizing = "content-box | border-box";
+```
+
+
+## Example
+
+
+Here is an example of CSS propertybox-sizing: border-box:
+
+
+```html
+<html> 
+<head>
+<style>
+   .with-content-box {
+      width: 200px;
+      height: 100px;
+      padding: 10px;
+      border: 3px solid green;
+      background-color: rgb(241, 234, 85);
+      box-sizing: content-box;
+   }
+   .with-border-box {
+      width: 200px;
+      height: 100px;  
+      padding: 10px;  
+      border: 3px solid rgb(64, 10, 215);
+      background-color: lightpink;
+      box-sizing: border-box;
+   }
+</style>
+</head>
+<body>
+   <div class="with-content-box">CONTENT BOX</div><br />
+   <div class="with-border-box">BORDER BOX</div>
+</body>
+</html>
+```
+
+
+The example given above shows a clear difference between thebox-sizing: border-boxandbox-sizing: content-boxproperty values. Here thebox-sizing: border-boxproperty ignores the padding value in calculation of total width and height. Whereas thebox-sizing: content-boxproperty value includes the padding value in the calculation.
+
+
+For a smooth, fluid and intuitive responsive design, thebox-sizing: border-boxvalue can be set in the following manner:
+
+
+```css
+* {
+   box-sizing: border-box;
+}
+```
+
+
+The above syntax may not give desired results, as it ignores the pseudo-elements. So there is another syntax which includes the pseudo-elements for the reset.
+
+
+```css
+*, *:before, *:after {
+   box-sizing: border-box;
+}
+```
+
+
+This universal box sizing method will make the use ofbox-sizing: content-box | padding-boxdifficult. Hence, there is one more syntax that may be more useful and apt in such situations.
+
+
+```css
+html {
+   box-sizing: border-box;
+}
+*, *:before, *:after {
+   box-sizing: inherit;
+}
+```
+
+
+This universal box-sizing reset syntax is more useful and gives more flexibility to the users.
+
+
+Though every current browser supports thebox-sizing: border-box, unprefixed; but some older versions of the browsers need support. In order to provide that support you may need to use the prefixes-webkitand-mozin the following manner:
+
+
+```css
+html {
+   -webkit-box-sizing: border-box;
+   -moz-box-sizing: border-box;
+   box-sizing: border-box;
+}
+*, *:before, *:after {
+   -webkit-box-sizing: inherit;
+   -moz-box-sizing: inherit;
+   box-sizing: inherit;
+}
+```
+
