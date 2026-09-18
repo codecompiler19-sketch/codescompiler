@@ -1,0 +1,345 @@
+---
+title: "PHP - File Handling"
+description: "Learn PHP - File Handling with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 850
+group: "PHP File Handling"
+seoTitle: "PHP - File Handling — CodesCompiler PHP Guide"
+permalink: "php-file-handling"
+---
+
+
+# PHP - File Handling
+
+
+
+
+In PHP, a file is a resource object, from which data can be read or written to in a linear fashion. The term "file handling" refers to a set of functions in PHP that enable read/write operations on disk files with PHP code.
+
+
+A file object is classified as astream. Any resource on which linear read/write operations are done is a stream. Other stream-like objects are the TCP sockets, standard input stream, i.e., a system keyboard represented by "php://stdin", the standard output stream represented by "php://stdout", and the error stream "php://stderr".
+
+
+Note− The constants STDIN, STDOUT, and STDERR stand for the respective standard streams.
+
+
+Although PHP is regarded as a server-side scripting language for developing web applications, PHP also has a command-line interface to perform console IO operations.
+
+
+## What is File Handling?
+
+
+File handling refers to the process of managing files on a server. In PHP, this includes −
+
+
+
+- Open a file.
+- Reading data from a file.
+- Writing data into a file.
+- Close the file.
+
+
+
+## Why Use File Handling?
+
+
+File handling is important since it allows you to −
+
+
+
+- Store user information.
+- Manage logs.
+- Create configuration files.
+- Generate reports.
+
+
+
+Now, let us look at how to manage files in PHP.
+
+
+## Opening a File
+
+
+To open a file in PHP, we use the fopen() function. This function requires two parameters: the path to the file and the mode (what you want to do with the file).
+
+
+Here are some common modes you might use −
+
+
+
+- "r": Read only.
+- "w": Write only (truncates the file to zero length).
+- "a": Write only (append).
+- "r+": Read and write.
+
+
+
+### Example: Opening a File
+
+
+Here is the example showing how you can open a file using the PHP file handling −
+
+
+```php
+// Opens the file for reading
+   $file = fopen("/PHP/PhpProjects/myfile.txt", "r"); 
+   if ($file) {
+       echo "File opened successfully!";
+   } else {
+       echo "Error opening the file.";
+   }
+```
+
+
+#### Output
+
+
+Here is the outcome of the following code −
+
+
+```php
+File opened successfully!
+```
+
+
+## Reading from a File
+
+
+When you have opened a file then you can read its contents with the help of 'fgets() or fread()'.
+
+
+
+- fgets($file):Reads a single line from the file.
+- fread($file, $length):Reads a specified number of bytes.
+
+
+
+### Example: Reading a File
+
+
+Here is the example showing how you can read a file after opening it in PHP.
+
+
+```php
+<?php
+   $file = fopen("/PHP/PhpProjects/myfile.txt", "r");
+
+   while (($line = fgets($file)) !== false) {
+      // Prints each line
+      echo $line . "\n"; 
+   }
+
+   fclose($file);
+?>
+```
+
+
+#### Output
+
+
+This will create the below output −
+
+
+```php
+Hello this is an example of 
+
+PHP File Handling.
+```
+
+
+## Writing to a File
+
+
+To write data to a file you will have to open it in write mode ("w" or "a"). Then you can use 'fwrite()'.
+
+
+### Example: Writing to a File
+
+
+Here is the example showing how you can write content in a file −
+
+
+```php
+<?php
+   // Opens the file for appending
+   $file = fopen("/PHP/PhpProjects/myfile.txt", "a");
+
+   if ($file) {
+      // Write a line
+      fwrite($file, "\nThis is a new line in the file.\n"); 
+      
+      // Close the file
+      fclose($file); 
+      echo "Data written to the file successfully!";
+   } else {
+      echo "Error opening the file.";
+   }
+?>
+```
+
+
+#### Output
+
+
+Here is the output of the above code −
+
+
+```php
+Data written to the file successfully!
+```
+
+
+Here is the updated content of the file myfile.txt −
+
+
+```php
+Hello this is an example of 
+
+PHP File Handling.
+
+This is a new line in the file.
+```
+
+
+## Closing a File
+
+
+When you are finished reading or writing to a file, use the fclose() method to properly close it. This helps free up system resources.
+
+
+### Example: Closing a File
+
+
+Below is the example showing how you can use the fclose() function to close the opened file −
+
+
+```php
+<?php
+   $file = fopen("/PHP/PhpProjects/myfile.txt", "r");
+   // Do something with the file
+   // Close the file
+   fclose($file); 
+
+   echo "The file has been closed.";
+?>
+```
+
+
+#### Output
+
+
+This will generate the below output −
+
+
+```php
+The file has been closed.
+```
+
+
+## File Handling Errors
+
+
+It is very important to handle errors when you are working with files. Use conditional statements to check if the file was opened successfully.
+
+
+### Example: Error Handling
+
+
+You can follow the below example to handle errors while working with file handling −
+
+
+```php
+<?php
+   $file = fopen("nonexistent.txt", "r");
+   if (!$file) {
+      echo "Error: File does not exist.";
+   } else {
+      // Read the file
+      fclose($file);
+   }
+?>
+```
+
+
+#### Output
+
+
+It will produce the following output −
+
+
+```php
+Error: File does not exist.
+```
+
+
+## Example: Get List of Stream Wrappers
+
+
+PHP supports a variety of stream protocols for stream related functions such as fopen(), file_exists(), etc. Use php_get_wrappers() function to get a list of all the registered wrappers.
+
+
+```php
+<?php
+   print_r(stream_get_wrappers());
+?>
+```
+
+
+### Output
+
+
+It will generate the following output −
+
+
+```php
+Array
+(
+   [0] => php
+   [1] => file
+   [2] => glob
+   [3] => data
+   [4] => http
+   [5] => ftp
+   [6] => zip
+   [7] => compress.zlib
+   [8] => compress.bzip2
+   [9] => https
+   [10] => ftps
+   [11] => phar
+)
+```
+
+
+The streams are referenced as "scheme://target". For instance, the file stream is "file://xyz.txt".
+
+
+The input data from the console is stored in the computer's main memory (RAM) until the application is running. Thereafter, the memory contents from RAM are erased.
+
+
+We would like to store it in such a way that it can be retrieved whenever required in a persistent medium such as a disk file. Hence, instead of the standard streams (keyboard for input and the display device for output), we will use the disk files for reading the data, and destination for storing the data.
+
+
+In addition to the read and write modes as used in the above example (IO operations with standard streams), the file stream can be opened in various other modes like "r+" and "w+" for simultaneous read/write, "b" for binary mode, etc.
+
+
+To open a disk file for reading and obtain its reference pointer, use the fopen() function.
+
+
+```php
+$handle = fopen('file://' . __DIR__ . '/data.txt', 'r');
+```
+
+
+The "file://" scheme is the default. Hence, it can be easily dropped, especially when dealing with local files.
+
+
+Note− It is always recommended to close the stream that was opened. Use the fclose() function for this purpose.
+
+
+```php
+fclose($handle);
+```
+
+
+PHP has several built-in functions for performing read/write operations on the file stream. In the subsequent chapters, we shall explore the filesystem functions.
+

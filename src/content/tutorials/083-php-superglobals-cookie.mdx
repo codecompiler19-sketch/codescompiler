@@ -1,0 +1,185 @@
+---
+title: "PHP - $_COOKIE"
+description: "Learn PHP - $_COOKIE with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 830
+group: "PHP Superglobals"
+seoTitle: "PHP - $_COOKIE — CodesCompiler PHP Guide"
+permalink: "php-superglobals-cookie"
+---
+
+
+# PHP - $_COOKIE
+
+
+
+
+The PHP superglobal $_COOKIE stores the variables passed to the current PHP script along with the HTTP request in the form of cookies. $HTTP_COOKIE_VARS also contains the same information, but it is not a superglobal, and it has now been deprecated.
+
+
+## What is a Cookie?
+
+
+Cookies are text files stored by a server on the client computer and they are kept for tracking purpose. PHP transparently supports HTTP cookies. Cookies are usually set in an HTTP header. JavaScript can also sets a cookie directly on a browser.
+
+
+The server script sends a set of cookies to the browser. It stores this information on the local machine for future use. Next time, when the browser sends any request to the web server, it sends those cookies information to the server and the server uses that information to identify the user.
+
+
+## The setcookie() Function
+
+
+PHP provides thesetcookiefunction to create a cookie object to be sent to the client along with the HTTP response.
+
+
+```php
+setcookie(name, value, expire, path, domain, security);
+```
+
+
+### Parameters
+
+
+Here are the parameters of setcookie() function −
+
+
+
+- Name− Name of the cookie stored.
+- Value− This sets the value of the named variable.
+- Expiry− This specifies a future time in seconds since 00:00:00 GMT on 1st Jan 1970.
+- Path− Directories for which the cookie is valid.
+- Domain− Specifies the domain name in very large domains.
+- Security− 1 for HTTPS. Default 0 for regular HTTP.
+
+
+
+## How to Set Cookies
+
+
+Take a look at the followingexample. This script sets a cookie namedusernameif it is not already set.
+
+
+### Example
+
+
+```php
+<?php
+   if (isset($_COOKIE['username'])) {
+      echo "<h2>Cookie username already set: " . $_COOKIE['username'] . "</h2>";
+   } else {
+      setcookie("username", "Mohan Kumar");
+      echo "<h2>Cookie username is now set.</h2>";
+   }
+?>
+```
+
+
+Run this script from the document root of the Apache server. You should see this message as theoutput−
+
+
+```php
+Cookie username is now set
+```
+
+
+If this script is re-executed, the cookie is now already set.
+
+
+```php
+Cookie username already set: Mohan Kumar
+```
+
+
+### Example
+
+
+To retrieve cookies on subsequent visit of client −
+
+
+```php
+<?php
+   $arr=$_COOKIE;
+   foreach ($arr as $key=>$val);
+   echo "<h2>$key => $val </h2>";
+?>
+```
+
+
+The browser will display the followingoutput−
+
+
+```php
+Username => Mohan Kumar
+```
+
+
+## How to Read a Cookie
+
+
+We can use the $_COOKIE variable to read a cookie. The isset() function is used to check if the cookie exists. And the $_COOKIE["username"] retrieves the cookie value.
+
+
+```php
+<?php
+   if(isset($_COOKIE["username"])) {
+      echo "Welcome " . $_COOKIE["username"];
+   } else {
+      echo "Cookie is not set.";
+   }
+?>
+```
+
+
+## How to Remove Cookies
+
+
+To delete a cookie, set the cookie with a date that has already expired, so that the browser triggers the cookie removal mechanism.
+
+
+```php
+<?php
+   setcookie("username", "", time() - 3600);
+   echo "<h2>Cookie username is now removed</h2>";
+?>
+```
+
+
+The browser will now show the followingoutput−
+
+
+```php
+Cookie username is now removed
+```
+
+
+## Setting Cookies Using the Array Notation
+
+
+You may also set the array cookies by using the array notation in the cookie name.
+
+
+```php
+setcookie("user[three]", "Guest");
+setcookie("user[two]", "user");
+setcookie("user[one]", "admin");
+```
+
+
+If the cookie name contains dots (.), then PHP replaces them with underscores (_).
+
+
+## When to Use Cookies in PHP
+
+
+You can use cookies in PHP to save small amounts of data on the user's browser for later use! Let's discuss some common situations −
+
+
+
+- User Authentication (Login Systems)
+- Remember User Preferences
+- Tracking User Activity
+- Shopping Carts
+- Session Management
+- Personalized Greetings or Messages
+
+

@@ -1,0 +1,255 @@
+---
+title: "PHP - $GLOBALS"
+description: "Learn PHP - $GLOBALS with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 760
+group: "PHP Superglobals"
+seoTitle: "PHP - $GLOBALS — CodesCompiler PHP Guide"
+permalink: "php-superglobals-globals"
+---
+
+
+# PHP - $GLOBALS
+
+
+
+
+$GLOBALS is one of the "superglobal" or "automatic global" variables in PHP. It is available in all scopes throughout a script. There is no need to do "global $variable;" to access it within functions or methods.
+
+
+$GLOBALS is an associative array of references to all globally defined variables. The names of variables form keys and their contents are the values of an associative array.
+
+
+## Access Global Variables with $GLOBALS
+
+
+This example shows $GLOBALS array containing the name and contents of global variables −
+
+
+```php
+<?php
+   $var1="Hello";
+   $var2=100;
+   $var3=array(1,2,3);
+
+   echo $GLOBALS["var1"] . "\n";
+   echo $GLOBALS["var2"] . "\n";
+   echo implode($GLOBALS["var3"]) . "\n";
+?>
+```
+
+
+### Output
+
+
+It will produce the following outcome −
+
+
+```php
+Hello
+100
+123
+```
+
+
+## Global vs Local Variables Using $GLOBALS
+
+
+In the following example,$var1is defined in the global namespace as well as a local variable inside the function. The global variable is extracted from the $GLOBALS array.
+
+
+```php
+<?php
+   function myfunction() {
+      $var1="Hello PHP";
+      echo "var1 in global namespace: " . $GLOBALS['var1']. "\n";
+      echo "var1 as local variable: ". $var1;
+   }
+   $var1="Hello World";
+   myfunction();
+?>
+```
+
+
+### Output
+
+
+It will produce the following result −
+
+
+```php
+var1 in global namespace: Hello World
+var1 as local variable: Hello PHP
+```
+
+
+## Modify Global Variables
+
+
+Prior to PHP version 8.1.0, global variables could be modified by a copy of $GLOBALS array.
+
+
+```php
+<?php
+   $a = 1;
+   $globals = $GLOBALS; 
+   $globals['a'] = 2;
+   var_dump($a);
+?>
+```
+
+
+### Output
+
+
+It will produce the below output −
+
+
+```php
+int(1)
+```
+
+
+Here,$globalsis a copy of the $GLOBALS superglobal. Changing an element in the copy, with its key as "a" to 2, actually changes the value of$a.
+
+
+It will produce the following output −
+
+
+```php
+int(2)
+```
+
+
+## Read-Only $GLOBALS
+
+
+As of PHP 8.1.0, $GLOBALS is a read-only copy of the global symbol table. That is, global variables cannot be modified via their copy. The same operation as above wont change$ato 2.
+
+
+```php
+<?php
+   $a = 1;
+   $globals = $GLOBALS; 
+   $globals['a'] = 2;
+   var_dump($a);
+?>
+```
+
+
+### Output
+
+
+It will generate the following output −
+
+
+```php
+int(1)
+```
+
+
+## Update Global Variables Inside a Function
+
+
+In the following example, the global variable $counter will be updated directly in the function with the help of$GLOBALS. Each function call increments the value by 1.
+
+
+```php
+<?php
+   $counter = 0;
+
+   function incrementCounter() {
+      $GLOBALS['counter']++;
+   }
+
+   incrementCounter();
+   incrementCounter();
+   incrementCounter();
+
+   echo "Counter value: " . $counter;
+?>
+```
+
+
+### Output
+
+
+Following is the output of the above code −
+
+
+```php
+Counter value: 3
+```
+
+
+## Use $GLOBALS in Nested Functions
+
+
+In the following example, we are using the $GLOBALS inside a nested function. So using this example you can use global variables even inside nested functions.
+
+
+```php
+<?php
+   $var = "Hello";
+
+   function outerFunction() {
+      function innerFunction() {
+         echo $GLOBALS['var'] . " from inner function!";
+      }
+      innerFunction();
+   }
+
+   outerFunction();
+?>
+```
+
+
+### Output
+
+
+Following is the output of the above code −
+
+
+```php
+Hello from inner function!
+```
+
+
+## Store Arrays in Global Variables
+
+
+In the following example, the $GLOBALS lets you directly change arrays stored as global variables. The function mentioned in our example adds new items to the array.
+
+
+```php
+<?php
+   $var = array("Apple", "Banana");
+
+   function addFruit($fruit) {
+      $GLOBALS['var'][] = $fruit;
+   }
+
+   addFruit("Orange");
+   addFruit("Grapes");
+
+   print_r($var);
+?>
+```
+
+
+### Output
+
+
+Following is the output of the above code −
+
+
+```php
+Array
+(
+   [0] => Apple
+   [1] => Banana
+   [2] => Orange
+   [3] => Grapes
+)
+```
+

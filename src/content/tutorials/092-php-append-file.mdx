@@ -1,0 +1,188 @@
+---
+title: "PHP - Append File"
+description: "Learn PHP - Append File with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 920
+group: "PHP File Handling"
+seoTitle: "PHP - Append File — CodesCompiler PHP Guide"
+permalink: "php-append-file"
+---
+
+
+# PHP - Append File
+
+
+
+
+Appending data to a file is a common PHP action. This chapter will show you how to do it step by step in simple ways. We will talk about what it means to append to a file, why you might want to do so, and how to do it with PHP code examples.
+
+
+## What is Appending to a File?
+
+
+Appending to a file is adding new data to the end of an existing file rather than overwriting it. This is useful for keeping logs, preserving user data and other cases in which previous data should be stored while new entries are added.
+
+
+In PHP, the fopen() function returns the file pointer of a file used in different opening modes such as "w" for write mode, "r" read mode and "r+" or "r+" mode for simultaneous read/write operation, and "a" mode that stands for append mode.
+
+
+When a file is opened with "w" mode parameter, it always opens a new file. It means that if the file already exists, its content will be lost. The subsequent fwrite() function will put the data at the starting position of the file.
+
+
+## Why Append Data?
+
+
+Here is the reasons why you need to append data −
+
+
+
+- Log Files:When documenting events or problems for a website or application, keep all prior logs.
+- User Submissions:If users submit comments or forms, you may want to save them as files.
+- Data Gathering:You may need to collect data over time while keeping previous information.
+
+
+
+## Appending Data to a File in PHP
+
+
+Assuming that a file "new.txt" is present with the following contents −
+
+
+```php
+Hello World
+CodesCompiler
+PHP Tutorial
+```
+
+
+The following statement −
+
+
+```php
+$fp = fopen("new.txt", "w");
+```
+
+
+Erases all the existing data before new contents are written.
+
+
+## Read/Write Mode
+
+
+Obviously, it is not possible to add new data if the file is opened with "r" mode. However, "r+" or "w+" mod opens the file in "r/w" mode, but still a fwrite() statement immediately after opening a file will overwrite the contents.
+
+
+### Example
+
+
+Take a look at the following code −
+
+
+```php
+<?php
+   $fp = fopen("new.txt", "r+");
+   fwrite($fp, "PHP-MySQL Tutorial\n");
+   fclose($fp);
+?>
+```
+
+
+With this code, the contents of the "new.txt" file will now become −
+
+
+```php
+PHP-MySQL Tutorial
+lsPoint
+PHP Tutorial
+```
+
+
+To ensure that the new content is added at the end of the existing file, we need to manually put the file pointer to the end, before write operation. (The initial file pointer position is at the 0th byte)
+
+
+## The fseek() Function
+
+
+PHP's fseek() function makes it possible to place the file pointer anywhere you want −
+
+
+```php
+fseek(resource $stream, int $offset, int $whence = SEEK_SET): int
+```
+
+
+The$whenceparameter is from where the offset is counted. Its values are −
+
+
+
+- SEEK_SET− Set position equal to offset bytes.
+- SEEK_CUR− Set position to current location plus offset.
+- SEEK_END− Set position to end-of-file plus offset.
+
+
+
+### Example
+
+
+So, we need to move the pointer to the end with the fseek() function as in the following code which adds the new content to the end.
+
+
+```php
+<?php
+   $fp = fopen("new.txt", "r+");
+   fseek($fp, 0, SEEK_END);
+   fwrite($fp, "\nPHP-MySQL Tutorial\n");
+   fclose($fp);
+?>
+```
+
+
+Now check the contents of "new.txt". It will have the following text −
+
+
+```php
+Hello World
+CodesCompiler
+PHP Tutorial
+PHP-MySQL Tutorial
+```
+
+
+## Append Mode
+
+
+Instead of manually moving the pointer to the end, the "a" parameter in fopen() function opens the file in append mode. Each fwrite() statement adds the content at the end of the existing contents, by automatically moving the pointer to SEEK_END position.
+
+
+```php
+<?php
+   $fp = fopen("new.txt", "a");
+   fwrite($fp, "\nPHP-MySQL Tutorial\n");
+   fclose($fp);
+?>
+```
+
+
+One of the allowed modes for fopen() function is "r+" mode, with which the file performs read/append operation. To read data from any position, you can place the pointer to the desired byte by fseek(). But, every fwrite() operation writes new content at the end only.
+
+
+### Example
+
+
+In the program below, the file is opened in "a+" mode. To read the first line, we shift the file position to 0the position from beginning. However, the fwrite() statement still adds new content to the end and doesn't overwrite the following line as it would have if the opening mode "r+" mode.
+
+
+```php
+<?php
+   $fp = fopen("new.txt", "a+");
+   fseek($fp, 0, SEEK_SET);
+   $data = fread($fp, 12);
+   echo $data;
+   fwrite($fp, "PHP-File Handling");
+   fclose ($fp);
+?>
+```
+
+
+Thus, we can append data to an existing file if it is opened in "r+/w+" mode or "a/a+" mode
+

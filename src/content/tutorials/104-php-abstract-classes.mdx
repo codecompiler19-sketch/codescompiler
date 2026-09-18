@@ -1,0 +1,178 @@
+---
+title: "PHP - Abstract Classes"
+description: "Learn PHP - Abstract Classes with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 1040
+group: "Object Oriented PHP"
+seoTitle: "PHP - Abstract Classes — CodesCompiler PHP Guide"
+permalink: "php-abstract-classes"
+---
+
+
+# PHP - Abstract Classes
+
+
+
+
+An abstract class in PHP is a class that cannot be created on its own. This means you can't create objects straight from an abstract class. Abstract classes are intended to be extended by subsequent classes. They serve as a blueprint for other classes, defining the common methods and properties that inheriting classes must implement.
+
+
+The list of reserved words in PHP includes the "abstract" keyword. When a class is defined with the "abstract" keyword, it cannot be instantiated, i.e., you cannot declare a new object of such a class. An abstract class can be extended by another class.
+
+
+Here is the syntax you can use for defining theabstract class−
+
+
+```php
+abstract class myclass {
+   // class body
+}
+```
+
+
+## Create an Object of Abstract Class
+
+
+As mentioned above, youcannot declare an object of this class. Hence, the following statement −
+
+
+```php
+$obj = new myclass;
+```
+
+
+will result in anerrormessage as shown below −
+
+
+```php
+PHP Fatal error:  Uncaught Error: Cannot instantiate abstract class myclass
+```
+
+
+An abstract class may include properties, constants or methods. The class members may be of public, private or protected type. One or more methods in a class may also be defined as abstract.
+
+
+If any method in a class is abstract, the class itself must be an abstract class. In other words, a normal class cannot have an abstract method defined in it.
+
+
+This will raise anerror−
+
+
+```php
+class myclass {
+   abstract function myabsmethod($arg1, $arg2);
+   function mymethod() #this is a normal method {
+      echo "Hello";
+   }
+}
+```
+
+
+Theerror messagewill be shown as −
+
+
+```php
+PHP Fatal error:  Class myclass contains 1 abstract method 
+and must therefore be declared abstract
+```
+
+
+You can use an abstract class as a parent and extend it with a child class. However, the child class must provide concrete implementation of each of the abstract methods in the parent class, otherwise an error will be encountered.
+
+
+## Why Use Abstract Classes?
+
+
+There are two key reasons that you need to use abstract classes in PHP −
+
+
+
+- Code Reusability:Abstract classes allow you to describe common attributes and methods in one place which reduces code duplication.
+- Enforcing Structure:They require child classes to implement specific methods, resulting in a consistent structure throughout all classes.
+
+
+
+## Example
+
+
+In the following code,myclassis anabstract classwithmyabsmethod()as anabstract method. Its derived class ismynewclass, but it doesn't have the implementation of the abstract method in its parent.
+
+
+```php
+<?php
+   abstract class myclass {
+      abstract function myabsmethod($arg1, $arg2);
+      function mymethod() {
+         echo "Hello";
+      }
+   }
+   class newclass extends myclass {
+      function newmethod() {
+         echo "World";
+      }
+   }
+   $m1 = new newclass;
+   $m1->mymethod();
+?>
+```
+
+
+Theerror messagein such a situation is −
+
+
+```php
+PHP Fatal error:  Class newclass contains 1 abstract method and must 
+therefore be declared abstract or implement the remaining 
+methods (myclass::myabsmethod)
+```
+
+
+It indicates that newclass should either implement the abstract method or it should be declared as an abstract class.
+
+
+## Example
+
+
+In the following PHP script, we havemarksas an abstract class with percent() being an abstract method in it. Anotherstudentclass extends themarksclass and implements its percent() method.
+
+
+```php
+<?php
+   abstract class marks {
+      protected int $m1, $m2, $m3;
+      abstract public function percent(): float;
+   }
+
+   class student extends marks {
+      public function __construct($x, $y, $z) {
+         $this->m1 = $x;
+         $this->m2 = $y;
+         $this->m3 = $z;
+      }
+      public function percent(): float {
+         return ($this->m1+$this->m2+$this->m3)*100/300;
+      }
+   }
+
+   $s1 = new student(50, 60, 70);
+   echo "Percentage of marks: ". $s1->percent() . PHP_EOL;
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+Percentage of marks: 60
+```
+
+
+## Difference between Interface and Abstract Class in PHP
+
+
+The concept of abstract class in PHP is very similar to interface. However, there are a couple of differences between an interface and an abstract class.
+
+
+Abstract classInterfaceUse abstract keyword to define abstract classUse interface keyword to define interfaceAbstract class cannot be instantiatedInterface cannot be instantiated.Abstract class may have normal and abstract methodsInterface must declare the methods with arguments and return types only and not  with any body.Abstract class is extended by child class which must implement all abstract methodsInterface must be implemented by another class, which must provide functionality of all methods in the interface.Can have public, private or protected propertiesProperties cannot be declared in interface
+

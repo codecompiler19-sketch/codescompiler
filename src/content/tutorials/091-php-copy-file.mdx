@@ -1,0 +1,279 @@
+---
+title: "PHP - Copy File"
+description: "Learn PHP - Copy File with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 910
+group: "PHP File Handling"
+seoTitle: "PHP - Copy File — CodesCompiler PHP Guide"
+permalink: "php-copy-file"
+---
+
+
+# PHP - Copy File
+
+
+
+
+When creating websites or applications in PHP, you may need to manage files. It involves generating, editing, moving and copying files. Copying files is an important step because it allows you to generate backups or duplicate resources without damaging the original file. With this chapter, we will see how to copy files with PHP.
+
+
+## Different Ways to Copy a File
+
+
+You can copy an existing file to a new file in three different ways −
+
+
+
+- Reading a line from one and writing to another in a loop
+- Reading entire contents to a string and writing the string to another file
+- Using PHP's built-in function library includes copy() function.
+
+
+
+## Why Copy Files in PHP?
+
+
+Copying files helps in many situations, like −
+
+
+
+- Create a backup for important files.
+- Creating multiple templates or documents.
+- Moving files to a different folder while keeping the original file.
+
+
+
+## PHP copy() Function
+
+
+PHP offers a simple function to copy files. This function returns true if the file is copied successfully and false if it fails. Here is the syntax we can use for the copy() function −
+
+
+```php
+copy($source, $destination);
+```
+
+
+Here the $source parameters is used for the file you want to copy and the $destination parameter is the location and name of the new file.
+
+
+### Example 1
+
+
+Here is the example of showing the usage of copy() function −
+
+
+```php
+<?php
+   $sFile = "original.txt";
+   $dFile = "copy.txt";
+
+   if (copy($sFile, $dFile)) {
+      echo "File copied successfully!";
+   } else {
+      echo "Failed to copy the file.";
+   }
+?>
+```
+
+
+### Output
+
+
+Following is the output of the above code −
+
+
+```php
+File copied successfully!
+```
+
+
+### Example 2
+
+
+In this example we will copy file to another folder. So with this example you will be able to copy a file to a different folder −
+
+
+```php
+<?php
+   $sFile = "original.txt";
+   $dFile = "backup/original_backup.txt";
+
+   if (copy($sFile, $dFile)) {
+      echo "File copied to the backup folder!";
+   } else {
+      echo "Failed to copy the file.";
+   }
+?>
+```
+
+
+### Output
+
+
+This will create the below output −
+
+
+```php
+File copied to the backup folder!
+```
+
+
+### Example 3
+
+
+Here we will check if file exists before copying the file. It is a good approach to verify if the source file exists −
+
+
+```php
+<?php
+   $sFile = "data.txt";
+   $dFile = "data_copy.txt";
+
+   if (file_exists($sFile)) {
+      if (copy($sFile, $dFile)) {
+         echo "File copied successfully!";
+      } else {
+         echo "Failed to copy the file.";
+      }
+   } else {
+      echo "Source file does not exist.";
+   }
+?>
+```
+
+
+### Output
+
+
+This will produce the below output −
+
+
+```php
+Failed to copy the file.
+```
+
+
+## Copy File Line by Line
+
+
+In the first approach, you can read each line from an existing file and write into a new file till the existing file reaches the end of file.
+
+
+In the following PHP script, an already existing file (hello.txt) is read line by line in a loop, and each line is written to another file (new.txt)
+
+
+It is assumed that "hello.txt" contains the following text −
+
+
+```php
+Hello World
+CodesCompiler
+PHP Tutorials
+```
+
+
+### Example
+
+
+Here is the PHP code to create a copy of an existing file −
+
+
+```php
+<?php
+   $file = fopen("hello.txt", "r");
+   $newfile = fopen("new.txt", "w");
+   while(! feof($file)) {
+      $str = fgets($file);
+      fputs($newfile, $str);
+   }
+   fclose($file);
+   fclose($newfile);
+?>
+```
+
+
+The newly created "new.txt" file should have exactly the same contents.
+
+
+## Copy Entire File
+
+
+Here we use two built-in functions from the PHP library −
+
+
+```php
+file_get_contents(
+   string $filename,
+   bool $use_include_path = false,
+   ?resource $context = null,
+   int $offset = 0,
+   ?int $length = null
+): string|false
+```
+
+
+This function reads the entire file into a string. The $filename parameter is a string containing the name of the file to be read
+
+
+The other function is −
+
+
+```php
+file_put_contents(
+   string $filename,
+   mixed $data,
+   int $flags = 0,
+   ?resource $context = null
+): int|false
+```
+
+
+The function puts the contents of $data in $filename. It returns the number of bytes written.
+
+
+### Example
+
+
+In the following example, we read contents of "hello.txt" in a string$data, and use it as a parameter to write into "test.txt" file.
+
+
+```php
+<?php
+   $source = "hello.txt";
+   $target = "test.txt";
+   $data = file_get_contents($source);
+   file_put_contents($target, $data);
+?>
+```
+
+
+## Copy File Directly
+
+
+PHP provides the copy() function, exclusively to perform copy operation. Let's use the copy() function to make "text.txt" as a copy of "hello.txt" file.
+
+
+```php
+<?php
+   $source = "a.php";
+   $target = "a1.php";
+   if (!copy($source, $target)) {
+      echo "failed to copy $source...\n";
+   }
+?>
+```
+
+
+## Common Errors While Copying Files
+
+
+When copying files, you can face certain regular challenges, like −
+
+
+
+- Source File Not Found:The source file was not found. Make sure the path to the source file is right.
+- Permission Issues:Ensure that the source and destination directories have the proper permissions.
+- Disk Space:Ensure that the destination has enough disk space.
+
+

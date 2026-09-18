@@ -1,0 +1,225 @@
+---
+title: "PHP - Sessions"
+description: "Learn PHP - Sessions with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 1250
+group: "PHP Web Development"
+seoTitle: "PHP - Sessions — CodesCompiler PHP Guide"
+permalink: "php-sessions"
+---
+
+
+# PHP - Sessions
+
+
+
+
+A web session is the time duration between the time a user establishes connection with a server and the time the connection is terminated. Along with the cookies, the session variables make the data accessible across the various pages of an entire website.
+
+
+During a session, the website maintains information about the user's actions and preferences. The session data is populated in a super-global associative array$_SESSION.
+
+
+To start a new session in PHP, you need to call thesession_start()function.
+
+
+## Starting a Session
+
+
+In order to enable access to session data, session_start() function must be invoked. session_start() creates a session or resumes the current one based on a session identifier passed via a GET or POST request, or passed via a cookie.
+
+
+```php
+session_start(array $options = []): bool
+```
+
+
+This function returnstrueif a session was successfully started, otherwisefalse.
+
+
+PHP first creates a unique identifier for that particular session which is a random string of 32 hexadecimal numbers.
+
+
+Thesession_id()function sets or retrieves a unique session ID.
+
+
+```php
+session_id(?string $id = null): string|false
+```
+
+
+PHP will generate a random session ID, if the$idparameter is not given. You may specify your own ID instead. The function returns the session id for the current session or the empty string if there is no current session. On failure, it returnsfalse.
+
+
+### Example
+
+
+Take a look at the following example −
+
+
+```php
+<?php  
+   // Starting the session
+   session_start();
+   $id = session_id();
+   echo "Session Id: ".$id ;
+?>
+```
+
+
+The browser will show a random string as theoutput−
+
+
+```php
+Session Id: mi3976f8ssethe9f04vq1ag6it
+```
+
+
+A cookie calledPHPSESSIDis automatically sent to the user's computer to store unique session identification string.
+
+
+A session creates a file in a temporary directory on the server where registered session variables and their values are stored. This data will be available to all pages on the site during that visit.
+
+
+The location of the temporary file is determined by a setting in the "php.ini" file called "session.save_path".
+
+
+## Handling Session Variables
+
+
+Session variables are stored in associative array called $_SESSION[]. These variables can be accessed during lifetime of a session.
+
+
+To create a new session variable, add a key-value pair in the$_SESSIONarray −
+
+
+```php
+$_SESSION[ "var"]=value;
+```
+
+
+To read back the value of a session variable, you can use echo/print statements, or var_dump() or print_r() functions.
+
+
+```php
+echo $_SESSION[ "var"];
+```
+
+
+To obtain the list of all the session variables in the current session, you can use a foreach loop to traverse the $_SESSION −
+
+
+```php
+foreach ($_SESSION as $key=>$val)
+echo $key . "=>" . $val;
+```
+
+
+### Example
+
+
+The following example starts a session then register a variable called counter that is incremented each time the page is visited during the session.
+
+
+Use theisset() functionto check if a session variable is already set or not.
+
+
+The following PHP script starts a session when it runs for the first time, and sets a session variable named counter. When the client revisits the same URL again, since the session variable is already set, the counter is incremented.
+
+
+```php
+<?php
+   session_start();
+   if( isset( $_SESSION['counter'] ) ) {
+      $_SESSION['counter'] += 1;
+   } else {
+      $_SESSION['counter'] = 1;
+   }
+   $msg = "Number of visits in this session: ".  $_SESSION['counter'];
+?>
+<?php  
+   echo "$msg"; 
+?>
+```
+
+
+Refresh the browser multiple times to simulate repeated visits. The browser displays the counter −
+
+
+```php
+Number of visits in this session: 5
+```
+
+
+## Destroying a PHP Session
+
+
+A PHP session can be destroyed by session_destroy() function. This function does not need any argument and a single call can destroy all the session variables. If you want to destroy a single session variable then you can use unset() function to unset a session variable.
+
+
+Here is an example tounset a single variable−
+
+
+```php
+<?php
+   unset($_SESSION['counter']);
+?>
+```
+
+
+Here is the call which willdestroy all the session variables−
+
+
+```php
+<?php
+   session_destroy();
+?>
+```
+
+
+You don't need to call start_session() function to start a session when a user visits your site if you can set session.auto_start variable to 1 in php.ini file.
+
+
+### Example
+
+
+The following PHP script renders a HTML form. The form data is used to create three session variables. A hyperlink takes the browser to another page, which reads back the session variables.
+
+
+```html
+<html>
+<body>
+   <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
+      <h3>User's ID: <input type="text" name="ID"/></h3>
+      <h3>User's Name: <input type="text" name="name"/></h3>
+      <h3>User Type: <input type="text" name="type"/></h3>
+      <input type="submit" value="Submit" />
+   </form>
+
+   <?php
+      session_start();
+      if ($_SERVER["REQUEST_METHOD"] == "POST") {
+         $_SESSION['ID'] = $_POST['ID'];
+         $_SESSION['Name'] = $_POST['name'];
+         $_SESSION['type'] = $_POST['type'];
+
+         echo "<h2>Following Session variables Created</h2>";
+         foreach ($_SESSION as $key=>$val) {
+            echo "<h3>" . $key . "=>" . $val . "</h3>";
+         }
+         echo "<a href='test.php'><b>Click Here</b></a>";
+      }
+   ?>
+</body>
+</html>
+```
+
+
+Save this code as "hello.php" in the document root folder, and open it in a client browser.
+
+
+Press theSubmitbutton. The browser will show the session variables created −
+
+
+The browser navigates to another page by following the link shown. It reads back the session variables.
+

@@ -1,0 +1,234 @@
+---
+title: "PHP - Call by value"
+description: "Learn PHP - Call by value with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 590
+group: "PHP Functions"
+seoTitle: "PHP - Call by value — CodesCompiler PHP Guide"
+permalink: "php-call-by-value"
+---
+
+
+# PHP - Call by Value
+
+
+
+
+By default, PHP uses the "call by value" mechanism for passing arguments to a function. When a function is called, the values of actual arguments are copied to the formal arguments of the function's definition.
+
+
+During the execution of the function body, if there is any change in the value of any of theformal arguments, it is not reflected in theactual arguments.
+
+
+## Types of Arguments in PHP Functions
+
+
+Here are the two types of arguments used in PHP functions −
+
+
+
+- Actual Arguments− The arguments that are passed in a function call.
+- Formal Arguments− The arguments that are declared in a function definition.
+
+
+
+## Syntax
+
+
+Here is the way you can define actual and formal arguments in PHP:
+
+
+```php
+<?php 
+   // $name is a formal argument
+   function greet($name) {  
+    echo "Hello, $name!";
+   }
+
+   // Rahul is an actual argument
+   greet("Rahul"); 
+?>
+```
+
+
+## Demonstrating Call by Value
+
+
+Let us consider the function used in the code below −
+
+
+```php
+<?php  
+   function change_name($nm) {
+      echo "Initially the name is $nm \n";
+      $nm = $nm."_new";
+      echo "This function changes the name to $nm \n";
+   }
+
+   $name = "John";
+   echo "My name is $name \n";
+   change_name($name);
+   echo "My name is still $name";
+?>
+```
+
+
+### Output
+
+
+It will produce the following result −
+
+
+```php
+My name is John
+Initially the name is John
+This function changes the name to John_new
+My name is still John
+```
+
+
+In this example, thechange_name()function appends_newto the string argument passed to it. However, the value of the variable that was passed to it remains unchanged after the function's execution.
+
+
+Formal arguments, in fact, behave as local variables for the function. Such a variable is accessible only inside the scope in which it is initialized. For a function, its body marked by the curly brackets "&#123; &#125;" is its scope. Any variable inside this scope is not available for the code outside it. Hence, manipulation of any local variable has no effect on the world outside.
+
+
+The "call by value" method is suitable for a function that uses the values passed to it. It performs certain computation and returns the result without having to change the value of parameters passed to it.
+
+
+Note− Any function that performs a formula-type computation is an example of call by value.
+
+
+## Example 1
+
+
+Take a look at the following example −
+
+
+```php
+<?php
+   function addFunction($num1, $num2) {
+      $sum = $num1 + $num2;
+      return $sum;
+   }
+   $x = 10;
+   $y = 20;
+   $num = addFunction($x, $y);
+   echo "Sum of the two numbers is : $num";
+?>
+```
+
+
+### Output
+
+
+It will generate the following output −
+
+
+```php
+Sum of the two numbers is : 30
+```
+
+
+## Example 2
+
+
+Here is another example of calling a function by passing the argument by value. The function increments the received number by 1, but that doesn't affect the variable passed to it.
+
+
+```php
+<?php
+   function increment($num) {
+      echo "The initial value: $num \n";
+      $num++;
+      echo "This function increments the number by 1 to $num \n";
+   }
+   $x = 10;
+   increment($x);
+   echo "Number has not changed: $x";
+?>
+```
+
+
+### Output
+
+
+It will produce the following outcome −
+
+
+```php
+The initial value: 10
+This function increments the number by 1 to 11
+Number has not changed: 10
+```
+
+
+## Example 3
+
+
+In the below example we will be incrementing a value and we will not change the original variable.
+
+
+```php
+<?php
+   function increment($num) {
+      echo "The initial value: $num \n";
+      $num++;
+      echo "This function increments the number by 1 to $num \n";
+   }
+   $x = 10;
+   increment($x);
+   echo "Number has not changed: $x";
+?>
+```
+
+
+### Output
+
+
+It will generate the following outcome −
+
+
+```php
+The initial value: 10 
+This function increments the number by 1 to 11 
+Number has not changed: 10
+```
+
+
+## String Manipulation in Call by Value
+
+
+In php, we can also manipulate strings using call by value. In our example we will append a string by passing a value in the argument.
+
+
+```php
+<?php
+   function appendString($str) {
+      $str .= " World!";
+      echo "Inside function: $str\n";
+   }
+
+   $text = "Hello";
+   appendString($text);
+
+   // Original string remains unchanged
+   echo "Outside function: $text";
+?>
+```
+
+
+### Output
+
+
+It will generate the following outcome −
+
+
+```php
+Inside function: Hello World!
+Outside function: Hello
+```
+
+
+PHP also supports passing the reference of variables to the function while calling. We shall discuss it in the next chapter.
+

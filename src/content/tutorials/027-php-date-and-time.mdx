@@ -1,0 +1,241 @@
+---
+title: "PHP - Date & Time"
+description: "Learn PHP - Date & Time with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 270
+group: "PHP Basics"
+seoTitle: "PHP - Date & Time — CodesCompiler PHP Guide"
+permalink: "php-date-and-time"
+---
+
+
+# PHP - Date & Time
+
+
+
+
+The built-in library of PHP has a wide range of functions that helps in programmatically handling and manipulating date and time information. Date and Time objects in PHP can be created by passing in a string presentation of date/time information, or from the current system's time.
+
+
+PHP provides the DateTime class that defines a number of methods. In this chapter, we will have a detailed view of the various Date and Time related methods available in PHP.
+
+
+The date/time features in PHP implements the ISO 8601 calendar, which implements the current leap-day rules from before the Gregorian calendar was in place. The date and time information is internally stored as a 64-bit number.
+
+
+Here are the topics we will cover in this chapter −
+
+
+
+- Getting the Time Stamp with time()
+- Converting a Time Stamp with getdate()
+- Converting a Time Stamp with date()
+- Formatting Date and Time
+- Converting Strings to Dates
+
+
+
+## Getting the Time Stamp with time()
+
+
+PHP's time() function gives you all the information that you need about the current date and time. It requires no arguments but returns an integer.
+
+
+```php
+time(): int
+```
+
+
+The integer returned by time() represents the number of seconds elapsed since midnight GMT on January 1, 1970. This moment is known as the UNIX epoch, and the number of seconds that have elapsed since then is referred to as a time stamp.
+
+
+```php
+<?php
+   print time();
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+1699421347
+```
+
+
+We can convert a time stamp into a form that humans are comfortable with.
+
+
+## Converting a Time Stamp with getdate()
+
+
+The function getdate() optionally accepts a time stamp and returns an associative array containing information about the date. If you omit the time stamp, it works with the current time stamp as returned by time().
+
+
+The following table lists the elements contained in the array returned by getdate().
+
+
+Sr.NoKey & DescriptionExample1secondsSeconds past the minutes (0-59)202minutesMinutes past the hour (0 - 59)293hoursHours of the day (0 - 23)224mdayDay of the month (1 - 31)115wdayDay of the week (0 - 6)46monMonth of the year (1 - 12)77yearYear (4 digits)19978ydayDay of year ( 0 - 365 )199weekdayDay of the weekThursday10monthMonth of the yearJanuary110Timestamp948370048
+
+
+Now you have complete control over date and time. You can format this date and time in whatever format you want.
+
+
+### Example
+
+
+Take a look at this followingexample−
+
+
+```php
+<?php
+   $date_array = getdate();
+
+   foreach ( $date_array as $key => $val ){
+      print "$key = $val\n";
+   }
+   $formated_date  = "Today's date: ";
+   $formated_date .= $date_array['mday'] . "-";
+   $formated_date .= $date_array['mon'] . "-";
+   $formated_date .= $date_array['year'];
+
+   print $formated_date;
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+seconds = 0
+minutes = 38
+hours = 6
+mday = 8
+wday = 3
+mon = 11
+year = 2023
+yday = 311
+weekday = Wednesday
+month = November
+0 = 1699421880
+Today's date: 8-11-2023
+```
+
+
+## Converting a Time Stamp with date()
+
+
+The date() function returns a formatted string representing a date. You can exercise an enormous amount of control over the format that date() returns with a string argument that you must pass to it.
+
+
+```php
+date(string $format, ?int $timestamp = null): string
+```
+
+
+The date() optionally accepts a time stamp if omitted then current date and time will be used. Any other data you include in the format string passed to date() will be included in the return value.
+
+
+The following table lists the codes that a format string can contain −
+
+
+Sr.NoFormat & DescriptionExample1a'am' or 'pm' lowercasepm2A'AM' or 'PM' uppercasePM3dDay of month, a number with leading zeroes204DDay of week (three letters)Thu5FMonth nameJanuary6hHour (12-hour format - leading zeroes)127HHour (24-hour format - leading zeroes)228gHour (12-hour format - no leading zeroes)129GHour (24-hour format - no leading zeroes)2210iMinutes ( 0 - 59 )2311jDay of the month (no leading zeroes2012l (Lower 'L')Day of the weekThursday13LLeap year ('1' for yes, '0' for no)114mMonth of year (number - leading zeroes)115MMonth of year (three letters)Jan16rThe RFC 2822 formatted dateThu, 21 Dec 2000 16:01:07 +020017nMonth of year (number - no leading zeroes)218sSeconds of hour2019UTime stamp94837244420yYear (two digits)0621YYear (four digits)200622zDay of year (0 - 365)20623ZOffset in seconds from GMT+5
+
+
+### Example
+
+
+Take a look at this followingexample−
+
+
+```php
+<?php
+   print date("m/d/y G.i:s \n", time()) . PHP_EOL;
+   print "Today is ";
+   print date("j of F Y, \a\\t g.i a", time());
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+11/08/23 11.23:08
+
+Today is 8 2023f November 2023, at 11.23 am
+```
+
+
+## Formatting Date and Time
+
+
+You can format the date and time in different ways with the help of the date() function. Here are some examples −
+
+
+Have a look at this followingexample−
+
+
+```php
+<?php
+   echo date("d/m/Y"); 
+   echo "\n";
+   echo date("l, F j, Y"); 
+?>
+```
+
+
+### Output
+
+
+It will create the below output −
+
+
+```php
+17/02/2025
+Monday, February 17, 2025
+```
+
+
+## Converting Strings to Dates
+
+
+The strtotime() function converts a string-formatted date to a timestamp. This is useful when manipulating and computing dates.
+
+
+Have a look at the belowexampleshowing the usage of strtotime() function −
+
+
+```php
+<?php
+   $date = "2025-02-17";
+   $timestamp = strtotime($date);
+   echo $timestamp; 
+?>
+```
+
+
+### Output
+
+
+It will produce the below output −
+
+
+```php
+1739750400
+```
+
+
+Hope you have good understanding on how to format date and time according to your requirement. For your reference a complete list of all the date and time functions is given inPHP Date & Time Functions.
+

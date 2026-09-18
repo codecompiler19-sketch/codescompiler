@@ -1,0 +1,111 @@
+---
+title: "PHP - $_REQUEST"
+description: "Learn PHP - $_REQUEST with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 780
+group: "PHP Superglobals"
+seoTitle: "PHP - $_REQUEST — CodesCompiler PHP Guide"
+permalink: "php-superglobals-request"
+---
+
+
+# PHP - $_REQUEST
+
+
+
+
+PHP uses a special variable called $_REQUEST to collect data from forms. It can save data sent using GET, POST or COOKIE methods. This makes it easy to get user input and removes the need to think about how the data is transmitted. The $_REQUEST operates according to the parameters in the "php.ini" file, including the request_order setting. This parameter controls the order in which PHP looks for GET, POST and COOKIE data.
+
+
+If you run a PHP script from the command line, the command line parameters will not be in the $_REQUEST array. However, the arguments are filled by the web server in the $_SERVER array.
+
+
+## Understanding the $_REQUEST Variable in PHP
+
+
+
+- The settings in your "php.ini" file decides the composition of this variable.
+- One of the directives in "php.ini" isrequest_order, which decides the order in which PHP registers GET, POST and COOKIE variables.
+- The presence and order of variables listed in this array is defined according to the PHPvariables_order.
+- If a PHP script is run from the command line, theargcandargvvariables are not included in the $_REQUST array because their values are taken from the $_SERVER array, which in turn is populated by the web server.
+
+
+
+## $_REQUEST with GET Method
+
+
+Save the following script in the document folder of the Apache server. If you are using XAMPP server on Windows, place the script as "hello.php" in the "c:/xampp/htdocs" folder.
+
+
+```html
+<html>
+<body>
+   <?php
+      echo "<h3>First Name: " . $_REQUEST['first_name'] . "<br />" 
+      . "Last Name: " . $_REQUEST['last_name'] . "</h3>";
+   ?>
+</body>
+</html>
+```
+
+
+Start the XAMPP server and enterhttp://localhost/hello.php?first_name=Amar&last_name=Sharmaas the URL in a browser window.
+
+
+You should get theoutputas −
+
+
+## $_REQUEST with POST Method
+
+
+Under the document root, save the following script as "hello.html".
+
+
+```html
+<html>
+<body>
+   <form action="hello.php" method="post">
+      First Name: <input type="text" name="first_name" /> <br />
+      Last Name: <input type="text" name="last_name" />
+      <input type="submit" value="Submit" />
+   </form>
+</body>
+</html>
+```
+
+
+In your browser, enter the URL "http://localhost/hello.html". You should get the similaroutputin the browser window.
+
+
+You may also embed the PHP code inside the HTML script and POST the form to itself with the PHP_SELF variable −
+
+
+```html
+<html>
+<body>
+   <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
+      <p>First Name: <input type="text" name="first_name" /></p>
+      <p>Last Name: <input type="text" name="last_name" /></p>
+      <input type="submit" value="Submit" />
+   </form>
+   <?php
+      if ($_SERVER["REQUEST_METHOD"] == "POST")
+      echo "<h3>First Name: " . $_REQUEST['first_name'] . "<br />" 
+      . "Last Name: " . $_REQUEST['last_name'] . "</h3>";
+   ?>
+</body>
+</html>
+```
+
+
+It will produce the followingoutput−
+
+
+## Security Considerations with $_REQUEST
+
+
+As $_REQUEST can collect data from multiple sources (GET, POST, and COOKIE), using it without validation can be unsafe. For example, if you expect form input but someone tampers with cookies, there can be security issues.
+
+
+So use $_GET, $_POST or $_COOKIE particularly when you know how data should be sent. Also, to avoid security vulnerabilities like SQL injection and cross-site scripting (XSS), continuously clean and validate user input.
+

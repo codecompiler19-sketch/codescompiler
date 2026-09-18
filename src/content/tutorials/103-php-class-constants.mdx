@@ -1,0 +1,172 @@
+---
+title: "PHP - Class Constants"
+description: "Learn PHP - Class Constants with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 1030
+group: "Object Oriented PHP"
+seoTitle: "PHP - Class Constants — CodesCompiler PHP Guide"
+permalink: "php-class-constants"
+---
+
+
+# PHP - Class Constants
+
+
+
+
+PHP allows an identifier in a class to be defined as a "class constant" with a constant value, the one that remains unchanged on a per class basis. To differentiate from a variable or property within class, the name of the constant is not prefixed with the usual "$" symbol and is defined with the "const" qualifier. Note that a PHP program can also have a global constant created using thedefine()function.
+
+
+The default visibility of a constant is public, although other modifiers may be used in the definition. The value of a constant must be an expression and not a variable, nor a function call/property. The value of a constant is accessed through the class name using the scope resolution operator. Inside a method though, it can be referred to throughselfvariable.
+
+
+## Accessing Class Constants in PHP
+
+
+Here is the syntax you can follow for accessing class constants in PHP −
+
+
+```php
+class SomeClass {
+   const CONSTANT = 'constant value';
+}
+echo SomeClass::CONSTANT;
+```
+
+
+Constant names are case sensitive. Conventionally, the names of constants are in upper case.
+
+
+## Key Points About Class Constants
+
+
+Here are some key points about class constant which you need to know before working with it −
+
+
+
+- Immutability:Once it is set, the value cannot be modified.
+- Scope:Class constants are accessible within the class that defines them .
+- Static:They are automatically static, so you do not need to create a class instance to access them.
+
+
+
+## Why Use Class Constants?
+
+
+Using class constants provides many advantages −
+
+
+
+- Readability:Makes your code easier to read and understand.
+- Maintainability:If you need to modify the value, do it only once.
+- Avoid Magic Numbers:By avoiding magic numbers or strings in your code, you can better understand what each value represents.
+
+
+
+## Example
+
+
+This example shows how a Class Constant is defined and accessed −
+
+
+```php
+<?php
+   class square {
+      const PI=M_PI;
+      var $side=5;
+      function area() {
+         $area=$this->side**2*self::PI;
+         return $area;
+      }
+   }
+   $s1=new square();
+   echo "PI=". square::PI . "\n";
+   echo "area=" . $s1->area();
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+PI=3.1415926535898
+area=78.539816339745
+```
+
+
+## Class Constant as Expression
+
+
+In this example, the class constant is assigned an expression. This code defines a global constant PI, which is the ratio of X and Y, as well as a class square with a method for calculating the area using the constant −
+
+
+```php
+<?php
+   const X = 22;
+   const Y=7;
+
+   class square {
+      const PI=X/Y;
+      var $side=5;
+      function area() {
+         $area=$this->side**2*self::PI;
+         return $area;
+      }
+   }
+   $s1=new square();
+   echo "PI=". square::PI . "\n";
+   echo "area=" . $s1->area();
+?>
+```
+
+
+### Output
+
+
+It will produce the below output −
+
+
+```php
+PI=3.1428571428571
+area=78.571428571429
+```
+
+
+## Class Constant Visibility Modifiers
+
+
+This program generates a class example that has a public constant X and a private constant Y. Accessing the private constant outside of the class results in an error. Take a look at the following example −
+
+
+```php
+<?php
+   class example {
+      const X=10;
+      private const Y=20;
+   }
+   $s1=new example();
+   echo "public=". example::X. "\n";
+   echo "private=" . $s1->Y ."\n";
+   echo "private=" . example::Y ."\n";
+?>
+```
+
+
+### Output
+
+
+It will generate the following output −
+
+
+```php
+public=10
+PHP Notice:  Undefined property: example::$Y in  line 11
+
+private=
+PHP Fatal error:  Uncaught Error: Cannot access private const example::Y
+```
+

@@ -1,0 +1,150 @@
+---
+title: "PHP - Flash Messages"
+description: "Learn PHP - Flash Messages with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 1300
+group: "PHP Web Development"
+seoTitle: "PHP - Flash Messages — CodesCompiler PHP Guide"
+permalink: "php-flash-messages"
+---
+
+
+# PHP - Flash Messages
+
+
+
+
+Message flashingin a PHP web application refers to the technique that makes certain messages popup on the browser window for the user to receive applications feedback. To be able to give the user a meaningful feedback to his interactions is an important design principle, that gives a better user experience.
+
+
+In a PHP web application, we can use the session data to flash messages regarding success or failure of a certain action, notifications or warnings, etc., from time to time to keep the user informed.
+
+
+Aflash messageallows you to create a message on one page and display it once on another page. To transfer a message from one page to another, you use the$_SESSIONsuperglobal variable.
+
+
+To start with, you add a variable to the $_SESSION array as follows −
+
+
+```php
+<?php
+   session_start();
+   $_SESSION['flash_message'] = "Hello World";
+?>
+```
+
+
+Later, navigate to another page, and retrieve the flashed message from the $_SESSION variable and assign it to a variable. Then, you can display the message and then delete the message from the $_SESSION −
+
+
+```php
+<?php
+   session_start();
+   if(isset($_SESSION['flash_message'])) {
+      $message = $_SESSION['flash_message'];
+      unset($_SESSION['flash_message']);
+      echo $message;
+   }
+?>
+```
+
+
+To generalize the basic idea of handling the flashed messages, we shall write a function that adds a message to the $_SESSION −
+
+
+```php
+session_start();
+function create_flash_message(string $name, string $message): void {
+
+   // remove existing message with the name
+   if (isset($_SESSION[FLASH][$name])) {
+      unset($_SESSION[FLASH][$name]);
+   }
+   // add the message to the session
+   $_SESSION[FLASH][$name] = ['message' => $message]; 
+}
+```
+
+
+Let us also have another function that reads back a message, flashes it on the browser, and removes it from the $_SESSION.
+
+
+```php
+function display_flash_message(string $name): void {
+   if (!isset($_SESSION[FLASH][$name])) {
+      return;
+   }
+
+   // get message from the session
+   $flash_message = $_SESSION[FLASH][$name];
+
+   // delete the flash message
+   unset($_SESSION[FLASH][$name]);
+
+   // display the flash message
+   echo format_flash_message($flash_message);
+}
+```
+
+
+Theformat_flash_message()function applies desired formatting to the obtained string with appropriate CSS rules.
+
+
+If there are more than messages that have been flashed by the application, all of them can be retrieved and flashed with the following example −
+
+
+```php
+function display_all_flash_messages(): void {
+   if (!isset($_SESSION[FLASH])) {
+      return;
+   }
+
+   // get flash messages
+   $flash_messages = $_SESSION[FLASH];
+
+   // remove all the flash messages
+   unset($_SESSION[FLASH]);
+
+   // show all flash messages
+   foreach ($flash_messages as $flash_message) {
+      echo format_flash_message($flash_message);
+   }
+}
+```
+
+
+Use the followingflash() functionto create, format and flash the messages
+
+
+```php
+function flash(string $name = '', string $message = ''): void {
+   if ($name !== '' && $message !== '') {
+      create_flash_message($name, $message);
+   } 
+   elseif ($name !== '' && $message === '') {
+      display_flash_message($name);		// display a flash message
+   } elseif ($name === '' && $message === '' ) {
+      display_all_flash_messages(); 	// display all flash message
+   }
+}
+```
+
+
+To implement the above method, call theflash() functionon the first page.
+
+
+```php
+flash('first', 'Hello World');
+```
+
+
+Navigate to another page and call the flash() function to retrieve and display the message −
+
+
+```php
+flash('first');
+```
+
+
+Mechanism of using the flash messages is usually employed on a signup page to redirect users to the login page with a welcome message after they sign up.
+

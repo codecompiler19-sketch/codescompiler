@@ -1,0 +1,215 @@
+---
+title: "PHP - MySQL Login"
+description: "Learn PHP - MySQL Login with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 1430
+group: "PHP Login Example"
+seoTitle: "PHP - MySQL Login — CodesCompiler PHP Guide"
+permalink: "php-mysql-login"
+---
+
+
+# PHP - MySQL Login
+
+
+
+
+MySQL is a popular choice as a backend database for PHP powered web applications. In this chapter, we shall learn to develop a login page for a PHP application that authenticates the given username and password.
+
+
+You should have a web server having PHP and MySQL installed for experimenting with the example discussed in this chapter. The bundled binaries of Apache, PHP and MySQL (MariaDB) in the form of XAMPP for your operating system can be easily installed.
+
+
+Before running the example code, you should have a MySQL database called mydb in which there must be a table called admin. You can use following SQL script to create the table and insert a test data
+
+
+```php
+use mydb;
+
+CREATE TABLE `admin` (
+   `username` varchar(10) NOT NULL,
+   `passcode` varchar(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO `admin` (`username`, `passcode`) VALUES
+('guest', 'abc123'),
+('manager', 'secret'),
+('user', 'test');
+
+ALTER TABLE `admin`
+   ADD PRIMARY KEY (`username`);
+COMMIT;
+```
+
+
+The first part of PHP login application is to establish database connection object. We use myqli API to obtain connection object. Save following code as "config.php"
+
+
+## Config.php
+
+
+```php
+<?php
+   define('DB_SERVER', 'localhost');
+   define('DB_USERNAME', 'root');
+   define('DB_PASSWORD', '');
+   define('DB_DATABASE', 'mydb');
+   $db = mysqli_connect(DB_SERVER,DB_USERNAME,DB_PASSWORD,DB_DATABASE);
+?>
+```
+
+
+This PHP script is called inside the login script. It presents the user with a HTML form to enter username and password. In case the form is submitted, PHP runs a SELECT query to retrieve a row in the admin table where the username and passcode matches with the user inputs.
+
+
+```sql
+$myusername = mysqli_real_escape_string($db,$_POST['username']);
+$mypassword = mysqli_real_escape_string($db,$_POST['password']); 
+      
+$sql = "SELECT * FROM admin WHERE username = '$myusername' and passcode = '$mypassword'";
+      
+$result = mysqli_query($db,$sql);
+$row = mysqli_num_rows($result);
+```
+
+
+If the row count is one, it indicates that the username and the password entered matches. The username is save to the $_SESSION variable and the browser is directed to welcome.php script.
+
+
+## Login.php
+
+
+Save the following code as "login.php" −
+
+
+```html
+<?php
+   include("config.php");
+   session_start();
+   $error='';
+   if($_SERVER["REQUEST_METHOD"] == "POST") {
+   
+      // username and password sent from form 
+      $myusername = mysqli_real_escape_string($db,$_POST['username']);
+      $mypassword = mysqli_real_escape_string($db,$_POST['password']); 
+
+      $sql = "SELECT * FROM admin WHERE username = '$myusername' and passcode = '$mypassword'";
+
+      $result = mysqli_query($db,$sql);      
+      $row = mysqli_num_rows($result);      
+      $count = mysqli_num_rows($result);
+
+      if($count == 1) {
+	  
+         // session_register("myusername");
+         $_SESSION['login_user'] = $myusername;
+         header("location: welcome.php");
+      } else {
+         $error = "Your Login Name or Password is invalid";
+      }
+   }
+?>
+<html>
+<head>
+   <title>Login Page</title>
+   <style type = "text/css">
+      body {
+         font-family:Arial, Helvetica, sans-serif;
+         font-size:14px;
+      }
+      label {
+         font-weight:bold;
+         width:100px;
+         font-size:14px;
+      }
+      .box {
+         border:#666666 solid 1px;
+      }
+   </style>
+</head>
+<body bgcolor = "#FFFFFF">
+   <div align = "center">
+      <div style = "width:300px; border: solid 1px #333333; " align = "left">
+         <div style = "background-color:#333333; color:#FFFFFF; padding:3px;"><b>Login</b></div>
+         <div style = "margin:30px">
+            <form action = "" method = "post">
+               <label>UserName  :</label><input type = "text" name = "username" class = "box"/><br /><br />
+               <label>Password  :</label><input type = "password" name = "password" class = "box" /><br/><br />
+               <input type = "submit" value = " Submit "/><br />
+            </form>
+            <div style = "font-size:11px; color:#cc0000; margin-top:10px"><?php echo $error; ?></div>
+         </div>
+      </div>
+   </div>
+</body>
+</html>
+```
+
+
+## Session.php
+
+
+The following is thesession.phpcode file. It checks if the session variable is set; then the user credentials will be assigned to the$login_sessionvariable. If not, the user is redirected back to thelogin.phpfile.
+
+
+```php
+<?php
+   // Start the session
+   session_start();
+
+   if(!isset($_SESSION['login_user'])){
+      header("location: login.php");
+      die();
+   }
+   $login_session = $_SESSION['login_user'];
+?>
+```
+
+
+## Welcome.php
+
+
+The "welcome.php" script gets invoked when the user is authenticated. It reads the session variable to display a welcome message.
+
+
+```html
+<?php
+   include('session.php');
+?>
+<html>
+<head>
+   <title>Welcome </title>
+</head>
+<body>
+   <h1>Welcome <?php echo $login_session; ?></h1> 
+   <h2><a href = "logout.php">Sign Out</a></h2>
+</body>
+</html>
+```
+
+
+## Logout.php
+
+
+Finally, the logout script removes the destroys the session and redirects the user to the login page.
+
+
+```php
+<?php
+   session_start();
+
+   if(session_destroy()) {
+      header("Location: login.php");
+   }
+?>
+```
+
+
+To start the login application, visit "http://localhost/login.php"
+
+
+Enter the username and password. On pressing the submit button, these inputs are checked against the rows in admin table. On success, you get the following message −
+
+
+If the query doesnt fetch any matching row, the error message is displayed as follows −
+

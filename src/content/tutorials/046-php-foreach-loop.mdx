@@ -1,0 +1,274 @@
+---
+title: "PHP - Foreach Loop"
+description: "Learn PHP - Foreach Loop with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 460
+group: "PHP Control Statements"
+seoTitle: "PHP - Foreach Loop — CodesCompiler PHP Guide"
+permalink: "php-foreach-loop"
+---
+
+
+# PHP - Foreach Loop
+
+
+
+
+Theforeachconstruct in PHP is specially meant for iterating over arrays. If you try to use it on a variable with a different data type, PHP raises an error.
+
+
+Theforeachloop in PHP can be used with indexed array as well as associative array. There are two types of usage syntaxes available −
+
+
+## Syntax for Indexed Arrays
+
+
+Here is the syntax below −
+
+
+```php
+foreach (array as $value) {
+   statements
+}
+```
+
+
+The above method is useful when you want to iterate an indexed array. The syntax below is more suitable for associative arrays.
+
+
+## Syntax for Associative Arrays
+
+
+See the syntax below −
+
+
+```php
+foreach (array as $key => $value) {
+   statements
+}
+```
+
+
+However, both these approaches work well with indexed array, because the index of an item in the array also acts as the key.
+
+
+## Key Features of foreach Loop
+
+
+Below are some key features of foreach loop you should see before using the loop −
+
+
+
+- Created mainly for arrays (using it with other data types results in an error).
+- Works with both indexed and associative arrays.
+- Each array element is automatically assigned to a variable in iteration.
+- When compared to standard loops, this syntax is easier to learn.
+
+
+
+## Using Foreach Loop with an Indexed Array
+
+
+The first type of syntax above shows a parenthesis in front of theforeachkeyword. The name of the array to be traversed is then followed by the "as" keyword and then a variable.
+
+
+When the fist iteration starts, the first element in the array is assigned to the variable. After the looping block is over, the variable takes the value of the next element and repeats the statements in the loop body till the elements in the array are exhausted.
+
+
+A typical use offoreachloop is as follows −
+
+
+```php
+<?php
+   $arr = array(10, 20, 30, 40, 50);
+   foreach ($arr as $val) {
+      echo "$val \n";
+   }
+?>
+```
+
+
+### Example 1
+
+
+PHP provides a very useful function inarray_search()which returns the key of a given value. Since the index itself is the key in an indexed array, the array_search() for each$valreturns the zero based index of each value. The following code demonstrates how it works −
+
+
+```php
+<?php
+   $arr = array(10, 20, 30, 40, 50);
+
+   foreach ($arr as $val) {
+      $index = array_search($val, $arr);
+      echo "Element at index $index is $val \n";
+   }
+?>
+```
+
+
+#### Output
+
+
+It will produce the following output −
+
+
+```php
+Element at index 0 is 10
+Element at index 1 is 20
+Element at index 2 is 30
+Element at index 3 is 40
+Element at index 4 is 50
+```
+
+
+### Example 2
+
+
+The second variation offoreachsyntax unpacks each element in the array into two variables: one for thekeyand one forvalue.
+
+
+Since the index itself acts as the key in case of an indexed array, the$kvariable successively takes the incrementing index of each element in the array.
+
+
+```php
+<?php
+   $arr = array(10, 20, 30, 40, 50);
+   foreach ($arr as $k=>$v) {
+      echo "Key: $k => Val: $v \n";
+   }
+?>
+```
+
+
+#### Output
+
+
+It will produce the following output −
+
+
+```php
+Key: 0 => Val: 10
+Key: 1 => Val: 20
+Key: 2 => Val: 30
+Key: 3 => Val: 40
+Key: 4 => Val: 50
+```
+
+
+## Iterating an Associative Array using Foreach Loop
+
+
+An associative array is a collection of key-value pairs. To iterate through an associative array, the second variation of foreach syntax is suitable. Each element in the array is unpacked in two variables each taking up the value of key and its value.
+
+
+### Example 1
+
+
+Here is an example in which an array of states and their respective capitals is traversed using theforeachloop.
+
+
+```php
+<?php
+   $capitals = array(
+      "Maharashtra"=>"Mumbai", "Telangana"=>"Hyderabad", 
+      "UP"=>"Lucknow", "Tamilnadu"=>"Chennai"
+   );
+
+   foreach ($capitals as $k=>$v) {
+      echo "Capital of $k is $v \n";
+   }
+?>
+```
+
+
+#### Output
+
+
+It will produce the following output −
+
+
+```php
+Capital of Maharashtra is Mumbai
+Capital of Telangana is Hyderabad
+Capital of UP is Lucknow
+Capital of Tamilnadu is Chennai
+```
+
+
+### Example 2
+
+
+However, you can still use the first version offoreachstatement, where only the value from each key-value pair in the array is stored in the variable. We then obtain the key corresponding to the value using thearray_search()function that we had used before.
+
+
+```php
+<?php
+   $capitals = array(
+      "Maharashtra"=>"Mumbai", "Telangana"=>"Hyderabad", 
+      "UP"=>"Lucknow", "Tamilnadu"=>"Chennai"
+   );
+
+   foreach ($capitals as $pair) {
+      $cap = array_search($pair, $capitals);         
+      echo "Capital of $cap is $capitals[$cap] \n";
+   }
+?>
+```
+
+
+## Iterating a 2D Array using Foreach Loop
+
+
+It is possible to declare a multi-dimensional array in PHP, wherein each element in an array is another array itself. Note that both the outer array as well as the sub-arry may be an indexed array or an associative array.
+
+
+### Example
+
+
+In the example below, we have a two-dimensional array, which can be called as an array or arrays. We need nested loops to traverse the nested array structure as follows −
+
+
+```php
+<?php
+   $twoD = array(
+      array(1,2,3,4),
+      array("one", "two", "three", "four"),
+      array("one"=>1, "two"=>2, "three"=>3)
+   );
+
+   foreach ($twoD as $idx=>$arr) {
+      echo "Array no $idx \n";
+      foreach ($arr as $k=>$v) {
+         echo "$k => $v" . "\n";
+      }
+      echo "\n";
+   }
+?>
+```
+
+
+#### Output
+
+
+It will produce the following output −
+
+
+```php
+Array no 0
+0 => 1
+1 => 2
+2 => 3
+3 => 4
+
+Array no 1
+0 => one
+1 => two
+2 => three
+3 => four
+
+Array no 2
+one => 1
+two => 2
+three => 3
+```
+

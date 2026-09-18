@@ -1,0 +1,202 @@
+---
+title: "PHP - Break Statement"
+description: "Learn PHP - Break Statement with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 490
+group: "PHP Control Statements"
+seoTitle: "PHP - Break Statement — CodesCompiler PHP Guide"
+permalink: "php-break-statement"
+---
+
+
+# PHP - Break Statement
+
+
+
+
+Thebreakstatement along with thecontinuestatement in PHP are known as "loop control statements". Any type of loop (for,whileordo-while) in PHP is designed to run for a certain number of iterations, as per the test condition used. Thebreakstatement inside the looping block takes the program flow outside the block, abandoning the rest of iterations that may be remaining.
+
+
+Thebreakstatement is normally used conditionally. Otherwise, the loop will terminate without completing the first iteration itself.
+
+
+## Syntax of the Break Statement
+
+
+The syntax of break statement is as follows −
+
+
+```php
+while(expr){
+   if (condition){
+      break;
+   }
+}
+```
+
+
+## Flowchart for Break Statement
+
+
+The followingflowchartexplains how thebreakstatement works −
+
+
+The loop starts by checking a condition. If the condition is false, the loop ends. If the condition is satisfied, the program will move to the next phase. If the condition is true, the program runs some code within the loop.
+
+
+If a break statement is present, the loop will be ended immediately. If there is no break, the loop resumes. This is a common programming method for ending a loop early when a predefined condition is met.
+
+
+## Using Break in a While Loop
+
+
+The following PHP code is a simple example of usingbreakin a loop. Thewhileloop is expected to perform ten iterations. However, abreakstatement inside the loop terminates it when the counter exceeds 3.
+
+
+```php
+<?php
+   $i = 1;
+
+   while ($i<=10){
+      echo "Iteration No. $i \n";
+      if ($i>=3){
+         break;
+      }
+      $i++;
+   }
+?>
+```
+
+
+### Output
+
+
+It will generate the following result −
+
+
+```php
+Iteration No. 1
+Iteration No. 2
+Iteration No. 3
+```
+
+
+An optional numeric argument can be given in front of break keyword. It is especially useful in nested looping constructs. It tells how many nested enclosing structures are to be broken out of. The default value is 1, only the immediate enclosing structure is broken out of.
+
+
+## Using Break with Nested Loops
+
+
+The following example has three nested loops: aforloop inside which there is awhileloop which in turn contains ado-whileloop.
+
+
+The innermost loop executes thebreak. The number "2" in front of it takes the control out of the current scope into theforloop instead of the immediatewhileloop.
+
+
+```php
+<?php
+   for ($x=1; $x<=3; $x++){
+      $y=1;
+      while ($y<=3){
+         $z=1;
+         do {
+            echo "x:$x y:$y z:$z \n";
+            if ($z==2){
+               break 2;
+            }
+            $z++;
+         }
+         while ($z<=3);
+         $z=1;
+         $y++;
+      }
+   }
+?>
+```
+
+
+### Output
+
+
+It will produce the below output −
+
+
+```php
+x:1 y:1 z:1
+x:1 y:1 z:2
+x:2 y:1 z:1
+x:2 y:1 z:2
+x:3 y:1 z:1
+x:3 y:1 z:2
+```
+
+
+Note that each time the value of "z" becomes 2, the program breaks out of the "y" loop. Hence, the value of "y" is always 1.
+
+
+## Using Break in a For Loop
+
+
+In this example the loop runs from 1 to 10 but the break statement stops execution when $i reaches 5.
+
+
+```php
+<?php
+   for ($i = 1; $i <= 10; $i++){
+      echo "Iteration No. $i \n";
+      if ($i == 5){
+         break;
+      }
+   }
+?>
+```
+
+
+### Output
+
+
+It will generate the following output −
+
+
+```php
+Iteration No. 1  
+Iteration No. 2  
+Iteration No. 3  
+Iteration No. 4  
+Iteration No. 5
+```
+
+
+## Using Break in a Do-While Loop
+
+
+In the following example, we will use a do-while loop with break statement. So the condition is checked after executing the loop body at least once. The loop executes at least once. When $num == 3, the break statement executes and stop the loop.
+
+
+```php
+<?php
+   $num = 1;
+
+   do {
+      echo "Value: $num \n";
+      if ($num == 3){
+         break;
+      }
+      $num++;
+   } while ($num <= 5);
+?>
+```
+
+
+### Output
+
+
+Following is the output of the above code −
+
+
+```php
+Value: 1  
+Value: 2  
+Value: 3
+```
+

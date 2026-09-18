@@ -1,0 +1,246 @@
+---
+title: "PHP - Form Validation"
+description: "Learn PHP - Form Validation with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 1180
+group: "PHP Web Development"
+seoTitle: "PHP - Form Validation — CodesCompiler PHP Guide"
+permalink: "php-form-validation-required"
+---
+
+
+# PHP - Form Validation
+
+
+
+
+The term "Form Validation" refers to the process of ascertaining if the data entered by the user in various form elements is acceptable for further processing. Validation of data before its subsequent processing avoids possible exceptions and runtime errors.
+
+
+## Types of Form Validation
+
+
+Validation can be done both on the client-side and on the server-side. When the client submits the form, the form data is intercepted by the PHP script running on the server. Using various functions available in PHP, the server-side form validation can be done.
+
+
+
+- Client-side Validation:This happens in the user's web browser before the form submission. It provides instant feedback to users. This is commonly done with JavaScript.
+- Server-side Validation:After the submission of the form, server-side validation happens. It is important for security and ensures that data is checked on the server even when client-side validation is turned off.
+
+
+
+## How to Validate Forms in PHP
+
+
+To validate forms in PHP you will have to follow the below steps −
+
+
+
+- Create a Form:First you need to create a simple HTML form.
+- Collect Form Data:Then use PHP to collect the data after the form is submitted.
+- Perform Validation:After that you have to check if the data meets specific criteria.
+- Provide Feedback:Inform the user if there are any errors or if the submission is successful.
+
+
+
+## Client-side Validation
+
+
+The new input controls as per the HTML5 specifications have in-built validation. For example an input element of the type 'email', even though is a text field, is customized to accept a string that is according to email address protocol.
+
+
+Validation takes place before the data is submitted to the server. Same thing is true with other input types such as URL, number, etc.
+
+
+### Example
+
+
+Given below is an HTML form with input elements of number type, email type and URL type. If you enter data that is not as per the required format, a suitable error message is flashed as you try to submit the form.
+
+
+```php
+<h1>Input Validation</h1>
+<form>
+   <p><Label for "name">Enter your name</label>
+   <input type = "text" id="name" name="name"></p>
+   <p><label for="age">Enter age</label>
+   <input type = "text" id = "age" name="age"></p>
+   <p><label for="email">Enter your email:</label>
+   <input type="text" id="email" name="email"></p>
+   <p><label for="URL">Enter your website<label>
+   <input type = "text" id="URL" name="url"></p>
+   <input type="submit">
+</form>
+```
+
+
+The number type text field shows up/down counter arrows on the right. Only number is accepted, and can be incremented or decremented.
+
+
+If the data in email field is invalid, you get the error message flashed as below.
+
+
+Similarly, any incorrect format for the URL also flashes the error as shown −
+
+
+## Server-Side Validation
+
+
+The validation on the server-side with PHP comes into picture, either when the form data passes the client-side validation, or there's no validation on the client side at all.
+
+
+In the HTML form used in the above example, let us remove all special input types and use all text fields of text type. The form is submitted with POST method to hello.php on the server.
+
+
+```php
+<form action="hello.php" method="POST">
+   <p><Label for "name">Enter your name</label>
+   <input type = "text" id="name" name="name"></p>
+   <p><label for="age">Enter age</label>
+   <input type = "text" id = "age" name="age"></p>
+   <p><label for="email">Enter your email:</label>
+   <input type="text" id="email" name="email"></p>
+   <p><label for="URL">Enter your website<label>
+   <input type = "text" id="URL" name="url"></p>
+   <input type="submit">
+</form>
+```
+
+
+## Form is Empty
+
+
+If the user (may be inadvertently) clicks the submit button, you can ask PHP to display the form again. You need to check if the $_POST array has been initialized with isset() function. If not, the header() function redirects the control back to the form.
+
+
+```php
+<?php 
+   if ($_SERVER["REQUEST_METHOD"] == "POST") {
+      if (isset($_POST)) {
+         header("Location: hello.html", true, 301);  
+         exit();  
+      }
+      // form processing if the form is not empty
+   }
+?>
+```
+
+
+### Example
+
+
+You can also check if any of the fields is empty at the time of submitting the form.
+
+
+```php
+<?php        
+   if ($_SERVER["REQUEST_METHOD"] == "POST") {
+      foreach($_POST as $k=>$v) {
+         if (empty($v)==true) {
+            echo "One or more fields are empty \n";
+            echo "<a href = 'hello.html'>Click here to go back </a>";
+            exit;
+         }
+         else
+         echo "$k => $v \n";
+      }
+   }
+?>
+```
+
+
+## Age field is non-numeric
+
+
+In the HTML form the input field for name is of text type, hence it can accept any characters. However, we want it to be numeric. This can be ensured by is_numeric() function
+
+
+```php
+<?php    
+   if (is_numeric($_POST["age"])==false) {
+      echo "Age cannot be non-numeric \n";
+      echo "<a href = 'hello.html'>Click here to go back</a>";
+   }
+?>
+```
+
+
+PHP also has is_string() function to check if a filed contains a string or not. Two other functions, trim() and htmlspecialchars() are also useful for form validation.
+
+
+
+- trim()− Removes whitespace from the beginning and end of a string
+- htmlspecialchars()− Converts special characters to HTML entities to prevent cross-site scripting (XSS) attacks.
+
+
+
+## Why is Form Validation Important?
+
+
+Form validation is important for a number of reasons.
+
+
+
+- Security:It helps to prevent malicious attacks like SQL injection and cross-site scripting (XSS).
+- Data integrity:Validating data makes sure it is correct and usable.
+- User Experience:It provides users with instant feedback when they make errors, which improves their experience.
+
+
+
+Following are the rules for form validation −
+
+
+
+- Required Fields:You need to make sure important fields are not empty.
+- Email Validation:You can check if the email address is valid or not.
+- Number Validation:You should allow only numbers for fields like age or phone number.
+- URL Validation:Need to check if a valid website URL is entered by the user.
+- Length Check:You have to limit how many characters a user can enter in the form.
+- Pattern Matching:You can also use regular expressions to allow only specific characters.
+
+
+
+## Avoid $_SERVER["PHP_SELF"] Exploits
+
+
+$_SERVER["PHP_SELF"] gets the current page's filename. This is useful, but it can be dangerous if not used correctly. Hackers can use this to inject malicious code into your website. For example, imagine your form action is this −
+
+
+```php
+<form action="<?php echo $_SERVER["PHP_SELF"]; ?>" method="post">
+```
+
+
+And the URL is changed to −
+
+
+```php
+http://example.com/form.php/<script>alert('Hacked!')</script>
+```
+
+
+The above script can run and harm your website. So to avoid this you can use thehtmlspecialchars()function. It turns special characters into harmless ones.
+
+
+```php
+<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+```
+
+
+If someone tries to inject code, it will now be shown as plain text rather than executed as a script. This prevents harmful scripts from running.
+
+
+### Final Example
+
+
+Here is the final example to avoid exploits. This means that even if someone attempts to insert harmful code, it will have no effect on your website.
+
+
+```php
+<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+   <label for="name">Enter your name:</label>
+   <input type="text" id="name" name="name">
+   <input type="submit">
+</form>
+```
+

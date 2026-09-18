@@ -1,0 +1,264 @@
+---
+title: "PHP - Simple XML Parser"
+description: "Learn PHP - Simple XML Parser with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 1370
+group: "PHP XML"
+seoTitle: "PHP - Simple XML Parser — CodesCompiler PHP Guide"
+permalink: "php-simple-xml"
+---
+
+
+# PHP - Simple XML Parser
+
+
+
+
+The SimpleXML extension of PHP provides a very simple and easy to use toolset to convert XML to an object that can be processed with normal property selectors and array iterators. It is a tree_based parser, and works well with simple XML files, but may face issues when working with larger and complex XML documents.
+
+
+The following functions are defined in SimpleXML extension −
+
+
+## simplexml_load_file
+
+
+Thesimplexml_load_file()function interprets an XML file into an object −
+
+
+```php
+simplexml_load_file(
+   string $filename,
+   ?string $class_name = SimpleXMLElement::class,
+   int $options = 0,
+   string $namespace_or_prefix = "",
+   bool $is_prefix = false
+): SimpleXMLElement|false
+```
+
+
+A well-formed XML document in the given file is converted into an object.
+
+
+The filename parameter is a string representing the XML file to be parsed. class_name is the optional parameter. It specifies the class whose object will be returned by the function. The function returns an object of classSimpleXMLElementwith properties containing the data held within the XML document, orfalseon failure.
+
+
+### Example
+
+
+Take a look at the following example −
+
+
+```php
+<?php
+   $xml = simplexml_load_file("test.xml") or die("Error: Cannot create object");
+   print_r($xml);
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+SimpleXMLElement Object
+(
+   [Course] => Android
+   [Subject] => Android
+   [Company] => CodesCompiler
+   [Price] => $10
+)
+```
+
+
+## simplexml_load_string
+
+
+Thesimplexml_load_string()function interprets an XML file into an object.
+
+
+```php
+simplexml_load_string(
+   string $filename,
+   ?string $class_name = SimpleXMLElement::class,
+   int $options = 0,
+   string $namespace_or_prefix = "",
+   bool $is_prefix = false
+): SimpleXMLElement|false
+```
+
+
+A well-formed XML document in the given string is converted into an object.
+
+
+The$dataparameter is a string representing the XML document to be parsed.class_nameis the optional parameter. It specifies the class whose object will be returned by the function. The function returns an object of classSimpleXMLElementwith properties containing the data held within the XML document, orfalseon failure.
+
+
+### Example
+
+
+Take a look at the following example −
+
+
+```php
+<?php
+   $data = "<?xml version = '1.0' encoding = 'UTF-8'?>   
+   <note>
+      <Course>Android</Course>
+      <Subject>Android</Subject>
+      <Company>CodesCompiler</Company>
+      <Price>$10</Price>
+   </note>";
+   $xml = simplexml_load_string($data) or die("Error: Cannot create object");
+   print_r($xml);
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+SimpleXMLElement Object
+(
+   [Course] => Android
+   [Subject] => Android
+   [Company] => CodesCompiler
+   [Price] => $10
+)
+```
+
+
+## simplexml_import_dom
+
+
+The simplexml_import_dom() function constructs a SimpleXMLElement object from a DOM node.
+
+
+```php
+simplexml_import_dom(SimpleXMLElement|DOMNode $node, ?string 
+   $class_name = SimpleXMLElement::class): ?SimpleXMLElement
+```
+
+
+This function takes a node of a DOM document and makes it into a SimpleXML node. This new object can then be used as a native SimpleXML element.
+
+
+The node parameter is a DOM Element node. The optional class_name may be given so that simplexml_import_dom() will return an object of the specified sub class of the SimpleXMLElement class. The value returned by this function is a SimpleXMLElement or null on failure.
+
+
+### Example
+
+
+Take a look at the following example −
+
+
+```php
+<?php
+   $dom = new DOMDocument;
+   $dom->loadXML('<books><book><title>PHP Handbook</title></book></books>');
+   if (!$dom) {
+      echo 'Error while parsing the document';
+      exit;
+   }
+
+   $s = simplexml_import_dom($dom);
+   echo $s->book[0]->title;
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+PHP Handbook
+```
+
+
+### Get the Node Values
+
+
+The following code shows how to get the node values from  an XML file and the XML should be as follows −
+
+
+```php
+<?xml version = "1.0" encoding = "utf-8"?>
+<codescompiler>
+   <course category = "JAVA">
+      <title lang = "en">Java</title>
+      <tutor>Gopal</tutor>
+      <duration></duration>
+      <price>$30</price>
+   </course>
+
+   <course category = "HADOOP">
+      <title lang = "en">Hadoop</title>.
+      <tutor>Satish</tutor>
+      <duration>3</duration>
+      <price>$50</price>
+   </course>
+
+   <course category = "HTML">
+      <title lang = "en">html</title>
+      <tutor>raju</tutor>
+      <duration>5</duration>
+      <price>$50</price>
+   </course>
+
+   <course category = "WEB">
+      <title lang = "en">Web Technologies</title>
+      <tutor>Javed</tutor>
+      <duration>10</duration>
+      <price>$60</price>
+   </course>
+</codescompiler>
+```
+
+
+### Example
+
+
+PHP code should be as follows −
+
+
+```php
+<?php
+   $xml = simplexml_load_file("books.xml") or die("Error: Cannot create object");
+
+   foreach($xml->children() as $books) { 
+      echo $books->title . "<br> "; 
+      echo $books->tutor . "<br> "; 
+      echo $books->duration . "<br> ";
+      echo $books->price . "<hr>"; 
+   }
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+Java
+Gopal
+
+$30
+________________________________________
+Hadoop
+Satish
+3
+$50
+________________________________________
+html
+raju
+5
+$50
+________________________________________
+Web Technologies
+Javed
+10
+$60
+________________________________________
+```
+

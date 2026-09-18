@@ -1,0 +1,282 @@
+---
+title: "PHP - Integers"
+description: "Learn PHP - Integers with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 210
+group: "PHP Basics"
+seoTitle: "PHP - Integers — CodesCompiler PHP Guide"
+permalink: "php-integers"
+---
+
+
+# PHP - Integers
+
+
+
+
+## Integers in PHP
+
+
+Integer is one of the built-in scalar types in PHP. A whole number, without a decimal point in the literal, is of the type "int" in PHP. An integer can be represented in decimal (base 10), hexadecimal (base 16), octal (base 8) or binary (base 2) notation.
+
+
+To use octal notation, a number is preceded with "0o" or "0O" (PHP 8.1.0 and earlier). From PHP 8.1.0 onward, a number prefixed with "0" and without a decimal point is an octal number.
+
+
+To use hexadecimal notation, precede the number with "0x". To use binary notation, precede the number with "0b".
+
+
+## Syntax to Declare Integers in PHP
+
+
+Here is syntax for declaring Integers in PHP Programming language −
+
+
+```php
+// Positive integer
+$num1 = 10;   
+
+// Negative integer
+$num2 = -5;   
+
+// Zero
+$num3 = 0;
+```
+
+
+## Rules for Integers
+
+
+There are some rules for integers −
+
+
+
+- An integer must have at least one digit.
+- An integer cannot contain a decimal point.
+- An integer can be either positive or negative.
+- There are three ways to define integers: decimal (base 10), hexadecimal (base 16 - prefixed with 0x), octal (base 8 - preceded with 0), and binary (base 2 - prefixed with 0b).
+
+
+
+## Integer Range in PHP
+
+
+The size of an integer depends on the system, with 32-bit systems having a range of -2,147,483,648 to 2,147,483,647, and 64-bit systems having a larger range.
+
+
+For checking the maximum and minimum integer values in PHP you can use −
+
+
+```php
+<?php
+   // Maximum integer value   
+   echo PHP_INT_MAX;  
+   
+   echo "\n";
+
+   // Minimum integer value
+   echo PHP_INT_MIN;  
+?>
+```
+
+
+### Output
+
+
+It will generate the followingresult−
+
+
+```php
+9223372036854775807
+-9223372036854775808
+```
+
+
+## Example
+
+
+Take a look at this following example −
+
+
+```php
+<?php
+   $a = 1234; 
+   echo "1234 is an Integer in decimal notation: $a\n";
+
+   $b = 0123; 
+   echo "0o123 is an integer in Octal notation: $b\n";
+
+   $c = 0x1A; 
+   echo "0xaA is an integer in Hexadecimal notation: $c\n";
+
+   $d = 0b1111;
+   echo "0b1111 is an integer in binary notation: $d";
+?>
+```
+
+
+### Output
+
+
+It will produce the below output −
+
+
+```php
+1234 is an Integer in decimal notation: 1234
+0o123 is an integer in Octal notation: 83
+0xaA is an integer in Hexadecimal notation: 26
+0b1111 is an integer in binary notation: 15
+```
+
+
+PHP 7.4.0 onwards, integer literals may contain underscores (_) as separators between digits, for better readability of literals. These underscores are removed by PHP's scanner.
+
+
+## Example
+
+
+Take a look at this following example −
+
+
+```php
+<?php
+   $a = 1_234_567; 
+   echo "1_234_567 is an Integer with _ as separator: $a";
+?>
+```
+
+
+### Output
+
+
+It will generate the following output −
+
+
+```php
+1_234_567 is an Integer with _ as separator: 1234567
+```
+
+
+PHP does not support unsigned ints. The size of anintis platform dependent. On 32 bit systems, the maximum value is about two billion. 64-bit platforms usually have a maximum value of about 9E18.
+
+
+intsize can be determined using the constant PHP_INT_SIZE, maximum value using the constant PHP_INT_MAX, and minimum value using the constant PHP_INT_MIN.
+
+
+If an integer number happens to be beyond the bounds of theinttype, or any operation results in a number beyond the bounds of theinttype, it will be interpreted as a float instead.
+
+
+## Example
+
+
+Take a look at this following example −
+
+
+```php
+<?php
+   $x = 1000000;
+   $y =  50000000000000 * $x;
+   var_dump($y); 
+?>
+```
+
+
+### Output
+
+
+This will bring about the following output −
+
+
+```php
+float(5.0E+19)
+```
+
+
+PHP doesn't have any operator for integer division. Hence, a division operation between an integer and a float always results in float. To obtain integral division, you may use theintval()built-in function.
+
+
+## Example
+
+
+Take a look at this following example −
+
+
+```php
+<?php
+   $x = 10;
+   $y = 3.5;
+   $z = $x/$y;
+   var_dump ($z);
+   $z = intdiv($x, $y);
+   var_dump ($z);
+?>
+```
+
+
+### Output
+
+
+The output of this PHP code is −
+
+
+```php
+float(2.857142857142857)
+int(3)
+```
+
+
+## Arithmetic Operations with Integers
+
+
+So with the integers you can perform math operations like addition, subtraction, multiplication and division. Here is the examples for showing the usage −
+
+
+```php
+<?php
+   $a = 10;
+   $b = 5;
+
+   // Addition 
+   echo "Addition = ".$a + $b;  
+   echo "\n";
+
+   // Subtraction
+   echo "Subtraction = ".$a - $b;  
+   echo "\n";
+
+   // Multiplication 
+   echo "Multiplication = ".$a * $b;  
+   echo "\n";
+
+   // Division 
+   echo "Division = ".$a / $b;
+?>
+```
+
+
+### Output
+
+
+This will generate the below result −
+
+
+```php
+Addition = 15
+Subtraction = 5
+Multiplication = 50
+Division = 2
+```
+
+
+## PHP Functions to Check an Integer
+
+
+PHP provides the below functions or methods to check that the type of a variable is an integer or not −
+
+
+
+- is_int():It is used to check if a given variable is an integer.
+- is_integer() - alias of is_int():It is another name (alias) for is_int(). It works the same way as is_int().
+- is_long() - alias of is_int():It is also an alias for is_int(). It is rarely used but works the same way.
+
+

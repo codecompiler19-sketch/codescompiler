@@ -1,0 +1,206 @@
+---
+title: "PHP - Classes and Objects"
+description: "Learn PHP - Classes and Objects with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 990
+group: "Object Oriented PHP"
+seoTitle: "PHP - Classes and Objects — CodesCompiler PHP Guide"
+permalink: "php-classes-and-objects"
+---
+
+
+# PHP - Classes and Objects
+
+
+
+
+The concept of classes and objects is central to PHP's object-oriented programming methodology. Aclassis the template description of its objects. It includes the properties and functions that process the properties. Anobjectis the instance of its class. It is characterized by the properties and functions defined in the class.
+
+
+## Defining a Class in PHP
+
+
+To define a class, PHP has a keyword "class". Similarly, PHP provides the keyword "new" to declare an object of any given class.
+
+
+The general form for defining a new class in PHP is as follows −
+
+
+```php
+<?php
+   class phpClass {
+      var $var1;
+      var $var2 = "constant string";
+
+      function myfunc ($arg1, $arg2) {
+         [..]
+      }
+      [..]
+   }
+?>
+```
+
+
+The keywordclassis followed by the name of the class that you want to define. Class name follows the same naming conventions as used for a PHP variable. It is followed by a pair of braces enclosing any number of variable declarations (properties) and function definitions.
+
+
+Variable declarations start with another reserved keywordvar, which is followed by a conventional$variablename; they may also have an initial assignment to a constant value.
+
+
+Function definitions look much like standalone PHP functions but are local to the class and will be used to set and access object data. Functions inside a class are also called methods.
+
+
+### Example
+
+
+Here is an example which defines a class of Book type −
+
+
+```php
+class Book {
+
+   /* Member variables */
+   var $price;
+   var $title;
+
+   /* Member functions */
+   function setPrice($par){
+      $this->price = $par;
+   }
+
+   function getPrice(){
+      echo $this->price ."<br/>";
+   }
+
+   function setTitle($par){
+      $this->title = $par;
+   }
+
+   function getTitle(){
+      echo $this->title ." <br/>";
+   }
+}
+```
+
+
+The pseudo-variable$thisis available when a method is called from within an object context.$thisrefers to the calling object.
+
+
+The Book class has twomember variables(or properties) -$titleand$price. The member variables (also sometimes called instance variables) usually have different values for each object; like each book has a title and price different from the other.
+
+
+The Book class has functions (functions defined inside the class are calledmethods) setTitle() and setPrice(). These functions are called with reference to an object and a parameter, used to set the value of title and price member variables respectively.
+
+
+The Book class also hasgetTitle()andgetPrice()methods. When called, they return the title and price of the object whose reference is passed.
+
+
+## Defining an Object in PHP
+
+
+An object is an instance of a class. When you create an object, you follow the blueprint provided by the class. Each object can have different attributes.
+
+
+Once a class is defined, you can declare one or more objects, using new operator.
+
+
+```php
+$b1 = new Book;
+$b2 = new Book;
+```
+
+
+Thenewoperator allocates the memory required for the member variables and methods of each object. Here we have created two objects and these objects are independent of each other and they will have their existence separately.
+
+
+Each object has access to its member variables and methods with the "->" operator. For example, the$titleproperty ofb1object is "$b1->title" and to call setTitle() method, use the "$b1->setTitle()" statement.
+
+
+To set the title and price ofb1object,
+
+
+```php
+$b1->setTitle("PHP Programming");
+$b1->setPrice(450);
+```
+
+
+Similarly, the following statements fetch the title and price ofb1book −
+
+
+```php
+echo $b1->getPrice();
+echo $b1->getTitle();
+```
+
+
+### Example
+
+
+Given below is the complete PHP script that defines Book class, declares two objects and calls the member functions.
+
+
+```php
+<?php
+   class Book {
+   
+      /* Member variables */
+      var $price;
+      var $title;
+
+      /* Member functions */
+      function setPrice($par){
+         $this->price = $par;
+      }
+
+      function getPrice(){
+         echo $this->price ."\n";
+      }
+
+      function setTitle($par){
+         $this->title = $par;
+      }
+
+      function getTitle(){
+         echo $this->title ."\n";
+      }
+   }
+
+   $b1 = new Book;
+   $b2 =new Book;
+
+   $b1->setTitle("PHP Programming");
+   $b1->setPrice(450);
+   $b2->setTitle("PHP Fundamentals");
+   $b2->setPrice(275);
+   $b1->getTitle();
+   $b1->getPrice();
+   $b2->getTitle();
+   $b2->getPrice();
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+PHP Programming
+450
+PHP Fundamentals
+275
+```
+
+
+## Why Use Classes and Objects?
+
+
+Using classes and objects can help you −
+
+
+
+- Organize Code:Place related properties and methods together.
+- Reuse Code:Create several objects from the same class without changing the code.
+- Encapsulation:It is the process of keeping properties and methods safe from outside interference.
+
+

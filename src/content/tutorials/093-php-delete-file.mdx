@@ -1,0 +1,216 @@
+---
+title: "PHP - Delete File"
+description: "Learn PHP - Delete File with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 930
+group: "PHP File Handling"
+seoTitle: "PHP - Delete File — CodesCompiler PHP Guide"
+permalink: "php-delete-file"
+---
+
+
+# PHP - Delete File
+
+
+
+
+In this chapter, we will learn how to remove a file using PHP. When maintaining data on a server, deleting files is an important step and PHP has simple methods to help with this.
+
+
+## The unlink() Function
+
+
+PHP doesn't have either adeletekeyword or adelete()function. Instead, it provides theunlink()function, which when called, deletes a file from the file-system. It is similar to Unix/C unlink function.
+
+
+If the delete operation could not be completed, PHP returns false and shows an E_WARNING message.
+
+
+### Syntax
+
+
+Here is the syntax of unlink() function −
+
+
+```php
+unlink(string $filename, ?resource $context = null): bool
+```
+
+
+The mandatory string parameter to unlink() function is a string that refers to the file to be deleted.
+
+
+## Why Delete a File?
+
+
+There are several reasons why you may want to delete a file, like −
+
+
+
+- Delete any unnecessary files that are using up space.
+- Cleaning up after users have uploaded files.
+- Managing temporary files that are no longer needed.
+
+
+
+## Usage of unlink() Function
+
+
+The following code demonstrates a simple use of the unlink() function −
+
+
+```php
+<?php
+   $file = "my_file.txt";
+
+   if (unlink($file)) {
+      echo "The file was deleted successfully.";
+   } else {
+      echo "The file could not be deleted.";
+   }
+?>
+```
+
+
+## Deleting the Symlink to a File
+
+
+The unlink() function can also delete a symlink to a file. However, deleting a symlink doesn't delete the original file. A symlink is a shortcut to an existing file.
+
+
+In Windows, open a command prompt with administrator privilege and use themlinkcommand with/hswitch to create a symlink to a file. (/jswitch is used for symlink to a folder)
+
+
+```php
+mklink /h hellolink.lnk hello.txt
+Hardlink created for hellolink.lnk <<===>> hello.txt
+```
+
+
+In Ubuntu Linux, to create a symbolic link to a file, you would use the following command −
+
+
+```php
+ln -s /path/to/original_file /path/to/symlink
+```
+
+
+To create a symbolic link to a directory, you would use the following command −
+
+
+```php
+ln -s /path/to/original_directory /path/to/symlink
+```
+
+
+In PHP, there is also a symlink() function for the purpose.
+
+
+```php
+symlink(string $target, string $link): bool
+```
+
+
+### Example
+
+
+Create a symlink with the following code −
+
+
+```php
+<?php
+   $target = 'hello.txt';
+   $link = 'hellolink.lnk';
+   symlink($target, $link);
+
+   echo readlink($link);
+?>
+```
+
+
+Now delete the symlink created above −
+
+
+```php
+unlink("hellolink.lnk");
+```
+
+
+If you check the current working directory, the symlink will be deleted, leaving the original file intact.
+
+
+## How to Rename a File in PHP
+
+
+You can change the name of an existing file with the help of respective command from the console of an operating system. For example, the "mv commandin Linux terminal or the "rename command" in Windows command prompt helps you to change the name of a file.
+
+
+However, to rename a file programmatically, PHP's built-in library includes arename()function.
+
+
+Here is thesyntaxof the rename() function −
+
+
+```php
+rename(string $from, string $to, ?resource $context = null): bool
+```
+
+
+Both$fromand$tostrings are the names of files, existing and new respectively. The rename() function attempts to rename$fromto$to, moving it between directories if necessary.
+
+
+If you are renaming afileand$toalready exists, then it will be overwritten. If you are renaming adirectoryand$toexists, then this function will emit awarning.
+
+
+To change the name of "hello.txt" to "test.txt" −
+
+
+```php
+<?php
+   rename("hello.txt", "test.txt");
+?>
+```
+
+
+You can also employ a little indirect approach for renaming a file. Make a copy of an existing file and delete the original one. This also renames "hello.txt" to "test.txt" −
+
+
+```php
+copy("hello.txt", "test.txt");
+unlink("hello.txt");
+```
+
+
+## Example with File Existence Check
+
+
+Below example is showing how you can check for file existence if the file does not exist so it will return the error message.
+
+
+```php
+<?php
+   $file = 'myfile.txt';
+
+   if (file_exists($file)) {
+      if (unlink($file)) {
+         echo "File '$file' has been deleted successfully.";
+      } else {
+         echo "Error: Could not delete the file '$file'.";
+      }
+   } else {
+      echo "Error: The file '$file' does not exist.";
+   }
+?>
+```
+
+
+### Output
+
+
+This will create the below output −
+
+
+```php
+Error: The file 'myfile.txt' does not exist.
+```
+

@@ -1,0 +1,101 @@
+---
+title: "PHP - Closure::call()"
+description: "Learn PHP - Closure::call() with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 1670
+group: "PHP Advanced"
+seoTitle: "PHP - Closure::call() — CodesCompiler PHP Guide"
+permalink: "php-closure-call"
+---
+
+
+# PHP  Closure::call()
+
+
+
+
+In PHP, aclosureis an anonymous function that has access to the variables in the scope in which it was created, even after that scope has closed. You need to specify use keyword in it.
+
+
+Closures are objects that encapsulate the function code and the scope in which they were created. With PHP 7, a newclosure::call()method was introduced to bind an object scope to a closure and invoke it.
+
+
+## Methods in the Closure Class
+
+
+The Closure class has the following methods including the call() method −
+
+
+```php
+final class Closure {
+
+   /* Methods */
+   private __construct()
+   public static bind(Closure $closure, ?object $newThis, object|string|null $newScope = "static"): ?Closure
+   public bindTo(?object $newThis, object|string|null $newScope = "static"): ?Closure
+   public call(object $newThis, mixed ...$args): mixed
+   public static fromCallable(callable $callback): Closure
+   
+}
+```
+
+
+Thecall() methodis a static method of Closure class. It has been introduced as a shortcut the bind() or bindTo() methods.
+
+
+Thebind() methodDuplicates a closure with a specific bound object and class scope while the bindTo() method duplicates the closure with a new bound object and class scope.
+
+
+The call() method has the followingsignature−
+
+
+```php
+public Closure::call(object $newThis, mixed ...$args): mixed
+```
+
+
+The call() method temporarily binds the closure to newThis, and calls it with any given parameters.
+
+
+With version prior to PHP 7, the bindTo() method can be used as follows −
+
+
+```php
+<?php
+   class A {
+      private $x = 1;
+   }
+
+   // Define a closure Pre PHP 7 code
+   $getValue = function() {
+      return $this->x;
+   };
+
+   // Bind a clousure
+   $value = $getValue->bindTo(new A, 'A'); 
+   print($value());
+?>
+```
+
+
+The program binds the$getValuewhich is a closure object, to the object of A class and prints the value of its private variable$xit is 1.
+
+
+With PHP 7, the binding is achieved by call() method as shown below −
+
+
+```php
+<?php
+   class A {
+      private $x = 1;
+   }
+
+   // PHP 7+ code, Define
+   $value = function() {
+      return $this->x;
+   };
+
+   print($value->call(new A));
+?>
+```
+

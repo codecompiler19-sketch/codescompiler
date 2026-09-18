@@ -1,0 +1,192 @@
+---
+title: "PHP - Download File"
+description: "Learn PHP - Download File with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 900
+group: "PHP File Handling"
+seoTitle: "PHP - Download File — CodesCompiler PHP Guide"
+permalink: "php-download-file"
+---
+
+
+# PHP - Download File
+
+
+
+
+In this chapter we will learn how to download files using PHP. This chapter is created for beginners, so we will explain everything step by step. By the end, you will know how to make it easy for users to download files from your website!
+
+
+## Why Download Files in PHP?
+
+
+Websites commonly allow visitors to download files. This could comprise documents, photos, software and other file types. PHP allows you to manage these downloads safely and effectively.
+
+
+Most modern browsers allow files of certain types to be downloaded automatically, without any server-side code such as a PHP script. For example, a zip file, or an EXE file.
+
+
+If an HTML hyperlink points to a ZIP or EXE file, the browser downloads it and pops up a save dialog. However, text files, image files, etc., are not downloaded but opened in the browser, which you can save to your local file-system.
+
+
+## Why Use PHP for File Downloads?
+
+
+PHP makes it easy to manage file downloads. It allows you to manage file access and add security measures. PHP can be used for −
+
+
+
+- Allow users to download files such as PDFs, images, and videos.
+- Secure files so that only logged-in users can access them.
+- Monitor the number of times a file has been downloaded.
+
+
+
+## The readfile() Function
+
+
+To download such files (instead of the browser automatically opening them), we can use thereadfile()function in PHP's built-in function library.
+
+
+```php
+readfile(string $filename, 
+bool $use_include_path = false, 
+?resource $context = null)
+: int|false
+```
+
+
+This function reads a file and writes it to the output buffer.
+
+
+The second parameter$use_include_pathis false by default, hence the file in the current directory will be downloaded. If set totrue, the directories added to theinclude_pathsetting ofphp.iniconfiguration will be searched to locate the file to be downloaded.
+
+
+The readfile() function returns the number of bytes read or false even it is successfully completed or not.
+
+
+### Example
+
+
+The following PHP script shows the usage of readfile() function.
+
+
+To download a file, theContent-Typeresponse header should be set toapplication/octect-stream. This MIME type is the default for binary files. Browsers usually don't execute it, or even ask if it should be executed.
+
+
+Additionally, setting the Content-Disposition header to attachment prompts the "Save As" dialog to pop up.
+
+
+```php
+<?php
+   $filePath = 'welcome.png';
+
+   // Set the Content-Type header to application/octet-stream
+   header('Content-Type: application/octet-stream');
+
+   // Set the Content-Disposition header to the filename of the downloaded file
+   header('Content-Disposition: attachment; filename="'. basename($filePath).'"');
+
+   // Read the contents of the file and output it to the browser.
+   readfile($filePath);
+?>
+```
+
+
+Save the above script as "download.php" in the document root folder. Make sure that the file to be downloaded is present in the same folder.
+
+
+Start the server and visithttp://localhost/download.phpin the browser. You will get a "Save As" dialog as below −
+
+
+You can select a name and download the file.
+
+
+For a large file, you can read it from the file stream in the chunk of a certain predefined size. The browser offers to save it in the local filesystem, if the Content-Disposition head is set to "attachment", as in the previous example.
+
+
+```php
+<?php
+   $filename = 'welcome.png';
+
+   header('Content-Type: application/octet-stream');
+   header('Content-Disposition: attachment; filename="' . basename($filename) . '"');
+
+   $handle = fopen($filename, 'rb');
+   $buffer = '';
+   $chunkSize = 1024 * 1024;
+
+   ob_start();
+   while (!feof($handle)) {
+      $buffer = fread($handle, $chunkSize);		
+      echo $buffer;
+      ob_flush();
+      flush();
+   }
+   fclose($handle);
+?>
+```
+
+
+## Using file_get_contents() function
+
+
+You can also use thefile_get_contents()function to read and send file content for download. Let us see an example −
+
+
+### Example
+
+
+Here is an example of showing the usage of file_get_contents() function to read and get the content of a file −
+
+
+```php
+<?php
+   // File name   
+   $file = 'myfile.txt'; 
+
+   if (file_exists($file)) {
+      $content = file_get_contents($file);
+      
+      header('Content-Description: File Transfer');
+      header('Content-Type: application/octet-stream');
+      header('Content-Disposition: attachment; filename="' . basename($file) . '"');
+      header('Expires: 0');
+      header('Cache-Control: must-revalidate');
+      header('Pragma: public');
+      header('Content-Length: ' . strlen($content));
+      
+      echo $content;
+      exit;
+   } else {
+      echo "File not found.";
+   }
+?>
+```
+
+
+### Output
+
+
+Following is the content of the file we have given (myfile.txt) −
+
+
+```php
+Hello CodesCompiler!!!!!
+```
+
+
+## Best Practices for Secure File Downloads
+
+
+Here are some of the best practices for secure file downloads in PHP −
+
+
+
+- File Validation:Check whether the requested file is allowed to be downloaded.
+- Authentication:Only logged-in users are able to download private files.
+- Hide File Path:Instead of sharing the actual file path, handle downloads with a script.
+- Limit File Types:Allow only safe file types (For example, PDF, JPEG or TXT).
+- Download restrictions:Set download restrictions to prevent excessive downloading in a short period of time.
+
+

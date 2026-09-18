@@ -1,0 +1,236 @@
+---
+title: "PHP - Continue Statement"
+description: "Learn PHP - Continue Statement with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 500
+group: "PHP Control Statements"
+seoTitle: "PHP - Continue Statement — CodesCompiler PHP Guide"
+permalink: "php-continue-statement"
+---
+
+
+# PHP - Continue Statement
+
+
+
+
+Like thebreakstatement,continueis another "loop control statement" in PHP. Unlike thebreakstatement, thecontinuestatement skips the current iteration and continues execution at the condition evaluation and then the beginning of the next iteration.
+
+
+Thecontinuestatement can be used inside any type of looping constructs, i.e.,for, for-each, whileordo-whileloops. Likebreak, thecontinuekeyword is also normally used conditionally.
+
+
+## Syntax of Continue Statement
+
+
+The syntax of continue statement is as follows −
+
+
+```php
+while(expr){
+   if (condition){
+      continue;
+   }
+}
+```
+
+
+## Flowchart for Continue Statement
+
+
+The followingflowchartexplains how thecontinuestatement works −
+
+
+The program first checks a condition. If the condition is false, the loop terminates. If the condition is True, the program will proceed to the "Continue" statement.
+
+
+The "Continue" statement skips the next stages and returns to check the condition again. If there is no "continue" statement, the program will execute the action. When the action is finished, the program returns to check the condition again.
+
+
+## Using Continue in For Loop
+
+
+Given below is a simple example showing the use ofcontinue. Theforloop is expected to complete ten iterations. However, thecontinuestatement skips the iteration whenever the counter id is divisible by 2.
+
+
+```php
+<?php
+   for ($x=1; $x<=10; $x++){
+      if ($x%2==0){
+         continue;
+      }
+      echo "x = $x \n";
+   }
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+x = 1
+x = 3
+x = 5
+x = 7
+x = 9
+```
+
+
+## Using Continue with Multiple Loop
+
+
+Thecontinuestatement accepts an optional numeric argument which tells it how many levels of enclosing loops it should skip to the end of. The default is 1.
+
+
+```php
+<?php
+   for ($i=1; $i<=3; $i++){
+      for ($j=1; $j<=3; $j++){
+         for ($k=1; $k<=3; $k++){
+            if ($k>1){
+               continue 2;
+            }
+            print "i: $i  j:$j  k: $k\n";
+         }
+      }
+   }
+?>
+```
+
+
+### Output
+
+
+It will generate the following result −
+
+
+```php
+i: 1  j:1  k: 1
+i: 1  j:2  k: 1
+i: 1  j:3  k: 1
+i: 2  j:1  k: 1
+i: 2  j:2  k: 1
+i: 2  j:3  k: 1
+i: 3  j:1  k: 1
+i: 3  j:2  k: 1
+i: 3  j:3  k: 1
+```
+
+
+Thecontinuestatement in the innerforloop skips the iterations 2 and 3 and directly jumps to the middle loop. Hence, the output shows "k" as 1 for all the values of "i" and "k" variables.
+
+
+## Skip Specific Values in For Loop
+
+
+In the code below, we will skip the values set in the for loop. In a loop that prints integers from 1 to 10, we will use the continue statement to skip the 5 number.
+
+
+```php
+<?php
+   for ($i = 1; $i <= 10; $i++) {
+      if ($i == 5) {
+         // Skip when $i is 5
+         continue; 
+      }
+      echo "Number: $i\n";
+   }
+?>
+```
+
+
+### Output
+
+
+This will create the below output −
+
+
+```php
+Number: 1
+Number: 2
+Number: 3
+Number: 4
+Number: 6
+Number: 7
+Number: 8
+Number: 9
+Number: 10
+```
+
+
+## Using Continue in a While Loop
+
+
+This example shows how to use the continue statement within a while loop to skip odd integers and only print even numbers from 1 to 10.
+
+
+```php
+<?php
+   $num = 1;
+   while ($num <= 10) {
+      if ($num % 2 != 0) {
+         $num++; 
+         // Skip odd numbers
+         continue; 
+      }
+      echo "Even Number: $num\n";
+      $num++;
+   }
+?>
+```
+
+
+### Output
+
+
+Following is the output of the above code −
+
+
+```php
+Even Number: 2
+Even Number: 4
+Even Number: 6
+Even Number: 8
+Even Number: 10
+```
+
+
+## Skip Elements in a Foreach Loop
+
+
+In the following example, we are showing how to use the continue statement in a foreach loop to skip a specific value from an array.
+
+
+```php
+<?php
+   $fruits = ["Apple", "Banana", "Mango", "Orange", "Grapes"];
+      
+   foreach ($fruits as $fruit) {
+      if ($fruit == "Mango") {
+         
+         // Skip "Mango"
+         continue; 
+      }
+      echo "Fruit: $fruit\n";
+   }
+?>
+```
+
+
+### Output
+
+
+Below is the output of the following code −
+
+
+```php
+Fruit: Apple
+Fruit: Banana
+Fruit: Orange
+Fruit: Grapes
+```
+

@@ -1,36 +1,116 @@
 ---
-permalink: "php-use-statement"
-title: "PHP \u2013 Use Statement"
-description: "Learn about Use Statement in PHP with interactive examples."
+title: "PHP - Use Statement"
+description: "Learn PHP - Use Statement with clear explanation, code examples, and practical PHP development guide."
 category: "php"
-order: 173
-group: "🚀 Advanced"
+order: 1720
+group: "PHP Advanced"
+seoTitle: "PHP - Use Statement — CodesCompiler PHP Guide"
+permalink: "php-use-statement"
 ---
 
 
+# PHP  The "use" Statement
 
-# PHP \u2013 Use Statement
 
-Welcome to the **Use Statement** tutorial in PHP! In this section, we will explore how this concept works and how you can implement it in your dynamic web applications.
 
-## Overview
 
-(Add detailed overview and explanation here)
+The "use" keyword in PHP is found to be associated with multiple purposes, such as aliasing, inserting traits and inheriting variables in closures.
 
-## Interactive Example
 
-Test out the concept in the interactive PHP WASM editor below. Modify the code and click **Run** to see the output instantly!
+## Aliasing
+
+
+Aliasing is accomplished with the use operator. It allows you to refer to an external fully qualified name with an alias or alternate name.
+
+
+### Example
+
+
+Take a look at the following example −
+
+
+```php
+use My\namespace\myclass as Another;
+$obj = new Another;
+```
+
+
+You can also have groupped use declaration as follows −
+
+
+```php
+use some\namespace\{ClassA, ClassB, ClassC as C};
+use function some\namespace\{fn_a, fn_b, fn_c};
+use const some\namespace\{ConstA, ConstB, ConstC};
+```
+
+
+## Traits
+
+
+With the help of use keyword, you can insert a trait into a class. A Trait is similar to a class, but only intended to group functionality in a fine-grained and consistent way. It is not possible to instantiate a Trait on its own.
+
+
+### Example
+
+
+Take a look at the following example −
+
 
 ```php
 <?php
-// Your PHP code here
-echo "Exploring Use Statement!";
+   trait mytrait {
+      public function hello() {
+         echo "Hello World from " . __TRAIT__ .;
+      }
+   }
+
+   class myclass {
+      use mytrait;
+   }
+
+   $obj = new myclass();
+   $obj->hello();
 ?>
 ```
 
-## Best Practices
 
-- Always validate and sanitize user input.
-- Keep your PHP logic separate from your HTML presentation where possible.
-- Use strict comparison (`===`) instead of loose comparison (`==`).
+It will produce the followingoutput−
+
+
+```php
+Hello World from mytrait
+```
+
+
+## Closures
+
+
+Closure is also an anonymous function that can access variables outside its scope with the help of the "use" keyword.
+
+
+### Example
+
+
+Take a look at the following example −
+
+
+```php
+<?php
+   $maxmarks=300;
+   $percent=function ($marks) use ($maxmarks) {
+      return $marks*100/$maxmarks;
+   };
+   $m = 250;
+   echo "marks=$m percentage=". $percent($m);
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+marks=250 percentage=83.333333333333
+```
 

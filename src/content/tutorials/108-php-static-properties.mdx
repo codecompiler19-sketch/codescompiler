@@ -1,0 +1,172 @@
+---
+title: "PHP - Static Properties"
+description: "Learn PHP - Static Properties with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 1080
+group: "Object Oriented PHP"
+seoTitle: "PHP - Static Properties — CodesCompiler PHP Guide"
+permalink: "php-static-properties"
+---
+
+
+# PHP – Static Properties
+
+
+
+
+The "static" keyword in PHP is used to define static properties and static methods in a PHP class. It may be noted that the static keyword is also used to define static variable, and static anonymous functions. Read this chapter to learn about the static properties in a PHP class.
+
+
+In a class definition, a variable declared with a static qualifier becomes its static property. The static keyword may appear before or after the access modifier.
+
+
+## Declare a Static Property
+
+
+Here is how you can declare a static property in PHP −
+
+
+```php
+static private $var1;
+public static $var2;
+```
+
+
+## Using Type Hints with Static Properties
+
+
+If you want to use type hints, the type must not be before thestatickeyword.
+
+
+```php
+static private string $var1;
+public static float $var2;
+```
+
+
+The value of the static property in a class is not accessible by its object (with the -> operator). Doing so will result in a notice statingAccessing static property myclass::$var1 as non static. Instead, the static properties are accessed using the Scope Resolution Operator represented by the "::" symbol.
+
+
+## Example
+
+
+Take a look at the following example −
+
+
+```php
+<?php
+   class myclass {
+      static string $var1 = "My Class";
+      function __construct() {
+         echo "New object declared" . PHP_EOL;
+      }
+   }
+   $obj = new myclass;
+   echo "accessing static property with scope resolution operator: " . myclass::$var1 . PHP_EOL;
+   echo "accessing static property with -> operator: ". $obj->var1 . PHP_EOL;
+?>
+```
+
+
+### Output
+
+
+It will produce the following outcome −
+
+
+```php
+New object declared
+accessing static property with scope resolution operator: My Class
+PHP Notice:  Accessing static property myclass::$var1 as non static in hello.php on line 14
+```
+
+
+## Using the self Keyword
+
+
+To access the static property from inside a method, refer to the current class with the self keyword. In the following example, the class has an integer static property, which is incremented every time a new object is declared.
+
+
+```php
+<?php
+   class myclass {
+   
+      /* Member variables */
+      static int $var1 = 0;
+      function __construct(){
+         self::$var1++;
+         echo "object number ". self::$var1 . PHP_EOL;
+      }
+   }
+   for ($i=1; $i<=3; $i++) {
+      $obj = new myclass;
+   }
+?>
+```
+
+
+### Output
+
+
+It will produce the below output −
+
+
+```php
+object number 1
+object number 2
+object number 3
+```
+
+
+## Using the parent Keyword
+
+
+The static property of a base class can be used inside a function of the inherited class by referring to the base by parent keyword. You need to use the "parent::static_property" syntax.
+
+
+Take look at the following example −
+
+
+```php
+<?php
+   class myclass {
+   
+      /* Member variables */
+      static int $var1 = 0;
+      function __construct() {
+         self::$var1++;
+         echo "object number ". self::$var1 . PHP_EOL;
+      }
+   }
+
+   class newclass extends myclass{
+      function getstatic() {
+         echo "Static property in parent class: " . parent::$var1 . PHP_EOL;
+      }
+   }
+   $obj = new newclass;
+   $obj->getstatic();
+?>
+```
+
+
+### Output
+
+
+It will generate the following output −
+
+
+```php
+object number 1
+Static property in parent class: 1
+```
+
+
+## Constant vs Static Property
+
+
+Here is a simple table showing the difference between constants and static properties in PHP −
+
+
+AspectConstant ('const')Static Property ('static')Keyword'const''static'Value MutabilityImmutable — value cannot be changed after declaration.Mutable — value can be changed during script execution.AccessAccessed with 'ClassName::CONSTANT_NAME'.Accessed with 'ClassName::$propertyName'.Value InitializationMust be initialized with a constant value (not a function).Can be initialized with a constant value or literal.Data TypesSupports scalar values, arrays (PHP 5.6+), and class objects (PHP 7.1+).Supports all data types, including complex objects.InheritanceInherited by child classes but cannot be overridden.Inherited and can be overridden in child classes.Context UsageAvailable both inside and outside the class.Mainly used for class-level state or counters.Access with '$this'Not accessible via object instance.Not accessible via object instance ('$this').Example Declaration'const PI = 3.14;''public static float $pi = 3.14;'Example Access'echo MyClass::PI;''echo MyClass::$pi;'
+

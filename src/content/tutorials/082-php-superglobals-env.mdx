@@ -1,0 +1,127 @@
+---
+title: "PHP - $_ENV"
+description: "Learn PHP - $_ENV with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 820
+group: "PHP Superglobals"
+seoTitle: "PHP - $_ENV — CodesCompiler PHP Guide"
+permalink: "php-superglobals-env"
+---
+
+
+# PHP - $_ENV
+
+
+
+
+$_ENVis a superglobal variable in PHP. It is an associative array that stores all the environment variables available in the current script.$HTTP_ENV_VARSalso contains the same information, but it is not a superglobal, and it has now been deprecated.
+
+
+The environment variables are imported into the global namespace. Most of these variables are provided by the shell under which the PHP parser is running. Hence, the list of environment variables may be different on different platforms.
+
+
+This array ($_ENV) also includes CGI variables in case PHP is running as a server module or a CGI processor.
+
+
+We can use theforeachloop to display all the environment variables available −
+
+
+```php
+<?php
+   foreach ($_ENV as $k=>$v)
+   echo $k . " => " . $v . "<br>";
+?>
+```
+
+
+## List of Environment Variables
+
+
+On a Windows OS and with XAMPP server, you may get the list of environment variables as follows −
+
+
+VariableValueALLUSERSPROFILEC:\ProgramDataAPPDATAC:\Users\user\AppData\RoamingCommonProgramFilesC:\Program Files\Common FilesCommonProgramFiles(x86)C:\Program Files (x86)\Common FilesCommonProgramW6432C:\Program Files\Common FilesCOMPUTERNAMEGNVBGL3ComSpecC:\WINDOWS\system32\cmd.exeDriverDataC:\Windows\System32\Drivers\DriverDataHOMEDRIVEC −HOMEPATH\Users\userLOCALAPPDATAC:\Users\user\AppData\LocalLOGONSERVER\\GNVBGL3MOZ_PLUGIN_PATHC:\Program Files (x86)\ Foxit Software\  Foxit PDF Reader\plugins\NUMBER_OF_PROCESSORS8OneDriveC:\Users\user\OneDriveOneDriveConsumerC:\Users\user\OneDriveOSWindows_NTPathC:\Python311\Scripts\;C:\Python311\;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\ v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\xampp\php;C:\Users\user\AppData\Local\Microsoft\ WindowsApps;C:\VSCode\Microsoft VS Code\binPATHEXT.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE; .WSF;.WSH;.MSC;.PY;.PYWPROCESSOR_ARCHITECTUREAMD64PROCESSOR_IDENTIFIERIntel64 Family 6 Model 140 Stepping 1, GenuineIntelPROCESSOR_LEVEL6PROCESSOR_REVISION8c01ProgramDataC:\ProgramDataProgramFilesC:\Program FilesProgramFiles(x86)C:\Program Files (x86)ProgramW6432C:\Program FilesPSModulePathC:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\ ModulesPUBLICC:\Users\PublicSystemDriveC −SystemRootC:\WINDOWSTEMPC:\Users\user\AppData\Local\TempTMPC:\Users\user\AppData\Local\TempUSERDOMAINGNVBGL3USERDOMAIN_ROAMINGPROFILEGNVBGL3USERNAMEuserUSERPROFILEC:\Users\userwindirC:\WINDOWSZES_ENABLE_SYSMAN1__COMPAT_LAYERRunAsAdmin InstallerAP_PARENT_PID10608
+
+
+You can access the value of individual environment variable too. This code fetches the PATH environment variable −
+
+
+```php
+<?php
+   echo "Path: " . $_ENV['Path'];
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+Path:
+C:\Python311\Scripts\;C:\Python311\;C:\WINDOWS\system32;
+C:\WINDOWS;C:\WINDOWS\System32\Wbem;
+C:\WINDOWS\System32\WindowsPowerShell\v1.0\;
+C:\WINDOWS\System32\OpenSSH\;C:\xampp\php;
+C:\Users\mlath\AppData\Local\Microsoft\WindowsApps;
+C:\VSCode\Microsoft VS Code\bin
+```
+
+
+Note− The $_ENV array may yield empty result, depending on "php.ini" setting "variables_order". You may have to edit the "php.ini" file and setvariables_order="EGPCS"instead ofvariables_order="GPCS"value.
+
+
+## The getenv() Function
+
+
+The PHP library provides the getenv() function to retrieve the list of all the environment variables or the value of a specific environment variable.
+
+
+The following script displays the values of all the available environment variables −
+
+
+```php
+<?php
+   $arr=getenv();
+   foreach ($arr as $key=>$val)
+   echo "$key=>$val";
+?>
+```
+
+
+To obtain the value of a specific variable, use its name as the argument for the getenv() function −
+
+
+```php
+<?php
+   echo "Path: " . getenv("PATH");
+?>
+```
+
+
+## The putenv() Function
+
+
+PHP also provides the putenv() function to create a new environment variable. The environment variable will only exist for the duration of the current request.
+
+
+Changing the value of certain environment variables should be avoided. By default, users will only be able to set the environment variables that begin with "PHP_" (e.g. PHP_FOO=BAR).
+
+
+The "safe_mode_protected_env_vars" directive in "php.ini" contains a comma-delimited list of environment variables that the end user won't be able to change using putenv().
+
+
+```php
+<?php
+   putenv("PHP_TEMPUSER=GUEST");
+   echo "Temp user: " . getenv("PHP_TEMPUSER");
+?>
+```
+
+
+The browser will display the followingoutput−
+
+
+```php
+Temp user: GUEST
+```
+

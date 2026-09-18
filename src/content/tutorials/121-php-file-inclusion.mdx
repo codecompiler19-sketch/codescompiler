@@ -1,0 +1,262 @@
+---
+title: "PHP - File Inclusion"
+description: "Learn PHP - File Inclusion with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 1210
+group: "PHP Web Development"
+seoTitle: "PHP - File Inclusion — CodesCompiler PHP Guide"
+permalink: "php-file-inclusion"
+---
+
+
+# PHP - File Inclusion
+
+
+
+
+When developing websites, we generally have to reuse the same information or code in many places. For example, we might want the same header, footer or menu across all pages. PHP allows us to use file inclusion instead of writing the same code many times!
+
+
+File inclusion saves time, organizes our code and allows us to make simple changes. When we make a change to one file, that changes all other files that contain that file.
+
+
+## Types File Inclusion in PHP
+
+
+You can include the content of a PHP file into another PHP file before the server executes it. There are two PHP functions which can be used to included one PHP file into another PHP file.
+
+
+
+- Include() Function
+- Require() Function
+- Include_once() and Require_once() Function
+
+
+
+This is a strong point of PHP which helps in creating functions, headers, footers, or elements that can be reused on multiple pages. This will help developers to make it easy to change the layout of complete website with minimal effort. If there is any change required then instead of changing thousand  of files just change included file.
+
+
+## The include() Function
+
+
+The include() function takes all the text in a specified file and copies it into the file that uses the include function. If there is any problem in loading a file then theinclude()function generates a warning but the script will continue execution.
+
+
+### Syntax
+
+
+Below is the syntax of theincludefunction −
+
+
+```php
+include 'filename.php';
+```
+
+
+Here,filename.phpis the file you want to include. It can be a relative or absolute path.
+
+
+### Example
+
+
+Assume you want to create a common menu for your website. Then create a file menu.php with the following content.
+
+
+```php
+<a href="http://www.codescompiler.com/index.htm">Home</a> 
+<a href="http://www.codescompiler.com/ebxml">ebXML</a>   
+<a href="http://www.codescompiler.com/ajax">AJAX</a>   
+<a href="http://www.codescompiler.com/perl">PERL</a>
+```
+
+
+Now create as many pages as you like and include this file to create header. For example now your test.php file can have following content.
+
+
+```php
+<?php <b>include("menu.php");</b> ?>
+<p>This is an example to show how to include PHP file!</p>
+```
+
+
+### Output
+
+
+It will produce the following result −
+
+
+### Advantages of include() Method
+
+
+Using the include() method in PHP has several advantages −
+
+
+
+- Adding a file allows you to reuse the same content on other pages without having to change any code.
+- You can add basic website elements like headers, footers, and menus to various pages.
+- If the included file has an error, include() will only display a warning message and the script will continue to run.
+- If you need to change the included file (for example, to update the header or footer), do so only once, and the changes will be reflected on all pages that use it.
+
+
+
+## The require() Function
+
+
+The require() function takes all the text in a specified file and copies it into the file that uses the include function. If there is any problem in loading a file then therequire()function generates a fatal error and halt the execution of the script.
+
+
+So there is no difference in require() and include() except they handle error conditions. It is recommended to use the require() function instead of include(), because scripts should not continue executing if files are missing or misnamed.
+
+
+### Syntax
+
+
+Below is the syntax of therequirefunction −
+
+
+```php
+require 'filename.php';
+```
+
+
+Here,filename.phpis a file you want to require. It can be a relative or absolute path.
+
+
+### Example
+
+
+You can try using above example with require() function and it will generate same result. But if you will try following two examples where file does not exist then you will get different results.
+
+
+```php
+<?php include("xxmenu.php"); ?>
+<p>This is an example to show how to include wrong PHP file!</p>
+```
+
+
+### Output
+
+
+This will produce the following result −
+
+
+```php
+This is an example to show how to include wrong PHP file!
+```
+
+
+Now lets try same example with require() function.
+
+
+```php
+<?php <b>require("xxmenu.php");</b> ?>
+<p>This is an example to show how to include wrong PHP file!</p>
+```
+
+
+This time file execution halts and nothing is displayed.
+
+
+NOTE− You may get plain warning messages or fatal error messages or nothing at all. This depends on your PHP Server configuration.
+
+
+### Advantages of require() Method
+
+
+Using the require() method in PHP has many advantages −
+
+
+
+- If the required file is important for the page (for example, a database connection file), require() makes sure the script stops and displays an error if it is not found, preventing the page from loading with limited functionality.
+- The function makes sure all necessary files are always available for proper execution. This is useful for files that the website need to work properly.
+- Like include(), require() allows you to reuse code across multiple pages.
+- With require(), you only need to include the required code once, which reduces duplication.
+
+
+
+## Difference between include() and require() Methods
+
+
+The require statement is also used to include a file within PHP code. However, there is one important difference between include and require: if a file is included using the include line but PHP cannot find it, the script will continue to run.
+
+
+
+- The include() function shows a warning and continues execution if the file is missing. While the require() method shows a fatal error and stops execution if the file is missing.
+- The include() function is basically used for non-critical files for example- header, footer. While require() is used for important files like database connection, configuration.
+- The include() method can include a file multiple times unless include_once() is used. And the require() includes a file multiple times unless require_once() is used.
+- The include() continues execution even if the file is not present of missing. And require() stops script execution if the file is missing.
+
+
+
+## The include_once() and require_once() Function
+
+
+These functions are useful when you have to make sure a file is only included once.
+
+
+```php
+// config.php
+<?php
+   $database_host = 'localhost';
+?>
+
+// settings.php
+<?php
+   // Includes config.php only once   
+   include_once 'config.php'; 
+
+   // It will not include again if called multiple times
+   require_once 'config.php'; 
+   echo "Database host is: $database_host";
+?>
+```
+
+
+## Security Risks of File Inclusion
+
+
+While file inclusion can make your code easier to work with, it may also create security risks, particularly if users have control over which files are included. This is known as Local File Inclusion (LFI) and can be used by attackers.
+
+
+### Example of a Vulnerable Code
+
+
+In this scenario, a malicious user may gain access to any file on the server by changing the page query parameter, which could result in data breaches or other vulnerabilities. Here is an example code which you should avoid in your PHP applications −
+
+
+```php
+<?php
+   // User can set the page parameter
+   $page = $_GET['page']; 
+
+   // This can lead to dangerous inclusions
+   include($page); 
+?>
+```
+
+
+## Prevent File Inclusion Vulnerabilities
+
+
+Always check and sanitize any user input before using it in an include statement.
+
+
+```php
+<?php
+   $allowed_pages = ['home.php', 'about.php', 'contact.php'];
+   if (in_array($page, $allowed_pages)) {
+      include($page);
+   } else {
+      echo "Page not found.";
+   }
+?>
+```
+
+
+Instead of including files with user-generated content you can consider using predefined paths. If you don't need remote file inclusion so you can disable it in your php.ini file.
+
+
+```php
+allow_url_include = Off
+```
+

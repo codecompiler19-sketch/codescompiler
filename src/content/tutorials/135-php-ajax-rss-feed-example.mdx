@@ -1,0 +1,130 @@
+---
+title: "PHP - AJAX RSS Feed Example"
+description: "Learn PHP - AJAX RSS Feed Example with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 1350
+group: "PHP AJAX"
+seoTitle: "PHP - AJAX RSS Feed Example — CodesCompiler PHP Guide"
+permalink: "php-ajax-rss-feed-example"
+---
+
+
+# PHP - AJAX RSS Feed Example
+
+
+
+
+## Really Simple Syndication (RSS)
+
+
+RSS, which stands for Really Simple Syndication, is used to publish often updated information from website like audio, video, images, etc. We can integrate RSS feeds to a website by using AJAX and PHP. This code demonstrates how to show RSS feeds in our site.
+
+
+## Index.html
+
+
+The index page should be as follows −
+
+
+```html
+<html>
+<head>
+   <script>
+      function showRSS(str) {
+         if (str.length == 0) { 
+            document.getElementById("output").innerHTML = "";
+            return;
+         }
+
+         if (window.XMLHttpRequest) {
+            xmlhttp = new XMLHttpRequest();
+         } else {
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+         }
+         xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+               document.getElementById("output").innerHTML = xmlhttp.responseText;
+            }
+         }
+
+         xmlhttp.open("GET","rss.php?q="+str,true);
+         xmlhttp.send();
+      }
+   </script>
+</head>
+<body>
+   <p>Please Select an option to get RSS:</p>
+   <form>
+      <select onchange = "showRSS(this.value)">
+         <option value = "">Select an RSS-feed:</option>
+         <option value = "cnn">CNN</option>
+         <option value = "bbc">BBC News</option>
+         <option value = "pc">PC World</option>
+      </select>
+   </form>
+   <br>
+   <div id = "output">RSS-feeds</div>
+</body>
+</html>
+```
+
+
+## rss.php
+
+
+"rss.php" has contained syntax about how to get access toRSS FeedsRSS Feeds and return RSS Feeds to the webpages.
+
+
+```php
+<?php
+   $q = $_GET["q"];
+
+   if($q == "cnn") {
+      $xml = ("http://rss.cnn.com/rss/cnn_topstories.rss");
+   } elseif($q == "bbc") {
+      $xml = ("http://newsrss.bbc.co.uk/rss/newsonline_world_edition/americas/rss.xml");
+   } elseif($q = "pcw"){
+      $xml = ("http://www.pcworld.com/index.rss");
+   }
+
+   $xmlDoc = new DOMDocument();
+   $xmlDoc->load($xml);
+
+   $channel = $xmlDoc->getElementsByTagName('channel')->item(0);
+
+   $channel_title = $channel->getElementsByTagName('title')
+   ->item(0)->childNodes->item(0)->nodeValue;
+
+   $channel_link = $channel->getElementsByTagName('link')
+   ->item(0)->childNodes->item(0)->nodeValue;
+
+   $channel_desc = $channel->getElementsByTagName('description')
+   ->item(0)->childNodes->item(0)->nodeValue;
+
+   echo("<p><a href = '" . $channel_link . "'>" . 
+      $channel_title . "</a>");
+   echo("<br>");
+   echo($channel_desc . "</p>");
+
+   $x = $xmlDoc->getElementsByTagName('item');
+
+   for ($i = 0; $i<=2; $i++) {
+      $item_title = $x->item($i)->getElementsByTagName('title')
+      ->item(0)->childNodes->item(0)->nodeValue;
+
+      $item_link = $x->item($i)->getElementsByTagName('link')
+      ->item(0)->childNodes->item(0)->nodeValue;
+
+      $item_desc = $x->item($i)->getElementsByTagName('description')
+      ->item(0)->childNodes->item(0)->nodeValue;
+
+      echo ("<p><a href = '" . $item_link . "'>" . $item_title . "</a>");
+      echo ("<br>");
+      echo ($item_desc . "</p>");
+   }
+?>
+```
+
+
+It will produce the following output −
+

@@ -1,0 +1,246 @@
+---
+title: "PHP - Handle CSV File"
+description: "Learn PHP - Handle CSV File with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 940
+group: "PHP File Handling"
+seoTitle: "PHP - Handle CSV File — CodesCompiler PHP Guide"
+permalink: "php-handle-csv-file"
+---
+
+
+# PHP - Handle CSV File
+
+
+
+
+Popular spreadsheet programs use the CSV file format (which stands for Comma Separated Values) to export worksheet data in plain text. Each line in the file represents one row of the worksheet, with values in each column separated by commas. For example, a CSV file with names and ages might look like this −
+
+
+```php
+Name,Age
+Amit Sharma,30
+Deepak Jain,25
+```
+
+
+## Why Use CSV Files?
+
+
+Here is why you should use CSV files in PHP −
+
+
+
+- CSV files are easy to create and read.
+- CSV files are compatible with a variety of tools, including Excel.
+- They take up less space than other file types.
+
+
+
+## PHP Functions to Handle CSV Files
+
+
+PHP's filesystem function library provides two functions -fgetcsv()andfputcsv()- respectively to read data from a CSV file into an array and put the array elements in a CSV file.
+
+
+## The fgetcsv() Function
+
+
+The getcsv() function reads the line from the file pointer, and parses it into CSV fields.
+
+
+```php
+fgetcsv(
+   resource $stream,
+   ?int $length = null,
+   string $separator = ",",
+   string $enclosure = "\"",
+   string $escape = "\\"
+): array|false
+```
+
+
+The$streamparameter is a handle to the file resource, opened inread mode. The default separator symbol to parse the fields is comma, you can specify any other symbol if required.
+
+
+The fgetcsv() function returns an indexed array containing the fields. If the function encounters any error, it returnsfalse.
+
+
+To demonstrate the use of fgetcsv() function, store the following text as "hello.txt" in the current working directory.
+
+
+```php
+Name, Email, Post, Salary
+Ravishankar, ravi@gmail.com, Manager, 40000
+Kavita, kavita@hotmail.com, Assistant, 25000
+Nandkumar, nandu@example.com, Programmer, 30000
+```
+
+
+### Example
+
+
+The following PHP code reads the CSV data from this file, and returns an array. The fields in the array are then rendered in a HTML table −
+
+
+```php
+<?php
+   $filename = 'hello.csv';
+   $data = [];
+
+   // open the file
+   $f = fopen($filename, 'r');
+
+   if ($f === false) {
+      die('Cannot open the file ' . $filename);
+   }
+
+   // read each line in CSV file at a time
+   while (($row = fgetcsv($f)) !== false) {
+      $data[] = $row;
+   }
+
+   // close the file
+   fclose($f);
+   echo "<table border=1>";
+   foreach ($data as $row) {
+      echo "<tr>";
+      foreach($row as $val) {
+         echo "<td>$val</td>"; 
+      }
+      echo "</tr>";
+   }
+   echo "</table>";
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+NameEmailPostSalaryRavishankarravi@gmail.comManager40000Kavitakavita@hotmail.comAssistant25000Nandkumarnandu@example.comProgrammer30000
+
+
+## The fputcsv() Function
+
+
+Te fputcsv() function puts an indexed array with its elements separated by commas, at the current file pointer position of a CSV file.
+
+
+```php
+fputcsv(
+   resource $stream,
+   array $fields,
+   string $separator = ",",
+   string $enclosure = "\"",
+   string $escape = "\\",
+   string $eol = "\n"
+): int|false
+```
+
+
+The target file must be opened in write mode. The second mandatory parameter is an array consisting of comma separated fields. As in case of fgetcsv() function, the default separator is comma.
+
+
+### Example
+
+
+In the following code, a two dimensional array of comma separated values is written into a CSV file.
+
+
+```php
+<?php
+   $data = [
+      ["Name", "Email", "Post", "Salary"],
+      ["Ravishankar", "ravi@gmail.com", "Manager", "40000"],
+      ["Kavita", "kavita@hotmail.com", "Assistant", "25000"],
+      ["Nandkumar", "nandu@example.com", "Programmer", "30000"],
+   ];
+   $filename = 'employee.csv';
+
+   // open csv file for writing
+   $f = fopen($filename, 'w');
+
+   if ($f === false) {
+      die('Error opening the file ' . $filename);
+   }
+
+   // write each row at a time to a file
+   foreach ($data as $row) {
+      fputcsv($f, $row);
+   }
+
+   // close the file
+   fclose($f);
+?>
+```
+
+
+The "employee.csv" file should be created in the current working directory, after the above program is executed.
+
+
+## Append Data to a CSV File
+
+
+If you want to add new data of information without overwriting the file you can use the append mode ("a"). Here is the way you can do it −
+
+
+```php
+<?php
+   $newData = ["Amrita", 29, "Delhi"];
+
+   // Open the file in append mode
+   $file = fopen("/PHP/PhpProjects/new_data.csv", "a"); 
+
+   // Add new data to the file
+   fputcsv($file, $newData); 
+
+   fclose($file);
+   echo "New data added successfully!";
+?>
+```
+
+
+### Output
+
+
+Following is the output of the above code −
+
+
+```php
+New data added successfully!
+```
+
+
+## Delete a CSV File
+
+
+Here we will show how you can delete or unlink a csv file using the unlink() function. Here is the code −
+
+
+```php
+<?php
+   $file = "old_data.csv";
+
+   if (file_exists($file)) {
+      
+      // Delete the file
+      unlink($file); 
+      echo "File deleted successfully!";
+   } else {
+      echo "File not found!";
+   }
+?>
+```
+
+
+### Output
+
+
+This will create the below output −
+
+
+```php
+File deleted successfully!
+```
+

@@ -1,0 +1,173 @@
+---
+title: "PHP - AJAX Auto Complete Search"
+description: "Learn PHP - AJAX Auto Complete Search with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 1340
+group: "PHP AJAX"
+seoTitle: "PHP - AJAX Auto Complete Search — CodesCompiler PHP Guide"
+permalink: "php-ajax-autocomplete-search"
+---
+
+
+# PHP - AJAX Auto Complete Search
+
+
+
+
+Autocomplete feature is a typeahead mechanism to show input suggestion as the user enters data in the search box provided. It is also called live search because it reacts to the users' input. In this example, we shall use AJAX and XML parser in PHP to demonstrate the use of auto complete text box.
+
+
+This application has three main constituents −
+
+
+
+- The XML Document
+- JavaScript Code
+- XML Parser in PHP
+
+
+
+Let us now discuss these three constituents in detail −
+
+
+## The XML Document
+
+
+Save the following XML script as "autocomplete.xml" in the document root folder
+
+
+```php
+<?xml version = "1.0" encoding = "utf-8"?>
+<pages>
+
+   <link>
+      <title>android</title>
+      <url>https://www.codescompiler.com/android/index.htm</url>
+   </link>
+
+   <link>
+      <title>Java</title>
+      <url>https://www.codescompiler.com/java/index.htm</url>
+   </link>
+
+   <link>
+      <title>CSS </title>
+      <url>https://www.codescompiler.com/css/index.htm</url>
+   </link>
+
+   <link>
+      <title>angularjs</title>
+      <url>https://www.codescompiler.com/angularjs/index.htm </url>
+   </link>
+
+   <link>
+      <title>hadoop</title>
+      <url>https://www.codescompiler.com/hadoop/index.htm </url>
+   </link>
+
+   <link>
+      <title>swift</title>
+      <url>https://www.codescompiler.com/swift/index.htm </url>
+   </link>
+
+   <link>
+      <title>ruby</title>
+      <url>https://www.codescompiler.com/ruby/index.htm </url>
+   </link>
+
+   <link>
+      <title>nodejs</title>
+      <url>https://www.codescompiler.com/nodejs/index.htm </url>
+   </link>
+   
+</pages>
+```
+
+
+## JavaScript Code
+
+
+The following script renders a text field for the user to enter a course name of his choice. On every keystroke a JavaScript function is called, and the input value is passed to the server-side PHP script with GET method. The servers response is asynchronously rendered.
+
+
+Save this code as "index.php".
+
+
+```html
+<html>
+<head>
+   <script>
+      function showResult(str) {
+         if (str.length == 0) {
+            document.getElementById("livesearch").innerHTML = "";
+            document.getElementById("livesearch").style.border = "0px";
+            return;
+         }
+
+         if (window.XMLHttpRequest) {
+            xmlhttp = new XMLHttpRequest();
+         } else {
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+         }
+
+         xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+               document.getElementById("livesearch").innerHTML = xmlhttp.responseText;
+               document.getElementById("livesearch").style.border = "1px solid #A5ACB2";
+            }
+         }
+
+         xmlhttp.open("GET","livesearch.php?q="+str,true);
+         xmlhttp.send();
+      }
+   </script>
+</head>
+<body>
+   <form>
+      <h2>Enter Course Name</h2>
+      <input type = "text" size = "30" onkeyup = "showResult(this.value)">
+      <div id = "livesearch"></div>
+      <a href = "https://www.codescompiler.com">More Details</a>
+   </form>
+</body>
+</html>
+```
+
+
+### XML Parser in PHP
+
+
+This the PHP script on the server. It parses the given XML source document, reads the characters entered in the input field, searches for it in the parsed XNL object, and sends back the response.
+
+
+Save the following code as "livesearch.php".
+
+
+```php
+<?php
+   $xml_doc = new DOMDocument();
+   $xml_doc->load('autocomplete.xml');
+
+   $x=$xml_doc->getElementsByTagName('link');
+
+   $q = $_GET['q'];
+   $result = '';
+   foreach($x as $node) {
+      if (stripos("{$node->nodeValue}", $q) !== false) {
+         $result .= "{$node->nodeValue}";
+      }
+   }
+
+   // Set $response to "No records found." in case no hint was found
+   // or the values of the matching values
+   if ($result == '')
+      $result = 'No records found.';
+
+   // show the results or "No records found."
+   echo $result;
+?>
+```
+
+
+With the XAMPP server running, visit "http://localhost/index.php" and the browser displays a input text field. For each character typed in it, the relevant suggestions appear below it.
+

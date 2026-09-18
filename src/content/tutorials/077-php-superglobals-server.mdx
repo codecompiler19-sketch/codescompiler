@@ -1,0 +1,130 @@
+---
+title: "PHP - $_SERVER"
+description: "Learn PHP - $_SERVER with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 770
+group: "PHP Superglobals"
+seoTitle: "PHP - $_SERVER — CodesCompiler PHP Guide"
+permalink: "php-superglobals-server"
+---
+
+
+# PHP - $_SERVER
+
+
+
+
+The$_SERVERis asuperglobalin PHP. It includes information about HTTP headers, path, script location, and other things. It is an associative array that contains information about the execution environment and server.
+
+
+The majority of these details are filled in by the web server and each server may have different entries. When running PHP scripts from the command line, some of these entries might not be available.
+
+
+PHP also generates additional objects using request headers. The header name, which is in uppercase and has underscores instead of hyphens, is followed by the term "HTTP_" for these items.
+
+
+## Key Points about the $_SERVER
+
+
+$_SERVER is a superglobal in PHP. It holds information regarding HTTP headers, path and script location, etc.
+
+
+
+- $_SERVER is an associative array and it holds all the server and execution environment related information.
+- Most of the entries in this associative array are populated by the web server. The entries may change from one web server to other, as servers may omit some, or provide others.
+- For a PHP script running on the command line, most of these entries will not be available or have any meaning.
+- PHP will also create additional elements with values from request headers. These entries will be named "HTTP_" followed by the header name, capitalized and with underscores instead of hyphens.
+- For example, the "Accept-Language" header would be available as $_SERVER['HTTP_ACCEPT_LANGUAGE'].
+- PHP versions prior to 5.4.0 had $HTTP_SERVER_VARS which contained the same information but it has now been removed.
+
+
+
+## Server Variables
+
+
+The following table lists some of the important server variables of the $_SERVER array followed by the description of their values.
+
+
+Sr.NoServer Variables & Description1PHP_SELFStores filename of currently executing script.2SERVER_ADDRThis property of array returns the IP address of the server under which the current script is executing.3SERVER_NAMEName of server host under which the current script is executing. In case of a server running locally, localhost is returned.4QUERY_STRINGA query string is the string of key value pairs separated by the "&" symbol and appended to the URL after the "?" symbol.For example, http://localhost/testscript?name=xyz&age=20 URL returns trailing query string5REQUEST_METHODHTTP request method used for accessing a URL, such as POST, GET, POST, PUT or DELETE.In the above query string example, a URL attached to query string with the "?" symbol requests the page with GET method6DOCUMENT_ROOTReturns the name of the directory on the server that is configured as the document root.On XAMPP apache server, it returnshtdocsas the name of document root c:/xampp/htdocs7REMOTE_ADDRIP address of the machine from where the user is viewing the current page.8SERVER_PORTPort number on which the web server is listening to the incoming request. Default is 809SCRIPT_FILENAMEThe absolute path to the currently executing script.10HTTP_HOSTThe contents of the Host header from the current request.11SCRIPT_NAMEContains the path of the current script relative to the document root.12REQUEST_URIThe URI that was given to access the page, including the query string.13HTTPSSet to 'on' if the request was made over HTTPS, otherwise not set.14SERVER_PROTOCOLThe name and version of the information protocol used, like HTTP/1.1 or HTTP/2.15GATEWAY_INTERFACEThe version of the CGI specification that the server uses, like CGI/1.1.
+
+
+## Example
+
+
+The following script invoked from document root of XAMPP server lists all the server variables −
+
+
+```php
+<?php
+   foreach ($_SERVER as $k=>$v)
+   echo $k . "=>" . $v . "\n";
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+MIBDIRS=>C:/xampp/php/extras/mibs
+MYSQL_HOME=>\xampp\mysql\bin
+OPENSSL_CONF=>C:/xampp/apache/bin/openssl.cnf
+PHP_PEAR_SYSCONF_DIR=>\xampp\php
+PHPRC=>\xampp\php
+TMP=>\xampp\tmp
+HTTP_HOST=>localhost
+HTTP_CONNECTION=>keep-alive
+HTTP_SEC_CH_UA=>"Chromium";v="116", "Not)
+A;Brand";v="24", "Google Chrome";v="116"
+HTTP_SEC_CH_UA_MOBILE=>?0
+HTTP_SEC_CH_UA_PLATFORM=>"Windows"
+HTTP_DNT=>1
+HTTP_UPGRADE_INSECURE_REQUESTS=>1
+HTTP_USER_AGENT=>Mozilla/5.0 (Windows NT 10.0; Win64; x64)
+ AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36
+HTTP_ACCEPT=>text/html,application/xhtml+xml,application/xml;
+q=0.9,image/avif,image/webp,image/apng,*/*;
+q=0.8,application/signed-exchange;v=b3;q=0.7
+HTTP_SEC_FETCH_SITE=>none
+HTTP_SEC_FETCH_MODE=>navigate
+HTTP_SEC_FETCH_USER=>?1
+HTTP_SEC_FETCH_DEST=>document
+HTTP_ACCEPT_ENCODING=>gzip, deflate, br
+HTTP_ACCEPT_LANGUAGE=>en-US,en;q=0.9,mr;q=0.8
+PATH=>C:\Python311\Scripts\;
+C:\Python311\;C:\WINDOWS\system32;
+C:\WINDOWS;C:\WINDOWS\System32\Wbem;
+C:\WINDOWS\System32\WindowsPowerShell\v1.0\;
+C:\WINDOWS\System32\OpenSSH\;C:\xampp\php;
+C:\Users\user\AppData\Local\Microsoft\WindowsApps;
+C:\VSCode\Microsoft VS Code\bin
+SystemRoot=>C:\WINDOWS
+COMSPEC=>C:\WINDOWS\system32\cmd.exe
+PATHEXT=>.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC;.PY;.PYW
+WINDIR=>C:\WINDOWS
+SERVER_SIGNATURE=>
+Apache/2.4.56 (Win64) OpenSSL/1.1.1t PHP/8.0.28 Server at localhost Port 80
+
+SERVER_SOFTWARE=>Apache/2.4.56 (Win64) OpenSSL/1.1.1t PHP/8.0.28
+SERVER_NAME=>localhost
+SERVER_ADDR=>::1
+SERVER_PORT=>80
+REMOTE_ADDR=>::1
+DOCUMENT_ROOT=>C:/xampp/htdocs
+REQUEST_SCHEME=>http
+CONTEXT_PREFIX=>
+CONTEXT_DOCUMENT_ROOT=>C:/xampp/htdocs
+SERVER_ADMIN=>postmaster@localhost
+SCRIPT_FILENAME=>C:/xampp/htdocs/hello.php
+REMOTE_PORT=>54148
+GATEWAY_INTERFACE=>CGI/1.1
+SERVER_PROTOCOL=>HTTP/1.1
+REQUEST_METHOD=>GET
+QUERY_STRING=>
+REQUEST_URI=>/hello.php
+SCRIPT_NAME=>/hello.php
+PHP_SELF=>/hello.php
+REQUEST_TIME_FLOAT=>1694802456.9816
+REQUEST_TIME=>1694802456
+```
+

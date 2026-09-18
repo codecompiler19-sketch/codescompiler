@@ -1,0 +1,238 @@
+---
+title: "PHP - Global Variables"
+description: "Learn PHP - Global Variables with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 740
+group: "PHP Functions"
+seoTitle: "PHP - Global Variables — CodesCompiler PHP Guide"
+permalink: "php-global-variables"
+---
+
+
+# PHP - Global Variables
+
+
+
+
+In PHP, any variable that can be accessed from anywhere in a PHP script is called as aglobal variable. If the variable is declared outside all the functions or classes in the script, it becomes a global variable.
+
+
+While global variables can be accessed directly outside a function, they aren't automatically available inside a function.
+
+
+## Key Points About Global Variables
+
+
+Here are some key points to keep in mind about global variables −
+
+
+
+- External classes or functions that are defined
+- Accessible globally, but internal operations need particular handling
+- Use the $GLOBALS array or the global keyword to access functions.
+
+
+
+## Example
+
+
+In the script below,$nameis global for the functionsayhello().
+
+
+```php
+<?php
+   $name = "Amar";
+   function sayhello() {
+      echo "Hello " . $name;
+   }
+   sayhello();
+?>
+```
+
+
+### Output
+
+
+However, the variable is not accessible inside the function. Hence, you will get anerror message"Undefined variable $name".
+
+
+```php
+Hello 
+PHP Warning: Undefined variable $name in /home/cg/root/93427/main.php on line 5
+```
+
+
+## Example
+
+
+To get access within a function, you need to use the "global" keyword before the variable.
+
+
+```php
+<?php
+   $name = "Amar";
+   function sayhello() {
+      GLOBAL $name;
+      echo "Hello " . $name;
+   }
+   sayhello();
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+Hello Amar
+```
+
+
+If a function accesses a global variable and modifies it, the modified value is available everywhere after the function call is completed.
+
+
+Let us change the value of$nameinside thesayhello()function and check its value after the function is called.
+
+
+## Example
+
+
+Take a look at this following example −
+
+
+```php
+<?php
+   $name = "Amar";
+   function sayhello() {
+      GLOBAL $name;
+      echo "Global variable name: $name" .PHP_EOL;
+      $name = "Amarjyot";
+      echo "Global variable name changed to: $name" .PHP_EOL;
+   }
+   sayhello();
+   echo "Global variable name after function call: $name" .PHP_EOL;
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+Global variable name: Amar
+Global variable name changed to: Amarjyot
+Global variable name after function call: Amarjyot
+```
+
+
+## The $GLOBALS Array
+
+
+PHP maintains an associative array named$GLOBALSthat holds all the variables and their values declared in a global scope. The $GLOBALS array also stores many predefined variables called as superglobals, along with the user defined global variables.
+
+
+Any of the global variables can also be accessed inside any function with the help of a regular syntax of accessing an arrow element. For example, the value of the global variable$nameis given by$GLOBALS["name"].
+
+
+### Example
+
+
+In the following example, two global variable $x and $y are accessed inside the addition() function.
+
+
+```php
+<?php
+   $x = 10;
+   $y = 20;
+
+   function addition() {
+      $z = $GLOBALS['x']+$GLOBALS['y'];
+      echo "Addition: $z" .PHP_EOL;
+   }
+   addition();
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+Addition: 30
+```
+
+
+### Example
+
+
+You can also add any local variable into the global scope by adding it in the $GLOBALS array. Let us add$zin the global scope.
+
+
+```php
+<?php
+   $x = 10;
+   $y = 20;
+   function addition() {
+      $z = $GLOBALS['x']+$GLOBALS['y'];
+      $GLOBALS['z'] = $z;
+   }
+   addition();
+   echo "Now z is the global variable. Addition: $z" .PHP_EOL;
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+Now z is the global variable. Addition: 30
+```
+
+
+## Including One PHP Script in Another
+
+
+You can include one PHP script in another. Variables declared in the included script are added in the global scope of the PHP script in which it is included.
+
+
+Here is "a.php" file −
+
+
+```php
+<?php
+   include 'b.php';
+   function addition() {
+      $z = $GLOBALS['x']+$GLOBALS['y'];
+      echo "Addition: $z" .PHP_EOL;
+   }
+   addition();
+?>
+```
+
+
+It includes "b.php" that has the$xand$yvariables, so they become the global variables for theaddition()function in "a.php" script.
+
+
+```php
+<?php
+   $x = 10;
+   $y = 20;
+?>
+```
+
+
+Global variables are generally used while implementing singleton patterns, and accessing registers in embedded systems and also when a variable is being used by many functions.
+

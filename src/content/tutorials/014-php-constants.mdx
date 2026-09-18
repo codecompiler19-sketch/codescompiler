@@ -1,0 +1,282 @@
+---
+title: "PHP - Constants"
+description: "Learn PHP - Constants with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 140
+group: "PHP Basics"
+seoTitle: "PHP - Constants — CodesCompiler PHP Guide"
+permalink: "php-constants"
+---
+
+
+# PHP - Constants
+
+
+
+
+A constant in PHP is a name or an identifier for a simple value. A constant value cannot change during the execution of the PHP script. It basically improves code readability and maintainability. Constants make it easier to manage the configuration settings.
+
+
+They make code easier to read and prevent key values from changing. Constants can be used anywhere in the application. PHP also contains built-in constants such as PHP_VERSION. Constants help make the code simple and secure.
+
+
+## Rules of Constants in PHP
+
+
+
+- By default, a PHP constant is case-sensitive.
+- By convention, constant identifiers are always uppercase.
+- A constant name starts with a letter or underscore, followed by any number of letters, numbers, or underscore.
+- There is no need to write a dollar sign ($) before a constant, however one has to use a dollar sign before a variable.
+
+
+
+## How to Define a Constant in PHP?
+
+
+We can use the define() function to create a constant in PHP programming language.
+
+
+### Syntax
+
+
+Below is the syntax of thedefine()function in PHP −
+
+
+```php
+define("CONSTANT_NAME", value);
+```
+
+
+## Parameters
+
+
+The parameters are needed to use the define() function are mentioned below −
+
+
+Sr.NoParameter & Description1CONSTANT_NAMEIt is the name of the constant (should be in uppercase).2valueIt is the fixed value assigned to the constant.
+
+
+## Rules for Defining Constants
+
+
+Here are the rules listed below for defining a constant −
+
+
+
+- A constant name must start with a letter or underscore.
+- Unlike variables, a constant name should not contain the $ sign.
+- Constants are global, so they can be accessed from anywhere in the script.
+
+
+
+## Examples of Valid and Invalid Constant Names in PHP
+
+
+Here are some examples of valid and invalid constant names in PHP −
+
+
+```php
+// Valid constant names
+define("ONE",     "first thing");
+define("TWO2",    "second thing");
+define("THREE_3", "third thing");
+define("__THREE__", "third value");
+
+// Invalid constant names
+define("2TWO",    "second thing");
+```
+
+
+## PHP Predefined Constants
+
+
+PHP has several built-in constants which provide useful information.
+
+
+```php
+<?php
+   // Provides the current PHP version
+   echo PHP_VERSION; 
+   
+   // Provides the operating system PHP is running on
+   echo PHP_OS; 
+?>
+```
+
+
+## Defining a Named Constant
+
+
+The define() function in PHP library is used to define a named constant at runtime.
+
+
+```php
+define(string $const_name, mixed $value, bool $case = false): bool
+```
+
+
+### Parameters
+
+
+
+- const_name− The name of the constant.
+- value− The value of the constant. It can be a scalar value (int, float, string, bool, or null) or array values are also accepted.
+- case− If set to true, the constant will be defined case-insensitive. The default behavior is case-sensitive, i.e., CONSTANT and Constant represent different values.
+
+
+
+The define() function returns "true" on success and "false" on failure.
+
+
+### Example 1
+
+
+The following example demonstrates how the define() function works −
+
+
+```php
+<?php  
+   define("CONSTANT", "Hello world.");
+
+   echo CONSTANT; 
+   // echo Constant; 
+?>
+```
+
+
+#### Output
+
+
+The first echo statement outputs the value of CONSTANT. You will get the followingoutput−
+
+
+```php
+Hello world.
+```
+
+
+But, when you uncomment the second echo statement, it will display the following error −
+
+
+```php
+Fatal error: Uncaught Error: Undefined constant "Constant" in hello.php: on line 5
+```
+
+
+If you set the case parameter to False, PHP doesn't differentiate upper and lowercase constants.
+
+
+### Example 2
+
+
+You can also use an array as the value of a constant. Take a look at the following example −
+
+
+```php
+<?php  
+   define(
+      $name="LANGS", 
+      $value=array('PHP', 'Java', 'Python')
+   );
+   var_dump(LANGS);
+?>
+```
+
+
+#### Output
+
+
+It will produce the followingoutput−
+
+
+```php
+array(3) {
+  [0]=>
+  string(3) "PHP"
+  [1]=>
+  string(4) "Java"
+  [2]=>
+  string(6) "Python"
+}
+```
+
+
+## Using the constant() Function
+
+
+The echo statement outputs the value of the defined constant. You can also use the constant() function. It returns the value of the constant indicated by name.
+
+
+```php
+constant(string $name): mixed
+```
+
+
+The constant() function is useful if you need to retrieve the value of a constant, but do not know its name. I.e. it is stored in a variable or returned by a function.
+
+
+```php
+<?php
+   define("MINSIZE", 50);
+
+   echo MINSIZE;
+   echo PHP_EOL;
+   // same thing as the previous line
+   echo constant("MINSIZE");	
+?>
+```
+
+
+### Output
+
+
+It will produce the followingoutput−
+
+
+```php
+50
+50
+```
+
+
+## Using the defined() Function
+
+
+The PHP library provides a defined() function that checks whether a given named constant exists. Take a look at the following example −
+
+
+```php
+<?php
+   define('MAX', 100);
+
+   if (defined('MAX')) {
+      echo MAX;
+   }
+?>
+```
+
+
+### Output
+
+
+It will produce the followingoutput−
+
+
+```php
+100
+```
+
+
+PHP also has a function called "get_defined_constants()" that returns an associative array of all the defined constants and their values.
+
+
+## Difference between Constants and Variables in PHP
+
+
+
+- Constants cannot be defined by simple assignment; they can only be defined using the define() function.
+- Constants may be defined and accessed anywhere without regard to variable scoping rules.
+- Once the Constants have been set, they may not be redefined or undefined.
+
+

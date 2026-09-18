@@ -1,0 +1,324 @@
+---
+title: "PHP - Object Iteration"
+description: "Learn PHP - Object Iteration with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 1100
+group: "Object Oriented PHP"
+seoTitle: "PHP - Object Iteration — CodesCompiler PHP Guide"
+permalink: "php-object-iteration"
+---
+
+
+# PHP - Object Iteration
+
+
+
+
+When working with objects in PHP, you may want to go over each property one by one. This is referred to as object iteration. It is useful when you want to verify or display all of an object's properties without having to access them individually.
+
+
+Aforeachloop may be employed to iterate through all the publicly visible members of an object of a PHP class. This feature has been available in versions of PHP 5 onwards. You can of course access the list of private properties inside an instance method. PHP also defines Iterator interface which can be used for the purpose.
+
+
+## When Can You Iterate an Object?
+
+
+Iteration provides access exclusively to an object's public properties. Private and protected properties will not appear unless you use certain methods.
+
+
+## Why Use Object Iteration?
+
+
+Object iteration is useful in situations such as −
+
+
+
+- Accessing Multiple Objects:If you have an array of objects, you are able to operate on them all without having to write separate code.
+- Efficient Data Management:You can easily process data from a variety of objects.
+- Simplifies Code:The use of loops to traverse across objects reduces code by reducing the need for repeated coding.
+
+
+
+## Using foreach Loop
+
+
+In the example below, the public properties of the class are listed with the use offoreachloop.
+
+
+### Example
+
+
+```php
+<?php
+   class myclass {
+      private $var;
+      protected $var1;
+      public $x, $y, $z;
+      public function __construct() {
+         $this->var="Hello World";
+         $this->var1=array(1,2,3);
+         $this->x=100;
+         $this->y=200;
+         $this->z=300;
+      }
+   }
+   $obj = new myclass();
+   foreach($obj as $key => $value) {
+      print "$key => $value\n";
+   }
+?>
+```
+
+
+#### Output
+
+
+It will produce the following output −
+
+
+```php
+x => 100
+y => 200
+z => 300
+```
+
+
+Note that only the public members are accessible outside the class. If the class includes a method, all the members (public, private or protected) can be traversed with aforeachloop from inside it.
+
+
+Let us add an iterate method in the abovemyclass.
+
+
+```php
+public function iterate() {
+   foreach ($this as $k=>$v) {
+      if (is_array($v)) {
+         var_dump($v);
+         echo PHP_EOL;
+      } else {
+         echo "$k : $v". PHP_EOL;
+      }
+   }	 
+}
+```
+
+
+Call this instance method to get the list of all the members.
+
+
+#### Output
+
+
+It will produce the following output −
+
+
+```php
+var : Hello World
+array(3) {
+   [0]=>
+   int(1)
+   [1]=>
+   int(2)
+   [2]=>
+   int(3)
+}
+x : 100
+y : 200
+z : 300
+```
+
+
+## With Private or Protected Properties
+
+
+If you want to access private or protected properties directly using foreach, they will not show. You can still use them within the class using a method.
+
+
+Iterating over the class returns all attributes (public, private, and protected). And outside of the classroom, only public properties are accessible.
+
+
+### Example
+
+
+Take a look at the below example −
+
+
+```php
+class MyClass {
+      private $privateVar = "Private Data";
+      protected $protectedVar = "Protected Data";
+      public $x = 100;
+  
+      public function iterate() {
+          foreach ($this as $key => $value) {
+              echo "$key : $value\n";
+          }
+      }
+  }
+  
+  $obj = new MyClass();
+  $obj->iterate();
+```
+
+
+#### Output
+
+
+This will create the below output −
+
+
+```php
+privateVar : Private Data  
+protectedVar : Protected Data  
+x : 100
+```
+
+
+## Using Iterator Interface
+
+
+PHP provides Iterator interface for external iterators or objects that can be iterated themselves internally. It defines following abstract methods which need to be implemented in the user defined class.
+
+
+```php
+interface Iterator extends Traversable {
+   /* Methods */
+   public current(): mixed
+   public key(): mixed
+   public next(): void
+   public rewind(): void
+   public valid(): bool
+}
+```
+
+
+
+- The rewind() method rewinds the Iterator to the first element. This is the first method called when starting a foreach loop. It will not be executed after foreach loops.
+- The current() method returns the current element.
+- The key() method returns the key of the current element on each iteration of foreach loop.
+- The next() method is called after each iteration of foreach loop and moves forward to next element.
+- The valid() method checks if current position is valid.
+
+
+
+### Example
+
+
+The following example demonstrates object iteration by implementing Iterator interface
+
+
+```php
+<?php
+   class myclass implements Iterator {
+      private $arr = array('a','b','c');
+
+      public function rewind():void {
+         echo "rewinding\n";
+         reset($this->arr);
+      }
+
+      public function current() {
+         $var = current($this->arr);
+         echo "current: $var\n";
+         return $var;
+      }
+
+      public function key() {
+         $var = key($this->arr);
+         echo "key: $var\n";
+         return $var;
+      }
+
+      public function next() : void {
+         $var = next($this->arr);
+         echo "next: $var\n";
+         # return $var;
+      }
+
+      public function valid() : bool {
+         $key = key($this->arr);
+         $var = ($key !== NULL && $key !== FALSE);
+         echo "valid: $var\n";
+         return $var;
+      }
+   }
+
+   $obj = new myclass();
+
+   foreach ($obj as $k => $v) {
+      print "$k: $v\n";
+   }
+?>
+```
+
+
+#### Output
+
+
+It will produce the following output −
+
+
+```php
+rewinding
+valid: 1
+current: a
+key: 0
+0: a
+next: b
+valid: 1
+current: b
+key: 1
+1: b
+next: c
+valid: 1
+current: c
+key: 2
+2: c
+next:
+```
+
+
+## Example: Combined Everything
+
+
+In the following example, we are combining all of the above concept we have discussed so far. So tak a look at the following example −
+
+
+```php
+<?php
+   class Book implements Iterator {
+      private $properties = [];
+      private $position = 0;
+
+      public function __construct($title, $author, $year) {
+         $this->properties['title'] = $title;
+         $this->properties['author'] = $author;
+         $this->properties['year'] = $year;
+      }
+
+      public function rewind(): void {
+         $this->position = 0;
+      }
+
+      public function current() {
+         return array_values($this->properties)[$this->position];
+      }
+
+      public function key() {
+         return array_keys($this->properties)[$this->position];
+      }
+
+      public function next(): void {
+         ++$this->position;
+      }
+
+      public function valid(): bool {
+         return $this->position  
+Output
+Following is the output of the above code − 
+
+title: PHP Basics  
+author: Jane Doe  
+year: 2024
+```
+

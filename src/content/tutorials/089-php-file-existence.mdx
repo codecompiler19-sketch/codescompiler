@@ -1,0 +1,298 @@
+---
+title: "PHP - File Existence"
+description: "Learn PHP - File Existence with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 890
+group: "PHP File Handling"
+seoTitle: "PHP - File Existence — CodesCompiler PHP Guide"
+permalink: "php-file-existence"
+---
+
+
+# PHP - File Existence
+
+
+
+
+When working with files in PHP, one important task is to detect whether a specific file exists. This helps make sure that your program does not face errors while trying to access files that may not exist. This chapter will show you how to use basic examples to validate the presence of a file.
+
+
+It is often handy to check if the file you are trying to open really exists in the first place before performing any processing on it. Otherwise, the program is likely to raise aruntime exception.
+
+
+## Why Check for File Existence?
+
+
+Before trying to open or read a file, be sure it exists. This allows you to avoid errors that can cause your program to fail. For example, trying to read an image file that does not exist can result in your function failure.
+
+
+## PHP Functions for File Existence
+
+
+PHP's built-in library provides some utility functions in this regard. Some of the functions we shall discuss in this chapter are −
+
+
+
+- file_exists()− tests if the file exists
+- is_file()− if the handle returned by the fopen() refers to a file or directory.
+- is_readable()− test if the file you have opened allows reading data
+- is_writable()− test if writing data in the file is allowed
+
+
+
+## The file_exists() Function
+
+
+This function works with a file as well as a directory. It checks whether the given file or directory exists or not.
+
+
+```php
+file_exists(string $filename): bool
+```
+
+
+The only parameter to this function is a string representing the file/directory with full path. The function returns true or false depending upon the file exists or not.
+
+
+### Example
+
+
+The following program checks if the file "hello.txt" exists or not.
+
+
+```php
+<?php
+   $filename = 'hello.txt';
+   if (file_exists($filename)) {
+      $message = "The file $filename exists";
+   } else {
+      $message = "The file $filename does not exist";
+   }
+   echo $message;
+?>
+```
+
+
+#### Output
+
+
+If the file does exist in the current directory, the message is −
+
+
+```php
+The file hello.txt exists
+```
+
+
+If not, the message is −
+
+
+```php
+The file hello.txt does not exist
+```
+
+
+### Example
+
+
+The string pointing to the file may have a relative or absolute path. Assuming that "hello.txt" file is available in a "hello" subdirectory which is inside the current directory.
+
+
+```php
+<?php
+   $filename = 'hello/hello.txt';
+      if (file_exists($filename)) {
+   $message = "The file $filename exists";
+   } else {
+      $message = "The file $filename does not exist";
+   }
+   echo $message;
+?>
+```
+
+
+#### Output
+
+
+It will produce the following output −
+
+
+```php
+The file hello/hello.txt exists
+```
+
+
+### Example
+
+
+Try giving the absolute path as below −
+
+
+```php
+<?php
+   $filename = 'c:/xampp/htdocs/hello.txt';
+   if (file_exists($filename)) {
+      $message = "The file $filename exists";
+   } else {
+      $message = "The file $filename does not exist";
+   }
+   echo $message;
+?>
+```
+
+
+#### Output
+
+
+It will produce the following result −
+
+
+```php
+The file c:/xampp/htdocs/hello.txt exists
+```
+
+
+## The is_file() Function
+
+
+Thefile_exists()function returnstruefor existing file as well as directory. Theis_file()function helps you to determine if it's a file.
+
+
+```php
+is_file ( string $filename ) : bool
+```
+
+
+The following example shows how theis_file()function works −
+
+
+```php
+<?php
+   $filename = 'hello.txt';
+
+   if (is_file($filename)) {
+      $message = "$filename is a file";
+   } else {
+      $message = "$filename is a not a file";
+   }
+   echo $message;
+?>
+```
+
+
+#### Output
+
+
+The output tells that it is a file −
+
+
+```php
+hello.txt is a file
+```
+
+
+Now, change the "$filename" to a directory, and see the result −
+
+
+```php
+<?php
+   $filename = hello;
+
+   if (is_file($filename)) {
+      $message = "$filename is a file";
+   } else {
+      $message = "$filename is a not a file";
+   }
+   echo $message;
+?>
+```
+
+
+Now you will be told that "hello" is not a file.
+
+
+Note that Theis_file()function accepts a$filenameand returnstrueonly if the$filenameis a file and exists.
+
+
+## The is_readable() Function
+
+
+Sometimes, you may want to check before hand if the file can be read from or not. Theis_readable()function can ascertain this fact.
+
+
+```php
+is_readable ( string $filename ) : bool
+```
+
+
+### Example
+
+
+Given below is an example of how theis_readable()function works −
+
+
+```php
+<?php
+   $filename = 'hello.txt';
+   if (is_readable($filename)) {
+      $message = "$filename is readable";
+   } else {
+      $message = "$filename is not readable";
+   }
+   echo $message;
+?>
+```
+
+
+#### Output
+
+
+It will generate the following output −
+
+
+```php
+hello.txt is readable
+```
+
+
+## The is_writable() Function
+
+
+You can use the is_writable() function to can check if a file exists and if it is possible to perform write operation on the given file.
+
+
+```php
+is_writable ( string $filename ) : bool
+```
+
+
+### Example
+
+
+The following example shows how theis_writable()function works −
+
+
+```php
+<?php
+   $filename = 'hello.txt';
+
+   if (is_writable($filename)) {
+      $message = "$filename is writable";
+   } else {
+      $message = "$filename is not writable";
+   }
+   echo $message;
+?>
+```
+
+
+#### Output
+
+
+For a normal archived file, the program tells that it is writable. However, change its property to "read_only" and run the program. You now get −
+
+
+```php
+hello.txt is writable
+```
+

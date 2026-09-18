@@ -1,0 +1,219 @@
+---
+title: "PHP - Array Operators"
+description: "Learn PHP - Array Operators with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 360
+group: "PHP Basics"
+seoTitle: "PHP - Array Operators — CodesCompiler PHP Guide"
+permalink: "php-array-operators"
+---
+
+
+# PHP - Array Operators
+
+
+
+
+In PHP, array operators are used to compare and combine arrays. These operators are useful for a variety of tasks, like merging two arrays, testing if two arrays are equal and finding whether they have the same order and data types.
+
+
+PHP defines the following set of symbols to be used as operators on array data types −
+
+
+NameSymbolExampleResultUnion+$a + $bUnion of $a and $b.Equality==$a == $bTRUE if $a and $b have the same key/value pairs.Identity===$a === $bTRUE if $a and $b have the same key/value pairs in the same order and of the same types.Inequality!=$a != $bTRUE if $a is not equal to $b.Inequality`<>`$a `<>` $bTRUE if $a is not equal to $b.Non identity!==$a !== $bTRUE if $a is not identical to $b.
+
+
+## Example: Union Operator in PHP
+
+
+The Union operator appends the right-hand array appended to left-hand array. If a key exists in both arrays, the elements from the left-hand array will be used, and the matching elements from the right-hand array will be ignored.
+
+
+The following example shows how you can use the union operator in PHP −
+
+
+```php
+<?php
+   $arr1=array("phy"=>70, "che"=>80, "math"=>90);
+   $arr2=array("Eng"=>70, "Bio"=>80,"CompSci"=>90);
+   $arr3=$arr1+$arr2;
+   var_dump($arr3);
+?>
+```
+
+
+### Output
+
+
+It will generate the following result −
+
+
+```php
+array(6) {
+   ["phy"]=>
+   int(70)
+   ["che"]=>
+   int(80)
+   ["math"]=>
+   int(90)
+   ["Eng"]=>
+   int(70)
+   ["Bio"]=>
+   int(80)
+   ["CompSci"]=>
+   int(90)
+}
+```
+
+
+## Example: When Two Array are Equal
+
+
+Two arrays are said to be equal if they have the same key-value pairs.
+
+
+In the following example, we have an indexed array and other associative array with keys corresponding to index of elements in first. Hence, both are equal.
+
+
+```php
+<?php
+   $arr1=array(0=>70, 2=>80, 1=>90);
+   $arr2=array(70,90,80);
+   var_dump ($arr1==$arr2);
+   var_dump ($arr2!=$arr1);
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+bool(true)
+bool(false)
+```
+
+
+## Example: When Two Arrays are Identical
+
+
+Arrays are identical if and only if both of them have same set of key-value pairs and in same order.
+
+
+```php
+<?php
+   $arr1=array(0=>70, 1=>80, 2=>90);
+   $arr2=array(70,90,80);
+   var_dump ($arr1===$arr2);
+   $arr3=[70,80,90];
+   var_dump ($arr3===$arr1);
+?>
+```
+
+
+### Output
+
+
+This will create the below outcome −
+
+
+```php
+bool(false)
+bool(true)
+```
+
+
+## Example: Using Inequality (!=) Operator
+
+
+The != operator is used to check that two arrays are not equal. So it returns true if the arrays have different key-value pairs and false if have same key-value pairs.
+
+
+```php
+<?php
+   $arr1 = array("a" => 1, "b" => 2, "c" => 3);
+   $arr2 = array("a" => 1, "b" => 5, "c" => 3);
+   $arr3 = array("a" => 1, "b" => 2, "c" => 3);
+
+   // Checking if $arr1 and $arr2 are not equal
+   var_dump($arr1 != $arr2); 
+
+   // Checking if $arr1 and $arr3 are not equal
+   var_dump($arr1 != $arr3);
+?>
+```
+
+
+### Output
+
+
+This will produce the output given below −
+
+
+```php
+bool(true)  
+bool(false)
+```
+
+
+## Example: Using Non-Identity (!==) Operator
+
+
+You may know that Non-Identity (!==) operator is used to check if two arrays are not identical. So in our example we will check if the return value is true so the arrays are not identical.
+
+
+```php
+<?php
+   $arr1 = array(0 => 70, 1 => "80", 2 => 90); 
+   $arr2 = array(0 => 70, 1 => 80, 2 => 90);   
+
+   var_dump($arr1 !== $arr2); 
+
+   $arr3 = array(0 => 70, 2 => 90, 1 => 80);
+
+   var_dump($arr1 !== $arr3);
+?>
+```
+
+
+### Output
+
+
+This will generate the below output −
+
+
+```php
+bool(true)
+bool(true)
+```
+
+
+## Example: Using Inequality (`<>`) Operator
+
+
+Inequality (`<>`) Operator works the same as '!=' does but it is good to explicitly see how it works.
+
+
+```php
+<?php
+   $arr1 = array("a" => 10, "b" => 20);
+   $arr2 = array("a" => 10, "b" => 25);
+
+   var_dump($arr1 <> $arr2); 
+?>
+```
+
+
+### Output
+
+
+This will produce the below outcome −
+
+
+```php
+bool(true)
+```
+

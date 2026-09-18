@@ -1,0 +1,227 @@
+---
+title: "PHP - Null Coalescing Operator"
+description: "Learn PHP - Null Coalescing Operator with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 390
+group: "PHP Basics"
+seoTitle: "PHP - Null Coalescing Operator — CodesCompiler PHP Guide"
+permalink: "php-null-coalescing-operator"
+---
+
+
+# PHP - Null Coalescing Operator
+
+
+
+
+The Null Coalescing operator is one of the many new features introduced in PHP 7. The word "coalescing" means uniting many things into one. This operator is used to replace the ternary operation in conjunction with theisset()function.
+
+
+## Ternary Operator in PHP
+
+
+PHP has a ternary operator represented by the "?" symbol. The ternary operator compares a Boolean expression and executes the first operand if it is true, otherwise it executes the second operand.
+
+
+### Syntax
+
+
+Here is the syntax for using the ternary operator −
+
+
+```php
+expr ? statement1 : statement2;
+```
+
+
+### Example: Variable is Set
+
+
+Let us use the ternary operator to check if a certain variable is set or not with the help of the isset() function, which returns true if declared and false if not.
+
+
+```php
+<?php
+   $x = 1;
+   $var = isset($x) ? $x : "not set";
+   echo "The value of x is $var";
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+The value of x is 1
+```
+
+
+### Example: Variable is Not Set
+
+
+Now, let's remove the declaration of "x" and rerun the code −
+
+
+```php
+<?php
+   # $x = 1;
+   $var = isset($x) ? $x : "not set";
+   echo "The value of x is $var";
+?>
+```
+
+
+The code will now produce the followingoutput−
+
+
+```php
+The value of x is not set
+```
+
+
+## The Null Coalescing Operator
+
+
+The Null Coalescing Operator is represented by the "??" symbol. It acts as a convenient shortcut to use a ternary in conjunction with isset(). It returns its first operand if it exists and is not null; otherwise it returns its second operand.
+
+
+### Syntax
+
+
+Below is the syntax for using the null coalescing operator −
+
+
+```php
+$Var = $operand1 ?? $operand2;
+```
+
+
+The first operand checks whether a certain variable is null or not (or is set or not). If it is not null, the first operand is returned, else the second operand is returned.
+
+
+### Example: Variable is Not Set
+
+
+Take a look at the following example −
+
+
+```php
+<?php
+   # $num = 10;
+   $val = $num ?? 0;
+   echo "The number is $val";
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+The number is 0
+```
+
+
+### Example: Variable is Set
+
+
+Now uncomment the first statement that sets$numto 10 and rerun the code −
+
+
+```php
+<?php
+   $num = 10;
+   $val = $num ?? 0;
+   echo "The number is $val";
+?>
+```
+
+
+It will now produce the followingoutput−
+
+
+```php
+The number is 10
+```
+
+
+A useful application of Null Coalescing operator is while checking whether a username has been provided by the client browser.
+
+
+### Checking for a Username in URL
+
+
+The following code reads the name variable from the URL. If indeed there is a value for the name parameter in the URL, a Welcome message for him is displayed. However, if not, the user is called Guest.
+
+
+```php
+<?php
+   $username = $_GET['name'] ?? 'Guest';
+   echo "Welcome $username";
+?>
+```
+
+
+Assuming that this script "hello.php" is in the htdocs folder of the PHP server, enterhttp://localhost/hello.php?name=Amarin the URL, the browser will show the following message −
+
+
+```php
+Welcome Amar
+```
+
+
+Ifhttp://localhost/hello.phpis the URL, the browser will show the following message −
+
+
+```php
+Welcome Guest
+```
+
+
+### Using isset() and Ternary Operator
+
+
+The Null coalescing operator is used as a replacement for the ternary operators specific case of checking isset() function. Hence, the following statements give similar results −
+
+
+```php
+<?php
+   $username = isset($_GET['name']) ? $_GET['name'] : 'Guest';
+   echo "Welcome $username";
+?>
+```
+
+
+It will now produce the followingoutput−
+
+
+```php
+Welcome Guest
+```
+
+
+### Chaining Null Coalescing Operator (??)
+
+
+You can chain the "??" operators as shown below −
+
+
+```php
+<?php
+   $username = $_GET['name'] ?? $_POST['name'] ?? 'Guest';
+   echo "Welcome $username";
+?>
+```
+
+
+It will now produce the followingoutput−
+
+
+```php
+Welcome Guest
+```
+
+
+This will set the username to Guest if the variable $name is not set either by GET or by POST method.
+

@@ -1,0 +1,320 @@
+---
+title: "PHP - For Loop"
+description: "Learn PHP - For Loop with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 450
+group: "PHP Control Statements"
+seoTitle: "PHP - For Loop — CodesCompiler PHP Guide"
+permalink: "php-for-loop"
+---
+
+
+# PHP - For Loop
+
+
+
+
+A program by default follows a sequential execution of statements. If the program flow is directed towards any of earlier statements in the program, it constitutes a loop. Theforstatement in PHP is a convenient tool to constitute a loop in a PHP script. In this chapter, we will discuss PHPs for statement.
+
+
+## Flowchart of a For Loop
+
+
+The following flowchart explains how aforloop works −
+
+
+## When to Use a For Loop?
+
+
+Theforstatement is used when you know how many times you want to execute a statement or a block of statements.
+
+
+### Syntax
+
+
+The syntax offorstatement in PHP is similar to the for statement in C language.
+
+
+```php
+for (expr1; expr2; expr3){
+   code to be executed;
+}
+```
+
+
+## Components of a For Loop
+
+
+Theforkeyword is followed by a parenthesis containing three expressions separated by a semicolon. Each of them may be empty or may contain multiple expressions separated by commas. The parenthesis is followed by one or more statements put inside curly brackets. It forms the body of the loop.
+
+
+The first expression in the parenthesis is executed only at the start of the loop. It generally acts as theinitializerused to set the start value for the counter of the number of loop iterations.
+
+
+In the beginning of each iteration,expr2is evaluated. If it evaluates to true, the loop continues and the statements in the body block are executed. If it evaluates to false, the execution of the loop ends. Generally, theexpr2specifies the final value of the counter.
+
+
+Theexpr3is executed at the end of each iteration. In most cases, this expression increments the counter variable.
+
+
+## Example: Simple For Loop
+
+
+The most general example of aforloop is as follows −
+
+
+```php
+<?php
+   for ($i=1; $i<=10; $i++){
+      echo "Iteration No: $i \n";
+   }
+?>
+```
+
+
+### Output
+
+
+Here is its output −
+
+
+```php
+Iteration No: 1
+Iteration No: 2
+Iteration No: 3
+Iteration No: 4
+Iteration No: 5
+Iteration No: 6
+Iteration No: 7
+Iteration No: 8
+Iteration No: 9
+Iteration No: 10
+```
+
+
+## Creating an Infinite For Loop
+
+
+Note that all the three expressions in the parenthesis are optional. Aforstatement with only two semicolons constitutes an infinite loop.
+
+
+```php
+for (; ;) {
+   Loop body
+}
+```
+
+
+To stop the infinite iteration, you need to use abreakstatement inside the body of the loop.
+
+
+## Decrementing For Loop
+
+
+You can also form a decrementingforloop. To have aforloop that goes from 10 to 1, initialize the looping variable with 10, the expression in the middle that is evaluated at the beginning of each iteration checks whether it is greater than 1. The last expression to be executed at the end of each iteration should decrement it by 1.
+
+
+```php
+<?php
+   for ($i=10; $i>=1; $i--){
+      echo "Iteration No: $i \n";
+   }
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+Iteration No: 10 
+Iteration No: 9 
+Iteration No: 8 
+Iteration No: 7 
+Iteration No: 6 
+Iteration No: 5 
+Iteration No: 4 
+Iteration No: 3 
+Iteration No: 2 
+Iteration No: 1
+```
+
+
+## Using forendfor Construct
+
+
+You can also use the ":" (colon) symbol to start the looping block and putendforstatement at the end of the block.
+
+
+```php
+<?php
+   for ($i=1; $i<=10; $i++):
+      echo "Iteration No: $i \n";
+   endfor;
+?>
+```
+
+
+## Iterating Over Arrays Using For Loop
+
+
+Each element in the array is identified by an incrementing index starting with "0". If an array of 5 elements is present, its lower bound is 0 and is upper bound is 4 (size of array -1).
+
+
+To obtain the number of elements in an array, there is a count() function. Hence, we can iterate over an indexed array by using the followingforstatement −
+
+
+```php
+<?php
+   $numbers = array(10, 20, 30, 40, 50);
+
+   for ($i=0; $i<count($numbers); $i++){
+      echo "numbers[$i] = $numbers[$i] \n";
+   }
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+numbers[0] = 10
+numbers[1] = 20
+numbers[2] = 30
+numbers[3] = 40
+numbers[4] = 50
+```
+
+
+## Iterating an Associative Array
+
+
+An associative array in PHP is a collection of key-value pairs. An arrow symbol (=>) is used to show the association between the key and its value. We use thearray_keys()function to obtain array of keys.
+
+
+The followingforloop prints the capital of each state from an associative array$capitalsdefined in the code −
+
+
+```php
+<?php
+   $capitals = array(
+      "Maharashtra"=>"Mumbai", 
+      "Telangana"=>"Hyderabad", 
+      "UP"=>"Lucknow", 
+      "Tamilnadu"=>"Chennai"
+   );
+   $keys=array_keys($capitals);
+
+   for ($i=0; $i<count($keys); $i++){
+      $cap = $keys[$i];
+      echo "Capital of $cap is $capitals[$cap] \n";
+   }
+?>
+```
+
+
+### Output
+
+
+Here is its output −
+
+
+```php
+Capital of Maharashtra is Mumbai
+Capital of Telangana is Hyderabad
+Capital of UP is Lucknow
+Capital of Tamilnadu is Chennai
+```
+
+
+## Using Nested For Loops in PHP
+
+
+If anotherforloop is used inside the body of an existing loop, the two loops are said to have been nested.
+
+
+For each value of counter variable of the outer loop, all the iterations of inner loop are completed.
+
+
+```php
+<?php
+   for ($i=1; $i<=3; $i++){
+      for ($j=1; $j<=3; $j++){
+         echo "i= $i j= $j \n";
+      }
+   }
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+i= 1 j= 1
+i= 1 j= 2
+i= 1 j= 3
+i= 2 j= 1
+i= 2 j= 2
+i= 2 j= 3
+i= 3 j= 1
+i= 3 j= 2
+i= 3 j= 3
+```
+
+
+Note that a string is a form of an array. Thestrlen()function gives the number of characters in a string.
+
+
+## Using a For Loop with Strings
+
+
+The following PHP script uses two nested loops to print incrementing number of characters from a string in each line.
+
+
+```php
+<?php
+   $str = "CodesCompiler";
+   for ($i=0; $i<strlen($str); $i++){
+      for ($j=0; $j<=$i; $j++){
+         echo "$str[$j]";
+      }
+      echo "\n";
+   }
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+T
+Tu
+Tut
+Tuto
+Tutor
+Tutori
+Tutoria
+Tutorial
+Tutorials
+TutorialsP
+TutorialsPo
+TutorialsPoi
+TutorialsPoin
+CodesCompiler
+```
+

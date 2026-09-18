@@ -1,0 +1,226 @@
+---
+title: "PHP - Spread Operator"
+description: "Learn PHP - Spread Operator with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 380
+group: "PHP Basics"
+seoTitle: "PHP - Spread Operator — CodesCompiler PHP Guide"
+permalink: "php-spread-operator"
+---
+
+
+# PHP - Spread Operator
+
+
+
+
+PHP recognizes the three dots symbol (...) as thespread operator. The spread operator is also sometimes called thesplat operator. This operator was first introduced in PHP version 7.4. It can be effectively used in many cases such as unpacking arrays.
+
+
+The spread operator increases the readability of arrays and function parameters. It is a simple but useful feature for modern PHP development.
+
+
+So here is the list concepts with example, we will cover in this chapter −
+
+
+
+- Syntax of PHP Spread Operator
+- Expanding an Array with Spread Operator
+- Using Spread Operator Multiple Times
+- Spread Operator vs array_merge()
+- Named Arguments with Spread Operator
+- Using Spread Operator with Function Return Value
+
+
+
+## Syntax
+
+
+Below is the syntax of the PHP spread operator −
+
+
+```php
+// Expanding an array
+$newArray = [...$existingArray];
+
+// Using in a function
+function myFunction(...$args) {
+   // Function body
+}
+```
+
+
+## Expanding an Array with Spread Operator
+
+
+In the example below, the elements in $arr1 are inserted in $arr2 after a list of its own elements.
+
+
+```php
+<?php
+   $arr1 = [4,5];
+   $arr2 = [1,2,3, ...$arr1];
+
+   print_r($arr2);
+?>
+```
+
+
+### Output
+
+
+This will produce the following result −
+
+
+```php
+Array
+(
+   [0] => 1
+   [1] => 2
+   [2] => 3
+   [3] => 4
+   [4] => 5
+)
+```
+
+
+## Using Spread Operator Multiple Times
+
+
+The Spread operator can be used more than once in an expression. For example, in the following code, a third array is created by expanding the elements of two arrays.
+
+
+```php
+<?php
+   $arr1 = [1,2,3];
+   $arr2 = [4,5,6];
+   $arr3 = [...$arr1, ...$arr2];
+
+   print_r($arr3);
+?>
+```
+
+
+### Output
+
+
+This will generate the below result −
+
+
+```php
+Array
+(
+   [0] => 1
+   [1] => 2
+   [2] => 3
+   [3] => 4
+   [4] => 5
+   [5] => 6
+)
+```
+
+
+## Spread Operator vs array_merge()
+
+
+Note that the same result can be obtained with the use ofarray_merge()function, as shown below −
+
+
+```php
+<?php
+   $arr1 = [1,2,3];
+   $arr2 = [4,5,6];
+   $arr3 = array_merge($arr1, $arr2);
+
+   print_r($arr3);
+?>
+```
+
+
+### Output
+
+
+This will create the below outcome −
+
+
+```php
+Array
+(
+   [0] => 1
+   [1] => 2
+   [2] => 3
+   [3] => 4
+   [4] => 5
+   [5] => 6
+)
+```
+
+
+However, the use of (...) operator is much more efficient as it avoids the overhead a function call.
+
+
+## Named Arguments with Spread Operator
+
+
+PHP 8.1.0 also introduced another feature that allows using named arguments after unpacking the arguments. Instead of providing a value to each of the arguments individually, the values from an array will be unpacked into the corresponding arguments, using ... (three dots) before the array.
+
+
+```php
+<?php  
+   function  myfunction($x, $y, $z=30) {
+      echo "x = $x  y = $y  z = $z";
+   }
+
+   myfunction(...[10, 20], z:30);
+?>
+```
+
+
+### Output
+
+
+This will lead to the following outcome −
+
+
+```php
+x = 10  y = 20  z = 30
+```
+
+
+## Using Spread Operator with Function Return Value
+
+
+In the following example, the return value of a function is an array. The array elements are then spread and unpacked.
+
+
+```php
+<?php
+   function get_squares() {
+      for ($i = 0; $i < 5; $i++) {
+         $arr[] = $i**2;
+      }
+      return $arr;
+   }
+   $squares = [...get_squares()];
+   print_r($squares);
+?>
+```
+
+
+### Output
+
+
+The result of this PHP code is −
+
+
+```php
+Array
+(
+   [0] => 0
+   [1] => 1
+   [2] => 4
+   [3] => 9
+   [4] => 16
+)
+```
+

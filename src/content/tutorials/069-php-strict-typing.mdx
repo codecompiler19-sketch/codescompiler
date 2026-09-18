@@ -1,0 +1,231 @@
+---
+title: "PHP - Strict Typing"
+description: "Learn PHP - Strict Typing with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 690
+group: "PHP Functions"
+seoTitle: "PHP - Strict Typing — CodesCompiler PHP Guide"
+permalink: "php-strict-typing"
+---
+
+
+# PHP - Strict Typing
+
+
+
+
+PHP is widely regarded as a weakly typed language. In PHP, you need not declare the type of a variable before assigning it any value. The PHP parser tries to cast the variables into compatible type as far as possible.
+
+
+For example, if one of the values passed is a string representation of a number, and the second is a numeric variable, PHP casts the string variable to numeric in order to perform the addition operation.
+
+
+## Automatic Type Casting in Addition
+
+
+PHP converts the string to a number to perform the addition operation. Take a look at the following example −
+
+
+```php
+<?php
+   function addition($x, $y) {
+      echo "First number: $x Second number: $y Addition: " . $x+$y;
+   }
+
+   $x="10";
+   $y=20;
+   addition($x, $y);
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+First number: 10 Second number: 20 Addition: 30
+```
+
+
+### Error by Adding Non-Numeric String to a Number
+
+
+However, if$xin the above example is a string that doesn't hold a valid numeric representation, then you will encounter an error.
+
+
+```php
+<?php
+   function addition($x, $y) {
+      echo "First number: $x Second number: $y Addition: " . $x+$y;
+   }
+   $x="Hello";
+   $y=20;
+   addition($x, $y);
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+PHP Fatal error:  Uncaught TypeError: Unsupported operand 
+types: string + int in hello.php:5
+```
+
+
+## Type Hints
+
+
+Type-hinting is supported from PHP 5.6 version onwards. It means you can explicitly state the expected type of a variable declared in your code. PHP allows you to type-hint function arguments, return values, and class properties. With this, it is possible to write more robust code.
+
+
+Let us incorporate type-hinting in the addition function in the above program −
+
+
+```php
+function addition(int $x, int $y) {
+   echo "First number: $x Second number: $y Addition: " . $x+$y;
+}
+```
+
+
+Note that by merely using the data types in the variable declarations doesn't prevent the unmatched type exception raised, as PHP is a dynamically typed language. In other words, $x="10" and $y=20 will still result in the addition as 30, whereas $x="Hello" makes the parser raise the error.
+
+
+### Example
+
+
+```php
+<?php
+   function addition($x, $y) {
+      echo "First number: $x \n";
+      echo "Second number: $y \n";
+      echo "Addition: " . $x+$y . "\n\n";
+   }
+
+   $x=10;
+   $y=20;
+   addition($x, $y);
+
+   $x="10";
+   $y=20;
+   addition($x, $y);
+
+   $x="Hello";
+   $y=20;
+   addition($x, $y);
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+First number: 10 
+Second number: 20 
+Addition: 30
+
+First number: 10 
+Second number: 20 
+Addition: 30
+
+First number: Hello 
+Second number: 20
+PHP Fatal error:  Uncaught TypeError: Unsupported operand 
+types: string + int in hello.php:5
+```
+
+
+## Using strict_types
+
+
+PHP can be made to impose stricter rules for type conversion, so that "10" is not implicitly converted to 10. This can be enforced by settingstrict_typesdirective to 1 in a declare() statement.
+
+
+The declare() statement must be the first statement in the PHP code, just after the "`<`?php" tag.
+
+
+### Example
+
+
+Take a look at the following example −
+
+
+```php
+<?php
+   declare (strict_types=1);
+   function addition(int $x, int $y) {
+      echo "First number: $x Second number: $y Addition: " . $x+$y;
+   }
+
+   $x=10;
+   $y=20;
+   addition($x, $y);
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+First number: 10 Second number: 20 Addition: 30
+```
+
+
+Now, if$xis set to "10", the implicit conversion won't take place, resulting in the followingerror−
+
+
+```php
+PHP Fatal error:  Uncaught TypeError: addition(): Argument #1 
+($x) must be of type int, string given
+```
+
+
+From PHP 7 onwards, type-hinting support has been extended for function returns to prevent unexpected return values. You can type-hint the return values by adding the intended type after the parameter list prefixed with a colon (:) symbol.
+
+
+### Example
+
+
+Let us add a type hint to the return value of the division() function below.
+
+
+```php
+<?php
+   declare (strict_types=1);
+   function division(int $x, int $y) : int {
+      return $x/$y;
+   }
+
+   $x=10;
+   $y=20;
+   $result = division($x, $y);
+   echo "First number: $x Second number: $y Addition: " . $result;
+?>
+```
+
+
+Because the function returns 0.5, which is not ofinttype (that is, the type hint used for the return value of the function), the followingerroris displayed −
+
+
+```php
+Fatal error: Uncaught TypeError: division(): Return value must be 
+of type int, float returned in hello.php:5
+```
+
+
+## Benefits of PHP Strict Typing
+
+
+Here are the benefits of using the strict typing in your code −
+
+
+
+- Strict typing improves code reliability to ensure type safety, reducing the risk of runtime errors due by incorrect data types.
+- Explicit type definitions improve code readability by making it self-explanatory and understandable.
+- When developers understand the different sorts of variables, it is easier to change and update the code without creating new errors.
+
+

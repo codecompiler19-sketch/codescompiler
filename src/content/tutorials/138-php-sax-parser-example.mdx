@@ -1,0 +1,238 @@
+---
+title: "PHP - SAX Parser Example"
+description: "Learn PHP - SAX Parser Example with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 1380
+group: "PHP XML"
+seoTitle: "PHP - SAX Parser Example — CodesCompiler PHP Guide"
+permalink: "php-sax-parser-example"
+---
+
+
+# PHP - SAX Parser Example
+
+
+
+
+PHP has the XML parser extension enabled by default in the php.ini settings file. This parser implements SAX API, which is an event-based parsing algorithm.
+
+
+An event-based parser doesnt load the entire XML document in the memory. instead, it reads in one node at a time. The parser allows you to interact with in real time. Once you move onto the next node, the old one is removed from the memory.
+
+
+SAX based parsing mechanism is faster than the tree based parsers. PHP library includes functions to handle the XML events, as explained in this chapter.
+
+
+The first step in parsing a XML document is to have a parser object, with xml_parse_create() function
+
+
+```php
+xml_parser_create(?string $encoding = null): XMLParser
+```
+
+
+This function creates a new XML parser and returns an object of XMLParser to be used by the other XML functions.
+
+
+The xml_parse() function starts parsing an XML document
+
+
+```php
+xml_parse(XMLParser $parser, string $data, bool $is_final = false): int
+```
+
+
+xml_parse() parses an XML document. The handlers for the configured events are called as many times as necessary.
+
+
+The XMLParser extension provides different event handler functions.
+
+
+## xml_set_element_handler()
+
+
+This function sets the element handler functions for the XML parser. Element events are issued whenever the XML parser encounters start or end tags. There are separate handlers for start tags and end tags.
+
+
+```php
+xml_set_element_handler(XMLParser $parser, callable $start_handler, 
+   callable $end_handler): true
+```
+
+
+The start_handler() function is called when a new XML element is opened. end_handler() function is called when an XML element is closed.
+
+
+## xml_set_character_data_handler()
+
+
+This function sets the character data handler function for the XML parser parser. Character data is roughly all the non-markup contents of XML documents, including whitespace between tags.
+
+
+```php
+xml_set_character_data_handler(XMLParser $parser, callable $handler): true
+```
+
+
+## xml_set_processing_instruction_handler()
+
+
+This function sets the processing instruction (PI) handler function for the XML parser parser. `<?php ?>` is a processing instruction, where php is called the "PI target". The handling of these are application-specific.
+
+
+```php
+xml_set_processing_instruction_handler(XMLParser $parser, callable $handler): true
+```
+
+
+Aprocessing instructionhas the following format −
+
+
+```php
+<?target
+   data
+?>
+```
+
+
+## xml_set_default_handler()
+
+
+This function sets the default handler function for the XML parser parser. What goes not to another handler goes to the default handler. You will get things like the XML and document type declarations in the default handler.
+
+
+```php
+xml_set_default_handler(XMLParser $parser, callable $handler): true
+```
+
+
+### Example
+
+
+The following example demonstrates the use of SAX API for parsing the XML document. We shall use the SAX.xml as below −
+
+
+```php
+<?xml version = "1.0" encoding = "utf-8"?>
+<tutors>
+   <course>
+      <name>Android</name>
+      <country>India</country>
+      <email>contact@codescompiler.com</email>
+      <phone>123456789</phone>
+   </course>
+
+   <course>
+      <name>Java</name>
+      <country>India</country>
+      <email>contact@codescompiler.com</email>
+      <phone>123456789</phone>
+   </course>
+
+   <course>
+      <name>HTML</name>
+      <country>India</country>
+      <email>contact@codescompiler.com</email>
+      <phone>123456789</phone>
+   </course>
+</tutors>
+```
+
+
+### Example
+
+
+The PHP code to parse the above document is given below. It opens the XML file and calls xml_parse() function till its end of file is reached. The event handlers store the data in tutors array. Then the array is echoed element wise.
+
+
+```php
+<?php
+
+   // Reading XML using the SAX(Simple API for XML) parser 
+   $tutors   = array();
+   $elements   = null;
+
+   // Called to this function when tags are opened 
+   function startElements($parser, $name, $attrs) {
+      global $tutors, $elements;
+      if(!empty($name)) {
+         if ($name == 'COURSE') {
+		 
+            // creating an array to store information
+            $tutors []= array();
+         }
+         $elements = $name;
+      }
+   }
+
+   // Called to this function when tags are closed 
+   function endElements($parser, $name) {
+      global $elements;
+
+      if(!empty($name)) {
+         $elements = null;
+      }
+   }
+
+   // Called on the text between the start and end of the tags
+   function characterData($parser, $data) {
+      global $tutors, $elements;
+      if(!empty($data)) {
+         if ($elements == 'NAME' || $elements == 'COUNTRY' ||  $elements == 'EMAIL' ||  $elements == 'PHONE') {
+            $tutors[count($tutors)-1][$elements] = trim($data);
+         }
+      }
+   }
+
+   $parser = xml_parser_create();
+   xml_set_element_handler($parser, "startElements", "endElements");
+   xml_set_character_data_handler($parser, "characterData");
+
+   // open xml file
+   if (!($handle = fopen('sax.xml', "r"))) {
+      die("could not open XML input");
+   }
+
+   while($data = fread($handle, 4096)) {
+      xml_parse($parser, $data);  
+   }
+
+   xml_parser_free($parser); 
+   $i = 1;
+
+   foreach($tutors as $course) {
+      echo "course No - ".$i. '<br/>';
+      echo "course Name - ".$course['NAME'].'<br/>';
+      echo "Country - ".$course['COUNTRY'].'<br/>';
+      echo "Email - ".$course['EMAIL'].'<br/>';
+      echo "Phone - ".$course['PHONE'].'<hr/>'; 
+      $i++; 
+   }
+?>
+```
+
+
+The above code gives the following output −
+
+
+```php
+course No - 1
+course Name - Android
+Country - India
+Email - contact@codescompiler.com
+Phone - 123456789
+________________________________________
+course No - 2
+course Name - Java
+Country - India
+Email - contact@codescompiler.com
+Phone - 123456789
+________________________________________
+course No - 3
+course Name - HTML
+Country - India
+Email - contact@codescompiler.com
+Phone - 123456789
+________________________________________
+```
+

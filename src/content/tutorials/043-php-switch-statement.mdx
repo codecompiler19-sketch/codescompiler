@@ -1,0 +1,370 @@
+---
+title: "PHP - Switch Statement"
+description: "Learn PHP - Switch Statement with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 430
+group: "PHP Control Statements"
+seoTitle: "PHP - Switch Statement — CodesCompiler PHP Guide"
+permalink: "php-switch-statement"
+---
+
+
+# PHP - Switch Statement
+
+
+
+
+In PHP, theswitchstatement allows manyif-elseconditions for a single variable. Sometimes you need to compare a variable to multiple values and run separate code for each one. In general, you would write if elseifelse.
+
+
+An excessive number of if-else statements can result in long, difficult-to-read code.Using a switch statement instead of many if-else statements can reduce code complexity and improve readability.
+
+
+## Using ifelseifelse Statements
+
+
+The following PHP script uses if elseif statements −
+
+
+```php
+if ($x == 0) {
+   echo "x equals 0";
+} elseif ($x == 1) {
+   echo "i equals 1";
+} elseif ($x == 2) {
+   echo "x equals 2";
+}
+```
+
+
+## Using switch Statement
+
+
+You can get the same result by using the switch case statements as shown below −
+
+
+```php
+switch ($x) {
+   case 0:
+      echo "x equals 0";
+   break;
+   case 1:
+      echo "x equals 1";
+   break;
+   case 2:
+      echo "x equals 2";
+   break;
+}
+```
+
+
+Theswitchstatement is followed by an expression, which is successively compared with value in each case clause. If it is found that the expression matches with any of the cases, the corresponding block of statements is executed.
+
+
+
+- The switch statement executes the statements inside the curly brackets line by line.
+- If and when a case statement is found whose expression evaluates to a value that matches the value of the switch expression, PHP starts to execute the statements until the end of the switch block, or the first time it encounters abreakstatement.
+- If you don't write abreakstatement at the end of a case's statement list, PHP will go on executing the statements of the following case.
+
+
+
+## Without Break Statements
+
+
+Try to run the above code by removing the breaks. If the value of x is 0, you will find that the output includes "x equals 1" as well as "x equals 2" lines.
+
+
+```php
+<?php
+   $x=0;
+   switch ($x) {
+      case 0:
+         echo "x equals 0 \n";
+      case 1:
+         echo "x equals 1 \n";
+      case 2:
+         echo "x equals 2";
+   }
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+x equals 0
+x equals 1
+x equals 2
+```
+
+
+Thus, it is important make sure to end each case block with a break statement.
+
+
+## Using default Case in Switch
+
+
+A special case is the default case. This case matches anything that wasn't matched by the other cases. Usingdefaultis optional, but if used, it must be the last case inside the curly brackets.
+
+
+You can club more than one cases to simulate multiple logical expressions combined with theoroperator.
+
+
+```php
+<?php
+   $x=10;
+   switch ($x) {
+      case 0:
+      case 1:
+      case 2:
+         echo "x between 0 and 2 \n";
+      break;
+      default:
+         echo "x is less than 0 or greater than 2";
+   }
+?>
+```
+
+
+The values to be compared against are given in thecase clause. The value can be a number, a string, or even a function. However you cannot use comparison operators (`<,` > == or !=) as a value in thecase clause.
+
+
+You can choose to use semicolon instead of colon in the case clause. If no matching case found, and there is no default branch either, then no code will be executed, just as if noifstatement was true.
+
+
+## Using switch-endswitch Statement
+
+
+PHP allows the usage of alternative syntax by delimiting the switch construct withswitch-endswitchstatements. The following version of switch case is acceptable.
+
+
+```php
+<?php
+   $x=0;
+   switch ($x) :
+      case 0:
+         echo "x equals 0";
+      break;
+      case 1:
+         echo "x equals 1 \n";
+      break;
+      case 2:
+         echo "x equals 2 \n";
+      break;
+      default:
+         echo "None of the above";
+   endswitch
+?>
+```
+
+
+## Using switch to Display the Current Day
+
+
+Obviously, you needn't write abreakto terminate the default case, it being the last case in the switch construct.
+
+
+### Example
+
+
+Take a look at the following example −
+
+
+```php
+<?php
+   $d = date("D");
+
+   switch ($d){
+      case "Mon":
+         echo "Today is Monday";
+      break;
+
+      case "Tue":
+         echo "Today is Tuesday";
+      break;
+	  
+      case "Wed":
+         echo "Today is Wednesday";
+      break;
+
+      case "Thu":
+         echo "Today is Thursday";
+      break;
+
+      case "Fri":
+         echo "Today is Friday";
+      break;
+
+      case "Sat":
+         echo "Today is Saturday";
+      break;
+
+      case "Sun":
+         echo "Today is Sunday";
+      break;
+
+      default:
+         echo "Wonder which day is this ?";
+   }
+?>
+```
+
+
+### Output
+
+
+It will generate the following output −
+
+
+```php
+Today is Monday
+```
+
+
+## Switch with Strings
+
+
+Now we will use a switch statement with string values to find the user roles. So here is the program showing the usage of strings in a switch case −
+
+
+```php
+<?php
+   $role = "admin";
+
+   switch ($role) {
+      case "admin":
+         echo "Welcome, Admin! You have full access.";
+      break;
+
+      case "editor":
+         echo "Hello, Editor! You can edit content.";
+      break;
+
+      case "subscriber":
+         echo "Hi, Subscriber! You can read articles.";
+      break;
+
+      default:
+         echo "Unknown role. Please contact support.";
+   }
+?>
+```
+
+
+### Output
+
+
+Here is the outcome of the following code −
+
+
+```php
+Welcome, Admin! You have full access.
+```
+
+
+## Switch with Arithmetic Operations
+
+
+In the below PHP code we will try to perform calculations as per the user input. Check the below program for the demonstration of switch case with arithmetic operations −
+
+
+```php
+<?php
+   $operation = "+";
+   $a = 10;
+   $b = 5;
+
+   switch ($operation) {
+      case "+":
+         echo "Addition: " . ($a + $b);
+      break;
+
+      case "-":
+         echo "Subtraction: " . ($a - $b);
+      break;
+
+      case "*":
+         echo "Multiplication: " . ($a * $b);
+      break;
+
+      case "/":
+         echo "Division: " . ($a / $b);
+      break;
+
+      default:
+         echo "Invalid operation";
+   }
+?>
+```
+
+
+### Output
+
+
+This will generate the below output −
+
+
+```php
+Addition: 15
+```
+
+
+## Nested Switch (Switch Inside Another Switch)
+
+
+A switch can be used inside another switch to make multi-level decisions. Now the below code show how you can use nested switch statements and see the outcome.
+
+
+```php
+<?php
+   $continent = "Asia";
+   $country = "India";
+
+   switch ($continent) {
+      case "Asia":
+         switch ($country) {
+            case "India":
+               echo "You are in India!";
+            break;
+            case "Japan":
+               echo "You are in Japan!";
+            break;
+            default:
+               echo "Country not listed in Asia.";
+         }
+      break;
+
+      case "Europe":
+         switch ($country) {
+            case "Germany":
+               echo "You are in Germany!";
+            break;
+            case "France":
+               echo "You are in France!";
+            break;
+            default:
+               echo "Country not listed in Europe.";
+         }
+      break;
+
+      default:
+         echo "Continent not recognized.";
+   }
+?>
+```
+
+
+### Output
+
+
+This will create the below output −
+
+
+```php
+You are in India!
+```
+

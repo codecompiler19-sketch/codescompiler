@@ -1,0 +1,113 @@
+---
+title: "PHP - $_POST"
+description: "Learn PHP - $_POST with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 790
+group: "PHP Superglobals"
+seoTitle: "PHP - $_POST — CodesCompiler PHP Guide"
+permalink: "php-superglobals-post"
+---
+
+
+# PHP - $_POST
+
+
+
+
+The $_POST variable in PHP is a super global array that collects form data after submitting an HTML form using the POST method. It is particularly useful for securely sending data and receiving user input.
+
+
+## What is $_POST?
+
+
+$_POST is a built-in PHP array. It stores data received from an HTML form using the POST method.This data is not visible in the URL, making it more secure than the GET method.
+
+
+## Syntax
+
+
+Here is the syntax we can use to define $_POST −
+
+
+```php
+$_POST['key']
+```
+
+
+Here 'key' is the name of the form input field.
+
+
+## Key Points about $_POST
+
+
+$_POST is one of the predefined or superglobal variables in PHP. It is an associative array of key-value pairs passed to a URL by the HTTP POST method that uses URLEncoded or multipart/form-data content-type in the request.
+
+
+
+- $_POST is a superglobal variable, which means it can be accessed from any point in the script without being marked global.
+- Associative array of key-value pairs.
+- POST data is not displayed in the URL, making it more secure for sensitive information like as passwords or personal details.
+- It is compatible with forms that employ URLEncoded or multipart/form-data content.
+- $HTTP_POST_VARS is an old version of $_POST that should not be used.
+- The simplest way to transmit data to the server is to modify the HTML form's method attribute to POST.
+
+
+
+## Example: HTML Form (hello.html)
+
+
+Assuming that the URL in the browser is "http://localhost/hello.php", method=POST is set in a HTML form "hello.html" as below −
+
+
+```html
+<html>
+<body>
+   <form action="hello.php" method="post">
+      <p>First Name: <input type="text" name="first_name"/> </p>
+      <p>Last Name: <input type="text" name="last_name" /> </p>
+      <input type="submit" value="Submit" />
+   </form>
+</body>
+</html>
+```
+
+
+The "hello.php" script (in the document root folder) for this exercise is as follows:
+
+
+```php
+<?php
+   echo "<h3>First name: " . $_POST['first_name'] . "<br /> " . 
+   "Last Name: " . $_POST['last_name'] . "</h3>";
+?>
+```
+
+
+Now, openhttp://localhost/hello.htmlin your browser. You should get the following output on the screen −
+
+
+As you press theSubmitbutton, the data will be submitted to "hello.php" with the POST method.
+
+
+You can also mix the HTML form with PHP code in hello.php, and post the form data to itself using the "PHP_SELF" variable −
+
+
+```html
+<html>
+<body>
+   <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
+      <p>First Name: <input type="text" name="first_name"/> </p> <br />
+      <p>Last Name: <input type="text" name="last_name" /></p>
+      <input type="submit" value="Submit" />
+   </form>
+   <?php
+      echo "<h3>First Name: " . $_POST['first_name'] . "<br /> " . 
+      "Last Name: " . $_POST['last_name'] . "</h3>";
+   ?>
+</body>
+</html>
+```
+
+
+It will produce the followingoutput−
+

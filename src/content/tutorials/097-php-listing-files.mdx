@@ -1,0 +1,190 @@
+---
+title: "PHP - Listing Files"
+description: "Learn PHP - Listing Files with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 970
+group: "PHP File Handling"
+seoTitle: "PHP - Listing Files — CodesCompiler PHP Guide"
+permalink: "php-listing-files"
+---
+
+
+# PHP - Listing Files
+
+
+
+
+Windows command DIR and Linux command ls both display the list of files in the current directory. These commands can be operated with different switches to apply conditions on the list of files displayed. PHP provides a couple of options for programmatically listing files in a given directory.
+
+
+## Why List Files?
+
+
+Listing files is useful for −
+
+
+
+- Displaying available papers or photos to users.
+- Managing uploaded files.
+- Create dynamic file galleries.
+
+
+
+## How to List Files in PHP?
+
+
+PHP provides built-in functions to read folders and list files. So the most common functions are listed below to help you understand the listing of files −
+
+
+
+- readdir() Function
+- scandir() Function
+
+
+
+## Step-by-Step Guide to Listing Files
+
+
+Here are some steps given to list a file −
+
+
+
+- Step 1 - To get started, make sure you have a web server running PHP. You can use softwares like XAMPP, WAMP or a live server.
+- Step 2 - Before writing the code you have to create a folder in your web server's root directory (For example, C:\xampp\htdocs\myfiles) and then add some files (like .txt or .jpg files) to this folder.
+- Step 3 - Now you can write the PHP Code.
+- Step 4 - Then you can run the code. Save the above code in a file with .php extension. Place your file in your web server's directory. And then open your web browser and go to file.
+
+
+
+## The readdir() Function
+
+
+The opendir() function in PHP is similar to fopen() function. It returns handles to the directory so that the contents of the directory can be read from in a serialized manner.
+
+
+```php
+opendir(string $directory, ?resource $context = null): resource|false
+```
+
+
+This function opens up a directory handle to be used in the subsequent closedir(), readdir(), and rewinddir() calls.
+
+
+Thereaddir()function reads the next available entry from the stream handle returned byopendir()function.
+
+
+```php
+readdir(?resource $dir_handle = null): string|false
+```
+
+
+Here,dir_handleis the directory handle previously opened with opendir().not specified, the last link opened by opendir() is assumed.
+
+
+Theclosedir()function is similar tofclose()function. It closes the directory handle.
+
+
+```php
+closedir(?resource $dir_handle = null): void
+```
+
+
+The function closes the directory stream indicated by dir_handle. The stream must have previously been opened by opendir().
+
+
+### Example
+
+
+The following PHP code reads one file at a time from the currently logged directory.
+
+
+```php
+<?php
+   $dir = getcwd();
+   
+   // Open a known directory, and proceed to read its contents
+   if (is_dir($dir)) {
+      if ($dh = opendir($dir)) {
+         while (($file = readdir($dh)) !== false) {
+            echo "filename:" . $file . "\n";
+         }
+         closedir($dh);
+      }
+   }
+?>
+```
+
+
+## The scandir() Function
+
+
+The scandir() function retrieves the files ans subdirectories inside a given directory.
+
+
+```php
+scandir(string $directory, 
+int $sorting_order = SCANDIR_SORT_ASCENDING, 
+?resource $context = null): array|false
+```
+
+
+The "sorting_order" by default is alphabetical in ascending order. If this optional parameter is set to SCANDIR_SORT_DESCENDING, then the sort order becomes alphabetical in descending order. If it is set to SCANDIR_SORT_NONE, then the result becomes unsorted.
+
+
+### Example
+
+
+With the following PHP code, the scandir() function returns an array of files in the given directory.
+
+
+```php
+<?php
+   $dir = "c:/xampp/php/mydir/";
+
+   $files = scandir($dir);
+   var_dump($files);
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+array(4) {
+   [0]=>
+   string(1) "."
+   [1]=>
+   string(2) ".."
+   [2]=>
+   string(5) "a.txt"
+   [3]=>
+   string(5) "b.txt"
+}
+```
+
+
+You can use aforeachloop to traverse the array returned by the scandir() function.
+
+
+```php
+<?php
+   $dir = "c:/xampp/php/mydir/";
+
+   $files = scandir($dir);
+   foreach ($files as $file)
+   echo $file . PHP_EOL;
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+.
+..
+a.txt
+b.txt
+```
+

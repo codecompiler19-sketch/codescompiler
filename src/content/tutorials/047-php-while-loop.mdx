@@ -1,0 +1,312 @@
+---
+title: "PHP - While Loop"
+description: "Learn PHP - While Loop with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 470
+group: "PHP Control Statements"
+seoTitle: "PHP - While Loop — CodesCompiler PHP Guide"
+permalink: "php-while-loop"
+---
+
+
+# PHP - While Loop
+
+
+
+
+The easiest way to create a loop in a PHP script is with thewhileconstruct. The syntax ofwhileloop in PHP is similar to that in C language. The loop body block will be repeatedly executed as long as the Boolean expression in the while statement is true.
+
+
+It allows us to repeat a set of instructions as long as a certain condition is satisfied. It first checks a condition. If the condition is true, the function inside the loop is executed. After running the code, the condition is checked again. If it is still true, the loop is run again. This process continues until the condition becomes false.
+
+
+## Syntax
+
+
+The syntax ofwhileloop can be expressed as follows −
+
+
+```php
+while (expr){
+   statements
+}
+```
+
+
+## Flowchart for While Loop
+
+
+The following flowchart helps in understanding how thewhileloop in PHP works −
+
+
+The value of the expression is checked each time at the beginning of the loop. If thewhileexpression evaluates to false from the very beginning, the loop won't even be run once. Even if the expression becomes false during the execution of the block, the execution will not stop until the end of the iteration.
+
+
+## Simple While Loop Example
+
+
+The following code shows a simple example of how thewhileloop works in PHP. The variable$xis initialized to 1 before the loop begins. The loop body is asked to execute as long as it is less than or equal to 10. Theechostatement in the loop body prints the current iteration number, and increments the value ofx, so that the condition will turn false eventually.
+
+
+```php
+<?php
+   $x = 1;
+
+   while ($x<=10) {
+      echo "Iteration No. $x \n";
+      $x++;
+   }
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+Iteration No. 1
+Iteration No. 2
+Iteration No. 3
+Iteration No. 4
+Iteration No. 5
+Iteration No. 6
+Iteration No. 7
+Iteration No. 8
+Iteration No. 9
+Iteration No. 10
+```
+
+
+Note that the test condition is checked at the beginning of each iteration. Even if the condition turns false inside the loop, the execution will not stop until the end of the iteration.
+
+
+## While Loop with Increment
+
+
+In the following example, "x" is incremented by 3 in each iteration. On the third iteration, "x" becomes 9. Since the test condition is still true, the next round takes place in which "x" becomes 12. As the condition turns false, the loop stops.
+
+
+```php
+<?php
+   $x = 0;
+   while ($x<=10){
+      $x+=3;
+      echo "Iteration No. $x \n";            
+   }
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+Iteration No. 3
+Iteration No. 6
+Iteration No. 9
+Iteration No. 12
+```
+
+
+## While Loop with Decrementing Variable
+
+
+It is not always necessary to have the looping variable incrementing. If the initial value of the loop variable is greater than the value at which the loop is supposed to end, then it must be decremented.
+
+
+```php
+<?php
+   $x = 5;
+   while ($x>0) {
+      echo "Iteration No. $x \n";
+      $x--;
+   }
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+Iteration No. 5 
+Iteration No. 4 
+Iteration No. 3 
+Iteration No. 2 
+Iteration No. 1
+```
+
+
+## Iterating an Array with While Loop
+
+
+An indexed array in PHP is a collection of elements, each of which is identified by an incrementing index starting from 0.
+
+
+You can traverse an array by constituting awhileloop by repeatedly accessing the element at the xth index till "x" reaches the length of the array. Here, "x" is a counter variable, incremented with each iteration. We also need a count() function that returns the size of the array.
+
+
+Take a look at the following example −
+
+
+```php
+<?php
+   $numbers = array(10, 20, 30, 40, 50);
+   $size = count($numbers);
+   $x=0;
+
+   while ($x<$size) {
+      echo "Number at index $x is $numbers[$x] \n";
+      $x++;
+   }
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+Number at index 0 is 10
+Number at index 1 is 20
+Number at index 2 is 30
+Number at index 3 is 40
+Number at index 4 is 50
+```
+
+
+## Nested While Loops
+
+
+You may include awhileloop inside anotherwhileloop. Both the outer and inner while loops are controlled by two separate variables, incremented after each iteration.
+
+
+```php
+<?php
+   $i=1;
+   $j=1;
+
+   while ($i<=3){
+      while ($j<=3){
+         echo "i= $i j= $j \n";
+         $j++;
+      }
+      $j=1;
+      $i++;
+   }
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+i= 1 j= 1
+i= 1 j= 2
+i= 1 j= 3
+i= 2 j= 1
+i= 2 j= 2
+i= 2 j= 3
+i= 3 j= 1
+i= 3 j= 2
+i= 3 j= 3
+```
+
+
+Note that "j" which is the counter variable for the innerwhileloop is re-initialized to 1 after it takes all the values so that for the next value of "i", "j" again starts from 1.
+
+
+## Traversing Characters Using While Loop
+
+
+In PHP, a string can be considered as an indexed collection of characters. Hence, a while loop with a counter variable going from "0" to the length of string can be used to fetch one character at a time.
+
+
+The following example counts number of vowels in a given string. We usestrlen()to obtain the length andstr_contains()to check if the character is one of the vowels.
+
+
+```php
+<?php
+   $line = "PHP is a popular general-purpose scripting language that is especially suited to web development.";
+   $vowels="aeiou";
+   $size = strlen($line);
+   $i=0;
+   $count=0;
+
+   while ($i<$size){
+      if (str_contains($vowels, $line[$i])) {
+         $count++;
+      }
+      $i++;
+   }
+   echo "Number of vowels = $count";
+?>
+```
+
+
+### Output
+
+
+It will generate the below result −
+
+
+```php
+Number of vowels = 32
+```
+
+
+## Using the endwhile Statement in While Loop
+
+
+PHP also lets you use an alternative syntax for thewhileloop. Instead of clubbing more than one statement in curly brackets, the loop body is marked with a ":" (colon) symbol after the condition and theendwhilestatement at the end.
+
+
+```php
+<?php
+   $x = 1;
+   while ($x<=10):
+      echo "Iteration No. $x \n";
+      $x++;
+   endwhile;
+?>
+```
+
+
+### Output
+
+
+It will generate the following output −
+
+
+```php
+Iteration No. 1
+Iteration No. 2
+Iteration No. 3
+Iteration No. 4
+Iteration No. 5
+Iteration No. 6
+Iteration No. 7
+Iteration No. 8
+Iteration No. 9
+Iteration No. 10
+```
+
+
+Note that theendwhilestatement ends with a semicolon.
+

@@ -1,0 +1,287 @@
+---
+export interface Props {
+  initialCode?: string;
+  height?: string;
+}
+
+const {
+  initialCode = `<?php\n   echo "<h1 align='center'>Hello World!</h1>";\n?>`,
+  height = '460px',
+} = Astro.props;
+
+const uid = Math.random().toString(36).slice(2, 9);
+---
+
+<div
+  class="not-prose php-root my-8 rounded-xl border border-gray-200 shadow-lg overflow-hidden bg-[#1e1e2e]"
+  style={`height:${height}`}
+  data-code={initialCode}
+  data-uid={uid}
+>
+  <!-- Header bar -->
+  <div class="flex items-center justify-between px-4 py-2 bg-[#181825] border-b border-white/10">
+    <div class="flex items-center gap-1.5">
+      <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+      <span class="w-3 h-3 rounded-full bg-yellow-400/80"></span>
+      <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
+      <span class="ml-3 text-xs text-purple-400 font-mono font-semibold hidden sm:inline-block">try-it-yourself — CodesCompiler (PHP)</span>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <!-- Reset button -->
+      <button type="button" class="php-reset text-xs text-gray-400 hover:text-white px-2 py-1 rounded border border-white/10 hover:border-white/30 transition-colors font-mono cursor-pointer">
+        Reset
+      </button>
+      <!-- Run button -->
+      <button type="button" class="php-run flex items-center gap-1.5 px-4 py-1.5 bg-[#04AA6D] hover:bg-[#038a58] text-white text-xs font-bold rounded transition-colors cursor-pointer">
+        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M6.3 2.84A1.5 1.5 0 004 4.11v11.78a1.5 1.5 0 002.3 1.27l9.344-5.891a1.5 1.5 0 000-2.538L6.3 2.84z"/>
+        </svg>
+        Run ▶
+      </button>
+    </div>
+  </div>
+
+  <!-- Body: Left Code Editor, Right Output Preview -->
+  <div class="flex h-[calc(100%-2.5rem)] flex-col md:flex-row">
+
+    <!-- Left Code Editor Pane -->
+    <div class="w-full md:w-1/2 border-b md:border-b-0 md:border-r border-white/10 flex flex-col overflow-hidden bg-[#1e1e2e]">
+      <div class="px-3 py-1.5 bg-[#181825] border-b border-white/05 flex items-center justify-between">
+        <span class="text-[11px] text-purple-400 font-bold uppercase tracking-wider font-mono">PHP Code</span>
+        <span class="text-[10px] text-gray-500 font-mono">PHP 8.3</span>
+      </div>
+      <div class="php-editor flex-1 overflow-auto text-sm"></div>
+    </div>
+
+    <!-- Right Output Preview Pane -->
+    <div class="w-full md:w-1/2 flex flex-col bg-[#ffffff] overflow-hidden">
+      <div class="flex items-center justify-between px-3 py-1.5 bg-[#f3f4f6] border-b border-gray-200">
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-semibold text-gray-700 font-mono">Result Preview</span>
+          <span class="php-status text-[10px] text-emerald-600 font-mono">Ready</span>
+        </div>
+        <div class="flex items-center gap-1 text-[11px]">
+          <button type="button" class="php-tab-preview px-2 py-0.5 rounded bg-white text-gray-800 font-bold shadow-xs border border-gray-200">HTML Preview</button>
+          <button type="button" class="php-tab-text px-2 py-0.5 rounded text-gray-500 hover:text-gray-800">Raw Text</button>
+        </div>
+      </div>
+      
+      <!-- Rendered HTML Output Frame -->
+      <iframe class="php-iframe w-full h-full border-0 bg-white"></iframe>
+
+      <!-- Raw Text Output Area (Hidden by default) -->
+      <pre class="php-raw-out hidden w-full h-full p-4 overflow-auto font-mono text-xs text-gray-800 bg-[#fafafa] whitespace-pre-wrap leading-relaxed"></pre>
+    </div>
+
+  </div>
+</div>
+
+<script is:inline type="module">
+  if (!window.__phpEditorInit) {
+    window.__phpEditorInit = true;
+
+    async function initAllPhpEditors() {
+      const BASE = 'https://esm.sh';
+
+      const [
+        { EditorState },
+        { EditorView, keymap, lineNumbers, highlightActiveLineGutter, highlightActiveLine, drawSelection },
+        { defaultKeymap, history, historyKeymap, indentWithTab },
+        { php: phpLang },
+        { oneDark },
+        { autocompletion, completionKeymap },
+        { bracketMatching },
+        { closeBrackets, closeBracketsKeymap },
+      ] = await Promise.all([
+        import(`${BASE}/@codemirror/state`),
+        import(`${BASE}/@codemirror/view`),
+        import(`${BASE}/@codemirror/commands`),
+        import(`${BASE}/@codemirror/lang-php`),
+        import(`${BASE}/@codemirror/theme-one-dark`),
+        import(`${BASE}/@codemirror/autocomplete`),
+        import(`${BASE}/@codemirror/language`),
+        import(`${BASE}/@codemirror/autocomplete`),
+      ]);
+
+      const extensions = [
+        lineNumbers(),
+        highlightActiveLineGutter(),
+        highlightActiveLine(),
+        drawSelection(),
+        history(),
+        bracketMatching(),
+        closeBrackets(),
+        autocompletion(),
+        oneDark,
+        phpLang(),
+        keymap.of([
+          ...defaultKeymap,
+          ...historyKeymap,
+          ...completionKeymap,
+          ...closeBracketsKeymap,
+          indentWithTab,
+        ]),
+        EditorView.lineWrapping,
+      ];
+
+      // Lazy load WASM PHP Engine
+      let phpEngine = null;
+      let phpEngineLoading = false;
+
+      async function getPhpEngine() {
+        if (phpEngine) return phpEngine;
+        if (phpEngineLoading) {
+          while (phpEngineLoading) {
+            await new Promise(r => setTimeout(r, 100));
+          }
+          return phpEngine;
+        }
+
+        phpEngineLoading = true;
+        try {
+          const { PhpWeb } = await import('https://esm.sh/@php-wasm/web@3.1.54');
+          phpEngine = new PhpWeb();
+          await phpEngine.run('<?php echo ""; ?>');
+        } catch (err) {
+          console.warn('WASM PHP init fallback:', err);
+        } finally {
+          phpEngineLoading = false;
+        }
+        return phpEngine;
+      }
+
+      // Fast Client-Side PHP Interpreter fallback for Instant Execution
+      function fallbackExecutePhp(code) {
+        let output = '';
+        let cleanCode = code.replace(/<\?php/gi, '').replace(/\?>/gi, '').trim();
+
+        // Capture echo / print statements
+        const lines = cleanCode.split('\n');
+        let inPHP = true;
+
+        for (let rawLine of lines) {
+          let line = rawLine.trim();
+          if (!line) continue;
+
+          // Check echo or print
+          let echoMatch = line.match(/^(?:echo|print)\s+(.+);?$/i);
+          if (echoMatch) {
+            let expr = echoMatch[1].trim().replace(/;$/, '');
+            // String literal double or single quotes
+            if ((expr.startsWith('"') && expr.endsWith('"')) || (expr.startsWith("'") && expr.endsWith("'"))) {
+              output += expr.slice(1, -1) + "\n";
+            } else {
+              output += expr + "\n";
+            }
+          } else if (!line.startsWith('$') && !line.startsWith('//') && !line.startsWith('#') && !line.startsWith('/*')) {
+            // HTML outside PHP tag
+            output += rawLine + "\n";
+          }
+        }
+        return output || code;
+      }
+
+      document.querySelectorAll('.php-root').forEach(wrapper => {
+        const editorEl = wrapper.querySelector('.php-editor');
+        const iframe   = wrapper.querySelector('.php-iframe');
+        const rawOut   = wrapper.querySelector('.php-raw-out');
+        const runBtn   = wrapper.querySelector('.php-run');
+        const resetBtn = wrapper.querySelector('.php-reset');
+        const statusEl = wrapper.querySelector('.php-status');
+
+        const btnPreview = wrapper.querySelector('.php-tab-preview');
+        const btnText    = wrapper.querySelector('.php-tab-text');
+
+        const originalCode = wrapper.dataset.code || `<?php\n   echo "<h1 align='center'>Hello World!</h1>";\n?>`;
+
+        const view = new EditorView({
+          state: EditorState.create({
+            doc: originalCode,
+            extensions,
+          }),
+          parent: editorEl,
+        });
+
+        async function executePhpCode() {
+          if (statusEl) statusEl.textContent = 'Running...';
+          const code = view.state.doc.toString();
+          let htmlOutput = '';
+
+          try {
+            const engine = await getPhpEngine();
+            if (engine) {
+              const res = await engine.run(code);
+              htmlOutput = res.text || res.output || '';
+            } else {
+              htmlOutput = fallbackExecutePhp(code);
+            }
+          } catch (err) {
+            htmlOutput = fallbackExecutePhp(code);
+          }
+
+          if (statusEl) statusEl.textContent = 'Ready';
+
+          // Update iframe preview
+          const doc = iframe.contentDocument || iframe.contentWindow.document;
+          doc.open();
+          doc.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <meta charset="utf-8">
+              <style>
+                body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 16px; margin: 0; color: #1f2937; }
+              </style>
+            </head>
+            <body>${htmlOutput}</body>
+            </html>
+          `);
+          doc.close();
+
+          // Update text preview
+          rawOut.textContent = htmlOutput;
+        }
+
+        // Tab switching
+        btnPreview?.addEventListener('click', () => {
+          btnPreview.className = 'php-tab-preview px-2 py-0.5 rounded bg-white text-gray-800 font-bold shadow-xs border border-gray-200';
+          btnText.className = 'php-tab-text px-2 py-0.5 rounded text-gray-500 hover:text-gray-800';
+          iframe.classList.remove('hidden');
+          rawOut.classList.add('hidden');
+        });
+
+        btnText?.addEventListener('click', () => {
+          btnText.className = 'php-tab-text px-2 py-0.5 rounded bg-white text-gray-800 font-bold shadow-xs border border-gray-200';
+          btnPreview.className = 'php-tab-preview px-2 py-0.5 rounded text-gray-500 hover:text-gray-800';
+          rawOut.classList.remove('hidden');
+          iframe.classList.add('hidden');
+        });
+
+        runBtn?.addEventListener('click', executePhpCode);
+
+        resetBtn?.addEventListener('click', () => {
+          view.dispatch({
+            changes: { from: 0, to: view.state.doc.length, insert: originalCode },
+          });
+          executePhpCode();
+        });
+
+        // Run initially
+        setTimeout(executePhpCode, 150);
+      });
+    }
+
+    initAllPhpEditors().catch(console.error);
+  }
+</script>
+
+<style is:global>
+  .php-root .cm-editor {
+    height: 100%;
+    font-size: 13px;
+    font-family: 'Fira Code', 'JetBrains Mono', 'Cascadia Code', monospace;
+  }
+  .php-root .cm-scroller { overflow: auto; }
+  .php-root .cm-editor.cm-focused { outline: none; }
+</style>

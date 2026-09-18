@@ -1,0 +1,97 @@
+---
+title: "PHP - Facebook Login"
+description: "Learn PHP - Facebook Login with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 1410
+group: "PHP Login Example"
+seoTitle: "PHP - Facebook Login — CodesCompiler PHP Guide"
+permalink: "php-facebook-login"
+---
+
+
+# PHP - Facebook Login
+
+
+
+
+Users can be asked to log into a web application with the help of Social media login, also called SSO. This way users need not create a new account. Instead, users can use their existing social media account information to log in. Some examples of social media login include: Google, Facebook, LinkedIn, Apple.
+
+
+In this chapter, we shall explain how to activate logging into a PHP application with Facebook credentials.
+
+
+The first step to add Facebook login feature is to create a Facebook app. Visithttps://developers.facebook.com/apps/creation/and sign in with your Facebook account.
+
+
+Next, enter the name of the Facebook app you want to create −
+
+
+Go in the App settings and obtain Application ID and secret code −
+
+
+Select platform as website −
+
+
+Next, you need to set Up Facebook SDK in PHP. Download the Facebook SDK for PHP from "https://packagist.org/packages/facebook/php-sdk" or usecomposer: composer require "facebook/graph-sdk-v5". Extract the SDK files to a directory accessible by your PHP application.
+
+
+To configure Facebook SDK in PHP Code, include the Facebook SDK autoloader in your PHP file: require_once __DIR__ . '/vendor/autoload.php';
+
+
+Set up your app's access token and app secret −
+
+
+```php
+$app_id = 'YOUR_APP_ID';
+$app_secret = 'YOUR_APP_SECRET';
+```
+
+
+Next, create Facebook Login Button. Create an HTML button and add the Facebook login JavaScript SDK to trigger the login flow −
+
+
+```php
+<button id="facebook-login-button">Login with Facebook</button>
+```
+
+
+Include the Facebook JavaScript SDK −
+
+
+```php
+<script src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v13.0&appId=YOUR_APP_ID&autoLogApp=true" async defer></script>
+```
+
+
+Create a PHP script to handle the Facebook login callback −
+
+
+```php
+<?php
+   session_start();
+
+   $fb = new Facebook\Facebook([
+      'app_id' => $app_id,
+      'app_secret' => $app_secret,
+      'default_graph_version' => 'v13.0',
+   ]);
+
+   $helper = $fb->getRedirectLoginHelper();
+   $accessToken = $helper->getAccessToken();
+
+   if ($accessToken) {
+      // User is logged in, handle their data
+      $user = $fb->get('/me', ['fields' => 'id,name,email']);
+      $_SESSION['user_data'] = $user;
+      header('Location: profile.php');
+   } else {
+      // User is not logged in, redirect to login page
+      $loginUrl = $helper->getLoginUrl(['scope' => 'public_profile,email']);
+      header('Location: ' . $loginUrl);
+   }
+?>
+```
+
+
+After successful login, store user data in the session and redirect to a protected page. On protected pages, check the session for user data to verify access.
+

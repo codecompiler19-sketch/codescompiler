@@ -1,0 +1,375 @@
+---
+title: "PHP - Read File"
+description: "Learn PHP - Read File with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 870
+group: "PHP File Handling"
+seoTitle: "PHP - Read File — CodesCompiler PHP Guide"
+permalink: "php-read-file"
+---
+
+
+# PHP - Read File
+
+
+
+
+## What is File Reading?
+
+
+Working with online applications frequently needs reading data from files. PHP makes it easy to read files from your server. File reading is the process of opening a file and extracting its data for usage in your program. For example, you may want to read a text file that contains user information, configuration settings or product specifications.
+
+
+## How to Read a File in PHP?
+
+
+There are a number of options in PHP for reading data from a file that has been opened with the fopen() function. The following built-in functions in PHP's library can help us perform the read operation −
+
+
+
+- file_get_contents()− reads a file into a string.
+- fgets()− gets a line from the file pointer.
+- fgetc()− returns a string with a single character from the file pointer.
+- fread()− reads a specified number of bytes from the file pointer.
+- fscanf()− reads data from the file and parses it as per the specified format.
+
+
+
+## Using file_get_contents() Function
+
+
+This function reads the entire file into a string. It is the simplest way to read a file.
+
+
+```php
+file_get_contents(
+   $path, 
+   $include_path, 
+   $context, 
+   $start, 
+   $max_length
+   )
+```
+
+
+### Example
+
+
+The following code reads the entire available content from the "myfile.txt" file −
+
+
+```php
+<?php
+   // Specify the path to the file
+   $filename = 'myfile.txt';
+
+   // Read the content of the file
+   $content = file_get_contents($filename);
+
+   // Check if the file was read successfully
+   if ($content === false) {
+      echo "Error reading the file.";
+   } else {
+      echo "File content: " . $content;
+   }
+?>
+```
+
+
+#### Output
+
+
+It will produce the following output −
+
+
+```php
+File content: Hello this is an example of 
+PHP read file.
+
+This is a new line in the file.
+```
+
+
+## Using fgets() Function
+
+
+Thefgets()function can return a line from an open file. This function stops returning on a new line at a specified length or EOF, whichever comes first and returnsfalseon failure.
+
+
+```php
+fgets(resource $stream, ?int $length = null): string|false
+```
+
+
+Here, the$streamparameter is a file pointer or handle to the file opened with the fopen() function with read or read/write mode, and$lengthis an optional parameter specifying the number of bytes to be read.
+
+
+The read operation ends when "length-1" bytes are read or a newline is encountered, whichever is first.
+
+
+### Example
+
+
+The following code reads the first available line from the "hello.txt" file −
+
+
+```php
+<?php
+   $file = fopen("hello.txt", "r");
+   $str = fgets($file);
+   echo $str;
+   fclose($file);
+?>
+```
+
+
+#### Output
+
+
+It will produce the following output −
+
+
+```php
+Hello World
+```
+
+
+### Example
+
+
+You can put the fgets() function in a loop to read the file until the end of file is reached.
+
+
+```php
+<?php
+   $file = fopen("hello.txt", "r");
+   while(! feof($file)) {
+      echo fgets($file). "<br>";
+   }
+   fclose($file);
+?>
+```
+
+
+#### Output
+
+
+It will produce the following output −
+
+
+```php
+Hello World
+CodesCompiler
+PHP Tutorials
+```
+
+
+Here, we have used thefeof()function which returns true if the file pointer is at EOF; otherwise returns false.
+
+
+## Using fgetc() Function
+
+
+The fgetc() function returns a single character read from the current position of the file handle. It returnsfalsewhen EOF is encountered.
+
+
+```php
+fgetc(resource $stream): string|false
+```
+
+
+Here, the$streamparameter is a file pointer or handle to the file opened with the fopen() function with read or read/write mode.
+
+
+### Example
+
+
+The following code displays the first character read from the "hello.txt" file −
+
+
+```php
+<?php
+   $file = fopen("hello.txt", "r");
+   $str = fgets($file);
+   echo $str;
+   fclose($file);
+?>
+```
+
+
+#### Output
+
+
+It will produce the following output −
+
+
+```php
+H
+```
+
+
+### Example
+
+
+You can also put thefgetc()function inside a loop to read the file character by character until it reaches EOF.
+
+
+```php
+<?php
+   $file = fopen("hello.txt", "r");
+   while(! feof($file)) {
+      $char = fgetc($file);
+      if ($char == "\n")
+      echo "<br>";
+      echo $char;
+   }
+   fclose($file);
+?>
+```
+
+
+#### Output
+
+
+It will produce the following output −
+
+
+```php
+Hello World
+CodesCompiler
+PHP Tutorials
+```
+
+
+## Using fread() Function
+
+
+The fread() function in PHP is a binary-safe function for reading data from a file. While the fgets() function reads only from a text file, the fread() function can read a file in binary mode.
+
+
+```php
+fread(resource $stream, int $length): string|false
+```
+
+
+Here, the$streamparameter is a file pointer or handle to the file opened with the fopen() function with binary read or read/write mode (rborrb+). The$lengthparameter specifies number of bytes to be read.
+
+
+If the$lengthparameter is not given, PHP tries to read the entire file until EOF is reached, subject to the chunk size specified.
+
+
+### Example
+
+
+The following code reads a text file −
+
+
+```php
+<?php
+   $name = "hello.txt";
+   $file = fopen($name, "r");
+   $data = fread($file, filesize($name));
+   echo $data;
+   fclose($file);
+?>
+```
+
+
+#### Output
+
+
+It will produce the following output −
+
+
+```php
+Hello World CodesCompiler PHP Tutorials
+```
+
+
+### Example
+
+
+You can also read a non-ASCII file such as an image file opened inrbmode.
+
+
+```php
+<?php
+   $name = "welcome.png";
+   $file = fopen($name, "rb");
+   $data = fread($file, filesize($name));
+   var_dump($data);
+   fclose($file);
+?>
+```
+
+
+The browser displays the "var_dump" information as the following −
+
+
+## Using fscanf() Function
+
+
+The fscanf() function in PHP reads the input from a file stream and parses it according to the specified format, thereby converts it into the variables of respective types. Each call to the function reads one line from the file.
+
+
+```php
+fscanf(resource $stream, string $format, mixed &...$vars): array|int|false|null
+```
+
+
+Here, the$streamparameter is the handle to the file opened with the fopen() function and in read mode. And,$formatis a string containing one or more of the following formatting specifiers −
+
+
+
+- %%− Returns a percent
+- %b− Binary number
+- %c− The character according to the ASCII value
+- %f− Floating-point number
+- %F− Floating-point number
+- %o− Octal number
+- %s− String
+- %d− Signed decimal number
+- %e− Scientific notation
+- %u− Unsigned decimal number
+- %x− Hexadecimal number for lowercase letters
+- %X− Hexadecimal number for uppercase letters
+
+
+
+$varsis an optional parameter that specifies variables by reference which will contain the parsed values.
+
+
+Assuming that the "employees.txt" file is available in the same directory in which the PHP script given below is present. Each line in the text file hasname, email, postandsalaryof each employee, separated by tab character.
+
+
+### Example
+
+
+The following PHP script reads the file using the format specifiers in fscanf() function −
+
+
+```php
+<?php
+   $fp = fopen("employees.txt", "r");
+   while ($employee_info = fscanf($fp, "%s\t%s\t%s\t%d\n")) {
+      list ($name, $email, $post, $salary) = $employee_info;
+      echo "<b>Name</b>: $name <b>Email</b>: 
+	  $email <b>Salary</b>: Rs. $salary <br>";
+   }
+   fclose($fp);
+?>
+```
+
+
+#### Output
+
+
+It will produce the following output −
+
+
+```php
+Name: Ravishankar Email: ravi@gmail.com Salary: Rs. 40000
+Name: Kavita Email: kavita@hotmail.com Salary: Rs. 25000
+Name: Nandkumar Email: nandu@example.com Salary: Rs. 30000
+```
+

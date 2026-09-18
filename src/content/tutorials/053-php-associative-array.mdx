@@ -1,0 +1,330 @@
+---
+title: "PHP - Associative Array"
+description: "Learn PHP - Associative Array with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 530
+group: "PHP Arrays"
+seoTitle: "PHP - Associative Array — CodesCompiler PHP Guide"
+permalink: "php-associative-array"
+---
+
+
+# PHP - Associative Array
+
+
+
+
+If each element in a PHP array is a key-value pair, such an array is called anassociative array. In this type of array, each value is identified by its associated key and not an index. Associative arrays are used to implement data structures such as dictionary, maps, trees, etc.
+
+
+In PHP, the "=>" symbol is used to establish association between a key and its value.
+
+
+## Syntax of Associative Array in PHP
+
+
+Both the approaches of declaring an array - the array() function and the square bracket notation - can be used. The two syntaxes used to declare an associative array is given below.
+
+
+Using the array() function −
+
+
+```php
+$arr1 = array(
+   "Maharashtra"=>"Mumbai", 
+   "Telangana"=>"Hyderabad", 
+   "UP"=>"Lucknow", 
+   "Tamilnadu"=>"Chennai"
+);
+```
+
+
+Using the square bracket notation [] −
+
+
+```php
+$arr2 = ["Maharashtra"=>"Mumbai", 
+   "Telangana"=>"Hyderabad", 
+   "UP"=>"Lucknow", 
+   "Tamilnadu"=>"Chennai"];
+```
+
+
+### Structure of the Associative Array
+
+
+If we call the var_dump() function, both the above arrays will show the similar structure −
+
+
+```php
+array(4) {
+   ["Maharashtra"]=>
+   string(6) "Mumbai"
+   ["Telangana"]=>
+   string(9) "Hyderabad
+   ["UP"]=>
+   string(7) "Lucknow"
+   ["Tamilnadu"]=>
+   string(7) "Chennai"
+}
+```
+
+
+Thekeypart of each element in an associative array can be any number (integer, float or Boolean), or a string. Thevaluepart can be of any type. However, the float key is cast to an integer. So, a Boolean true/false is used as "1" or "0" as the key.
+
+
+## Basic Example of Associative Array
+
+
+Take a look at the following example −
+
+
+```php
+<?php
+   $arr1 = array(
+      10=>"hello",
+      5.75=>"world",
+      -5=>"foo",
+      false=>"bar"
+   );
+   var_dump($arr1);     
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+array(4) {
+  [10]=>
+  string(5) "hello"
+  [5]=>
+  string(5) "world"
+  [-5]=>
+  string(3) "foo"
+  [0]=>
+  string(3) "bar"
+}
+```
+
+
+Note that the key 5.75 gets rounded to 5, and the key "true" is reflected as "0". If the same key appears more than once in an array, the key-value pair that appears last will be retained, discarding the association of the key with earlier value.
+
+
+PHP internally treats even an indexed array as an associative array, where the index is actually the key of the value. It means the value at the 0th index has a key equal to "0", and so on. A var_dump() on an indexed array also brings out this characteristics of a PHP array.
+
+
+## Iterating an Associative Array
+
+
+Aforeachloop is the easiest and ideal for iterating through an associative array, although any other type of loop can also be used with some maneuver.
+
+
+Let us look at theforeachloop implementation, with each key value pair unpacked in two variables.
+
+
+```php
+<?php
+   $capitals = array(
+      "Maharashtra"=>"Mumbai", 
+      "Telangana"=>"Hyderabad", 
+      "UP"=>"Lucknow", 
+      "Tamilnadu"=>"Chennai"
+   );
+
+   foreach ($capitals as $k=>$v) {
+      echo "Capital of $k is $v \n";
+   }
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+Capital of Maharashtra is Mumbai
+Capital of Telangana is Hyderabad
+Capital of UP is Lucknow
+Capital of Tamilnadu is Chennai
+```
+
+
+## Using foreach with array_search()
+
+
+There is another way of using theforeachloop in PHP, where each element is stored in a variable. We can then separate the key and value parts usingarray_search()and use them in the loop body.
+
+
+```php
+<?php
+   $capitals = array(
+      "Maharashtra"=>"Mumbai", 
+      "Telangana"=>"Hyderabad", 
+      "UP"=>"Lucknow", 
+      "Tamilnadu"=>"Chennai"
+   );
+
+   foreach ($capitals as $pair) {
+      $cap = array_search($pair, $capitals);         
+      echo "Capital of $cap is $capitals[$cap] \n";
+   }
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+Capital of Maharashtra is Mumbai 
+Capital of Telangana is Hyderabad 
+Capital of UP is Lucknow 
+Capital of Tamilnadu is Chennai
+```
+
+
+To use for,whileordo-whileloop, we have to first get the array of all the keys (use array_keys()), find the  size and use it as the test condition in the loop syntax.
+
+
+### Using for loop with array_keys()
+
+
+Here is how we can use aforloop to traverse an associative array −
+
+
+```php
+<?php
+   $capitals = array(
+      "Maharashtra"=>"Mumbai", 
+      "Telangana"=>"Hyderabad", 
+      "UP"=>"Lucknow",
+      "Tamilnadu"=>"Chennai"
+   );
+   $keys=array_keys($capitals);
+
+   for ($i=0; $i<count($keys); $i++){
+      $cap = $keys[$i];
+      echo "Capital of $cap is $capitals[$cap] \n";
+   }
+?>
+```
+
+
+#### Output
+
+
+It will produce the following output −
+
+
+```php
+Capital of Maharashtra is Mumbai 
+Capital of Telangana is Hyderabad 
+Capital of UP is Lucknow 
+Capital of Tamilnadu is Chennai
+```
+
+
+## Accessing Values Using Keys
+
+
+In an associative array, the key is the identifier of value instead of index. Hence, to fetch value associated with a certain key, use $arr[key] syntax. The same can be used to update the value of a certain key.
+
+
+In the following code, an associative array$arr1is declared. Another array$arr2is created such that it stores each pair from$arr1with the value of each key being doubled.
+
+
+```php
+<?php
+   $arr1 = array("a"=>10, "b"=>20, "c"=>30, "d"=>40);
+   foreach ($arr1 as $k=>$v){
+      $arr2[$k] = $v*2;
+   }
+   print_r($arr2);
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+Array
+(
+   [a] => 20
+   [b] => 40
+   [c] => 60
+   [d] => 80
+)
+```
+
+
+Theprint_r()function used here displays the data stored in the array in an easy to understand human readable form.
+
+
+## Check if a Key Exists in an Associative Array
+
+
+In the following example, we are showing how you can loop for a key in an associative array. Before accessing a key, verify that it exists by calling array_key_exists() or isset().
+
+
+```php
+<?php
+   $arr = ["a" => 10, "b" => 20];
+
+   if (array_key_exists("a", $arr)) {
+      echo "Key 'a' exists!";
+   }
+?>
+```
+
+
+### Output
+
+
+Following is the output of the above code −
+
+
+```php
+Key 'a' exists!
+```
+
+
+## Remove Elements from an Associative Array
+
+
+In the following example, we are using unset() function which can remove a specific key-value pair from an associative array.
+
+
+```php
+<?php
+   $arr = ["a" => 10, "b" => 20, "c" => 30];
+   unset($arr["b"]);
+   print_r($arr);
+?>
+```
+
+
+### Output
+
+
+Below is the output of the above code −
+
+
+```php
+Array ( [a] => 10 [c] => 30 )
+```
+

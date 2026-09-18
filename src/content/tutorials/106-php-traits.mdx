@@ -1,0 +1,363 @@
+---
+title: "PHP - Traits"
+description: "Learn PHP - Traits with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 1060
+group: "Object Oriented PHP"
+seoTitle: "PHP - Traits — CodesCompiler PHP Guide"
+permalink: "php-traits"
+---
+
+
+# PHP - Traits
+
+
+
+
+When designing websites with PHP, you might want to share the same functionality among different classes. However, PHP does not support multiple inheritance. A class can only inherit from one parent class. So, how do you reuse code between classes?
+
+
+In PHP, Traits have been introduced to overcome this limitation. You can define one or more method in a trait, which can be reused freely in various independent classes.
+
+
+## What is a Trait?
+
+
+A trait is a way of grouping methods (functions) that can be reused across classes. Consider it an example of reusable code that can be added to your classes without needing inheritance.
+
+
+Traits allow you to write code that is cleaner and more organized.
+
+
+## How to Create a Trait
+
+
+The "trait" keyword is used as per the following syntax −
+
+
+```php
+trait mytrait {
+   public function method1() {
+      // Function body
+      echo "Method 1 is called.";
+   }
+
+   public function method2() {
+      // Function body
+      echo "Method 2 is called.";
+   }
+}
+```
+
+
+To be able to call the methods in a trait, it needs to made available to another class with use keyword.
+
+
+## How to Use a Trait in a Class
+
+
+Above we can created a trait now you can use it in a class with the use keyword −
+
+
+```php
+class MyClass {
+      // Using the trait
+      use mytrait; 
+
+      public function additionalMethod() {
+         echo "This is an additional method in MyClass.";
+      }
+   }
+
+   // Example usage
+   $myClassInstance = new MyClass();
+   // Calls method1 from mytrait
+   $myClassInstance->method1(); 
+   // Calls method2 from mytrait
+   $myClassInstance->method2(); 
+   $myClassInstance->additionalMethod();
+```
+
+
+### Output
+
+
+This will create the below output −
+
+
+```php
+Method 1 is called.
+Method 2 is called.
+This is an additional method in MyClass.
+```
+
+
+## Example
+
+
+A Trait is similar to a class, but only intended to group functionality in a fine-grained and consistent way. It is not possible to instantiate a Trait on its own.
+
+
+```php
+<?php
+   trait mytrait {
+      public function hello() {
+         echo "Hello World from " . __TRAIT__ . "";
+      }
+   }
+   class myclass {
+      use mytrait;
+   }
+   $obj = new myclass();
+   $obj->hello();
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+Hello World from mytrait
+```
+
+
+## Example
+
+
+A trait can be used in more than one classes. The following example has a mytrait with avg() function int it. It is used inside a marks class. The percent() method internally calls the avg() function from the trait.
+
+
+Take a look at the following example −
+
+
+```php
+<?php
+   trait mytrait {
+      function avg($x, $y) {
+         return ($x+$y)/2;
+      }
+   }
+   class marks {
+      use mytrait;
+      private int $m1, $m2;
+      function __construct($x, $y) {
+         $this->m1 = $x;
+         $this->m2 = $y;
+      }
+      function percent():float {
+         return $this->avg($this->m1, $this->m2);
+      }
+   }
+   $obj = new marks(50, 60);
+   echo "percentage: " . $obj->percent();
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+percentage: 55
+```
+
+
+## Using Multiple Traits
+
+
+A class can use more than one traits. Here we have two traits with one function each performing addition and multiplication of two numbers. Both are used inside a third class.
+
+
+```php
+<?php
+   trait addition {
+      function add($x, $y) {
+         return $x+$y;
+      }
+   }
+
+   trait multiplication {
+      function multiply($x, $y) {
+         return $x*$y;
+      }
+   }
+
+   class numbers {
+      use addition, multiplication;
+      private int $m1, $m2;
+      function __construct($x, $y) {
+         $this->m1 = $x;
+         $this->m2 = $y;
+      }
+      function calculate():array {
+         $arr = [$this->add($this->m1, $this->m2), $this->multiply($this->m1, $this->m2)];
+         return $arr;
+      }
+   }
+
+   $obj = new numbers(50, 60);
+   $res = $obj->calculate();
+   echo "Addition: " . $res[0] . PHP_EOL;
+   echo "Multiplication: " . $res[1] . PHP_EOL;
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+Addition: 110
+Multiplication: 3000
+```
+
+
+## Overriding Trait Function
+
+
+When a class uses a certain trait, its function are available to it just as a child class inherits the parent methods. The trait function may also be overridden.
+
+
+```php
+<?php
+   trait mytrait {
+      public function sayHello() {
+         echo 'Hello World!';
+      }
+   }
+
+   class myclass {
+      use mytrait;
+      public function sayHello() {
+         echo 'Hello PHP!';
+      }
+   }
+
+   $o = new myclass();
+   $o->sayHello();
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+Hello PHP!
+```
+
+
+## The "insteadof" Keyword
+
+
+Sometimes, more two traits might have same name of the function. Hence, using them in a class creates ambiguous situation. PHP provides insteadof keyword to tell the parser function from which trait you intend to use.
+
+
+```php
+<?php
+   trait mytrait {
+      public function sayHello() {
+         echo 'Hello World!';
+      }
+   }
+
+   trait newtrait {
+      public function sayHello() {
+         echo 'Hello PHP!';
+      }
+   }
+
+   class myclass {
+      use mytrait, newtrait{
+         newtrait::sayHello insteadof mytrait;
+      }
+   }
+
+   $o = new myclass();
+   $o->sayHello();
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+Hello PHP!
+```
+
+
+## Aliasing a Trait Function
+
+
+If you want to be able to call functions from both traits even if they have function with same name, a workaround is to specify an alias name to one of them.
+
+
+### Example
+
+
+In the following example, we will call sayHello() from mytrait as hello() −
+
+
+```php
+<?php
+   trait mytrait {
+      public function sayHello() {
+         echo 'Hello World!' . PHP_EOL;
+      }
+   }
+
+   trait newtrait {
+      public function sayHello() {
+         echo 'Hello PHP!' . PHP_EOL;
+      }
+   }
+
+   class myclass {
+      use mytrait, newtrait{
+         mytrait::sayHello as hello;
+         newtrait::sayHello insteadof mytrait;
+      }
+   }
+
+   $o = new myclass();
+   $o->hello();
+   $o->sayHello();
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+Hello World!
+Hello PHP!
+```
+
+
+## Why Use Traits?
+
+
+Traits are useful because −
+
+
+
+- Help you reuse code between classes.
+- Avoid writing the same code repeatedly.
+- Give you a chance to combine different functionalities.
+
+
+
+## When to Use Traits
+
+
+Use traits when −
+
+
+
+- You want to exchange methods between classes that are not related by inheritance.
+- You want to keep your code clean and easy to maintain.
+
+

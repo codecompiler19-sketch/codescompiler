@@ -1,0 +1,164 @@
+---
+title: "PHP - Files & I/O"
+description: "Learn PHP - Files & I/O with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 220
+group: "PHP Basics"
+seoTitle: "PHP - Files & I/O — CodesCompiler PHP Guide"
+permalink: "php-files"
+---
+
+
+# PHP - Files & I/O
+
+
+
+
+PHP Files and I/O is the process of reading, writing, creating and deleting files. PHP has various functions for easy file management. We can open a file and write to or read from it. Functions like fopen(), fread() and fwrite() are very useful.
+
+
+Files allow you to store data for later use. Getting data from files is as simple. File management is important in web applications. It allows for the secure storage and management of data.
+
+
+This chapter will explain following functions related to files −
+
+
+
+- Opening a File
+- Reading a File
+- Writing a File
+- Closing a File
+
+
+
+## Opening and Closing Files
+
+
+The PHPfopen()function is used to open a file. It requires two arguments stating first the file name and then mode in which to operate.
+
+
+Files modes can be specified as one of the six options in this table.
+
+
+Sr.NoMode & Purpose1rOpens the file for reading only.Places the file pointer at the beginning of the file.2r+Opens the file for reading and writing.Places the file pointer at the beginning of the file.3wOpens the file for writing only.Places the file pointer at the beginning of the file.and truncates the file to zero length. If files does notexist then it attempts to create a file.4w+Opens the file for reading and writing only.Places the file pointer at the beginning of the file.and truncates the file to zero length. If files does notexist then it attempts to create a file.5aOpens the file for writing only.Places the file pointer at the end of the file.If files does not exist then it attempts to create a file.6a+Opens the file for reading and writing only.Places the file pointer at the end of the file.If files does not exist then it attempts to create a file.
+
+
+If an attempt to open a file fails thenfopenreturns a value offalseotherwise it returns afile pointerwhich is used for further reading or writing to that file.
+
+
+After making a changes to the opened file it is important to close it with thefclose()function. Thefclose()function requires a file pointer as its argument and then returnstruewhen the closure succeeds orfalseif it fails.
+
+
+## Reading a File
+
+
+Once a file is opened usingfopen()function it can be read  with a function calledfread(). This function requires two arguments. These must be the file pointer and the length of the file expressed in bytes.
+
+
+The files length can be found using thefilesize()function which takes the file name as its argument and returns the size of the file expressed in bytes.
+
+
+So here are the steps required to read a file with PHP.
+
+
+
+- Open a file usingfopen()function.
+- Get the file's length usingfilesize()function.
+- Read the file's content usingfread()function.
+- Close the file withfclose()function.
+
+
+
+### Example
+
+
+The following example assigns the content of a text file to a variable then displays those contents on the web page.
+
+
+```html
+<html>
+<head>
+   <title>Reading a file using PHP</title>
+</head>
+<body>
+   <?php
+      $filename = "tmp.txt";
+      $file = fopen( $filename, "r" );
+
+      if( $file == false ) {
+         echo ( "Error in opening file" );
+         exit();
+      }
+
+      $filesize = filesize( $filename );
+      $filetext = fread( $file, $filesize );
+      fclose( $file );
+
+      echo ( "File size : $filesize bytes" );
+      echo ( "<pre>$filetext</pre>" );
+   ?>
+</body>
+</html>
+```
+
+
+It will produce the following result −
+
+
+## Writing a File
+
+
+A new file can be written or text can be appended to an existing file using the PHPfwrite()function. This function requires two arguments specifying afile pointerand the string of data that is to be written. Optionally a third integer argument can be included to specify the length of the data to write. If the third argument is included, writing would will stop after the specified length has been reached.
+
+
+### Example
+
+
+The following example creates a new text file then writes a short text heading inside it. After closing this file its existence is confirmed usingfile_exist()function which takes file name as an argument
+
+
+```html
+<?php
+   $filename = "/home/user/guest/newfile.txt";
+   $file = fopen( $filename, "w" );
+   
+   if( $file == false ) {
+      echo ( "Error in opening new file" );
+      exit();
+   }
+   fwrite( $file, "This is  a simple test\n" );
+   fclose( $file );
+?>
+<html>
+<head>
+   <title>Writing a file using PHP</title>
+</head>
+<body>
+   <?php
+      $filename = "newfile.txt";
+      $file = fopen( $filename, "r" );
+
+      if( $file == false ) {
+         echo ( "Error in opening file" );
+         exit();
+      }
+
+      $filesize = filesize( $filename );
+      $filetext = fread( $file, $filesize );
+
+      fclose( $file );
+
+      echo ( "File size : $filesize bytes" );
+      echo ( "$filetext" );
+      echo("file name: $filename");
+   ?>
+</body>
+</html>
+```
+
+
+It will produce the following result −
+
+
+We have covered  all the function related to file input and out inPHP File System Functionchapter.
+

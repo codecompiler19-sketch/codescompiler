@@ -1,0 +1,162 @@
+---
+title: "PHP - DOM Parser Example"
+description: "Learn PHP - DOM Parser Example with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 1390
+group: "PHP XML"
+seoTitle: "PHP - DOM Parser Example — CodesCompiler PHP Guide"
+permalink: "php-dom-parser-example"
+---
+
+
+# PHP - DOM Parser Example
+
+
+
+
+The DOM extension in PHP comes with extensive functionality with which we can perform various operations on XML and HTML documents. We can dynamically construct a DOM object, load a DOM document from a HTML file or a string with HTML tag tree. We can also save the DOM document to a XML file, or extract the DOM tree from a XML document.
+
+
+The DOMDocument class is one the most important classes defined in the DOM extension.
+
+
+```php
+$obj = new DOMDocument($version = "1.0", $encoding = "")
+```
+
+
+It represents an entire HTML or XML document; serves as the root of the document tree. The DOMDocument class includes definitions of a number of static methods, some of which are introduced here −
+
+
+Sr.NoMethods & Description1createElementCreate new element node2createAttributeCreate new attribute3createTextNodeCreate new text node4getElementByIdSearches for an element with a certain id5getElementsByTagNameSearches for all elements with given local tag name6loadLoad XML from a file7loadHTMLLoad HTML from a string8loadHTMLFileLoad HTML from a file9loadXMLLoad XML from a string10saveDumps the internal XML tree back into a file11saveHTMLDumps the internal document into a string using HTML formatting12saveHTMLFileDumps the internal document into a file using HTML formatting13saveXMLDumps the internal XML tree back into a string
+
+
+## Example
+
+
+Let us use the following HTML file for this example −
+
+
+```html
+<html>
+<head> 
+   <title>CodesCompiler</title>
+</head> 
+<body> 
+   <h2>Course details</h2> 
+   <table border = "0"> 
+      <tbody> 
+         <tr> 
+            <td>Android</td> 
+            <td>Gopal</td> 
+            <td>Sairam</td> 
+         </tr>
+         <tr> 
+            <td>Hadoop</td> 
+            <td>Gopal</td> 
+            <td>Satish</td> 
+         </tr> 
+         <tr> 
+            <td>HTML</td> 
+            <td>Gopal</td> 
+            <td>Raju</td> 
+         </tr> 
+         <tr> 
+            <td>Web technologies</td> 
+            <td>Gopal</td> 
+            <td>Javed</td> 
+         </tr> 
+         <tr> 
+            <td>Graphic</td> 
+            <td>Gopal</td> 
+            <td>Satish</td> 
+         </tr> 
+         <tr> 
+            <td>Writer</td> 
+            <td>Kiran</td> 
+            <td>Amith</td> 
+         </tr> 
+         <tr> 
+            <td>Writer</td> 
+            <td>Kiran</td> 
+            <td>Vineeth</td> 
+         </tr> 
+      </tbody> 
+   </table> 
+</body> 
+</html>
+```
+
+
+We shall now extract the Document Object Model from the above HTML file by calling the loadHTMLFile() method in the following PHP code −
+
+
+```php
+<?php 
+
+   /*** a new dom object ***/ 
+   $dom = new domDocument; 
+
+   /*** load the html into the object ***/ 
+   $dom->loadHTMLFile("hello.html");
+
+   /*** discard white space ***/ 
+   $dom->preserveWhiteSpace = false; 
+
+   /*** the table by its tag name ***/ 
+   $tables = $dom->getElementsByTagName('table'); 
+
+   /*** get all rows from the table ***/ 
+   $rows = $tables[0]->getElementsByTagName('tr'); 
+
+   /*** loop over the table rows ***/ 
+   foreach ($rows as $row) {
+   
+      /*** get each column by tag name ***/ 
+      $cols = $row->getElementsByTagName('td'); 
+
+      /*** echo the values ***/ 
+      echo 'Designation: '.$cols->item(0)->nodeValue.'<br />'; 
+      echo 'Manager: '.$cols->item(1)->nodeValue.'<br />'; 
+      echo 'Team: '.$cols->item(2)->nodeValue; 
+      echo '<hr />'; 
+   }
+   
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+Designation: Android
+Manager: Gopal
+Team: Sairam
+________________________________________
+Designation: Hadoop
+Manager: Gopal
+Team: Satish
+________________________________________
+Designation: HTML
+Manager: Gopal
+Team: Raju
+________________________________________
+Designation: Web technologies
+Manager: Gopal
+Team: Javed
+________________________________________
+Designation: Graphic
+Manager: Gopal
+Team: Satish
+________________________________________
+Designation: Writer
+Manager: Kiran
+Team: Amith
+________________________________________
+Designation: Writer
+Manager: Kiran
+Team: Vineeth
+________________________________________
+```
+

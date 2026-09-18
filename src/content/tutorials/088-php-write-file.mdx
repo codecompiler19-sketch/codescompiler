@@ -1,0 +1,217 @@
+---
+title: "PHP - Write File"
+description: "Learn PHP - Write File with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 880
+group: "PHP File Handling"
+seoTitle: "PHP - Write File — CodesCompiler PHP Guide"
+permalink: "php-write-file"
+---
+
+
+# PHP - Write File
+
+
+
+
+This chapter will show you how to create and write files in PHP. PHP is a popular programming language for creating dynamic web pages and applications. Writing files helps you to store data, log messages and create content on the server.
+
+
+## What is File Writing?
+
+
+In PHP, file writing means either creating a new file or updating an existing one. This can be a text, log or CSV file. We will look at how to create simple text files in PHP.
+
+
+Here are the reasons why you should write files in PHP −
+
+
+
+- Data storage:It allows you to save user data, settings and any other information that your program needs.
+- Logging:Save any errors or events in your application for future review.
+- Backup:Exporting important data to a file provides its backup.
+
+
+
+## Basic Functions for File Writing in PHP
+
+
+PHP's built-in function library provides two functions to perform write operations on a file stream. These functions arefwrite()andfputs().
+
+
+To be able to write data in a file, it must be opened in write mode (w), append mode (a), read/write mode (r+ or w+) or binary write/append mode (rb+, wb+ or wa).
+
+
+## The fputs() Function
+
+
+The fputs() function writes a string into the file opened in a writable mode.
+
+
+```php
+fputs(resource $stream, string $string, int $length)
+```
+
+
+Here, the$streamparameter is a handle to a file opened in a writable mode. The$stringparameter is the data to be written, and$lengthis an optional parameter that specifies the maximum number of bytes to be written.
+
+
+The fputs() function returns the number of bytes written, orfalseif the function is unsuccessful.
+
+
+### Example: Return the number of Bytes
+
+
+The following code opens a new file, writes a string in it, and returns the number of bytes written.
+
+
+```php
+<?php
+   $fp = fopen("hello.txt", "w");
+   $bytes = fputs($fp, "Hello World\n");
+   echo "bytes written: $bytes";
+   fclose($fp);
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+bytes written: 12
+```
+
+
+### Example: Add text in Existing File
+
+
+If you need to add text in an earlier existing file, it must be opened in append mode (a). Let us add one more string in the same file in previous example.
+
+
+```php
+<?php
+   $fp = fopen("hello.txt", "a");
+   $bytes = fputs($fp, "Hello PHP");
+   echo "bytes written: $bytes";
+   fclose($fp);
+?>
+```
+
+
+If you open the "hello.txt" file in a text editor, you should see both the lines in it.
+
+
+### Example: Write Content in Another File
+
+
+In the following PHP script, an already existing file (hello.txt) is read line by line in a loop, and each line is written to another file (new.txt)
+
+
+It is assumed thar "hello.txt" consists of following text −
+
+
+```php
+Hello World
+CodesCompiler
+PHP Tutorials
+```
+
+
+Here is the PHP code to create a copy of an existing file −
+
+
+```php
+<?php
+   $file = fopen("hello.txt", "r");
+   $newfile = fopen("new.txt", "w");
+   while(! feof($file)) {
+      $str = fgets($file);
+      fputs($newfile, $str);
+   }
+   fclose($file);
+   fclose($newfile);
+?>
+```
+
+
+The newly created "new.txt" file should have exactly the same contents.
+
+
+## The fwrite() Function
+
+
+The frwrite() function is a counterpart of fread() function. It performs binary-safe write operations.
+
+
+```php
+fwrite(resource $stream, string $data, ?int $length = null): int|false
+```
+
+
+Here, the$streamparameter is a resource pointing to the file opened in a writable mode. Data to be written to the file is provided in the$dataparameter. The optional$lengthparameter may be provided to specify the number of bytes to be written. It should beint, writing will stop after length bytes have been written or the end of data is reached, whichever comes first.
+
+
+The fwrite() function returns the number of bytes written, orfalseon failure along with E_WARNING.
+
+
+### Example: Return Number of Bytes
+
+
+The following program opens a new file, performs write operation and displays the number of bytes written.
+
+
+```php
+<?php
+   $file = fopen("/PhpProject/sample.txt", "w");
+   echo fwrite($file, "Hello CodesCompiler!!!!!");
+   fclose($file);
+?>
+```
+
+
+#### Output
+
+
+This will create the below output −
+
+
+```php
+25
+```
+
+
+### Example: Open File in Binary Read Mode
+
+
+In the example code given below, an existing file "welcome.png" in opened in binary read mode. The fread() function is used to read its bytes in "$data" variable, and in turn written to another file "new.png" −
+
+
+```php
+<?php
+   $name = "/PHP/PhpProjects/image2.png";
+   $file = fopen($name, "rb");
+   $newfile = fopen("/PHP/PhpProjects/new.png", "wb");
+   $size = filesize($name);
+   $data = fread($file, $size);
+   fwrite($newfile, $data, $size);
+   echo "File is written successfully.";
+   fclose($file);
+   fclose($newfile);
+?>
+```
+
+
+Run the above code. The current directory should now have a copy of the existing "welcome.png" file.
+
+
+#### Output
+
+
+Following is the output of the above code −
+
+
+```php
+File is written successfully.
+```
+

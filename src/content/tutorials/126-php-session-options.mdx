@@ -1,0 +1,144 @@
+---
+title: "PHP - Session Options"
+description: "Learn PHP - Session Options with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 1260
+group: "PHP Web Development"
+seoTitle: "PHP - Session Options — CodesCompiler PHP Guide"
+permalink: "php-session-options"
+---
+
+
+# PHP - Session Options
+
+
+
+
+From PHP version 7 onwards, thesession_start()function accepts an array of options to override the session configuration directives set in "php.ini". The [session] session in "php.ini" defines the default values of various options.
+
+
+The options, if provided, are in the form of an associative array of options that will override the currently set session configuration directives. The keys should not include the "session." prefix.
+
+
+## Start an HTTP session
+
+
+For example, you may start the HTTP session with the two session options defined as the parameters ofsession_start()function −
+
+
+```php
+<?php
+   session_start([
+      'cache_limiter' => 'private',
+      'read_and_close' => true,
+   ]);
+?>
+```
+
+
+## Configurable Options of an HTTP Session
+
+
+Some of the configurable options of an HTTP session in PHP are as follows −
+
+
+### session_name
+
+
+It specifies the name of the session which is used as cookie name. It should only contain alphanumeric characters. Defaults to PHPSESSID.
+
+
+```php
+session_name('MY_SESSION');
+session_start();
+```
+
+
+### session.save_handler
+
+
+It defines the name of the handler which is used for storing and retrieving data associated with a session. Defaults to files.
+
+
+```php
+ini_set('session.save_handler', 'files'); 
+session_start();
+```
+
+
+### session.auto_start
+
+
+It specifies whether the session module starts a session automatically on request startup. Defaults to 0 (disabled).
+
+
+```php
+ini_set('session.auto_start', 1);
+```
+
+
+### session.cookie_lifetime
+
+
+It specifies the lifetime of the cookie in seconds which is sent to the browser. The value 0 means "until the browser is closed." Defaults to 0.
+
+
+```php
+// 1 hour
+ini_set('session.cookie_lifetime', 3600); 
+session_start();
+```
+
+
+### session.cache_limiter
+
+
+It specifies the cache control method used for session pages. It may be one of the following values: nocache, private, private_no_expire, or public. Defaults to nocache.
+
+
+```php
+ini_set('session.cache_limiter', 'private'); 
+session_start();
+```
+
+
+### session.sid_length
+
+
+It allows you to specify the length of session ID string. Session ID length can be between 22 to 256. The default is 32.
+
+
+```php
+ini_set('session.sid_length', 64); 
+session_start();
+echo session_id();
+```
+
+
+### session.upload_progress.enabled
+
+
+It enables upload progress tracking, populating the $_SESSION variable. Defaults to 1, enabled.
+
+
+```php
+ini_set('session.upload_progress.enabled', 1); 
+session_start();
+```
+
+
+### session.lazy_write
+
+
+When it is set to 1, it means that the session data is only rewritten if it changes. Defaults to 1, enabled.
+
+
+```php
+ini_set('session.lazy_write', 1); 
+session_start();
+$_SESSION['key'] = 'value';
+```
+
+
+PHP session options provide extensive control over user sessions. Understanding and using these options allows you to design more secure and versatile web apps. To secure user information, always start your session with session_start() and handle session data properly.
+

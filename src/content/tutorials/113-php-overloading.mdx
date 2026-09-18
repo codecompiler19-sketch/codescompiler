@@ -1,0 +1,324 @@
+---
+title: "PHP - Overloading"
+description: "Learn PHP - Overloading with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 1130
+group: "Object Oriented PHP"
+seoTitle: "PHP - Overloading — CodesCompiler PHP Guide"
+permalink: "php-overloading"
+---
+
+
+# PHP - Overloading
+
+
+
+
+In C++ or Java, the term means a class can a class method of same name more than once but with different arguments and/or return type. In PHP, the term overloading has a different interpretation. It is a feature with which properties and methods can be created dynamically. PHP's magic methods (method names starting with double underscore) are used to set up dynamic properties and methods.
+
+
+The magic methods used for the purpose of overloading are invoked when interacting with properties or methods that have not been declared or are not visible in the current scope.
+
+
+So in this chapter we have covered the below topics −
+
+
+
+- Property Overloading
+- Method Overloading
+- Access Control in Overloading
+- Handle Undefined Properties and Methods
+- Inheritance and Overloading
+
+
+
+## Property Overloading
+
+
+The examples of PHP's magic methods are __construct(), __destruct(), __tostring(), etc. PHP uses the following magic methods for overloading properties.
+
+
+```php
+public __set ( string $name , mixed $value ) : void
+public __get ( string $name ) : mixed
+public __isset ( string $name ) : bool
+public __unset ( string $name ) : void
+```
+
+
+Here,
+
+
+
+- __set()is run for writing data to inaccessible properties that are protected or private or non-existing.
+- __get()reads data from inaccessible properties.
+- __isset()calls isset() or empty() on inaccessible properties.
+- __unset()is invoked when unset() is called on inaccessible properties.
+
+
+
+The$nameargument used above is the name of the property to be set or retrieved. The$valueargument of __set() method specifies the value to be assigned to the property.
+
+
+The__isset()method checks if a certain property has been set or not. The__unset()method removes the property.
+
+
+Property overloadingworks only inobject context. In anystatic context, these magic methods will not be triggered. Hence they should not be declared static.
+
+
+### Example
+
+
+In the following code, a dynamic property named myprop, which is not declared in the class, is set and retrieved.
+
+
+```php
+<?php
+   class myclass {
+      public function __set($name, $value) {
+         echo "setting $name property to $value \n";
+         $this->$name = $value;
+      }
+
+      public function __get($name) {
+         echo "value of $name property is ";
+         return $this->$name;
+      }
+   }
+
+   $obj = new myclass();
+
+   # This calls __set() method
+   $obj->myproperty="Hello World!";
+
+   # This call __get() method
+   echo "Retrieving myproperty: " . $obj->myproperty . PHP_EOL;
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+setting myproperty property to Hello World! 
+Retrieving myproperty: Hello World!
+```
+
+
+The__set()and__get()magical methods also set and retrieve a property which is declared as private. Add the following statement inside myclass (before the function definitions)
+
+
+```php
+private $myproperty;
+```
+
+
+You can check if the property, define __isset() method inmyclass−
+
+
+```php
+public function __isset($name) {
+   return isset($this->$name);
+}
+```
+
+
+Check if the property is set with this statement −
+
+
+```php
+var_dump (isset($obj->myproperty));
+```
+
+
+Which in this case returnstrue.
+
+
+To unset the dynamically created property with the __unset() method defined inmyclass−
+
+
+```php
+public function __unset($name) {
+   unset($this->$name);
+}
+```
+
+
+The following code would returnfalse−
+
+
+```php
+var_dump (isset($obj->myproperty));
+```
+
+
+## Method Overloading
+
+
+Two magic methods used to set methods dynamically are__call()and__callStatic().
+
+
+```php
+public __call (string $name , array $arguments) : mixed
+public static __callStatic (string $name , array $arguments) : mixed
+```
+
+
+The __call() is triggered when invoking inaccessible (not defined or private) methods in an object context. On the other hand, the __callStatic() is triggered when invoking inaccessible methods in a static context.
+
+
+### Example
+
+
+The following example demonstrates method overloading in PHP
+
+
+```php
+<?php
+   class myclass {
+      public function __call($name, $args) {
+	  
+         // Value of $name is case sensitive.
+         echo "Calling object method $name with " . implode(" ", $args). "\n";
+      }
+      public static function __callStatic($name, $args) {
+         echo "Calling static method $name with " . implode(" ", $args). "\n";
+      }
+   }
+   $obj = new myclass();
+
+   # This invokes __call() magic method
+   $obj->mymethod("Hello World!");
+
+   # This invokes __callStatic() method
+   myclass::mymethod("Hello World!");
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+Calling object method mymethod with Hello World!
+Calling static method mymethod with Hello World!
+```
+
+
+## Access Control in Overloading
+
+
+Here __get and __set methods can access private or protected properties which might bypass encapsulation.
+
+
+```php
+<?php
+   class Example {
+      private $name;
+
+      public function __set($property, $value) {
+         $this->$property = $value;
+      }
+
+      public function __get($property) {
+         return $this->$property;
+      }
+   }
+
+   $obj = new Example();
+   // Accessing private property
+   $obj->name = "Radhika"; 
+
+   echo $obj->name;
+?>
+```
+
+
+### Output
+
+
+Following is the output of the above code −
+
+
+```php
+Radhika
+```
+
+
+## Handle Undefined Properties and Methods
+
+
+To avoid unexpected behavior, add tests or exceptions to magic methods. So see the below example −
+
+
+```php
+<?php
+   class SafeExample {
+      public function __get($name) {
+         if (!property_exists($this, $name)) {
+            throw new Exception("Property '$name' does not exist.");
+         }
+      }
+   }
+
+   $obj = new SafeExample();
+   try {
+      echo $obj->unknownProperty;
+   } catch (Exception $e) {
+      echo $e->getMessage(); 
+   }
+?>
+```
+
+
+### Output
+
+
+This will create the below output −
+
+
+```php
+Property 'unknownProperty' does not exist.
+```
+
+
+## Inheritance and Overloading
+
+
+Child classes can override magic methods, so you may need to use parent::__call() to maintain parent functionality.
+
+
+```php
+class ParentClass {
+      public function __call($name, $arguments) {
+         echo "Parent method: $name\n";
+      }
+   }
+
+   class ChildClass extends ParentClass {
+      public function __call($name, $arguments) {
+         echo "Child method: $name\n";
+         parent::__call($name, $arguments);
+      }
+   }
+
+   $obj = new ChildClass();
+   $obj->testMethod();
+```
+
+
+### Output
+
+
+This will generate the below output −
+
+
+```php
+Child method: testMethod
+Parent method: testMethod
+```
+
+
+Notethat the use of "->" operator implies that the method is aninstance method, and "::" operator means that the method is astatic method.
+

@@ -1,0 +1,277 @@
+---
+title: "PHP - Named Arguments"
+description: "Learn PHP - Named Arguments with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 620
+group: "PHP Functions"
+seoTitle: "PHP - Named Arguments — CodesCompiler PHP Guide"
+permalink: "php-named-arguments"
+---
+
+
+# PHP - Named Arguments
+
+
+
+
+The feature of Named Arguments has been introduced in PHP with the version 8.0. It is an extension of the existing mechanism of passing positional arguments to a function while calling.
+
+
+By default, values of passed arguments are copied to the corresponding formal arguments at the same position. This feature of named arguments in PHP makes it possible to pass the value based on the parameter name instead of the position.
+
+
+## Example with Positional Arguments
+
+
+If we have a function defined as follows −
+
+
+```php
+function myfunction($x, $y) {
+   statement1;
+   statement2;
+   . . .
+}
+```
+
+
+and it is called as −
+
+
+```php
+myfunction(10, 20);
+```
+
+
+In this case, the values are passed to the variables "x" and "y" in the order of declaration. It means, the first value to the first argument, second value to second argument and so on. The variables "x" and "y" are positional arguments.
+
+
+To pass the values by named arguments, specify the parameter name to which argument the value is to be passed. The name of the parameter is the name of formal argument without the "$" symbol. The value to be passed is put in front of the ":" symbol.
+
+
+```php
+myfunction(x:10, y:20);
+```
+
+
+## Example with Named Arguments
+
+
+Here is the code that demonstrates how you can usenamed argumentsin PHP −
+
+
+```php
+<?php  
+   function  myfunction($x, $y) {
+      echo "x = $x  y = $y";
+   }
+
+   myfunction(x:10, y:20);
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+x = 10  y = 20
+```
+
+
+Usingnamed argumentsmakes it possible to pass the values in any order, and not necessarily in the same order in which the arguments are declared in the function definition. We can callmyfunction()as shown below and it will produce the same result.
+
+
+```php
+myfunction(y:20, x:10);
+```
+
+
+With this feature, the arguments become order-independent and self-documenting. It also makes it possible to skip the arguments with default values arbitrarily.
+
+
+## Combining Named Arguments with Positional Arguments
+
+
+Named arguments can be combined with positional arguments, with the condition that, the named arguments must come after the positional arguments.
+
+
+```php
+<?php  
+   function  myfunction($x, $y, $z) {
+      echo "x = $x  y = $y  z = $z";
+   }
+   myfunction(10, z:20, y:30);
+?>
+```
+
+
+### Output
+
+
+It will generate the following result −
+
+
+```php
+x = 10  y = 30  z = 20
+```
+
+
+However, if you try to treat $z as a positional argument,
+
+
+```php
+myfunction(x:10, y:20, 30);
+```
+
+
+In this case, PHP will encounter the followingerror−
+
+
+```php
+PHP Fatal error:  Cannot use positional argument after 
+named argument in hello.php on line 7
+```
+
+
+## Passing Named Arguments from an Array
+
+
+PHP 8.1.0 also introduced another feature that allows using named argument after unpacking the arguments. Instead of providing values to each argument individually, the values in an array an be unpacked into the corresponding arguments, using "..." (three dots) before the array.
+
+
+```php
+<?php  
+   function  myfunction($x, $y, $z=30) {
+      echo "x = $x  y = $y  z = $z";
+   }
+   myfunction(...[10, 20], z:30);
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+x = 10  y = 20  z = 30
+```
+
+
+Note that passing the same parameter multiple times results in an exception as follows −
+
+
+```php
+myfunction(x:10, z:20, x:20);
+```
+
+
+Error−
+
+
+```php
+PHP Fatal error:  Uncaught Error: Named parameter $x 
+overwrites previous argument in hello.php:7
+```
+
+
+## Positional Arguments vs Named Arguments
+
+
+Positional arguments are passed in the same order as the function parameters. In this the position or order matters. See the example for positional argument −
+
+
+```php
+<?php  
+   def greet(name, age):
+      print(f"Hello, my name is {name} and I am {age} years old.")
+
+   greet("Amit", 25)
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+Hello, my name is Amit and I am 25 years old.
+```
+
+
+While the arguments passed with parameter names are called Named arguments. The position does not matter because you name the arguments.
+
+
+```php
+<?php  
+   greet(name="Amit", age=25)
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+Hello, my name is Amit and I am 25 years old.
+```
+
+
+Or change the order −
+
+
+```php
+<?php  
+   greet(age=25, name="Amit")
+?>
+```
+
+
+The output for the above code will be the same. So it proves if we change the order of arguments it does not affect the output of the program.
+
+
+## Passing Arguments by Reference
+
+
+Normally, when you pass a variable to a function, PHP makes a copy of it. If you change a variable inside the function, the original value outside the function remains unchanged. But when you pass a reference (with the & symbol), the function uses the original variable rather than a copy. So, if the function changes the variable, it will be reflected outside of the function!
+
+
+```php
+<?php  
+   function updateString(&$str) 
+   {
+      $str .= " updated";
+   }
+
+   $text = "This is just a test string";
+   updateString($text);
+   echo $text;
+?>
+```
+
+
+### Output
+
+
+It will generate the below output −
+
+
+```php
+This is just a test string updated
+```
+
+
+It's useful when you want to update a variable within a function but maintain the change outside of the function. But you have be careful because falsely changing the variable can lead to unexpected outcomes in your program.
+

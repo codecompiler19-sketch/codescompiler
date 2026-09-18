@@ -1,0 +1,234 @@
+---
+title: "PHP - Type Juggling"
+description: "Learn PHP - Type Juggling with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 180
+group: "PHP Basics"
+seoTitle: "PHP - Type Juggling — CodesCompiler PHP Guide"
+permalink: "php-type-juggling"
+---
+
+
+# PHP - Type Juggling
+
+
+
+
+PHP is a dynamically typed language, which means the type of a variable can be changed based on the value sent to it at runtime. This automatic type conversion in PHP is called type juggling.
+
+
+In languages like C, C++ and Java, a variable's type must be defined before it can be used and it can only hold values of that type. But PHP handles type conversions automatically, allowing variables to carry a wide range of values without the need for explicit type declaration.
+
+
+## No Explicit Type Declaration in PHP
+
+
+Explicit type declaration of a variable is neither needed nor supported in PHP. Hence the type of PHP variable is decided by the value assigned to it, and not the other way around. Further, when a variable is assigned a value of different type, its type too changes.
+
+
+## Example 1
+
+
+Look at the following variable assignment in PHP.
+
+
+```php
+<?php
+   $var = "Hello";
+   echo "The variable \$var is of " . gettype($var) . " type" .PHP_EOL;
+
+   $var = 10;
+   echo "The variable \$var is of " . gettype($var) . " type" .PHP_EOL;
+
+   $var = true;
+   echo "The variable \$var is of " . gettype($var) . " type" .PHP_EOL;
+
+   $var = [1,2,3,4];
+   echo "The variable \$var is of " . gettype($var) . " type" .PHP_EOL;
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+The variable $var is of string type
+The variable $var is of integer type
+The variable $var is of boolean type
+The variable $var is of array type
+```
+
+
+You can see the type of "$var" changes dynamically as per the value assigned to it. This feature of PHP is called "type juggling".
+
+
+## Example 2
+
+
+Type juggling also takes place during calculation of expression. In this example, a string variable containing digits is automatically converted to integer for evaluation of addition expression.
+
+
+```php
+<?php
+   $var1=100;
+   $var2="100";
+   $var3=$var1+$var2;
+   var_dump($var3);
+?>
+```
+
+
+### Output
+
+
+Here is its output −
+
+
+```php
+int(200)
+```
+
+
+## Example 3
+
+
+If a string starts with digits, trailing non-numeric characters if any, are ignored while performing the calculation. However, PHP parser issues a notice as shown below −
+
+
+```php
+<?php
+   $var1=100;
+   $var2="100 days";
+   $var3=$var1+$var2;
+   var_dump($var3);
+?>
+```
+
+
+### Output
+
+
+You will get the following result −
+
+
+```php
+int(200)
+
+PHP Warning:  A non-numeric value encountered in /home/cg/root/53040/main.php on line 4
+```
+
+
+## Type Casting vs Type Juggling
+
+
+In PHP, type juggling is the automatic changing of a variable's data type when necessary. For example, adding an integer value to a variable makes it an integer. PHP handles this automatically, with no user action required.
+
+
+On the other hand, type casting occurs when a user actively changes a variable's data type. This means that the user decides what type the variable should be and then converts it using a specific method.
+
+
+In simple terms, PHP automatically performs type juggling, while the programmer performs type casting.
+
+
+### Example
+
+
+Type casting forces a variable to be used as a certain type. The following script shows an example of different type cast operators −
+
+
+```php
+<?php
+   $var1=100;
+   $var2=(boolean)$var1;
+   $var3=(string)$var1;
+   $var4=(array)$var1;
+   $var5=(object)$var1;
+   var_dump($var2, $var3, $var4, $var5);
+?>
+```
+
+
+#### Output
+
+
+It will generate the following outcome −
+
+
+```php
+bool(true)
+string(3) "100"
+array(1) {
+  [0]=>
+  int(100)
+}
+object(stdClass)#1 (1) {
+  ["scalar"]=>
+  int(100)
+}
+```
+
+
+### Example
+
+
+Casting a variable to a string can also be done by enclosing in double quoted string −
+
+
+```php
+<?php
+   $var1=100.50;
+   $var2=(string)$var1;
+   $var3="$var1";
+   var_dump($var2, $var3);
+?>
+```
+
+
+#### Output
+
+
+Here, you will get the following result −
+
+
+```php
+string(5) "100.5"
+string(5) "100.5"
+```
+
+
+## PHP Type Juggling Vulnerability
+
+
+PHP Type Juggling vulnerability occurs when PHP automatically changes data types, which can lead to security vulnerabilities. When comparing values, PHP tries to transform them so they match, which can be dangerous if not done correctly.
+
+
+For example, see the below code in PHP −
+
+
+```php
+// It will be true as PHP ignores non-numeric part.
+   "123abc" == 123
+```
+
+
+This means that if your code checks a password or security token using == (double equals), PHP can view two different responses as the same because of to type juggling. Hackers can use this to get unauthorized access to your computer.
+
+
+### How to resolve This?
+
+
+To avoid this issue we need to always use strict comparison (===), which checks both value and type −
+
+
+```php
+// This is false as the type is different.
+   "123abc" === 123
+```
+
+
+This makes sure that PHP does not change data types and makes your code more secure.
+

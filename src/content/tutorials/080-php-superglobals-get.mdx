@@ -1,0 +1,128 @@
+---
+title: "PHP - $_GET"
+description: "Learn PHP - $_GET with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 800
+group: "PHP Superglobals"
+seoTitle: "PHP - $_GET — CodesCompiler PHP Guide"
+permalink: "php-superglobals-get"
+---
+
+
+# PHP - $_GET
+
+
+
+
+$_GET is one of the superglobals in PHP. It is an associative array of variables passed to the current script via the query string appended to the URL of HTTP request. Note that the array is populated by all requests with a query string in addition to GET requests.
+
+
+$HTTP_GET_VARS contains the same initial information, but that has now been deprecated.
+
+
+By default, the client browser sends a request for the URL on the server by using the HTTP GET method. A query string attached to the URL may contain key value pairs concatenated by the "&" symbol. The $_GET associative array stores these key value pairs.
+
+
+## How Does $_GET Work?
+
+
+When someone visits a URL like this −
+
+
+```php
+http://localhost/hello.php?name=Amit&age=22
+```
+
+
+PHP can access the values using $_GET.
+
+
+```php
+<?php
+   echo "Hello, " . $_GET['name'] . "!";
+   echo " You are " . $_GET['age'] . " years old.";
+?>
+```
+
+
+### Output
+
+
+Here is the outcome of the following code −
+
+
+```php
+Hello, Amit! You are 22 years old.
+```
+
+
+## Example
+
+
+Save the following script in the document folder of Apache server. If you are using XAMPP server on Windows, place the script as "hello.php" in the "c:/xampp/htdocs" folder.
+
+
+```php
+<?php
+   echo "<h3>First Name: " . $_REQUEST['first_name'] . "<br />" . 
+   "Last Name: " . $_REQUEST['last_name'] . "</h3>";
+?>
+```
+
+
+Start the XAMPP server, and enter "http://localhost/hello.php?first_name=Mukesh&last_name=Sinha" as the URL in a browser window. You should get the followingoutput−
+
+
+The $_GET array is also populated when a HTML form data is submitted to a URL with GET action.
+
+
+Under the document root, save the following script as "hello.html" −
+
+
+```html
+<html>
+<body>
+   <form action="hello.php" method="get">
+      <p>First Name: <input type="text" name="first_name"/></p>
+      <p>Last Name: <input type="text" name="last_name" /></p>
+      <input type="submit" value="Submit" />
+   </form>
+</body>
+</html>
+```
+
+
+In your browser, enter the URL"http://localhost/hello.html"−
+
+
+You should get a similaroutputin the browser window −
+
+
+## HTML Special Characters
+
+
+In the following example, htmlspecialchars() is used to convert characters in HTML entities −
+
+
+CharacterReplacement& (ampersand)&amp;" (double quote)&quot;' (single quote)&#039; or &apos;`< `(less than)&lt;> (greater than)&gt;
+
+
+Assuming that the URL in the browser is "http://localhost/hello.php?name=Suraj&age=20" −
+
+
+```php
+<?php
+   echo  "Name: " . htmlspecialchars($_GET["name"]) . "";
+   echo  "Age: " . htmlspecialchars($_GET["age"]) . "<br/>";
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+Name: Suraj
+Age: 20
+```
+

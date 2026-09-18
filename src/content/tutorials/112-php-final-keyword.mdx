@@ -1,0 +1,228 @@
+---
+title: "PHP - Final Keyword"
+description: "Learn PHP - Final Keyword with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 1120
+group: "Object Oriented PHP"
+seoTitle: "PHP - Final Keyword — CodesCompiler PHP Guide"
+permalink: "php-final-keyword"
+---
+
+
+# PHP - The Final Keyword
+
+
+
+
+In PHP, thefinalkeyword prevents classes and functions from being changed or overridden. It helps to keep important parts of your code secure, to guarantee no one accidentally breaks them while making changes.
+
+
+The "final" keyword is used in the definition of a class, a method inside a class, as well as with the definition of a constant property of a class.
+
+
+## What Does the final Keyword Do?
+
+
+The final keyword can be used in two ways −
+
+
+
+- For Classes:This prevents the class from being extended (inherited).
+- For methods:This prevents them from being overridden in child classes.
+
+
+
+In this chapter we will cover the below topics −
+
+
+
+- Using final with Classes
+- Using final with Methods
+- Using final with Constants
+- Real-World Example: ellipse and circle Classes
+
+
+
+## Using final with Classes
+
+
+Let's see how to create a class with the "final" keyword −
+
+
+```php
+final class myclass {
+   /*class members*/   
+}
+```
+
+
+### Example: Class inheritance error
+
+
+The "final" keyword in class definition prevents such a class from being extended. In other words, you cannot use a final class as a parent. If you try, PHP parser throws an error
+
+
+```php
+<?php
+   final class myclass {
+   
+      /* class body */
+   }
+   class newclass extends myclass {
+   
+      /* class body */ 
+   }
+?>
+```
+
+
+#### Output
+
+
+When you run this code, it will show anerror−
+
+
+```php
+PHP Fatal error:  Class newclass may not inherit from final class (myclass)
+```
+
+
+## Using final with Methods
+
+
+Here is how you can create a method with the "final" keyword −
+
+
+```php
+class myclass {
+   final function myfunction() {
+   
+      /* function body */
+   }
+}
+```
+
+
+Prefixing a method definition with thefinalkeyword prevents it from being overridden in a child class. A class withfinalmethod can be extended, but the child class cannot override it.
+
+
+### Example: Method overriding error
+
+
+Take a look at the following example −
+
+
+```php
+<?php
+   class myclass {
+      final public function hello() {
+         echo "Hello World!";
+      }
+   }
+   class newclass extends myclass {
+      public function hello() {
+         echo "Hello PHP!";
+      }
+   }
+?>
+```
+
+
+#### Output
+
+
+When you run this code, it will show anerror−
+
+
+```php
+PHP Fatal error:  Cannot override final method myclass::hello() in hello.php
+```
+
+
+## Using final with Constants
+
+
+You can also declare a constant in a class with thefinalkeyword, starting from PHP 8.1.0 onwards.
+
+
+```php
+final public const NAME = "My Class";
+```
+
+
+### Example: Final constant inheritance error
+
+
+If you try to override a final constant from parent class in a child class, an error is encountered.
+
+
+```php
+<?php
+   class myclass {
+      final public const NAME = "My Class";
+      final public function hello() {
+         echo "Hello World!";
+      }
+   }
+
+   class newclass extends myclass {
+      public const NAME = "New Class";
+   }
+?>
+```
+
+
+#### Output
+
+
+When you run this code, it will show anerror−
+
+
+```php
+Fatal error: newclass::NAME cannot override final constant myclass::NAME
+```
+
+
+## Real-World Example: ellipse and circle Classes
+
+
+The following PHP script contains a parent class ellipse with a PI constant and area() method both declared as final. They are inherited by the circle class. The area() function calculates the area of circle.
+
+
+```php
+<?php
+   class ellipse {
+      final public const PI=22/7;
+      private float $a, $b;
+      public function __construct($x, $y) {
+         $this->a = $x;
+         $this->b = $y;
+      }
+      final public function area() : float {
+         return self::PI*$this->a*$this->b;
+      }
+   }
+   class circle extends ellipse {
+      public function __construct(float $x) {
+         parent::__construct($x, $x);
+      }
+   }
+   $c1 = new circle(5);
+   echo "Area: " . $c1->area() . PHP_EOL;
+?>
+```
+
+
+### Output
+
+
+It will produce the followingoutput−
+
+
+```php
+Area: 78.571428571429
+```
+
+
+Note that the instance variables or properties of a class cannot be declared as final.
+

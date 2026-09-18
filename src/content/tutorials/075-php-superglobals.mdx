@@ -1,0 +1,164 @@
+---
+title: "PHP - Superglobals"
+description: "Learn PHP - Superglobals with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 750
+group: "PHP Superglobals"
+seoTitle: "PHP - Superglobals — CodesCompiler PHP Guide"
+permalink: "php-superglobals"
+---
+
+
+# PHP - $_SESSION
+
+
+
+
+One of the superglobal variables in PHP,$_SESSIONis an associative array of session variables available in the current script.$HTTP_SESSION_VARSalso contains the same information, but it is not a superglobal, and it has now been deprecated.
+
+
+## What is a Session?
+
+
+A Session is an alternative way to make data accessible across the pages of an entire website. It is the time duration between the time a user establishes a connection with a server and the time the connection is terminated. During this interval, the user may navigate to different pages. Many times, it is desired that some data is persistently available across the pages. This is facilitated bysession variables.
+
+
+A session creates a file in a temporary directory on the server where the registered session variables and their values are stored. This data will be available to all the pages on the site during that visit.
+
+
+The server assigns a unique SESSION_ID to each session. Since HTTP is a stateless protocol, data in session variables is automatically deleted when the session is terminated.
+
+
+### How Sessions Work?
+
+
+Here is the way how sessions work −
+
+
+
+- The server assigns a unique SESSION_ID to each user.
+- This ID is stored in a temporary file on the server.
+- The session data is accessible from all pages until the session is terminated.
+
+
+
+## Starting a Session
+
+
+In order to enable access to session data, the session_start() function must be invoked. session_start() creates a session or resumes the current one based on a session identifier passed via a GET or POST request, or passed via a cookie.
+
+
+```php
+session_start(array $options = []): bool
+```
+
+
+This function returnstrueif a session was successfully started, else it returnsfalse.
+
+
+## Creating and Using Session Variables
+
+
+To create a new session variable, add a key-value pair in the $_SESSION array −
+
+
+```php
+$_SESSION[ "var"]=value;
+```
+
+
+To read back the value of a session variable, you can useecho/printstatements, orvar_dump()orprint_r()functions.
+
+
+```php
+echo $_SESSION[ "var"];
+```
+
+
+To obtain the list of all the session variables in the current session, you can use aforeachloop to traverse the$_SESSION−
+
+
+```php
+foreach ($_SESSION as $key=>$val)
+echo $key . "=>" . $val;
+```
+
+
+## Deleting Session Variables
+
+
+To manually clear all the session data, there issession_destroy()function. A specific session variable may also be released by calling theunset()function.
+
+
+```php
+unset($_SESSION[ "var"]);
+```
+
+
+## List of Session Functions
+
+
+In PHP, there are many built-in functions for managing the session data.
+
+
+Session FunctionsDescriptionsession_abortDiscard session array changes and finish sessionsession_cache_expireReturn current cache expiresession_cache_limiterGet and/or set the current cache limitersession_commitAlias of session_write_closesession_create_idCreate new session idsession_decodeDecodes session data from a session encoded stringsession_destroyDestroys all data registered to a sessionsession_encodeEncodes the current session data as a session encoded stringsession_gcPerform session data garbage collectionsession_get_cookie_paramsGet the session cookie parameterssession_idGet and/or set the current session idsession_is_registeredFind out whether a global variable is registered in a sessionsession_module_nameGet and/or set the current session modulesession_nameGet and/or set the current session namesession_regenerate_idUpdate the current session id with a newly generated onesession_register_shutdownSession shutdown functionsession_registerRegister one or more global variables with the current sessionsession_resetRe-initialize session array with original valuessession_save_pathGet and/or set the current session save pathsession_set_cookie_paramsSet the session cookie parameterssession_set_save_handlerSets user-level session storage functionssession_startStart new or resume existing sessionsession_statusReturns the current session statussession_unregisterUnregister a global variable from the current sessionsession_unsetFree all session variablessession_write_closeWrite session data and end session
+
+
+### Example: Managing User Data with PHP Sessions
+
+
+The following PHP script renders an HTML form. The form data is used to create three session variables. A hyperlink takes the browser to another page, which reads back the session variables.
+
+
+Save this code as "test.php" in the document root folder, and open it in a client browser. Enter the data and press theSubmitbutton.
+
+
+```html
+<html>
+<head>
+   <title>PHP Sessions: How to Use $_SESSION to Manage User Data</title>
+   <meta name="keywords" content="PHP Sessions, PHP $_SESSION, Manage User Data in PHP, PHP session_start, session variables, PHP session tutorial">
+</head>
+<body>
+   <form action="<?php echo $_SERVER['PHP_SELF'];?>" method="post">
+      <h3>User's ID: <input type="text" name="ID"/></h3>
+      <h3>Your Name: <input type="text" name="name"/></h3>
+      <h3>Enter Age: <input type="text" name="age"/></h3>
+      <input type="submit" value="Submit"/>
+   </form>
+   <?php
+      session_start();
+      if ($_SERVER["REQUEST_METHOD"] == "POST") {
+         $_SESSION['UserID'] = $_POST['ID'];
+         $_SESSION['Name'] = $_POST['name'];
+         $_SESSION['age'] = $_POST['age'];
+      }
+      echo "Following Session Variables Created: \n";
+
+      foreach ($_SESSION as $key=>$val)
+      echo "<h3>" . $key . "=>" . $val . "</h3>";
+      echo "<br/>" . '<a href="hello.php">Click Here</a>';
+   ?>
+</body>
+</html>
+```
+
+
+When you click the "Submit" button, it will show a list of all the session variables created −
+
+
+Next, have the following script in the "hello.php" file and save it.
+
+
+```php
+<?php
+session_start();
+   echo "<h2>Following Session variables Read:</h2>";
+   foreach ($_SESSION as $key=>$val)
+   echo "<h3>" . $key . "=>" . $val . "</h3>";
+?>
+```
+
+
+Now, follow the link on the "test.php" page to navigate to "hello.php". It will show the session variables that are read −
+

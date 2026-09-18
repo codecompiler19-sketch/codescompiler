@@ -1,0 +1,335 @@
+---
+title: "PHP - Do…While Loop"
+description: "Learn PHP - Do…While Loop with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 480
+group: "PHP Control Statements"
+seoTitle: "PHP - Do…While Loop — CodesCompiler PHP Guide"
+permalink: "php-do-while-loop"
+---
+
+
+# PHP - DoWhile Loop
+
+
+
+
+The "dowhile" loop is another looping construct available in PHP. This type of loop is similar to thewhileloop, except that the test condition is checked at the end of each iteration rather than at the beginning of a new iteration.
+
+
+Thewhileloop verifies the truth condition before entering the loop, whereas in "dowhile" loop, the truth condition is verified before re entering the loop. As a result, the "dowhile" loop is guaranteed to have at least one iteration irrespective of the truth condition.
+
+
+## Flowchart of DoWhile Loop
+
+
+The following figure shows the difference in "while" loop and "dowhile" loop by using a comparative flowchart representation of the two.
+
+
+## Syntax of Do...While Statement
+
+
+Thesyntaxfor constituting a "dowhile" loop is similar to its counterpart in C language.
+
+
+```php
+do {
+   statements;
+}
+while (expression);
+```
+
+
+## Basic Example of DoWhile Loop
+
+
+Here is a simple example of "dowhile" loop that prints iteration numbers 1 to 5.
+
+
+```php
+<?php
+   $var=1;
+   do{
+      echo "Iteration No: $var \n";
+      $var++;
+   }
+   while ($var<=5);
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+Iteration No: 1 
+Iteration No: 2 
+Iteration No: 3 
+Iteration No: 4 
+Iteration No: 5
+```
+
+
+## Using While Loop
+
+
+The following code uses awhileloop and also generates the same output −
+
+
+```php
+<?php
+   $var=1;
+   while ($var<=5){
+      echo "<h3>Iteration No: $var</h3>";
+      $var++;
+   }         
+?>
+```
+
+
+Hence, it can be said that the "dowhile" and "while" loops behave similarly. However, the difference will be evident when the initial value of the counter variable (in this case$var) is set to any value more than the one used in the test expression in the parenthesis in front of thewhilekeyword.
+
+
+## Using both While and DoWhile Loops
+
+
+In the following code, both the loops -whileand "dowhile" - are used. The counter variable for thewhileloop is$varand for "dowhile" loop, it is$j. Both are initialized to 10 (any value greater than 5).
+
+
+```php
+<?php
+   echo "while Loop \n";
+   $var=10;
+   while ($var<=5){
+      echo "Iteration No: $var \n";
+      $var++;
+   }   
+
+   echo "do-while Loop \n"; 
+   $j=10;
+   do{
+      echo "Iteration No: $j \n";
+      $j++;
+   }
+   while ($j<=5);
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+while Loop
+do - while Loop
+Iteration No: 10
+```
+
+
+The result shows that thewhileloop doesn't perform any iterations as the condition is false at the beginning itself ($varis initialized to 10, which is greater than the test condition$var`<=`5). On the other hand, the "dowhile" loop does undergo the first iteration even though the counter variable$jis initialized to a value greater than the test condition.
+
+
+### Differences Between while and do...while Loops
+
+
+We can thus infer that the "dowhile" loop guarantees at least one iteration because the test condition is verified at the end of 	looping 	block. Thewhileloop may not do any iteration as the test 	condition is verified before entering the looping block.
+
+
+Another syntactical difference is that thewhilestatement in "dowhile" terminates with semicolon. In case ofwhileloop, the parenthesis is followed by a curly bracketed looping block.
+
+
+Apart from these, there are no differences. One can use both these types of loops interchangeably.
+
+
+## Decrementing a Dowhile Loop
+
+
+To design a "dowhile" with decrementing count, initialize the counter variable to a higher value, use decrement operator (--) inside the loop to reduce the value of the counter on each iteration, and set the test condition in thewhileparenthesis to run the loop till the counter is greater than the desired last value.
+
+
+In theexamplebelow, the counter decrements from 5 to 1.
+
+
+```php
+<?php
+   $j=5;
+   do{
+      echo "Iteration No: $j \n";
+      $j--;
+   }
+   while ($j>=1);
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+Iteration No: 5
+Iteration No: 4
+Iteration No: 3
+Iteration No: 2
+Iteration No: 1
+```
+
+
+## Traverse a String in Reverse Order
+
+
+In PHP, a string can be treated as an indexed array of characters. We can extract and display one character at a time from end to beginning by running a decrementing "dowhile" loop as follows −
+
+
+```php
+<?php
+   $string = "CodesCompiler";
+   $j = strlen($string);
+
+   do{
+      $j--;
+      echo "Character at index $j : $string[$j] \n";
+   }
+   while ($j>=1);
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+Character at index 13 : t
+Character at index 12 : n
+Character at index 11 : i
+Character at index 10 : o
+Character at index 9 : P
+Character at index 8 : s
+Character at index 7 : l
+Character at index 6 : a
+Character at index 5 : i
+Character at index 4 : r
+Character at index 3 : o
+Character at index 2 : t
+Character at index 1 : u
+Character at index 0 : T
+```
+
+
+## Nested Dowhile Loops
+
+
+Like theforloop orwhileloop, you can also write nested "dowhile" loops. In the following example, the upper "dowhile" loop counts the iteration with$var, the inner "dowhile" loop increments$jand each time prints the product of$var*j, thereby printing the tables from 1 to 10.
+
+
+```php
+<?php
+   $var=1;
+   $j=1;
+
+   do{
+      print "\n";
+      do{
+         $k = sprintf("%4u",$var*$j);
+         print "$k";
+         $j++;
+      } 
+      while ($j<=10);
+      $j=1;
+      $var++;
+   }
+   while ($var<=10);
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+1   2   3   4   5   6   7   8   9  10
+2   4   6   8  10  12  14  16  18  20
+3   6   9  12  15  18  21  24  27  30
+4   8  12  16  20  24  28  32  36  40
+5  10  15  20  25  30  35  40  45  50
+6  12  18  24  30  36  42  48  54  60
+7  14  21  28  35  42  49  56  63  70
+8  16  24  32  40  48  56  64  72  80
+9  18  27  36  45  54  63  72  81  90
+10  20  30  40  50  60  70  80  90 100
+```
+
+
+## The break Statement
+
+
+In the following example, we are using the break statement with the do...while loop. With the break statement, we can terminate the loop even if the condition remains true −
+
+
+```php
+<?php
+   $var = 3;
+
+   do {
+   if ($var == 6) break;
+   echo $var;
+   $var++;
+   } while ($var < 9);
+?>
+```
+
+
+### Output
+
+
+Following is the output of the above code −
+
+
+```php
+345
+```
+
+
+## The continue Statement
+
+
+Now, we are using the continue statement with the do-while loop. So using the continue statement we can terminate the running iteration and continue with the next task −
+
+
+```php
+<?php
+   $var = 0;
+
+   do {
+   $var++;
+   if ($var == 6) continue;
+   echo $var;
+   } while ($var < 9);
+?>
+```
+
+
+### Output
+
+
+Below is the output of the above code −
+
+
+```php
+12345789
+```
+

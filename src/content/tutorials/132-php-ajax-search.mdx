@@ -1,0 +1,131 @@
+---
+title: "PHP - AJAX Search"
+description: "Learn PHP - AJAX Search with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 1320
+group: "PHP AJAX"
+seoTitle: "PHP - AJAX Search — CodesCompiler PHP Guide"
+permalink: "php-ajax-search"
+---
+
+
+# PHP - AJAX Search
+
+
+
+
+AJAX is a shortform of the term Asynchronous JavaScript and XML. Ajax is used to build fast and dynamic web pages. Below example demonstrates interaction with the backend PHP script with AJAX functions to provide a search field on the webpage.
+
+
+## Step 1
+
+
+Save the following script as "example.php" −
+
+
+```html
+<html>
+<head>
+   <style>
+      span {
+         color: green;
+      }
+   </style>
+   <script>
+      function showHint(str) {
+         if (str.length == 0) {
+            document.getElementById("txtHint").innerHTML = "";
+            return;
+         } else {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+               if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                  document.getElementById("txtHint").innerHTML = xmlhttp.responseText;
+               }
+            }
+            xmlhttp.open("GET", "hello.php?q=" + str, true);
+            xmlhttp.send();
+         }
+      }
+   </script>
+</head>
+<body>
+   <p><b>Search your favourite tutorials:</b></p>
+   <form>
+      <input type = "text" onkeyup = "showHint(this.value)">
+   </form>
+   <p>Entered Course name: <span id="txtHint"></span></p>
+</body>
+</html>
+```
+
+
+This code is essentially a HTML script that renders a HTML form with a text field. On itsonkeyupevent, a showHint() JavaScript function is called. The function sends a HTTP GET request to another PHP script on the server.
+
+
+## Step 2
+
+
+Save the following script as "php_ajax.php" −
+
+
+```php
+<?php
+   // Array with names
+   $a[] = "Android";
+   $a[] = "B programming language";
+   $a[] = "C programming language";
+   $a[] = "D programming language";
+   $a[] = "euphoria";
+   $a[] = "F#";
+   $a[] = "GWT";
+   $a[] = "HTML5";
+   $a[] = "ibatis";
+   $a[] = "Java";
+   $a[] = "K programming language";
+   $a[] = "Lisp";
+   $a[] = "Microsoft technologies";
+   $a[] = "Networking";
+   $a[] = "Open Source";
+   $a[] = "Prototype";
+   $a[] = "QC";
+   $a[] = "Restful web services";
+   $a[] = "Scrum";
+   $a[] = "Testing";
+   $a[] = "UML";
+   $a[] = "VB Script";
+   $a[] = "Web Technologies";
+   $a[] = "Xerox Technology";
+   $a[] = "YQL";
+   $a[] = "ZOPL";
+
+   $q = $_REQUEST["q"];
+   $hint = "";
+
+   if ($q !== "") {
+      $q = strtolower($q);
+      $len = strlen($q);
+
+      foreach($a as $name) {
+         if (stristr($q, substr($name, 0, $len))) {
+            if ($hint === "") {
+               $hint = $name;
+            } else {
+               $hint .= ", $name";
+            }
+         }
+      }
+   }
+   echo $hint === "" ? "Please enter a valid course name" : $hint;
+?>
+```
+
+
+## Step 3
+
+
+We will start this application by opening example.php in the browser by entering the URLhttp://localhost/example.php
+
+
+On every keystroke in the search field, a GET request goes to the server. The server script reads the character from $_REQUEST array and searches for the course name that matches. The matched value is displayed below the text field in the browser.
+

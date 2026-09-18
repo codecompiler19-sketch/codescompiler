@@ -1,0 +1,218 @@
+---
+title: "PHP - Constant Arrays"
+description: "Learn PHP - Constant Arrays with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 560
+group: "PHP Arrays"
+seoTitle: "PHP - Constant Arrays — CodesCompiler PHP Guide"
+permalink: "php-constant-arrays"
+---
+
+
+# PHP - Constant Arrays
+
+
+
+
+In PHP, an array is a collection of elements that can have several values under a single name. Normally, arrays in PHP are mutable, which means you can add, remove or change elements after they are generated. Constant arrays, on the other hand, are useful when you want an array with values that never change during your program.
+
+
+A constant array is one that cannot be altered once defined. You have access to its components, but you cannot modify, add or remove them. Prior to PHP 5.6, it was not possible to declare constant arrays; however, current versions of PHP introduced simple methods to perform this using the const keyword or the define() function.
+
+
+Unlike a normal array, its identifier doesn't start with the "$" sign.
+
+
+## Syntax of the Constant Arrays
+
+
+The syntax for declaring constant array using const is −
+
+
+```php
+const ARRAY_NAME = [
+   "val1", 
+   "val2", 
+   "val3"
+];
+```
+
+
+The syntax for defining constant array using define() is −
+
+
+```php
+define('ARRAY_NAME', [
+   "val1", 
+   "val2", 
+   "val3"
+]);
+```
+
+
+## Constant Array with const
+
+
+In the below example we have used const to define the constant array and displayed using the var_dump() function.
+
+
+```php
+<?php
+   const FRUITS = array(
+      "Watermelon", 
+      "Strawberries",
+      "Pomegranate",
+      "Blackberry",
+   );
+   var_dump(FRUITS);
+?>
+```
+
+
+### Output
+
+
+It will generate the following output −
+
+
+```php
+array(4) {
+   [0]=>
+   string(10) "Watermelon"
+   [1]=>
+   string(12) "Strawberries"
+   [2]=>
+   string(11) "Pomegranate"
+   [3]=>
+   string(10) "Blackberry"
+}
+```
+
+
+You can also use the conventional square bracket syntax to declare a constant array in PHP −
+
+
+```php
+const FRUITS = [
+   "Watermelon", 
+   "Strawberries",
+   "Pomegranate",
+   "Blackberry",
+];
+```
+
+
+## Try to Modify the Constant Array
+
+
+It is not possible to modify any element in a constant array. Hence, the following code throws a fatal error −
+
+
+```php
+<?php
+   const FRUITS = [
+      "Watermelon", 
+      "Strawberries",
+      "Pomegranate",
+      "Blackberry",
+   ];
+   FRUITS[1] = "Mango";
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+PHP Fatal error:  Cannot use temporary expression in write context
+```
+
+
+## Constant Arrays PHP 7 Onwards (With define())
+
+
+The newer versions of PHP allow you to declare a constant array with define() function.
+
+
+```php
+<?php
+   define ('FRUITS',  [
+      "Watermelon", 
+      "Strawberries",
+      "Pomegranate",
+      "Blackberry",
+   ]);
+   print_r(FRUITS);
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+Array
+(
+   [0] => Watermelon
+   [1] => Strawberries
+   [2] => Pomegranate
+   [3] => Blackberry
+)
+```
+
+
+You can also use the array() function to declare the constant array here.
+
+
+```php
+define ('FRUITS',  array(
+   "Watermelon", 
+   "Strawberries",
+   "Pomegranate",
+   "Blackberry",
+));
+```
+
+
+## Associative Constant Array with define()
+
+
+It is also possible to declare anassociative constant array. Here is an example −
+
+
+```php
+<?php
+   define ('CAPITALS',  array(
+      "Maharashtra" => "Mumbai",
+      "Telangana" => "Hyderabad",
+      "Gujarat" => "Gandhinagar",
+      "Bihar" => "Patna"
+   ));
+   print_r(CAPITALS);
+?>
+```
+
+
+### Output
+
+
+It will produce the following output −
+
+
+```php
+Array
+(
+   [Maharashtra] => Mumbai
+   [Telangana] => Hyderabad
+   [Gujarat] => Gandhinagar
+   [Bihar] => Patna
+)
+```
+

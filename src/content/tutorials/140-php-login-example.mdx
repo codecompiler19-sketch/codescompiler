@@ -1,0 +1,173 @@
+---
+title: "PHP - Login Example"
+description: "Learn PHP - Login Example with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 1400
+group: "PHP Login Example"
+seoTitle: "PHP - Login Example — CodesCompiler PHP Guide"
+permalink: "php-login-example"
+---
+
+
+# PHP - Login Example
+
+
+
+
+A typical PHP web application authenticates the user before logging in, by asking his credentials such asusernameandpassword. The credentials are then checked against the user data available with the server. In this example, the user data is available in the form of an associative array. The following PHP Login script is explained below −
+
+
+## HTML Form
+
+
+The HTML part of the code presents a simple HTML form, that accepts username and password, and posts the data to itself.
+
+
+```html
+<form action = "<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+   <div>
+      <label for="username">Username:</label>
+      <input type="text" name="username" id="name">
+   </div>
+   <div>
+      <label for="password">Password:</label>
+      <input type="password" name="password" id="password">
+   </div>
+   <section style="margin-left:2rem;">
+      <button type="submit" name="login">Login</button>
+   </section>
+</form>
+```
+
+
+## PHP Authentication
+
+
+The PHP script parses the POST data, and checks if the username is present in the users array. If found, it further checks whether the password corresponds to the registered user in the array
+
+
+```php
+<?php
+   if (array_key_exists($user, $users)) {
+      if ($users[$_POST['username']]==$_POST['password']) {
+         $_SESSION['valid'] = true;
+         $_SESSION['timeout'] = time();
+         $_SESSION['username'] = $_POST['username'];
+         $msg = "You have entered correct username and password";
+      } else { 
+         $msg = "You have entered wrong Password"; 
+      }
+   } else {
+      $msg = "You have entered wrong user name";
+   }
+?>
+```
+
+
+The username and the appropriate message is added to the $_SESSION array. The user is prompted with a respective message, whether the credentials entered by him are correct or not.
+
+
+## The Complete Code
+
+
+Here is the complete code −
+
+
+### Login.php
+
+
+```html
+<?php
+   ob_start();
+   session_start();
+?>
+<html lang = "en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link rel="stylesheet" href="loginstyle.css">
+   <title>Login</title>
+</head>
+<body>
+   <h2 style="margin-left:10rem; margin-top:5rem;">Enter Username and Password</h2> 
+   <?php
+      $msg = '';
+      $users = ['user'=>"test", "manager"=>"secret", "guest"=>"abc123"];
+
+      if (isset($_POST['login']) && !empty($_POST['username']) 
+      && !empty($_POST['password'])) {
+         $user=$_POST['username'];                  
+         if (array_key_exists($user, $users)){
+            if ($users[$_POST['username']]==$_POST['password']){
+               $_SESSION['valid'] = true;
+               $_SESSION['timeout'] = time();
+               $_SESSION['username'] = $_POST['username'];
+               $msg = "You have entered correct username and password";
+            }
+            else {
+               $msg = "You have entered wrong Password";
+            }
+         }
+         else {
+            $msg = "You have entered wrong user name";
+         }
+      }
+   ?>
+
+   <h4 style="margin-left:10rem; color:red;"><?php echo $msg; ?></h4>
+   <br/><br/>
+   <form action = "<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="post">
+      <div>
+         <label for="username">Username:</label>
+         <input type="text" name="username" id="name">
+      </div>
+      <div>
+         <label for="password">Password:</label>
+         <input type="password" name="password" id="password">
+      </div>
+      <section style="margin-left:2rem;">
+         <button type="submit" name="login">Login</button>
+      </section>
+   </form>
+
+   <p style="margin-left: 2rem;"> 
+      <a href = "logout.php" tite = "Logout">Click here to clean Session.</a>
+   </p>
+   </div> 
+</body>
+</html>
+```
+
+
+### Logout.php
+
+
+To logout, the user clicks on the link tologout.php
+
+
+```php
+<?php
+   session_start();
+   unset($_SESSION["username"]);
+   unset($_SESSION["password"]);
+   
+   echo '<h4>You have cleaned session</h4>';
+   header('Refresh: 2; URL = login.php');
+?>
+```
+
+
+Start the application by entering "http://localhost/login.php". Here are thedifferent scenarios−
+
+
+Correct Username and Password
+
+
+Incorrect Password
+
+
+Incorrect Username
+
+
+When the user clicks the link at the bottom, the session variables are removed, and the login screen reappears.
+

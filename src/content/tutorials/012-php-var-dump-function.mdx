@@ -1,0 +1,284 @@
+---
+title: "PHP - var_dump"
+description: "Learn PHP - var_dump with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 120
+group: "PHP Basics"
+seoTitle: "PHP - var_dump — CodesCompiler PHP Guide"
+permalink: "php-var-dump-function"
+---
+
+
+# PHP Variable Handling var_dump() Function
+
+
+
+
+The PHP Variable Handlingvar_dump()function is used to display structured information such as type and the value of one or more expressions given as arguments to this function.
+
+
+This function returns all the public, private and protected properties of the objects in the output. The dump information about arrays and objects is properly indented to show the recursive structure.
+
+
+For the built-in integer, float and Boolean variables, the var_dump() function shows the type and value of the argument variable.
+
+
+If an object has a special __debugInfo() function, var_dump() follows it. You can also use var_dump() on many variables simultaneously. This function prints the output immediately, but it can also be saved using the output-control functions.
+
+
+## Syntax
+
+
+Below is the syntax of the PHP Variable Handlingvar_dump()function −
+
+
+```php
+void var_dump ( mixed $value, mixed ...$values )
+```
+
+
+## Parameters
+
+
+Below are the parameters of thevar_dump()function −
+
+
+
+- $value− It is the variable you want to check.
+- $values− It is the more variables that you want to check. It is an optional parameter.
+
+
+
+## Return Value
+
+
+Thevar_dump()function does not return anything. It just prints information on the screen.
+
+
+## PHP Version
+
+
+First introduced in core PHP 4, thevar_dump()function continues to function easily in PHP 5, PHP 7, and PHP 8.
+
+
+## Example 1
+
+
+First we will show you the basic example of the PHP Variable Handlingvar_dump()function to display detailed information about the given variable.
+
+
+```php
+<?php
+   $x = 10;  
+   var_dump ($x);
+?>
+```
+
+
+### Output
+
+
+The dump information is as follows −
+
+
+```php
+int(10)
+```
+
+
+## Example 2
+
+
+Now we will see how thevar_dump()function behaves for a float variable. See the below code −
+
+
+```php
+<?php
+   $x = 10.25;  
+   var_dump ($x);
+?>
+```
+
+
+### Output
+
+
+The var_dump() function returns the following output −
+
+
+```php
+float(10.25)
+```
+
+
+## Example 3
+
+
+In the below PHP code we will use thevar_dump()function. Here we can use the `</pre>` HTML tag that displays preformatted text. Text in a `</pre>` element is displayed in a fixed-width font, and the text preserves both the spaces and the line breaks.
+
+
+```php
+<?php
+   echo "</pre>";
+   $x = "Hello World"; 
+   var_dump ($x);  
+   echo "</pre>"
+?>
+```
+
+
+### Output
+
+
+The above code will generate the below output −
+
+
+```php
+string(11) "Hello World"
+```
+
+
+## Example 4
+
+
+Thevar_dump()function is useful to study the array structure. In the following example, we have an array with one of the elements of the array being another array. In other words, we have a nested array situation.
+
+
+```php
+<?php
+   $x = array("Hello", false, 99.99, array(10, 20,30));
+   var_dump ($x);
+?>
+```
+
+
+### Output
+
+
+This will create the below output −
+
+
+```php
+array(4) {
+   [0]=>
+   string(5) "Hello"
+   [1]=>
+   bool(false)
+   [2]=>
+   float(99.99)
+   [3]=>
+   array(3) {
+      [0]=>
+      int(10)
+      [1]=>
+      int(20)
+      [2]=>
+      int(30)
+   }
+   }
+```
+
+
+## Example 5
+
+
+Since "$x" is an indexed array in the previous example, the index starting with "0" along with its value is dumped. In case the array is an associate array, the key-value pair information is dumped.
+
+
+```php
+<?php
+   $x = array(
+      "Hello", false, 99.99, 
+      array(1=>10, 2=>20,3=>30)
+   );
+   var_dump($x);
+?>
+```
+
+
+### Output
+
+
+Following is the output of the above code −
+
+
+```php
+array(4) {
+  [0]=>
+  string(5) "Hello"
+  [1]=>
+  bool(false)
+  [2]=>
+  float(99.99)
+  [3]=>
+  array(3) {
+    [1]=>
+    int(10)
+    [2]=>
+    int(20)
+    [3]=>
+    int(30)
+  }
+}
+```
+
+
+When you use var_dump() to show array value, there is no need of using the end tag " `</pre>` ".
+
+
+## Example 6
+
+
+Thevar_dump()function can als reveal the properties of an object representing a class. In the following example, we have declared a Point class with two private properties "x" and "y". The class constructor initializes the object "p" with the parameters passed to it.
+
+
+The var_dump() function provides the information about the object properties and their corresponding values.
+
+
+```php
+<?php  
+   class Point {
+      private int $x;
+      private int $y;
+
+      public function __construct(int $x, int $y = 0) {
+         $this->x = $x;
+         $this->y = $y;
+      }
+   }
+
+   $p = new Point(4, 5);
+   var_dump($p) 
+?>
+```
+
+
+### Output
+
+
+It will produce the followingoutput−
+
+
+```php
+object(Point)#1 (2) {
+  ["x":"Point":private]=>
+  int(4)
+  ["y":"Point":private]=>
+  int(5)
+}
+```
+
+
+There is a similar built-in function for producing dump in PHP, named asget_defined_vars().
+
+
+```php
+var_dump(get_defined_vars());
+```
+
+
+It will dump all the defined variables to the browser.
+
+
+php_variable_handling_functions.htm
+

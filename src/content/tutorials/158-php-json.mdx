@@ -1,0 +1,152 @@
+---
+title: "PHP - JSON"
+description: "Learn PHP - JSON with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 1580
+group: "PHP Advanced"
+seoTitle: "PHP - JSON — CodesCompiler PHP Guide"
+permalink: "php-json"
+---
+
+
+# PHP  JSON
+
+
+
+
+Standard distributions of PHP have the JSON support enabled by default. The PHP extension implements the JavaScript Object Notation (JSON) data interchange format. The JSON extension in PHP parser handles the JSON data.
+
+
+JSON (JavaScript Object Notation) is a lightweight, text-based, language-independent data interchange format. JSON defines a small set of formatting rules for the portable representation of structured data. It is a text based data format that is easy for the humans as well as machines to read.
+
+
+The JSON extension in PHP version 5.2 onwards provides a number of predefined constants, JSON related functions, and also a JsonException class.
+
+
+## PHP JSON Functions
+
+
+PHP has the following JSON functions −
+
+
+### json_encode()
+
+
+This function returns a string containing the JSON representation of the supplied value. If the parameter is an array or object, it will be serialized recursively.
+
+
+```php
+json_encode(mixed $value, int $flags = 0, int $depth = 512): string|false
+```
+
+
+### json_decode()
+
+
+This function takes a JSON encoded string and converts it into a PHP value.
+
+
+```php
+json_decode(
+   string $json,
+   ?bool $associative = null,
+   int $depth = 512,
+   int $flags = 0
+): mixed
+```
+
+
+When the associative parameter of this function is true, JSON objects will be returned as associative arrays; when false, JSON objects will be returned as objects.
+
+
+The encode/decode operations are affected by the supplied flags. The predefined constants and their integer values are as below −
+
+
+Predefined ConstantValuesJSON_HEX_TAG1JSON_HEX_AMP2JSON_HEX_APOS4JSON_HEX_QUOT8JSON_FORCE_OBJECT16JSON_NUMERIC_CHECK32JSON_UNESCAPED_SLASHES64JSON_PRETTY_PRINT128JSON_UNESCAPED_UNICODE256
+
+
+### json_last_error_msg()
+
+
+This function returns the error string of the last json_encode() or json_decode() call.
+
+
+```php
+json_last_error_msg(): string
+```
+
+
+"No error" message is returned if no error has occurred.
+
+
+### json_last_error()
+
+
+This function returns an integer.
+
+
+```php
+json_last_error(): int
+```
+
+
+The function returns an integer corresponding to one of the following constants −
+
+
+Sr.NoConstant & Meaning1JSON_ERROR_NONENo error has occurred2JSON_ERROR_DEPTHThe maximum stack depth has been exceeded3JSON_ERROR_STATE_MISMATCHInvalid or malformed JSON4JSON_ERROR_CTRL_CHARControl character error, possibly incorrectly encoded5JSON_ERROR_SYNTAXSyntax error6JSON_ERROR_UTF8Malformed UTF-8 characters, possibly incorrectly encoded7JSON_ERROR_RECURSIONOne or more recursive references in the value to be encoded8JSON_ERROR_INF_OR_NANOne or moreNANorINFvalues in the value to be encoded9JSON_ERROR_UNSUPPORTED_TYPEA value of a type that cannot be encoded was given10JSON_ERROR_INVALID_PROPERTY_NAMEA property name that cannot be encoded was given11JSON_ERROR_UTF16Malformed UTF-16 characters, possibly incorrectly encoded
+
+
+### Example
+
+
+The following PHP code encodes a given array to JSON representation, and decodes the JSON string back to PHP array.
+
+
+```php
+<?php
+   $arr = array('a' => 1, 'b' => 2, 'c' => 3, 'd' => 4, 'e' => 5);
+   $encoded = json_encode($arr);
+   echo "The initial array: " . PHP_EOL;
+   var_dump($arr);
+   echo "Encoded JSON: $encoded" . PHP_EOL;
+
+   $decoded = json_decode($encoded);
+   echo "Array obtained after decoding: " . PHP_EOL;
+   var_dump($decoded);
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+The initial array: 
+array(5) {
+   ["a"]=>
+   int(1)
+   ["b"]=>
+   int(2)
+   ["c"]=>
+   int(3)
+   ["d"]=>
+   int(4)
+   ["e"]=>
+   int(5)
+}
+Encoded JSON: {"a":1,"b":2,"c":3,"d":4,"e":5}
+Array obtained after decoding: 
+object(stdClass)#1 (5) {
+   ["a"]=>
+   int(1)
+   ["b"]=>
+   int(2)
+   ["c"]=>
+   int(3)
+   ["d"]=>
+   int(4)
+   ["e"]=>
+   int(5)
+}
+```
+

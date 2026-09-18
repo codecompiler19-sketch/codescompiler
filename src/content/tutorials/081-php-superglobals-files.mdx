@@ -1,0 +1,150 @@
+---
+title: "PHP - $_FILES"
+description: "Learn PHP - $_FILES with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 810
+group: "PHP Superglobals"
+seoTitle: "PHP - $_FILES — CodesCompiler PHP Guide"
+permalink: "php-superglobals-files"
+---
+
+
+# PHP - $_FILES
+
+
+
+
+$_FILES is one of the 'superglobal', or automatic global, variables in PHP. It is available in all scopes throughout a script. The variable $_FILES is an associative array containing items uploaded via HTTP POST method.
+
+
+A file is uploaded when a HTML form contains an input element with a file type, its enctype attribute set to multipart/form-data, and the method attribute set to HTTP POST method.
+
+
+$HTTP_POST_FILES also contains the same information, but it is not a superglobal, and it has now been deprecated.
+
+
+## HTML File Input Element for File Upload
+
+
+The following HTML script contains a form withinputelement offiletype −
+
+
+```php
+<input type="file" name="file">
+```
+
+
+This "input type" renders a button captioned as file. When clicked, a file dialogbox pops up. You can choose a file to be uploaded.
+
+
+The PHP script on the server can access the file data in $_FILES variable.
+
+
+## Properties of $_FILES
+
+
+The $_FILES array contains the following properties −
+
+
+
+- $_FILES['file']['name']− The original name of the file that the user has chosen to be uploaded.
+- $_FILES['file']['type']− The mime type of the file. An example would be "image/gif". This mime type is however not checked on the PHP side.
+- $_FILES['file']['size']− The size, in bytes, of the uploaded file.
+- $_FILES['file']['tmp_name']− The temporary filename of the file in which the uploaded file was stored on the server.
+- $_FILES['file']['full_path']− The full path as submitted by the browser. Available as of PHP 8.1.0.
+- $_FILES['file']['error']− The error code associated with this file upload.
+
+
+
+## PHP File Upload Error Codes
+
+
+Theerror codesare enumerated as below −
+
+
+Error CodesDescriptionUPLOAD_ERR_OK (Value=0)There is no error, the file uploaded with success.UPLOAD_ERR_INI_SIZE (Value=1)The uploaded file exceeds the upload_max_filesize directive in php.ini.UPLOAD_ERR_FORM_SIZE (Value=2)The uploaded file exceeds the MAX_FILE_SIZE.UPLOAD_ERR_PARTIAL (Value=3)The uploaded file was only partially uploaded.UPLOAD_ERR_NO_FILE (Value=4)No file was uploaded.UPLOAD_ERR_NO_TMP_DIR (Value=6)Missing a temporary folder.UPLOAD_ERR_CANT_WRITE (Value=7)Failed to write file to disk.UPLOAD_ERR_EXTENSION (Value=8)A PHP extension stopped the file upload.
+
+
+## Single File Upload Form
+
+
+The following "test.html" contains a HTML form whose enctype is set to multiform/form-data. It also has an input file element which presents a button on the form for the user to select file to be uploaded. Save this file in the document root folder of your Apache server.
+
+
+```html
+<html>
+<body>
+   <form action="hello.php" method="POST" enctype="multipart/form-data">
+      <p><input type="file" name="file"></p>
+      <p><input type ="submit" value="submit"></p>
+   </form>
+</body>
+</html>
+```
+
+
+The above HTML renders a button named "Choose File" in the browser window. To open a file dialog box, click the "Choose File" button. As the name of selected file appears, click thesubmitbutton.
+
+
+## Server-Side Script to Handle Single File Upload
+
+
+The server-side PHP script (upload.php) in the document root folder reads the variables $_FILES array as follows −
+
+
+```php
+<?php
+   echo "Filename: " . $_FILES['file']['name']."<br>";
+   echo "Type : " . $_FILES['file']['type'] ."<br>";
+   echo "Size : " . $_FILES['file']['size'] ."<br>";
+   echo "Temp name: " . $_FILES['file']['tmp_name'] ."<br>";
+   echo "Error : " . $_FILES['file']['error'] . "<br>";
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+Filename: abc.txt
+Type : text/plain
+Size : 556762
+Temp name: C:\xampp\tmp\phpD833.tmp
+Error : 0
+```
+
+
+## Multiple File Upload Form
+
+
+In PHP, you can upload multiple files using the HTML array feature −
+
+
+```html
+<html>
+<body>
+   <form action="hello.php" method="POST" enctype="multipart/form-data">
+      <input type="file" name="files[]"/>
+      <input type="file" name="files[]"/>
+      <input type ="submit" value="submit"/>
+   </form>
+</body>
+</html>
+```
+
+
+Now, change the PHP script (hello.php) to −
+
+
+```php
+<?php
+   foreach ($_FILES["files"]["name"] as $key => $val) {       
+      echo "File uploaded: $val <br>";
+   }
+?>
+```
+
+
+The browser will show multiple "Choose File" buttons. After you upload the selected files by clicking the "Submit" button, the browser will show the names of files in response to the URLhttp://localhost/hello.htmlas shown below −
+

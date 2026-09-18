@@ -1,0 +1,222 @@
+---
+title: "PHP - Anonymous Functions"
+description: "Learn PHP - Anonymous Functions with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 700
+group: "PHP Functions"
+seoTitle: "PHP - Anonymous Functions — CodesCompiler PHP Guide"
+permalink: "php-anonymous-functions"
+---
+
+
+# PHP - Anonymous Functions
+
+
+
+
+## What are Anonymous Functions?
+
+
+PHP allows defining anonymous functions. Normally, when we define a function in PHP, we usually provide it a name which is used to call the function whenever required. In contrast, ananonymous functionis a function that doesnt have any name specified at the time of definition. Such a function is also calledclosureorlambda function.
+
+
+Sometimes, you may want a function for one time use only. The most common use of anonymous functions is to create aninline callback function.
+
+
+Anonymous functions are implemented using theClosureclass. Closure is an anonymous function that closes over the environment in which it is defined.
+
+
+## Syntax
+
+
+Thesyntaxfor defining an anonymous function is as follows −
+
+
+```php
+$var=function ($arg1, $arg2) { return $val; };
+```
+
+
+Note that there is no function name between thefunctionkeyword and the opening parenthesis, and the fact that there is a semicolon after the function definition. This implies that anonymous function definitions are expressions. When assigned to a variable, the anonymous function can be called later using the variables name.
+
+
+### Example
+
+
+Take a look at the following example −
+
+
+```php
+<?php
+   $add = function ($a, $b) {
+      return "a:$a b:$b addition: " . $a+$b; 
+   };
+   echo $add(5,10);
+?>
+```
+
+
+#### Output
+
+
+It will produce the following output −
+
+
+```php
+a:5 b:10 addition: 15
+```
+
+
+## Anonymous Function as a Callback
+
+
+Anonymous functions are often used as callbacks. Callback functions are used as one of the arguments of another function. An anonymous function is executed on the fly and its return value becomes the argument of the parent function, which may be either a built-in or a user-defined function.
+
+
+### Example
+
+
+In this example, we use an anonymous function inside theusort()function, a built in function that sorts an array by values using a user-defined comparison function.
+
+
+```php
+<?php
+   $arr = [10,3,70,21,54];
+   usort ($arr, function ($x , $y) {
+      return $x > $y;
+   });
+   foreach ($arr as $x){
+      echo $x . "\n";
+   }
+?>
+```
+
+
+#### Output
+
+
+It will produce the following output −
+
+
+```php
+3
+10
+21
+54
+70
+```
+
+
+### Example
+
+
+The following example uses an anonymous function to calculate the cumulative sum after successive numbers in an array. Here, we use thearray_walk()function. This function applies a user defined function to each element in the array.
+
+
+```php
+<?php
+   $arr=array(1,2,3,4,5);
+   array_walk($arr, function($n){
+      $s=0;
+      for($i=1;$i<=$n;$i++){
+         $s+=$i;
+      }
+      echo "Number: $n Sum: $s". PHP_EOL;
+   });
+?>
+```
+
+
+#### Output
+
+
+It will produce the following output −
+
+
+```php
+Number: 1 Sum: 1
+Number: 2 Sum: 3
+Number: 3 Sum: 6
+Number: 4 Sum: 10
+Number: 5 Sum: 15
+```
+
+
+## Anonymous Function as Closure
+
+
+Closure is also an anonymous function that can access the variables outside its scope with the help of the "use" keyword.
+
+
+### Example
+
+
+Take a look a the following example −
+
+
+```php
+<?php
+   $maxmarks=300;
+   $percent=function ($marks) use ($maxmarks) {
+      return $marks*100/$maxmarks;
+   };
+   $m = 250;
+   echo "Marks = $m Percentage = ". $percent($m);
+?>
+```
+
+
+#### Output
+
+
+It will produce the following output −
+
+
+```php
+Marks = 250 Percentage = 83.333333333333
+```
+
+
+## Static Anonymous Functions
+
+
+Anonymous functions can be declared statically. This stops the current class from being automatically connected to them. Objects may not be bound to them during runtime.
+
+
+### Example
+
+
+Here in the below example we are trying to use $this inside a static anonymous function −
+
+
+```php
+<?php
+   class MyClass
+   {
+      function sayHello()
+      {
+         $myFunction = static function($name) {
+               echo "Hello " . $name . "!";
+         };
+
+         $myFunction("Aryan");
+      }
+   }
+
+   $obj = new MyClass();
+   $obj->sayHello();
+
+?>
+```
+
+
+### Output
+
+
+Following is the output of the above code −
+
+
+```php
+Hello Aryan!
+```
+

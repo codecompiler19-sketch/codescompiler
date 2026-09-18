@@ -1,0 +1,387 @@
+---
+title: "PHP - Inheritance"
+description: "Learn PHP - Inheritance with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 1020
+group: "Object Oriented PHP"
+seoTitle: "PHP - Inheritance — CodesCompiler PHP Guide"
+permalink: "php-inheritance"
+---
+
+
+# PHP - Inheritance
+
+
+
+
+Inheritance is one of the fundamental principles of object-oriented programming methodology. Inheritance is a software modelling approach that enables extending the capability of an existing class to build new class instead of building from scratch.
+
+
+PHP provides all the functionality to implement inheritance in its object model. Incorporating inheritance in PHP software development results in code reuse, remove redundant code duplication and logical organization.
+
+
+## Class Inheritance in PHP
+
+
+Imagine that you need to design a new class whose most of the functionality already well defined in an existing class. Inheritance lets you to extend the existing class, add or remove its features and develop a new class. In fact, PHP has the "extends" keyword to establish inheritance relationship between existing and new classes.
+
+
+```php
+class newclass extends oldclass {
+   ...
+   ...
+}
+```
+
+
+## Types of Inheritance in PHP
+
+
+There are three types of inheritance are there in PHP −
+
+
+
+- Single Inheritance:One child class inherits from one parent class.
+- Multilevel Inheritance:A class inherits from its child classes.
+- Hierarchical Inheritance:Multiple classes derive from the same parent class, resulting in hierarchical inheritance.
+
+
+
+## Is-a Relationship
+
+
+Inheritance comes into picture when a new class (henceforth will be called inherited class, sub class, child class, etc.) possesses "IS A" relationship with an existing class (which will be called base class, super class, parent class, etc.).
+
+
+In PHP, when a new class is defined by extending another class, the subclass inherits the public and protected methods, properties and constants from the parent class. You are free to override the functionality of an inherited method, otherwise it will retain its functionality as defined in the parent class.
+
+
+## Example of Multilevel Inheritance
+
+
+Now the below code shows an example of multilevel inheritance −
+
+
+```php
+<?php
+   class Animal {  
+      public function sound() {  
+         echo "Animals make sound\n";  
+      }  
+   }  
+   
+   class Dog extends Animal {  
+      public function bark() {  
+         echo "Dog barks\n";  
+      }  
+   }  
+   
+   class Puppy extends Dog {  
+      public function weep() {  
+         echo "Puppy weeps\n";  
+      }  
+   }  
+   
+   $myPuppy = new Puppy();  
+   $myPuppy->sound(); 
+   $myPuppy->bark();  
+   $myPuppy->weep();  
+?>
+```
+
+
+This will create the belowoutput−
+
+
+```php
+Animals make sound
+Dog barks
+Puppy weeps
+```
+
+
+## Access Modifiers in Inheritance
+
+
+Now the below code shows how we can use access modifiers which decide whether properties and methods can be used outside or inside the class −
+
+
+```php
+<?php
+   class Animal {  
+      public $name = "Lion";  
+      protected $type = "Wild";  
+      private $age = 5;  
+   
+      public function getAge() {  
+         return $this->age;  
+      }  
+   }  
+   
+   class Cat extends Animal {  
+      public function showType() {  
+         return $this->type;  
+      }  
+   }  
+   
+   $myCat = new Cat();  
+   echo $myCat->name."\n";     
+   echo $myCat->showType()."\n";
+   echo $myCat->getAge()."\n";
+?>
+```
+
+
+This will produce the belowoutput−
+
+
+```php
+Lion
+Wild
+5
+```
+
+
+## Example of Method Overriding in PHP
+
+
+Take a look at the following example −
+
+
+```php
+<?php
+   class myclass {
+      public function hello() {
+         echo "Hello from the parent class" . PHP_EOL;      
+      }
+      public  function thanks() {
+         echo "Thank you from parent class" . PHP_EOL;
+      }
+   }
+   class newclass extends myclass {
+      public function thanks() {
+         echo "Thank you from the child class" . PHP_EOL;
+      }
+   }
+
+   # object of parent class
+   $obj1 = new myclass;
+   $obj1->hello();
+   $obj1->thanks();
+
+   # object of child class
+   $obj2 = new newclass;
+   $obj2->hello();
+   $obj2->thanks();
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+Hello from the parent class
+Thank you from parent class
+Hello from the parent class
+Thank you from the child class
+```
+
+
+As mentioned before, the child class inherits public and protected members (properties and methods) of the parent. The child class may introduce additional properties or methods.
+
+
+In the following example, we use theBook classas the parent class. Here, we create anebook classthat extends the Book class. The new class has an additional property -format(indicating ebook's file format - EPUB, PDF, MOBI etc). The ebook class defines two new methods to initialize and output the ebbok data -getebook()anddispebook()respectively.
+
+
+## Example of Inheritance and Extended Functionality
+
+
+The complete code of inheritance example is given below −
+
+
+```php
+<?php
+   class Book {
+   
+      /* Member variables */
+      protected int $price;
+      protected string $title;
+
+      public function getbook(string $param1, int $param2) {
+         $this->title = $param1;
+         $this->price = $param2;
+      }
+      public function dispbook() {
+         echo "Title: $this->title Price: $this->price \n";
+      }
+   }
+
+   class ebook extends Book {
+      private string $format;
+      public function getebook(string $param1, int $param2, string $param3) {
+         $this->title = $param1;
+         $this->price = $param2;
+         $this->format = $param3;
+      }
+      public function dispebook() {
+         echo "Title: $this->title Price: $this->price\n";
+         echo "Format: $this->format \n";
+      }
+   }
+   $eb = new ebook;
+   $eb->getebook("PHP Fundamentals", 450, "EPUB");
+   $eb->dispebook();
+?>
+```
+
+
+The browseroutputis as shown below −
+
+
+```php
+Title: PHP Fundamentals Price: 450
+Format: EPUB
+```
+
+
+If you take a closer look at the getebook() function, the first two assignment statements are in fact there getbook() function, which the ebook class has inherited. Hence, we can call it with parent keyword and scope resolution operator.
+
+
+Change the getebook() function code with the following −
+
+
+```php
+public function getebook(string $param1, int $param2, string $param3) {
+   parent::getbook($param1, $param2);
+   $this->format = $param3;
+}
+```
+
+
+Similarly, the first echo statement in dispebook() function is replaced by a call to the dispbook() function in parent class −
+
+
+```php
+public function dispebook() {
+   parent::dispbook();
+   echo "Format: $this->format<br/>";
+}
+```
+
+
+## Constructor in Inheritance
+
+
+The constructor in the parent class constructor is inherited by the child class but it cannot be directly called in the child class if the child class defines a constructor.
+
+
+In order to run a parent constructor, a call toparent::__construct()within the child constructor is required.
+
+
+### Example
+
+
+Take a look at the following example −
+
+
+```php
+<?php
+   class myclass{
+      public function __construct(){
+         echo "This is parent constructor". PHP_EOL;
+      }
+   }
+   class newclass extends myclass {
+      public function __construct(){
+         parent::__construct();
+         echo "This is child class destructor" . PHP_EOL;
+      }
+   }
+   $obj = new newclass();
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+This is parent constructor
+This is child class destructor
+```
+
+
+However, if the child does not have a constructor, then it may be inherited from the parent class just like a normal class method (if it was not declared as private).
+
+
+### Example
+
+
+Take a look at the following example −
+
+
+```php
+<?php
+   class myclass{
+      public function __construct(){
+         echo "This is parent constructor". PHP_EOL;
+      }
+   }
+   class newclass extends myclass{ }
+   $obj = new newclass();
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+This is parent constructor
+```
+
+
+## Usage of Final Keyword
+
+
+In the following example, we are using the final keyword. So the final keyword is used if you do not want a method or class to be inherited or changed.
+
+
+```php
+<?php
+   class Animal {  
+      final public function sound() {  
+         echo "Animals make sound";  
+      }  
+   }  
+   
+   class Dog extends Animal {  
+      // This will create an error
+      // public function sound() {  
+      //     echo "Dog barks";  
+      // }  
+   }  
+   
+   $myDog = new Dog();  
+   $myDog->sound();
+?>
+```
+
+
+### Output
+
+
+Following is the output of the above code −
+
+
+```php
+Animals make sound
+```
+
+
+## Inheritance Limitations
+
+
+PHP doesn't allow developing a class by extending more than one parents. You can havehierarchical inheritance, wherein class B extends class A, class C extends class B, and so on. But PHP doesn't supportmultiple inheritancewhere class C tries to extend both class A and class B. We can however extend one class and implement one or moreinterfaces. We shall learn about interfaces in one of the subsequent chapters.
+

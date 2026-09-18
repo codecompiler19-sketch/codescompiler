@@ -2,6 +2,7 @@
 import Editor from './Editor.astro';
 import SqlEditor from './SqlEditor.astro';
 import PythonEditor from './PythonEditor.astro';
+import PhpEditor from './PhpEditor.astro';
 
 const props = Astro.props;
 const htmlContent = await Astro.slots.render('default');
@@ -43,6 +44,7 @@ function detectLanguage(props: Record<string, any>, htmlContent: string, rawCode
   const combined = `${propClass} ${codeClass} ${preClass} ${dataLang} ${htmlContent.slice(0, 300)}`.toLowerCase();
 
   // 1. Explicit Language Matches
+  if (/\bphp\b|language-php|lang-php/i.test(combined)) return 'php';
   if (/\b(python|py)\b|language-python|lang-python/i.test(combined)) return 'python';
   if (/\b(sql|mysql|postgresql)\b|language-sql|lang-sql/i.test(combined)) return 'sql';
   if (/\b(javascript|js|jsx|typescript|ts)\b|language-js|lang-js|language-javascript/i.test(combined)) return 'javascript';
@@ -53,6 +55,7 @@ function detectLanguage(props: Record<string, any>, htmlContent: string, rawCode
 
   // 2. Code Content Heuristics
   const trimmed = rawCode.trim();
+  if (/<\?php|\?>|\$_(GET|POST|SESSION|SERVER|COOKIE|REQUEST)/i.test(trimmed)) return 'php';
   if (/#.*python|def\s+|import\s+|from\s+.*import|print\s*\(|if\s+__name__|#!\/usr\/bin/i.test(trimmed)) return 'python';
   if (/\b(SELECT|INSERT\s+INTO|UPDATE|DELETE\s+FROM|CREATE\s+TABLE|ALTER\s+TABLE)\b/i.test(trimmed)) return 'sql';
   if (/<[a-z1-6][^>]*>/i.test(trimmed) && (trimmed.includes('</') || trimmed.includes('/>'))) return 'html';
@@ -61,6 +64,7 @@ function detectLanguage(props: Record<string, any>, htmlContent: string, rawCode
 
   // 3. Fallback to page category from Astro.url.pathname
   const path = pathname.toLowerCase();
+  if (path.includes('/php-') || path.includes('/php')) return 'php';
   if (path.includes('/python-') || path.includes('/python')) return 'python';
   if (path.includes('/sql-') || path.includes('/sql')) return 'sql';
   if (path.includes('/javascript-') || path.includes('/js-') || path.includes('/javascript')) return 'javascript';
@@ -73,6 +77,7 @@ function detectLanguage(props: Record<string, any>, htmlContent: string, rawCode
 const lang = detectLanguage(props, htmlContent, rawCode, pathname);
 
 const langLabelMap: Record<string, string> = {
+  php: 'PHP',
   python: 'PYTHON',
   sql: 'SQL',
   javascript: 'JAVASCRIPT',
@@ -84,7 +89,11 @@ const langLabelMap: Record<string, string> = {
 const langLabel = langLabelMap[lang] || lang.toUpperCase();
 
 function checkRunnableHtml(code: string, langClass: string): boolean {
-  if (/language-text|lang-text|language-syntax|lang-syntax|language-bash|lang-bash/i.test(langClass)) {
+  if (/language-text|lang-text|language-syntax|lang-syntax|language-bash|lang-bash|language-php|lang-php/i.test(langClass)) {
+    return false;
+  }
+
+  if (/<\?php|\?>/i.test(code)) {
     return false;
   }
 
@@ -134,6 +143,7 @@ const propClassStr = (props.class || props['data-language'] || props.lang || '')
 const isRunnable = (lang === 'html' && checkRunnableHtml(rawCode, propClassStr)) || propClassStr.includes('runnable') || propClassStr.includes('interactive');
 const isSqlEditor = propClassStr.includes('sql-editor') || propClassStr.includes('sql-runnable');
 const isPythonEditor = propClassStr.includes('python-editor') || propClassStr.includes('py-runnable');
+const isPhpEditor = lang === 'php' || propClassStr.includes('php-editor') || propClassStr.includes('php-runnable');
 
 // 100% Uniform OneDark Theme Syntax Tokenizer (Matching CodeMirror Editor Theme)
 function highlightSyntax(code: string, lang: string): string {
@@ -141,6 +151,35 @@ function highlightSyntax(code: string, lang: string): string {
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;');
+
+  if (lang === 'php') {
+    const phpKeywords = new Set([
+      'abstract','and','array','as','break','callable','case','catch','class','clone','const',
+      'continue','declare','default','die','do','echo','else','elseif','empty','enddeclare',
+      'endfor','endforeach','endif','endswitch','endwhile','eval','exit','extends','final',
+      'finally','fn','for','foreach','function','global','goto','if','implements','include',
+      'include_once','instanceof','insteadof','interface','isset','list','match','namespace',
+      'new','or','print','private','protected','public','readonly','require','require_once',
+      'return','static','switch','throw','trait','try','unset','use','var','while','xor','yield'
+    ]);
+
+    return escaped.replace(
+      /(\/\/.*$|\/\*[\s\S]*?\*\/|#.*$)|("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')|(\$[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)|(\b\d+(?:\.\d+)?\b)|(\b[a-zA-Z_]\w*\b)(\s*\()?/gm,
+      (match, comment, str, variable, num, word, paren) => {
+        const p = paren || '';
+        if (comment) return `<span style="color: #5c6370; font-style: italic;">${comment}</span>`;
+        if (str) return `<span style="color: #98c379;">${str}</span>`;
+        if (variable) return `<span style="color: #e06c75;">${variable}</span>`;
+        if (num) return `<span style="color: #d19a66;">${num}</span>`;
+        if (word) {
+          if (phpKeywords.has(word)) return `<span style="color: #c678dd; font-weight: 600;">${word}</span>${p}`;
+          if (p) return `<span style="color: #61afef;">${word}</span>${p}`;
+          return `<span style="color: #abb2bf;">${word}</span>`;
+        }
+        return match;
+      }
+    );
+  }
 
   if (lang === 'python') {
     const pyKeywords = new Set([
@@ -305,6 +344,8 @@ const highlightedCode = highlightSyntax(rawCode, lang);
   <SqlEditor initialCode={rawCode} />
 ) : isPythonEditor ? (
   <PythonEditor initialCode={rawCode} />
+) : isPhpEditor ? (
+  <PhpEditor initialCode={rawCode} height="460px" />
 ) : (
   <div class="not-prose tiy-syntax-block my-6 rounded-xl overflow-hidden border border-white/10 bg-[#1e1e2e] shadow-lg">
     <!-- Uniform Header matching Editor.astro -->

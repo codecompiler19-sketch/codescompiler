@@ -1,0 +1,381 @@
+---
+title: "PHP - Type Hints"
+description: "Learn PHP - Type Hints with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 670
+group: "PHP Functions"
+seoTitle: "PHP - Type Hints — CodesCompiler PHP Guide"
+permalink: "php-type-hints"
+---
+
+
+# PHP - Type Hints
+
+
+
+
+PHP supports using "type hints" at the time of declaring variables in the function definition and properties or instance variables in a class. PHP is widely regarded as a weakly typed language. In PHP, you need not declare the type of a variable before assigning it any value.
+
+
+The PHP parser tries to cast the variables into compatible type as far as possible. Hence, if one of values passed is a string representation of a number, and the second is a numeric variable, PHP casts the string variable to numeric in order to perform the addition operation.
+
+
+## Type Casting in Function Parameters
+
+
+In PHP, type casting in function parameters allows you to define the type of value that a function will accept. This helps to find errors and makes your code more reliable.
+
+
+Take a look at the following example −
+
+
+```php
+<?php
+   function addition($x, $y) {
+      echo "First number: $x Second number: $y Addition: " . $x+$y;
+   }
+   $x="10";
+   $y=20;
+   addition($x, $y);
+?>
+```
+
+
+### Output
+
+
+It will generate the following output −
+
+
+```php
+First number: 10 Second number: 20 Addition: 30
+```
+
+
+## When Type Conversion Fails in PHP?
+
+
+However, if$xin the above example is a string that doesn't hold a valid numeric representation, then you would encounter an error.
+
+
+```php
+<?php
+   function addition($x, $y) {
+      echo "First number: $x Second number: $y Addition: " . $x+$y;
+   }
+   $x="Hello";
+   $y=20;
+   addition($x, $y);
+?>
+```
+
+
+#### Output
+
+
+It will produce the following output −
+
+
+```php
+PHP Fatal error:  Uncaught TypeError: Unsupported operand types: string + int in hello.php:5
+```
+
+
+## Using Type Hints in PHP Functions
+
+
+Type-hinting is supported from PHP 5.6 version onwards. It means you can explicitly state the expected type of a variable declared in your code. PHP allows you to type-hint function arguments, return values, and class properties. With this, it is possible to write more robust code.
+
+
+Let us incorporate type-hinting in the addition function in the above program −
+
+
+```php
+function addition($x, $y) {
+   echo "First number: $x Second number: $y Addition: " . $x+$y;
+}
+```
+
+
+The type-hinting feature is mostly used by IDEs (Integrated Development Environment) to prompt the user about the expected types of the parameters used in function declaration.
+
+
+The following figure shows the VS Code editor popping up the function prototype as you type −
+
+
+If the cursor hovers on the name of the function, the type declarations for the parameters and the return value are displayed −
+
+
+Note that by merely using the data types in the variable declarations doesnt prevent the unmatched type exception raised, as PHP is a dynamically typed language. In other words, $x="10" and $y=20 will still result in the addition as 30, where as $x="Hello" makes the parser raise the error.
+
+
+## Strict Type Checking in PHP
+
+
+PHP can be made to impose stricter rules for type conversion, so that "10" is not implicitly converted to 10. This can be enforced by setting strict_types directive to 1 in a declare() statement. The declare() statement must be the first statement in the PHP code, just after the "`<`?php" tag.
+
+
+### Example
+
+
+```php
+<?php
+   declare (strict_types=1);
+   function addition(int $x, int $y) {
+      echo "First number: $x Second number: $y Addition: " . $x+$y;
+   }
+   $x=10;
+   $y=20;
+   addition($x, $y);
+?>
+```
+
+
+#### Output
+
+
+It will produce the following output −
+
+
+```php
+First number: 10 Second number: 20 Addition: 30
+```
+
+
+Now, if$xis set to "10", the implicit conversion wont take place, resulting in the following error −
+
+
+```php
+PHP Fatal error:  Uncaught TypeError: addition(): Argument #1 ($x) must be of type int, string given
+```
+
+
+The VS Code IDE too indicates the error of the same effect −
+
+
+## PHP Return Type Declarations
+
+
+From PHP 7 onwards with type-hinting support has been extended for function returns to prevent unexpected return values. You can type-hint return values by adding the intended type after the parameter list prefixed with a colon (:) symbol.
+
+
+### Example
+
+
+Let us add a type hint to the return value of the addition function above −
+
+
+```php
+<?php
+   declare (strict_types=1);
+   function addition(int $x, int $y) : int {
+      return $x+$y;
+   }
+
+   $x=10;
+   $y=20;
+
+   $result = addition($x, $y);
+   echo "First number: $x Second number: $y Addition: " . $result;
+?>
+```
+
+
+#### Output
+
+
+The above code will produce the following output −
+
+
+```php
+First number: 10 Second number: 20 Addition: 30
+```
+
+
+Here too, if the function is found to return anything other than an integer, the IDE indicates the reason even before you run.
+
+
+## PHP Union Types
+
+
+The PHP introduced union types with its version 8.0. You can now specify more than one type for a single declaration. The data types are separated by the "|" symbol.
+
+
+### Example
+
+
+In the definition of addition() function below, the$xand$yarguments can be ofintorfloattype.
+
+
+```php
+<?php
+   declare (strict_types=1);
+   function addition(int|float $x, int|float $y) : float {
+      return $x+$y;
+   }
+   $x=10.55;
+   $y=20;
+
+   $result = addition($x, $y);
+   echo "First number: $x Second number: $y Addition: " . $result;
+?>
+```
+
+
+#### Output
+
+
+The output of the above code will be as following −
+
+
+```php
+First number: 10.55 Second number: 20 Addition: 30.55
+```
+
+
+## Type-hinting in Class
+
+
+In PHP, from version 7.4 onwards, you can use the type hints in declaration of class properties and methods. This helps catch type related issues early which makes the code more reliable and easier to debug.
+
+
+### Example
+
+
+In the following example, the class constructor uses type hints −
+
+
+```php
+<?php
+   declare (strict_types=1);
+   class Student {
+      public $name;
+      public $age;
+      public function __construct(string $name, int $age) {
+         $this->name = $name;
+         $this->age = $age;
+      }
+
+      public function dispStudent() {
+         echo "Name: $this->name Age: $this->age";
+      }
+   }
+   $s1 = new Student("Amar", 21);
+   $s1->dispStudent();
+?>
+```
+
+
+#### Output
+
+
+Here is the output of the above code −
+
+
+```php
+Name: Amar Age: 21
+```
+
+
+It is also possible to use type hints in the declaration of class properties.
+
+
+```php
+class Student {
+   public string $name;
+   public int $age;
+
+   public function __construct($name, $age) {
+      $this->name = $name;
+      $this->age = $age;
+   }
+
+   public function dispStudent() {
+      echo "Name: $this->name Age: $this->age";
+   }
+}
+```
+
+
+## Nullable Type
+
+
+A nullable type means that a parameter or return result can be either a certain type or null. To allow null values, add a ? before the type.
+
+
+### Example
+
+
+In the following example, we are using the Nullable type hint. See the example below −
+
+
+```php
+<?php
+   function greet(?string $name) {
+      if ($name === null) {
+         echo "Hello, Guest!";
+      } else {
+         echo "Hello, $name!";
+      }
+   }
+
+   greet("Jatin");  
+   echo "\n";
+   greet(null); 
+?>
+```
+
+
+### Output
+
+
+Following is the output of the above code −
+
+
+```php
+Hello, Jatin!
+Hello, Guest!
+```
+
+
+## Mixed Type
+
+
+A mixed type parameter accepts any type of value, such as texts, integers, arrays, and objects.
+
+
+```php
+<?php
+   function display(mixed $value) {
+      var_dump($value);
+   }
+
+   display("Hello");   
+   display(123);       
+   display([1, 2, 3]);
+?>
+```
+
+
+### Output
+
+
+Following is the output of the above code −
+
+
+```php
+string(5) "Hello"
+int(123)
+array(3) {
+  [0]=>
+  int(1)
+  [1]=>
+  int(2)
+  [2]=>
+  int(3)
+}
+```
+
+
+The most commonly encountered errors during program development aretype errors. The type-hinting feature helps in reducing them.
+

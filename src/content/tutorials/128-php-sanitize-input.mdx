@@ -1,0 +1,272 @@
+---
+title: "PHP - Sanitize Input"
+description: "Learn PHP - Sanitize Input with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 1280
+group: "PHP Web Development"
+seoTitle: "PHP - Sanitize Input — CodesCompiler PHP Guide"
+permalink: "php-sanitize-input"
+---
+
+
+# PHP - Sanitize Input
+
+
+
+
+In PHP, it is important to ensure that the input data is sanitized properly by removed any undesired characters before it is processed by the server side code. Usually, the users input their data to a PHP web application through a HTML form. If the form data consists of any undesired characters, it may prove to be harmful, hence an appropriate cleansing operation must be performed.
+
+
+Input sanitization can be done with the help of one or more of the following functions in PHP.
+
+
+## What is Input Sanitization?
+
+
+Input sanitization is the process of cleaning up data provided by users before it is used in an application. This prevents other characters or code from being executed. Cleaning input reduces the probability of security issues like SQL injection and cross-site scripting (XSS) attacks.
+
+
+Here is why the Input Sanitization important −
+
+
+
+- Security:The main objective of sanitization is to keep your application safe from threats. Malicious users can try to harm your application by transmitting dangerous data.
+- Data Integrity:Sanitizing input makes sure the stored information is correct and consistent. This helps to maintain the quality of information in your application.
+- User Experience:Sanitized input can reduce errors and provide a more consistent user experience.
+
+
+
+## The htmlspecialchars() Function
+
+
+This function converts special characters to HTML entities.
+
+
+```php
+htmlspecialchars(
+   string $string,
+   int $flags = ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401,
+   ?string $encoding = null,
+   bool $double_encode = true
+): string
+```
+
+
+In HTML, certain characters have special significance. This htmlspecialchars() function is used to encode special characters in HTML entities. This is useful when you want to display user input as HTML and want to prevent script injection attacks.
+
+
+The followingspecial charactersare translated as shown −
+
+
+CharacterReplaced by& (ampersand)&amp;" (double quote)&quot;, unlessENT_NOQUOTESis set' (single quote)&#039; (forENT_HTML401) or &apos; (forENT_XML1, ENT_XHTMLorENT_HTML5), but only whenENT_QUOTESis set`< `(less than)&lt;> (greater than)&gt;
+
+
+### Flag Constants
+
+
+Theflagsparameter is a bitmask of one or more of the following flags, which specify how to handle quotes, invalid code unit sequences and the used document type.
+
+
+Sr.NoConstant & Description1ENT_COMPATWill convert double-quotes and leave single-quotes alone.2ENT_QUOTESWill convert both double and single quotes.3ENT_NOQUOTESWill leave both double and single quotes unconverted.4ENT_IGNOREdiscard invalid code unit sequences instead of returning an empty string.5ENT_SUBSTITUTEReplace invalid code unit sequences with a Unicode Replacement Character U+FFFD (UTF-8) or &#xFFFD;6ENT_DISALLOWEDReplace invalid code points for the given document type with a Unicode Replacement Character U+FFFD (UTF-8) or &#xFFFD; (otherwise) instead of leaving them as is. This may be useful.7ENT_HTML401Handle code as HTML 4.01.8ENT_XML1Handle code as XML 1.9ENT_XHTMLHandle code as XHTML.10ENT_HTML5Handle code as HTML 5.
+
+
+### Example
+
+
+Take a look at the following example −
+
+
+```php
+<?php
+   $str = 'Welcome To "PHP Tutorial" by <b>CodesCompiler</b>';
+   echo htmlspecialchars($str);
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+Welcome To "PHP Tutorial" by <b>CodesCompiler</b>
+```
+
+
+## The strip_tags() Function
+
+
+The strip_tags() function removes all the HTML and PHP tags from a given string.
+
+
+```php
+strip_tags(string $string, array|string|null $allowed_tags = null): string
+```
+
+
+This function is very useful when you want ensure that the user input doesn’t contain any potentially malicious tags.
+
+
+Theallowed_tagsparameter is an optional second parameter to specify tags which should not be stripped. These are either given as string, or as an array.
+
+
+### Example
+
+
+Take a look at the following example −
+
+
+```php
+<?php
+   $text = '<p>Hello World</p><!-- Comment --> 
+      <a href="/test.html">Click Here</a>';
+   echo strip_tags($text);
+   echo "\n";
+
+   // Allow <p> and <a>
+   echo strip_tags($text, '<p><a>');
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+Hello World 
+      Click Here
+Hello World
+
+ 
+      Click Here
+```
+
+
+## The addslashes() Function
+
+
+The addslashes() function adds backslashes to a string.
+
+
+```php
+addslashes(string $string): string
+```
+
+
+The function returns a string with backslashes added before characters that need to be escaped. These characters are −
+
+
+
+- Single Quote (')
+- Double Quote (")
+- Backslash (\)
+- NUL (The NUL Byte)
+
+
+
+Use this function when you are storing user input in a database and want to prevent SQL injection attacks.
+
+
+### Example
+
+
+Take a look at the following example −
+
+
+```php
+<?php
+   $text = "Newton's Laws";
+   $str = addslashes($text);  
+
+   // prints the escaped string 
+   echo($str);  
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+Newton\'s Laws
+```
+
+
+## The filter_var() Function
+
+
+With the help of a specific filter flag, you can use filter_var() function to sanitize user input.
+
+
+```php
+filter_var(mixed $value, int $filter = 
+   FILTER_DEFAULT, array|int $options = 0): mixed
+```
+
+
+The $value parameter is a variable whose value needs to be sanitized. The $filter parameter is any of the predefined filter constants.
+
+
+Sr.NoID & Description1FILTER_SANITIZE_EMAILRemove all characters except letters, digits and !#$%&'*+-=?^_`{|}~@.[].2FILTER_SANITIZE_ENCODEDURL-encode string, optionally strip or encode special characters.3FILTER_SANITIZE_ADD_SLASHESApply addslashes(). (Available as of PHP 7.3.0).4FILTER_SANITIZE_NUMBER_FLOATRemove all characters except digits, +- and optionally .,eE.5FILTER_SANITIZE_NUMBER_INTRemove all characters except digits, plus and minus sign.6FILTER_SANITIZE_SPECIAL_CHARSHTML-encode '"<>& and characters with ASCII value less than 32, optionally strip or encode otherspecial characters.7FILTER_SANITIZE_FULL_SPECIAL_CHARSEquivalent to calling htmlspecialchars() withENT_QUOTESset. Encoding quotes can be disabled by settingFILTER_FLAG_NO_ ENCODE_QUOTES.td>8FILTER_SANITIZE_URLRemove all characters except letters, digits and $-_.+!*'(),{}|\\^~[]``<>`#%";/?:@&=.9FILTER_UNSAFE_RAW
+
+
+### Example
+
+
+The following code shows how you can sanitize Email data −
+
+
+```php
+<?php
+   $a = 'abc def@xyz.com';
+
+   $sa = filter_var($a, FILTER_SANITIZE_EMAIL);
+   echo "$sa";
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+abcdef@xyz.com
+```
+
+
+### Example
+
+
+The following code shows how you can sanitize URLs −
+
+
+```php
+<?php
+   $a = "http://example.c o m";
+
+   $sa = filter_var($a, FILTER_SANITIZE_URL);
+   echo "$sa";
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+http://example.com
+```
+
+
+## The mysqli_real_escape_string() Function
+
+
+When working with databases, it is important to escape special characters in strings before you use them in SQL queries to prevent SQL injection.
+
+
+```sql
+$conn = new mysqli("localhost", "username", "password", "database");
+$user_input = "O'Reilly";
+$safe_input = $conn->real_escape_string($user_input);
+$query = "SELECT * FROM users WHERE last_name = '$safe_input'";
+```
+

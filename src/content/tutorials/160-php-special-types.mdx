@@ -1,0 +1,143 @@
+---
+title: "PHP - Special Types"
+description: "Learn PHP - Special Types with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 1600
+group: "PHP Advanced"
+seoTitle: "PHP - Special Types — CodesCompiler PHP Guide"
+permalink: "php-special-types"
+---
+
+
+# PHP  Special Types
+
+
+
+
+PHPs two data typesresourceandNULLare classified asspecial types. An object of resource type refers to external resources like database connection, file streams etc. On the other hand, a NULL data type is a variable without any data assigned to it. In this chapter, we shall learn more about these types.
+
+
+## Resource Type
+
+
+A PHP program often needs to interact with an external environment such as a database, or a disk file etc. These are treated as resources in PHP. Resource is a special data type that refers to any such external resource. PHP uses relevant functions to create these resources. For example, fopen() function opens a disk file and its reference is stored in a resource variable.
+
+
+PHP's Zend engine uses reference counting system. Hence, a resource with zero reference count is destroyed automatically by garbage collector and the memory used by resource data type need not be freed manually.
+
+
+Different built-in PHP functions return respective resource variables. Subsequently, PHP uses them for interacting with the corresponding external environment. For example, the fopen() function returns a file resource, which acts as a file handle and the read/write operations on the file are facilitated by this resource variable.
+
+
+The following table summarizes different functions that return resource variables −
+
+
+Resource TypeBuilt-in functionsDefinitionProducedSoldbzip2bzopen()bzclose()Bzip2 filecurlcurl_init()curl_close()Curl sessionftpftp_connect(),ftp_close()FTP streammssql linkmssql_connect()mssql_close()Link to Microsoft SQL Server databasemysql linkmysql_connect()mysql_close()Link to MySQL databasemysql resultmysql_db_query(),mysql_free_result()MySQL resultoci8 connectionoci_connect()oci_close()Connection to Oracle DatabaseODBC linkodbc_connect()odbc_close()Link to ODBC databasepdf documentpdf_new()pdf_close()PDF documentstreamopendir()closedir()Dir handlestreamfopen(), tmpfile()fclose()File handlesocketsocket_create()Socket_close()Socket handlexmlxml_parser_create()xml_parser_free()XML parserzlibgzopen()gzclose()gz-compressed filezlib.deflatedeflate_init()None()incremental deflate contextzlib.inflateinflate_init()None()incremental inflate context
+
+
+PHP has get_resource_type() function that returns resource type of a variable.
+
+
+```php
+get_resource_type ( resource $handle ) : string
+```
+
+
+where $handle is the resource variable whose type is to be obtained. This function returns a string corresponding to resource type.
+
+
+There is also get_resource_id() function an integer identifier for the given resource.
+
+
+```php
+get_resource_id(resource $resource): int
+```
+
+
+### Example
+
+
+This function provides a type-safe way for generating the integer identifier for a given resource.
+
+
+```php
+<?php
+   $fp = fopen("hello.php", "r");
+   $resource = get_resource_type($fp);
+   $id = get_resource_id($fp);
+   echo "The resource type is : $resource The resource ID is : $id";
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+The resource type is : stream The resource ID is : 5
+```
+
+
+## NULL type
+
+
+In PHP, a variable with no value is said to be of null data type. Such a variable has a value defined as NULL. A variable can be explicitly assigned NULL or its value been set to null by using unset() function.
+
+
+```php
+$var=NULL;
+```
+
+
+It is possible to cast variable of other type to null, although casting null to other type has been deprecated from PHP 7.2. In earlier versions, casting was done using (unset)$var syntax
+
+
+### Example
+
+
+The following example shows how to assign NULL to a variable
+
+
+```php
+<?php
+   $var=NULL;
+   var_dump($var);
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+NULL
+```
+
+
+### Example
+
+
+The following example performs null variable to other primary variables −
+
+
+```php
+<?php
+   $var = NULL;
+   var_dump( (int)   $var);
+   var_dump((float)$var);
+   var_dump((bool)  $var) ;
+   var_dump( (boolean) $var);
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+int(0)
+float(0)
+bool(false)
+bool(false)
+```
+

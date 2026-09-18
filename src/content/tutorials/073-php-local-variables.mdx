@@ -1,0 +1,166 @@
+---
+title: "PHP - Local Variables"
+description: "Learn PHP - Local Variables with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 730
+group: "PHP Functions"
+seoTitle: "PHP - Local Variables — CodesCompiler PHP Guide"
+permalink: "php-local-variables"
+---
+
+
+# PHP - Local Variables
+
+
+
+
+Scope can be defined as the range of availability a variable has to the program in which it is declared. PHP variables can be one of four scope types −
+
+
+
+- Local Variables
+- Global Variables
+- Static Variables
+- Function Parameters
+
+
+
+## Local Variables
+
+
+A variable declared in a function is considered local; that is, it can be referenced solely in that function. Any assignment outside of that function will be considered to be an entirely different variable from the one contained in the function. You cannot access them outside of the function.
+
+
+Consider local variables as private notes. Only the author (function) can read them.
+
+
+### How Local Variables Work
+
+
+When a function is called, PHP creates local variables. When the function ends, PHP deletes the variables. Local variables exist only during the function's execution.
+
+
+### Example 1
+
+
+Here is the example to show hwo the local variable work in PHP −
+
+
+```php
+<?php
+   $x = 4;
+   
+   function assignx () { 
+      $x = 0;
+      print "\$x inside function is $x. \n";
+   }
+   
+   assignx();
+   print "\$x outside of function is $x. \n";
+?>
+```
+
+
+#### Output
+
+
+This will produce the following result −
+
+
+```php
+$x inside function is 0. 
+$x outside of function is 4.
+```
+
+
+### Example 2
+
+
+You can use local variables inside a loop also. So check how the local variables work in a for loop.
+
+
+```php
+<?php
+   function countToThree() {
+      for ($i = 1; $i <= 3; $i++) {
+         // Local variable
+         echo $i . " "; 
+      }
+   }
+
+   countToThree();
+?>
+```
+
+
+### Output
+
+
+Following is the output of the above code −
+
+
+```php
+1 2 3
+```
+
+
+### Example 3
+
+
+In this example, $age is a local variable inside the checkAge() function. The variable is only available inside the function  you can't access it from outside.
+
+
+```php
+<?php
+   function checkAge() {
+      // Local variable
+      $age = 20; 
+      if ($age >= 18) {
+         echo "You are an adult.";
+      } else {
+         echo "You are a minor.";
+      }
+   }
+
+   checkAge(); 
+?>
+```
+
+
+### Output
+
+
+Following is the output of the above code −
+
+
+```php
+You are an adult.
+```
+
+
+## Why Use Local Variables?
+
+
+Here are some of the reasons why you should use local variables −
+
+
+
+- Security:Local variables protect data within functions.
+- Memory Management:After use, local variables are deleted to save memory.
+- Avoid conflict:Local variables with the same name in different functions do not interact with each other.
+
+
+
+## Important Points to Keep in Mind
+
+
+Understanding local variables is important to write PHP code that is secure, efficient, and clean. Here are some key points of local variables you should keep in mind −
+
+
+
+- Local variables are defined inside a function.
+- Only when the function is operating do they exist.
+- When not in use, they are inaccessible.
+- Many functions can use the same variable names without getting any issues.
+
+

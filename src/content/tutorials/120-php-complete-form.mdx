@@ -1,0 +1,362 @@
+---
+title: "PHP - Complete Form"
+description: "Learn PHP - Complete Form with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 1200
+group: "PHP Web Development"
+seoTitle: "PHP - Complete Form — CodesCompiler PHP Guide"
+permalink: "php-complete-form"
+---
+
+
+# PHP - Complete Form
+
+
+
+
+This chapter puts all the concepts of form validation and extraction of HTML form data into PHP code. The complete form handling code given below has three sections: A PHP code section in the beginning that looks for any validation errors when the form is submitted, the HTML form with various elements such as text fields, radio buttons, Select control, checkbox, etc.
+
+
+The third part is again a PHP code that renders the data entered by the user.
+
+
+## PHP Error Tracking
+
+
+The code that traps errors, is in the beginning of the entire script. Obviously, this will be executed every time the page is loaded.
+
+If it's being loaded after the form is submitted, the following segment checks whether each element is empty, the email field is well-formed, and the checkbox is clicked (indicating that the user agrees to the terms).
+
+```php
+<?php
+
+   // define variables and set to empty values
+   $nameErr = $emailErr = $genderErr = $websiteErr = "";
+   $name = $email = $gender = $class = $course = $subject = "";
+
+   if ($_SERVER["REQUEST_METHOD"] == "POST") {
+      if (empty($_POST["name"])) {
+         $nameErr = "Name is required";
+      } else {
+         $name = test_input($_POST["name"]);
+      }
+
+      if (empty($_POST["email"])) {
+         $emailErr = "Email is required";
+      } else {
+         $email = test_input($_POST["email"]);
+		 
+         // check if e-mail address is well-formed
+         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $emailErr = "Invalid email format"; 
+         }
+      }
+
+      if (empty($_POST["course"])) {
+         $course = "";
+      } else {
+         $course = test_input($_POST["course"]);
+      }
+
+      if (empty($_POST["class"])) {
+         $class = "";
+      } else {
+         $class = test_input($_POST["class"]);
+      }
+
+      if (empty($_POST["gender"])) {
+         $genderErr = "Gender is required";
+      } else {
+         $gender = test_input($_POST["gender"]);
+      }
+
+      if (empty($_POST["subject"])) {
+         $subjectErr = "You must select one or more subjects";
+      } else {
+         $subject = $_POST["subject"];	
+      }
+   }
+
+   function test_input($data) {
+      $data = trim($data);
+      $data = stripslashes($data);
+      $data = htmlspecialchars($data);
+      return $data;
+   }
+?>
+```
+
+
+## HTML Form
+
+
+The HTML script that renders an entry form, follows the error trapping code. Various for elements have been employed in the form design.
+
+
+```php
+<h2>Absolute Classes Registration Form</h2>
+<p><span class = "error">* required field.</span></p>
+<form method = "POST" action = "<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+   <table>
+      <tr>
+         <td>Name:</td>
+         <td>
+            <input type = "text" name = "name">
+            <span class = "error">* <?php echo $nameErr;?></span>
+         </td>
+      </tr>
+      <tr>
+         <td>E-mail: </td>
+         <td>
+            <input type = "text" name = "email">
+            <span class = "error">* <?php echo $emailErr;?></span>
+         </td>
+      </tr>
+      <tr>
+         <td>Time:</td>
+         <td>
+            <input type = "text" name = "course">
+            <span class = "error"><?php echo $websiteErr;?></span>
+         </td>
+      </tr>
+      <tr>
+         <td>Classes:</td>
+         <td><textarea name = "class" rows = "5" cols = "40"></textarea></td>
+      </tr>
+      <tr>
+         <td>Gender:</td>
+         <td>
+            <input type = "radio" name = "gender" value = "female">Female
+            <input type = "radio" name = "gender" value = "male">Male
+            <span class = "error">* <?php echo $genderErr;?></span>
+         </td>
+      </tr>
+      <tr>
+         <td>Select:</td>
+         <td>
+            <select name = "subject[]" size = "4" multiple>
+               <option value = "Android">C</option>
+               <option value = "Java">Java</option>
+               <option value = "C#">C#</option>
+               <option value = "Data Base">C++</option>
+               <option value = "Hadoop">PHP</option>
+               <option value = "VB script">Python</option>
+            </select>
+         </td>
+      </tr>
+      <tr>
+         <td>Agree</td>
+         <td><input type = "checkbox" name = "checked" value = "1"></td>
+         <?php if(!isset($_POST['checked'])){ ?>
+            <span class = "error">* <?php echo "You must agree to terms";?></span>
+         <?php } ?> 
+      </tr>
+      <tr>
+         <td>
+            <input type = "submit" name = "submit" value = "Submit"> 
+         </td>
+      </tr>
+   </table>
+</form>
+```
+
+
+Note that the form data is submitted back to the same script, hence the form's action attribute is set to $_SERVER["PHP_SELF"] superglobal.
+
+
+This part also contains certain inline PHP code that flashes the error messages besides the respective form control – such as Name Required message just besides the Name text box, if the name field is empty while submitting the form.
+
+
+## Display Form Data
+
+
+The third part of the script is again a PHP code that echoes the values of each of the form fields submitted by the user.
+
+
+```php
+<?php
+   if ($_SERVER["REQUEST_METHOD"] == "POST") {
+      echo "<h2>Your given values are as :</h2>";
+      echo ("<p><b>Name</b> : $name</p>");
+      echo ("<p><b>Email address</b> : $email</p>");
+      echo ("<p><b>Preffered class time</b> : $course</p>");
+      echo ("<p><b>Class info</b> : $class </p>");
+      echo ("<p><b>Gender</b> : $gender</p>");
+      echo "<p><b>Subjcts Chosen:</b><p>";
+      if (!empty($subject)) { 
+         echo "<ul>";
+         for($i = 0; $i < count($subject); $i++) {
+            echo "<li>$subject[$i]</u/li>";
+         }
+         echo "</ul>";
+      }
+   }
+?>
+```
+
+
+Here's the sample data filled in the form when the script is run from the server's document root folder −
+
+
+When submitted, theoutputis rendered as below −
+
+
+### Handling HTML Form
+
+
+The complete code of PHP's handling HTML form is as follows −
+
+
+```html
+<html>
+<head>
+   <style>
+      .error {color: #FF0000;}
+   </style>
+</head>
+<body>
+   <?php
+   
+      // define variables and set to empty values
+      $nameErr = $emailErr = $genderErr = $websiteErr = "";
+      $name = $email = $gender = $class = $course = $subject = "";
+
+      if ($_SERVER["REQUEST_METHOD"] == "POST") {
+         if (empty($_POST["name"])) {
+            $nameErr = "Name is required";
+         }else {
+            $name = test_input($_POST["name"]);
+         }
+
+         if (empty($_POST["email"])) {
+            $emailErr = "Email is required";
+         } else {
+            $email = test_input($_POST["email"]);
+
+            // check if e-mail address is well-formed
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+               $emailErr = "Invalid email format"; 
+            }
+         }
+
+         if (empty($_POST["course"])) {
+            $course = "";
+         } else {
+            $course = test_input($_POST["course"]);
+         }
+
+         if (empty($_POST["class"])) {
+            $class = "";
+         } else {
+            $class = test_input($_POST["class"]);
+         }
+
+         if (empty($_POST["gender"])) {
+            $genderErr = "Gender is required";
+         } else {
+            $gender = test_input($_POST["gender"]);
+         }
+
+         if (empty($_POST["subject"])) {
+            $subjectErr = "You must select one or more subjects";
+         } else {
+            $subject = $_POST["subject"];	
+         }
+      }
+
+      function test_input($data) {
+         $data = trim($data);
+         $data = stripslashes($data);
+         $data = htmlspecialchars($data);
+         return $data;
+      }
+   ?>
+   <h2>Absolute Classes Registration Form</h2>
+   <p><span class = "error">* required field.</span></p>
+   <form method = "POST" action = "<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+      <table>
+         <tr>
+            <td>Name:</td>
+            <td>
+               <input type = "text" name = "name">
+               <span class = "error">* <?php echo $nameErr;?></span>
+            </td>
+         </tr>
+         <tr>
+            <td>E-mail: </td>
+            <td>
+               <input type = "text" name = "email">
+               <span class = "error">* <?php echo $emailErr;?></span>
+            </td>
+         </tr>
+         <tr>
+            <td>Time:</td>
+            <td> 
+               <input type = "text" name = "course">
+               <span class = "error"><?php echo $websiteErr;?></span>
+            </td>
+         </tr>
+         <tr>
+            <td>Classes:</td>
+            <td><textarea name = "class" rows = "5" cols = "40"></textarea></td>
+         </tr>
+         <tr>
+            <td>Gender:</td>
+            <td>
+               <input type = "radio" name = "gender" value = "female">Female
+               <input type = "radio" name = "gender" value = "male">Male
+               <span class = "error">* <?php echo $genderErr;?></span>
+            </td>
+         </tr>
+         <tr>
+            <td>Select:</td>
+            <td>
+               <select name = "subject[]" size = "4" multiple>
+                  <option value = "C">C</option>
+                  <option value = "Java">Java</option>
+                  <option value = "C#">C#</option>
+                  <option value = "c++">C++</option>
+                  <option value = "PHP">PHP</option>
+                  <option value = "Python">Python</option>
+               </select>
+            </td>
+         </tr>
+         <tr>
+            <td>Agree</td>
+            <td><input type = "checkbox" name = "checked" value = "1"></td>
+            <?php if(!isset($_POST['checked'])){ ?>
+               <span class = "error">* <?php echo "You must agree to terms";?></span>
+            <?php } ?> 
+         </tr>
+         <tr>
+            <td>
+               <input type = "submit" name = "submit" value = "Submit"> 
+            </td>
+         </tr>
+      </table>
+   </form>
+   <?php
+      if ($_SERVER["REQUEST_METHOD"] == "POST") {
+         echo "<h2>Your given values are as :</h2>";
+         echo ("<p><b>Name</b> : $name</p>");
+         echo ("<p><b>Email address</b> : $email</p>");
+         echo ("<p><b>Preffered class time</b> : $course</p>");
+         echo ("<p><b>Class info</b> : $class </p>");
+         echo ("<p><b>Gender</b> : $gender</p>");
+         echo "<p><b>Subjcts Chosen:</b><p>";
+         if (!empty($subject)) { 
+            echo "<ul>";
+            for($i = 0; $i < count($subject); $i++) {
+               echo "<li>$subject[$i]</u/li>";
+            }
+            echo "</ul>";
+         }
+      }
+   ?>
+</body>
+</html>
+```
+
+
+It will produce the followingoutput−
+

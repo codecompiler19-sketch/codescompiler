@@ -1,0 +1,220 @@
+---
+title: "PHP - Arrow Functions"
+description: "Learn PHP - Arrow Functions with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 710
+group: "PHP Functions"
+seoTitle: "PHP - Arrow Functions — CodesCompiler PHP Guide"
+permalink: "php-arrow-functions"
+---
+
+
+# PHP - Arrow Functions
+
+
+
+
+Arrow functions were added in PHP 7.4 to make it easier and faster to write anonymous functions. Instead of the regular"function"term, you can now type "fn". The new version simplifies your code, making it cleaner and more readable.Arrow functionsare perfect for short, one-line functions because they automatically return the result without the need for an explicit return statement.
+
+
+They also inherit variables from the parent scope, so you do not need to pass them separately. Overall, arrow functions are a fantastic addition to PHP, making it faster and easier to write small inline functions.
+
+
+Here is the syntax for using thearrow functionsin your code −
+
+
+```php
+fn (argument_list) => expr
+```
+
+
+## Key Points About Arrow Functions
+
+
+Arrow functions have some key points listed below that make them different from regular functions −
+
+
+
+- There is only one expression after the "=>" symbol, and its value is the return value of the arrow function.
+- The arrow function doesn't have an explicitreturnstatement.
+- Like in the anonymous function, the arrow function is assigned to a variable for it to be called.
+
+
+
+## Basic Addition with Arrow Function
+
+
+The following example demonstrates how you can use the arrow function in PHP −
+
+
+```php
+<?php
+   $add = fn ($a, $b) => $a + $b;
+
+   $x = 10;
+   $y = 20; 
+   echo " x: $x y: $y Addition: " . $add($x, $y);
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+x: 10 y: 20 Addition: 30
+```
+
+
+## Using the Arrow Function as a Callback Function
+
+
+We can also use the arrow function as a callback function. Callback functions are used as one of the arguments of another function. The arrow function is executed on the fly and the value of the expression after "=>" becomes the argument of the parent function, which may be either a built-in or a user-defined function.
+
+
+In this example, we use an arrow function inside usort() function, a built_in function that sorts an array by values using a user-defined comparison function.
+
+
+```php
+<?php
+   $arr = [10,3,70,21,54];
+   usort ($arr, fn ($x , $y) => $x > $y);
+
+   foreach ($arr as $x){
+      echo $x . "\n";
+   }
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+3
+10
+21
+54
+70
+```
+
+
+## Accessing Variables from the Parent Scope
+
+
+Arrow functions can automatically access variables from the parent scope. Unlike the anonymous functions, the "use" keyword is not necessary for it to act as a closure. When a variable used in the expression is defined in the parent scope, it will be implicitly captured by-value.
+
+
+```php
+<?php
+   $maxmarks=300;
+   $percent=fn ($marks) => $marks*100/$maxmarks;
+
+   $m = 250;
+   echo "Marks = $m Percentage = ". $percent($m);
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+Marks = 250 Percentage = 83.333333333333
+```
+
+
+### Nested Arrow Functions
+
+
+Arrow functions capture variables by value automatically, even when nested.
+
+
+In the following example, an arrow function is defined in the expression part of another arrow function.
+
+
+```php
+<?php
+   $z = 1;
+   $fn = fn($x) => fn($y) => $x * $y + $z;
+   $x = 5;
+   $y = 10; 
+   echo "x:$x y:$y \n";
+   echo "Result of nested arrow functions: " . ($fn($x)($y));
+?>
+```
+
+
+It will produce the followingoutput−
+
+
+```php
+x:5 y:10 
+Result of nested arrow functions: 51
+```
+
+
+## Filtering an Array with Arrow Functions
+
+
+You can use arrow functions to filter elements in an array very easily. So here is the example below in which we are filtering out the even numbers and showing them in the output.
+
+
+```php
+<?php
+   $numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+   $evenNumbers = array_filter($numbers, fn($n) => $n % 2 === 0);
+
+   foreach ($evenNumbers as $num) {
+      echo $num . " ";
+   }
+?>
+```
+
+
+### Output
+
+
+Following is the output of the above code −
+
+
+```php
+2 4 6 8 10
+```
+
+
+## Transform an Array with array_map
+
+
+Arrow functions are used to transform an array using array_map. In the following example, we are using array_map() function to change the array into a squared numbers array.
+
+
+```php
+<?php
+   $nums = [1, 2, 3, 4];
+   $squared = array_map(fn($n) => $n * $n, $nums);
+
+   print_r($squared);
+?>
+```
+
+
+### Output
+
+
+Following is the output of the above code −
+
+
+```php
+Array
+(
+   [0] => 1
+   [1] => 4
+   [2] => 9
+   [3] => 16
+)
+```
+
+
+Just like anonymous functions, the arrow function syntax allows arbitrary function signatures, including parameter and return types, default values, variadics, as well as by-reference passing and returning.
+

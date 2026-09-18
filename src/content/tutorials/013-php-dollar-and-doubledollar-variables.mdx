@@ -1,0 +1,252 @@
+---
+title: "PHP - $ and $$ Variables"
+description: "Learn PHP - $ and $$ Variables with clear explanation, code examples, and practical PHP development guide."
+category: "php"
+order: 130
+group: "PHP Basics"
+seoTitle: "PHP - $ and $$ Variables — CodesCompiler PHP Guide"
+permalink: "php-dollar-and-doubledollar-variables"
+---
+
+
+# PHP - $ and $$ Variables
+
+
+
+
+PHP is a powerful scripting language created specifically for web development. One of its unique features is the use of variables. Variables in PHP begin with the dollar symbol ($). But there is another type of variable known as a $$ (double dollar sign) variable, which is a variable within itself.
+
+
+In this chapter, we are going to learn about these variables through simple examples.
+
+
+## What is a $ Variable?
+
+
+A $ variable is a normal PHP variable that contains a value. A variable can be allocated a wide range of values, including numbers, texts and arrays.
+
+
+### Example
+
+
+Here is the basic usage of $ variable in which we have declared a variable $name and assign it the value. And with the help of echo, we print the value stored in $name −
+
+
+```php
+<?php   
+   $name = "Akshita";
+   echo $name; 
+   // Output: Akshita
+?>
+```
+
+
+### Normal vs Dynamic Variables
+
+
+Normal Variable:The declaration of a normal variable is like this −
+
+
+```php
+<?php  
+   $a = 'good';
+?>
+```
+
+
+Dynamic Variable:A dynamic variable takes the value of a normal variable and treats that as the name of the variable. In the above example, "good" can be used as the name of a variable by using two dollar signs "$$" −
+
+
+```php
+<?php     
+   $$a = 'morning';
+?>
+```
+
+
+We now have two variables: "$a" with contents "good" and "$$a" with contents "morning". As a result, the following echo statements will produce the same output −
+
+
+```php
+<?php  
+   $a = 'good';
+   $$a = 'morning';
+
+   echo "$a {$$a}\n";
+   echo "$a $good";
+?>
+```
+
+
+#### Output
+
+
+Both produce the same output −
+
+
+```php
+good morning
+good morning
+```
+
+
+### Example - Using Dynamic Variables
+
+
+Take a look at this followingexample−
+
+
+```php
+<?php  
+   $a = 'good';
+   $$a = 'morning';
+
+   echo "$a {$$a}\n";
+   echo "$a $good";
+?>
+```
+
+
+#### Output
+
+
+It will produce the following output −
+
+
+```php
+good morning
+good morning
+```
+
+
+### Example
+
+
+Let's take a look at another example −
+
+
+```php
+<?php  
+   $x = "foo";  
+   $$x = "bar";  
+   echo "Value of x = " .$x . "\n";  
+   echo 'Value of $$x = ' . $$x . "\n";  
+   echo 'Value of foo = ' . $foo;  
+?>
+```
+
+
+#### Output
+
+
+Here, you will get the below outcome −
+
+
+```php
+Value of x = foo
+Value of $$x = bar
+Value of foo = bar
+```
+
+
+## What is a $$ Variable?
+
+
+A $$ variable is a variable within a variable. It means that the variable's name is saved in another variable.
+
+
+Note that the use of "$" symbol is not restricted to two. Any number of dollar symbols can be prefixed.
+
+
+Suppose there is a variable "$x" with "a" as its value. Next, we define $$x='as', then "$$x" as well as "$a" will have the same value. Similarly, the statement $$$x='and' effectively declares a "$as" variable whose value is 'and'.
+
+
+### Example with Multiple $ Symbols
+
+
+Here is a complete example that shows the use of multiple "$" symbols.
+
+
+```php
+<?php  
+   $php = "a";
+   $lang = "php";
+   $World = "lang";
+   $Hello = "World";
+   $a = "Hello";
+   echo '$a= ' . $a;
+   echo "\n";
+   echo '$$a= ' . $$a;
+   echo "\n";
+   echo '$$$a= ' . $$$a;
+   echo "\n";
+   echo '$$$$a= ' . $$$$a;
+   echo "\n";
+   echo '$$$$$a= ' . $$$$$a;
+?>
+```
+
+
+#### Output
+
+
+When you run this code, it will produce the following result −
+
+
+```php
+$a= Hello
+$$a= World
+$$$a= lang
+$$$$a= php
+$$$$$a= a
+```
+
+
+### Using Dynamic Variables with Arrays
+
+
+Using dynamic variables with arrays may lead to certain ambiguous situations. With an array "a", if you write $$a[1], then the parser needs to know if you are refering to "$a[1]" as a variable or if you want "$$a" as the variable and then the [1] index from that variable.
+
+
+To resolve this ambiguity, use $&#123;$a[1]&#125; for the first case and $&#123;$a&#125;[1] for the second.
+
+
+#### Example
+
+
+Take a look at the following example −
+
+
+```php
+<?php  
+   $vars = array("hw", "os", "lang");
+   $var_hw="Intel";
+   $var_lang="PHP";
+   $var_os="Linux";
+
+   foreach ($vars as $var)
+      echo ${"var_$var"} . "\n";
+
+   print "$var_hw\n$var_os\n$var_lang";
+?>
+```
+
+
+#### Output
+
+
+It will produce the following output −
+
+
+```php
+Intel
+Linux
+PHP
+Intel
+Linux
+PHP
+```
+
+
+It may be noted that this technique cannot be used with PHP's Super-global arrays (Several predefined variables in PHP are "superglobals", which means they are available in all scopes throughout a script) within functions or class methods. The variable "$this" is a special variable in PHP and it cannot be referenced dynamically.
+
