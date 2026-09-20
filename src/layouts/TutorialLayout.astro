@@ -123,27 +123,28 @@ const schemaData = [tutorialSchema, breadcrumbSchema];
 
 <BaseLayout title={title} seoTitle={seoTitle} ogType={ogType} ogImage={ogImage} description={description} schemaData={schemaData}>
   <!-- TUTORIAL SUB-HEADER FOR MOBILE SIDEBAR -->
-  <div slot="sub-header" class="md:hidden bg-gray-50 flex items-center px-3 py-2 border-b border-gray-200 w-full relative z-10 shadow-sm">
-    <button id="sidebar-toggle" class="p-1.5 mr-2 rounded hover:bg-gray-200 transition-colors text-gray-700" aria-label="Toggle sidebar">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <div slot="sub-header" class="md:hidden bg-white dark:bg-slate-800 flex items-center justify-between px-3.5 py-2.5 border-b border-slate-200 dark:border-slate-700/80 w-full relative z-20 shadow-xs">
+    <button id="sidebar-toggle" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-800 dark:text-slate-100 text-xs font-semibold hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors" aria-label="Toggle tutorial menu">
+      <svg class="w-4 h-4 text-[#04AA6D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
       </svg>
+      <span>Topics Menu</span>
     </button>
-    <nav class="text-[11px] text-gray-500 flex items-center gap-1.5 flex-wrap font-medium" aria-label="Breadcrumb">
+    <nav class="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5 font-medium truncate max-w-[55%]" aria-label="Breadcrumb">
       <a href="/" class="hover:text-[#04AA6D] transition-colors">Home</a>
       <span>/</span>
       <a href={`/tutorial/${category}-introduction`} class="hover:text-[#04AA6D] transition-colors capitalize">{category}</a>
       <span>/</span>
-      <span class="text-gray-900 font-semibold truncate max-w-[140px]">{title}</span>
+      <span class="text-slate-900 dark:text-slate-100 font-semibold truncate">{title}</span>
     </nav>
   </div>
 
-  <div class="w-full bg-[#f8fafc] dark:bg-[#0f172a] min-h-screen py-3 sm:py-5 px-2 sm:px-4 lg:px-6">
-    <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row gap-5 lg:gap-6 items-start">
+  <div class="w-full bg-[#f8fafc] dark:bg-[#0f172a] min-h-screen py-2 sm:py-5 px-1.5 sm:px-4 lg:px-6">
+    <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row gap-4 lg:gap-6 items-start">
       <!-- Sidebar (CodesCompiler Style) -->
       <aside
         id="page-sidebar"
-        class="fixed top-[150px] bottom-0 left-0 z-50 md:z-0 w-64 bg-white dark:bg-slate-800 border-r md:border border-slate-200/80 dark:border-slate-700/80 transform -translate-x-full transition-transform duration-200 ease-in-out md:relative md:top-0 md:translate-x-0 overflow-y-auto shadow-sm md:rounded-2xl md:sticky md:top-20 md:max-h-[calc(100vh-100px)] flex-shrink-0"
+        class="fixed inset-y-0 left-0 z-50 w-72 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 transform -translate-x-full transition-transform duration-300 ease-in-out md:relative md:inset-auto md:w-64 md:transform-none md:rounded-2xl md:border md:border-slate-200/80 dark:md:border-slate-700/80 overflow-y-auto shadow-2xl md:shadow-sm md:sticky md:top-20 md:max-h-[calc(100vh-100px)] flex-shrink-0"
       >
         <!-- Dark Header Banner (CodesCompiler Style) -->
         <div class="bg-[#0d1e32] text-white p-3.5 flex items-center gap-3 border-b border-slate-800">
@@ -186,7 +187,7 @@ const schemaData = [tutorialSchema, breadcrumbSchema];
                   <a
                     href={`/tutorial/${tutorialSlug}`}
                     aria-current={isActive ? 'page' : undefined}
-                    class={`group flex items-center justify-between px-3.5 py-2 text-[13px] border-b border-dotted border-slate-200 dark:border-slate-700/60 transition-colors duration-150 ${
+                    class={`group flex items-center justify-between px-3.5 py-2.5 text-[13px] border-b border-dotted border-slate-200 dark:border-slate-700/60 transition-colors duration-150 ${
                       isActive
                         ? 'bg-[#e6f4ea] dark:bg-emerald-950/40 text-slate-900 dark:text-emerald-300 font-bold'
                         : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-[#04AA6D]'
@@ -209,15 +210,15 @@ const schemaData = [tutorialSchema, breadcrumbSchema];
         </nav>
       </aside>
 
-      <!-- Overlay backdrop -->
+      <!-- Full screen mobile backdrop -->
       <div
         id="sidebar-backdrop"
-        class="fixed top-[150px] bottom-0 left-0 right-0 bg-black/50 z-30 hidden md:hidden"
+        class="fixed inset-0 bg-black/60 z-40 hidden md:hidden backdrop-blur-xs transition-opacity duration-300"
       ></div>
 
-      <div class="flex flex-1 min-w-0 gap-5 lg:gap-6 items-start">
+      <div class="flex flex-1 min-w-0 gap-5 lg:gap-6 items-start w-full">
         <!-- Main Article White Card Container -->
-        <article class="flex-1 min-w-0 px-6 sm:px-10 lg:px-12 py-8 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-sm">
+        <article class="flex-1 min-w-0 px-3.5 sm:px-8 lg:px-12 py-5 sm:py-8 bg-white dark:bg-slate-800 rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-xs sm:shadow-sm overflow-hidden w-full">
           <!-- Breadcrumb (Desktop Only) -->
           <nav class="hidden md:flex text-xs text-slate-400 dark:text-slate-400 mb-6 items-center gap-1.5 flex-wrap font-medium" aria-label="Breadcrumb">
             <a href="/" class="hover:text-[#04AA6D] transition-colors">Home</a>
@@ -228,11 +229,11 @@ const schemaData = [tutorialSchema, breadcrumbSchema];
           </nav>
 
           <!-- Prose Content -->
-          <div class="prose prose-gray prose-sm sm:prose-base max-w-none
+          <div class="prose prose-gray prose-sm sm:prose-base max-w-none break-words
             prose-headings:font-bold prose-headings:text-slate-900 dark:prose-headings:text-white
             prose-a:text-[#04AA6D] prose-a:no-underline hover:prose-a:underline
-            prose-code:bg-slate-100 dark:prose-code:bg-slate-900 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-[#c7254e] prose-code:text-sm prose-code:font-normal
-            prose-pre:bg-[#282A35] prose-pre:text-gray-100 prose-pre:rounded-xl
+            prose-code:bg-slate-100 dark:prose-code:bg-slate-900 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-[#c7254e] prose-code:text-sm prose-code:font-normal prose-code:break-words
+            prose-pre:bg-[#282A35] prose-pre:text-gray-100 prose-pre:rounded-xl prose-pre:max-w-full prose-pre:overflow-x-auto
             prose-blockquote:border-[#04AA6D] prose-blockquote:bg-green-50 dark:prose-blockquote:bg-emerald-950/30 prose-blockquote:py-1
             prose-li:text-slate-700 dark:prose-li:text-slate-300">
             <slot />
@@ -247,16 +248,16 @@ const schemaData = [tutorialSchema, breadcrumbSchema];
             if (!prev && !next) return null;
 
             return (
-              <div class="mt-12 pt-8 border-t border-slate-200/80 dark:border-slate-700 flex items-center justify-between">
+              <div class="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-slate-200/80 dark:border-slate-700 flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
                 {prev &&
-                  <a href={`/tutorial/${prev.data.permalink || prev.slug}`} class="flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-[#04AA6D] transition-colors">
+                  <a href={`/tutorial/${prev.data.permalink || prev.slug}`} class="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-[#04AA6D] transition-colors truncate max-w-[48%]">
                     <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-                    {prev.data.title}
+                    <span class="truncate">{prev.data.title}</span>
                   </a>
                 }
                 {next &&
-                  <a href={`/tutorial/${next.data.permalink || next.slug}`} class="flex items-center gap-2 text-sm font-semibold text-[#04AA6D] hover:underline ml-auto">
-                    {next.data.title}
+                  <a href={`/tutorial/${next.data.permalink || next.slug}`} class="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#04AA6D] hover:underline ml-auto truncate max-w-[48%] justify-end">
+                    <span class="truncate">{next.data.title}</span>
                     <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                   </a>
                 }
