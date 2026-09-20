@@ -15,6 +15,7 @@ export interface Props {
   ogImage?: string;       // Custom OG image (overrides image)
   noindex?: boolean;      // Add noindex meta tag
   keywords?: string;      // SEO Keywords
+  ogType?: string;        // Custom OG Type (e.g. article)
   schemaData?: object[];  // Array of Schema.org JSON-LD objects
 }
 
@@ -25,6 +26,7 @@ const {
   canonicalURL = new URL(Astro.url.pathname, Astro.site),
   seoTitle,
   ogImage,
+  ogType: propOgType,
   noindex = false,
   keywords,
   schemaData = [],
@@ -36,8 +38,8 @@ const displayTitle = pageTitle.includes('CodesCompiler') ? pageTitle : `${pageTi
 // The image used for OG/Twitter cards
 const socialImage = ogImage || image;
 
-// og:type is article only for blog posts; otherwise website
-const ogType = Astro.url.pathname.startsWith('/blog/') ? 'article' : 'website';
+// og:type is article if passed or for blog posts; otherwise website
+const ogType = propOgType || (Astro.url.pathname.startsWith('/blog/') ? 'article' : 'website');
 
 // All tutorials for the search index (flat list for auto-suggest)
 const tutorialLinks = [

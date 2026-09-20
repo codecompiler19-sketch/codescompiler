@@ -1521,8 +1521,34 @@ function tutForm(t={}){
           <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Tags</label>
             <input id="tf_tg" class="input-text" style="width:100%;" value="${esc(t.tags||'')}" placeholder="css, html, js">
           </div>
-          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">SEO Description</label>
-            <textarea id="tf_d" class="input-text" style="width:100%;height:60px;" placeholder="Search description...">${esc(t.description||'')}</textarea>
+        </div>
+      </div>
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">🔍 SEO &amp; Open Graph (OG) Meta</div>
+        <div style="padding:14px;display:flex;flex-direction:column;gap:10px;">
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Meta Title (seoTitle)</label>
+            <input id="tf_seo" class="input-text" style="width:100%;" value="${esc(t.seoTitle||'')}" placeholder="Custom browser & search title...">
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Meta Description</label>
+            <textarea id="tf_d" class="input-text" style="width:100%;height:60px;" placeholder="Search engine description...">${esc(t.description||'')}</textarea>
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Meta Keywords</label>
+            <input id="tf_kw" class="input-text" style="width:100%;" value="${esc(t.keywords||'')}" placeholder="keyword1, keyword2...">
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Open Graph Type (og:type)</label>
+            <select id="tf_ogtype" class="input-text" style="width:100%;">
+              <option value="article" ${t.ogType==='article'?'selected':''}>article</option>
+              <option value="website" ${t.ogType==='website'?'selected':''}>website</option>
+            </select>
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Open Graph Image (og:image)</label>
+            <input id="tf_ogimg" class="input-text" style="width:100%;" value="${esc(t.ogImage||'')}" placeholder="/images/courses/html-banner.png">
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Robots Indexing</label>
+            <select id="tf_noindex" class="input-text" style="width:100%;">
+              <option value="false" ${!t.noindex?'selected':''}>Index &amp; Follow (Default)</option>
+              <option value="true" ${t.noindex?'selected':''}>Noindex, Nofollow</option>
+            </select>
           </div>
         </div>
       </div>
@@ -1564,7 +1590,12 @@ function buildTutContent(){
   const tags=$('tf_tg').value.split(',').map(s=>s.trim()).filter(Boolean);
   const tStr=tags.length?`\ntags: [${tags.map(t=>`"${t}"`).join(', ')}]`:'';
   const img=$('tf_img').value.trim();const iStr=img?`\nimage: "${img}"`:'';
-  return`---\ntitle: "${$('tf_t').value}"\ndescription: "${$('tf_d').value}"\ncategory: "${$('tf_c').value}"\norder: ${$('tf_o').value}\ndate: "${$('tf_dt').value}"\nauthor: "${$('tf_au').value}"${tStr}${iStr}\n---\n\n${$('tf_b').value}`
+  const seo=$('tf_seo').value.trim();const seoStr=seo?`\nseoTitle: "${seo.replace(/"/g, '\\"')}"`:'';
+  const kw=$('tf_kw').value.trim();const kwStr=kw?`\nkeywords: "${kw.replace(/"/g, '\\"')}"`:'';
+  const ogt=$('tf_ogtype').value;const ogtStr=ogt?`\nogType: "${ogt}"`:'';
+  const ogi=$('tf_ogimg').value.trim();const ogiStr=ogi?`\nogImage: "${ogi.replace(/"/g, '\\"')}"`:'';
+  const noi=$('tf_noindex').value==='true'?`\nnoindex: true`:'';
+  return`---\ntitle: "${$('tf_t').value.replace(/"/g, '\\"')}"\ndescription: "${$('tf_d').value.replace(/"/g, '\\"')}"\ncategory: "${$('tf_c').value}"\norder: ${$('tf_o').value}\ndate: "${$('tf_dt').value}"\nauthor: "${$('tf_au').value}"${tStr}${iStr}${seoStr}${kwStr}${ogtStr}${ogiStr}${noi}\n---\n\n${$('tf_b').value}`
 }
 
 // ══ BLOGS ══

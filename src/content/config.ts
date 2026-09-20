@@ -10,6 +10,10 @@ const tutorialsCollection = defineCollection({
     group: z.string().optional(),
     seoTitle: z.string().optional(),
     permalink: z.string().optional(),
+    ogType: z.string().optional(),
+    ogImage: z.string().optional(),
+    keywords: z.string().optional(),
+    noindex: z.boolean().optional(),
   }),
 });
 

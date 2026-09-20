@@ -23,7 +23,19 @@ const CATNAME={html:'HTML',css:'CSS',javascript:'JavaScript',seo:'SEO',python:'P
 const $=id=>document.getElementById(id);
 const esc=s=>String(s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 function toast(m,ok=true){const d=document.createElement('div');d.className='toast '+(ok?'ok':'err');d.innerHTML=(ok?'✅':'❌')+' '+m;$('toasts').appendChild(d);setTimeout(()=>d.remove(),3500)}
-async function api(p,o){return(await fetch(API+p,o)).json()}
+async function api(p, o) {
+  try {
+    const res = await fetch(API + p, o);
+    const text = await res.text();
+    try {
+      return JSON.parse(text);
+    } catch (e) {
+      return { ok: false, error: text || `HTTP ${res.status} error` };
+    }
+  } catch (err) {
+    return { ok: false, error: err.message };
+  }
+}
 async function post(p,b){return api(p,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)})}
 
 // Inline Editor (replaces modal popup - opens full-page inside content area)
@@ -573,6 +585,22 @@ function renderUploadPanel(type) {
 
     <div id="upload-body-${type}" style="display:block;padding:20px;background:#fff;">
       
+      <!-- Web URL Content Importer -->
+      <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:6px;padding:16px;margin-bottom:20px;">
+        <h4 style="font-size:13px;font-weight:700;color:#0369a1;margin:0 0 6px;display:flex;align-items:center;gap:6px;">
+          <span>🌐 Import Content Directly from Web URL</span>
+        </h4>
+        <p style="font-size:12px;color:#475569;margin-bottom:12px;">
+          Enter any webpage URL (e.g. documentation or article). The system will automatically fetch the article text, convert HTML to MDX, extract headers &amp; code blocks, and load it into the editor ready to save.
+        </p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <input type="url" id="url-input-${type}" class="input-text" placeholder="https://example.com/html-tutorial-page" style="flex:1;min-width:280px;font-size:13px;padding:8px 12px;border:1px solid #94a3b8;border-radius:4px;">
+          <button class="btn bp" onclick="importFromUrl('${type}')" id="btn-import-url-${type}" style="font-size:13px;padding:8px 16px;">
+            ⚡ Fetch &amp; Convert to MDX
+          </button>
+        </div>
+      </div>
+
       <!-- Template Format Instructions -->
       <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:16px;margin-bottom:20px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:10px;">
@@ -604,6 +632,59 @@ function renderUploadPanel(type) {
     </div>
   </div>`;
 }
+
+window.importFromUrl = async function(type) {
+  const urlInput = $('url-input-' + type);
+  const btn = $('btn-import-url-' + type);
+  if (!urlInput || !urlInput.value.trim()) return toast('Please enter a valid webpage URL', false);
+  
+  const targetUrl = urlInput.value.trim();
+  if (btn) { btn.disabled = true; btn.innerHTML = '⏳ Fetching &amp; Converting...'; }
+
+  try {
+    const res = await post('/api/import-url', { url: targetUrl });
+    if (res.ok && res.content) {
+      toast('URL content fetched and converted to MDX! 🚀');
+      const bodyText = res.body || extractBody(res.content);
+
+      if (type === 'tutorial') {
+        openEditor('Imported Tutorial: ' + res.filename, tutForm({ title: res.title, description: res.description, category: res.category, file: res.filename }),
+          async () => {
+            let fn = $('tf_f').value.trim(); if (!fn.endsWith('.mdx')) fn += '.mdx';
+            await post('/api/tutorials/save', { filename: fn, content: buildTutContent() });
+            toast('Tutorial published! 🎉'); await loadAll(); renderTuts();
+          },
+          () => renderTuts(),
+          '<span class="badge bpub" style="margin-right:8px">Imported</span>'
+        );
+        setTimeout(() => {
+          if ($('tf_b')) $('tf_b').value = bodyText;
+          if ($('tf_d')) $('tf_d').value = res.description || '';
+        }, 100);
+      } else if (type === 'blog') {
+        openEditor('Imported Post: ' + res.filename, blogForm({ title: res.title, description: res.description, category: 'Blog', file: res.filename }),
+          async () => {
+            let fn = $('bf_f').value.trim(); if (!fn.endsWith('.mdx')) fn += '.mdx';
+            await post('/api/blogs/save', { filename: fn, content: buildBlogContent() });
+            toast('Post published! 🎉'); await loadAll(); renderBlogs();
+          },
+          () => renderBlogs(),
+          '<span class="badge bpub" style="margin-right:8px">Imported</span>'
+        );
+        setTimeout(() => {
+          if ($('bf_b')) $('bf_b').value = bodyText;
+          if ($('bf_d')) $('bf_d').value = res.description || '';
+        }, 100);
+      }
+    } else {
+      toast(res.error || 'Failed to fetch URL content', false);
+    }
+  } catch (err) {
+    toast('Error importing URL: ' + err.message, false);
+  } finally {
+    if (btn) { btn.disabled = false; btn.innerHTML = '⚡ Fetch &amp; Convert to MDX'; }
+  }
+};
 
 window.toggleUploadPanel = function(type) {
   const body = $('upload-body-' + type);
@@ -646,7 +727,7 @@ function stageUploadFiles(files, type) {
   if (!files.length) return;
   stagedUploads[type] = files;
   renderStagedUploadsUI(type);
-  toast('Selected ' + files.length + ' file' + (files.length > 1 ? 's' : '') + ' ready to upload! 📦 Review below and click Submit.');
+  toast(`Selected ${files.length} file${files.length > 1 ? 's' : ''} ready to upload! 📦 Review below and click Submit.`);
 }
 
 function renderStagedUploadsUI(type) {
@@ -772,9 +853,9 @@ async function startSequentialUpload(type) {
 
       const currentNum = i + 1;
       const pct = Math.round((currentNum / total) * 100);
-      if (progressText) progressText.textContent = 'Submitting page ' + currentNum + ' of ' + total + ': ' + file.name;
-      if (progressPercent) progressPercent.textContent = pct + '%';
-      if (progressFill) progressFill.style.width = pct + '%';
+      if (progressText) progressText.textContent = `Submitting page ${currentNum} of ${total}: ${file.name}`;
+      if (progressPercent) progressPercent.textContent = `${pct}%`;
+      if (progressFill) progressFill.style.width = `${pct}%`;
 
       if (itemRow) {
         itemRow.style.background = '#f0f9ff';
@@ -787,7 +868,7 @@ async function startSequentialUpload(type) {
       if (!allowedExt[type].includes(ext)) {
         failCount++;
         if (itemIcon) itemIcon.textContent = '❌';
-        if (itemText) { itemText.textContent = 'Wrong file type. Expected: ' + allowedExt[type].join(' or '); itemText.style.color = '#b91c1c'; }
+        if (itemText) { itemText.textContent = `Wrong file type. Expected: ${allowedExt[type].join(' or ')}`; itemText.style.color = '#b91c1c'; }
         if (itemBadge) itemBadge.innerHTML = '<span class="badge" style="background:#fee2e2;color:#991b1b;">Failed</span>';
         if (itemRow) itemRow.style.background = '#fff5f5';
         confirmationList.push({ file: file.name, title: file.name, ok: false, error: 'Invalid file format' });
@@ -1440,8 +1521,34 @@ function tutForm(t={}){
           <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Tags</label>
             <input id="tf_tg" class="input-text" style="width:100%;" value="${esc(t.tags||'')}" placeholder="css, html, js">
           </div>
-          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">SEO Description</label>
-            <textarea id="tf_d" class="input-text" style="width:100%;height:60px;" placeholder="Search description...">${esc(t.description||'')}</textarea>
+        </div>
+      </div>
+      <div class="wp-card" style="background:#fff;border:1px solid #c3c4c7;border-radius:4px;">
+        <div class="wp-card-header" style="border-bottom:1px solid #c3c4c7;padding:10px 14px;font-weight:600;background:#f6f7f7;">🔍 SEO &amp; Open Graph (OG) Meta</div>
+        <div style="padding:14px;display:flex;flex-direction:column;gap:10px;">
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Meta Title (seoTitle)</label>
+            <input id="tf_seo" class="input-text" style="width:100%;" value="${esc(t.seoTitle||'')}" placeholder="Custom browser & search title...">
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Meta Description</label>
+            <textarea id="tf_d" class="input-text" style="width:100%;height:60px;" placeholder="Search engine description...">${esc(t.description||'')}</textarea>
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Meta Keywords</label>
+            <input id="tf_kw" class="input-text" style="width:100%;" value="${esc(t.keywords||'')}" placeholder="keyword1, keyword2...">
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Open Graph Type (og:type)</label>
+            <select id="tf_ogtype" class="input-text" style="width:100%;">
+              <option value="article" ${t.ogType==='article'?'selected':''}>article</option>
+              <option value="website" ${t.ogType==='website'?'selected':''}>website</option>
+            </select>
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Open Graph Image (og:image)</label>
+            <input id="tf_ogimg" class="input-text" style="width:100%;" value="${esc(t.ogImage||'')}" placeholder="/images/courses/html-banner.png">
+          </div>
+          <div><label style="display:block;font-size:12px;font-weight:600;margin-bottom:4px;">Robots Indexing</label>
+            <select id="tf_noindex" class="input-text" style="width:100%;">
+              <option value="false" ${!t.noindex?'selected':''}>Index &amp; Follow (Default)</option>
+              <option value="true" ${t.noindex?'selected':''}>Noindex, Nofollow</option>
+            </select>
           </div>
         </div>
       </div>
@@ -1483,7 +1590,12 @@ function buildTutContent(){
   const tags=$('tf_tg').value.split(',').map(s=>s.trim()).filter(Boolean);
   const tStr=tags.length?`\ntags: [${tags.map(t=>`"${t}"`).join(', ')}]`:'';
   const img=$('tf_img').value.trim();const iStr=img?`\nimage: "${img}"`:'';
-  return`---\ntitle: "${$('tf_t').value}"\ndescription: "${$('tf_d').value}"\ncategory: "${$('tf_c').value}"\norder: ${$('tf_o').value}\ndate: "${$('tf_dt').value}"\nauthor: "${$('tf_au').value}"${tStr}${iStr}\n---\n\n${$('tf_b').value}`
+  const seo=$('tf_seo').value.trim();const seoStr=seo?`\nseoTitle: "${seo.replace(/"/g, '\\"')}"`:'';
+  const kw=$('tf_kw').value.trim();const kwStr=kw?`\nkeywords: "${kw.replace(/"/g, '\\"')}"`:'';
+  const ogt=$('tf_ogtype').value;const ogtStr=ogt?`\nogType: "${ogt}"`:'';
+  const ogi=$('tf_ogimg').value.trim();const ogiStr=ogi?`\nogImage: "${ogi.replace(/"/g, '\\"')}"`:'';
+  const noi=$('tf_noindex').value==='true'?`\nnoindex: true`:'';
+  return`---\ntitle: "${$('tf_t').value.replace(/"/g, '\\"')}"\ndescription: "${$('tf_d').value.replace(/"/g, '\\"')}"\ncategory: "${$('tf_c').value}"\norder: ${$('tf_o').value}\ndate: "${$('tf_dt').value}"\nauthor: "${$('tf_au').value}"${tStr}${iStr}${seoStr}${kwStr}${ogtStr}${ogiStr}${noi}\n---\n\n${$('tf_b').value}`
 }
 
 // ══ BLOGS ══
