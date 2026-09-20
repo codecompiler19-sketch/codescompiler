@@ -138,145 +138,141 @@ const schemaData = [tutorialSchema, breadcrumbSchema];
     </nav>
   </div>
 
-  <div class="w-full" style="max-width: 1600px; margin: 0 auto;">
-  <div class="flex-1 flex overflow-hidden" style="min-height: 0;">
-    <!-- Sidebar (CodesCompiler Style) -->
-    <aside
-      id="page-sidebar"
-      class="fixed top-[150px] bottom-0 left-0 z-50 md:z-0 w-64 bg-white border-r border-slate-200 transform -translate-x-full transition-transform duration-200 ease-in-out md:relative md:top-0 md:translate-x-0 overflow-y-auto shadow-sm"
-    >
-      <!-- Dark Header Banner (CodesCompiler Style) -->
-      <div class="bg-[#0d1e32] text-white p-3.5 flex items-center gap-3 border-b border-slate-800">
-        <!-- Logo / Image Placeholder -->
-        <div class="w-11 h-11 rounded bg-white/10 border border-white/20 flex items-center justify-center flex-shrink-0 overflow-hidden relative group">
-          <img
-            src={`/images/courses/${normCat}-banner.png`}
-            onerror="this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='flex'"
-            class="w-full h-full object-cover"
-            alt={`${categoryLabel} Banner`}
-          />
-          <div class="flex flex-col items-center justify-center w-full h-full text-white text-[11px] font-extrabold tracking-wider uppercase">
-            {normCat.substring(0, 3)}
-          </div>
-        </div>
-        <div class="min-w-0 flex-1">
-          <h2 class="text-sm font-extrabold tracking-wide uppercase text-white leading-snug truncate">
-            {categoryLabel}
-          </h2>
-          <p class="text-[11px] text-slate-300 font-normal leading-tight mt-0.5 truncate">
-            {categorySubtitle}
-          </p>
-        </div>
-      </div>
-
-      <!-- Chapter links grouped by section with dotted line borders (CodesCompiler Style) -->
-      <nav class="pb-6 flex flex-col" aria-label={`${categoryLabel} chapters`}>
-        {sidebarGroups.map((group) => (
-          <div class="flex flex-col">
-            {group.label && (
-              <div class="px-3.5 pt-3 pb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 bg-slate-100 border-b border-slate-200 flex items-center gap-1.5 sticky top-0 z-10">
-                <span class="w-1.5 h-1.5 rounded-full bg-[#04AA6D]"></span>
-                <span>{group.label}</span>
-              </div>
-            )}
-            {group.items.map((tutorial) => {
-              const tutorialSlug = tutorial.data.permalink || tutorial.slug;
-              const isActive = tutorialSlug === currentSlug;
-              return (
-                <a
-                  href={`/tutorial/${tutorialSlug}`}
-                  aria-current={isActive ? 'page' : undefined}
-                  class={`group flex items-center justify-between px-3.5 py-2 text-[13px] border-b border-dotted border-slate-200 transition-colors duration-150 ${
-                    isActive
-                      ? 'bg-[#e6f4ea] text-slate-900 font-bold'
-                      : 'text-slate-700 hover:bg-slate-50 hover:text-[#04AA6D]'
-                  }`}
-                >
-                  <div class="flex items-center min-w-0 pr-2">
-                    <span class={`w-1.5 h-1.5 rounded-full mr-2.5 flex-shrink-0 ${isActive ? 'bg-[#04AA6D]' : 'bg-slate-300 group-hover:bg-[#04AA6D]'}`}></span>
-                    <span class="truncate">{tutorial.data.title}</span>
-                  </div>
-                  {isActive && (
-                    <svg class="w-3.5 h-3.5 text-slate-600 flex-shrink-0 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                    </svg>
-                  )}
-                </a>
-              );
-            })}
-          </div>
-        ))}
-      </nav>
-    </aside>
-
-    <!-- Overlay backdrop -->
-    <div
-      id="sidebar-backdrop"
-      class="fixed top-[150px] bottom-0 left-0 right-0 bg-black/50 z-30 hidden md:hidden"
-    ></div>
-
-    <div class="flex flex-1 min-w-0">
-      <!-- Article -->
-      <article class="flex-1 min-w-0 px-5 sm:px-8 lg:px-14 py-8 bg-white">
-        <!-- Breadcrumb (Desktop Only) -->
-        <nav class="hidden md:flex text-xs text-gray-400 mb-6 items-center gap-1 flex-wrap" aria-label="Breadcrumb">
-          <a href="/" class="hover:text-[#04AA6D] transition-colors">Home</a>
-          <span>/</span>
-          <a href={`/tutorial/${category}-introduction`} class="hover:text-[#04AA6D] transition-colors capitalize">{category}</a>
-          <span>/</span>
-          <span class="text-gray-600 truncate max-w-[180px]">{title}</span>
-        </nav>
-
-
-
-
-
-        <!-- Prose Content -->
-        <div class="prose prose-gray prose-sm sm:prose-base max-w-none
-          prose-headings:font-bold prose-headings:text-gray-900
-          prose-a:text-[#04AA6D] prose-a:no-underline hover:prose-a:underline
-          prose-code:bg-gray-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-[#c7254e] prose-code:text-sm prose-code:font-normal
-          prose-pre:bg-[#282A35] prose-pre:text-gray-100 prose-pre:rounded-lg
-          prose-blockquote:border-[#04AA6D] prose-blockquote:bg-green-50 prose-blockquote:py-1
-          prose-li:text-gray-700">
-          <slot />
-        </div>
-
-        <!-- Prev / Next -->
-        {(() => {
-          const idx = categoryTutorials.findIndex(t => (t.data.permalink || t.slug) === currentSlug);
-          const prev = idx > 0 ? categoryTutorials[idx - 1] : null;
-          const next = idx < categoryTutorials.length - 1 ? categoryTutorials[idx + 1] : null;
-
-          if (!prev && !next) return null;
-
-          return (
-            <div class="mt-12 pt-8 border-t border-gray-100 flex items-center justify-between">
-              {prev &&
-                <a href={`/tutorial/${prev.data.permalink || prev.slug}`} class="flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-[#04AA6D] transition-colors">
-                  <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-                  {prev.data.title}
-                </a>
-              }
-              {next &&
-                <a href={`/tutorial/${next.data.permalink || next.slug}`} class="flex items-center gap-2 text-sm font-semibold text-[#04AA6D] hover:underline ml-auto">
-                  {next.data.title}
-                  <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </a>
-              }
+  <div class="w-full bg-[#f8fafc] dark:bg-[#0f172a] min-h-screen py-3 sm:py-5 px-2 sm:px-4 lg:px-6">
+    <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row gap-5 lg:gap-6 items-start">
+      <!-- Sidebar (CodesCompiler Style) -->
+      <aside
+        id="page-sidebar"
+        class="fixed top-[150px] bottom-0 left-0 z-50 md:z-0 w-64 bg-white dark:bg-slate-800 border-r md:border border-slate-200/80 dark:border-slate-700/80 transform -translate-x-full transition-transform duration-200 ease-in-out md:relative md:top-0 md:translate-x-0 overflow-y-auto shadow-sm md:rounded-2xl md:sticky md:top-20 md:max-h-[calc(100vh-100px)] flex-shrink-0"
+      >
+        <!-- Dark Header Banner (CodesCompiler Style) -->
+        <div class="bg-[#0d1e32] text-white p-3.5 flex items-center gap-3 border-b border-slate-800">
+          <!-- Logo / Image Placeholder -->
+          <div class="w-11 h-11 rounded bg-white/10 border border-white/20 flex items-center justify-center flex-shrink-0 overflow-hidden relative group">
+            <img
+              src={`/images/courses/${normCat}-banner.png`}
+              onerror="this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='flex'"
+              class="w-full h-full object-cover"
+              alt={`${categoryLabel} Banner`}
+            />
+            <div class="flex flex-col items-center justify-center w-full h-full text-white text-[11px] font-extrabold tracking-wider uppercase">
+              {normCat.substring(0, 3)}
             </div>
-          );
-        })()}
-      </article>
-
-      <!-- Right Sidebar (Ads & related) -->
-      <aside class="hidden xl:block w-72 flex-shrink-0 pt-8 pr-8 pb-8">
-        <div class="sticky top-20 flex flex-col gap-6">
-          <AdSlot format="vertical" />
+          </div>
+          <div class="min-w-0 flex-1">
+            <h2 class="text-sm font-extrabold tracking-wide uppercase text-white leading-snug truncate">
+              {categoryLabel}
+            </h2>
+            <p class="text-[11px] text-slate-300 font-normal leading-tight mt-0.5 truncate">
+              {categorySubtitle}
+            </p>
+          </div>
         </div>
+
+        <!-- Chapter links grouped by section with dotted line borders (CodesCompiler Style) -->
+        <nav class="pb-6 flex flex-col" aria-label={`${categoryLabel} chapters`}>
+          {sidebarGroups.map((group) => (
+            <div class="flex flex-col">
+              {group.label && (
+                <div class="px-3.5 pt-3 pb-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-600 bg-slate-100 dark:bg-slate-800 dark:text-slate-300 border-b border-slate-200 dark:border-slate-700 flex items-center gap-1.5 sticky top-0 z-10">
+                  <span class="w-1.5 h-1.5 rounded-full bg-[#04AA6D]"></span>
+                  <span>{group.label}</span>
+                </div>
+              )}
+              {group.items.map((tutorial) => {
+                const tutorialSlug = tutorial.data.permalink || tutorial.slug;
+                const isActive = tutorialSlug === currentSlug;
+                return (
+                  <a
+                    href={`/tutorial/${tutorialSlug}`}
+                    aria-current={isActive ? 'page' : undefined}
+                    class={`group flex items-center justify-between px-3.5 py-2 text-[13px] border-b border-dotted border-slate-200 dark:border-slate-700/60 transition-colors duration-150 ${
+                      isActive
+                        ? 'bg-[#e6f4ea] dark:bg-emerald-950/40 text-slate-900 dark:text-emerald-300 font-bold'
+                        : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/50 hover:text-[#04AA6D]'
+                    }`}
+                  >
+                    <div class="flex items-center min-w-0 pr-2">
+                      <span class={`w-1.5 h-1.5 rounded-full mr-2.5 flex-shrink-0 ${isActive ? 'bg-[#04AA6D]' : 'bg-slate-300 dark:bg-slate-600 group-hover:bg-[#04AA6D]'}`}></span>
+                      <span class="truncate">{tutorial.data.title}</span>
+                    </div>
+                    {isActive && (
+                      <svg class="w-3.5 h-3.5 text-slate-600 dark:text-emerald-400 flex-shrink-0 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                      </svg>
+                    )}
+                  </a>
+                );
+              })}
+            </div>
+          ))}
+        </nav>
       </aside>
+
+      <!-- Overlay backdrop -->
+      <div
+        id="sidebar-backdrop"
+        class="fixed top-[150px] bottom-0 left-0 right-0 bg-black/50 z-30 hidden md:hidden"
+      ></div>
+
+      <div class="flex flex-1 min-w-0 gap-5 lg:gap-6 items-start">
+        <!-- Main Article White Card Container -->
+        <article class="flex-1 min-w-0 px-6 sm:px-10 lg:px-12 py-8 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200/80 dark:border-slate-700/80 shadow-sm">
+          <!-- Breadcrumb (Desktop Only) -->
+          <nav class="hidden md:flex text-xs text-slate-400 dark:text-slate-400 mb-6 items-center gap-1.5 flex-wrap font-medium" aria-label="Breadcrumb">
+            <a href="/" class="hover:text-[#04AA6D] transition-colors">Home</a>
+            <span>/</span>
+            <a href={`/tutorial/${category}-introduction`} class="hover:text-[#04AA6D] transition-colors capitalize">{category}</a>
+            <span>/</span>
+            <span class="text-slate-700 dark:text-slate-300 font-semibold truncate max-w-[220px]">{title}</span>
+          </nav>
+
+          <!-- Prose Content -->
+          <div class="prose prose-gray prose-sm sm:prose-base max-w-none
+            prose-headings:font-bold prose-headings:text-slate-900 dark:prose-headings:text-white
+            prose-a:text-[#04AA6D] prose-a:no-underline hover:prose-a:underline
+            prose-code:bg-slate-100 dark:prose-code:bg-slate-900 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-[#c7254e] prose-code:text-sm prose-code:font-normal
+            prose-pre:bg-[#282A35] prose-pre:text-gray-100 prose-pre:rounded-xl
+            prose-blockquote:border-[#04AA6D] prose-blockquote:bg-green-50 dark:prose-blockquote:bg-emerald-950/30 prose-blockquote:py-1
+            prose-li:text-slate-700 dark:prose-li:text-slate-300">
+            <slot />
+          </div>
+
+          <!-- Prev / Next -->
+          {(() => {
+            const idx = categoryTutorials.findIndex(t => (t.data.permalink || t.slug) === currentSlug);
+            const prev = idx > 0 ? categoryTutorials[idx - 1] : null;
+            const next = idx < categoryTutorials.length - 1 ? categoryTutorials[idx + 1] : null;
+
+            if (!prev && !next) return null;
+
+            return (
+              <div class="mt-12 pt-8 border-t border-slate-200/80 dark:border-slate-700 flex items-center justify-between">
+                {prev &&
+                  <a href={`/tutorial/${prev.data.permalink || prev.slug}`} class="flex items-center gap-2 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-[#04AA6D] transition-colors">
+                    <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                    {prev.data.title}
+                  </a>
+                }
+                {next &&
+                  <a href={`/tutorial/${next.data.permalink || next.slug}`} class="flex items-center gap-2 text-sm font-semibold text-[#04AA6D] hover:underline ml-auto">
+                    {next.data.title}
+                    <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                  </a>
+                }
+              </div>
+            );
+          })()}
+        </article>
+
+        <!-- Right Sidebar (Ads & related) -->
+        <aside class="hidden xl:block w-72 flex-shrink-0 py-2">
+          <div class="sticky top-20 flex flex-col gap-6">
+            <AdSlot format="vertical" />
+          </div>
+        </aside>
+      </div>
     </div>
-  </div>
   </div>
 
   <script is:inline>
