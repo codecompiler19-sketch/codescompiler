@@ -111,10 +111,10 @@ const schemaData = [
             <!-- Central Portrait Core -->
             <div class="portrait-core absolute inset-[20%] rounded-full overflow-hidden border-4 border-[#14213D] bg-gradient-to-br from-[#EAF6FF] via-[#9AD3FF] to-[#7BB8F5] shadow-[0_0_0_8px_rgba(255,197,49,0.45)]">
               <!-- Real Photo Image element -->
-              <img id="realPhoto" src="/images/jay-vadhvani.jpg" alt="Jay Vadhvani" class="w-full h-full object-cover hidden" onerror="this.classList.add('hidden'); document.getElementById('svgAvatar').classList.remove('hidden');" />
+              <img id="realPhoto" src="/images/jay-vadhvani.png" alt="Jay Vadhvani" class="w-full h-full object-cover" onload="this.classList.remove('hidden'); document.getElementById('svgAvatar')?.classList.add('hidden');" onerror="this.classList.add('hidden'); document.getElementById('svgAvatar')?.classList.remove('hidden');" />
 
               <!-- SVG Avatar Fallback -->
-              <svg id="svgAvatar" viewBox="0 0 300 300" class="w-full h-full" role="img" aria-label="Avatar of Jay Vadhvani">
+              <svg id="svgAvatar" viewBox="0 0 300 300" class="w-full h-full hidden" role="img" aria-label="Avatar of Jay Vadhvani">
                 <!-- Lab coat -->
                 <path d="M34 300 C34 232 90 206 150 206 C210 206 266 232 266 300 Z" fill="#FFFFFF" stroke="#14213D" stroke-width="5" stroke-linejoin="round"/>
                 <path d="M118 210 L150 268 L182 210 Z" fill="#2459E6" stroke="#14213D" stroke-width="5" stroke-linejoin="round"/>
@@ -625,6 +625,13 @@ const schemaData = [
       const uploadInput = document.getElementById('localPhotoUpload');
       const realPhoto = document.getElementById('realPhoto');
       const svgAvatar = document.getElementById('svgAvatar');
+
+      if (realPhoto && svgAvatar) {
+        if (realPhoto.complete && realPhoto.naturalHeight !== 0) {
+          realPhoto.classList.remove('hidden');
+          svgAvatar.classList.add('hidden');
+        }
+      }
 
       if (uploadInput) {
         uploadInput.addEventListener('change', (e) => {
