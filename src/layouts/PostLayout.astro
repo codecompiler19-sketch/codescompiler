@@ -80,7 +80,7 @@ const CATEGORY_MAP: Record<string, { color: string; bg: string; href: string }> 
   'Tabs':                { color: '#0369a1', bg: '#e0f2fe', href: '/blog?cat=tabs' },
   'Calendar':            { color: '#b91c1c', bg: '#fef2f2', href: '/blog?cat=calendar' }
 };
-const catMeta = category ? (CATEGORY_MAP[category] ?? { color: '#6b7280', bg: '#f3f4f6', href: '/blog' }) : null;
+const catMeta = category ? (CATEGORY_MAP[category] ?? { color: '#6b7280', bg: '#f3f4f6', href: '/blog/' }) : null;
 
 // All unique tags across posts
 const allTags = [...new Set(allPosts.flatMap(p => p.data.tags ?? []))].sort();
@@ -89,8 +89,8 @@ const allTags = [...new Set(allPosts.flatMap(p => p.data.tags ?? []))].sort();
 const toc = headings.filter(h => h.depth === 2 || h.depth === 3);
 
 // ── SCHEMA.ORG JSON-LD ─────────────────────────────────────
-const siteUrl = Astro.site ? Astro.site.toString().replace(/\/$/, '') : 'https://app.codescompiler.com';
-const fullUrl = `${siteUrl}/blog/${slug}`;
+const siteUrl = Astro.site ? Astro.site.toString().replace(/\/$/, '') : 'https://codescompiler.com';
+const fullUrl = `${siteUrl}/blog/${slug}/`;
 
 const blogPostingSchema = {
   "@context": "https://schema.org",
@@ -121,8 +121,8 @@ const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Home", "item": siteUrl },
-    { "@type": "ListItem", "position": 2, "name": "Blog", "item": `${siteUrl}/blog` },
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": siteUrl + '/' },
+    { "@type": "ListItem", "position": 2, "name": "Blog", "item": `${siteUrl}/blog/` },
     { "@type": "ListItem", "position": 3, "name": title, "item": fullUrl }
   ]
 };
@@ -148,7 +148,7 @@ const schemaData = [blogPostingSchema, breadcrumbSchema];
       <nav class="post-breadcrumb" aria-label="Breadcrumb">
         <a href="/">Home</a>
         <span class="sep">›</span>
-        <a href="/blog">Posts</a>
+        <a href="/blog/">Posts</a>
         <span class="sep">›</span>
         <span class="current" title={title}>{title}</span>
       </nav>
@@ -176,7 +176,7 @@ const schemaData = [blogPostingSchema, breadcrumbSchema];
         <h3 class="widget-title">📂 Categories</h3>
         <ul class="category-list">
           <li>
-            <a href="/blog" class="cat-link cat-all">
+            <a href="/blog/" class="cat-link cat-all">
               <span class="cat-icon">🌐</span>
               <span class="cat-name">All Posts</span>
               <span class="cat-count">{allPosts.length}</span>
@@ -200,7 +200,7 @@ const schemaData = [blogPostingSchema, breadcrumbSchema];
         <ul class="recent-list">
           {recentPosts.map(post => (
             <li class="recent-item">
-              <a href={`/blog/${post.slug}`} class="recent-link">
+              <a href={`/blog/${post.slug}/`} class="recent-link">
                 {post.data.image && (
                   <img
                     src={post.data.image}
@@ -354,7 +354,7 @@ const schemaData = [blogPostingSchema, breadcrumbSchema];
           <h3 class="related-title">📖 You Might Also Like</h3>
           <div class="related-grid">
             {relatedPosts.map(rp => (
-              <a href={`/blog/${rp.data.permalink || rp.slug}`} class="related-card">
+              <a href={`/blog/${rp.data.permalink || rp.slug}/`} class="related-card">
                 {rp.data.image && (
                   <img src={rp.data.image} alt={rp.data.title} loading="lazy" />
                 )}
@@ -369,7 +369,7 @@ const schemaData = [blogPostingSchema, breadcrumbSchema];
 
       <!-- Back to Posts -->
       <div class="post-footer-nav">
-        <a href="/blog" class="back-btn">← Back to All Posts</a>
+        <a href="/blog/" class="back-btn">← Back to All Posts</a>
       </div>
     </main>
 

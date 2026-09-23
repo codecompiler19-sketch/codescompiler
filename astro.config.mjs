@@ -72,4 +72,5 @@ export default defineConfig({
     copySitemap()
   ],
   site: 'https://codescompiler.com',
+  trailingSlash: 'always',
 });

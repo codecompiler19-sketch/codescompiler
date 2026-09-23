@@ -23,7 +23,7 @@ const {
   title,
   description,
   image = '/og-image.png',
-  canonicalURL = new URL(Astro.url.pathname, Astro.site),
+  canonicalURL,
   seoTitle,
   ogImage,
   ogType: propOgType,
@@ -31,6 +31,22 @@ const {
   keywords,
   schemaData = [],
 } = Astro.props;
+
+// Canonical URL Normalization Function: Ensures a single, consistent trailing-slash format
+const siteOrigin = Astro.site ? Astro.site.origin : 'https://codescompiler.com';
+
+function getCanonicalUrl(rawUrl?: string | URL): string {
+  let path = typeof rawUrl === 'string' ? rawUrl : (rawUrl instanceof URL ? rawUrl.pathname : Astro.url.pathname);
+  // Remove duplicate slashes
+  path = path.replace(/\/+/g, '/');
+  // Add trailing slash to normal HTML routes (excluding static files with extensions)
+  if (!path.endsWith('/') && !path.includes('.')) {
+    path += '/';
+  }
+  return new URL(path, siteOrigin).href;
+}
+
+const canonicalUrl = getCanonicalUrl(canonicalURL);
 
 // The title that goes in <title> tag and OG title
 const pageTitle = seoTitle || title;
@@ -43,13 +59,13 @@ const ogType = propOgType || (Astro.url.pathname.startsWith('/blog/') ? 'article
 
 // All tutorials for the search index (flat list for auto-suggest)
 const tutorialLinks = [
-  { label: 'HTML Tutorial', href: '/tutorial/html-introduction', cat: 'HTML' },
-  { label: 'CSS Tutorial', href: '/tutorial/css-introduction', cat: 'CSS' },
-  { label: 'JavaScript Tutorial', href: '/tutorial/javascript-introduction', cat: 'JavaScript' },
-  { label: 'SEO Tutorial', href: '/tutorial/seo-introduction', cat: 'SEO' },
-  { label: 'Python Tutorial', href: '/tutorial/python-introduction', cat: 'Python' },
-  { label: 'SQL Tutorial', href: '/tutorial/sql-introduction', cat: 'SQL' },
-  { label: 'PHP Tutorial', href: '/tutorial/php-introduction', cat: 'PHP' },
+  { label: 'HTML Tutorial', href: '/tutorial/html-introduction/', cat: 'HTML' },
+  { label: 'CSS Tutorial', href: '/tutorial/css-introduction/', cat: 'CSS' },
+  { label: 'JavaScript Tutorial', href: '/tutorial/javascript-introduction/', cat: 'JavaScript' },
+  { label: 'SEO Tutorial', href: '/tutorial/seo-introduction/', cat: 'SEO' },
+  { label: 'Python Tutorial', href: '/tutorial/python-introduction/', cat: 'Python' },
+  { label: 'SQL Tutorial', href: '/tutorial/sql-introduction/', cat: 'SQL' },
+  { label: 'PHP Tutorial', href: '/tutorial/php-introduction/', cat: 'PHP' },
 ];
 ---
 
@@ -71,15 +87,15 @@ const tutorialLinks = [
     <meta name="title" content={displayTitle} />
     <meta name="description" content={description} />
     {keywords && <meta name="keywords" content={keywords} />}
-    <link rel="canonical" href={String(canonicalURL)} />
+    <link rel="canonical" href={canonicalUrl} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <meta property="og:type" content={ogType} />
-    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:title" content={displayTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={new URL(socialImage, Astro.url)} />
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content={canonicalURL} />
+    <meta property="twitter:url" content={canonicalUrl} />
     <meta property="twitter:title" content={displayTitle} />
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content={new URL(socialImage, Astro.url)} />
@@ -228,10 +244,10 @@ const tutorialLinks = [
           }
         })}
 
-        <a href="/about" class="m-single">About</a>
-        <a href="/contact" class="m-single">Contact</a>
+        <a href="/about/" class="m-single">About</a>
+        <a href="/contact/" class="m-single">Contact</a>
 
-      <a href="/tutorial/html-introduction" class="m-getstarted">🚀 Get Started Free</a>
+      <a href="/tutorial/html-introduction/" class="m-getstarted">🚀 Get Started Free</a>
     </div>
   </header>
 
@@ -267,12 +283,12 @@ const tutorialLinks = [
           <div class="flex flex-col items-center sm:items-start space-y-4">
             <p class="font-medium text-white text-sm uppercase tracking-wider">Quick Links</p>
             <div class="flex flex-col items-center sm:items-start gap-2.5 text-sm">
-              <a href="/about" class="hover:text-white transition-colors text-zinc-400">About Us</a>
-              <a href="/contact" class="hover:text-white transition-colors text-zinc-400">Contact</a>
-              <a href="/privacy-policy" class="hover:text-white transition-colors text-zinc-400">Privacy Policy</a>
-              <a href="/terms-of-service" class="hover:text-white transition-colors text-zinc-400">Terms of Service</a>
-              <a href="/apps" class="hover:text-white transition-colors text-zinc-400">Our Apps</a>
-              <a href="/shri-hanuman-chalisa" class="hover:text-white transition-colors text-zinc-400">Shri Hanuman Chalisa</a>
+              <a href="/about/" class="hover:text-white transition-colors text-zinc-400">About Us</a>
+              <a href="/contact/" class="hover:text-white transition-colors text-zinc-400">Contact</a>
+              <a href="/privacy-policy/" class="hover:text-white transition-colors text-zinc-400">Privacy Policy</a>
+              <a href="/terms-of-service/" class="hover:text-white transition-colors text-zinc-400">Terms of Service</a>
+              <a href="/apps/" class="hover:text-white transition-colors text-zinc-400">Our Apps</a>
+              <a href="/shri-hanuman-chalisa/" class="hover:text-white transition-colors text-zinc-400">Shri Hanuman Chalisa</a>
             </div>
           </div>
 
@@ -280,13 +296,13 @@ const tutorialLinks = [
           <div class="flex flex-col items-center sm:items-start space-y-4">
             <p class="font-medium text-white text-sm uppercase tracking-wider">Languages & Tutorials</p>
             <div class="flex flex-col items-center sm:items-start gap-2.5 text-sm">
-              <a href="/tutorial/html-introduction" class="hover:text-white transition-colors text-zinc-400">HTML</a>
-              <a href="/tutorial/css-introduction" class="hover:text-white transition-colors text-zinc-400">CSS</a>
-              <a href="/tutorial/javascript-introduction" class="hover:text-white transition-colors text-zinc-400">JavaScript</a>
-              <a href="/tutorial/python-introduction" class="hover:text-white transition-colors text-zinc-400">Python</a>
-              <a href="/tutorial/sql-introduction" class="hover:text-white transition-colors text-zinc-400">SQL</a>
-              <a href="/tutorial/php-introduction" class="hover:text-white transition-colors text-zinc-400">PHP</a>
-              <a href="/tutorial/seo-introduction" class="hover:text-white transition-colors text-zinc-400">SEO</a>
+              <a href="/tutorial/html-introduction/" class="hover:text-white transition-colors text-zinc-400">HTML</a>
+              <a href="/tutorial/css-introduction/" class="hover:text-white transition-colors text-zinc-400">CSS</a>
+              <a href="/tutorial/javascript-introduction/" class="hover:text-white transition-colors text-zinc-400">JavaScript</a>
+              <a href="/tutorial/python-introduction/" class="hover:text-white transition-colors text-zinc-400">Python</a>
+              <a href="/tutorial/sql-introduction/" class="hover:text-white transition-colors text-zinc-400">SQL</a>
+              <a href="/tutorial/php-introduction/" class="hover:text-white transition-colors text-zinc-400">PHP</a>
+              <a href="/tutorial/seo-introduction/" class="hover:text-white transition-colors text-zinc-400">SEO</a>
             </div>
           </div>
 
@@ -294,12 +310,12 @@ const tutorialLinks = [
           <div class="flex flex-col items-center sm:items-start space-y-4">
             <p class="font-medium text-white text-sm uppercase tracking-wider">Free Books</p>
             <div class="flex flex-col items-center sm:items-start gap-2.5 text-sm">
-              <a href="/books/html-for-kids" class="hover:text-white transition-colors text-zinc-400">HTML for Kids</a>
-              <a href="/books/css-for-kids" class="hover:text-white transition-colors text-zinc-400">CSS for Kids</a>
-              <a href="/books/javascript-for-kids" class="hover:text-white transition-colors text-zinc-400">JavaScript for Kids</a>
-              <a href="/books/python-for-kids" class="hover:text-white transition-colors text-zinc-400">Python for Kids</a>
-              <a href="/books/c-programming-for-kids" class="hover:text-white transition-colors text-zinc-400">C Programming</a>
-              <a href="/books" class="hover:text-white transition-colors text-zinc-400 font-medium text-xs text-[#04AA6D] uppercase tracking-wider pt-1">View All Books →</a>
+              <a href="/books/html-for-kids/" class="hover:text-white transition-colors text-zinc-400">HTML for Kids</a>
+              <a href="/books/css-for-kids/" class="hover:text-white transition-colors text-zinc-400">CSS for Kids</a>
+              <a href="/books/javascript-for-kids/" class="hover:text-white transition-colors text-zinc-400">JavaScript for Kids</a>
+              <a href="/books/python-for-kids/" class="hover:text-white transition-colors text-zinc-400">Python for Kids</a>
+              <a href="/books/c-programming-for-kids/" class="hover:text-white transition-colors text-zinc-400">C Programming</a>
+              <a href="/books/" class="hover:text-white transition-colors text-zinc-400 font-medium text-xs text-[#04AA6D] uppercase tracking-wider pt-1">View All Books →</a>
             </div>
           </div>
 

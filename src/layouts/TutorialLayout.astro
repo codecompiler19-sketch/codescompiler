@@ -82,8 +82,8 @@ const categorySubtitle = CATEGORY_SUBTITLES[normCat] || `${categoryLabel} Tutori
 const toc = headings.filter(h => h.depth === 2 || h.depth === 3);
 
 // ── SCHEMA.ORG JSON-LD ─────────────────────────────────────
-const siteUrl = Astro.site ? Astro.site.toString().replace(/\/$/, '') : 'https://app.codescompiler.com';
-const fullUrl = `${siteUrl}/tutorial/${currentSlug}`;
+const siteUrl = Astro.site ? Astro.site.toString().replace(/\/$/, '') : 'https://codescompiler.com';
+const fullUrl = `${siteUrl}/tutorial/${currentSlug}/`;
 
 const tutorialSchema = {
   "@context": "https://schema.org",
@@ -112,8 +112,8 @@ const breadcrumbSchema = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   "itemListElement": [
-    { "@type": "ListItem", "position": 1, "name": "Home", "item": siteUrl },
-    { "@type": "ListItem", "position": 2, "name": `${categoryLabel} Tutorial`, "item": `${siteUrl}/tutorial/${category}-introduction` },
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": siteUrl + '/' },
+    { "@type": "ListItem", "position": 2, "name": `${categoryLabel} Tutorial`, "item": `${siteUrl}/tutorial/${category}-introduction/` },
     { "@type": "ListItem", "position": 3, "name": title, "item": fullUrl }
   ]
 };
@@ -133,7 +133,7 @@ const schemaData = [tutorialSchema, breadcrumbSchema];
     <nav class="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5 font-medium truncate max-w-[55%]" aria-label="Breadcrumb">
       <a href="/" class="hover:text-[#04AA6D] transition-colors">Home</a>
       <span>/</span>
-      <a href={`/tutorial/${category}-introduction`} class="hover:text-[#04AA6D] transition-colors capitalize">{category}</a>
+      <a href={`/tutorial/${category}-introduction/`} class="hover:text-[#04AA6D] transition-colors capitalize">{category}</a>
       <span>/</span>
       <span class="text-slate-900 dark:text-slate-100 font-semibold truncate">{title}</span>
     </nav>
@@ -185,7 +185,7 @@ const schemaData = [tutorialSchema, breadcrumbSchema];
                 const isActive = tutorialSlug === currentSlug;
                 return (
                   <a
-                    href={`/tutorial/${tutorialSlug}`}
+                    href={`/tutorial/${tutorialSlug}/`}
                     aria-current={isActive ? 'page' : undefined}
                     class={`group flex items-center justify-between px-3.5 py-2.5 text-[13px] border-b border-dotted border-slate-200 dark:border-slate-700/60 transition-colors duration-150 ${
                       isActive
@@ -223,7 +223,7 @@ const schemaData = [tutorialSchema, breadcrumbSchema];
           <nav class="hidden md:flex text-xs text-slate-400 dark:text-slate-400 mb-6 items-center gap-1.5 flex-wrap font-medium" aria-label="Breadcrumb">
             <a href="/" class="hover:text-[#04AA6D] transition-colors">Home</a>
             <span>/</span>
-            <a href={`/tutorial/${category}-introduction`} class="hover:text-[#04AA6D] transition-colors capitalize">{category}</a>
+            <a href={`/tutorial/${category}-introduction/`} class="hover:text-[#04AA6D] transition-colors capitalize">{category}</a>
             <span>/</span>
             <span class="text-slate-700 dark:text-slate-300 font-semibold truncate max-w-[220px]">{title}</span>
           </nav>
@@ -250,13 +250,13 @@ const schemaData = [tutorialSchema, breadcrumbSchema];
             return (
               <div class="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-slate-200/80 dark:border-slate-700 flex items-center justify-between gap-2 flex-wrap sm:flex-nowrap">
                 {prev &&
-                  <a href={`/tutorial/${prev.data.permalink || prev.slug}`} class="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-[#04AA6D] transition-colors truncate max-w-[48%]">
+                  <a href={`/tutorial/${prev.data.permalink || prev.slug}/`} class="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-[#04AA6D] transition-colors truncate max-w-[48%]">
                     <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
                     <span class="truncate">{prev.data.title}</span>
                   </a>
                 }
                 {next &&
-                  <a href={`/tutorial/${next.data.permalink || next.slug}`} class="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#04AA6D] hover:underline ml-auto truncate max-w-[48%] justify-end">
+                  <a href={`/tutorial/${next.data.permalink || next.slug}/`} class="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#04AA6D] hover:underline ml-auto truncate max-w-[48%] justify-end">
                     <span class="truncate">{next.data.title}</span>
                     <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                   </a>
