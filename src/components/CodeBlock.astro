@@ -31,45 +31,60 @@ const rawCode = unescapeHtml(htmlContent);
 
 // Accurate Language Detection from props, code class, heuristics, or pathname
 function detectLanguage(props: Record<string, any>, htmlContent: string, rawCode: string, pathname: string): string {
-  const propClass = (props.class || props['data-language'] || props.lang || props.language || '').toLowerCase();
-  
+  const propClass = String(props.class || '').toLowerCase();
+  const propLang = String(props.lang || props.language || props['data-language'] || '').toLowerCase();
+
   const codeClassMatch = htmlContent.match(/<code[^>]*class=["']([^"']+)["']/i) || htmlContent.match(/class=["']([^"']*lang[^"']*)["']/i);
   const codeClass = codeClassMatch ? codeClassMatch[1].toLowerCase() : '';
+
   const preClassMatch = htmlContent.match(/<pre[^>]*class=["']([^"']+)["']/i);
   const preClass = preClassMatch ? preClassMatch[1].toLowerCase() : '';
 
   const dataLangMatch = htmlContent.match(/data-language=["']([^"']+)["']/i);
   const dataLang = dataLangMatch ? dataLangMatch[1].toLowerCase() : '';
-  
-  const combined = `${propClass} ${codeClass} ${preClass} ${dataLang} ${htmlContent.slice(0, 300)}`.toLowerCase();
 
-  // 1. Explicit Language Matches
-  if (/\bphp\b|language-php|lang-php/i.test(combined)) return 'php';
-  if (/\b(python|py)\b|language-python|lang-python/i.test(combined)) return 'python';
-  if (/\b(sql|mysql|postgresql)\b|language-sql|lang-sql/i.test(combined)) return 'sql';
-  if (/\b(javascript|js|jsx|typescript|ts)\b|language-js|lang-js|language-javascript/i.test(combined)) return 'javascript';
-  if (/\bcss\b|language-css|lang-css/i.test(combined)) return 'css';
-  if (/\bjson\b|language-json|lang-json/i.test(combined)) return 'json';
-  if (/\b(bash|sh|shell)\b|language-bash|lang-bash/i.test(combined)) return 'bash';
-  if (/\b(html|xml|htm)\b|language-html|lang-html/i.test(combined)) return 'html';
+  const langMarkers = `${propClass} ${propLang} ${codeClass} ${preClass} ${dataLang}`;
 
-  // 2. Code Content Heuristics
+  // 1. Explicit Language Matches from class / props
+  if (/\b(javascript|js|jsx|typescript|ts)\b|language-js|lang-js|language-javascript|lang-javascript/i.test(langMarkers)) return 'javascript';
+  if (/\bcss\b|language-css|lang-css/i.test(langMarkers)) return 'css';
+  if (/\b(html|xml|htm)\b|language-html|lang-html/i.test(langMarkers)) return 'html';
+  if (/\b(python|py)\b|language-python|lang-python/i.test(langMarkers)) return 'python';
+  if (/\bphp\b|language-php|lang-php/i.test(langMarkers)) return 'php';
+  if (/\b(sql|mysql|postgresql)\b|language-sql|lang-sql/i.test(langMarkers)) return 'sql';
+  if (/\bjson\b|language-json|lang-json/i.test(langMarkers)) return 'json';
+  if (/\b(bash|sh|shell)\b|language-bash|lang-bash/i.test(langMarkers)) return 'bash';
+
+  // 2. Code Content Heuristics on raw unescaped code string ONLY
   const trimmed = rawCode.trim();
-  if (/<\?php|\?>|\$_(GET|POST|SESSION|SERVER|COOKIE|REQUEST)/i.test(trimmed)) return 'php';
-  if (/#.*python|def\s+|import\s+|from\s+.*import|print\s*\(|if\s+__name__|#!\/usr\/bin/i.test(trimmed)) return 'python';
-  if (/\b(SELECT|INSERT\s+INTO|UPDATE|DELETE\s+FROM|CREATE\s+TABLE|ALTER\s+TABLE)\b/i.test(trimmed)) return 'sql';
-  if (/<[a-z1-6][^>]*>/i.test(trimmed) && (trimmed.includes('</') || trimmed.includes('/>'))) return 'html';
-  if (/([\.#]?[a-zA-Z0-9_-]+\s*\{|[a-zA-Z-]+\s*:\s*[^;]+;)/.test(trimmed)) return 'css';
-  if (/\b(const|let|var|function|console\.log)\b/.test(trimmed)) return 'javascript';
 
-  // 3. Fallback to page category from Astro.url.pathname
+  // HTML heuristics
+  if (/^<!doctype html|^<html|^<head|^<body/i.test(trimmed)) return 'html';
+  if (/<[a-z1-6][^>]*>/i.test(trimmed) && (trimmed.includes('</') || trimmed.includes('/>'))) return 'html';
+
+  // CSS heuristics
+  if (/^[\.#a-zA-Z0-9_\-\*,\s:>+~]+\s*\{[\s\S]*?\}/.test(trimmed) || /@media|@keyframes|box-sizing|font-family|background:|margin:|padding:|color:/i.test(trimmed)) return 'css';
+
+  // JavaScript heuristics
+  if (/\b(const|let|var|function|return|console\.log|document\.|window\.|addEventListener)\b/.test(trimmed)) return 'javascript';
+
+  // SQL heuristics
+  if (/\b(SELECT\s+|INSERT\s+INTO|UPDATE\s+|DELETE\s+FROM|CREATE\s+TABLE|ALTER\s+TABLE)\b/i.test(trimmed)) return 'sql';
+
+  // Python heuristics
+  if (/#.*python|def\s+|import\s+|from\s+.*import|print\s*\(|if\s+__name__/i.test(trimmed)) return 'python';
+
+  // PHP heuristics
+  if (/<\?php|\?>|\$_(GET|POST|SESSION|SERVER)/i.test(trimmed)) return 'php';
+
+  // 3. Fallback to pathname for tutorial sections
   const path = pathname.toLowerCase();
-  if (path.includes('/php-') || path.includes('/php')) return 'php';
-  if (path.includes('/python-') || path.includes('/python')) return 'python';
-  if (path.includes('/sql-') || path.includes('/sql')) return 'sql';
-  if (path.includes('/javascript-') || path.includes('/js-') || path.includes('/javascript')) return 'javascript';
-  if (path.includes('/css-') || path.includes('/css')) return 'css';
-  if (path.includes('/html-') || path.includes('/html')) return 'html';
+  if (path.includes('/tutorial/javascript') || path.includes('/tutorial/js')) return 'javascript';
+  if (path.includes('/tutorial/css')) return 'css';
+  if (path.includes('/tutorial/html')) return 'html';
+  if (path.includes('/tutorial/python')) return 'python';
+  if (path.includes('/tutorial/php')) return 'php';
+  if (path.includes('/tutorial/sql')) return 'sql';
 
   return 'html';
 }
@@ -140,10 +155,11 @@ function checkRunnableHtml(code: string, langClass: string): boolean {
 }
 
 const propClassStr = (props.class || props['data-language'] || props.lang || '').toLowerCase();
-const isRunnable = (lang === 'html' && checkRunnableHtml(rawCode, propClassStr)) || propClassStr.includes('runnable') || propClassStr.includes('interactive');
-const isSqlEditor = propClassStr.includes('sql-editor') || propClassStr.includes('sql-runnable');
-const isPythonEditor = propClassStr.includes('python-editor') || propClassStr.includes('py-runnable');
-const isPhpEditor = lang === 'php' || propClassStr.includes('php-editor') || propClassStr.includes('php-runnable');
+const isBlogPage = pathname.toLowerCase().includes('/blog');
+const isRunnable = !isBlogPage && ((lang === 'html' && checkRunnableHtml(rawCode, propClassStr)) || propClassStr.includes('runnable') || propClassStr.includes('interactive'));
+const isSqlEditor = !isBlogPage && (propClassStr.includes('sql-editor') || propClassStr.includes('sql-runnable'));
+const isPythonEditor = !isBlogPage && (propClassStr.includes('python-editor') || propClassStr.includes('py-runnable'));
+const isPhpEditor = !isBlogPage && (propClassStr.includes('php-editor') || propClassStr.includes('php-runnable'));
 
 // 100% Uniform OneDark Theme Syntax Tokenizer (Matching CodeMirror Editor Theme)
 function highlightSyntax(code: string, lang: string): string {
@@ -354,14 +370,16 @@ const highlightedCode = highlightSyntax(rawCode, lang);
         <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
         <span class="w-3 h-3 rounded-full bg-yellow-400/80"></span>
         <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
-        <span class="ml-3 font-bold text-gray-400 uppercase tracking-wider">{langLabel} SYNTAX</span>
+        <span class="ml-3 font-bold text-gray-300 uppercase tracking-wider">{langLabel} CODE</span>
       </div>
       <button 
         type="button"
-        onclick="navigator.clipboard.writeText(this.parentElement.nextElementSibling.innerText); this.innerText='Copied!'; setTimeout(()=>this.innerText='Copy', 2000);" 
-        class="px-3 py-1 rounded bg-[#04AA6D] hover:bg-[#038a58] text-white font-sans text-xs font-bold transition-colors cursor-pointer"
+        onclick="navigator.clipboard.writeText(this.parentElement.nextElementSibling.innerText); const orig=this.innerHTML; this.innerHTML='<span>Copied!</span>'; setTimeout(()=>this.innerHTML=orig, 2000);" 
+        class="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-[#04AA6D] hover:bg-[#038a58] text-white font-sans text-xs font-bold transition-colors cursor-pointer"
+        aria-label="Copy code to clipboard"
       >
-        Copy
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        <span>Copy</span>
       </button>
     </div>
     <!-- Uniform Pre Code Container matching OneDark 14px / leading-relaxed font -->

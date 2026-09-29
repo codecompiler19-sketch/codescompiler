@@ -2,6 +2,8 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import PostLayout from '../../layouts/PostLayout.astro';
 
+import CodeBlock from '../../components/CodeBlock.astro';
+
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
   // Only build pages for published posts. Draft & scheduled = 404
@@ -38,6 +40,6 @@ const { Content, headings } = await post.render();
   noindex={post.data.noindex ?? false}
   headings={headings}
 >
-  <Content />
+  <Content components={{ pre: CodeBlock }} />
 </PostLayout>
 
