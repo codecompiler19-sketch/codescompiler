@@ -51,7 +51,7 @@ const CATEGORY_COLORS: Record<string, { color: string; bg: string }> = {
       <h1 class="text-5xl sm:text-6xl md:text-7xl font-black text-white leading-none tracking-tight mb-6" set:html={theme.heroTitle} />
     ) : (
       <h1 class="text-5xl sm:text-6xl md:text-7xl font-black text-white leading-none tracking-tight mb-6">
-        Learn HTML, CSS &<br/>
+        Learn HTML, CSS &amp;<br/>
         <span class="relative inline-block mt-2">
           <span class="relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-[#04AA6D] to-emerald-300">JavaScript Online</span>
           <span class="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-[#04AA6D] to-emerald-300 rounded-full opacity-50"></span>
@@ -64,7 +64,7 @@ const CATEGORY_COLORS: Record<string, { color: string; bg: string }> = {
       <p class="text-gray-400 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed mb-10" set:html={theme.heroSubtitle} />
     ) : (
       <p class="text-gray-400 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed mb-10">
-        Interactive, hands-on tutorials for <strong class="text-orange-400">HTML</strong>, <strong class="text-blue-400">CSS</strong>, and <strong class="text-yellow-400">JavaScript</strong>. 
+        Interactive, hands-on tutorials for <strong class="text-orange-400">HTML</strong>, <strong class="text-blue-400">CSS</strong>, and <strong class="text-yellow-400">JavaScript</strong>.
         Write real code in the browser and see results instantly — no setup, no downloads.
       </p>
     )}
@@ -100,20 +100,30 @@ const CATEGORY_COLORS: Record<string, { color: string; bg: string }> = {
   </div>
 </section>
 
-<section class="w-full bg-[#04AA6D]">
-  <div class="max-w-5xl mx-auto px-5 py-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center text-white">
-    {[
-      { v: '50+',  l: 'Tutorial Chapters', icon: '📖' },
-      { v: '200+', l: 'Code Examples',     icon: '💻' },
-      { v: '3',    l: 'Learning Paths',    icon: '🛤️'  },
-      { v: '$0',   l: 'Always Free',       icon: '🎁'  },
-    ].map(s => (
-      <div class="flex flex-col items-center gap-1">
-        <span class="text-2xl">{s.icon}</span>
-        <div class="text-3xl font-black">{s.v}</div>
-        <div class="text-green-100 text-sm">{s.l}</div>
-      </div>
-    ))}
+<!-- Responsive stats bar: clean line icons, cards on desktop, stacked/two-column on small screens -->
+<section class="w-full border-y border-emerald-700/20 bg-gradient-to-r from-emerald-600 via-[#04AA6D] to-emerald-600 text-white" aria-label="CodesCompiler highlights">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
+      {[
+        { v: '50+', l: 'Tutorial Chapters', icon: 'book' },
+        { v: '200+', l: 'Code Examples', icon: 'code' },
+        { v: '3', l: 'Learning Paths', icon: 'route' },
+        { v: '$0', l: 'Always Free', icon: 'spark' },
+      ].map(s => (
+        <div class="stats-card group flex items-center sm:justify-center gap-3 sm:gap-4 min-h-[68px] sm:min-h-[76px] rounded-xl px-3 sm:px-5 py-2.5 sm:py-3 transition-all duration-200 hover:bg-white/10">
+          <span class="stats-icon flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-lg bg-white/10 ring-1 ring-white/15 text-white" aria-hidden="true">
+            {s.icon === 'book' && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-5 w-5 sm:h-[22px] sm:w-[22px]"><path stroke-linecap="round" stroke-linejoin="round" d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5v-15Z"/><path stroke-linecap="round" d="M4 20.5A2.5 2.5 0 0 1 6.5 18H20M8 7h8M8 11h6"/></svg>}
+            {s.icon === 'code' && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-5 w-5 sm:h-[22px] sm:w-[22px]"><path stroke-linecap="round" stroke-linejoin="round" d="m8.5 8-4 4 4 4M15.5 8l4 4-4 4M13.5 5l-3 14"/></svg>}
+            {s.icon === 'route' && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-5 w-5 sm:h-[22px] sm:w-[22px]"><circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path stroke-linecap="round" stroke-linejoin="round" d="M8.5 6c4 0 1.5 8 6 8h1M18 15.5c0-3.5-2-5.5-5-5.5H12"/></svg>}
+            {s.icon === 'spark' && <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-5 w-5 sm:h-[22px] sm:w-[22px]"><path stroke-linecap="round" stroke-linejoin="round" d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3ZM19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15Z"/></svg>}
+          </span>
+          <span class="min-w-0 text-left sm:text-center">
+            <span class="block text-[1.45rem] sm:text-3xl font-extrabold tracking-tight leading-none">{s.v}</span>
+            <span class="mt-1 block text-[11px] sm:text-sm font-medium text-emerald-50/95 leading-tight truncate sm:whitespace-normal">{s.l}</span>
+          </span>
+        </div>
+      ))}
+    </div>
   </div>
 </section>
 
@@ -124,15 +134,11 @@ const CATEGORY_COLORS: Record<string, { color: string; bg: string }> = {
       <h2 class="text-3xl sm:text-4xl font-black text-gray-900 mt-2" set:html={theme.coursesTitle || 'Popular Learning Paths'} />
       <p class="text-gray-500 mt-3 max-w-lg mx-auto" set:html={theme.coursesSubtitle || 'Choose a path to start coding immediately.'} />
     </div>
-
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <a href="/tutorial/html-introduction/" class="group relative bg-white border-2 border-transparent hover:border-orange-300 rounded-2xl p-7 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden block">
         <div class="absolute top-0 right-0 w-24 h-24 bg-orange-50 rounded-full -translate-x-4 -translate-y-10 group-hover:scale-150 transition-transform duration-500"></div>
         <div class="relative">
-          <div class="flex items-center justify-between mb-5">
-            <div class="w-14 h-14 rounded-xl bg-orange-100 flex items-center justify-center"><span class="text-orange-600 font-black text-xl font-mono">&lt;/&gt;</span></div>
-            <span class="text-xs font-bold bg-orange-100 text-orange-600 px-3 py-1 rounded-full">Beginner</span>
-          </div>
+          <div class="flex items-center justify-between mb-5"><div class="w-14 h-14 rounded-xl bg-orange-100 flex items-center justify-center"><span class="text-orange-600 font-black text-xl font-mono">&lt;/&gt;</span></div><span class="text-xs font-bold bg-orange-100 text-orange-600 px-3 py-1 rounded-full">Beginner</span></div>
           <h3 class="text-xl font-bold text-gray-900 mb-2">HTML</h3>
           <p class="text-gray-500 text-sm leading-relaxed mb-4">The skeleton of every webpage. Learn to structure content, create forms, add images, and build solid foundations.</p>
           <div class="flex items-center gap-3 text-xs text-gray-400 mb-5"><span class="flex items-center gap-1">📚 12 chapters</span><span class="flex items-center gap-1">⏱ ~3 hours</span></div>
@@ -142,10 +148,7 @@ const CATEGORY_COLORS: Record<string, { color: string; bg: string }> = {
       <a href="/tutorial/css-introduction/" class="group relative bg-white border-2 border-transparent hover:border-blue-300 rounded-2xl p-7 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden block">
         <div class="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-full -translate-x-4 -translate-y-10 group-hover:scale-150 transition-transform duration-500"></div>
         <div class="relative">
-          <div class="flex items-center justify-between mb-5">
-            <div class="w-14 h-14 rounded-xl bg-blue-100 flex items-center justify-center"><span class="text-blue-600 font-black text-xl font-mono">{ }</span></div>
-            <span class="text-xs font-bold bg-blue-100 text-blue-600 px-3 py-1 rounded-full">Step 2</span>
-          </div>
+          <div class="flex items-center justify-between mb-5"><div class="w-14 h-14 rounded-xl bg-blue-100 flex items-center justify-center"><span class="text-blue-600 font-black text-xl font-mono">{ }</span></div><span class="text-xs font-bold bg-blue-100 text-blue-600 px-3 py-1 rounded-full">Step 2</span></div>
           <h3 class="text-xl font-bold text-gray-900 mb-2">CSS</h3>
           <p class="text-gray-500 text-sm leading-relaxed mb-4">Make your HTML beautiful. Master colors, layouts, Flexbox, Grid, animations, and fully responsive designs.</p>
           <div class="flex items-center gap-3 text-xs text-gray-400 mb-5"><span class="flex items-center gap-1">📚 15 chapters</span><span class="flex items-center gap-1">⏱ ~4 hours</span></div>
@@ -155,10 +158,7 @@ const CATEGORY_COLORS: Record<string, { color: string; bg: string }> = {
       <a href="/tutorial/javascript-introduction/" class="group relative bg-white border-2 border-transparent hover:border-yellow-300 rounded-2xl p-7 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden block">
         <div class="absolute top-0 right-0 w-24 h-24 bg-yellow-50 rounded-full -translate-x-4 -translate-y-10 group-hover:scale-150 transition-transform duration-500"></div>
         <div class="relative">
-          <div class="flex items-center justify-between mb-5">
-            <div class="w-14 h-14 rounded-xl bg-yellow-100 flex items-center justify-center"><span class="text-yellow-600 font-black text-xl font-mono">JS</span></div>
-            <span class="text-xs font-bold bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full">Step 3</span>
-          </div>
+          <div class="flex items-center justify-between mb-5"><div class="w-14 h-14 rounded-xl bg-yellow-100 flex items-center justify-center"><span class="text-yellow-600 font-black text-xl font-mono">JS</span></div><span class="text-xs font-bold bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full">Step 3</span></div>
           <h3 class="text-xl font-bold text-gray-900 mb-2">JavaScript</h3>
           <p class="text-gray-500 text-sm leading-relaxed mb-4">Bring pages to life. Handle clicks, fetch APIs, build dynamic interfaces, and write real programs.</p>
           <div class="flex items-center gap-3 text-xs text-gray-400 mb-5"><span class="flex items-center gap-1">📚 18 chapters</span><span class="flex items-center gap-1">⏱ ~6 hours</span></div>
@@ -168,10 +168,7 @@ const CATEGORY_COLORS: Record<string, { color: string; bg: string }> = {
       <a href="/tutorial/python-introduction/" class="group relative bg-white border-2 border-transparent hover:border-sky-300 rounded-2xl p-7 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden block">
         <div class="absolute top-0 right-0 w-24 h-24 bg-sky-50 rounded-full -translate-x-4 -translate-y-10 group-hover:scale-150 transition-transform duration-500"></div>
         <div class="relative">
-          <div class="flex items-center justify-between mb-5">
-            <div class="w-14 h-14 rounded-xl bg-sky-100 flex items-center justify-center"><span class="text-sky-700 font-black text-xl font-mono">PY</span></div>
-            <span class="text-xs font-bold bg-sky-100 text-sky-800 px-3 py-1 rounded-full">Backend</span>
-          </div>
+          <div class="flex items-center justify-between mb-5"><div class="w-14 h-14 rounded-xl bg-sky-100 flex items-center justify-center"><span class="text-sky-700 font-black text-xl font-mono">PY</span></div><span class="text-xs font-bold bg-sky-100 text-sky-800 px-3 py-1 rounded-full">Backend</span></div>
           <h3 class="text-xl font-bold text-gray-900 mb-2">Python</h3>
           <p class="text-gray-500 text-sm leading-relaxed mb-4">Master Python programming syntax, data structures, algorithms, object-oriented concepts, and automation.</p>
           <div class="flex items-center gap-3 text-xs text-gray-400 mb-5"><span class="flex items-center gap-1">📚 20 chapters</span><span class="flex items-center gap-1">⏱ ~7 hours</span></div>
@@ -181,10 +178,7 @@ const CATEGORY_COLORS: Record<string, { color: string; bg: string }> = {
       <a href="/tutorial/sql-introduction/" class="group relative bg-white border-2 border-transparent hover:border-indigo-300 rounded-2xl p-7 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden block">
         <div class="absolute top-0 right-0 w-24 h-24 bg-indigo-50 rounded-full -translate-x-4 -translate-y-10 group-hover:scale-150 transition-transform duration-500"></div>
         <div class="relative">
-          <div class="flex items-center justify-between mb-5">
-            <div class="w-14 h-14 rounded-xl bg-indigo-100 flex items-center justify-center"><span class="text-indigo-700 font-black text-xl font-mono">SQL</span></div>
-            <span class="text-xs font-bold bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full">Database</span>
-          </div>
+          <div class="flex items-center justify-between mb-5"><div class="w-14 h-14 rounded-xl bg-indigo-100 flex items-center justify-center"><span class="text-indigo-700 font-black text-xl font-mono">SQL</span></div><span class="text-xs font-bold bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full">Database</span></div>
           <h3 class="text-xl font-bold text-gray-900 mb-2">SQL</h3>
           <p class="text-gray-500 text-sm leading-relaxed mb-4">Learn relational databases, query design, joins, filtering, indexing, and data management.</p>
           <div class="flex items-center gap-3 text-xs text-gray-400 mb-5"><span class="flex items-center gap-1">📚 14 chapters</span><span class="flex items-center gap-1">⏱ ~4 hours</span></div>
@@ -194,10 +188,7 @@ const CATEGORY_COLORS: Record<string, { color: string; bg: string }> = {
       <a href="/tutorial/php-introduction/" class="group relative bg-white border-2 border-transparent hover:border-purple-300 rounded-2xl p-7 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden block">
         <div class="absolute top-0 right-0 w-24 h-24 bg-purple-50 rounded-full -translate-x-4 -translate-y-10 group-hover:scale-150 transition-transform duration-500"></div>
         <div class="relative">
-          <div class="flex items-center justify-between mb-5">
-            <div class="w-14 h-14 rounded-xl bg-purple-100 flex items-center justify-center"><span class="text-purple-700 font-black text-xl font-mono">PHP</span></div>
-            <span class="text-xs font-bold bg-purple-100 text-purple-800 px-3 py-1 rounded-full">Web Scripting</span>
-          </div>
+          <div class="flex items-center justify-between mb-5"><div class="w-14 h-14 rounded-xl bg-purple-100 flex items-center justify-center"><span class="text-purple-700 font-black text-xl font-mono">PHP</span></div><span class="text-xs font-bold bg-purple-100 text-purple-800 px-3 py-1 rounded-full">Web Scripting</span></div>
           <h3 class="text-xl font-bold text-gray-900 mb-2">PHP</h3>
           <p class="text-gray-500 text-sm leading-relaxed mb-4">Build server-side applications, form handlers, sessions, and dynamic database-driven web pages.</p>
           <div class="flex items-center gap-3 text-xs text-gray-400 mb-5"><span class="flex items-center gap-1">📚 16 chapters</span><span class="flex items-center gap-1">⏱ ~5 hours</span></div>
@@ -207,10 +198,7 @@ const CATEGORY_COLORS: Record<string, { color: string; bg: string }> = {
       <a href="/tutorial/seo-introduction/" class="group relative bg-white border-2 border-transparent hover:border-emerald-300 rounded-2xl p-7 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden block">
         <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-full -translate-x-4 -translate-y-10 group-hover:scale-150 transition-transform duration-500"></div>
         <div class="relative">
-          <div class="flex items-center justify-between mb-5">
-            <div class="w-14 h-14 rounded-xl bg-emerald-100 flex items-center justify-center"><span class="text-emerald-700 font-black text-xl font-mono">SEO</span></div>
-            <span class="text-xs font-bold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">Optimization</span>
-          </div>
+          <div class="flex items-center justify-between mb-5"><div class="w-14 h-14 rounded-xl bg-emerald-100 flex items-center justify-center"><span class="text-emerald-700 font-black text-xl font-mono">SEO</span></div><span class="text-xs font-bold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">Optimization</span></div>
           <h3 class="text-xl font-bold text-gray-900 mb-2">SEO</h3>
           <p class="text-gray-500 text-sm leading-relaxed mb-4">Learn Search Engine Optimization principles, technical site audits, meta tags, sitemaps, and ranking strategies.</p>
           <div class="flex items-center gap-3 text-xs text-gray-400 mb-5"><span class="flex items-center gap-1">📚 10 chapters</span><span class="flex items-center gap-1">⏱ ~3 hours</span></div>
@@ -240,10 +228,7 @@ const CATEGORY_COLORS: Record<string, { color: string; bg: string }> = {
       ].map(f => (
         <div class="flex gap-4 p-5 rounded-xl hover:bg-gray-50 transition-colors group">
           <div class="text-3xl flex-shrink-0 pt-0.5 group-hover:scale-110 transition-transform">{f.emoji}</div>
-          <div>
-            <h3 class="font-bold text-gray-900 mb-1">{f.title}</h3>
-            <p class="text-gray-500 text-sm leading-relaxed">{f.desc}</p>
-          </div>
+          <div><h3 class="font-bold text-gray-900 mb-1">{f.title}</h3><p class="text-gray-500 text-sm leading-relaxed">{f.desc}</p></div>
         </div>
       ))}
     </div>
@@ -262,32 +247,17 @@ const CATEGORY_COLORS: Record<string, { color: string; bg: string }> = {
       {latestPosts.map(post => {
         const catColor = CATEGORY_COLORS[post.data.category] ?? { color: '#6b7280', bg: '#f3f4f6' };
         return (
-          <a href={`/blog/${post.slug}`}
-             class="group bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col block no-underline">
+          <a href={`/blog/${post.slug}`} class="group bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col block no-underline">
             {post.data.image ? (
-              <div class="overflow-hidden h-44">
-                <img src={post.data.image} alt={post.data.title}
-                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-              </div>
+              <div class="overflow-hidden h-44"><img src={post.data.image} alt={post.data.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" /></div>
             ) : (
               <div class="h-36 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-4xl">💻</div>
             )}
             <div class="p-5 flex flex-col gap-2 flex-1">
-              <div class="flex items-center justify-between gap-2">
-                <span class="text-[10px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-full"
-                      style={`color:${catColor.color};background:${catColor.bg}`}>
-                  {post.data.category}
-                </span>
-                <span class="text-xs text-gray-400">
-                  {new Date(post.data.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                </span>
-              </div>
+              <div class="flex items-center justify-between gap-2"><span class="text-[10px] font-bold uppercase tracking-wide px-2.5 py-1 rounded-full" style={`color:${catColor.color};background:${catColor.bg}`}>{post.data.category}</span><span class="text-xs text-gray-400">{new Date(post.data.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span></div>
               <h3 class="text-base font-bold text-gray-900 leading-snug line-clamp-2">{post.data.title}</h3>
               <p class="text-sm text-gray-500 leading-relaxed line-clamp-2 flex-1">{post.data.description}</p>
-              <div class="text-sm font-bold text-[#04AA6D] flex items-center gap-1 mt-1">
-                Read Post
-                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg>
-              </div>
+              <div class="text-sm font-bold text-[#04AA6D] flex items-center gap-1 mt-1">Read Post <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/></svg></div>
             </div>
           </a>
         );
@@ -305,4 +275,3 @@ const CATEGORY_COLORS: Record<string, { color: string; bg: string }> = {
   .float-2 { animation: float2 10s ease-in-out infinite; }
   .float-3 { animation: float3 7s ease-in-out infinite; }
 </style>
-
