@@ -14,6 +14,11 @@ const tutorialsCollection = defineCollection({
     ogImage: z.string().optional(),
     keywords: z.string().optional(),
     noindex: z.boolean().optional(),
+    author: z.string().optional(),
+    date: z.union([z.string(), z.date()]).optional(),
+    tags: z.array(z.string()).optional(),
+    image: z.string().optional(),
+    imageAlt: z.string().optional(),
   }),
 });
 
