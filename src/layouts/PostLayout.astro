@@ -90,7 +90,7 @@ const toc = headings.filter(h => h.depth === 2 || h.depth === 3);
 
 // ── SCHEMA.ORG JSON-LD ─────────────────────────────────────
 const siteUrl = Astro.site ? Astro.site.toString().replace(/\/$/, '') : 'https://codescompiler.com';
-const fullUrl = `${siteUrl}/blog/${slug}/`;
+const fullUrl = canonicalUrl ? new URL(canonicalUrl, siteUrl).href : `${siteUrl}/blog/${slug}/`;
 
 const blogPostingSchema = {
   "@context": "https://schema.org",
@@ -200,7 +200,7 @@ const schemaData = [blogPostingSchema, breadcrumbSchema];
         <ul class="recent-list">
           {recentPosts.map(post => (
             <li class="recent-item">
-              <a href={`/blog/${post.slug}/`} class="recent-link">
+              <a href={`/blog/${post.data.permalink || post.slug}/`} class="recent-link">
                 {post.data.image && (
                   <img
                     src={post.data.image}
@@ -229,7 +229,7 @@ const schemaData = [blogPostingSchema, breadcrumbSchema];
           <h3 class="widget-title">🏷️ Tags</h3>
           <div class="tag-cloud">
             {allTags.map(tag => (
-              <a href={`/blog?tag=${tag}`} class="tag-pill">#{tag}</a>
+              <a href={`/blog/?tag=${encodeURIComponent(tag)}`} class="tag-pill">#{tag}</a>
             ))}
           </div>
         </div>
@@ -240,7 +240,7 @@ const schemaData = [blogPostingSchema, breadcrumbSchema];
         <h3 class="widget-title">📢 Share This Post</h3>
         <div class="share-buttons">
           <a
-            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent('https://codescompiler.com')}`}
+            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(fullUrl)}`}
             target="_blank"
             rel="noopener noreferrer"
             class="share-btn share-twitter"
@@ -252,7 +252,7 @@ const schemaData = [blogPostingSchema, breadcrumbSchema];
             class="share-btn share-facebook"
           >Facebook</a>
           <a
-            href={`https://api.whatsapp.com/send?text=${encodeURIComponent(title + ' ' + 'https://codescompiler.com')}`}
+            href={`https://api.whatsapp.com/send?text=${encodeURIComponent(title + ' ' + fullUrl)}`}
             target="_blank"
             rel="noopener noreferrer"
             class="share-btn share-whatsapp"
