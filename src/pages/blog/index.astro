@@ -129,7 +129,7 @@ const allTags = [...new Set(allPosts.flatMap(p => p.data.tags ?? []))].sort();
         <ul class="recent-list">
           {recentPosts.map(post => (
             <li class="recent-item">
-              <a href={`/blog/${post.slug}/`} class="recent-link">
+              <a href={`/blog/${post.data.permalink || post.slug}/`} class="recent-link">
                 {post.data.image && (
                   <img
                     src={post.data.image}
@@ -172,7 +172,7 @@ const allTags = [...new Set(allPosts.flatMap(p => p.data.tags ?? []))].sort();
       {featured.length > 0 && (
         <div class="featured-section">
           <div class="section-label">⭐ Featured Post</div>
-          <a href={`/blog/${featured[0].slug}/`} class="featured-card">
+          <a href={`/blog/${featured[0].data.permalink || featured[0].slug}/`} class="featured-card">
             {featured[0].data.image && (
               <div class="featured-img-wrap">
                 <img
@@ -220,7 +220,7 @@ const allTags = [...new Set(allPosts.flatMap(p => p.data.tags ?? []))].sort();
       <div class="posts-grid" id="postsGrid">
         {sorted.map(post => (
           <a
-            href={`/blog/${post.slug}/`}
+            href={`/blog/${post.data.permalink || post.slug}/`}
             class="post-card"
             data-category={post.data.category}
             data-tags={JSON.stringify(post.data.tags ?? [])}
@@ -306,8 +306,17 @@ const allTags = [...new Set(allPosts.flatMap(p => p.data.tags ?? []))].sort();
   const nextBtn      = document.getElementById('nextPage');
   const pageInfo     = document.getElementById('pageInfo');
 
-  let activeCat  = 'all';
-  let activeTag  = null;
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlCategory = urlParams.get('cat');
+  const urlTag = urlParams.get('tag');
+
+  const categorySlug = value => value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  const initialCategory = urlCategory
+    ? cats.find(cat => categorySlug(cat) === urlCategory)
+    : null;
+
+  let activeCat  = initialCategory || 'all';
+  let activeTag  = urlTag ? decodeURIComponent(urlTag) : null;
   let searchTerm = '';
   
   // Pagination State
@@ -413,7 +422,13 @@ const allTags = [...new Set(allPosts.flatMap(p => p.data.tags ?? []))].sort();
     filterCards();
   });
   
-  // Initialize
+  // Initialize from shareable category/tag URLs.
+  if (activeCat !== 'all') {
+    catBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.cat === activeCat));
+  }
+  if (activeTag) {
+    tagBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.tag === activeTag));
+  }
   filterCards();
 </script>
 
