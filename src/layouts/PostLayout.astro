@@ -98,10 +98,16 @@ const blogPostingSchema = {
   "headline": title,
   "description": description,
   "image": image ? (image.startsWith('http') ? image : `${siteUrl}${image}`) : undefined,
-  "author": {
-    "@type": "Person",
-    "name": author
-  },
+  "author": author === 'CodesCompiler'
+    ? {
+        "@type": "Organization",
+        "name": "CodesCompiler",
+        "url": siteUrl + '/'
+      }
+    : {
+        "@type": "Person",
+        "name": author
+      },
   "datePublished": date ? new Date(date).toISOString() : undefined,
   "publisher": {
     "@type": "Organization",
@@ -246,7 +252,7 @@ const schemaData = [blogPostingSchema, breadcrumbSchema];
             class="share-btn share-twitter"
           >𝕏 Twitter</a>
           <a
-            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://codescompiler.com')}`}
+            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(fullUrl)}`}
             target="_blank"
             rel="noopener noreferrer"
             class="share-btn share-facebook"
