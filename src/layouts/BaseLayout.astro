@@ -36,13 +36,15 @@ const {
 const siteOrigin = Astro.site ? Astro.site.origin : 'https://codescompiler.com';
 
 function getCanonicalUrl(rawUrl?: string | URL): string {
-  let path = typeof rawUrl === 'string' ? rawUrl : (rawUrl instanceof URL ? rawUrl.pathname : Astro.url.pathname);
-  // Remove duplicate slashes
-  path = path.replace(/\/+/g, '/');
-  // Add trailing slash to normal HTML routes (excluding static files with extensions)
+  const url = rawUrl
+    ? new URL(rawUrl.toString(), siteOrigin)
+    : new URL(Astro.url.pathname, siteOrigin);
+
+  let path = url.pathname.replace(/\\+/g, '/');
   if (!path.endsWith('/') && !path.includes('.')) {
     path += '/';
   }
+
   return new URL(path, siteOrigin).href;
 }
 
@@ -84,21 +86,19 @@ const tutorialLinks = [
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{displayTitle}</title>
-    <meta name="title" content={displayTitle} />
     <meta name="description" content={description} />
-    {keywords && <meta name="keywords" content={keywords} />}
     <link rel="canonical" href={canonicalUrl} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
     <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:title" content={displayTitle} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={new URL(socialImage, Astro.url)} />
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content={canonicalUrl} />
-    <meta property="twitter:title" content={displayTitle} />
-    <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content={new URL(socialImage, Astro.url)} />
+    <meta property="og:image" content={new URL(socialImage, siteOrigin)} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalUrl} />
+    <meta name="twitter:title" content={displayTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(socialImage, siteOrigin)} />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
