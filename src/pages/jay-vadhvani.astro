@@ -151,16 +151,6 @@ const schemaData = [
             </div>
           </div>
 
-          <!-- Quick Image Preview / Upload Control -->
-          <div class="mt-6 text-center">
-            <label for="localPhotoUpload" class="jv-btn text-xs !py-1.5 !px-3 cursor-pointer">
-              📷 Preview Your Photo
-            </label>
-            <input type="file" id="localPhotoUpload" accept="image/*" class="hidden" />
-            <p class="text-xs text-[#4A5878] dark:text-[#A9B7DA] mt-2">
-              Add your image to <code class="bg-gray-200 dark:bg-gray-800 px-1 py-0.5 rounded">public/images/jay-vadhvani.jpg</code>
-            </p>
-          </div>
         </div>
 
       </div>
@@ -620,37 +610,6 @@ const schemaData = [
 
   <!-- Client JavaScript for Photo Loader & Book Shelf -->
   <script is:inline>
-    // --- Local Photo Preview Logic ---
-    (function initPhoto() {
-      const uploadInput = document.getElementById('localPhotoUpload');
-      const realPhoto = document.getElementById('realPhoto');
-      const svgAvatar = document.getElementById('svgAvatar');
-
-      if (realPhoto && svgAvatar) {
-        if (realPhoto.complete && realPhoto.naturalHeight !== 0) {
-          realPhoto.classList.remove('hidden');
-          svgAvatar.classList.add('hidden');
-        }
-      }
-
-      if (uploadInput) {
-        uploadInput.addEventListener('change', (e) => {
-          const file = e.target.files && e.target.files[0];
-          if (file) {
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-              if (realPhoto) {
-                realPhoto.src = evt.target.result;
-                realPhoto.classList.remove('hidden');
-                if (svgAvatar) svgAvatar.classList.add('hidden');
-              }
-            };
-            reader.readAsDataURL(file);
-          }
-        });
-      }
-    })();
-
     // --- Book Shelf Preview Selector ---
     (function initBooks() {
       const cards = document.querySelectorAll('.book-card');
