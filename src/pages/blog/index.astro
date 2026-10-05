@@ -4,7 +4,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import AdSlot from '../../components/AdSlot.astro';
 
 const allPostsRaw = await getCollection('blog');
-const hasFilterParams = Astro.url.searchParams.has('cat') || Astro.url.searchParams.has('tag');
 // Only show published posts publicly (draft & scheduled are hidden)
 const allPosts = allPostsRaw.filter(
   p => !p.data.status || p.data.status === 'published'
@@ -54,7 +53,6 @@ const allTags = [...new Set(allPosts.flatMap(p => p.data.tags ?? []))].sort();
 <BaseLayout
   title="Web Development & Coding Blog — CodesCompiler"
   description="Explore coding projects, UI designs, and web development tutorials. Build real HTML, CSS, and JavaScript projects step by step."
-  noindex={hasFilterParams}
 >
   <!-- ============================================================ -->
   <!-- PAGE HERO                                                     -->
@@ -272,11 +270,11 @@ const allTags = [...new Set(allPosts.flatMap(p => p.data.tags ?? []))].sort();
       </div>
 
       <!-- Pagination Controls -->
-      <div id="paginationContainer" class="pagination-container hidden">
-        <button id="prevPage" class="page-btn">← Prev</button>
-        <span id="pageInfo" class="page-info">Page 1 of 1</span>
-        <button id="nextPage" class="page-btn">Next →</button>
-      </div>
+      <nav id="paginationContainer" class="pagination-container hidden" aria-label="Blog pagination">
+        <button id="prevPage" class="page-btn" type="button" aria-label="Go to previous blog page">← Prev</button>
+        <span id="pageInfo" class="page-info" aria-live="polite">Page 1 of 1</span>
+        <button id="nextPage" class="page-btn" type="button" aria-label="Go to next blog page">Next →</button>
+      </nav>
 
     </main>
 
@@ -312,6 +310,12 @@ const allTags = [...new Set(allPosts.flatMap(p => p.data.tags ?? []))].sort();
   const urlCategory = urlParams.get('cat');
   const urlTag = urlParams.get('tag');
 
+  // Filters are UI state, not SEO landing pages. Keep the state functional but avoid
+  // leaving crawlable query URLs in the browser after the initial state is applied.
+  if (urlCategory || urlTag) {
+    history.replaceState(null, '', window.location.pathname + window.location.hash);
+  }
+
   const categorySlug = value => value.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
   const initialCategory = urlCategory
     ? cats.find(cat => categorySlug(cat) === urlCategory)
@@ -322,7 +326,8 @@ const allTags = [...new Set(allPosts.flatMap(p => p.data.tags ?? []))].sort();
   let searchTerm = '';
   
   // Pagination State
-  let currentPage = 1;
+  const hashPage = Number(new URLSearchParams(window.location.hash.replace(/^#/, '')).get('page'));
+  let currentPage = Number.isFinite(hashPage) && hashPage > 0 ? hashPage : 1;
   const itemsPerPage = 10;
   let totalPages = 1;
 
@@ -367,6 +372,7 @@ const allTags = [...new Set(allPosts.flatMap(p => p.data.tags ?? []))].sort();
     if (totalPages > 1) {
       pagContainer.classList.remove('hidden');
       pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+      history.replaceState(null, '', currentPage === 1 ? window.location.pathname + window.location.search : `#page=${currentPage}`);
       prevBtn.disabled = currentPage === 1;
       nextBtn.disabled = currentPage === totalPages;
     } else {
