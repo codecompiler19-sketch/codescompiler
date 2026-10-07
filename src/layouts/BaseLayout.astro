@@ -5,7 +5,21 @@ import navData from '../data/navigation.json';
 import themeRaw from '../theme-settings.json';
 
 const theme = themeRaw || {};
-const { navItems } = navData;
+const configuredNavItems = Array.isArray(navData?.navItems) ? navData.navItems : [];
+
+// Keep the primary Books and Kids destinations visible even if an older
+// navigation.json is used by a staging build.
+const navItems = [...configuredNavItems];
+const requiredTopLevelLinks = [
+  { type: 'link', label: 'Books', href: '/books/' },
+  { type: 'link', label: 'Kids', href: '/kids/' },
+];
+
+for (const requiredLink of requiredTopLevelLinks) {
+  if (!navItems.some((item: any) => item?.label === requiredLink.label)) {
+    navItems.push(requiredLink);
+  }
+}
 
 export interface Props {
   image?: string;
